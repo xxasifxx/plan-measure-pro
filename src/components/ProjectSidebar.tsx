@@ -30,6 +30,8 @@ interface Props {
   activePayItemId: string;
   onActivePayItemChange: (id: string) => void;
   projectName: string | null;
+  hasPdf?: boolean;
+  onImportToc?: () => void;
 }
 
 const UNITS = ['SF', 'LF', 'CY', 'EA', 'SY', 'TON', 'LS'] as const;
