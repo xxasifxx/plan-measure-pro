@@ -32,6 +32,7 @@ interface Props {
   projectName: string | null;
   hasPdf?: boolean;
   onImportToc?: () => void;
+  onCloseProject?: () => void;
 }
 
 const UNITS = ['SF', 'LF', 'CY', 'EA', 'SY', 'TON', 'LS'] as const;
