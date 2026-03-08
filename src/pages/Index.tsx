@@ -46,6 +46,11 @@ const Index = () => {
     }
   }, [createProject, setTotalPages, toast]);
 
+  const handleCloseProject = useCallback(() => {
+    setPdf(null);
+    closeProject();
+  }, [closeProject]);
+
   const handleTocRegionSelected = useCallback(async (rect: { x1: number; y1: number; x2: number; y2: number }) => {
     if (!pdf || !project) return;
 
