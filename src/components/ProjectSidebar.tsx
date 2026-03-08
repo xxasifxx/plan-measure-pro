@@ -1,4 +1,4 @@
-import { FileUp, MapPin, ChevronRight, DollarSign, Plus, Trash2, Edit2 } from 'lucide-react';
+import { FileUp, MapPin, ChevronRight, DollarSign, Plus, Trash2, Edit2, TableOfContents } from 'lucide-react';
 import { useState } from 'react';
 import type { TocEntry, PayItem } from '@/types/project';
 import {
@@ -30,6 +30,8 @@ interface Props {
   activePayItemId: string;
   onActivePayItemChange: (id: string) => void;
   projectName: string | null;
+  hasPdf?: boolean;
+  onImportToc?: () => void;
 }
 
 const UNITS = ['SF', 'LF', 'CY', 'EA', 'SY', 'TON', 'LS'] as const;
@@ -37,7 +39,8 @@ const COLORS = ['#e74c3c', '#f39c12', '#3498db', '#2ecc71', '#9b59b6', '#1abc9c'
 
 export function ProjectSidebar({
   toc, currentPage, totalPages, onPageChange, onFileUpload,
-  payItems, onUpdatePayItems, activePayItemId, onActivePayItemChange, projectName
+  payItems, onUpdatePayItems, activePayItemId, onActivePayItemChange, projectName,
+  hasPdf, onImportToc,
 }: Props) {
   const [editingItem, setEditingItem] = useState<PayItem | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -93,6 +96,28 @@ export function ProjectSidebar({
             </div>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {/* Import TOC button */}
+        {hasPdf && toc.length === 0 && (
+          <>
+            <SidebarSeparator />
+            <SidebarGroup>
+              <SidebarGroupContent>
+                <div className="px-2 group-data-[collapsible=icon]:hidden">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full text-xs h-7"
+                    onClick={onImportToc}
+                  >
+                    <TableOfContents className="h-3 w-3 mr-1" />
+                    Import Table of Contents
+                  </Button>
+                </div>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </>
+        )}
 
         {/* TOC */}
         {toc.length > 0 && (

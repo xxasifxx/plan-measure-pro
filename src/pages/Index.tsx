@@ -6,9 +6,10 @@ import { Toolbar } from '@/components/Toolbar';
 import { PdfCanvas } from '@/components/PdfCanvas';
 import { SummaryPanel } from '@/components/SummaryPanel';
 import { useProject } from '@/hooks/useProject';
-import { loadPdf, extractTocFromPage } from '@/lib/pdf-utils';
+import { loadPdf, extractTextFromRegion } from '@/lib/pdf-utils';
 import { exportCsv, exportPdfReport } from '@/lib/export-utils';
 import { useToast } from '@/hooks/use-toast';
+import type { TocEntry } from '@/types/project';
 
 const Index = () => {
   const {
@@ -16,7 +17,7 @@ const Index = () => {
     currentPage, setCurrentPage, totalPages, setTotalPages,
     toolMode, setToolMode, activePayItemId, setActivePayItemId,
     scale, setScale, setCalibration, addAnnotation, removeAnnotation,
-    currentCalibration,
+    currentCalibration, persist,
   } = useProject();
 
   const [pdf, setPdf] = useState<PDFDocumentProxy | null>(null);
@@ -29,15 +30,12 @@ const Index = () => {
       setPdf(pdfDoc);
       setTotalPages(pdfDoc.numPages);
 
-      // Extract TOC from page 1
-      const toc = await extractTocFromPage(pdfDoc, 1);
-
       const name = file.name.replace(/\.pdf$/i, '');
-      createProject(name, '', file.name, toc, pdfDoc.numPages);
+      createProject(name, '', file.name, [], pdfDoc.numPages);
 
       toast({
         title: 'PDF Loaded',
-        description: `${pdfDoc.numPages} pages • ${toc.length} sections found`,
+        description: `${pdfDoc.numPages} pages loaded. Select the Table of Contents area to import sections.`,
       });
     } catch (err) {
       toast({
@@ -47,6 +45,40 @@ const Index = () => {
       });
     }
   }, [createProject, setTotalPages, toast]);
+
+  const handleTocRegionSelected = useCallback(async (rect: { x1: number; y1: number; x2: number; y2: number }) => {
+    if (!pdf || !project) return;
+
+    try {
+      toast({ title: 'Extracting TOC...', description: 'Reading text from selected area' });
+
+      const entries: TocEntry[] = await extractTextFromRegion(pdf, currentPage, scale, rect);
+
+      if (entries.length === 0) {
+        toast({
+          title: 'No entries found',
+          description: 'Could not parse any TOC entries from the selected area. Try selecting a different region.',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      const updated = { ...project, toc: entries };
+      persist(updated);
+      setToolMode('select');
+
+      toast({
+        title: 'TOC Imported',
+        description: `${entries.length} sections imported from the selected area.`,
+      });
+    } catch (err) {
+      toast({
+        title: 'Error extracting TOC',
+        description: String(err),
+        variant: 'destructive',
+      });
+    }
+  }, [pdf, project, currentPage, scale, persist, setToolMode, toast]);
 
   const activePayItem = payItems.find(p => p.id === activePayItemId);
 
@@ -64,6 +96,8 @@ const Index = () => {
           activePayItemId={activePayItemId}
           onActivePayItemChange={setActivePayItemId}
           projectName={project?.name || null}
+          hasPdf={!!pdf}
+          onImportToc={() => setToolMode('tocSelect')}
         />
 
         <div className="flex-1 flex flex-col min-w-0">
@@ -102,6 +136,7 @@ const Index = () => {
             onCalibrate={cal => setCalibration(currentPage, cal)}
             onAddAnnotation={addAnnotation}
             onRemoveAnnotation={removeAnnotation}
+            onTocRegionSelected={handleTocRegionSelected}
           />
         </div>
       </div>

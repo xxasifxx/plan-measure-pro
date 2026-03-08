@@ -47,7 +47,7 @@ export interface Project {
   updatedAt: string;
 }
 
-export type ToolMode = 'select' | 'calibrate' | 'line' | 'polygon' | 'pan';
+export type ToolMode = 'select' | 'calibrate' | 'line' | 'polygon' | 'pan' | 'tocSelect';
 
 export const DEFAULT_PAY_ITEMS: PayItem[] = [
   { id: 'exc', name: 'Unclassified Excavation', unit: 'CY', unitPrice: 12.50, color: '#e74c3c' },
