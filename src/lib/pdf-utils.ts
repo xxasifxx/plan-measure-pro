@@ -94,7 +94,7 @@ export async function extractTocFromPage(
 
       // Pattern: description then sheet number at end "COVER SHEET C-101"
       const reverseMatch = lineText.match(
-        /^(.{3,?})\s+([A-Z]{0,4}[\-.]?\d{1,4}[A-Z]?)\s*$/i
+        /^(.{3,}?)\s+([A-Z]{0,4}[\-.]?\d{1,4}[A-Z]?)\s*$/i
       );
       if (reverseMatch) {
         const description = reverseMatch[1].trim().replace(/[.\s]+$/, '');
