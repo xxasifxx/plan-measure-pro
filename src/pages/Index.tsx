@@ -13,7 +13,7 @@ import type { TocEntry } from '@/types/project';
 
 const Index = () => {
   const {
-    project, createProject, payItems, updatePayItems,
+    project, createProject, closeProject, payItems, updatePayItems,
     currentPage, setCurrentPage, totalPages, setTotalPages,
     toolMode, setToolMode, activePayItemId, setActivePayItemId,
     scale, setScale, setCalibration, addAnnotation, removeAnnotation,
