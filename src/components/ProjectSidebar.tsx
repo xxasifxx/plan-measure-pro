@@ -1,4 +1,4 @@
-import { FileUp, MapPin, ChevronRight, DollarSign, Plus, Trash2, Edit2, TableOfContents } from 'lucide-react';
+import { FileUp, MapPin, ChevronRight, DollarSign, Plus, Trash2, Edit2, TableOfContents, X } from 'lucide-react';
 import { useState } from 'react';
 import type { TocEntry, PayItem } from '@/types/project';
 import {
