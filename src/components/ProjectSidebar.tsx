@@ -98,7 +98,7 @@ export function ProjectSidebar({
         {toc.length > 0 && (
           <>
             <SidebarSeparator />
-            <SidebarGroup defaultOpen>
+            <SidebarGroup>
               <SidebarGroupLabel className="text-[10px] uppercase tracking-widest">
                 Sections
               </SidebarGroupLabel>
@@ -128,7 +128,7 @@ export function ProjectSidebar({
         {toc.length === 0 && totalPages > 0 && (
           <>
             <SidebarSeparator />
-            <SidebarGroup defaultOpen>
+            <SidebarGroup>
               <SidebarGroupLabel className="text-[10px] uppercase tracking-widest">
                 Pages
               </SidebarGroupLabel>
@@ -154,7 +154,7 @@ export function ProjectSidebar({
 
         {/* Pay Items */}
         <SidebarSeparator />
-        <SidebarGroup defaultOpen>
+        <SidebarGroup>
           <SidebarGroupLabel className="text-[10px] uppercase tracking-widest">
             Pay Items
           </SidebarGroupLabel>
