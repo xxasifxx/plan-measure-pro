@@ -97,6 +97,28 @@ export function ProjectSidebar({
           </SidebarGroupContent>
         </SidebarGroup>
 
+        {/* Import TOC button */}
+        {hasPdf && toc.length === 0 && (
+          <>
+            <SidebarSeparator />
+            <SidebarGroup>
+              <SidebarGroupContent>
+                <div className="px-2 group-data-[collapsible=icon]:hidden">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full text-xs h-7"
+                    onClick={onImportToc}
+                  >
+                    <TableOfContents className="h-3 w-3 mr-1" />
+                    Import Table of Contents
+                  </Button>
+                </div>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </>
+        )}
+
         {/* TOC */}
         {toc.length > 0 && (
           <>
