@@ -28,63 +28,111 @@ export async function extractTocFromPage(
   pdf: pdfjsLib.PDFDocumentProxy,
   pageNum: number = 1
 ): Promise<TocEntry[]> {
-  const page = await pdf.getPage(pageNum);
-  const textContent = await page.getTextContent();
-  const textItems = textContent.items
-    .filter((item: any) => 'str' in item)
-    .map((item: any) => item.str as string);
-
-  const fullText = textItems.join(' ');
+  // Try extracting from multiple pages (some PDFs split TOC across pages)
   const entries: TocEntry[] = [];
+  const maxTocPages = Math.min(3, pdf.numPages);
 
-  // Pattern: "Section Name ... PageNum" or "Section Name    PageNum" or "SECTION NAME 12"
-  // Try multiple patterns
-  const patterns = [
-    // "Section Name ........... 12"
-    /([A-Za-z][A-Za-z\s&\/\-,()]+?)[\s.]{3,}(\d{1,3})/g,
-    // "Section Name  12" (multiple spaces then number)
-    /([A-Za-z][A-Za-z\s&\/\-,()]{3,}?)\s{2,}(\d{1,3})/g,
-    // "12  Section Name" (page number first)
-    /(\d{1,3})\s{2,}([A-Za-z][A-Za-z\s&\/\-,()]{3,})/g,
-  ];
+  for (let pg = 1; pg <= maxTocPages; pg++) {
+    const page = await pdf.getPage(pg);
+    const textContent = await page.getTextContent();
+    const textItems = textContent.items
+      .filter((item: any) => 'str' in item)
+      .map((item: any) => ({
+        str: (item as any).str as string,
+        x: (item as any).transform?.[4] ?? 0,
+        y: (item as any).transform?.[5] ?? 0,
+      }));
 
-  // Try first two patterns (section then page)
-  for (let i = 0; i < 2; i++) {
-    const regex = patterns[i];
-    let match;
-    while ((match = regex.exec(fullText)) !== null) {
-      const label = match[1].trim();
-      const page = parseInt(match[2], 10);
-      if (page > 0 && page <= pdf.numPages && label.length > 1) {
-        entries.push({ label, page });
+    const fullText = textItems.map(t => t.str).join(' ');
+
+    // Check if this page contains an "INDEX OF SHEETS" or similar TOC header
+    const hasTocHeader = /INDEX\s+OF\s+SHEETS|TABLE\s+OF\s+CONTENTS|SHEET\s+INDEX/i.test(fullText);
+    if (pg > 1 && !hasTocHeader && entries.length > 0) break;
+
+    // Strategy 1: "INDEX OF SHEETS" format
+    // Sheet numbers like "C-101", "G-001", "SP-1", "1", "2" paired with descriptions
+    // Pattern: SheetNo (alphanumeric with dashes/dots) followed by description text
+    // The sheet number IS the page ordering — we assign sequential page numbers
+
+    // Build lines by grouping text items by Y position
+    const yGroups = new Map<number, typeof textItems>();
+    for (const item of textItems) {
+      const roundedY = Math.round(item.y / 3) * 3; // group within 3pt
+      if (!yGroups.has(roundedY)) yGroups.set(roundedY, []);
+      yGroups.get(roundedY)!.push(item);
+    }
+
+    // Sort groups top-to-bottom (highest Y = top of page in PDF coords)
+    const sortedLines = Array.from(yGroups.entries())
+      .sort((a, b) => b[0] - a[0])
+      .map(([, items]) => items.sort((a, b) => a.x - b.x));
+
+    for (const lineItems of sortedLines) {
+      const lineText = lineItems.map(i => i.str).join(' ').trim();
+      if (!lineText || lineText.length < 2) continue;
+
+      // Skip header rows
+      if (/SHEET\s*NO|DESCRIPTION|INDEX\s+OF/i.test(lineText)) continue;
+
+      // Pattern: "C-101 COVER SHEET" or "SP-1 SITE PLAN" or "1 GENERAL NOTES"
+      const sheetMatch = lineText.match(
+        /^([A-Z]{0,4}[\-.]?\d{1,4}[A-Z]?)\s+(.{3,})$/i
+      );
+      if (sheetMatch) {
+        const sheetNo = sheetMatch[1].trim();
+        const description = sheetMatch[2].trim()
+          .replace(/[.\s]+$/, '') // trailing dots/spaces
+          .replace(/\s{2,}/g, ' ');
+        if (description.length > 1) {
+          entries.push({
+            label: `${sheetNo} — ${description}`,
+            page: entries.length + 1, // sequential page assignment
+          });
+          continue;
+        }
+      }
+
+      // Pattern: description then sheet number at end "COVER SHEET C-101"
+      const reverseMatch = lineText.match(
+        /^(.{3,?})\s+([A-Z]{0,4}[\-.]?\d{1,4}[A-Z]?)\s*$/i
+      );
+      if (reverseMatch) {
+        const description = reverseMatch[1].trim().replace(/[.\s]+$/, '');
+        const sheetNo = reverseMatch[2].trim();
+        if (description.length > 1) {
+          entries.push({
+            label: `${sheetNo} — ${description}`,
+            page: entries.length + 1,
+          });
+          continue;
+        }
       }
     }
-    if (entries.length >= 3) return deduplicateEntries(entries);
-  }
 
-  // Try pattern 3 (page then section)
-  const regex3 = patterns[2];
-  let match;
-  while ((match = regex3.exec(fullText)) !== null) {
-    const page = parseInt(match[1], 10);
-    const label = match[2].trim();
-    if (page > 0 && page <= pdf.numPages && label.length > 1) {
-      entries.push({ label, page });
-    }
-  }
+    // Strategy 2: Fallback — generic "Name ... PageNum" patterns
+    if (entries.length === 0) {
+      const patterns = [
+        /([A-Za-z][A-Za-z\s&\/\-,()]+?)[\s.]{3,}(\d{1,3})/g,
+        /([A-Za-z][A-Za-z\s&\/\-,()]{3,}?)\s{2,}(\d{1,3})/g,
+      ];
 
-  if (entries.length >= 2) return deduplicateEntries(entries);
-
-  // Fallback: try line-by-line from textItems
-  for (const item of textItems) {
-    const lineMatch = item.match(/^(.+?)\s+(\d{1,3})\s*$/);
-    if (lineMatch) {
-      const label = lineMatch[1].trim().replace(/[.\s]+$/, '');
-      const pg = parseInt(lineMatch[2], 10);
-      if (pg > 0 && pg <= pdf.numPages && label.length > 1) {
-        entries.push({ label, page: pg });
+      for (const regex of patterns) {
+        let match;
+        while ((match = regex.exec(fullText)) !== null) {
+          const label = match[1].trim();
+          const pageRef = parseInt(match[2], 10);
+          if (pageRef > 0 && pageRef <= pdf.numPages && label.length > 1) {
+            entries.push({ label, page: pageRef });
+          }
+        }
+        if (entries.length >= 3) break;
       }
     }
+  }
+
+  // If sequential assignment resulted in pages > numPages, cap them
+  for (const entry of entries) {
+    if (entry.page > pdf.numPages) entry.page = pdf.numPages;
   }
 
   return deduplicateEntries(entries);
