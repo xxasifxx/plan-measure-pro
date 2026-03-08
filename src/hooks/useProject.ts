@@ -12,15 +12,7 @@ export function useProject() {
   const [activePayItemId, setActivePayItemId] = useState<string>(payItems[0]?.id || '');
   const [scale, setScale] = useState(1.5);
 
-  // Load saved project on mount
-  useEffect(() => {
-    const activeId = storage.getActiveProjectId();
-    if (activeId) {
-      const projects = storage.getProjects();
-      const found = projects.find(p => p.id === activeId);
-      if (found) setProject(found);
-    }
-  }, []);
+  // No auto-load — always start with a clean slate
 
   const createProject = useCallback((name: string, contractNumber: string, pdfFileName: string, toc: TocEntry[], numPages: number) => {
     const proj: Project = {
