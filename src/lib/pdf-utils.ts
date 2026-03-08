@@ -24,125 +24,128 @@ export async function renderPage(
   await page.render({ canvasContext: ctx, viewport }).promise;
 }
 
-export async function extractTocFromPage(
+/**
+ * Extract text items from a specific rectangular region of a PDF page.
+ * Coordinates are in canvas pixels (already scaled).
+ */
+export async function extractTextFromRegion(
   pdf: pdfjsLib.PDFDocumentProxy,
-  _pageNum: number = 1
+  pageNum: number,
+  scale: number,
+  rect: { x1: number; y1: number; x2: number; y2: number }
 ): Promise<TocEntry[]> {
+  const page = await pdf.getPage(pageNum);
+  const viewport = page.getViewport({ scale });
+  const textContent = await page.getTextContent();
+
+  // Filter text items that fall within the selection rectangle
+  const textItems = textContent.items
+    .filter((item: any) => 'str' in item && item.str.trim())
+    .map((item: any) => {
+      // Transform PDF coordinates to canvas coordinates
+      const tx = pdfjsLib.Util.transform(viewport.transform, item.transform);
+      return {
+        str: item.str as string,
+        x: tx[4] as number,
+        y: tx[5] as number,
+        width: item.width * scale,
+        height: item.height * scale,
+      };
+    })
+    .filter(item => {
+      // Check if text item falls within selection rectangle
+      const minX = Math.min(rect.x1, rect.x2);
+      const maxX = Math.max(rect.x1, rect.x2);
+      const minY = Math.min(rect.y1, rect.y2);
+      const maxY = Math.max(rect.y1, rect.y2);
+      return item.x >= minX && item.x <= maxX && item.y >= minY && item.y <= maxY;
+    });
+
+  console.log(`[TOC Extract] Found ${textItems.length} text items in selection`);
+
+  // Group by Y coordinate into rows
+  const yGroups = new Map<number, typeof textItems>();
+  for (const item of textItems) {
+    const roundedY = Math.round(item.y / 3) * 3;
+    if (!yGroups.has(roundedY)) yGroups.set(roundedY, []);
+    yGroups.get(roundedY)!.push(item);
+  }
+
+  // Sort rows top-to-bottom (canvas Y increases downward)
+  const rows = Array.from(yGroups.entries())
+    .sort((a, b) => a[0] - b[0])
+    .map(([y, items]) => ({
+      y,
+      items: items.sort((a, b) => a.x - b.x),
+      text: items.sort((a, b) => a.x - b.x).map(i => i.str).join(' ').trim(),
+    }));
+
+  console.log(`[TOC Extract] Grouped into ${rows.length} rows`);
+
+  // Try to detect column layout: find "SHEET NO" and "DESCRIPTION" headers
+  let sheetNoX: number | null = null;
+  let descX: number | null = null;
+  let dataStartIdx = 0;
+
+  for (let i = 0; i < Math.min(5, rows.length); i++) {
+    for (const item of rows[i].items) {
+      if (/SHEET\s*NO/i.test(item.str)) sheetNoX = item.x;
+      if (/DESCRIPTION/i.test(item.str)) descX = item.x;
+    }
+    if (sheetNoX !== null && descX !== null) {
+      dataStartIdx = i + 1;
+      break;
+    }
+    // Skip header rows like "INDEX OF SHEETS"
+    if (/INDEX\s+OF\s+SHEETS/i.test(rows[i].text)) {
+      dataStartIdx = i + 1;
+    }
+  }
+
+  console.log(`[TOC Extract] Columns — SHEET NO x:${sheetNoX?.toFixed(0) ?? '?'}, DESCRIPTION x:${descX?.toFixed(0) ?? '?'}, data starts at row ${dataStartIdx}`);
+
   const entries: TocEntry[] = [];
-  const maxPages = Math.min(3, pdf.numPages);
 
-  for (let pg = 1; pg <= maxPages; pg++) {
-    const page = await pdf.getPage(pg);
-    const textContent = await page.getTextContent();
-    const textItems = textContent.items
-      .filter((item: any) => 'str' in item)
-      .map((item: any) => ({
-        str: (item as any).str as string,
-        x: (item as any).transform?.[4] ?? 0,
-        y: (item as any).transform?.[5] ?? 0,
-      }));
+  for (let i = dataStartIdx; i < rows.length; i++) {
+    const row = rows[i];
+    // Skip empty or header-like rows
+    if (row.text.length < 2) continue;
+    if (/SHEET\s*NO|DESCRIPTION|INDEX\s+OF/i.test(row.text)) continue;
+    // Stop at title block indicators
+    if (/DESIGNED|DRAWN|CHECKED|APPROVED|REVISIONS|SEAL|PROFESSIONAL|P\.E\./i.test(row.text)) break;
 
-    // Debug: log all text items
-    console.group(`[TOC Parser] Page ${pg} — ${textItems.length} text items`);
-    for (const item of textItems) {
-      if (item.str.trim()) {
-        console.log(`  x:${Math.round(item.x)} y:${Math.round(item.y)} "${item.str}"`);
-      }
-    }
-    console.groupEnd();
+    let sheetNo = '';
+    let description = '';
 
-    const fullText = textItems.map(t => t.str).join(' ');
-
-    // ONLY look for "INDEX OF SHEETS" — ignore all other tables
-    if (!/INDEX\s+OF\s+SHEETS/i.test(fullText)) {
-      console.log(`[TOC Parser] Page ${pg}: No "INDEX OF SHEETS" — skipping`);
-      continue;
-    }
-
-    console.log(`[TOC Parser] Page ${pg}: Found "INDEX OF SHEETS"`);
-
-    // Group text items into rows by Y coordinate
-    const yGroups = new Map<number, typeof textItems>();
-    for (const item of textItems) {
-      const roundedY = Math.round(item.y / 2) * 2;
-      if (!yGroups.has(roundedY)) yGroups.set(roundedY, []);
-      yGroups.get(roundedY)!.push(item);
-    }
-
-    // Sort rows top-to-bottom (PDF Y is bottom-up → sort descending)
-    const rows = Array.from(yGroups.entries())
-      .sort((a, b) => b[0] - a[0])
-      .map(([y, items]) => ({
-        y,
-        items: items.sort((a, b) => a.x - b.x),
-        text: items.sort((a, b) => a.x - b.x).map(i => i.str).join(' ').trim(),
-      }));
-
-    // Find the "INDEX OF SHEETS" header row
-    const headerIdx = rows.findIndex(r => /INDEX\s+OF\s+SHEETS/i.test(r.text));
-    if (headerIdx < 0) continue;
-
-    // Find the column header row: "SHEET NO." and "DESCRIPTION"
-    let sheetNoX: number | null = null;
-    let descX: number | null = null;
-    let dataStartIdx = headerIdx + 1;
-
-    for (let i = headerIdx; i < Math.min(headerIdx + 5, rows.length); i++) {
-      for (const item of rows[i].items) {
-        if (/SHEET\s*NO/i.test(item.str)) sheetNoX = item.x;
-        if (/DESCRIPTION/i.test(item.str)) descX = item.x;
-      }
-      if (sheetNoX !== null && descX !== null) {
-        dataStartIdx = i + 1;
-        break;
-      }
-    }
-
-    console.log(`[TOC Parser] Columns — SHEET NO x:${sheetNoX?.toFixed(0) ?? '?'}, DESCRIPTION x:${descX?.toFixed(0) ?? '?'}, data rows start at index ${dataStartIdx}`);
-
-    // Parse data rows
-    for (let i = dataStartIdx; i < rows.length; i++) {
-      const row = rows[i];
-
-      // Stop at title block / revision block
-      if (/DESIGNED|DRAWN|CHECKED|APPROVED|REVISIONS|SEAL|PROFESSIONAL|P\.E\./i.test(row.text)) break;
-      if (row.text.length < 2) continue;
-
-      let sheetNo = '';
-      let description = '';
-
-      if (sheetNoX !== null && descX !== null) {
-        // Assign each text item to the nearest column
-        for (const item of row.items) {
-          if (!item.str.trim()) continue;
-          const distSheet = Math.abs(item.x - sheetNoX);
-          const distDesc = Math.abs(item.x - descX);
-          if (distSheet < distDesc) {
-            sheetNo += (sheetNo ? ' ' : '') + item.str.trim();
-          } else {
-            description += (description ? ' ' : '') + item.str.trim();
-          }
+    if (sheetNoX !== null && descX !== null) {
+      for (const item of row.items) {
+        if (!item.str.trim()) continue;
+        const distSheet = Math.abs(item.x - sheetNoX);
+        const distDesc = Math.abs(item.x - descX);
+        if (distSheet < distDesc) {
+          sheetNo += (sheetNo ? ' ' : '') + item.str.trim();
+        } else {
+          description += (description ? ' ' : '') + item.str.trim();
         }
-      } else {
-        // No column headers found — treat first token as sheet no
-        const parts = row.text.split(/\s{2,}/);
-        sheetNo = parts[0] || '';
-        description = parts.slice(1).join(' ');
       }
-
-      sheetNo = sheetNo.trim();
-      description = description.trim().replace(/[.\s]+$/, '');
-
-      if (!sheetNo || !description) continue;
-      if (/SHEET\s*NO|DESCRIPTION|INDEX\s+OF/i.test(sheetNo + ' ' + description)) continue;
-
-      console.log(`[TOC Parser] → [${sheetNo}] "${description}"`);
-
-      entries.push({
-        label: `${sheetNo} — ${description}`,
-        page: entries.length + 1,
-      });
+    } else {
+      // Fallback: split on large whitespace gaps
+      const parts = row.text.split(/\s{2,}/);
+      sheetNo = parts[0] || '';
+      description = parts.slice(1).join(' ');
     }
+
+    sheetNo = sheetNo.trim();
+    description = description.trim().replace(/[.\s]+$/, '');
+
+    if (!sheetNo || !description) continue;
+
+    console.log(`[TOC Extract] → [${sheetNo}] "${description}"`);
+
+    entries.push({
+      label: `${sheetNo} — ${description}`,
+      page: entries.length + 1,
+    });
   }
 
   // Cap to actual page count
@@ -150,12 +153,7 @@ export async function extractTocFromPage(
     if (entry.page > pdf.numPages) entry.page = pdf.numPages;
   }
 
-  if (entries.length === 0) {
-    console.log('[TOC Parser] No entries found. Falling back to page list.');
-  } else {
-    console.log(`[TOC Parser] Found ${entries.length} TOC entries.`);
-  }
-
+  console.log(`[TOC Extract] Parsed ${entries.length} TOC entries`);
   return entries;
 }
 

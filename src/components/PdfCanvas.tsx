@@ -16,11 +16,13 @@ interface Props {
   onCalibrate: (cal: Calibration) => void;
   onAddAnnotation: (annotation: Annotation) => void;
   onRemoveAnnotation: (id: string) => void;
+  onTocRegionSelected?: (rect: { x1: number; y1: number; x2: number; y2: number }) => void;
 }
 
 export function PdfCanvas({
   pdf, currentPage, scale, toolMode, calibration,
-  annotations, activePayItemId, payItems, onCalibrate, onAddAnnotation, onRemoveAnnotation
+  annotations, activePayItemId, payItems, onCalibrate, onAddAnnotation, onRemoveAnnotation,
+  onTocRegionSelected,
 }: Props) {
   const pdfCanvasRef = useRef<HTMLCanvasElement>(null);
   const overlayCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -34,6 +36,20 @@ export function PdfCanvas({
   const [calibratePoints, setCalibratePoints] = useState<PointXY[]>([]);
   const [calibrateDistance, setCalibrateDistance] = useState('');
   const [showCalPrompt, setShowCalPrompt] = useState(false);
+
+  // TOC selection rectangle
+  const [tocDragStart, setTocDragStart] = useState<PointXY | null>(null);
+  const [tocDragEnd, setTocDragEnd] = useState<PointXY | null>(null);
+  const [tocRect, setTocRect] = useState<{ x1: number; y1: number; x2: number; y2: number } | null>(null);
+
+  // Reset TOC selection when tool changes away from tocSelect
+  useEffect(() => {
+    if (toolMode !== 'tocSelect') {
+      setTocDragStart(null);
+      setTocDragEnd(null);
+      setTocRect(null);
+    }
+  }, [toolMode]);
 
   // Render PDF page
   useEffect(() => {
@@ -77,7 +93,6 @@ export function PdfCanvas({
         ctx.lineTo(ann.points[1].x, ann.points[1].y);
         ctx.stroke();
 
-        // Label
         const mid = {
           x: (ann.points[0].x + ann.points[1].x) / 2,
           y: (ann.points[0].y + ann.points[1].y) / 2,
@@ -97,7 +112,6 @@ export function PdfCanvas({
         ctx.fill();
         ctx.stroke();
 
-        // Label
         const cx = ann.points.reduce((s, p) => s + p.x, 0) / ann.points.length;
         const cy = ann.points.reduce((s, p) => s + p.y, 0) / ann.points.length;
         ctx.fillStyle = color;
@@ -126,13 +140,9 @@ export function PdfCanvas({
       if (mousePos) {
         ctx.lineTo(mousePos.x, mousePos.y);
       }
-      if (toolMode === 'polygon' && drawingPoints.length >= 2) {
-        // Show closing line
-      }
       ctx.stroke();
       ctx.setLineDash([]);
 
-      // Draw vertices
       for (const pt of drawingPoints) {
         ctx.fillStyle = color;
         ctx.beginPath();
@@ -167,10 +177,31 @@ export function PdfCanvas({
       }
       ctx.setLineDash([]);
     }
-  }, [annotations, currentPage, drawingPoints, mousePos, payItems, activePayItemId, toolMode, calibratePoints]);
+
+    // Draw TOC selection rectangle
+    const drawTocRect = (x1: number, y1: number, x2: number, y2: number) => {
+      ctx.strokeStyle = '#3b82f6';
+      ctx.fillStyle = 'rgba(59, 130, 246, 0.1)';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([6, 3]);
+      const rx = Math.min(x1, x2);
+      const ry = Math.min(y1, y2);
+      const rw = Math.abs(x2 - x1);
+      const rh = Math.abs(y2 - y1);
+      ctx.fillRect(rx, ry, rw, rh);
+      ctx.strokeRect(rx, ry, rw, rh);
+      ctx.setLineDash([]);
+    };
+
+    if (tocDragStart && tocDragEnd) {
+      drawTocRect(tocDragStart.x, tocDragStart.y, tocDragEnd.x, tocDragEnd.y);
+    } else if (tocRect) {
+      drawTocRect(tocRect.x1, tocRect.y1, tocRect.x2, tocRect.y2);
+    }
+  }, [annotations, currentPage, drawingPoints, mousePos, payItems, activePayItemId, toolMode, calibratePoints, tocDragStart, tocDragEnd, tocRect]);
 
   const handleCanvasClick = useCallback((e: React.MouseEvent) => {
-    if (toolMode === 'pan' || toolMode === 'select') return;
+    if (toolMode === 'pan' || toolMode === 'select' || toolMode === 'tocSelect') return;
     const pos = getCanvasPos(e);
 
     if (toolMode === 'calibrate') {
@@ -235,20 +266,54 @@ export function PdfCanvas({
       panStart.current = { x: e.clientX, y: e.clientY };
       return;
     }
+
+    // TOC drag
+    if (toolMode === 'tocSelect' && tocDragStart) {
+      const pos = getCanvasPos(e);
+      setTocDragEnd(pos);
+      return;
+    }
+
     const pos = getCanvasPos(e);
     setMousePos(pos);
-  }, [isPanning, getCanvasPos]);
+  }, [isPanning, getCanvasPos, toolMode, tocDragStart]);
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     if (toolMode === 'pan') {
       setIsPanning(true);
       panStart.current = { x: e.clientX, y: e.clientY };
+      return;
     }
-  }, [toolMode]);
+
+    if (toolMode === 'tocSelect') {
+      const pos = getCanvasPos(e);
+      setTocDragStart(pos);
+      setTocDragEnd(null);
+      setTocRect(null);
+    }
+  }, [toolMode, getCanvasPos]);
 
   const handleMouseUp = useCallback(() => {
-    setIsPanning(false);
-  }, []);
+    if (isPanning) {
+      setIsPanning(false);
+      return;
+    }
+
+    if (toolMode === 'tocSelect' && tocDragStart && tocDragEnd) {
+      const w = Math.abs(tocDragEnd.x - tocDragStart.x);
+      const h = Math.abs(tocDragEnd.y - tocDragStart.y);
+      if (w > 20 && h > 20) {
+        setTocRect({
+          x1: tocDragStart.x,
+          y1: tocDragStart.y,
+          x2: tocDragEnd.x,
+          y2: tocDragEnd.y,
+        });
+      }
+      setTocDragStart(null);
+      setTocDragEnd(null);
+    }
+  }, [isPanning, toolMode, tocDragStart, tocDragEnd]);
 
   const submitCalibration = () => {
     const dist = parseFloat(calibrateDistance);
@@ -265,12 +330,22 @@ export function PdfCanvas({
     setShowCalPrompt(false);
   };
 
+  const handleImportToc = () => {
+    if (tocRect && onTocRegionSelected) {
+      onTocRegionSelected(tocRect);
+      setTocRect(null);
+    }
+  };
+
   // Handle right-click to cancel drawing
   const handleContextMenu = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     setDrawingPoints([]);
     setCalibratePoints([]);
     setShowCalPrompt(false);
+    setTocDragStart(null);
+    setTocDragEnd(null);
+    setTocRect(null);
   }, []);
 
   // Keyboard escape to cancel
@@ -280,6 +355,9 @@ export function PdfCanvas({
         setDrawingPoints([]);
         setCalibratePoints([]);
         setShowCalPrompt(false);
+        setTocDragStart(null);
+        setTocDragEnd(null);
+        setTocRect(null);
       }
     };
     window.addEventListener('keydown', handler);
@@ -343,6 +421,30 @@ export function PdfCanvas({
         </div>
       )}
 
+      {/* TOC import prompt */}
+      {tocRect && toolMode === 'tocSelect' && (
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-card border border-border rounded-md shadow-lg p-3 z-20">
+          <p className="text-xs text-muted-foreground mb-2">Import the Table of Contents from the selected area?</p>
+          <div className="flex gap-2">
+            <button onClick={handleImportToc} className="toolbar-btn toolbar-btn-active text-xs">
+              Import TOC
+            </button>
+            <button
+              onClick={() => { setTocRect(null); }}
+              className="toolbar-btn text-xs"
+            >
+              Reselect
+            </button>
+            <button
+              onClick={() => { setTocRect(null); setTocDragStart(null); setTocDragEnd(null); }}
+              className="toolbar-btn text-xs"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Empty state */}
       {!pdf && (
         <div className="absolute inset-0 flex items-center justify-center">
@@ -365,6 +467,7 @@ export function PdfCanvas({
             {toolMode === 'calibrate' && 'Click two points on a known dimension'}
             {toolMode === 'line' && 'Click two points to measure length'}
             {toolMode === 'polygon' && 'Click to place vertices • Double-click to close • Right-click to cancel'}
+            {toolMode === 'tocSelect' && 'Click and drag to select the Table of Contents area'}
           </span>
         </div>
       )}
