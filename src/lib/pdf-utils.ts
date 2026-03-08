@@ -26,13 +26,12 @@ export async function renderPage(
 
 export async function extractTocFromPage(
   pdf: pdfjsLib.PDFDocumentProxy,
-  pageNum: number = 1
+  _pageNum: number = 1
 ): Promise<TocEntry[]> {
-  // Try extracting from multiple pages (some PDFs split TOC across pages)
   const entries: TocEntry[] = [];
-  const maxTocPages = Math.min(3, pdf.numPages);
+  const maxPages = Math.min(3, pdf.numPages);
 
-  for (let pg = 1; pg <= maxTocPages; pg++) {
+  for (let pg = 1; pg <= maxPages; pg++) {
     const page = await pdf.getPage(pg);
     const textContent = await page.getTextContent();
     const textItems = textContent.items
@@ -43,109 +42,121 @@ export async function extractTocFromPage(
         y: (item as any).transform?.[5] ?? 0,
       }));
 
+    // Debug: log all text items
+    console.group(`[TOC Parser] Page ${pg} — ${textItems.length} text items`);
+    for (const item of textItems) {
+      if (item.str.trim()) {
+        console.log(`  x:${Math.round(item.x)} y:${Math.round(item.y)} "${item.str}"`);
+      }
+    }
+    console.groupEnd();
+
     const fullText = textItems.map(t => t.str).join(' ');
 
-    // Check if this page contains an "INDEX OF SHEETS" or similar TOC header
-    const hasTocHeader = /INDEX\s+OF\s+SHEETS|TABLE\s+OF\s+CONTENTS|SHEET\s+INDEX/i.test(fullText);
-    if (pg > 1 && !hasTocHeader && entries.length > 0) break;
+    // ONLY look for "INDEX OF SHEETS" — ignore all other tables
+    if (!/INDEX\s+OF\s+SHEETS/i.test(fullText)) {
+      console.log(`[TOC Parser] Page ${pg}: No "INDEX OF SHEETS" — skipping`);
+      continue;
+    }
 
-    // Strategy 1: "INDEX OF SHEETS" format
-    // Sheet numbers like "C-101", "G-001", "SP-1", "1", "2" paired with descriptions
-    // Pattern: SheetNo (alphanumeric with dashes/dots) followed by description text
-    // The sheet number IS the page ordering — we assign sequential page numbers
+    console.log(`[TOC Parser] Page ${pg}: Found "INDEX OF SHEETS"`);
 
-    // Build lines by grouping text items by Y position
+    // Group text items into rows by Y coordinate
     const yGroups = new Map<number, typeof textItems>();
     for (const item of textItems) {
-      const roundedY = Math.round(item.y / 3) * 3; // group within 3pt
+      const roundedY = Math.round(item.y / 2) * 2;
       if (!yGroups.has(roundedY)) yGroups.set(roundedY, []);
       yGroups.get(roundedY)!.push(item);
     }
 
-    // Sort groups top-to-bottom (highest Y = top of page in PDF coords)
-    const sortedLines = Array.from(yGroups.entries())
+    // Sort rows top-to-bottom (PDF Y is bottom-up → sort descending)
+    const rows = Array.from(yGroups.entries())
       .sort((a, b) => b[0] - a[0])
-      .map(([, items]) => items.sort((a, b) => a.x - b.x));
+      .map(([y, items]) => ({
+        y,
+        items: items.sort((a, b) => a.x - b.x),
+        text: items.sort((a, b) => a.x - b.x).map(i => i.str).join(' ').trim(),
+      }));
 
-    for (const lineItems of sortedLines) {
-      const lineText = lineItems.map(i => i.str).join(' ').trim();
-      if (!lineText || lineText.length < 2) continue;
+    // Find the "INDEX OF SHEETS" header row
+    const headerIdx = rows.findIndex(r => /INDEX\s+OF\s+SHEETS/i.test(r.text));
+    if (headerIdx < 0) continue;
 
-      // Skip header rows
-      if (/SHEET\s*NO|DESCRIPTION|INDEX\s+OF/i.test(lineText)) continue;
+    // Find the column header row: "SHEET NO." and "DESCRIPTION"
+    let sheetNoX: number | null = null;
+    let descX: number | null = null;
+    let dataStartIdx = headerIdx + 1;
 
-      // Pattern: "C-101 COVER SHEET" or "SP-1 SITE PLAN" or "1 GENERAL NOTES"
-      const sheetMatch = lineText.match(
-        /^([A-Z]{0,4}[\-.]?\d{1,4}[A-Z]?)\s+(.{3,})$/i
-      );
-      if (sheetMatch) {
-        const sheetNo = sheetMatch[1].trim();
-        const description = sheetMatch[2].trim()
-          .replace(/[.\s]+$/, '') // trailing dots/spaces
-          .replace(/\s{2,}/g, ' ');
-        if (description.length > 1) {
-          entries.push({
-            label: `${sheetNo} — ${description}`,
-            page: entries.length + 1, // sequential page assignment
-          });
-          continue;
-        }
+    for (let i = headerIdx; i < Math.min(headerIdx + 5, rows.length); i++) {
+      for (const item of rows[i].items) {
+        if (/SHEET\s*NO/i.test(item.str)) sheetNoX = item.x;
+        if (/DESCRIPTION/i.test(item.str)) descX = item.x;
       }
-
-      // Pattern: description then sheet number at end "COVER SHEET C-101"
-      const reverseMatch = lineText.match(
-        /^(.{3,}?)\s+([A-Z]{0,4}[\-.]?\d{1,4}[A-Z]?)\s*$/i
-      );
-      if (reverseMatch) {
-        const description = reverseMatch[1].trim().replace(/[.\s]+$/, '');
-        const sheetNo = reverseMatch[2].trim();
-        if (description.length > 1) {
-          entries.push({
-            label: `${sheetNo} — ${description}`,
-            page: entries.length + 1,
-          });
-          continue;
-        }
+      if (sheetNoX !== null && descX !== null) {
+        dataStartIdx = i + 1;
+        break;
       }
     }
 
-    // Strategy 2: Fallback — generic "Name ... PageNum" patterns
-    if (entries.length === 0) {
-      const patterns = [
-        /([A-Za-z][A-Za-z\s&\/\-,()]+?)[\s.]{3,}(\d{1,3})/g,
-        /([A-Za-z][A-Za-z\s&\/\-,()]{3,}?)\s{2,}(\d{1,3})/g,
-      ];
+    console.log(`[TOC Parser] Columns — SHEET NO x:${sheetNoX?.toFixed(0) ?? '?'}, DESCRIPTION x:${descX?.toFixed(0) ?? '?'}, data rows start at index ${dataStartIdx}`);
 
-      for (const regex of patterns) {
-        let match;
-        while ((match = regex.exec(fullText)) !== null) {
-          const label = match[1].trim();
-          const pageRef = parseInt(match[2], 10);
-          if (pageRef > 0 && pageRef <= pdf.numPages && label.length > 1) {
-            entries.push({ label, page: pageRef });
+    // Parse data rows
+    for (let i = dataStartIdx; i < rows.length; i++) {
+      const row = rows[i];
+
+      // Stop at title block / revision block
+      if (/DESIGNED|DRAWN|CHECKED|APPROVED|REVISIONS|SEAL|PROFESSIONAL|P\.E\./i.test(row.text)) break;
+      if (row.text.length < 2) continue;
+
+      let sheetNo = '';
+      let description = '';
+
+      if (sheetNoX !== null && descX !== null) {
+        // Assign each text item to the nearest column
+        for (const item of row.items) {
+          if (!item.str.trim()) continue;
+          const distSheet = Math.abs(item.x - sheetNoX);
+          const distDesc = Math.abs(item.x - descX);
+          if (distSheet < distDesc) {
+            sheetNo += (sheetNo ? ' ' : '') + item.str.trim();
+          } else {
+            description += (description ? ' ' : '') + item.str.trim();
           }
         }
-        if (entries.length >= 3) break;
+      } else {
+        // No column headers found — treat first token as sheet no
+        const parts = row.text.split(/\s{2,}/);
+        sheetNo = parts[0] || '';
+        description = parts.slice(1).join(' ');
       }
+
+      sheetNo = sheetNo.trim();
+      description = description.trim().replace(/[.\s]+$/, '');
+
+      if (!sheetNo || !description) continue;
+      if (/SHEET\s*NO|DESCRIPTION|INDEX\s+OF/i.test(sheetNo + ' ' + description)) continue;
+
+      console.log(`[TOC Parser] → [${sheetNo}] "${description}"`);
+
+      entries.push({
+        label: `${sheetNo} — ${description}`,
+        page: entries.length + 1,
+      });
     }
   }
 
-  // If sequential assignment resulted in pages > numPages, cap them
+  // Cap to actual page count
   for (const entry of entries) {
     if (entry.page > pdf.numPages) entry.page = pdf.numPages;
   }
 
-  return deduplicateEntries(entries);
-}
+  if (entries.length === 0) {
+    console.log('[TOC Parser] No entries found. Falling back to page list.');
+  } else {
+    console.log(`[TOC Parser] Found ${entries.length} TOC entries.`);
+  }
 
-function deduplicateEntries(entries: TocEntry[]): TocEntry[] {
-  const seen = new Set<string>();
-  return entries.filter(e => {
-    const key = `${e.label}::${e.page}`;
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  }).sort((a, b) => a.page - b.page);
+  return entries;
 }
 
 export function getPageDimensions(
