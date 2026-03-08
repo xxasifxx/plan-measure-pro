@@ -1,4 +1,4 @@
-import { FileUp, MapPin, ChevronRight, DollarSign, Plus, Trash2, Edit2, TableOfContents } from 'lucide-react';
+import { FileUp, MapPin, ChevronRight, DollarSign, Plus, Trash2, Edit2, TableOfContents, X } from 'lucide-react';
 import { useState } from 'react';
 import type { TocEntry, PayItem } from '@/types/project';
 import {
@@ -32,6 +32,7 @@ interface Props {
   projectName: string | null;
   hasPdf?: boolean;
   onImportToc?: () => void;
+  onCloseProject?: () => void;
 }
 
 const UNITS = ['SF', 'LF', 'CY', 'EA', 'SY', 'TON', 'LS'] as const;
@@ -40,7 +41,7 @@ const COLORS = ['#e74c3c', '#f39c12', '#3498db', '#2ecc71', '#9b59b6', '#1abc9c'
 export function ProjectSidebar({
   toc, currentPage, totalPages, onPageChange, onFileUpload,
   payItems, onUpdatePayItems, activePayItemId, onActivePayItemChange, projectName,
-  hasPdf, onImportToc,
+  hasPdf, onImportToc, onCloseProject,
 }: Props) {
   const [editingItem, setEditingItem] = useState<PayItem | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -87,12 +88,23 @@ export function ProjectSidebar({
             Project
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <div className="px-2 group-data-[collapsible=icon]:hidden">
+            <div className="px-2 space-y-1.5 group-data-[collapsible=icon]:hidden">
               <label className="flex items-center gap-2 px-3 py-2 rounded-sm border border-dashed border-sidebar-border cursor-pointer hover:border-sidebar-primary hover:bg-sidebar-accent transition-colors text-xs">
                 <FileUp className="h-3.5 w-3.5" />
                 <span>{projectName || 'Upload PDF'}</span>
                 <input type="file" accept=".pdf" onChange={handleFile} className="hidden" />
               </label>
+              {hasPdf && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-full text-xs h-7 text-destructive hover:text-destructive"
+                  onClick={onCloseProject}
+                >
+                  <X className="h-3 w-3 mr-1" />
+                  Close Project
+                </Button>
+              )}
             </div>
           </SidebarGroupContent>
         </SidebarGroup>

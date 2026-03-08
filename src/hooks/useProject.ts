@@ -83,11 +83,22 @@ export function useProject() {
     }
   }, [project, persist]);
 
+  const closeProject = useCallback(() => {
+    if (project) {
+      storage.clearActiveProject();
+    }
+    setProject(null);
+    setCurrentPage(1);
+    setTotalPages(0);
+    setToolMode('select');
+  }, [project]);
+
   const currentCalibration = project?.calibrations[currentPage] || null;
 
   return {
     project,
     createProject,
+    closeProject,
     payItems,
     updatePayItems,
     currentPage,

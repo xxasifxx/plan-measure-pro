@@ -13,7 +13,7 @@ import type { TocEntry } from '@/types/project';
 
 const Index = () => {
   const {
-    project, createProject, payItems, updatePayItems,
+    project, createProject, closeProject, payItems, updatePayItems,
     currentPage, setCurrentPage, totalPages, setTotalPages,
     toolMode, setToolMode, activePayItemId, setActivePayItemId,
     scale, setScale, setCalibration, addAnnotation, removeAnnotation,
@@ -45,6 +45,11 @@ const Index = () => {
       });
     }
   }, [createProject, setTotalPages, toast]);
+
+  const handleCloseProject = useCallback(() => {
+    setPdf(null);
+    closeProject();
+  }, [closeProject]);
 
   const handleTocRegionSelected = useCallback(async (rect: { x1: number; y1: number; x2: number; y2: number }) => {
     if (!pdf || !project) return;
@@ -98,6 +103,7 @@ const Index = () => {
           projectName={project?.name || null}
           hasPdf={!!pdf}
           onImportToc={() => setToolMode('tocSelect')}
+          onCloseProject={handleCloseProject}
         />
 
         <div className="flex-1 flex flex-col min-w-0">

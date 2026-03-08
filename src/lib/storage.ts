@@ -44,3 +44,7 @@ export function getActiveProjectId(): string | null {
 export function setActiveProjectId(id: string): void {
   localStorage.setItem(ACTIVE_PROJECT_KEY, id);
 }
+
+export function clearActiveProject(): void {
+  localStorage.removeItem(ACTIVE_PROJECT_KEY);
+}
