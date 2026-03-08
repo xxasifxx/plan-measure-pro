@@ -103,6 +103,7 @@ const Index = () => {
           projectName={project?.name || null}
           hasPdf={!!pdf}
           onImportToc={() => setToolMode('tocSelect')}
+          onCloseProject={handleCloseProject}
         />
 
         <div className="flex-1 flex flex-col min-w-0">
