@@ -1,0 +1,126 @@
+import { X, Download, FileText } from 'lucide-react';
+import type { Annotation, PayItem } from '@/types/project';
+import { Button } from '@/components/ui/button';
+import { sfToCY, sfToSY } from '@/lib/geometry';
+
+interface Props {
+  annotations: Annotation[];
+  payItems: PayItem[];
+  projectName: string;
+  contractNumber: string;
+  onClose: () => void;
+  onExportCsv: () => void;
+  onExportPdf: () => void;
+}
+
+interface SummaryRow {
+  payItem: PayItem;
+  totalQuantity: number;
+  displayUnit: string;
+  extendedCost: number;
+  count: number;
+}
+
+export function SummaryPanel({
+  annotations, payItems, projectName, contractNumber,
+  onClose, onExportCsv, onExportPdf
+}: Props) {
+  const rows: SummaryRow[] = payItems.map(item => {
+    const itemAnns = annotations.filter(a => a.payItemId === item.id);
+    let totalQuantity = 0;
+
+    for (const ann of itemAnns) {
+      if (ann.depth && ann.depth > 0) {
+        totalQuantity += sfToCY(ann.measurement, ann.depth);
+      } else if (item.unit === 'SY') {
+        totalQuantity += sfToSY(ann.measurement);
+      } else {
+        totalQuantity += ann.measurement;
+      }
+    }
+
+    return {
+      payItem: item,
+      totalQuantity,
+      displayUnit: item.unit,
+      extendedCost: totalQuantity * item.unitPrice,
+      count: itemAnns.length,
+    };
+  }).filter(r => r.count > 0);
+
+  const grandTotal = rows.reduce((sum, r) => sum + r.extendedCost, 0);
+
+  return (
+    <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="bg-card border border-border rounded-md shadow-xl w-full max-w-3xl max-h-[80vh] overflow-hidden flex flex-col">
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b border-border">
+          <div>
+            <h2 className="text-sm font-bold">Quantity Takeoff Summary</h2>
+            <p className="text-[10px] text-muted-foreground mt-0.5">
+              {projectName} {contractNumber && `• ${contractNumber}`}
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="sm" onClick={onExportCsv} className="text-xs h-7">
+              <Download className="h-3 w-3 mr-1" />CSV
+            </Button>
+            <Button variant="ghost" size="sm" onClick={onExportPdf} className="text-xs h-7">
+              <FileText className="h-3 w-3 mr-1" />PDF
+            </Button>
+            <Button variant="ghost" size="icon" onClick={onClose} className="h-7 w-7">
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Table */}
+        <div className="flex-1 overflow-auto p-4">
+          {rows.length === 0 ? (
+            <p className="text-xs text-muted-foreground text-center py-8">
+              No measurements yet. Draw annotations on the plans to see quantities here.
+            </p>
+          ) : (
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="border-b border-border">
+                  <th className="text-left py-2 px-2 font-semibold text-muted-foreground">Pay Item</th>
+                  <th className="text-right py-2 px-2 font-semibold text-muted-foreground">Count</th>
+                  <th className="text-right py-2 px-2 font-semibold text-muted-foreground">Quantity</th>
+                  <th className="text-right py-2 px-2 font-semibold text-muted-foreground">Unit</th>
+                  <th className="text-right py-2 px-2 font-semibold text-muted-foreground">Unit Price</th>
+                  <th className="text-right py-2 px-2 font-semibold text-muted-foreground">Extended</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map(row => (
+                  <tr key={row.payItem.id} className="border-b border-border/50 hover:bg-muted/30">
+                    <td className="py-2 px-2">
+                      <div className="flex items-center gap-2">
+                        <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: row.payItem.color }} />
+                        {row.payItem.name}
+                      </div>
+                    </td>
+                    <td className="text-right py-2 px-2 font-mono">{row.count}</td>
+                    <td className="text-right py-2 px-2 font-mono">{row.totalQuantity.toFixed(1)}</td>
+                    <td className="text-right py-2 px-2">{row.displayUnit}</td>
+                    <td className="text-right py-2 px-2 font-mono">${row.payItem.unitPrice.toFixed(2)}</td>
+                    <td className="text-right py-2 px-2 font-mono font-semibold">${row.extendedCost.toFixed(2)}</td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr className="border-t-2 border-border">
+                  <td colSpan={5} className="py-3 px-2 font-bold text-right">Grand Total</td>
+                  <td className="py-3 px-2 font-bold text-right font-mono text-primary">
+                    ${grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
