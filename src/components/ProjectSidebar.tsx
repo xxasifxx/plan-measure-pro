@@ -39,7 +39,8 @@ const COLORS = ['#e74c3c', '#f39c12', '#3498db', '#2ecc71', '#9b59b6', '#1abc9c'
 
 export function ProjectSidebar({
   toc, currentPage, totalPages, onPageChange, onFileUpload,
-  payItems, onUpdatePayItems, activePayItemId, onActivePayItemChange, projectName
+  payItems, onUpdatePayItems, activePayItemId, onActivePayItemChange, projectName,
+  hasPdf, onImportToc,
 }: Props) {
   const [editingItem, setEditingItem] = useState<PayItem | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
