@@ -88,12 +88,23 @@ export function ProjectSidebar({
             Project
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <div className="px-2 group-data-[collapsible=icon]:hidden">
+            <div className="px-2 space-y-1.5 group-data-[collapsible=icon]:hidden">
               <label className="flex items-center gap-2 px-3 py-2 rounded-sm border border-dashed border-sidebar-border cursor-pointer hover:border-sidebar-primary hover:bg-sidebar-accent transition-colors text-xs">
                 <FileUp className="h-3.5 w-3.5" />
                 <span>{projectName || 'Upload PDF'}</span>
                 <input type="file" accept=".pdf" onChange={handleFile} className="hidden" />
               </label>
+              {hasPdf && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-full text-xs h-7 text-destructive hover:text-destructive"
+                  onClick={onCloseProject}
+                >
+                  <X className="h-3 w-3 mr-1" />
+                  Close Project
+                </Button>
+              )}
             </div>
           </SidebarGroupContent>
         </SidebarGroup>
