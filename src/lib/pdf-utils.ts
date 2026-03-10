@@ -63,163 +63,111 @@ export async function extractTextFromRegion(
 
   console.log(`[TOC Extract] Found ${textItems.length} text items in selection`);
 
-  // Group by Y coordinate into rows
+  // Group by Y coordinate into rows (tolerance of 5px)
   const yGroups = new Map<number, typeof textItems>();
   for (const item of textItems) {
-    const roundedY = Math.round(item.y / 3) * 3;
+    const roundedY = Math.round(item.y / 5) * 5;
     if (!yGroups.has(roundedY)) yGroups.set(roundedY, []);
     yGroups.get(roundedY)!.push(item);
   }
 
-  // Sort rows top-to-bottom (canvas Y increases downward)
+  // Sort rows top-to-bottom, items left-to-right
   const rows = Array.from(yGroups.entries())
     .sort((a, b) => a[0] - b[0])
-    .map(([y, items]) => ({
-      y,
-      items: items.sort((a, b) => a.x - b.x),
-      text: items.sort((a, b) => a.x - b.x).map(i => i.str).join(' ').trim(),
-    }));
+    .map(([y, items]) => {
+      const sorted = items.sort((a, b) => a.x - b.x);
+      return {
+        y,
+        items: sorted,
+        text: sorted.map(i => i.str).join(' ').trim(),
+      };
+    });
 
   console.log(`[TOC Extract] Grouped into ${rows.length} rows`);
 
-  // Try to detect column layout: find "SHEET NO" and "DESCRIPTION" headers
-  let sheetNoX: number | null = null;
-  let descX: number | null = null;
-  let dataStartIdx = 0;
+  // Header patterns to skip
+  const headerPattern = /SHEET\s*NO|DESCRIPTION|INDEX\s+OF\s+SHEETS|DRAWING\s+LIST/i;
+  // Stop patterns
+  const stopPattern = /DESIGNED|DRAWN|CHECKED|APPROVED|REVISIONS|SEAL|PROFESSIONAL|P\.E\./i;
 
-  for (let i = 0; i < Math.min(5, rows.length); i++) {
-    const rowText = rows[i].text;
-    for (const item of rows[i].items) {
-      // Match various header formats: "SHEET NO", "SHEET NO.", "SHEET", "NO.", "SHT"
-      if (/SHEET/i.test(item.str) && sheetNoX === null) sheetNoX = item.x;
-      if (/^NO\.?$/i.test(item.str) && sheetNoX === null) sheetNoX = item.x;
-      if (/DESCRIPTION/i.test(item.str)) descX = item.x;
+  // Number patterns
+  const singleNumPattern = /^\d+$/;
+  const rangePattern = /^(\d+)\s*[-–]\s*(\d+)$/;
+
+  const entries: TocEntry[] = [];
+
+  for (const row of rows) {
+    console.log(`[TOC] Row: "${row.text}" | items: ${row.items.map(i => `"${i.str}"@${i.x.toFixed(0)}`).join(', ')}`);
+
+    if (headerPattern.test(row.text)) {
+      console.log(`[TOC]   → skipped (header)`);
+      continue;
     }
-    if (sheetNoX !== null && descX !== null) {
-      dataStartIdx = i + 1;
+    if (stopPattern.test(row.text)) {
+      console.log(`[TOC]   → stop (footer)`);
       break;
     }
-    // Skip header rows like "INDEX OF SHEETS"
-    if (/INDEX\s+OF\s+SHEETS/i.test(rowText) || /SHEET\s*NO/i.test(rowText) || /DESCRIPTION/i.test(rowText)) {
-      dataStartIdx = i + 1;
-    }
-  }
-
-  // If we found DESCRIPTION but not SHEET NO, infer sheetNoX from data rows
-  if (descX !== null && sheetNoX === null) {
-    for (let i = dataStartIdx; i < Math.min(dataStartIdx + 5, rows.length); i++) {
-      for (const item of rows[i].items) {
-        if (/^\d+(-\d+)?$/.test(item.str.trim()) && item.x < descX) {
-          sheetNoX = item.x;
-          break;
-        }
-      }
-      if (sheetNoX !== null) break;
-    }
-  }
-
-  console.log(`[TOC Extract] Columns — SHEET NO x:${sheetNoX?.toFixed(0) ?? '?'}, DESCRIPTION x:${descX?.toFixed(0) ?? '?'}, data starts at row ${dataStartIdx}`);
-
-  // Parse raw rows into individual entries
-  const rawEntries: { sheetNo: string; description: string }[] = [];
-
-  for (let i = dataStartIdx; i < rows.length; i++) {
-    const row = rows[i];
     if (row.text.length < 2) continue;
-    if (/SHEET\s*NO|DESCRIPTION|INDEX\s+OF/i.test(row.text)) continue;
-    if (/DESIGNED|DRAWN|CHECKED|APPROVED|REVISIONS|SEAL|PROFESSIONAL|P\.E\./i.test(row.text)) break;
 
-    let sheetNo = '';
-    let description = '';
+    // Find number or range among text items
+    let startPage: number | null = null;
+    let endPage: number | null = null;
+    const descParts: string[] = [];
 
-    if (sheetNoX !== null && descX !== null) {
-      // Use midpoint between columns as boundary
-      const boundary = (sheetNoX + descX) / 2;
-      for (const item of row.items) {
-        if (!item.str.trim()) continue;
-        if (item.x < boundary) {
-          sheetNo += (sheetNo ? ' ' : '') + item.str.trim();
-        } else {
-          description += (description ? ' ' : '') + item.str.trim();
-        }
+    for (const item of row.items) {
+      const trimmed = item.str.trim();
+      if (!trimmed) continue;
+
+      const rangeMatch = trimmed.match(rangePattern);
+      if (rangeMatch && startPage === null) {
+        startPage = parseInt(rangeMatch[1]);
+        endPage = parseInt(rangeMatch[2]);
+        continue;
       }
-    } else if (descX !== null) {
-      // Only have description column — items left of it are sheet numbers
-      for (const item of row.items) {
-        if (!item.str.trim()) continue;
-        if (item.x < descX - 20) {
-          sheetNo += (sheetNo ? ' ' : '') + item.str.trim();
-        } else {
-          description += (description ? ' ' : '') + item.str.trim();
-        }
+
+      if (singleNumPattern.test(trimmed) && startPage === null) {
+        startPage = parseInt(trimmed);
+        endPage = startPage;
+        continue;
       }
-    } else {
-      // Fallback: first token that looks like a sheet number, rest is description
-      const match = row.text.match(/^(\d+(?:\s*[-–]\s*\d+)?)\s+(.+)/);
-      if (match) {
-        sheetNo = match[1];
-        description = match[2];
+
+      // Not a number — part of description
+      descParts.push(trimmed);
+    }
+
+    // Fallback: try regex on joined text
+    if (startPage === null) {
+      const joinedMatch = row.text.match(/^(\d+)\s*[-–]\s*(\d+)\s+(.+)/);
+      if (joinedMatch) {
+        startPage = parseInt(joinedMatch[1]);
+        endPage = parseInt(joinedMatch[2]);
+        descParts.length = 0;
+        descParts.push(joinedMatch[3]);
       } else {
-        const parts = row.text.split(/\s{2,}/);
-        sheetNo = parts[0] || '';
-        description = parts.slice(1).join(' ');
+        const singleMatch = row.text.match(/^(\d+)\s+(.+)/);
+        if (singleMatch) {
+          startPage = parseInt(singleMatch[1]);
+          endPage = startPage;
+          descParts.length = 0;
+          descParts.push(singleMatch[2]);
+        }
       }
     }
 
-    sheetNo = sheetNo.trim();
-    description = description.trim().replace(/[.\s]+$/, '');
+    const description = descParts.join(' ').replace(/[.\s]+$/, '').trim();
 
-    if (!sheetNo || !description) continue;
-
-    console.log(`[TOC Extract] → [${sheetNo}] "${description}"`);
-    rawEntries.push({ sheetNo, description });
-  }
-
-  // Group consecutive entries with the same description into page ranges
-  const entries: TocEntry[] = [];
-  let pageCounter = 1;
-
-  for (let i = 0; i < rawEntries.length; i++) {
-    const current = rawEntries[i];
-    const startPage = pageCounter;
-
-    // Check for "THRU" or hyphenated ranges in sheet number (e.g., "C-101 THRU C-105")
-    const thruMatch = current.sheetNo.match(/(.+?)\s*(?:THRU|THROUGH|-)\s*(.+)/i);
-    if (thruMatch) {
-      // Estimate page count from sheet numbers
-      const startNum = parseInt(thruMatch[1].replace(/\D/g, '')) || 0;
-      const endNum = parseInt(thruMatch[2].replace(/\D/g, '')) || 0;
-      const rangeSize = endNum > startNum ? endNum - startNum + 1 : 1;
-      pageCounter += rangeSize;
-      entries.push({
-        label: current.description,
-        sheetNo: current.sheetNo,
-        startPage,
-        endPage: startPage + rangeSize - 1,
-      });
+    if (startPage === null || !description) {
+      console.log(`[TOC]   → skipped (no number or no description)`);
       continue;
     }
 
-    // Group consecutive entries with same description
-    let endIdx = i;
-    while (endIdx + 1 < rawEntries.length && rawEntries[endIdx + 1].description === current.description) {
-      endIdx++;
-    }
-
-    const groupSize = endIdx - i + 1;
-    const sheetNos = groupSize === 1
-      ? current.sheetNo
-      : `${current.sheetNo} - ${rawEntries[endIdx].sheetNo}`;
-
+    console.log(`[TOC]   → pages ${startPage}-${endPage} "${description}"`);
     entries.push({
-      label: current.description,
-      sheetNo: sheetNos,
+      label: description,
+      sheetNo: startPage === endPage ? `${startPage}` : `${startPage}-${endPage}`,
       startPage,
-      endPage: startPage + groupSize - 1,
+      endPage: endPage!,
     });
-
-    pageCounter += groupSize;
-    i = endIdx; // skip grouped entries
   }
 
   // Cap to actual page count
