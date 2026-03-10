@@ -1,6 +1,9 @@
 import { X, Download, FileText } from 'lucide-react';
+import { useState } from 'react';
 import type { Annotation, PayItem } from '@/types/project';
+import { UNIT_LABELS } from '@/types/project';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { sfToCY, sfToSY } from '@/lib/geometry';
 
 interface Props {
@@ -19,13 +22,28 @@ interface SummaryRow {
   displayUnit: string;
   extendedCost: number;
   count: number;
+  manualQuantity?: number;
 }
 
 export function SummaryPanel({
   annotations, payItems, projectName, contractNumber,
   onClose, onExportCsv, onExportPdf
 }: Props) {
+  const [manualQuantities, setManualQuantities] = useState<Record<string, number>>({});
+
   const rows: SummaryRow[] = payItems.map(item => {
+    if (!item.drawable) {
+      const manualQty = manualQuantities[item.id] ?? item.contractQuantity ?? 0;
+      return {
+        payItem: item,
+        totalQuantity: manualQty,
+        displayUnit: UNIT_LABELS[item.unit],
+        extendedCost: manualQty * item.unitPrice,
+        count: 0,
+        manualQuantity: manualQty,
+      };
+    }
+
     const itemAnns = annotations.filter(a => a.payItemId === item.id);
     let totalQuantity = 0;
 
@@ -42,13 +60,17 @@ export function SummaryPanel({
     return {
       payItem: item,
       totalQuantity,
-      displayUnit: item.unit,
+      displayUnit: UNIT_LABELS[item.unit],
       extendedCost: totalQuantity * item.unitPrice,
       count: itemAnns.length,
     };
-  }).filter(r => r.count > 0);
+  }).filter(r => r.count > 0 || !r.payItem.drawable);
 
   const grandTotal = rows.reduce((sum, r) => sum + r.extendedCost, 0);
+
+  const updateManualQty = (itemId: string, value: number) => {
+    setManualQuantities(prev => ({ ...prev, [itemId]: value }));
+  };
 
   return (
     <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -84,6 +106,7 @@ export function SummaryPanel({
             <table className="w-full text-xs">
               <thead>
                 <tr className="border-b border-border">
+                  <th className="text-left py-2 px-2 font-semibold text-muted-foreground">Item Code</th>
                   <th className="text-left py-2 px-2 font-semibold text-muted-foreground">Pay Item</th>
                   <th className="text-right py-2 px-2 font-semibold text-muted-foreground">Count</th>
                   <th className="text-right py-2 px-2 font-semibold text-muted-foreground">Quantity</th>
@@ -95,23 +118,39 @@ export function SummaryPanel({
               <tbody>
                 {rows.map(row => (
                   <tr key={row.payItem.id} className="border-b border-border/50 hover:bg-muted/30">
+                    <td className="py-2 px-2 font-mono text-muted-foreground">{row.payItem.itemCode || '—'}</td>
                     <td className="py-2 px-2">
                       <div className="flex items-center gap-2">
                         <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: row.payItem.color }} />
                         {row.payItem.name}
                       </div>
                     </td>
-                    <td className="text-right py-2 px-2 font-mono">{row.count}</td>
-                    <td className="text-right py-2 px-2 font-mono">{row.totalQuantity.toFixed(1)}</td>
+                    <td className="text-right py-2 px-2 font-mono">
+                      {row.payItem.drawable ? row.count : '—'}
+                    </td>
+                    <td className="text-right py-2 px-2 font-mono">
+                      {row.payItem.drawable ? (
+                        row.totalQuantity.toFixed(1)
+                      ) : (
+                        <Input
+                          type="number"
+                          value={row.manualQuantity ?? 0}
+                          onChange={e => updateManualQty(row.payItem.id, parseFloat(e.target.value) || 0)}
+                          className="h-6 w-20 text-xs text-right inline-block"
+                        />
+                      )}
+                    </td>
                     <td className="text-right py-2 px-2">{row.displayUnit}</td>
                     <td className="text-right py-2 px-2 font-mono">${row.payItem.unitPrice.toFixed(2)}</td>
-                    <td className="text-right py-2 px-2 font-mono font-semibold">${row.extendedCost.toFixed(2)}</td>
+                    <td className="text-right py-2 px-2 font-mono font-semibold">
+                      ${(row.payItem.drawable ? row.extendedCost : (row.manualQuantity ?? 0) * row.payItem.unitPrice).toFixed(2)}
+                    </td>
                   </tr>
                 ))}
               </tbody>
               <tfoot>
                 <tr className="border-t-2 border-border">
-                  <td colSpan={5} className="py-3 px-2 font-bold text-right">Grand Total</td>
+                  <td colSpan={6} className="py-3 px-2 font-bold text-right">Grand Total</td>
                   <td className="py-3 px-2 font-bold text-right font-mono text-primary">
                     ${grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                   </td>

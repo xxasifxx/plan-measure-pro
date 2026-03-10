@@ -3,7 +3,9 @@ import {
   ChevronLeft, ChevronRight, Download, BarChart3
 } from 'lucide-react';
 import type { ToolMode, PayItem, Calibration } from '@/types/project';
+import { UNIT_LABELS } from '@/types/project';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
 
 interface Props {
   toolMode: ToolMode;
@@ -31,6 +33,20 @@ export function Toolbar({
   toolMode, onToolChange, currentPage, totalPages, onPageChange,
   scale, onScaleChange, calibration, activePayItem, onShowSummary, onExport
 }: Props) {
+  const { toast } = useToast();
+
+  const handleToolChange = (mode: ToolMode) => {
+    if ((mode === 'line' || mode === 'polygon') && activePayItem && !activePayItem.drawable) {
+      toast({
+        title: 'Non-drawable pay item',
+        description: `"${activePayItem.name}" (${UNIT_LABELS[activePayItem.unit]}) cannot be drawn on plans. Select a drawable item (SF, LF, CY, SY) first.`,
+        variant: 'destructive',
+      });
+      return;
+    }
+    onToolChange(mode);
+  };
+
   return (
     <div className="flex items-center gap-1 px-2 py-1.5 bg-card border-b border-border overflow-x-auto">
       {/* Tool buttons */}
@@ -38,7 +54,7 @@ export function Toolbar({
         {tools.map(t => (
           <button
             key={t.mode}
-            onClick={() => onToolChange(t.mode)}
+            onClick={() => handleToolChange(t.mode)}
             title={t.label}
             className={`toolbar-btn ${toolMode === t.mode ? 'toolbar-btn-active' : ''}`}
           >
@@ -55,6 +71,12 @@ export function Toolbar({
           <span className="text-[10px] font-medium text-muted-foreground truncate max-w-[100px]">
             {activePayItem.name}
           </span>
+          <span className="text-[9px] text-muted-foreground/60">
+            {UNIT_LABELS[activePayItem.unit]}
+          </span>
+          {!activePayItem.drawable && (
+            <span className="text-[9px] text-destructive font-medium">manual</span>
+          )}
         </div>
       )}
 
