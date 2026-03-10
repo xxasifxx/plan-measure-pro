@@ -1,4 +1,4 @@
-import { FileUp, MapPin, ChevronRight, DollarSign, Plus, Trash2, Edit2, TableOfContents, X } from 'lucide-react';
+import { FileUp, MapPin, ChevronRight, ChevronDown, DollarSign, Plus, Trash2, Edit2, TableOfContents, X } from 'lucide-react';
 import { useState } from 'react';
 import type { TocEntry, PayItem } from '@/types/project';
 import {
@@ -131,7 +131,7 @@ export function ProjectSidebar({
           </>
         )}
 
-        {/* TOC */}
+        {/* TOC Sections */}
         {toc.length > 0 && (
           <>
             <SidebarSeparator />
@@ -142,18 +142,12 @@ export function ProjectSidebar({
               <SidebarGroupContent>
                 <SidebarMenu>
                   {toc.map((entry, i) => (
-                    <SidebarMenuItem key={i}>
-                      <SidebarMenuButton
-                        onClick={() => onPageChange(entry.page)}
-                        isActive={currentPage === entry.page}
-                        tooltip={entry.label}
-                        className="text-xs"
-                      >
-                        <ChevronRight className="h-3 w-3 shrink-0" />
-                        <span className="truncate">{entry.label}</span>
-                        <span className="ml-auto text-[10px] text-sidebar-foreground/50">{entry.page}</span>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
+                    <TocSectionItem
+                      key={i}
+                      entry={entry}
+                      currentPage={currentPage}
+                      onPageChange={onPageChange}
+                    />
                   ))}
                 </SidebarMenu>
               </SidebarGroupContent>
@@ -320,5 +314,56 @@ function PayItemForm({ item, onSave, onCancel }: {
         <Button size="sm" onClick={() => onSave(form)} className="text-xs h-7" disabled={!form.name}>Save</Button>
       </div>
     </div>
+  );
+}
+
+function TocSectionItem({ entry, currentPage, onPageChange }: {
+  entry: TocEntry;
+  currentPage: number;
+  onPageChange: (page: number) => void;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const isRange = entry.endPage > entry.startPage;
+  const isActive = currentPage >= entry.startPage && currentPage <= entry.endPage;
+
+  return (
+    <SidebarMenuItem>
+      <SidebarMenuButton
+        onClick={() => {
+          if (isRange) setExpanded(!expanded);
+          onPageChange(entry.startPage);
+        }}
+        isActive={isActive}
+        tooltip={`${entry.label} (${entry.sheetNo})`}
+        className="text-xs"
+      >
+        {isRange ? (
+          expanded ? <ChevronDown className="h-3 w-3 shrink-0" /> : <ChevronRight className="h-3 w-3 shrink-0" />
+        ) : (
+          <ChevronRight className="h-3 w-3 shrink-0" />
+        )}
+        <span className="truncate flex-1">{entry.label}</span>
+        <span className="ml-auto text-[10px] text-sidebar-foreground/50">
+          {isRange ? `${entry.startPage}-${entry.endPage}` : entry.startPage}
+        </span>
+      </SidebarMenuButton>
+      {isRange && expanded && (
+        <div className="ml-4 border-l border-sidebar-border">
+          {Array.from({ length: entry.endPage - entry.startPage + 1 }, (_, j) => {
+            const pg = entry.startPage + j;
+            return (
+              <SidebarMenuButton
+                key={pg}
+                onClick={() => onPageChange(pg)}
+                isActive={currentPage === pg}
+                className="text-xs pl-3"
+              >
+                <span>Page {pg}</span>
+              </SidebarMenuButton>
+            );
+          })}
+        </div>
+      )}
+    </SidebarMenuItem>
   );
 }

@@ -104,14 +104,13 @@ export async function extractTextFromRegion(
 
   console.log(`[TOC Extract] Columns — SHEET NO x:${sheetNoX?.toFixed(0) ?? '?'}, DESCRIPTION x:${descX?.toFixed(0) ?? '?'}, data starts at row ${dataStartIdx}`);
 
-  const entries: TocEntry[] = [];
+  // Parse raw rows into individual entries
+  const rawEntries: { sheetNo: string; description: string }[] = [];
 
   for (let i = dataStartIdx; i < rows.length; i++) {
     const row = rows[i];
-    // Skip empty or header-like rows
     if (row.text.length < 2) continue;
     if (/SHEET\s*NO|DESCRIPTION|INDEX\s+OF/i.test(row.text)) continue;
-    // Stop at title block indicators
     if (/DESIGNED|DRAWN|CHECKED|APPROVED|REVISIONS|SEAL|PROFESSIONAL|P\.E\./i.test(row.text)) break;
 
     let sheetNo = '';
@@ -129,7 +128,6 @@ export async function extractTextFromRegion(
         }
       }
     } else {
-      // Fallback: split on large whitespace gaps
       const parts = row.text.split(/\s{2,}/);
       sheetNo = parts[0] || '';
       description = parts.slice(1).join(' ');
@@ -141,19 +139,63 @@ export async function extractTextFromRegion(
     if (!sheetNo || !description) continue;
 
     console.log(`[TOC Extract] → [${sheetNo}] "${description}"`);
+    rawEntries.push({ sheetNo, description });
+  }
+
+  // Group consecutive entries with the same description into page ranges
+  const entries: TocEntry[] = [];
+  let pageCounter = 1;
+
+  for (let i = 0; i < rawEntries.length; i++) {
+    const current = rawEntries[i];
+    const startPage = pageCounter;
+
+    // Check for "THRU" or hyphenated ranges in sheet number (e.g., "C-101 THRU C-105")
+    const thruMatch = current.sheetNo.match(/(.+?)\s*(?:THRU|THROUGH|-)\s*(.+)/i);
+    if (thruMatch) {
+      // Estimate page count from sheet numbers
+      const startNum = parseInt(thruMatch[1].replace(/\D/g, '')) || 0;
+      const endNum = parseInt(thruMatch[2].replace(/\D/g, '')) || 0;
+      const rangeSize = endNum > startNum ? endNum - startNum + 1 : 1;
+      pageCounter += rangeSize;
+      entries.push({
+        label: current.description,
+        sheetNo: current.sheetNo,
+        startPage,
+        endPage: startPage + rangeSize - 1,
+      });
+      continue;
+    }
+
+    // Group consecutive entries with same description
+    let endIdx = i;
+    while (endIdx + 1 < rawEntries.length && rawEntries[endIdx + 1].description === current.description) {
+      endIdx++;
+    }
+
+    const groupSize = endIdx - i + 1;
+    const sheetNos = groupSize === 1
+      ? current.sheetNo
+      : `${current.sheetNo} - ${rawEntries[endIdx].sheetNo}`;
 
     entries.push({
-      label: `${sheetNo} — ${description}`,
-      page: entries.length + 1,
+      label: current.description,
+      sheetNo: sheetNos,
+      startPage,
+      endPage: startPage + groupSize - 1,
     });
+
+    pageCounter += groupSize;
+    i = endIdx; // skip grouped entries
   }
 
   // Cap to actual page count
   for (const entry of entries) {
-    if (entry.page > pdf.numPages) entry.page = pdf.numPages;
+    if (entry.startPage > pdf.numPages) entry.startPage = pdf.numPages;
+    if (entry.endPage > pdf.numPages) entry.endPage = pdf.numPages;
   }
 
-  console.log(`[TOC Extract] Parsed ${entries.length} TOC entries`);
+  console.log(`[TOC Extract] Parsed ${entries.length} TOC sections`);
   return entries;
 }
 
