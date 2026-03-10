@@ -1,6 +1,8 @@
 export interface TocEntry {
   label: string;
-  page: number;
+  sheetNo: string;
+  startPage: number;
+  endPage: number;
 }
 
 export interface PayItem {

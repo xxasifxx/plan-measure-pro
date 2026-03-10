@@ -423,7 +423,7 @@ export function PdfCanvas({
 
       {/* TOC import prompt */}
       {tocRect && toolMode === 'tocSelect' && (
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-card border border-border rounded-md shadow-lg p-3 z-20">
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-card border border-border rounded-md shadow-lg p-3 z-50">
           <p className="text-xs text-muted-foreground mb-2">Import the Table of Contents from the selected area?</p>
           <div className="flex gap-2">
             <button onClick={handleImportToc} className="toolbar-btn toolbar-btn-active text-xs">
