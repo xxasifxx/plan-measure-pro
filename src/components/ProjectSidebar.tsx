@@ -1,6 +1,7 @@
-import { FileUp, MapPin, ChevronRight, ChevronDown, DollarSign, Plus, Trash2, Edit2, TableOfContents, X } from 'lucide-react';
+import { FileUp, MapPin, ChevronRight, ChevronDown, Plus, Trash2, Edit2, TableOfContents, X, PenTool, Hash } from 'lucide-react';
 import { useState } from 'react';
-import type { TocEntry, PayItem } from '@/types/project';
+import type { TocEntry, PayItem, PayItemUnit } from '@/types/project';
+import { isDrawableUnit, UNIT_LABELS } from '@/types/project';
 import {
   Sidebar,
   SidebarContent,
@@ -35,7 +36,7 @@ interface Props {
   onCloseProject?: () => void;
 }
 
-const UNITS = ['SF', 'LF', 'CY', 'EA', 'SY', 'TON', 'LS'] as const;
+const ALL_UNITS: PayItemUnit[] = ['SF', 'LF', 'CY', 'SY', 'EA', 'TON', 'LS', 'USD', 'MNTH'];
 const COLORS = ['#e74c3c', '#f39c12', '#3498db', '#2ecc71', '#9b59b6', '#1abc9c', '#e67e22', '#34495e', '#e91e63', '#00bcd4'];
 
 export function ProjectSidebar({
@@ -202,8 +203,17 @@ export function ProjectSidebar({
                   }`}
                 >
                   <div className="h-3 w-3 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
-                  <span className="truncate flex-1 text-sidebar-foreground">{item.name}</span>
-                  <span className="text-[10px] text-sidebar-foreground/50">{item.unit}</span>
+                  {item.drawable ? (
+                    <PenTool className="h-2.5 w-2.5 shrink-0 text-sidebar-foreground/40" />
+                  ) : (
+                    <Hash className="h-2.5 w-2.5 shrink-0 text-sidebar-foreground/40" />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <span className="truncate block text-sidebar-foreground">
+                      {item.itemCode ? `${item.itemCode} · ` : ''}{item.name}
+                    </span>
+                  </div>
+                  <span className="text-[10px] text-sidebar-foreground/50 shrink-0">{UNIT_LABELS[item.unit]}</span>
                   <button
                     onClick={(e) => { e.stopPropagation(); setEditingItem(item); setDialogOpen(true); }}
                     className="opacity-0 group-hover:opacity-100 hover:text-sidebar-primary"
@@ -228,10 +238,12 @@ export function ProjectSidebar({
                     onClick={() => {
                       setEditingItem({
                         id: crypto.randomUUID(),
+                        itemCode: '',
                         name: '',
                         unit: 'SF',
                         unitPrice: 0,
                         color: COLORS[payItems.length % COLORS.length],
+                        drawable: true,
                       });
                     }}
                   >
@@ -263,24 +275,41 @@ function PayItemForm({ item, onSave, onCancel }: {
 }) {
   const [form, setForm] = useState(item);
 
+  const handleUnitChange = (unit: PayItemUnit) => {
+    setForm({ ...form, unit, drawable: isDrawableUnit(unit) });
+  };
+
   return (
     <div className="space-y-3">
+      <div>
+        <Label className="text-xs">Item Code</Label>
+        <Input
+          value={form.itemCode}
+          onChange={e => setForm({ ...form, itemCode: e.target.value })}
+          className="h-8 text-xs"
+          placeholder="e.g. 202-0002"
+        />
+      </div>
       <div>
         <Label className="text-xs">Name</Label>
         <Input
           value={form.name}
           onChange={e => setForm({ ...form, name: e.target.value })}
           className="h-8 text-xs"
-          placeholder="e.g. HMA Paving"
+          placeholder="e.g. STRIPPING TOPSOIL"
         />
       </div>
       <div className="grid grid-cols-2 gap-2">
         <div>
           <Label className="text-xs">Unit</Label>
-          <Select value={form.unit} onValueChange={v => setForm({ ...form, unit: v as PayItem['unit'] })}>
+          <Select value={form.unit} onValueChange={v => handleUnitChange(v as PayItemUnit)}>
             <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
             <SelectContent>
-              {UNITS.map(u => <SelectItem key={u} value={u}>{u}</SelectItem>)}
+              {ALL_UNITS.map(u => (
+                <SelectItem key={u} value={u}>
+                  {UNIT_LABELS[u]} {isDrawableUnit(u) ? '(drawable)' : ''}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -293,6 +322,16 @@ function PayItemForm({ item, onSave, onCancel }: {
             className="h-8 text-xs"
           />
         </div>
+      </div>
+      <div>
+        <Label className="text-xs">Contract Quantity</Label>
+        <Input
+          type="number"
+          value={form.contractQuantity ?? ''}
+          onChange={e => setForm({ ...form, contractQuantity: e.target.value ? parseFloat(e.target.value) : undefined })}
+          className="h-8 text-xs"
+          placeholder="Optional"
+        />
       </div>
       <div>
         <Label className="text-xs">Color</Label>
@@ -309,6 +348,11 @@ function PayItemForm({ item, onSave, onCancel }: {
           ))}
         </div>
       </div>
+      {!form.drawable && (
+        <p className="text-[10px] text-muted-foreground">
+          Non-drawable item — quantity must be entered manually.
+        </p>
+      )}
       <div className="flex gap-2 justify-end">
         <Button variant="ghost" size="sm" onClick={onCancel} className="text-xs h-7">Cancel</Button>
         <Button size="sm" onClick={() => onSave(form)} className="text-xs h-7" disabled={!form.name}>Save</Button>
