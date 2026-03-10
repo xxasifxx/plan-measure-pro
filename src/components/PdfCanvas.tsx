@@ -396,7 +396,7 @@ export function PdfCanvas({
 
       {/* Calibration distance prompt */}
       {showCalPrompt && (
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-card border border-border rounded-md shadow-lg p-3 z-20">
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-card border border-border rounded-md shadow-lg p-3 z-50">
           <p className="text-xs text-muted-foreground mb-2">Enter the real-world distance between the two points (feet):</p>
           <div className="flex gap-2">
             <input
