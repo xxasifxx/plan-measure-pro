@@ -88,8 +88,11 @@ export async function extractTextFromRegion(
   let dataStartIdx = 0;
 
   for (let i = 0; i < Math.min(5, rows.length); i++) {
+    const rowText = rows[i].text;
     for (const item of rows[i].items) {
-      if (/SHEET\s*NO/i.test(item.str)) sheetNoX = item.x;
+      // Match various header formats: "SHEET NO", "SHEET NO.", "SHEET", "NO.", "SHT"
+      if (/SHEET/i.test(item.str) && sheetNoX === null) sheetNoX = item.x;
+      if (/^NO\.?$/i.test(item.str) && sheetNoX === null) sheetNoX = item.x;
       if (/DESCRIPTION/i.test(item.str)) descX = item.x;
     }
     if (sheetNoX !== null && descX !== null) {
@@ -97,8 +100,21 @@ export async function extractTextFromRegion(
       break;
     }
     // Skip header rows like "INDEX OF SHEETS"
-    if (/INDEX\s+OF\s+SHEETS/i.test(rows[i].text)) {
+    if (/INDEX\s+OF\s+SHEETS/i.test(rowText) || /SHEET\s*NO/i.test(rowText) || /DESCRIPTION/i.test(rowText)) {
       dataStartIdx = i + 1;
+    }
+  }
+
+  // If we found DESCRIPTION but not SHEET NO, infer sheetNoX from data rows
+  if (descX !== null && sheetNoX === null) {
+    for (let i = dataStartIdx; i < Math.min(dataStartIdx + 5, rows.length); i++) {
+      for (const item of rows[i].items) {
+        if (/^\d+(-\d+)?$/.test(item.str.trim()) && item.x < descX) {
+          sheetNoX = item.x;
+          break;
+        }
+      }
+      if (sheetNoX !== null) break;
     }
   }
 
@@ -117,20 +133,37 @@ export async function extractTextFromRegion(
     let description = '';
 
     if (sheetNoX !== null && descX !== null) {
+      // Use midpoint between columns as boundary
+      const boundary = (sheetNoX + descX) / 2;
       for (const item of row.items) {
         if (!item.str.trim()) continue;
-        const distSheet = Math.abs(item.x - sheetNoX);
-        const distDesc = Math.abs(item.x - descX);
-        if (distSheet < distDesc) {
+        if (item.x < boundary) {
+          sheetNo += (sheetNo ? ' ' : '') + item.str.trim();
+        } else {
+          description += (description ? ' ' : '') + item.str.trim();
+        }
+      }
+    } else if (descX !== null) {
+      // Only have description column — items left of it are sheet numbers
+      for (const item of row.items) {
+        if (!item.str.trim()) continue;
+        if (item.x < descX - 20) {
           sheetNo += (sheetNo ? ' ' : '') + item.str.trim();
         } else {
           description += (description ? ' ' : '') + item.str.trim();
         }
       }
     } else {
-      const parts = row.text.split(/\s{2,}/);
-      sheetNo = parts[0] || '';
-      description = parts.slice(1).join(' ');
+      // Fallback: first token that looks like a sheet number, rest is description
+      const match = row.text.match(/^(\d+(?:\s*[-–]\s*\d+)?)\s+(.+)/);
+      if (match) {
+        sheetNo = match[1];
+        description = match[2];
+      } else {
+        const parts = row.text.split(/\s{2,}/);
+        sheetNo = parts[0] || '';
+        description = parts.slice(1).join(' ');
+      }
     }
 
     sheetNo = sheetNo.trim();
