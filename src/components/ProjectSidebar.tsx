@@ -131,7 +131,7 @@ export function ProjectSidebar({
           </>
         )}
 
-        {/* TOC */}
+        {/* TOC Sections */}
         {toc.length > 0 && (
           <>
             <SidebarSeparator />
@@ -141,20 +141,54 @@ export function ProjectSidebar({
               </SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {toc.map((entry, i) => (
-                    <SidebarMenuItem key={i}>
-                      <SidebarMenuButton
-                        onClick={() => onPageChange(entry.page)}
-                        isActive={currentPage === entry.page}
-                        tooltip={entry.label}
-                        className="text-xs"
-                      >
-                        <ChevronRight className="h-3 w-3 shrink-0" />
-                        <span className="truncate">{entry.label}</span>
-                        <span className="ml-auto text-[10px] text-sidebar-foreground/50">{entry.page}</span>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
+                  {toc.map((entry, i) => {
+                    const isRange = entry.endPage > entry.startPage;
+                    const isActive = currentPage >= entry.startPage && currentPage <= entry.endPage;
+                    const [expanded, setExpanded] = useState(false);
+
+                    return (
+                      <SidebarMenuItem key={i}>
+                        <SidebarMenuButton
+                          onClick={() => {
+                            if (isRange) {
+                              setExpanded(!expanded);
+                            }
+                            onPageChange(entry.startPage);
+                          }}
+                          isActive={isActive}
+                          tooltip={`${entry.label} (${entry.sheetNo})`}
+                          className="text-xs"
+                        >
+                          {isRange ? (
+                            expanded ? <ChevronDown className="h-3 w-3 shrink-0" /> : <ChevronRight className="h-3 w-3 shrink-0" />
+                          ) : (
+                            <ChevronRight className="h-3 w-3 shrink-0" />
+                          )}
+                          <span className="truncate flex-1">{entry.label}</span>
+                          <span className="ml-auto text-[10px] text-sidebar-foreground/50">
+                            {isRange ? `${entry.startPage}-${entry.endPage}` : entry.startPage}
+                          </span>
+                        </SidebarMenuButton>
+                        {isRange && expanded && (
+                          <div className="ml-4 border-l border-sidebar-border">
+                            {Array.from({ length: entry.endPage - entry.startPage + 1 }, (_, j) => {
+                              const pg = entry.startPage + j;
+                              return (
+                                <SidebarMenuButton
+                                  key={pg}
+                                  onClick={() => onPageChange(pg)}
+                                  isActive={currentPage === pg}
+                                  className="text-xs pl-3"
+                                >
+                                  <span>Page {pg}</span>
+                                </SidebarMenuButton>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </SidebarMenuItem>
+                    );
+                  })}
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
