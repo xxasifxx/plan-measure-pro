@@ -34,6 +34,7 @@ interface Props {
   hasPdf?: boolean;
   onImportToc?: () => void;
   onCloseProject?: () => void;
+  onImportPayItems?: () => void;
 }
 
 const ALL_UNITS: PayItemUnit[] = ['SF', 'LF', 'CY', 'SY', 'EA', 'TON', 'LS', 'USD', 'MNTH'];
@@ -42,7 +43,7 @@ const COLORS = ['#e74c3c', '#f39c12', '#3498db', '#2ecc71', '#9b59b6', '#1abc9c'
 export function ProjectSidebar({
   toc, currentPage, totalPages, onPageChange, onFileUpload,
   payItems, onUpdatePayItems, activePayItemId, onActivePayItemChange, projectName,
-  hasPdf, onImportToc, onCloseProject,
+  hasPdf, onImportToc, onCloseProject, onImportPayItems,
 }: Props) {
   const [editingItem, setEditingItem] = useState<PayItem | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -192,6 +193,17 @@ export function ProjectSidebar({
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <div className="px-2 space-y-1 group-data-[collapsible=icon]:hidden">
+              {hasPdf && payItems.length === 0 && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full text-xs h-7 mb-1"
+                  onClick={onImportPayItems}
+                >
+                  <TableOfContents className="h-3 w-3 mr-1" />
+                  Import Pay Items
+                </Button>
+              )}
               {payItems.map(item => (
                 <div
                   key={item.id}

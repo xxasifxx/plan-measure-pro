@@ -6,7 +6,7 @@ import { Toolbar } from '@/components/Toolbar';
 import { PdfCanvas } from '@/components/PdfCanvas';
 import { SummaryPanel } from '@/components/SummaryPanel';
 import { useProject } from '@/hooks/useProject';
-import { loadPdf, extractTextFromRegion } from '@/lib/pdf-utils';
+import { loadPdf, extractTextFromRegion, extractPayItemsFromPage } from '@/lib/pdf-utils';
 import { exportCsv, exportPdfReport } from '@/lib/export-utils';
 import { useToast } from '@/hooks/use-toast';
 import type { TocEntry } from '@/types/project';
@@ -85,6 +85,25 @@ const Index = () => {
     }
   }, [pdf, project, currentPage, scale, persist, setToolMode, toast]);
 
+  const handleImportPayItems = useCallback(async () => {
+    if (!pdf) return;
+    try {
+      toast({ title: 'Extracting Pay Items...', description: 'Scanning current page for Estimate of Quantities table(s)' });
+      const items = await extractPayItemsFromPage(pdf, currentPage, scale);
+      updatePayItems(items);
+      toast({
+        title: 'Pay Items Imported',
+        description: `${items.length} pay items extracted from the Estimate of Quantities table.`,
+      });
+    } catch (err) {
+      toast({
+        title: 'Error extracting pay items',
+        description: String(err),
+        variant: 'destructive',
+      });
+    }
+  }, [pdf, currentPage, scale, updatePayItems, toast]);
+
   const activePayItem = payItems.find(p => p.id === activePayItemId);
 
   return (
@@ -104,6 +123,7 @@ const Index = () => {
           hasPdf={!!pdf}
           onImportToc={() => setToolMode('tocSelect')}
           onCloseProject={handleCloseProject}
+          onImportPayItems={handleImportPayItems}
         />
 
         <div className="flex-1 flex flex-col min-w-0">
