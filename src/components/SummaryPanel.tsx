@@ -106,8 +106,9 @@ export function SummaryPanel({
             <table className="w-full text-xs">
               <thead>
                 <tr className="border-b border-border">
-                  <th className="text-left py-2 px-2 font-semibold text-muted-foreground">Item Code</th>
-                  <th className="text-left py-2 px-2 font-semibold text-muted-foreground">Pay Item</th>
+                  <th className="text-left py-2 px-2 font-semibold text-muted-foreground">Item #</th>
+                  <th className="text-left py-2 px-2 font-semibold text-muted-foreground">Description</th>
+                  <th className="text-left py-2 px-2 font-semibold text-muted-foreground">Unit Code</th>
                   <th className="text-right py-2 px-2 font-semibold text-muted-foreground">Count</th>
                   <th className="text-right py-2 px-2 font-semibold text-muted-foreground">Quantity</th>
                   <th className="text-right py-2 px-2 font-semibold text-muted-foreground">Unit</th>
