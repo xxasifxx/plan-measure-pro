@@ -221,6 +221,7 @@ export function ProjectSidebar({
                     onClick={() => {
                       setEditingItem({
                         id: crypto.randomUUID(),
+                        itemNumber: payItems.length > 0 ? Math.max(...payItems.map(p => p.itemNumber)) + 1 : 1,
                         itemCode: '',
                         name: '',
                         unit: 'SF',

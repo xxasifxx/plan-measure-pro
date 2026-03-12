@@ -533,12 +533,17 @@ export async function extractPayItemsFromPage(
     }
   }
 
-  // Sort by parsed item number to ensure proper ordering
-  allPayItems.sort((a, b) => {
-    const numA = parseInt(a.name) || 0;
-    const numB = parseInt(b.name) || 0;
-    return numA - numB;
-  });
+  // Sort by item number
+  allPayItems.sort((a, b) => a.itemNumber - b.itemNumber);
+
+  // Assign colors by section (items in same section get distinct colors)
+  const sectionCounters: Record<string, number> = {};
+  for (const item of allPayItems) {
+    const sectionKey = item.itemCode.match(/^(\d)/)?.[1] || '0';
+    const idx = sectionCounters[sectionKey] || 0;
+    item.color = getColorForItem(item.itemCode, idx);
+    sectionCounters[sectionKey] = idx + 1;
+  }
 
   console.log(`[PayItems] Extracted ${allPayItems.length} pay items total`);
 
