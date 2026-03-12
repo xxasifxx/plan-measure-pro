@@ -165,7 +165,10 @@ export function SummaryPanel({
                       ${(row.payItem.drawable ? row.extendedCost : (row.manualQuantity ?? 0) * row.payItem.unitPrice).toFixed(2)}
                     </td>
                   </tr>
-                ))}
+                      ))}
+                    </>
+                  ));
+                })()}
               </tbody>
               <tfoot>
                 <tr className="border-t-2 border-border">
