@@ -516,17 +516,17 @@ export async function extractPayItemsFromPage(
 
       const unit = mapUnit(unitStr);
       const contractQuantity = parseFloat(qtyStr) || undefined;
-      const color = PAY_ITEM_COLORS[(itemNum - 1) % PAY_ITEM_COLORS.length];
 
       console.log(`[PayItems]   #${itemNum}: code="${unitCodeStr}" desc="${description}" unit="${unitStr}"→${unit} qty=${contractQuantity}`);
 
       allPayItems.push({
         id: crypto.randomUUID(),
+        itemNumber: itemNum,
         itemCode: unitCodeStr,
         name: description || `Item ${itemNum}`,
         unit,
         unitPrice: 0,
-        color,
+        color: '', // assigned after grouping by section
         contractQuantity,
         drawable: isDrawableUnit(unit),
       });
