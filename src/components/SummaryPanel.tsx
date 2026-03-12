@@ -1,7 +1,7 @@
 import { X, Download, FileText } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import type { Annotation, PayItem } from '@/types/project';
-import { UNIT_LABELS } from '@/types/project';
+import { UNIT_LABELS, getPayItemSection } from '@/types/project';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { sfToCY, sfToSY } from '@/lib/geometry';
@@ -106,8 +106,9 @@ export function SummaryPanel({
             <table className="w-full text-xs">
               <thead>
                 <tr className="border-b border-border">
-                  <th className="text-left py-2 px-2 font-semibold text-muted-foreground">Item Code</th>
-                  <th className="text-left py-2 px-2 font-semibold text-muted-foreground">Pay Item</th>
+                  <th className="text-left py-2 px-2 font-semibold text-muted-foreground">Item #</th>
+                  <th className="text-left py-2 px-2 font-semibold text-muted-foreground">Description</th>
+                  <th className="text-left py-2 px-2 font-semibold text-muted-foreground">Unit Code</th>
                   <th className="text-right py-2 px-2 font-semibold text-muted-foreground">Count</th>
                   <th className="text-right py-2 px-2 font-semibold text-muted-foreground">Quantity</th>
                   <th className="text-right py-2 px-2 font-semibold text-muted-foreground">Unit</th>
@@ -116,15 +117,33 @@ export function SummaryPanel({
                 </tr>
               </thead>
               <tbody>
-                {rows.map(row => (
+                {(() => {
+                  // Group rows by section
+                  const sections = new Map<number, SummaryRow[]>();
+                  for (const row of rows) {
+                    const sec = getPayItemSection(row.payItem.itemCode);
+                    if (!sections.has(sec)) sections.set(sec, []);
+                    sections.get(sec)!.push(row);
+                  }
+                  const sortedSections = Array.from(sections.entries()).sort((a, b) => a[0] - b[0]);
+                  
+                  return sortedSections.map(([sec, sectionRows]) => (
+                    <>
+                      <tr key={`section-${sec}`}>
+                        <td colSpan={8} className="py-1.5 px-2 text-[10px] uppercase tracking-widest font-semibold text-muted-foreground bg-muted/30">
+                          Section {sec}
+                        </td>
+                      </tr>
+                      {sectionRows.map(row => (
                   <tr key={row.payItem.id} className="border-b border-border/50 hover:bg-muted/30">
-                    <td className="py-2 px-2 font-mono text-muted-foreground">{row.payItem.itemCode || '—'}</td>
+                    <td className="py-2 px-2 font-mono">{row.payItem.itemNumber}</td>
                     <td className="py-2 px-2">
                       <div className="flex items-center gap-2">
                         <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: row.payItem.color }} />
                         {row.payItem.name}
                       </div>
                     </td>
+                    <td className="py-2 px-2 font-mono text-muted-foreground">{row.payItem.itemCode || '—'}</td>
                     <td className="text-right py-2 px-2 font-mono">
                       {row.payItem.drawable ? row.count : '—'}
                     </td>
@@ -146,11 +165,14 @@ export function SummaryPanel({
                       ${(row.payItem.drawable ? row.extendedCost : (row.manualQuantity ?? 0) * row.payItem.unitPrice).toFixed(2)}
                     </td>
                   </tr>
-                ))}
+                      ))}
+                    </>
+                  ));
+                })()}
               </tbody>
               <tfoot>
                 <tr className="border-t-2 border-border">
-                  <td colSpan={6} className="py-3 px-2 font-bold text-right">Grand Total</td>
+                  <td colSpan={7} className="py-3 px-2 font-bold text-right">Grand Total</td>
                   <td className="py-3 px-2 font-bold text-right font-mono text-primary">
                     ${grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                   </td>

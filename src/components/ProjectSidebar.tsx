@@ -1,7 +1,7 @@
 import { FileUp, MapPin, ChevronRight, ChevronDown, Plus, Trash2, Edit2, TableOfContents, X, PenTool, Hash } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import type { TocEntry, PayItem, PayItemUnit } from '@/types/project';
-import { isDrawableUnit, UNIT_LABELS } from '@/types/project';
+import { isDrawableUnit, UNIT_LABELS, getPayItemSection } from '@/types/project';
 import {
   Sidebar,
   SidebarContent,
@@ -204,42 +204,13 @@ export function ProjectSidebar({
                   Import Pay Items
                 </Button>
               )}
-              {payItems.map(item => (
-                <div
-                  key={item.id}
-                  onClick={() => onActivePayItemChange(item.id)}
-                  className={`flex items-center gap-2 px-2 py-1.5 rounded-sm cursor-pointer text-xs transition-colors ${
-                    activePayItemId === item.id
-                      ? 'bg-sidebar-accent ring-1 ring-sidebar-primary'
-                      : 'hover:bg-sidebar-accent/50'
-                  }`}
-                >
-                  <div className="h-3 w-3 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
-                  {item.drawable ? (
-                    <PenTool className="h-2.5 w-2.5 shrink-0 text-sidebar-foreground/40" />
-                  ) : (
-                    <Hash className="h-2.5 w-2.5 shrink-0 text-sidebar-foreground/40" />
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <span className="truncate block text-sidebar-foreground">
-                      {item.itemCode ? `${item.itemCode} · ` : ''}{item.name}
-                    </span>
-                  </div>
-                  <span className="text-[10px] text-sidebar-foreground/50 shrink-0">{UNIT_LABELS[item.unit]}</span>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); setEditingItem(item); setDialogOpen(true); }}
-                    className="opacity-0 group-hover:opacity-100 hover:text-sidebar-primary"
-                  >
-                    <Edit2 className="h-2.5 w-2.5" />
-                  </button>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); deletePayItem(item.id); }}
-                    className="opacity-0 group-hover:opacity-100 hover:text-destructive"
-                  >
-                    <Trash2 className="h-2.5 w-2.5" />
-                  </button>
-                </div>
-              ))}
+              <PayItemList
+                payItems={payItems}
+                activePayItemId={activePayItemId}
+                onActivePayItemChange={onActivePayItemChange}
+                onEdit={(item) => { setEditingItem(item); setDialogOpen(true); }}
+                onDelete={deletePayItem}
+              />
 
               <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                 <DialogTrigger asChild>
@@ -250,6 +221,7 @@ export function ProjectSidebar({
                     onClick={() => {
                       setEditingItem({
                         id: crypto.randomUUID(),
+                        itemNumber: payItems.length > 0 ? Math.max(...payItems.map(p => p.itemNumber)) + 1 : 1,
                         itemCode: '',
                         name: '',
                         unit: 'SF',
@@ -421,5 +393,79 @@ function TocSectionItem({ entry, currentPage, onPageChange }: {
         </div>
       )}
     </SidebarMenuItem>
+  );
+}
+
+function PayItemList({ payItems, activePayItemId, onActivePayItemChange, onEdit, onDelete }: {
+  payItems: PayItem[];
+  activePayItemId: string;
+  onActivePayItemChange: (id: string) => void;
+  onEdit: (item: PayItem) => void;
+  onDelete: (id: string) => void;
+}) {
+  // Group by section (first digit of itemCode × 100)
+  const sections = useMemo(() => {
+    const grouped = new Map<number, PayItem[]>();
+    for (const item of payItems) {
+      const section = getPayItemSection(item.itemCode);
+      if (!grouped.has(section)) grouped.set(section, []);
+      grouped.get(section)!.push(item);
+    }
+    return Array.from(grouped.entries())
+      .sort((a, b) => a[0] - b[0])
+      .map(([section, items]) => ({
+        section,
+        label: `Section ${section}`,
+        items: items.sort((a, b) => a.itemNumber - b.itemNumber),
+      }));
+  }, [payItems]);
+
+  return (
+    <>
+      {sections.map(({ section, label, items }) => (
+        <div key={section} className="space-y-0.5">
+          <div className="text-[9px] uppercase tracking-widest text-sidebar-foreground/40 px-2 pt-1.5 pb-0.5 font-semibold">
+            {label}
+          </div>
+          {items.map(item => (
+            <div
+              key={item.id}
+              onClick={() => onActivePayItemChange(item.id)}
+              className={`flex items-center gap-2 px-2 py-1.5 rounded-sm cursor-pointer text-xs transition-colors ${
+                activePayItemId === item.id
+                  ? 'bg-sidebar-accent ring-1 ring-sidebar-primary'
+                  : 'hover:bg-sidebar-accent/50'
+              }`}
+            >
+              <div className="h-3 w-3 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
+              {item.drawable ? (
+                <PenTool className="h-2.5 w-2.5 shrink-0 text-sidebar-foreground/40" />
+              ) : (
+                <Hash className="h-2.5 w-2.5 shrink-0 text-sidebar-foreground/40" />
+              )}
+              <div className="flex-1 min-w-0">
+                <span className="truncate block text-sidebar-foreground">
+                  <span className="font-mono text-sidebar-foreground/60">{item.itemNumber}.</span>{' '}
+                  {item.name}
+                </span>
+              </div>
+              <span className="text-[10px] text-sidebar-foreground/50 shrink-0">{UNIT_LABELS[item.unit]}</span>
+              <button
+                onClick={(e) => { e.stopPropagation(); onEdit(item); }}
+                className="opacity-0 group-hover:opacity-100 hover:text-sidebar-primary"
+              >
+                <Edit2 className="h-2.5 w-2.5" />
+              </button>
+              <button
+                onClick={(e) => { e.stopPropagation(); onDelete(item.id); }}
+                className="opacity-0 group-hover:opacity-100 hover:text-destructive"
+              >
+                <Trash2 className="h-2.5 w-2.5" />
+              </button>
+            </div>
+          ))}
+        </div>
+      ))}
+    </>
   );
 }

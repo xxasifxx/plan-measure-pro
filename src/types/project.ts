@@ -27,6 +27,7 @@ export const UNIT_LABELS: Record<PayItemUnit, string> = {
 
 export interface PayItem {
   id: string;
+  itemNumber: number;
   itemCode: string;
   name: string;
   unit: PayItemUnit;
@@ -34,6 +35,16 @@ export interface PayItem {
   color: string;
   contractQuantity?: number;
   drawable: boolean;
+}
+
+/**
+ * Get the section number (e.g., 100, 500) from a unit code like "104-0001" or "510-N0059".
+ * Section = first digit × 100.
+ */
+export function getPayItemSection(itemCode: string): number {
+  const match = itemCode.match(/^(\d)/);
+  if (!match) return 0;
+  return parseInt(match[1]) * 100;
 }
 
 export interface PointXY {
