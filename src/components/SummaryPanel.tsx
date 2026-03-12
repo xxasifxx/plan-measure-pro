@@ -1,7 +1,7 @@
 import { X, Download, FileText } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import type { Annotation, PayItem } from '@/types/project';
-import { UNIT_LABELS } from '@/types/project';
+import { UNIT_LABELS, getPayItemSection } from '@/types/project';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { sfToCY, sfToSY } from '@/lib/geometry';
