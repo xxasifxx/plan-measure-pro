@@ -117,15 +117,33 @@ export function SummaryPanel({
                 </tr>
               </thead>
               <tbody>
-                {rows.map(row => (
+                {(() => {
+                  // Group rows by section
+                  const sections = new Map<number, SummaryRow[]>();
+                  for (const row of rows) {
+                    const sec = getPayItemSection(row.payItem.itemCode);
+                    if (!sections.has(sec)) sections.set(sec, []);
+                    sections.get(sec)!.push(row);
+                  }
+                  const sortedSections = Array.from(sections.entries()).sort((a, b) => a[0] - b[0]);
+                  
+                  return sortedSections.map(([sec, sectionRows]) => (
+                    <>
+                      <tr key={`section-${sec}`}>
+                        <td colSpan={8} className="py-1.5 px-2 text-[10px] uppercase tracking-widest font-semibold text-muted-foreground bg-muted/30">
+                          Section {sec}
+                        </td>
+                      </tr>
+                      {sectionRows.map(row => (
                   <tr key={row.payItem.id} className="border-b border-border/50 hover:bg-muted/30">
-                    <td className="py-2 px-2 font-mono text-muted-foreground">{row.payItem.itemCode || '—'}</td>
+                    <td className="py-2 px-2 font-mono">{row.payItem.itemNumber}</td>
                     <td className="py-2 px-2">
                       <div className="flex items-center gap-2">
                         <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: row.payItem.color }} />
                         {row.payItem.name}
                       </div>
                     </td>
+                    <td className="py-2 px-2 font-mono text-muted-foreground">{row.payItem.itemCode || '—'}</td>
                     <td className="text-right py-2 px-2 font-mono">
                       {row.payItem.drawable ? row.count : '—'}
                     </td>
