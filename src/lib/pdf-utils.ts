@@ -513,7 +513,20 @@ export async function extractPayItemsFromPage(
       unitCodeStr = unitCodeStr.trim();
       unitStr = unitStr.trim();
       qtyStr = qtyStr.trim().replace(/,/g, '');
-      const description = descParts.join(' ').trim();
+
+      let parsedItemCode = unitCodeStr;
+      let description = descParts.join(' ').trim();
+
+      // PDF.js may merge UNIT CODE + DESCRIPTION into one text item in the unitCode column.
+      // Example: "104-0001 CONSTRUCTION LAYOUT"
+      const codeWithDescMatch = unitCodeStr.match(/^([0-9]{3}-[A-Z0-9]+)\s+(.+)$/i);
+      if (codeWithDescMatch) {
+        parsedItemCode = codeWithDescMatch[1].trim();
+        const overflowDesc = codeWithDescMatch[2].trim();
+        if (overflowDesc) {
+          description = description ? `${overflowDesc} ${description}` : overflowDesc;
+        }
+      }
 
       // Item number must be a positive integer
       const itemNum = parseInt(itemNoStr);
@@ -527,12 +540,12 @@ export async function extractPayItemsFromPage(
       const unit = mapUnit(unitStr);
       const contractQuantity = parseFloat(qtyStr) || undefined;
 
-      console.log(`[PayItems]   #${itemNum}: code="${unitCodeStr}" desc="${description}" unit="${unitStr}"→${unit} qty=${contractQuantity}`);
+      console.log(`[PayItems]   #${itemNum}: code="${parsedItemCode}" desc="${description}" unit="${unitStr}"→${unit} qty=${contractQuantity}`);
 
       allPayItems.push({
         id: crypto.randomUUID(),
         itemNumber: itemNum,
-        itemCode: unitCodeStr,
+        itemCode: parsedItemCode,
         name: description || `Item ${itemNum}`,
         unit,
         unitPrice: 0,
