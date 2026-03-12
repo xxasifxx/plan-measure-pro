@@ -1,7 +1,7 @@
 import { FileUp, MapPin, ChevronRight, ChevronDown, Plus, Trash2, Edit2, TableOfContents, X, PenTool, Hash } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import type { TocEntry, PayItem, PayItemUnit } from '@/types/project';
-import { isDrawableUnit, UNIT_LABELS } from '@/types/project';
+import { isDrawableUnit, UNIT_LABELS, getPayItemSection } from '@/types/project';
 import {
   Sidebar,
   SidebarContent,
