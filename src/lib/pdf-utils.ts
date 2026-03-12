@@ -285,9 +285,8 @@ export async function extractPayItemsFromPage(
   }
 
   // Step 2: Cluster ITEM headers by X-proximity
-  // Sort by X, then group headers that are close in X (< 100px) into one cluster
   const sortedHeaders = [...itemNoHeaders].sort((a, b) => a.x - b.x);
-  const X_CLUSTER_GAP = 100; // headers within 100px X are the same table
+  const X_CLUSTER_GAP = 100;
   const headerGroups: TextItem[][] = [];
   let currentGroup: TextItem[] = [sortedHeaders[0]];
 
@@ -303,121 +302,104 @@ export async function extractPayItemsFromPage(
 
   console.log(`[PayItems] ${headerGroups.length} table(s) detected by X-clustering`);
 
-  // Step 3: For each header group, find column positions from nearby text
-  // "Nearby" means within Y tolerance AND within the X-region of this table
   const Y_TOLERANCE = 15;
 
-  // First, determine rough X boundaries for each table to scope header search
-  // Use midpoints between groups
-  const groupXCenters = headerGroups.map(g => g[0].x);
-  const tableBounds: { xMin: number; xMax: number }[] = [];
-  for (let i = 0; i < headerGroups.length; i++) {
-    const xMin = i === 0 ? 0 : (groupXCenters[i - 1] + groupXCenters[i]) / 2;
-    const xMax = i === headerGroups.length - 1 ? Infinity : (groupXCenters[i] + groupXCenters[i + 1]) / 2;
-    tableBounds.push({ xMin, xMax });
+  // Step 3: For each ITEM header group, find ALL header keywords on the same Y band
+  // across the FULL page, then assign each keyword to the nearest ITEM header group.
+  // This correctly associates UNIT/QUANTITY columns with their table even when
+  // they're far to the right of the ITEM header.
+
+  const primaryHeaders = headerGroups.map(g => g[0]); // one per table
+  const headerY = primaryHeaders[0].y; // all ITEM headers share similar Y
+
+  // Gather all header-keyword items within the header Y band (multi-row headers)
+  const headerKeywords = /ITEM|NO\.?|CODE|DESCRIPTION|UNIT|QUANTITY|QTY|CONTRACT|DIRECTED|PRICE|SHEET|WHERE/i;
+  const allHeaderArea = allItems.filter(t =>
+    t.y >= headerY - Y_TOLERANCE && t.y <= headerY + Y_TOLERANCE * 4 &&
+    headerKeywords.test(t.str)
+  );
+
+  const headerBottomY = Math.max(...allHeaderArea.map(t => t.y)) + Y_TOLERANCE;
+
+  // Assign each header item to the nearest ITEM header by X
+  const assignedHeaders: Map<number, TextItem[]> = new Map();
+  for (let i = 0; i < primaryHeaders.length; i++) {
+    assignedHeaders.set(i, []);
   }
 
-  // Now build full header clusters with column detection
+  for (const h of allHeaderArea) {
+    let bestIdx = 0;
+    let bestDist = Infinity;
+    for (let i = 0; i < primaryHeaders.length; i++) {
+      // Distance: use the ITEM header X as reference. Headers should be to the right of their ITEM.
+      // Prefer the table whose ITEM header is closest-left of this header item.
+      const dist = h.x - primaryHeaders[i].x;
+      // Allow slightly left (negative) but prefer right (positive)
+      const absDist = dist < -20 ? Infinity : Math.abs(dist);
+      if (absDist < bestDist) {
+        bestDist = absDist;
+        bestIdx = i;
+      }
+    }
+    assignedHeaders.get(bestIdx)!.push(h);
+  }
+
+  // Step 4: Build column positions and table boundaries from assigned headers
   const headerClusters: HeaderCluster[] = [];
 
-  for (let i = 0; i < headerGroups.length; i++) {
-    const group = headerGroups[i];
-    const bounds = tableBounds[i];
-    const primaryHeader = group[0]; // the "ITEM" header
-    const headerY = primaryHeader.y;
+  for (let i = 0; i < primaryHeaders.length; i++) {
+    const primary = primaryHeaders[i];
+    const headers = assignedHeaders.get(i)!;
 
-    // Find all text items in this X region that are on header rows
-    // Header rows: within Y_TOLERANCE of the primary ITEM header, OR the row just below it
-    // (headers can span 2-3 rows: "ITEM" / "NO." / "DESCRIPTION" etc.)
-    const headerAreaItems = allItems.filter(t =>
-      t.x >= bounds.xMin && t.x < bounds.xMax &&
-      t.y >= headerY - Y_TOLERANCE && t.y <= headerY + Y_TOLERANCE * 4
-    );
-
-    // Find the lowest Y among header-like text (contains keywords)
-    const headerKeywords = /ITEM|NO\.?|CODE|DESCRIPTION|UNIT|QUANTITY|QTY|CONTRACT|TOTAL|DIRECTED|PRICE|SHEET|WHERE/i;
-    const headerRowItems = headerAreaItems.filter(t => headerKeywords.test(t.str));
-    
-    // Group header items into rows
-    const headerRows = new Map<number, TextItem[]>();
-    for (const item of headerRowItems) {
-      const ry = Math.round(item.y / 5) * 5;
-      if (!headerRows.has(ry)) headerRows.set(ry, []);
-      headerRows.get(ry)!.push(item);
-    }
-    
-    // The bottom of the header area = the maximum Y of any header row
-    const headerBottomY = Math.max(...headerRowItems.map(t => t.y)) + Y_TOLERANCE;
-
-    // Identify column positions — scan ALL header row items for column keywords
     const columns: HeaderCluster['columns'] = {};
-    columns.itemNo = primaryHeader.x;
+    columns.itemNo = primary.x;
 
-    // Collect all header items for column detection
-    const allHeaderItems = headerAreaItems.filter(t =>
-      t.y >= headerY - Y_TOLERANCE && t.y <= headerBottomY
-    );
+    // Find column positions from assigned header keywords
+    const codeItems = headers.filter(t => /^CODE$/i.test(t.str) || /UNIT\s*CODE/i.test(t.str));
+    const descItems = headers.filter(t => /DESCRIPTION/i.test(t.str));
+    const unitItems = headers.filter(t => /^UNIT$/i.test(t.str));
+    const qtyItems = headers.filter(t => /QUANTITY|QTY/i.test(t.str));
 
-    // Find columns by keyword matching
-    // We need to handle multi-row headers: "UNIT" on row 1, "CODE" on row 2 both at same X
-    // Strategy: find X positions for key column identifiers
-    
-    // Find "CODE" or "UNIT CODE" items for the unit code column
-    const codeItems = allHeaderItems.filter(t => /^CODE$/i.test(t.str) || /UNIT\s*CODE/i.test(t.str));
-    // Find "DESCRIPTION" items
-    const descItems = allHeaderItems.filter(t => /DESCRIPTION/i.test(t.str));
-    // Find standalone "UNIT" items (not "UNIT CODE" or "UNIT PRICE")
-    // Look for "UNIT" text that's NOT at the same X as a CODE item
-    const unitItems = allHeaderItems.filter(t => /^UNIT$/i.test(t.str));
-    // Find "QUANTITY" items — could be "CONTRACT QUANTITY" 
-    const qtyItems = allHeaderItems.filter(t => /QUANTITY|QTY/i.test(t.str));
-
-    // For items that appear on the same X as other keywords, disambiguate
-    // Unit code: look for CODE
     if (codeItems.length > 0) {
-      // Use the leftmost CODE item in this region
-      const regionCodes = codeItems.filter(t => t.x >= bounds.xMin && t.x < bounds.xMax);
-      if (regionCodes.length > 0) {
-        columns.unitCode = Math.min(...regionCodes.map(t => t.x));
-      }
+      columns.unitCode = Math.min(...codeItems.map(t => t.x));
     }
-
     if (descItems.length > 0) {
-      const regionDesc = descItems.filter(t => t.x >= bounds.xMin && t.x < bounds.xMax);
-      if (regionDesc.length > 0) {
-        columns.description = Math.min(...regionDesc.map(t => t.x));
+      columns.description = Math.min(...descItems.map(t => t.x));
+    }
+    // "UNIT" column — must not be at the same X as unitCode
+    for (const u of unitItems.sort((a, b) => a.x - b.x)) {
+      if (!columns.unitCode || Math.abs(u.x - columns.unitCode) > 30) {
+        columns.unit = u.x;
+        break;
       }
     }
-
-    // For "UNIT" column — find UNIT items that aren't near the unitCode X
-    if (unitItems.length > 0) {
-      const regionUnits = unitItems.filter(t => t.x >= bounds.xMin && t.x < bounds.xMax);
-      for (const u of regionUnits) {
-        if (!columns.unitCode || Math.abs(u.x - columns.unitCode) > 30) {
-          columns.unit = u.x;
-          break;
-        }
-      }
-    }
-
-    // For quantity — use the first QUANTITY/QTY item in this region
-    // If there are multiple (CONTRACT QUANTITY, DIRECTED QUANTITY), pick the first by X
     if (qtyItems.length > 0) {
-      const regionQty = qtyItems
-        .filter(t => t.x >= bounds.xMin && t.x < bounds.xMax)
-        .sort((a, b) => a.x - b.x);
-      if (regionQty.length > 0) {
-        columns.quantity = regionQty[0].x;
-      }
+      // Pick the first (leftmost) QUANTITY — that's CONTRACT QUANTITY
+      const sorted = qtyItems.sort((a, b) => a.x - b.x);
+      columns.quantity = sorted[0].x;
     }
 
-    console.log(`[PayItems] Table ${i + 1}: X bounds [${bounds.xMin.toFixed(0)}, ${bounds.xMax === Infinity ? '∞' : bounds.xMax.toFixed(0)}], headerBottomY=${headerBottomY.toFixed(0)}, columns:`, JSON.stringify(columns));
+    // Table X extent: from ITEM header X to the rightmost assigned header
+    const tableMinX = primary.x;
+    const tableMaxX = Math.max(...headers.map(t => t.x + t.width));
+
+    // Compute region boundaries: midpoint between this table's max and next table's min
+    const xMin = i === 0 ? 0 : (() => {
+      const prevMax = Math.max(...assignedHeaders.get(i - 1)!.map(t => t.x + t.width));
+      return (prevMax + tableMinX) / 2;
+    })();
+    const xMax = i === primaryHeaders.length - 1 ? Infinity : (() => {
+      const nextMin = primaryHeaders[i + 1].x;
+      return (tableMaxX + nextMin) / 2;
+    })();
+
+    console.log(`[PayItems] Table ${i + 1}: X bounds [${xMin.toFixed(0)}, ${xMax === Infinity ? '∞' : xMax.toFixed(0)}], columns:`, JSON.stringify(columns));
 
     headerClusters.push({
-      items: allHeaderItems,
-      minX: bounds.xMin,
-      maxX: bounds.xMax,
-      headerY: headerBottomY, // use the BOTTOM of headers so data starts after
+      items: headers,
+      minX: xMin,
+      maxX: xMax,
+      headerY: headerBottomY,
       columns,
     });
   }
