@@ -172,7 +172,7 @@ export function SummaryPanel({
               </tbody>
               <tfoot>
                 <tr className="border-t-2 border-border">
-                  <td colSpan={6} className="py-3 px-2 font-bold text-right">Grand Total</td>
+                  <td colSpan={7} className="py-3 px-2 font-bold text-right">Grand Total</td>
                   <td className="py-3 px-2 font-bold text-right font-mono text-primary">
                     ${grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                   </td>
