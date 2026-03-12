@@ -453,13 +453,25 @@ export async function extractPayItemsFromPage(
 
     console.log(`[PayItems] Table ${ri + 1}: ${rows.length} data rows`);
 
-    // Build column entries for nearest-match
+    // Build column boundaries using midpoints between sorted column headers
     const colEntries: { name: string; x: number }[] = [];
     if (colPositions.itemNo !== undefined) colEntries.push({ name: 'itemNo', x: colPositions.itemNo });
     if (colPositions.unitCode !== undefined) colEntries.push({ name: 'unitCode', x: colPositions.unitCode });
     if (colPositions.description !== undefined) colEntries.push({ name: 'description', x: colPositions.description });
     if (colPositions.unit !== undefined) colEntries.push({ name: 'unit', x: colPositions.unit });
     if (colPositions.quantity !== undefined) colEntries.push({ name: 'quantity', x: colPositions.quantity });
+
+    // Sort columns left-to-right and compute boundary midpoints
+    colEntries.sort((a, b) => a.x - b.x);
+    const colBounds: { name: string; minX: number; maxX: number }[] = colEntries.map((col, i) => {
+      const prevX = i > 0 ? colEntries[i - 1].x : -Infinity;
+      const nextX = i < colEntries.length - 1 ? colEntries[i + 1].x : Infinity;
+      return {
+        name: col.name,
+        minX: (prevX + col.x) / 2,
+        maxX: (col.x + nextX) / 2,
+      };
+    });
 
     let foundAnyItem = false;
 
@@ -472,7 +484,7 @@ export async function extractPayItemsFromPage(
         break;
       }
 
-      // Assign each text item to the nearest column
+      // Assign each text item to column by boundary range
       let itemNoStr = '';
       let unitCodeStr = '';
       let descParts: string[] = [];
@@ -480,17 +492,15 @@ export async function extractPayItemsFromPage(
       let qtyStr = '';
 
       for (const textItem of row.items) {
-        let bestCol = 'description';
-        let bestDist = Infinity;
-        for (const col of colEntries) {
-          const dist = Math.abs(textItem.x - col.x);
-          if (dist < bestDist) {
-            bestDist = dist;
-            bestCol = col.name;
+        let assignedCol = 'description'; // fallback
+        for (const bound of colBounds) {
+          if (textItem.x >= bound.minX && textItem.x < bound.maxX) {
+            assignedCol = bound.name;
+            break;
           }
         }
 
-        switch (bestCol) {
+        switch (assignedCol) {
           case 'itemNo': itemNoStr += textItem.str + ' '; break;
           case 'unitCode': unitCodeStr += textItem.str + ' '; break;
           case 'description': descParts.push(textItem.str); break;
