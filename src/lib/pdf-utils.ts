@@ -524,7 +524,8 @@ export async function extractPayItemsFromPage(
         parsedItemCode = codeWithDescMatch[1].trim();
         const overflowDesc = codeWithDescMatch[2].trim();
         if (overflowDesc) {
-          description = description ? `${overflowDesc} ${description}` : overflowDesc;
+          const sameText = description && description.toUpperCase() === overflowDesc.toUpperCase();
+          description = sameText ? description : (description ? `${overflowDesc} ${description}` : overflowDesc);
         }
       }
 
