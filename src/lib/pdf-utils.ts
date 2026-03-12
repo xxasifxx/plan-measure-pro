@@ -241,6 +241,13 @@ interface HeaderCluster {
 /**
  * Extract pay items from the current page's Estimate of Quantities table(s).
  * Handles side-by-side tables (e.g., items 1-60 left, 61-87 right).
+ *
+ * Algorithm:
+ * 1. Find all "ITEM" header text items on the page
+ * 2. Cluster them by X-proximity (side-by-side tables have ITEM headers far apart)
+ * 3. For each cluster, find nearby column headers within that X region
+ * 4. Split page into vertical regions at midpoints between clusters
+ * 5. Parse each region's rows independently using its own column positions
  */
 export async function extractPayItemsFromPage(
   pdf: pdfjsLib.PDFDocumentProxy,
@@ -251,7 +258,6 @@ export async function extractPayItemsFromPage(
   const viewport = page.getViewport({ scale });
   const textContent = await page.getTextContent();
 
-  // Extract all text items with coordinates
   const allItems: TextItem[] = textContent.items
     .filter((item: any) => 'str' in item && item.str.trim())
     .map((item: any) => {
@@ -267,8 +273,7 @@ export async function extractPayItemsFromPage(
 
   console.log(`[PayItems] Total text items on page: ${allItems.length}`);
 
-  // Step 1: Find header rows — look for text items containing key column names
-  // We look for "ITEM" items that are near "DESCRIPTION" and "UNIT" items (within similar Y)
+  // Step 1: Find all "ITEM" headers (could also be "ITEM NO." etc)
   const itemNoHeaders = allItems.filter(t =>
     /^ITEM\s*(NO\.?|NUMBER)?$/i.test(t.str) || t.str === 'ITEM'
   );
@@ -279,76 +284,158 @@ export async function extractPayItemsFromPage(
     throw new Error('Could not find "ITEM NO" header on this page. Navigate to the Estimate of Quantities page and try again.');
   }
 
-  // Step 2: Build header clusters — group headers that share similar Y coordinates
-  // Each cluster represents one table
-  const Y_TOLERANCE = 10;
+  // Step 2: Cluster ITEM headers by X-proximity
+  // Sort by X, then group headers that are close in X (< 100px) into one cluster
+  const sortedHeaders = [...itemNoHeaders].sort((a, b) => a.x - b.x);
+  const X_CLUSTER_GAP = 100; // headers within 100px X are the same table
+  const headerGroups: TextItem[][] = [];
+  let currentGroup: TextItem[] = [sortedHeaders[0]];
+
+  for (let i = 1; i < sortedHeaders.length; i++) {
+    if (sortedHeaders[i].x - sortedHeaders[i - 1].x < X_CLUSTER_GAP) {
+      currentGroup.push(sortedHeaders[i]);
+    } else {
+      headerGroups.push(currentGroup);
+      currentGroup = [sortedHeaders[i]];
+    }
+  }
+  headerGroups.push(currentGroup);
+
+  console.log(`[PayItems] ${headerGroups.length} table(s) detected by X-clustering`);
+
+  // Step 3: For each header group, find column positions from nearby text
+  // "Nearby" means within Y tolerance AND within the X-region of this table
+  const Y_TOLERANCE = 15;
+
+  // First, determine rough X boundaries for each table to scope header search
+  // Use midpoints between groups
+  const groupXCenters = headerGroups.map(g => g[0].x);
+  const tableBounds: { xMin: number; xMax: number }[] = [];
+  for (let i = 0; i < headerGroups.length; i++) {
+    const xMin = i === 0 ? 0 : (groupXCenters[i - 1] + groupXCenters[i]) / 2;
+    const xMax = i === headerGroups.length - 1 ? Infinity : (groupXCenters[i] + groupXCenters[i + 1]) / 2;
+    tableBounds.push({ xMin, xMax });
+  }
+
+  // Now build full header clusters with column detection
   const headerClusters: HeaderCluster[] = [];
 
-  for (const itemHeader of itemNoHeaders) {
-    // Find all header-like items on the same Y row as this ITEM header
-    const nearbyHeaders = allItems.filter(t =>
-      Math.abs(t.y - itemHeader.y) < Y_TOLERANCE
+  for (let i = 0; i < headerGroups.length; i++) {
+    const group = headerGroups[i];
+    const bounds = tableBounds[i];
+    const primaryHeader = group[0]; // the "ITEM" header
+    const headerY = primaryHeader.y;
+
+    // Find all text items in this X region that are on header rows
+    // Header rows: within Y_TOLERANCE of the primary ITEM header, OR the row just below it
+    // (headers can span 2-3 rows: "ITEM" / "NO." / "DESCRIPTION" etc.)
+    const headerAreaItems = allItems.filter(t =>
+      t.x >= bounds.xMin && t.x < bounds.xMax &&
+      t.y >= headerY - Y_TOLERANCE && t.y <= headerY + Y_TOLERANCE * 4
     );
 
-    const clusterMinX = Math.min(...nearbyHeaders.map(h => h.x));
-    const clusterMaxX = Math.max(...nearbyHeaders.map(h => h.x + h.width));
+    // Find the lowest Y among header-like text (contains keywords)
+    const headerKeywords = /ITEM|NO\.?|CODE|DESCRIPTION|UNIT|QUANTITY|QTY|CONTRACT|TOTAL|DIRECTED|PRICE|SHEET|WHERE/i;
+    const headerRowItems = headerAreaItems.filter(t => headerKeywords.test(t.str));
+    
+    // Group header items into rows
+    const headerRows = new Map<number, TextItem[]>();
+    for (const item of headerRowItems) {
+      const ry = Math.round(item.y / 5) * 5;
+      if (!headerRows.has(ry)) headerRows.set(ry, []);
+      headerRows.get(ry)!.push(item);
+    }
+    
+    // The bottom of the header area = the maximum Y of any header row
+    const headerBottomY = Math.max(...headerRowItems.map(t => t.y)) + Y_TOLERANCE;
 
-    // Identify column X positions from header text
+    // Identify column positions — scan ALL header row items for column keywords
     const columns: HeaderCluster['columns'] = {};
-    columns.itemNo = itemHeader.x;
+    columns.itemNo = primaryHeader.x;
 
-    for (const h of nearbyHeaders) {
-      const s = h.str.toUpperCase();
-      if (/UNIT\s*CODE/i.test(s) || /CODE/i.test(s)) {
-        columns.unitCode = h.x;
-      } else if (/DESCRIPTION/i.test(s)) {
-        columns.description = h.x;
-      } else if (/CONTRACT\s*QUANTITY/i.test(s) || /QUANTITY/i.test(s) || /QTY/i.test(s)) {
-        columns.quantity = h.x;
-      } else if (s === 'UNIT' && !(/CODE/i.test(s))) {
-        // "UNIT" alone (not "UNIT CODE") — this is the unit column
-        // But we need to distinguish from "UNIT CODE" and "UNIT PRICE"
-        // Check if it's NOT the same X as unitCode
-        if (!columns.unitCode || Math.abs(h.x - columns.unitCode) > 20) {
-          columns.unit = h.x;
+    // Collect all header items for column detection
+    const allHeaderItems = headerAreaItems.filter(t =>
+      t.y >= headerY - Y_TOLERANCE && t.y <= headerBottomY
+    );
+
+    // Find columns by keyword matching
+    // We need to handle multi-row headers: "UNIT" on row 1, "CODE" on row 2 both at same X
+    // Strategy: find X positions for key column identifiers
+    
+    // Find "CODE" or "UNIT CODE" items for the unit code column
+    const codeItems = allHeaderItems.filter(t => /^CODE$/i.test(t.str) || /UNIT\s*CODE/i.test(t.str));
+    // Find "DESCRIPTION" items
+    const descItems = allHeaderItems.filter(t => /DESCRIPTION/i.test(t.str));
+    // Find standalone "UNIT" items (not "UNIT CODE" or "UNIT PRICE")
+    // Look for "UNIT" text that's NOT at the same X as a CODE item
+    const unitItems = allHeaderItems.filter(t => /^UNIT$/i.test(t.str));
+    // Find "QUANTITY" items — could be "CONTRACT QUANTITY" 
+    const qtyItems = allHeaderItems.filter(t => /QUANTITY|QTY/i.test(t.str));
+
+    // For items that appear on the same X as other keywords, disambiguate
+    // Unit code: look for CODE
+    if (codeItems.length > 0) {
+      // Use the leftmost CODE item in this region
+      const regionCodes = codeItems.filter(t => t.x >= bounds.xMin && t.x < bounds.xMax);
+      if (regionCodes.length > 0) {
+        columns.unitCode = Math.min(...regionCodes.map(t => t.x));
+      }
+    }
+
+    if (descItems.length > 0) {
+      const regionDesc = descItems.filter(t => t.x >= bounds.xMin && t.x < bounds.xMax);
+      if (regionDesc.length > 0) {
+        columns.description = Math.min(...regionDesc.map(t => t.x));
+      }
+    }
+
+    // For "UNIT" column — find UNIT items that aren't near the unitCode X
+    if (unitItems.length > 0) {
+      const regionUnits = unitItems.filter(t => t.x >= bounds.xMin && t.x < bounds.xMax);
+      for (const u of regionUnits) {
+        if (!columns.unitCode || Math.abs(u.x - columns.unitCode) > 30) {
+          columns.unit = u.x;
+          break;
         }
       }
     }
 
-    console.log(`[PayItems] Header cluster at X=${clusterMinX.toFixed(0)}-${clusterMaxX.toFixed(0)}, Y=${itemHeader.y.toFixed(0)}, columns:`, columns);
+    // For quantity — use the first QUANTITY/QTY item in this region
+    // If there are multiple (CONTRACT QUANTITY, DIRECTED QUANTITY), pick the first by X
+    if (qtyItems.length > 0) {
+      const regionQty = qtyItems
+        .filter(t => t.x >= bounds.xMin && t.x < bounds.xMax)
+        .sort((a, b) => a.x - b.x);
+      if (regionQty.length > 0) {
+        columns.quantity = regionQty[0].x;
+      }
+    }
+
+    console.log(`[PayItems] Table ${i + 1}: X bounds [${bounds.xMin.toFixed(0)}, ${bounds.xMax === Infinity ? '∞' : bounds.xMax.toFixed(0)}], headerBottomY=${headerBottomY.toFixed(0)}, columns:`, JSON.stringify(columns));
 
     headerClusters.push({
-      items: nearbyHeaders,
-      minX: clusterMinX,
-      maxX: clusterMaxX,
-      headerY: itemHeader.y,
+      items: allHeaderItems,
+      minX: bounds.xMin,
+      maxX: bounds.xMax,
+      headerY: headerBottomY, // use the BOTTOM of headers so data starts after
       columns,
     });
   }
 
-  // Step 3: Determine X boundaries for each table region
-  // Sort clusters by X position (left to right)
-  headerClusters.sort((a, b) => a.minX - b.minX);
-
-  const regions: { cluster: HeaderCluster; xMin: number; xMax: number }[] = [];
-  for (let i = 0; i < headerClusters.length; i++) {
-    const cluster = headerClusters[i];
-    const xMin = i === 0 ? 0 : (headerClusters[i - 1].maxX + cluster.minX) / 2;
-    const xMax = i === headerClusters.length - 1 ? Infinity : (cluster.maxX + headerClusters[i + 1].minX) / 2;
-    regions.push({ cluster, xMin, xMax });
-  }
-
-  console.log(`[PayItems] ${regions.length} table region(s) detected`);
-
   // Step 4: Parse each table region independently
   const allPayItems: PayItem[] = [];
 
-  for (const region of regions) {
-    const { cluster, xMin, xMax } = region;
+  // Stop patterns — footers, title blocks
+  const stopPattern = /^(DESIGNED|DRAWN|CHECKED|APPROVED|REVISIONS|SEAL|PROFESSIONAL|P\.E\.)$/i;
+  const footerPattern = /DESIGNED|DRAWN|CHECKED|APPROVED|REVISIONS|SEAL|PROFESSIONAL|P\.E\./i;
 
-    // Filter text items belonging to this region (by X) and below the header row (by Y)
+  for (let ri = 0; ri < headerClusters.length; ri++) {
+    const cluster = headerClusters[ri];
+    const { minX: xMin, maxX: xMax, headerY: dataStartY, columns: colPositions } = cluster;
+
+    // Filter text items in this region, below header rows
     const regionItems = allItems.filter(t =>
-      t.x >= xMin && t.x < xMax && t.y > cluster.headerY + Y_TOLERANCE
+      t.x >= xMin && t.x < xMax && t.y > dataStartY
     );
 
     // Group into rows by Y coordinate
@@ -360,7 +447,6 @@ export async function extractPayItemsFromPage(
       yGroups.get(roundedY)!.push(item);
     }
 
-    // Sort rows top-to-bottom
     const rows = Array.from(yGroups.entries())
       .sort((a, b) => a[0] - b[0])
       .map(([y, items]) => ({
@@ -368,40 +454,36 @@ export async function extractPayItemsFromPage(
         items: items.sort((a, b) => a.x - b.x),
       }));
 
-    console.log(`[PayItems] Region X=${xMin.toFixed(0)}-${xMax === Infinity ? '∞' : xMax.toFixed(0)}: ${rows.length} rows`);
+    console.log(`[PayItems] Table ${ri + 1}: ${rows.length} data rows`);
 
-    // Build column boundaries: assign each text item to the nearest column
-    const colPositions = cluster.columns;
+    // Build column entries for nearest-match
+    const colEntries: { name: string; x: number }[] = [];
+    if (colPositions.itemNo !== undefined) colEntries.push({ name: 'itemNo', x: colPositions.itemNo });
+    if (colPositions.unitCode !== undefined) colEntries.push({ name: 'unitCode', x: colPositions.unitCode });
+    if (colPositions.description !== undefined) colEntries.push({ name: 'description', x: colPositions.description });
+    if (colPositions.unit !== undefined) colEntries.push({ name: 'unit', x: colPositions.unit });
+    if (colPositions.quantity !== undefined) colEntries.push({ name: 'quantity', x: colPositions.quantity });
 
-    // Stop patterns — footers, title blocks, etc.
-    const stopPattern = /DESIGNED|DRAWN|CHECKED|APPROVED|REVISIONS|SEAL|PROFESSIONAL|P\.E\.|TOTAL|SHEET\s+\d|EQ-\d/i;
+    let foundAnyItem = false;
 
     for (const row of rows) {
       const rowText = row.items.map(i => i.str).join(' ');
 
-      if (stopPattern.test(rowText)) {
+      // Only stop on footer patterns AFTER we've found at least one item
+      if (foundAnyItem && footerPattern.test(rowText)) {
         console.log(`[PayItems]   Row "${rowText}" → stop (footer)`);
         break;
       }
 
-      // Assign each item to a column based on closest X match
+      // Assign each text item to the nearest column
       let itemNoStr = '';
       let unitCodeStr = '';
       let descParts: string[] = [];
       let unitStr = '';
       let qtyStr = '';
 
-      // Build sorted column positions for nearest-match assignment
-      const colEntries: { name: string; x: number }[] = [];
-      if (colPositions.itemNo !== undefined) colEntries.push({ name: 'itemNo', x: colPositions.itemNo });
-      if (colPositions.unitCode !== undefined) colEntries.push({ name: 'unitCode', x: colPositions.unitCode });
-      if (colPositions.description !== undefined) colEntries.push({ name: 'description', x: colPositions.description });
-      if (colPositions.unit !== undefined) colEntries.push({ name: 'unit', x: colPositions.unit });
-      if (colPositions.quantity !== undefined) colEntries.push({ name: 'quantity', x: colPositions.quantity });
-
       for (const textItem of row.items) {
-        // Find nearest column
-        let bestCol = 'description'; // default
+        let bestCol = 'description';
         let bestDist = Infinity;
         for (const col of colEntries) {
           const dist = Math.abs(textItem.x - col.x);
@@ -426,12 +508,14 @@ export async function extractPayItemsFromPage(
       qtyStr = qtyStr.trim().replace(/,/g, '');
       const description = descParts.join(' ').trim();
 
-      // Item number must be a sequential integer
+      // Item number must be a positive integer
       const itemNum = parseInt(itemNoStr);
       if (isNaN(itemNum) || itemNum <= 0) {
-        console.log(`[PayItems]   Row "${rowText}" → skipped (no valid item number)`);
+        console.log(`[PayItems]   Row "${rowText}" → skipped (no valid item number: "${itemNoStr}")`);
         continue;
       }
+
+      foundAnyItem = true;
 
       const unit = mapUnit(unitStr);
       const contractQuantity = parseFloat(qtyStr) || undefined;
@@ -452,9 +536,12 @@ export async function extractPayItemsFromPage(
     }
   }
 
-  // Sort by item number (inferred from insertion order, but let's be safe)
-  // Items were pushed in order per region, but regions are left-to-right
-  // The left table has lower item numbers, so ordering should already be correct
+  // Sort by parsed item number to ensure proper ordering
+  allPayItems.sort((a, b) => {
+    const numA = parseInt(a.name) || 0;
+    const numB = parseInt(b.name) || 0;
+    return numA - numB;
+  });
 
   console.log(`[PayItems] Extracted ${allPayItems.length} pay items total`);
 
