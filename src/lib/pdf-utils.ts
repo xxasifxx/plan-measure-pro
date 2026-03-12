@@ -192,12 +192,27 @@ export function getPageDimensions(
   });
 }
 
-const PAY_ITEM_COLORS = [
-  '#e74c3c', '#f39c12', '#3498db', '#2ecc71', '#9b59b6',
-  '#1abc9c', '#e67e22', '#34495e', '#e91e63', '#00bcd4',
-  '#8bc34a', '#ff5722', '#607d8b', '#795548', '#cddc39',
-  '#ff9800', '#4caf50', '#03a9f4', '#673ab7', '#f44336',
-];
+const SECTION_COLORS: Record<number, string[]> = {
+  100: ['#e74c3c', '#c0392b', '#ff6b6b', '#d63031', '#e17055'],
+  200: ['#f39c12', '#e67e22', '#fdcb6e', '#f0932b', '#ffa502'],
+  300: ['#3498db', '#2980b9', '#74b9ff', '#0984e3', '#00cec9'],
+  400: ['#2ecc71', '#27ae60', '#55efc4', '#00b894', '#badc58'],
+  500: ['#9b59b6', '#8e44ad', '#a29bfe', '#6c5ce7', '#e056fd'],
+  600: ['#1abc9c', '#16a085', '#00d2d3', '#01a3a4', '#48dbfb'],
+  700: ['#e91e63', '#c2185b', '#f48fb1', '#ff4081', '#ff1744'],
+  800: ['#607d8b', '#455a64', '#90a4ae', '#78909c', '#546e7a'],
+  900: ['#795548', '#5d4037', '#a1887f', '#8d6e63', '#6d4c41'],
+};
+
+const DEFAULT_COLORS = ['#e74c3c', '#f39c12', '#3498db', '#2ecc71', '#9b59b6',
+  '#1abc9c', '#e67e22', '#34495e', '#e91e63', '#00bcd4'];
+
+function getColorForItem(itemCode: string, indexInSection: number): string {
+  const match = itemCode.match(/^(\d)/);
+  const section = match ? parseInt(match[1]) * 100 : 0;
+  const palette = SECTION_COLORS[section] || DEFAULT_COLORS;
+  return palette[indexInSection % palette.length];
+}
 
 const UNIT_MAP: Record<string, PayItemUnit> = {
   'L.S.': 'LS', 'LS': 'LS', 'LUMP SUM': 'LS',
