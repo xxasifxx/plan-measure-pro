@@ -34,6 +34,7 @@ interface Props {
   hasPdf?: boolean;
   onImportToc?: () => void;
   onCloseProject?: () => void;
+  onImportPayItems?: () => void;
 }
 
 const ALL_UNITS: PayItemUnit[] = ['SF', 'LF', 'CY', 'SY', 'EA', 'TON', 'LS', 'USD', 'MNTH'];

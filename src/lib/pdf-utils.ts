@@ -1,5 +1,6 @@
 import * as pdfjsLib from 'pdfjs-dist';
-import type { TocEntry } from '@/types/project';
+import type { TocEntry, PayItem, PayItemUnit } from '@/types/project';
+import { isDrawableUnit } from '@/types/project';
 
 // Set worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;

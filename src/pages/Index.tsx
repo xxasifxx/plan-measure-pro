@@ -6,7 +6,7 @@ import { Toolbar } from '@/components/Toolbar';
 import { PdfCanvas } from '@/components/PdfCanvas';
 import { SummaryPanel } from '@/components/SummaryPanel';
 import { useProject } from '@/hooks/useProject';
-import { loadPdf, extractTextFromRegion } from '@/lib/pdf-utils';
+import { loadPdf, extractTextFromRegion, extractPayItemsFromPage } from '@/lib/pdf-utils';
 import { exportCsv, exportPdfReport } from '@/lib/export-utils';
 import { useToast } from '@/hooks/use-toast';
 import type { TocEntry } from '@/types/project';
