@@ -204,42 +204,13 @@ export function ProjectSidebar({
                   Import Pay Items
                 </Button>
               )}
-              {payItems.map(item => (
-                <div
-                  key={item.id}
-                  onClick={() => onActivePayItemChange(item.id)}
-                  className={`flex items-center gap-2 px-2 py-1.5 rounded-sm cursor-pointer text-xs transition-colors ${
-                    activePayItemId === item.id
-                      ? 'bg-sidebar-accent ring-1 ring-sidebar-primary'
-                      : 'hover:bg-sidebar-accent/50'
-                  }`}
-                >
-                  <div className="h-3 w-3 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
-                  {item.drawable ? (
-                    <PenTool className="h-2.5 w-2.5 shrink-0 text-sidebar-foreground/40" />
-                  ) : (
-                    <Hash className="h-2.5 w-2.5 shrink-0 text-sidebar-foreground/40" />
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <span className="truncate block text-sidebar-foreground">
-                      {item.itemCode ? `${item.itemCode} · ` : ''}{item.name}
-                    </span>
-                  </div>
-                  <span className="text-[10px] text-sidebar-foreground/50 shrink-0">{UNIT_LABELS[item.unit]}</span>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); setEditingItem(item); setDialogOpen(true); }}
-                    className="opacity-0 group-hover:opacity-100 hover:text-sidebar-primary"
-                  >
-                    <Edit2 className="h-2.5 w-2.5" />
-                  </button>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); deletePayItem(item.id); }}
-                    className="opacity-0 group-hover:opacity-100 hover:text-destructive"
-                  >
-                    <Trash2 className="h-2.5 w-2.5" />
-                  </button>
-                </div>
-              ))}
+              <PayItemList
+                payItems={payItems}
+                activePayItemId={activePayItemId}
+                onActivePayItemChange={onActivePayItemChange}
+                onEdit={(item) => { setEditingItem(item); setDialogOpen(true); }}
+                onDelete={deletePayItem}
+              />
 
               <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                 <DialogTrigger asChild>
