@@ -108,17 +108,14 @@ export function SummaryPanel({
                 <tr className="border-b border-border">
                   <th className="text-left py-2 px-2 font-semibold text-muted-foreground">Item #</th>
                   <th className="text-left py-2 px-2 font-semibold text-muted-foreground">Description</th>
-                  <th className="text-left py-2 px-2 font-semibold text-muted-foreground">Unit Code</th>
-                  <th className="text-right py-2 px-2 font-semibold text-muted-foreground">Count</th>
+                  <th className="text-left py-2 px-2 font-semibold text-muted-foreground">Unit</th>
                   <th className="text-right py-2 px-2 font-semibold text-muted-foreground">Quantity</th>
-                  <th className="text-right py-2 px-2 font-semibold text-muted-foreground">Unit</th>
                   <th className="text-right py-2 px-2 font-semibold text-muted-foreground">Unit Price</th>
                   <th className="text-right py-2 px-2 font-semibold text-muted-foreground">Extended</th>
                 </tr>
               </thead>
               <tbody>
                 {(() => {
-                  // Group rows by section
                   const sections = new Map<number, SummaryRow[]>();
                   for (const row of rows) {
                     const sec = getPayItemSection(row.payItem.itemCode);
@@ -130,7 +127,7 @@ export function SummaryPanel({
                   return sortedSections.map(([sec, sectionRows]) => (
                     <>
                       <tr key={`section-${sec}`}>
-                        <td colSpan={8} className="py-1.5 px-2 text-[10px] uppercase tracking-widest font-semibold text-muted-foreground bg-muted/30">
+                        <td colSpan={6} className="py-1.5 px-2 text-[10px] uppercase tracking-widest font-semibold text-muted-foreground bg-muted/30">
                           Section {sec}
                         </td>
                       </tr>
@@ -143,10 +140,7 @@ export function SummaryPanel({
                         {row.payItem.name}
                       </div>
                     </td>
-                    <td className="py-2 px-2 font-mono text-muted-foreground">{row.payItem.itemCode || '—'}</td>
-                    <td className="text-right py-2 px-2 font-mono">
-                      {row.payItem.drawable ? row.count : '—'}
-                    </td>
+                    <td className="py-2 px-2">{row.displayUnit}</td>
                     <td className="text-right py-2 px-2 font-mono">
                       {row.payItem.drawable ? (
                         row.totalQuantity.toFixed(1)
@@ -159,7 +153,6 @@ export function SummaryPanel({
                         />
                       )}
                     </td>
-                    <td className="text-right py-2 px-2">{row.displayUnit}</td>
                     <td className="text-right py-2 px-2 font-mono">${row.payItem.unitPrice.toFixed(2)}</td>
                     <td className="text-right py-2 px-2 font-mono font-semibold">
                       ${(row.payItem.drawable ? row.extendedCost : (row.manualQuantity ?? 0) * row.payItem.unitPrice).toFixed(2)}
@@ -172,7 +165,7 @@ export function SummaryPanel({
               </tbody>
               <tfoot>
                 <tr className="border-t-2 border-border">
-                  <td colSpan={7} className="py-3 px-2 font-bold text-right">Grand Total</td>
+                  <td colSpan={5} className="py-3 px-2 font-bold text-right">Grand Total</td>
                   <td className="py-3 px-2 font-bold text-right font-mono text-primary">
                     ${grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                   </td>

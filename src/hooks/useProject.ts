@@ -80,9 +80,12 @@ export function useProject() {
       storage.clearActiveProject();
     }
     setProject(null);
+    setPayItems([]);
+    storage.savePayItems([]);
     setCurrentPage(1);
     setTotalPages(0);
     setToolMode('select');
+    setActivePayItemId('');
   }, [project]);
 
   const currentCalibration = project?.calibrations[currentPage] || null;
