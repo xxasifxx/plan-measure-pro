@@ -85,6 +85,25 @@ const Index = () => {
     }
   }, [pdf, project, currentPage, scale, persist, setToolMode, toast]);
 
+  const handleImportPayItems = useCallback(async () => {
+    if (!pdf) return;
+    try {
+      toast({ title: 'Extracting Pay Items...', description: 'Scanning current page for Estimate of Quantities table(s)' });
+      const items = await extractPayItemsFromPage(pdf, currentPage, scale);
+      updatePayItems(items);
+      toast({
+        title: 'Pay Items Imported',
+        description: `${items.length} pay items extracted from the Estimate of Quantities table.`,
+      });
+    } catch (err) {
+      toast({
+        title: 'Error extracting pay items',
+        description: String(err),
+        variant: 'destructive',
+      });
+    }
+  }, [pdf, currentPage, scale, updatePayItems, toast]);
+
   const activePayItem = payItems.find(p => p.id === activePayItemId);
 
   return (
