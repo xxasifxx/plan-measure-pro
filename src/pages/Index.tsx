@@ -108,7 +108,7 @@ const Index = () => {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full">
+      <div className="h-screen flex w-full overflow-hidden">
         <ProjectSidebar
           toc={project?.toc || []}
           currentPage={currentPage}
