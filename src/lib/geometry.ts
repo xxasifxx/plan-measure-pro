@@ -37,3 +37,34 @@ export function formatMeasurement(value: number, unit: string): string {
   if (value >= 1000) return `${(value / 1000).toFixed(1)}K ${unit}`;
   return `${value.toFixed(1)} ${unit}`;
 }
+
+// --- Hit testing for select tool ---
+
+/** Distance from point to line segment */
+export function pointToSegmentDistance(p: PointXY, a: PointXY, b: PointXY): number {
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  const lenSq = dx * dx + dy * dy;
+  if (lenSq === 0) return distancePx(p, a);
+  let t = ((p.x - a.x) * dx + (p.y - a.y) * dy) / lenSq;
+  t = Math.max(0, Math.min(1, t));
+  return distancePx(p, { x: a.x + t * dx, y: a.y + t * dy });
+}
+
+/** Point-in-polygon (ray casting) */
+export function pointInPolygon(p: PointXY, polygon: PointXY[]): boolean {
+  let inside = false;
+  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+    const xi = polygon[i].x, yi = polygon[i].y;
+    const xj = polygon[j].x, yj = polygon[j].y;
+    if ((yi > p.y) !== (yj > p.y) && p.x < (xj - xi) * (p.y - yi) / (yj - yi) + xi) {
+      inside = !inside;
+    }
+  }
+  return inside;
+}
+
+/** Distance from point to a count marker center */
+export function pointToMarkerDistance(p: PointXY, marker: PointXY): number {
+  return distancePx(p, marker);
+}

@@ -7,7 +7,7 @@ export interface TocEntry {
 
 export type PayItemUnit = 'SF' | 'LF' | 'CY' | 'SY' | 'EA' | 'TON' | 'LS' | 'USD' | 'MNTH';
 
-export const DRAWABLE_UNITS = new Set<PayItemUnit>(['SF', 'LF', 'CY', 'SY']);
+export const DRAWABLE_UNITS = new Set<PayItemUnit>(['SF', 'LF', 'CY', 'SY', 'EA']);
 
 export function isDrawableUnit(unit: PayItemUnit): boolean {
   return DRAWABLE_UNITS.has(unit);
@@ -61,12 +61,12 @@ export interface Calibration {
 
 export interface Annotation {
   id: string;
-  type: 'line' | 'polygon';
+  type: 'line' | 'polygon' | 'count';
   points: PointXY[];
   payItemId: string;
   page: number;
   depth?: number; // feet, for volume calc
-  measurement: number; // LF or SF
+  measurement: number; // LF or SF or 1 for count
   measurementUnit: string;
 }
 
@@ -83,6 +83,6 @@ export interface Project {
   updatedAt: string;
 }
 
-export type ToolMode = 'select' | 'calibrate' | 'line' | 'polygon' | 'pan' | 'tocSelect';
+export type ToolMode = 'select' | 'calibrate' | 'line' | 'polygon' | 'pan' | 'tocSelect' | 'count';
 
 export const DEFAULT_PAY_ITEMS: PayItem[] = [];
