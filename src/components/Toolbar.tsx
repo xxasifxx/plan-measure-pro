@@ -1,5 +1,5 @@
 import {
-  MousePointer2, Ruler, PenTool, Minus, Move, ZoomIn, ZoomOut,
+  MousePointer2, Ruler, PenTool, Minus, Move, ZoomIn, ZoomOut, Maximize,
   ChevronLeft, ChevronRight, Download, BarChart3
 } from 'lucide-react';
 import type { ToolMode, PayItem, Calibration } from '@/types/project';
@@ -19,6 +19,7 @@ interface Props {
   activePayItem: PayItem | undefined;
   onShowSummary: () => void;
   onExport: () => void;
+  onFitToScreen?: () => void;
 }
 
 const tools: { mode: ToolMode; icon: typeof MousePointer2; label: string }[] = [
