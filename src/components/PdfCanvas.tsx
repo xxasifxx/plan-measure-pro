@@ -70,6 +70,9 @@ export function PdfCanvas({
     };
   }, [scale]);
 
+  // Helper to scale a normalized point to current canvas pixels
+  const s = useCallback((pt: PointXY): PointXY => ({ x: pt.x * scale, y: pt.y * scale }), [scale]);
+
   // Draw overlay
   useEffect(() => {
     const canvas = overlayCanvasRef.current;
@@ -79,7 +82,7 @@ export function PdfCanvas({
 
     const pageAnnotations = annotations.filter(a => a.page === currentPage);
 
-    // Draw existing annotations
+    // Draw existing annotations (stored normalized, scale up for display)
     for (const ann of pageAnnotations) {
       const item = payItems.find(p => p.id === ann.payItemId);
       const color = item?.color || '#999';
@@ -89,32 +92,31 @@ export function PdfCanvas({
       ctx.lineWidth = 2;
 
       if (ann.type === 'line' && ann.points.length === 2) {
+        const p0 = s(ann.points[0]), p1 = s(ann.points[1]);
         ctx.beginPath();
-        ctx.moveTo(ann.points[0].x, ann.points[0].y);
-        ctx.lineTo(ann.points[1].x, ann.points[1].y);
+        ctx.moveTo(p0.x, p0.y);
+        ctx.lineTo(p1.x, p1.y);
         ctx.stroke();
 
-        const mid = {
-          x: (ann.points[0].x + ann.points[1].x) / 2,
-          y: (ann.points[0].y + ann.points[1].y) / 2,
-        };
+        const mid = { x: (p0.x + p1.x) / 2, y: (p0.y + p1.y) / 2 };
         ctx.fillStyle = color;
         ctx.font = 'bold 11px monospace';
         ctx.fillText(`${ann.measurement.toFixed(1)} LF`, mid.x + 5, mid.y - 5);
       }
 
       if (ann.type === 'polygon' && ann.points.length >= 3) {
+        const scaled = ann.points.map(s);
         ctx.beginPath();
-        ctx.moveTo(ann.points[0].x, ann.points[0].y);
-        for (let i = 1; i < ann.points.length; i++) {
-          ctx.lineTo(ann.points[i].x, ann.points[i].y);
+        ctx.moveTo(scaled[0].x, scaled[0].y);
+        for (let i = 1; i < scaled.length; i++) {
+          ctx.lineTo(scaled[i].x, scaled[i].y);
         }
         ctx.closePath();
         ctx.fill();
         ctx.stroke();
 
-        const cx = ann.points.reduce((s, p) => s + p.x, 0) / ann.points.length;
-        const cy = ann.points.reduce((s, p) => s + p.y, 0) / ann.points.length;
+        const cx = scaled.reduce((sum, p) => sum + p.x, 0) / scaled.length;
+        const cy = scaled.reduce((sum, p) => sum + p.y, 0) / scaled.length;
         ctx.fillStyle = color;
         ctx.font = 'bold 11px monospace';
         const label = ann.depth
@@ -124,7 +126,7 @@ export function PdfCanvas({
       }
     }
 
-    // Draw in-progress shape
+    // Draw in-progress shape (drawingPoints are already normalized)
     if (drawingPoints.length > 0) {
       const item = payItems.find(p => p.id === activePayItemId);
       const color = item?.color || '#fff';
@@ -133,18 +135,20 @@ export function PdfCanvas({
       ctx.lineWidth = 2;
       ctx.setLineDash([5, 3]);
 
+      const scaledPts = drawingPoints.map(s);
       ctx.beginPath();
-      ctx.moveTo(drawingPoints[0].x, drawingPoints[0].y);
-      for (let i = 1; i < drawingPoints.length; i++) {
-        ctx.lineTo(drawingPoints[i].x, drawingPoints[i].y);
+      ctx.moveTo(scaledPts[0].x, scaledPts[0].y);
+      for (let i = 1; i < scaledPts.length; i++) {
+        ctx.lineTo(scaledPts[i].x, scaledPts[i].y);
       }
       if (mousePos) {
-        ctx.lineTo(mousePos.x, mousePos.y);
+        const sm = s(mousePos);
+        ctx.lineTo(sm.x, sm.y);
       }
       ctx.stroke();
       ctx.setLineDash([]);
 
-      for (const pt of drawingPoints) {
+      for (const pt of scaledPts) {
         ctx.fillStyle = color;
         ctx.beginPath();
         ctx.arc(pt.x, pt.y, 4, 0, Math.PI * 2);
@@ -152,7 +156,7 @@ export function PdfCanvas({
       }
     }
 
-    // Draw calibration points
+    // Draw calibration points (normalized)
     if (calibratePoints.length > 0) {
       ctx.strokeStyle = '#ff0';
       ctx.fillStyle = '#ff0';
@@ -160,46 +164,41 @@ export function PdfCanvas({
       ctx.setLineDash([4, 4]);
 
       for (const pt of calibratePoints) {
+        const sp = s(pt);
         ctx.beginPath();
-        ctx.arc(pt.x, pt.y, 5, 0, Math.PI * 2);
+        ctx.arc(sp.x, sp.y, 5, 0, Math.PI * 2);
         ctx.fill();
       }
 
       if (calibratePoints.length === 2) {
+        const sp0 = s(calibratePoints[0]), sp1 = s(calibratePoints[1]);
         ctx.beginPath();
-        ctx.moveTo(calibratePoints[0].x, calibratePoints[0].y);
-        ctx.lineTo(calibratePoints[1].x, calibratePoints[1].y);
-        ctx.stroke();
-      } else if (calibratePoints.length === 1 && mousePos) {
-        ctx.beginPath();
-        ctx.moveTo(calibratePoints[0].x, calibratePoints[0].y);
-        ctx.lineTo(mousePos.x, mousePos.y);
+        ctx.moveTo(sp0.x, sp0.y);
+        ctx.lineTo(sp1.x, sp1.y);
         ctx.stroke();
       }
       ctx.setLineDash([]);
     }
 
-    // Draw TOC selection rectangle
+    // TOC selection rectangle
     const drawTocRect = (x1: number, y1: number, x2: number, y2: number) => {
+      const sx1 = x1 * scale, sy1 = y1 * scale, sx2 = x2 * scale, sy2 = y2 * scale;
       ctx.strokeStyle = '#3b82f6';
       ctx.fillStyle = 'rgba(59, 130, 246, 0.1)';
       ctx.lineWidth = 2;
       ctx.setLineDash([6, 3]);
-      const rx = Math.min(x1, x2);
-      const ry = Math.min(y1, y2);
-      const rw = Math.abs(x2 - x1);
-      const rh = Math.abs(y2 - y1);
-      ctx.fillRect(rx, ry, rw, rh);
-      ctx.strokeRect(rx, ry, rw, rh);
+      ctx.strokeRect(sx1, sy1, sx2 - sx1, sy2 - sy1);
+      ctx.fillRect(sx1, sy1, sx2 - sx1, sy2 - sy1);
       ctx.setLineDash([]);
     };
 
-    if (tocDragStart && tocDragEnd) {
+    if (toolMode === 'tocSelect' && tocDragStart && tocDragEnd) {
       drawTocRect(tocDragStart.x, tocDragStart.y, tocDragEnd.x, tocDragEnd.y);
-    } else if (tocRect) {
+    }
+    if (tocRect && toolMode === 'tocSelect') {
       drawTocRect(tocRect.x1, tocRect.y1, tocRect.x2, tocRect.y2);
     }
-  }, [annotations, currentPage, drawingPoints, mousePos, payItems, activePayItemId, toolMode, calibratePoints, tocDragStart, tocDragEnd, tocRect]);
+  }, [annotations, currentPage, drawingPoints, mousePos, payItems, activePayItemId, toolMode, calibratePoints, tocDragStart, tocDragEnd, tocRect, scale, s]);
 
   const handleCanvasClick = useCallback((e: React.MouseEvent) => {
     if (toolMode === 'pan' || toolMode === 'select' || toolMode === 'tocSelect') return;
