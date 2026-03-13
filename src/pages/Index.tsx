@@ -179,6 +179,7 @@ const Index = () => {
             onAddAnnotation={addAnnotation}
             onRemoveAnnotation={removeAnnotation}
             onTocRegionSelected={handleTocRegionSelected}
+            externalContainerRef={canvasContainerRef}
           />
         </div>
       </div>
