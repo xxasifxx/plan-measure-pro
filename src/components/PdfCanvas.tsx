@@ -373,8 +373,11 @@ export function PdfCanvas({
 
   return (
     <div
-      ref={containerRef}
-      className="flex-1 overflow-auto bg-muted/50 relative"
+      ref={(el) => {
+        (containerRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
+        if (externalContainerRef) (externalContainerRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
+      }}
+      className="flex-1 overflow-auto bg-muted/50 relative min-h-0"
       onMouseUp={handleMouseUp}
     >
       <div
