@@ -10,7 +10,11 @@ interface UndoAction {
 
 export function useProject() {
   const [project, setProject] = useState<Project | null>(null);
-  const [payItems, setPayItems] = useState<PayItem[]>(() => storage.getPayItems());
+  const [payItems, setPayItems] = useState<PayItem[]>(() => {
+    // Only load pay items if there's an active project
+    const activeId = storage.getActiveProjectId();
+    return activeId ? storage.getPayItems() : [];
+  });
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [toolMode, setToolMode] = useState<ToolMode>('select');
