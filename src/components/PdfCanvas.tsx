@@ -61,14 +61,14 @@ export function PdfCanvas({
     });
   }, [pdf, currentPage, scale]);
 
-  // Get canvas-relative position
+  // Get canvas-relative position normalized to scale=1
   const getCanvasPos = useCallback((e: React.MouseEvent): PointXY => {
     const rect = overlayCanvasRef.current!.getBoundingClientRect();
     return {
-      x: (e.clientX - rect.left),
-      y: (e.clientY - rect.top),
+      x: (e.clientX - rect.left) / scale,
+      y: (e.clientY - rect.top) / scale,
     };
-  }, []);
+  }, [scale]);
 
   // Draw overlay
   useEffect(() => {
