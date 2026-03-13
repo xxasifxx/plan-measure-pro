@@ -17,6 +17,7 @@ interface Props {
   onAddAnnotation: (annotation: Annotation) => void;
   onRemoveAnnotation: (id: string) => void;
   onTocRegionSelected?: (rect: { x1: number; y1: number; x2: number; y2: number }) => void;
+  externalContainerRef?: React.RefObject<HTMLDivElement>;
 }
 
 export function PdfCanvas({
