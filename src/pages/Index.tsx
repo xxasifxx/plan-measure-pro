@@ -163,6 +163,7 @@ const Index = () => {
             onExport={() => {
               if (project) exportCsv(project.annotations, payItems, project.name);
             }}
+            onFitToScreen={handleFitToScreen}
           />
 
           <PdfCanvas
