@@ -126,6 +126,11 @@ export function Toolbar({
         <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => onScaleChange(Math.min(4, scale + 0.25))}>
           <ZoomIn className="h-3 w-3" />
         </Button>
+        {onFitToScreen && (
+          <Button variant="ghost" size="icon" className="h-6 w-6" onClick={onFitToScreen} title="Fit to screen">
+            <Maximize className="h-3 w-3" />
+          </Button>
+        )}
       </div>
 
       {/* Actions */}
