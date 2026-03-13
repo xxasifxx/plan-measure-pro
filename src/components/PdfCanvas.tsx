@@ -369,8 +369,8 @@ export function PdfCanvas({
     if (!pendingPolygon || !calibration) return;
     const depth = parseFloat(depthInput);
     if (isNaN(depth) || depth <= 0) return;
-    const { sfToCY } = require('@/lib/geometry');
-    const volumeCY = sfToCY(pendingPolygon.areaSF, depth);
+    const { sfToCY } = await_import_workaround;
+    const volumeCY = computeCY(pendingPolygon.areaSF, depth);
     onAddAnnotation({
       id: crypto.randomUUID(),
       type: 'polygon',
