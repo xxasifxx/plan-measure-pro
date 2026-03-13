@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { renderPage } from '@/lib/pdf-utils';
-import { distancePx, polygonAreaSF, lineLength } from '@/lib/geometry';
+import { distancePx, polygonAreaSF, lineLength, pointToSegmentDistance, pointInPolygon, pointToMarkerDistance } from '@/lib/geometry';
 import type { ToolMode, PointXY, Annotation, Calibration, PayItem } from '@/types/project';
 
 interface Props {
@@ -18,12 +18,17 @@ interface Props {
   onRemoveAnnotation: (id: string) => void;
   onTocRegionSelected?: (rect: { x1: number; y1: number; x2: number; y2: number }) => void;
   externalContainerRef?: React.RefObject<HTMLDivElement>;
+  selectedAnnotationId: string | null;
+  onSelectAnnotation: (id: string | null) => void;
 }
+
+const HIT_TOLERANCE = 8; // pixels at scale=1
+const MARKER_RADIUS = 8;
 
 export function PdfCanvas({
   pdf, currentPage, scale, toolMode, calibration,
   annotations, activePayItemId, payItems, onCalibrate, onAddAnnotation, onRemoveAnnotation,
-  onTocRegionSelected, externalContainerRef,
+  onTocRegionSelected, externalContainerRef, selectedAnnotationId, onSelectAnnotation,
 }: Props) {
   const pdfCanvasRef = useRef<HTMLCanvasElement>(null);
   const overlayCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -37,6 +42,10 @@ export function PdfCanvas({
   const [calibratePoints, setCalibratePoints] = useState<PointXY[]>([]);
   const [calibrateDistance, setCalibrateDistance] = useState('');
   const [showCalPrompt, setShowCalPrompt] = useState(false);
+
+  // Depth prompt for CY polygons
+  const [pendingPolygon, setPendingPolygon] = useState<{ points: PointXY[]; areaSF: number } | null>(null);
+  const [depthInput, setDepthInput] = useState('');
 
   // TOC selection rectangle
   const [tocDragStart, setTocDragStart] = useState<PointXY | null>(null);
@@ -73,6 +82,23 @@ export function PdfCanvas({
   // Helper to scale a normalized point to current canvas pixels
   const s = useCallback((pt: PointXY): PointXY => ({ x: pt.x * scale, y: pt.y * scale }), [scale]);
 
+  // Hit-test annotations at a normalized point
+  const hitTestAnnotations = useCallback((pos: PointXY): Annotation | null => {
+    const pageAnnotations = annotations.filter(a => a.page === currentPage);
+    // Reverse order so topmost drawn annotation is selected first
+    for (let i = pageAnnotations.length - 1; i >= 0; i--) {
+      const ann = pageAnnotations[i];
+      if (ann.type === 'count') {
+        if (pointToMarkerDistance(pos, ann.points[0]) <= MARKER_RADIUS) return ann;
+      } else if (ann.type === 'line' && ann.points.length === 2) {
+        if (pointToSegmentDistance(pos, ann.points[0], ann.points[1]) <= HIT_TOLERANCE) return ann;
+      } else if (ann.type === 'polygon' && ann.points.length >= 3) {
+        if (pointInPolygon(pos, ann.points)) return ann;
+      }
+    }
+    return null;
+  }, [annotations, currentPage]);
+
   // Draw overlay
   useEffect(() => {
     const canvas = overlayCanvasRef.current;
@@ -82,14 +108,40 @@ export function PdfCanvas({
 
     const pageAnnotations = annotations.filter(a => a.page === currentPage);
 
-    // Draw existing annotations (stored normalized, scale up for display)
     for (const ann of pageAnnotations) {
       const item = payItems.find(p => p.id === ann.payItemId);
       const color = item?.color || '#999';
+      const isSelected = ann.id === selectedAnnotationId;
 
-      ctx.strokeStyle = color;
+      ctx.strokeStyle = isSelected ? '#fff' : color;
       ctx.fillStyle = color + '33';
-      ctx.lineWidth = 2;
+      ctx.lineWidth = isSelected ? 3 : 2;
+
+      if (ann.type === 'count') {
+        const sp = s(ann.points[0]);
+        // Draw marker circle
+        ctx.beginPath();
+        ctx.arc(sp.x, sp.y, MARKER_RADIUS * scale, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+        if (isSelected) {
+          ctx.strokeStyle = '#fff';
+          ctx.lineWidth = 3;
+          ctx.stroke();
+        }
+        // Draw count number
+        ctx.fillStyle = '#fff';
+        ctx.font = `bold ${Math.round(10 * scale)}px monospace`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        // Find count index among same pay item count annotations on this page
+        const sameItemCounts = pageAnnotations.filter(a => a.type === 'count' && a.payItemId === ann.payItemId);
+        const idx = sameItemCounts.indexOf(ann) + 1;
+        ctx.fillText(String(idx), sp.x, sp.y);
+        ctx.textAlign = 'start';
+        ctx.textBaseline = 'alphabetic';
+        continue;
+      }
 
       if (ann.type === 'line' && ann.points.length === 2) {
         const p0 = s(ann.points[0]), p1 = s(ann.points[1]);
@@ -97,6 +149,13 @@ export function PdfCanvas({
         ctx.moveTo(p0.x, p0.y);
         ctx.lineTo(p1.x, p1.y);
         ctx.stroke();
+
+        if (isSelected) {
+          ctx.strokeStyle = '#fff';
+          ctx.setLineDash([4, 4]);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
 
         const mid = { x: (p0.x + p1.x) / 2, y: (p0.y + p1.y) / 2 };
         ctx.fillStyle = color;
@@ -112,8 +171,16 @@ export function PdfCanvas({
           ctx.lineTo(scaled[i].x, scaled[i].y);
         }
         ctx.closePath();
+        ctx.fillStyle = color + '33';
         ctx.fill();
         ctx.stroke();
+
+        if (isSelected) {
+          ctx.strokeStyle = '#fff';
+          ctx.setLineDash([4, 4]);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
 
         const cx = scaled.reduce((sum, p) => sum + p.x, 0) / scaled.length;
         const cy = scaled.reduce((sum, p) => sum + p.y, 0) / scaled.length;
@@ -126,7 +193,7 @@ export function PdfCanvas({
       }
     }
 
-    // Draw in-progress shape (drawingPoints are already normalized)
+    // Draw in-progress shape
     if (drawingPoints.length > 0) {
       const item = payItems.find(p => p.id === activePayItemId);
       const color = item?.color || '#fff';
@@ -154,9 +221,18 @@ export function PdfCanvas({
         ctx.arc(pt.x, pt.y, 4, 0, Math.PI * 2);
         ctx.fill();
       }
+
+      // Show running total for polygon
+      if (toolMode === 'polygon' && drawingPoints.length >= 3 && calibration) {
+        const areaSF = polygonAreaSF(drawingPoints, calibration.pixelsPerFoot);
+        const lastScaled = scaledPts[scaledPts.length - 1];
+        ctx.fillStyle = color;
+        ctx.font = 'bold 11px monospace';
+        ctx.fillText(`~${areaSF.toFixed(1)} SF`, lastScaled.x + 10, lastScaled.y - 10);
+      }
     }
 
-    // Draw calibration points (normalized)
+    // Draw calibration points
     if (calibratePoints.length > 0) {
       ctx.strokeStyle = '#ff0';
       ctx.fillStyle = '#ff0';
@@ -198,11 +274,32 @@ export function PdfCanvas({
     if (tocRect && toolMode === 'tocSelect') {
       drawTocRect(tocRect.x1, tocRect.y1, tocRect.x2, tocRect.y2);
     }
-  }, [annotations, currentPage, drawingPoints, mousePos, payItems, activePayItemId, toolMode, calibratePoints, tocDragStart, tocDragEnd, tocRect, scale, s]);
+  }, [annotations, currentPage, drawingPoints, mousePos, payItems, activePayItemId, toolMode, calibratePoints, tocDragStart, tocDragEnd, tocRect, scale, s, selectedAnnotationId, calibration]);
 
   const handleCanvasClick = useCallback((e: React.MouseEvent) => {
-    if (toolMode === 'pan' || toolMode === 'select' || toolMode === 'tocSelect') return;
+    if (toolMode === 'pan' || toolMode === 'tocSelect') return;
     const pos = getCanvasPos(e);
+
+    // Select tool: hit-test
+    if (toolMode === 'select') {
+      const hit = hitTestAnnotations(pos);
+      onSelectAnnotation(hit?.id || null);
+      return;
+    }
+
+    // Count tool: place marker
+    if (toolMode === 'count') {
+      onAddAnnotation({
+        id: crypto.randomUUID(),
+        type: 'count',
+        points: [pos],
+        payItemId: activePayItemId,
+        page: currentPage,
+        measurement: 1,
+        measurementUnit: 'EA',
+      });
+      return;
+    }
 
     if (toolMode === 'calibrate') {
       const pts = [...calibratePoints, pos];
@@ -239,13 +336,23 @@ export function PdfCanvas({
     if (toolMode === 'polygon') {
       setDrawingPoints(prev => [...prev, pos]);
     }
-  }, [toolMode, calibratePoints, drawingPoints, calibration, activePayItemId, currentPage, onAddAnnotation, getCanvasPos]);
+  }, [toolMode, calibratePoints, drawingPoints, calibration, activePayItemId, currentPage, onAddAnnotation, getCanvasPos, hitTestAnnotations, onSelectAnnotation]);
 
   const handleDoubleClick = useCallback((e: React.MouseEvent) => {
     if (toolMode !== 'polygon' || drawingPoints.length < 3) return;
     if (!calibration) { setDrawingPoints([]); return; }
 
     const areaSF = polygonAreaSF(drawingPoints, calibration.pixelsPerFoot);
+    const activeItem = payItems.find(p => p.id === activePayItemId);
+
+    // If CY pay item, prompt for depth
+    if (activeItem?.unit === 'CY') {
+      setPendingPolygon({ points: [...drawingPoints], areaSF });
+      setDepthInput('');
+      setDrawingPoints([]);
+      return;
+    }
+
     onAddAnnotation({
       id: crypto.randomUUID(),
       type: 'polygon',
@@ -253,10 +360,30 @@ export function PdfCanvas({
       payItemId: activePayItemId,
       page: currentPage,
       measurement: areaSF,
-      measurementUnit: 'SF',
+      measurementUnit: activeItem?.unit === 'SY' ? 'SY' : 'SF',
     });
     setDrawingPoints([]);
-  }, [toolMode, drawingPoints, calibration, activePayItemId, currentPage, onAddAnnotation]);
+  }, [toolMode, drawingPoints, calibration, activePayItemId, currentPage, onAddAnnotation, payItems]);
+
+  const submitDepth = useCallback(() => {
+    if (!pendingPolygon || !calibration) return;
+    const depth = parseFloat(depthInput);
+    if (isNaN(depth) || depth <= 0) return;
+    const { sfToCY } = require('@/lib/geometry');
+    const volumeCY = sfToCY(pendingPolygon.areaSF, depth);
+    onAddAnnotation({
+      id: crypto.randomUUID(),
+      type: 'polygon',
+      points: pendingPolygon.points,
+      payItemId: activePayItemId,
+      page: currentPage,
+      depth,
+      measurement: volumeCY,
+      measurementUnit: 'CY',
+    });
+    setPendingPolygon(null);
+    setDepthInput('');
+  }, [pendingPolygon, depthInput, calibration, activePayItemId, currentPage, onAddAnnotation]);
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     if (isPanning) {
@@ -267,7 +394,6 @@ export function PdfCanvas({
       return;
     }
 
-    // TOC drag
     if (toolMode === 'tocSelect' && tocDragStart) {
       const pos = getCanvasPos(e);
       setTocDragEnd(pos);
@@ -337,7 +463,6 @@ export function PdfCanvas({
     }
   };
 
-  // Handle right-click to cancel drawing
   const handleContextMenu = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     setDrawingPoints([]);
@@ -346,9 +471,10 @@ export function PdfCanvas({
     setTocDragStart(null);
     setTocDragEnd(null);
     setTocRect(null);
+    setPendingPolygon(null);
   }, []);
 
-  // Keyboard escape to cancel
+  // Keyboard: escape to cancel, delete to remove selected annotation
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -358,17 +484,29 @@ export function PdfCanvas({
         setTocDragStart(null);
         setTocDragEnd(null);
         setTocRect(null);
+        setPendingPolygon(null);
+        onSelectAnnotation(null);
+      }
+      if ((e.key === 'Delete' || e.key === 'Backspace') && selectedAnnotationId && toolMode === 'select') {
+        // Don't delete if user is typing in an input
+        if ((e.target as HTMLElement).tagName === 'INPUT' || (e.target as HTMLElement).tagName === 'TEXTAREA') return;
+        onRemoveAnnotation(selectedAnnotationId);
+        onSelectAnnotation(null);
       }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, []);
+  }, [selectedAnnotationId, toolMode, onRemoveAnnotation, onSelectAnnotation]);
 
   const cursorClass = toolMode === 'pan'
     ? (isPanning ? 'cursor-grabbing' : 'cursor-grab')
     : toolMode === 'select'
     ? 'cursor-default'
     : 'cursor-crosshair';
+
+  // Selected annotation info
+  const selectedAnnotation = selectedAnnotationId ? annotations.find(a => a.id === selectedAnnotationId) : null;
+  const selectedPayItem = selectedAnnotation ? payItems.find(p => p.id === selectedAnnotation.payItemId) : null;
 
   return (
     <div
@@ -397,6 +535,36 @@ export function PdfCanvas({
         />
       </div>
 
+      {/* Selected annotation info popup */}
+      {selectedAnnotation && selectedPayItem && (
+        <div className="absolute top-3 right-3 bg-card border border-border rounded-md shadow-lg p-3 z-20 min-w-[180px]">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="h-3 w-3 rounded-full" style={{ backgroundColor: selectedPayItem.color }} />
+            <span className="text-xs font-semibold truncate">{selectedPayItem.name}</span>
+          </div>
+          <div className="text-[10px] text-muted-foreground space-y-0.5">
+            <p>Type: {selectedAnnotation.type}</p>
+            <p>Measurement: {selectedAnnotation.measurement.toFixed(2)} {selectedAnnotation.measurementUnit}</p>
+            {selectedAnnotation.depth && <p>Depth: {selectedAnnotation.depth} ft</p>}
+            <p>Page: {selectedAnnotation.page}</p>
+          </div>
+          <div className="flex gap-1 mt-2">
+            <button
+              onClick={() => { onRemoveAnnotation(selectedAnnotation.id); onSelectAnnotation(null); }}
+              className="toolbar-btn text-[10px] text-destructive hover:bg-destructive/10"
+            >
+              Delete
+            </button>
+            <button
+              onClick={() => onSelectAnnotation(null)}
+              className="toolbar-btn text-[10px]"
+            >
+              Deselect
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Calibration distance prompt */}
       {showCalPrompt && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-card border border-border rounded-md shadow-lg p-3 z-50">
@@ -416,6 +584,34 @@ export function PdfCanvas({
             </button>
             <button
               onClick={() => { setCalibratePoints([]); setShowCalPrompt(false); }}
+              className="toolbar-btn text-xs"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Depth prompt for CY polygons */}
+      {pendingPolygon && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-card border border-border rounded-md shadow-lg p-3 z-50">
+          <p className="text-xs text-muted-foreground mb-1">Area: {pendingPolygon.areaSF.toFixed(1)} SF</p>
+          <p className="text-xs text-muted-foreground mb-2">Enter depth in feet to calculate cubic yards:</p>
+          <div className="flex gap-2">
+            <input
+              type="number"
+              value={depthInput}
+              onChange={e => setDepthInput(e.target.value)}
+              className="h-8 w-32 px-2 text-xs border border-input rounded-sm bg-background"
+              placeholder="e.g. 1.5"
+              autoFocus
+              onKeyDown={e => e.key === 'Enter' && submitDepth()}
+            />
+            <button onClick={submitDepth} className="toolbar-btn toolbar-btn-active text-xs">
+              Calculate
+            </button>
+            <button
+              onClick={() => setPendingPolygon(null)}
               className="toolbar-btn text-xs"
             >
               Cancel
@@ -470,6 +666,7 @@ export function PdfCanvas({
             {toolMode === 'calibrate' && 'Click two points on a known dimension'}
             {toolMode === 'line' && 'Click two points to measure length'}
             {toolMode === 'polygon' && 'Click to place vertices • Double-click to close • Right-click to cancel'}
+            {toolMode === 'count' && 'Click to place count markers'}
             {toolMode === 'tocSelect' && 'Click and drag to select the Table of Contents area'}
           </span>
         </div>

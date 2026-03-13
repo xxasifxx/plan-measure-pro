@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { ProjectSidebar } from '@/components/ProjectSidebar';
@@ -16,14 +16,37 @@ const Index = () => {
     project, createProject, closeProject, payItems, updatePayItems,
     currentPage, setCurrentPage, totalPages, setTotalPages,
     toolMode, setToolMode, activePayItemId, setActivePayItemId,
-    scale, setScale, setCalibration, addAnnotation, removeAnnotation,
-    currentCalibration, persist,
+    scale, setScale, setCalibration, copyCalibrationToPages,
+    addAnnotation, removeAnnotation, currentCalibration, persist,
+    undo, redo, canUndo, canRedo,
   } = useProject();
 
   const [pdf, setPdf] = useState<PDFDocumentProxy | null>(null);
   const [showSummary, setShowSummary] = useState(false);
+  const [selectedAnnotationId, setSelectedAnnotationId] = useState<string | null>(null);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+
+  // Keyboard shortcuts: Ctrl+Z undo, Ctrl+Shift+Z redo
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.target as HTMLElement).tagName === 'INPUT' || (e.target as HTMLElement).tagName === 'TEXTAREA') return;
+      if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
+        e.preventDefault();
+        undo();
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'z' && e.shiftKey) {
+        e.preventDefault();
+        redo();
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'y') {
+        e.preventDefault();
+        redo();
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [undo, redo]);
 
   const handleFitToScreen = useCallback(async () => {
     if (!pdf) return;
@@ -72,7 +95,6 @@ const Index = () => {
     try {
       toast({ title: 'Extracting TOC...', description: 'Reading text from selected area' });
 
-      // rect is in normalized (scale=1) coords, scale it up for extraction
       const scaledRect = {
         x1: rect.x1 * scale, y1: rect.y1 * scale,
         x2: rect.x2 * scale, y2: rect.y2 * scale,
@@ -124,6 +146,20 @@ const Index = () => {
     }
   }, [pdf, currentPage, scale, updatePayItems, toast]);
 
+  const handleCopyCalibration = useCallback(() => {
+    if (!currentCalibration || !project) return;
+    // Apply to all other pages
+    const otherPages = [];
+    for (let i = 1; i <= totalPages; i++) {
+      if (i !== currentPage) otherPages.push(i);
+    }
+    copyCalibrationToPages(currentPage, otherPages);
+    toast({
+      title: 'Calibration copied',
+      description: `Scale applied to all ${otherPages.length} other pages.`,
+    });
+  }, [currentCalibration, project, totalPages, currentPage, copyCalibrationToPages, toast]);
+
   const activePayItem = payItems.find(p => p.id === activePayItemId);
 
   return (
@@ -169,6 +205,11 @@ const Index = () => {
               if (project) exportCsv(project.annotations, payItems, project.name);
             }}
             onFitToScreen={handleFitToScreen}
+            onUndo={undo}
+            onRedo={redo}
+            canUndo={canUndo}
+            canRedo={canRedo}
+            onCopyCalibration={currentCalibration ? handleCopyCalibration : undefined}
           />
 
           <PdfCanvas
@@ -185,6 +226,8 @@ const Index = () => {
             onRemoveAnnotation={removeAnnotation}
             onTocRegionSelected={handleTocRegionSelected}
             externalContainerRef={canvasContainerRef}
+            selectedAnnotationId={selectedAnnotationId}
+            onSelectAnnotation={setSelectedAnnotationId}
           />
         </div>
       </div>
