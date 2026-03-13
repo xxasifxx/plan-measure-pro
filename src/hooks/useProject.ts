@@ -11,9 +11,9 @@ interface UndoAction {
 export function useProject() {
   const [project, setProject] = useState<Project | null>(null);
   const [payItems, setPayItems] = useState<PayItem[]>(() => {
-    // Only load pay items if there's an active project
-    const activeId = storage.getActiveProjectId();
-    return activeId ? storage.getPayItems() : [];
+    // We can't restore PDFs across refreshes, so always start clean
+    storage.clearActiveProject();
+    return [];
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
