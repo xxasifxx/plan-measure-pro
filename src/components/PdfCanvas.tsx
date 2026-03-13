@@ -369,8 +369,7 @@ export function PdfCanvas({
     if (!pendingPolygon || !calibration) return;
     const depth = parseFloat(depthInput);
     if (isNaN(depth) || depth <= 0) return;
-    const { sfToCY } = await_import_workaround;
-    const volumeCY = computeCY(pendingPolygon.areaSF, depth);
+    const volumeCY = (pendingPolygon.areaSF * depth) / 27;
     onAddAnnotation({
       id: crypto.randomUUID(),
       type: 'polygon',
