@@ -72,7 +72,12 @@ const Index = () => {
     try {
       toast({ title: 'Extracting TOC...', description: 'Reading text from selected area' });
 
-      const entries: TocEntry[] = await extractTextFromRegion(pdf, currentPage, scale, rect);
+      // rect is in normalized (scale=1) coords, scale it up for extraction
+      const scaledRect = {
+        x1: rect.x1 * scale, y1: rect.y1 * scale,
+        x2: rect.x2 * scale, y2: rect.y2 * scale,
+      };
+      const entries: TocEntry[] = await extractTextFromRegion(pdf, currentPage, scale, scaledRect);
 
       if (entries.length === 0) {
         toast({
