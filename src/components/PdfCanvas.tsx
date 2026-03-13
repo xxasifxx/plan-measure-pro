@@ -23,7 +23,7 @@ interface Props {
 export function PdfCanvas({
   pdf, currentPage, scale, toolMode, calibration,
   annotations, activePayItemId, payItems, onCalibrate, onAddAnnotation, onRemoveAnnotation,
-  onTocRegionSelected,
+  onTocRegionSelected, externalContainerRef,
 }: Props) {
   const pdfCanvasRef = useRef<HTMLCanvasElement>(null);
   const overlayCanvasRef = useRef<HTMLCanvasElement>(null);
