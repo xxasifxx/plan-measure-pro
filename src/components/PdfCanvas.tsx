@@ -17,12 +17,13 @@ interface Props {
   onAddAnnotation: (annotation: Annotation) => void;
   onRemoveAnnotation: (id: string) => void;
   onTocRegionSelected?: (rect: { x1: number; y1: number; x2: number; y2: number }) => void;
+  externalContainerRef?: React.RefObject<HTMLDivElement>;
 }
 
 export function PdfCanvas({
   pdf, currentPage, scale, toolMode, calibration,
   annotations, activePayItemId, payItems, onCalibrate, onAddAnnotation, onRemoveAnnotation,
-  onTocRegionSelected,
+  onTocRegionSelected, externalContainerRef,
 }: Props) {
   const pdfCanvasRef = useRef<HTMLCanvasElement>(null);
   const overlayCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -372,8 +373,11 @@ export function PdfCanvas({
 
   return (
     <div
-      ref={containerRef}
-      className="flex-1 overflow-auto bg-muted/50 relative"
+      ref={(el) => {
+        (containerRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
+        if (externalContainerRef) (externalContainerRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
+      }}
+      className="flex-1 overflow-auto bg-muted/50 relative min-h-0"
       onMouseUp={handleMouseUp}
     >
       <div

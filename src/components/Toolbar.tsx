@@ -1,5 +1,5 @@
 import {
-  MousePointer2, Ruler, PenTool, Minus, Move, ZoomIn, ZoomOut,
+  MousePointer2, Ruler, PenTool, Minus, Move, ZoomIn, ZoomOut, Maximize,
   ChevronLeft, ChevronRight, Download, BarChart3
 } from 'lucide-react';
 import type { ToolMode, PayItem, Calibration } from '@/types/project';
@@ -19,6 +19,7 @@ interface Props {
   activePayItem: PayItem | undefined;
   onShowSummary: () => void;
   onExport: () => void;
+  onFitToScreen?: () => void;
 }
 
 const tools: { mode: ToolMode; icon: typeof MousePointer2; label: string }[] = [
@@ -31,7 +32,7 @@ const tools: { mode: ToolMode; icon: typeof MousePointer2; label: string }[] = [
 
 export function Toolbar({
   toolMode, onToolChange, currentPage, totalPages, onPageChange,
-  scale, onScaleChange, calibration, activePayItem, onShowSummary, onExport
+  scale, onScaleChange, calibration, activePayItem, onShowSummary, onExport, onFitToScreen
 }: Props) {
   const { toast } = useToast();
 
@@ -125,6 +126,11 @@ export function Toolbar({
         <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => onScaleChange(Math.min(4, scale + 0.25))}>
           <ZoomIn className="h-3 w-3" />
         </Button>
+        {onFitToScreen && (
+          <Button variant="ghost" size="icon" className="h-6 w-6" onClick={onFitToScreen} title="Fit to screen">
+            <Maximize className="h-3 w-3" />
+          </Button>
+        )}
       </div>
 
       {/* Actions */}

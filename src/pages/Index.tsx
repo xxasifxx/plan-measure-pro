@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { ProjectSidebar } from '@/components/ProjectSidebar';
@@ -22,7 +22,22 @@ const Index = () => {
 
   const [pdf, setPdf] = useState<PDFDocumentProxy | null>(null);
   const [showSummary, setShowSummary] = useState(false);
+  const canvasContainerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+
+  const handleFitToScreen = useCallback(async () => {
+    if (!pdf) return;
+    try {
+      const page = await pdf.getPage(currentPage);
+      const viewport = page.getViewport({ scale: 1 });
+      const container = canvasContainerRef.current;
+      if (!container) return;
+      const cw = container.clientWidth - 32;
+      const ch = container.clientHeight - 32;
+      const fitScale = Math.min(cw / viewport.width, ch / viewport.height, 4);
+      setScale(Math.max(0.5, Math.round(fitScale * 100) / 100));
+    } catch {}
+  }, [pdf, currentPage, setScale]);
 
   const handleFileUpload = useCallback(async (file: File) => {
     try {
@@ -108,7 +123,7 @@ const Index = () => {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full">
+      <div className="h-screen flex w-full overflow-hidden">
         <ProjectSidebar
           toc={project?.toc || []}
           currentPage={currentPage}
@@ -126,7 +141,7 @@ const Index = () => {
           onImportPayItems={handleImportPayItems}
         />
 
-        <div className="flex-1 flex flex-col min-w-0">
+        <div className="flex-1 flex flex-col min-w-0 min-h-0">
           <div className="h-10 flex items-center border-b border-border bg-card px-2">
             <SidebarTrigger className="mr-2" />
             <span className="text-xs font-bold uppercase tracking-wider text-foreground">
@@ -148,6 +163,7 @@ const Index = () => {
             onExport={() => {
               if (project) exportCsv(project.annotations, payItems, project.name);
             }}
+            onFitToScreen={handleFitToScreen}
           />
 
           <PdfCanvas
@@ -163,6 +179,7 @@ const Index = () => {
             onAddAnnotation={addAnnotation}
             onRemoveAnnotation={removeAnnotation}
             onTocRegionSelected={handleTocRegionSelected}
+            externalContainerRef={canvasContainerRef}
           />
         </div>
       </div>
