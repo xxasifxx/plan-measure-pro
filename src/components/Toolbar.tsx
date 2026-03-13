@@ -32,7 +32,7 @@ const tools: { mode: ToolMode; icon: typeof MousePointer2; label: string }[] = [
 
 export function Toolbar({
   toolMode, onToolChange, currentPage, totalPages, onPageChange,
-  scale, onScaleChange, calibration, activePayItem, onShowSummary, onExport
+  scale, onScaleChange, calibration, activePayItem, onShowSummary, onExport, onFitToScreen
 }: Props) {
   const { toast } = useToast();
 
