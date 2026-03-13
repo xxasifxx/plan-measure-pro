@@ -22,7 +22,22 @@ const Index = () => {
 
   const [pdf, setPdf] = useState<PDFDocumentProxy | null>(null);
   const [showSummary, setShowSummary] = useState(false);
+  const canvasContainerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+
+  const handleFitToScreen = useCallback(async () => {
+    if (!pdf) return;
+    try {
+      const page = await pdf.getPage(currentPage);
+      const viewport = page.getViewport({ scale: 1 });
+      const container = canvasContainerRef.current;
+      if (!container) return;
+      const cw = container.clientWidth - 32;
+      const ch = container.clientHeight - 32;
+      const fitScale = Math.min(cw / viewport.width, ch / viewport.height, 4);
+      setScale(Math.max(0.5, Math.round(fitScale * 100) / 100));
+    } catch {}
+  }, [pdf, currentPage, setScale]);
 
   const handleFileUpload = useCallback(async (file: File) => {
     try {
