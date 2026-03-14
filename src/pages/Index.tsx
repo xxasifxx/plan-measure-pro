@@ -17,7 +17,8 @@ const Index = () => {
     currentPage, setCurrentPage, totalPages, setTotalPages,
     toolMode, setToolMode, activePayItemId, setActivePayItemId,
     scale, setScale, setCalibration, copyCalibrationToPages,
-    addAnnotation, removeAnnotation, currentCalibration, persist,
+    addAnnotation, removeAnnotation, updateAnnotation, removeAnnotationsForPayItem,
+    currentCalibration, persist,
     undo, redo, canUndo, canRedo,
   } = useProject();
 
