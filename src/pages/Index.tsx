@@ -227,6 +227,7 @@ const Index = () => {
             onCalibrate={cal => setCalibration(currentPage, cal)}
             onAddAnnotation={addAnnotation}
             onRemoveAnnotation={removeAnnotation}
+            onUpdateAnnotation={updateAnnotation}
             onTocRegionSelected={handleTocRegionSelected}
             externalContainerRef={canvasContainerRef}
             selectedAnnotationId={selectedAnnotationId}

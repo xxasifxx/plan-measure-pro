@@ -185,6 +185,7 @@ export function useProject() {
     addAnnotation,
     removeAnnotation,
     updateAnnotation,
+    removeAnnotationsForPayItem,
     currentCalibration,
     persist,
     undo,
