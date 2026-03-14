@@ -19,6 +19,7 @@ interface Props {
   onCalibrate: (cal: Calibration) => void;
   onAddAnnotation: (annotation: Annotation) => void;
   onRemoveAnnotation: (id: string) => void;
+  onUpdateAnnotation?: (id: string, changes: Partial<Annotation>) => void;
   onTocRegionSelected?: (rect: { x1: number; y1: number; x2: number; y2: number }) => void;
   externalContainerRef?: React.RefObject<HTMLDivElement>;
   selectedAnnotationId: string | null;
