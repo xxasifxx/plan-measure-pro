@@ -17,7 +17,8 @@ const Index = () => {
     currentPage, setCurrentPage, totalPages, setTotalPages,
     toolMode, setToolMode, activePayItemId, setActivePayItemId,
     scale, setScale, setCalibration, copyCalibrationToPages,
-    addAnnotation, removeAnnotation, currentCalibration, persist,
+    addAnnotation, removeAnnotation, updateAnnotation, removeAnnotationsForPayItem,
+    currentCalibration, persist,
     undo, redo, canUndo, canRedo,
   } = useProject();
 
@@ -180,6 +181,8 @@ const Index = () => {
           onImportToc={() => setToolMode('tocSelect')}
           onCloseProject={handleCloseProject}
           onImportPayItems={handleImportPayItems}
+          annotations={project?.annotations || []}
+          onRemoveAnnotationsForPayItem={removeAnnotationsForPayItem}
         />
 
         <div className="flex-1 flex flex-col min-w-0 min-h-0">
@@ -224,6 +227,7 @@ const Index = () => {
             onCalibrate={cal => setCalibration(currentPage, cal)}
             onAddAnnotation={addAnnotation}
             onRemoveAnnotation={removeAnnotation}
+            onUpdateAnnotation={updateAnnotation}
             onTocRegionSelected={handleTocRegionSelected}
             externalContainerRef={canvasContainerRef}
             selectedAnnotationId={selectedAnnotationId}

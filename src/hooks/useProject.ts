@@ -130,6 +130,15 @@ export function useProject() {
   const canUndo = project ? undoStack.current.length > 0 : false;
   const canRedo = project ? redoStack.current.length > 0 : false;
 
+  const removeAnnotationsForPayItem = useCallback((payItemId: string) => {
+    if (!project) return;
+    const updated = {
+      ...project,
+      annotations: project.annotations.filter(a => a.payItemId !== payItemId),
+    };
+    persist(updated);
+  }, [project, persist]);
+
   const updatePayItems = useCallback((items: PayItem[]) => {
     setPayItems(items);
     storage.savePayItems(items);
@@ -176,6 +185,7 @@ export function useProject() {
     addAnnotation,
     removeAnnotation,
     updateAnnotation,
+    removeAnnotationsForPayItem,
     currentCalibration,
     persist,
     undo,
