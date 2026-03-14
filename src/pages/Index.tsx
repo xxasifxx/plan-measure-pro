@@ -181,6 +181,8 @@ const Index = () => {
           onImportToc={() => setToolMode('tocSelect')}
           onCloseProject={handleCloseProject}
           onImportPayItems={handleImportPayItems}
+          annotations={project?.annotations || []}
+          onRemoveAnnotationsForPayItem={removeAnnotationsForPayItem}
         />
 
         <div className="flex-1 flex flex-col min-w-0 min-h-0">
