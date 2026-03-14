@@ -278,6 +278,19 @@ export function PdfCanvas({
     }
   }, [annotations, currentPage, drawingPoints, mousePos, payItems, activePayItemId, toolMode, calibratePoints, tocDragStart, tocDragEnd, tocRect, scale, s, selectedAnnotationId, calibration]);
 
+  // Guard: check active pay item and calibration before drawing
+  const guardDrawing = useCallback((needsCalibration: boolean): boolean => {
+    if (!activePayItemId || !payItems.find(p => p.id === activePayItemId)) {
+      toast({ title: 'No pay item selected', description: 'Select a pay item in the sidebar before drawing.', variant: 'destructive' });
+      return false;
+    }
+    if (needsCalibration && !calibration) {
+      toast({ title: 'No calibration set', description: 'Calibrate the scale on this page before measuring.', variant: 'destructive' });
+      return false;
+    }
+    return true;
+  }, [activePayItemId, payItems, calibration]);
+
   const handleCanvasClick = useCallback((e: React.MouseEvent) => {
     if (toolMode === 'pan' || toolMode === 'tocSelect') return;
     const pos = getCanvasPos(e);
@@ -291,6 +304,7 @@ export function PdfCanvas({
 
     // Count tool: place marker
     if (toolMode === 'count') {
+      if (!guardDrawing(false)) return;
       onAddAnnotation({
         id: crypto.randomUUID(),
         type: 'count',
@@ -313,14 +327,11 @@ export function PdfCanvas({
     }
 
     if (toolMode === 'line') {
+      if (!guardDrawing(true)) return;
       const pts = [...drawingPoints, pos];
       setDrawingPoints(pts);
       if (pts.length === 2) {
-        if (!calibration) {
-          setDrawingPoints([]);
-          return;
-        }
-        const measurement = lineLength(pts, calibration.pixelsPerFoot);
+        const measurement = lineLength(pts, calibration!.pixelsPerFoot);
         onAddAnnotation({
           id: crypto.randomUUID(),
           type: 'line',
@@ -336,9 +347,10 @@ export function PdfCanvas({
     }
 
     if (toolMode === 'polygon') {
+      if (drawingPoints.length === 0 && !guardDrawing(true)) return;
       setDrawingPoints(prev => [...prev, pos]);
     }
-  }, [toolMode, calibratePoints, drawingPoints, calibration, activePayItemId, currentPage, onAddAnnotation, getCanvasPos, hitTestAnnotations, onSelectAnnotation]);
+  }, [toolMode, calibratePoints, drawingPoints, calibration, activePayItemId, currentPage, onAddAnnotation, getCanvasPos, hitTestAnnotations, onSelectAnnotation, guardDrawing]);
 
   const handleDoubleClick = useCallback((e: React.MouseEvent) => {
     if (toolMode !== 'polygon' || drawingPoints.length < 3) return;
