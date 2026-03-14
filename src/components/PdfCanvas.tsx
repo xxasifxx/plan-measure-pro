@@ -189,10 +189,8 @@ export function PdfCanvas({
         const cx = scaled.reduce((sum, p) => sum + p.x, 0) / scaled.length;
         const cy = scaled.reduce((sum, p) => sum + p.y, 0) / scaled.length;
         ctx.fillStyle = color;
-        ctx.font = 'bold 11px monospace';
-        const label = ann.depth
-          ? `${ann.measurement.toFixed(1)} CY`
-          : `${ann.measurement.toFixed(1)} SF`;
+        const unitLabel = ann.measurementUnit || (ann.depth ? 'CY' : 'SF');
+        const label = `${ann.measurement.toFixed(1)} ${unitLabel}`;
         ctx.fillText(label, cx - 20, cy);
       }
     }
