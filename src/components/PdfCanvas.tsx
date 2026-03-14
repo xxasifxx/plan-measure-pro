@@ -354,7 +354,11 @@ export function PdfCanvas({
 
   const handleDoubleClick = useCallback((e: React.MouseEvent) => {
     if (toolMode !== 'polygon' || drawingPoints.length < 3) return;
-    if (!calibration) { setDrawingPoints([]); return; }
+    if (!calibration) {
+      toast({ title: 'No calibration set', description: 'Calibrate the scale before measuring areas.', variant: 'destructive' });
+      setDrawingPoints([]);
+      return;
+    }
 
     const areaSF = polygonAreaSF(drawingPoints, calibration.pixelsPerFoot);
     const activeItem = payItems.find(p => p.id === activePayItemId);
@@ -367,14 +371,18 @@ export function PdfCanvas({
       return;
     }
 
+    // SY conversion: divide SF by 9
+    const isSY = activeItem?.unit === 'SY';
+    const measurement = isSY ? areaSF / 9 : areaSF;
+
     onAddAnnotation({
       id: crypto.randomUUID(),
       type: 'polygon',
       points: [...drawingPoints],
       payItemId: activePayItemId,
       page: currentPage,
-      measurement: areaSF,
-      measurementUnit: activeItem?.unit === 'SY' ? 'SY' : 'SF',
+      measurement,
+      measurementUnit: isSY ? 'SY' : 'SF',
     });
     setDrawingPoints([]);
   }, [toolMode, drawingPoints, calibration, activePayItemId, currentPage, onAddAnnotation, payItems]);
