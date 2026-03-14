@@ -32,7 +32,7 @@ const MARKER_RADIUS = 8;
 export function PdfCanvas({
   pdf, currentPage, scale, toolMode, calibration,
   annotations, activePayItemId, payItems, onCalibrate, onAddAnnotation, onRemoveAnnotation,
-  onTocRegionSelected, externalContainerRef, selectedAnnotationId, onSelectAnnotation,
+  onUpdateAnnotation, onTocRegionSelected, externalContainerRef, selectedAnnotationId, onSelectAnnotation,
 }: Props) {
   const pdfCanvasRef = useRef<HTMLCanvasElement>(null);
   const overlayCanvasRef = useRef<HTMLCanvasElement>(null);
