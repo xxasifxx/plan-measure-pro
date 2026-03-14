@@ -558,7 +558,7 @@ export function PdfCanvas({
 
       {/* Selected annotation info popup */}
       {selectedAnnotation && selectedPayItem && (
-        <div className="absolute top-3 right-3 bg-card border border-border rounded-md shadow-lg p-3 z-20 min-w-[180px]">
+        <div className="absolute top-3 right-3 bg-card border border-border rounded-md shadow-lg p-3 z-20 min-w-[200px]">
           <div className="flex items-center gap-2 mb-2">
             <div className="h-3 w-3 rounded-full" style={{ backgroundColor: selectedPayItem.color }} />
             <span className="text-xs font-semibold truncate">{selectedPayItem.name}</span>
@@ -569,6 +569,37 @@ export function PdfCanvas({
             {selectedAnnotation.depth && <p>Depth: {selectedAnnotation.depth} ft</p>}
             <p>Page: {selectedAnnotation.page}</p>
           </div>
+          {/* Reassign pay item */}
+          {onUpdateAnnotation && (
+            <div className="mt-2">
+              <p className="text-[10px] text-muted-foreground mb-1">Reassign to:</p>
+              <Select
+                value={selectedAnnotation.payItemId}
+                onValueChange={(newId) => {
+                  const newItem = payItems.find(p => p.id === newId);
+                  if (newItem) {
+                    onUpdateAnnotation(selectedAnnotation.id, {
+                      payItemId: newId,
+                    });
+                  }
+                }}
+              >
+                <SelectTrigger className="h-7 text-[10px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {payItems.filter(p => p.drawable).map(p => (
+                    <SelectItem key={p.id} value={p.id} className="text-xs">
+                      <div className="flex items-center gap-1.5">
+                        <div className="h-2 w-2 rounded-full" style={{ backgroundColor: p.color }} />
+                        {p.name} ({UNIT_LABELS[p.unit]})
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
           <div className="flex gap-1 mt-2">
             <button
               onClick={() => { onRemoveAnnotation(selectedAnnotation.id); onSelectAnnotation(null); }}
