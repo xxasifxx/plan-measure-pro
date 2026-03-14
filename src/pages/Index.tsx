@@ -188,7 +188,7 @@ const Index = () => {
           payItems={payItems}
           onUpdatePayItems={updatePayItems}
           activePayItemId={activePayItemId}
-          onActivePayItemChange={setActivePayItemId}
+          onActivePayItemChange={handleActivePayItemChange}
           projectName={project?.name || null}
           hasPdf={!!pdf}
           onImportToc={() => setToolMode('tocSelect')}
