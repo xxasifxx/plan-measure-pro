@@ -6,6 +6,26 @@ import type { ToolMode, PayItem, Calibration } from '@/types/project';
 import { UNIT_LABELS } from '@/types/project';
 import { Button } from '@/components/ui/button';
 
+interface Props {
+  toolMode: ToolMode;
+  onToolChange: (mode: ToolMode) => void;
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+  scale: number;
+  onScaleChange: (scale: number) => void;
+  calibration: Calibration | null;
+  activePayItem: PayItem | undefined;
+  onShowSummary: () => void;
+  onExport: () => void;
+  onFitToScreen?: () => void;
+  onUndo?: () => void;
+  onRedo?: () => void;
+  canUndo?: boolean;
+  canRedo?: boolean;
+  onCopyCalibration?: () => void;
+}
+
 const tools: { mode: ToolMode; icon: typeof MousePointer2; label: string }[] = [
   { mode: 'select', icon: MousePointer2, label: 'Select' },
   { mode: 'pan', icon: Move, label: 'Pan' },
@@ -25,7 +45,7 @@ export function Toolbar({
         {tools.map(t => (
           <button
             key={t.mode}
-            onClick={() => handleToolChange(t.mode)}
+            onClick={() => onToolChange(t.mode)}
             title={t.label}
             className={`toolbar-btn ${toolMode === t.mode ? 'toolbar-btn-active' : ''}`}
           >
