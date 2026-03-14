@@ -400,12 +400,13 @@ function TocSectionItem({ entry, currentPage, onPageChange }: {
   );
 }
 
-function PayItemList({ payItems, activePayItemId, onActivePayItemChange, onEdit, onDelete }: {
+function PayItemList({ payItems, activePayItemId, onActivePayItemChange, onEdit, onDelete, annotations }: {
   payItems: PayItem[];
   activePayItemId: string;
   onActivePayItemChange: (id: string) => void;
   onEdit: (item: PayItem) => void;
   onDelete: (id: string) => void;
+  annotations: Annotation[];
 }) {
   // Group by section (first digit of itemCode × 100)
   const sections = useMemo(() => {
