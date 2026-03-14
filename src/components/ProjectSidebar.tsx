@@ -35,6 +35,8 @@ interface Props {
   onImportToc?: () => void;
   onCloseProject?: () => void;
   onImportPayItems?: () => void;
+  annotations: Annotation[];
+  onRemoveAnnotationsForPayItem?: (payItemId: string) => void;
 }
 
 const ALL_UNITS: PayItemUnit[] = ['SF', 'LF', 'CY', 'SY', 'EA', 'TON', 'LS', 'USD', 'MNTH'];
