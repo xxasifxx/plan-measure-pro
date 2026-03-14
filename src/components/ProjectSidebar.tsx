@@ -68,6 +68,7 @@ export function ProjectSidebar({
 
   const deletePayItem = (id: string) => {
     onUpdatePayItems(payItems.filter(p => p.id !== id));
+    onRemoveAnnotationsForPayItem?.(id);
   };
 
   return (
