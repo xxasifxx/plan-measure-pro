@@ -163,6 +163,19 @@ const Index = () => {
 
   const activePayItem = payItems.find(p => p.id === activePayItemId);
 
+  const handleActivePayItemChange = useCallback((id: string | null) => {
+    setActivePayItemId(id);
+    if (!id) return;
+    const item = payItems.find(p => p.id === id);
+    if (!item) return;
+    switch (item.unit) {
+      case 'LF': setToolMode('line'); break;
+      case 'SF': case 'SY': case 'CY': setToolMode('polygon'); break;
+      case 'EA': setToolMode('count'); break;
+      default: setToolMode('select'); break;
+    }
+  }, [payItems, setActivePayItemId, setToolMode]);
+
   return (
     <SidebarProvider>
       <div className="h-screen flex w-full overflow-hidden">
