@@ -3,6 +3,9 @@ import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { renderPage } from '@/lib/pdf-utils';
 import { distancePx, polygonAreaSF, lineLength, pointToSegmentDistance, pointInPolygon, pointToMarkerDistance } from '@/lib/geometry';
 import type { ToolMode, PointXY, Annotation, Calibration, PayItem } from '@/types/project';
+import { UNIT_LABELS } from '@/types/project';
+import { toast } from '@/hooks/use-toast';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface Props {
   pdf: PDFDocumentProxy | null;
