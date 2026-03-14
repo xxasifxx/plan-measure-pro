@@ -1,12 +1,10 @@
 import {
-  MousePointer2, Ruler, PenTool, Minus, Move, ZoomIn, ZoomOut, Maximize,
-  ChevronLeft, ChevronRight, Download, BarChart3, Undo2, Redo2, Hash, Copy
+  MousePointer2, Ruler, Move, ZoomIn, ZoomOut, Maximize,
+  ChevronLeft, ChevronRight, Download, BarChart3, Undo2, Redo2, Copy
 } from 'lucide-react';
-import { useState } from 'react';
 import type { ToolMode, PayItem, Calibration } from '@/types/project';
 import { UNIT_LABELS } from '@/types/project';
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
 
 interface Props {
   toolMode: ToolMode;
@@ -32,9 +30,6 @@ const tools: { mode: ToolMode; icon: typeof MousePointer2; label: string }[] = [
   { mode: 'select', icon: MousePointer2, label: 'Select' },
   { mode: 'pan', icon: Move, label: 'Pan' },
   { mode: 'calibrate', icon: Ruler, label: 'Calibrate' },
-  { mode: 'line', icon: Minus, label: 'Line' },
-  { mode: 'polygon', icon: PenTool, label: 'Polygon' },
-  { mode: 'count', icon: Hash, label: 'Count' },
 ];
 
 export function Toolbar({
@@ -42,27 +37,6 @@ export function Toolbar({
   scale, onScaleChange, calibration, activePayItem, onShowSummary, onExport, onFitToScreen,
   onUndo, onRedo, canUndo, canRedo, onCopyCalibration
 }: Props) {
-  const { toast } = useToast();
-
-  const handleToolChange = (mode: ToolMode) => {
-    if ((mode === 'line' || mode === 'polygon') && activePayItem && !activePayItem.drawable) {
-      toast({
-        title: 'Non-drawable pay item',
-        description: `"${activePayItem.name}" (${UNIT_LABELS[activePayItem.unit]}) cannot be drawn on plans. Select a drawable item (SF, LF, CY, SY) first.`,
-        variant: 'destructive',
-      });
-      return;
-    }
-    if (mode === 'count' && activePayItem && activePayItem.unit !== 'EA') {
-      toast({
-        title: 'Count tool requires EA item',
-        description: `Select an EA (Each) pay item to use the count tool.`,
-        variant: 'destructive',
-      });
-      return;
-    }
-    onToolChange(mode);
-  };
 
   return (
     <div className="flex items-center gap-1 px-2 py-1.5 bg-card border-b border-border overflow-x-auto">
@@ -71,7 +45,7 @@ export function Toolbar({
         {tools.map(t => (
           <button
             key={t.mode}
-            onClick={() => handleToolChange(t.mode)}
+            onClick={() => onToolChange(t.mode)}
             title={t.label}
             className={`toolbar-btn ${toolMode === t.mode ? 'toolbar-btn-active' : ''}`}
           >
