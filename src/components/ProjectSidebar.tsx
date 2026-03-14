@@ -432,43 +432,54 @@ function PayItemList({ payItems, activePayItemId, onActivePayItemChange, onEdit,
           <div className="text-[9px] uppercase tracking-widest text-sidebar-foreground/40 px-2 pt-1.5 pb-0.5 font-semibold">
             {label}
           </div>
-          {items.map(item => (
-            <div
-              key={item.id}
-              onClick={() => onActivePayItemChange(item.id)}
-              className={`flex items-center gap-2 px-2 py-1.5 rounded-sm cursor-pointer text-xs transition-colors ${
-                activePayItemId === item.id
-                  ? 'bg-sidebar-accent ring-1 ring-sidebar-primary'
-                  : 'hover:bg-sidebar-accent/50'
-              }`}
-            >
-              <div className="h-3 w-3 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
-              {item.drawable ? (
-                <PenTool className="h-2.5 w-2.5 shrink-0 text-sidebar-foreground/40" />
-              ) : (
-                <Hash className="h-2.5 w-2.5 shrink-0 text-sidebar-foreground/40" />
-              )}
-              <div className="flex-1 min-w-0">
-                <span className="truncate block text-sidebar-foreground">
-                  <span className="font-mono text-sidebar-foreground/60">{item.itemNumber}.</span>{' '}
-                  {item.name}
-                </span>
+          {items.map(item => {
+            const itemAnnotations = annotations.filter(a => a.payItemId === item.id);
+            const totalMeasurement = itemAnnotations.reduce((sum, a) => sum + a.measurement, 0);
+            const count = itemAnnotations.length;
+
+            return (
+              <div
+                key={item.id}
+                onClick={() => onActivePayItemChange(item.id)}
+                className={`group flex items-center gap-2 px-2 py-1.5 rounded-sm cursor-pointer text-xs transition-colors ${
+                  activePayItemId === item.id
+                    ? 'bg-sidebar-accent ring-1 ring-sidebar-primary'
+                    : 'hover:bg-sidebar-accent/50'
+                }`}
+              >
+                <div className="h-3 w-3 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
+                {item.drawable ? (
+                  <PenTool className="h-2.5 w-2.5 shrink-0 text-sidebar-foreground/40" />
+                ) : (
+                  <Hash className="h-2.5 w-2.5 shrink-0 text-sidebar-foreground/40" />
+                )}
+                <div className="flex-1 min-w-0">
+                  <span className="truncate block text-sidebar-foreground">
+                    <span className="font-mono text-sidebar-foreground/60">{item.itemNumber}.</span>{' '}
+                    {item.name}
+                  </span>
+                  {count > 0 && (
+                    <span className="block text-[9px] text-sidebar-foreground/50 mt-0.5">
+                      {count} ann · {totalMeasurement.toFixed(1)} {UNIT_LABELS[item.unit]}
+                    </span>
+                  )}
+                </div>
+                <span className="text-[10px] text-sidebar-foreground/50 shrink-0">{UNIT_LABELS[item.unit]}</span>
+                <button
+                  onClick={(e) => { e.stopPropagation(); onEdit(item); }}
+                  className="opacity-0 group-hover:opacity-100 hover:text-sidebar-primary"
+                >
+                  <Edit2 className="h-2.5 w-2.5" />
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); onDelete(item.id); }}
+                  className="opacity-0 group-hover:opacity-100 hover:text-destructive"
+                >
+                  <Trash2 className="h-2.5 w-2.5" />
+                </button>
               </div>
-              <span className="text-[10px] text-sidebar-foreground/50 shrink-0">{UNIT_LABELS[item.unit]}</span>
-              <button
-                onClick={(e) => { e.stopPropagation(); onEdit(item); }}
-                className="opacity-0 group-hover:opacity-100 hover:text-sidebar-primary"
-              >
-                <Edit2 className="h-2.5 w-2.5" />
-              </button>
-              <button
-                onClick={(e) => { e.stopPropagation(); onDelete(item.id); }}
-                className="opacity-0 group-hover:opacity-100 hover:text-destructive"
-              >
-                <Trash2 className="h-2.5 w-2.5" />
-              </button>
-            </div>
-          ))}
+            );
+          })}
         </div>
       ))}
     </>
