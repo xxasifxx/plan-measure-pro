@@ -213,6 +213,7 @@ export function ProjectSidebar({
                 onActivePayItemChange={onActivePayItemChange}
                 onEdit={(item) => { setEditingItem(item); setDialogOpen(true); }}
                 onDelete={deletePayItem}
+                annotations={annotations}
               />
 
               <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
