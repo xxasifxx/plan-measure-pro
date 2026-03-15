@@ -50,6 +50,7 @@ export function ProjectSidebar({
   toc, currentPage, totalPages, onPageChange, onFileUpload,
   payItems, onUpdatePayItems, activePayItemId, onActivePayItemChange, projectName,
   hasPdf, onImportToc, onCloseProject, onImportPayItems, annotations, onRemoveAnnotationsForPayItem,
+  onSpecsUpload, specsLoaded, specsLoading, onViewSpec,
 }: Props) {
   const [editingItem, setEditingItem] = useState<PayItem | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
