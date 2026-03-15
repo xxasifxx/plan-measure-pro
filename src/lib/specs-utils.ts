@@ -130,11 +130,40 @@ export function findSectionContent(
   for (let i = startPageIdx; i < sortedPages.length; i++) {
     const [, text] = sortedPages[i];
 
-    // Stop if we've found the next section's real content
-    if (i > startPageIdx && nextSectionFirstSub.test(text)) {
-      // Verify it's real content for the next section (not a reference)
-      const wordCount = text.split(/\s+/).length;
-      if (wordCount > 150) break;
+    // Stop if we've hit a different section's real content
+    if (i > startPageIdx) {
+      // Check for any other section's .01 subsection on this page
+      let foundNextSection = false;
+      let match: RegExpExecArray | null;
+      anySectionFirstSub.lastIndex = 0;
+      while ((match = anySectionFirstSub.exec(text)) !== null) {
+        const foundNum = parseInt(match[1], 10);
+        if (foundNum !== sectionNumber) {
+          // Verify it's real content (not a cross-reference)
+          const wordCount = text.split(/\s+/).length;
+          if (wordCount > 150) {
+            foundNextSection = true;
+            break;
+          }
+        }
+      }
+
+      // Also check for "SECTION NNN" heading for a different section
+      if (!foundNextSection) {
+        anySectionHeading.lastIndex = 0;
+        while ((match = anySectionHeading.exec(text)) !== null) {
+          const foundNum = parseInt(match[1], 10);
+          if (foundNum !== sectionNumber) {
+            const wordCount = text.split(/\s+/).length;
+            if (wordCount > 150) {
+              foundNextSection = true;
+              break;
+            }
+          }
+        }
+      }
+
+      if (foundNextSection) break;
     }
 
     contentPages.push(text);
