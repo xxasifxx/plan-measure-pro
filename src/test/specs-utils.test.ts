@@ -240,4 +240,35 @@ describe('findSectionContent — non-sequential boundaries', () => {
     expect(s801).not.toBeNull();
     expect(s801!.basisOfPayment).toContain('801-0001');
   });
+
+  it('skips TOC pages that list multiple sections', () => {
+    const pages = new Map<number, string>();
+    // TOC page: has 202.01, 202.02, 203.01, 204.01 etc. — many distinct sections
+    const tocText = [
+      'SECTION 202 EXCAVATION',
+      '202.01 Description 150',
+      '202.02 Materials 150',
+      '202.03 Construction 151',
+      '202.04 Measurement and Payment 152',
+      'SECTION 203 EMBANKMENT',
+      '203.01 Description 153',
+      '203.02 Materials 153',
+      '203.03 Construction 154',
+      '203.04 Measurement and Payment 155',
+      'SECTION 204 SUBBASE',
+      '204.01 Description 156',
+      '204.02 Materials 156',
+    ].join(' ') + ' word'.repeat(160);
+    pages.set(10, tocText);
+
+    // Real content page for section 202
+    pages.set(100, makePageText(202, ['01', '02', '03']));
+    pages.set(101, makePageText(202, ['04'], 'Basis of Payment Item 202-0002'));
+
+    const s202 = findSectionContent(pages, 202);
+    expect(s202).not.toBeNull();
+    // Should pick page 100 (real content), not page 10 (TOC)
+    expect(s202!.fullContent).not.toContain('SECTION 203');
+    expect(s202!.fullContent).not.toContain('204.01');
+  });
 });
