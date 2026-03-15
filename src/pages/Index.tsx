@@ -8,7 +8,7 @@ import { SummaryPanel } from '@/components/SummaryPanel';
 import { SpecViewer } from '@/components/SpecViewer';
 import { useProject } from '@/hooks/useProject';
 import { loadPdf, extractTextFromRegion, extractPayItemsFromPage } from '@/lib/pdf-utils';
-import { extractAllText, findSectionContent, getSectionFromItemCode, findItemCodePayRequirements, type SpecSection } from '@/lib/specs-utils';
+import { extractAllText, buildSectionPageIndex, getSectionFromItemCode } from '@/lib/specs-utils';
 import { exportCsv, exportPdfReport } from '@/lib/export-utils';
 import { useToast } from '@/hooks/use-toast';
 import type { TocEntry } from '@/types/project';
