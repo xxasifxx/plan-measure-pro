@@ -86,19 +86,27 @@ export function findSectionContent(
     // Must have the first subsection marker (e.g., "202.01")
     if (!firstSubsectionPattern.test(text)) continue;
 
-    // Distinguish real content from TOC:
-    // Real content pages have substantial prose (long text, sentences).
-    // TOC pages are mostly headings + bare page numbers.
-    // Heuristic: count words on this page — real content has 100+ words
-    // Also check for at least 2 subsection markers (XXX.01, XXX.02, etc.)
+    // KEY HEURISTIC: Distinguish real content from TOC pages.
+    // TOC pages list subsection headings from MANY different sections on one page
+    // (e.g., "202.01 ... 202.02 ... 203.01 ... 204.01 ..." all with page numbers).
+    // Real content pages only have subsection markers from ONE section,
+    // followed by paragraphs of prose.
+
+    // Count how many DISTINCT 3-digit section prefixes appear as subsection markers
+    const allSubsectionMatches = text.match(/(\d{3})\.\d{2}\b/g) || [];
+    const distinctSections = new Set(
+      allSubsectionMatches.map((m) => m.slice(0, 3))
+    );
+
+    // If 3+ distinct section numbers have subsection markers on this page, it's TOC
+    if (distinctSections.size >= 3) continue;
+
     const wordCount = text.split(/\s+/).length;
     const subsectionMatches = text.match(
       new RegExp(`${sectionStr}\\.\\d{2}`, 'g')
     );
     const subsectionCount = subsectionMatches ? subsectionMatches.length : 0;
 
-    // Real section content: has multiple subsections AND substantial text
-    // OR has the section heading nearby AND substantial text
     const hasSubstantialText = wordCount > 150;
     const hasMultipleSubsections = subsectionCount >= 2;
     const hasSectionHeading = sectionHeadingPattern.test(text);
