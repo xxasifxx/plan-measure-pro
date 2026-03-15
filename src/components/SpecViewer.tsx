@@ -3,7 +3,7 @@ import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, ChevronLeft, ChevronRight, Loader2, ZoomIn, ZoomOut } from 'lucide-react';
+import { BookOpen, ChevronLeft, ChevronRight, GripVertical, Loader2, ZoomIn, ZoomOut } from 'lucide-react';
 
 interface Props {
   open: boolean;
@@ -29,6 +29,30 @@ export function SpecViewer({
   const [currentPage, setCurrentPage] = useState(1);
   const [rendering, setRendering] = useState(false);
   const [scale, setScale] = useState(1.5);
+  const [panelWidth, setPanelWidth] = useState(896); // default ~4xl
+  const draggingRef = useRef(false);
+
+  // Drag-to-resize from left edge
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    draggingRef.current = true;
+    const startX = e.clientX;
+    const startWidth = panelWidth;
+
+    const onMove = (ev: MouseEvent) => {
+      if (!draggingRef.current) return;
+      const delta = startX - ev.clientX;
+      const newWidth = Math.min(Math.max(400, startWidth + delta), window.innerWidth - 100);
+      setPanelWidth(newWidth);
+    };
+    const onUp = () => {
+      draggingRef.current = false;
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+    };
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  }, [panelWidth]);
 
   // Reset to start page when opening
   useEffect(() => {
@@ -82,7 +106,18 @@ export function SpecViewer({
 
   return (
     <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
-      <SheetContent side="right" className="w-full sm:max-w-4xl p-0 flex flex-col">
+      <SheetContent
+        side="right"
+        className="p-0 flex flex-col"
+        style={{ maxWidth: panelWidth, width: '100%' }}
+      >
+        {/* Drag handle on left edge */}
+        <div
+          className="absolute left-0 top-0 bottom-0 w-2 cursor-col-resize z-50 flex items-center justify-center hover:bg-primary/10 transition-colors group"
+          onMouseDown={handleMouseDown}
+        >
+          <GripVertical className="h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+        </div>
         <SheetHeader className="p-3 pb-2 border-b border-border shrink-0">
           <div className="flex items-center gap-2">
             <BookOpen className="h-4 w-4 text-primary shrink-0" />
