@@ -1,4 +1,8 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
+
+// Mock pdfjs-dist to avoid native canvas dependency
+vi.mock('pdfjs-dist', () => ({}));
+
 import { getSectionFromItemCode, findItemCodePayRequirements } from '@/lib/specs-utils';
 
 describe('getSectionFromItemCode', () => {
