@@ -115,6 +115,26 @@ export function ProjectSidebar({
                   Close Project
                 </Button>
               )}
+              {hasPdf && onSpecsUpload && (
+                <label className="flex items-center gap-2 px-3 py-2 rounded-sm border border-dashed border-sidebar-border cursor-pointer hover:border-sidebar-primary hover:bg-sidebar-accent transition-colors text-xs">
+                  {specsLoading ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <BookOpen className="h-3.5 w-3.5" />
+                  )}
+                  <span>{specsLoaded ? 'Specs Loaded ✓' : specsLoading ? 'Loading Specs…' : 'Upload Standard Specs'}</span>
+                  <input
+                    type="file"
+                    accept=".pdf"
+                    onChange={(e) => {
+                      const f = e.target.files?.[0];
+                      if (f && f.type === 'application/pdf') onSpecsUpload(f);
+                    }}
+                    className="hidden"
+                    disabled={specsLoading}
+                  />
+                </label>
+              )}
             </div>
           </SidebarGroupContent>
         </SidebarGroup>
