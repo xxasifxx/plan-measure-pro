@@ -83,22 +83,24 @@ export function buildSectionPageIndex(
       }
     }
 
-    // Look for "SECTION NNN" headings
-    const sectionHeadingMatches = text.matchAll(/SECTION\s+(\d{3})\b/gi);
+    // Look for "SECTION NNN" headings — require a title after it (dash, hyphen, or title words)
+    // to distinguish actual section headings from inline cross-references like
+    // "in accordance with Section 202"
+    const sectionHeadingMatches = text.matchAll(/SECTION\s+(\d{3})\s*[-–—]\s*\w/gi);
     for (const match of sectionHeadingMatches) {
       const numStr = match[1];
       const num = parseInt(numStr, 10);
       if (sectionToPage.has(num)) continue;
 
       // The section heading's number must match the dominant subsection prefix,
-      // OR there are no subsection markers (sparse page with just the heading)
+      // OR there are no subsection markers (heading-only page is OK since we
+      // already verified it has "SECTION NNN - TITLE" format)
       const isOwnerPage =
         prefixCounts.size === 0 ||
         dominantPrefix === numStr ||
         (prefixCounts.get(numStr) || 0) >= dominantCount;
 
       if (isOwnerPage) {
-        // Also verify there's real content (not just a one-line reference)
         const wordCount = text.split(/\s+/).length;
         if (wordCount > 50) {
           sectionToPage.set(num, pageNum);
