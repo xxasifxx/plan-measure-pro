@@ -180,7 +180,7 @@ describe('findItemCodePayRequirements', () => {
 describe('findSectionContent — non-sequential boundaries', () => {
   function makePageText(section: number, subsections: string[], extra = ''): string {
     const parts = subsections.map(s => `${section}.${s}`);
-    return `SECTION ${section} TEST ${parts.join(' ')} ${' word'.repeat(80)} ${extra}`;
+    return `SECTION ${section} TEST ${parts.join(' ')} ${' word'.repeat(160)} ${extra}`;
   }
 
   it('stops at non-sequential next section (305 → 502)', () => {
