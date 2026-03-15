@@ -83,18 +83,22 @@ export function buildSectionPageIndex(
       }
     }
 
-    // Look for "SECTION NNN" headings — require a title after it (dash, hyphen, or title words)
-    // to distinguish actual section headings from inline cross-references like
-    // "in accordance with Section 202"
-    const sectionHeadingMatches = text.matchAll(/SECTION\s+(\d{3})\s*[-–—]\s*\w/gi);
+    // Look for "SECTION NNN" on the page. To confirm it's the ACTUAL section start
+    // (not a cross-reference), require that NNN.01 also appears on this page.
+    // Real section pages always contain the first subsection (NNN.01 Description).
+    const sectionHeadingMatches = text.matchAll(/SECTION\s+(\d{3})\b/gi);
     for (const match of sectionHeadingMatches) {
       const numStr = match[1];
       const num = parseInt(numStr, 10);
       if (sectionToPage.has(num)) continue;
 
+      // Require NNN.01 on the same page — this is the strongest signal
+      // that this page is where the section actually starts
+      const hasFirstSubsection = new RegExp(`\\b${numStr}\\.01\\b`).test(text);
+      if (!hasFirstSubsection) continue;
+
       // The section heading's number must match the dominant subsection prefix,
-      // OR there are no subsection markers (heading-only page is OK since we
-      // already verified it has "SECTION NNN - TITLE" format)
+      // OR there are few/no other subsection markers
       const isOwnerPage =
         prefixCounts.size === 0 ||
         dominantPrefix === numStr ||
