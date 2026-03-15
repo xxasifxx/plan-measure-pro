@@ -241,7 +241,6 @@ export function ProjectSidebar({
                 annotations={annotations}
                 onViewSpec={specsLoaded ? onViewSpec : undefined}
               />
-              />
 
               <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                 <DialogTrigger asChild>
