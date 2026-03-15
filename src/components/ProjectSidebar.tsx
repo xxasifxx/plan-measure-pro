@@ -468,6 +468,7 @@ function PayItemList({ payItems, activePayItemId, onActivePayItemChange, onEdit,
               <div
                 key={item.id}
                 onClick={() => onActivePayItemChange(item.id)}
+                onDoubleClick={() => onViewSpec?.(item.itemCode)}
                 className={`group flex items-center gap-2 px-2 py-1.5 rounded-sm cursor-pointer text-xs transition-colors ${
                   activePayItemId === item.id
                     ? 'bg-sidebar-accent ring-1 ring-sidebar-primary'
