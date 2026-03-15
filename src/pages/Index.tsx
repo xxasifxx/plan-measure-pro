@@ -375,6 +375,17 @@ const Index = () => {
           onExportPdf={() => exportPdfReport(project.annotations, payItems, project.name, project.contractNumber)}
         />
       )}
+
+      <SpecViewer
+        open={specViewerOpen}
+        onClose={() => setSpecViewerOpen(false)}
+        sectionNumber={specViewerData.sectionNumber}
+        itemCode={specViewerData.itemCode}
+        itemName={specViewerData.itemName}
+        fullContent={specViewerData.fullContent}
+        itemPayRequirements={specViewerData.itemPayRequirements}
+        loading={specSearching}
+      />
     </SidebarProvider>
   );
 };
