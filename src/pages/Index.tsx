@@ -339,9 +339,8 @@ const Index = () => {
         sectionNumber={specViewerData.sectionNumber}
         itemCode={specViewerData.itemCode}
         itemName={specViewerData.itemName}
-        fullContent={specViewerData.fullContent}
-        itemPayRequirements={specViewerData.itemPayRequirements}
-        loading={specSearching}
+        specsPdf={specsPdf}
+        startPage={specViewerData.startPage}
       />
     </SidebarProvider>
   );
