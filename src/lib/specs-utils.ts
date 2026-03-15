@@ -68,13 +68,13 @@ export function findSectionContent(
   const sectionStr = String(sectionNumber);
   // Pattern to find the first subsection (XXX.01) which marks the real section start
   const firstSubsectionPattern = new RegExp(`${sectionStr}\\.01\\b`);
-  // Pattern to find the next section's first subsection (marks the end)
-  const nextSectionFirstSub = new RegExp(`${sectionNumber + 1}\\.01\\b`);
-  // Also check for SECTION XXX heading
-  const sectionHeadingPattern = new RegExp(
-    `SECTION\\s+${sectionStr}\\b`,
-    'i'
-  );
+  // Pattern to detect ANY other section's first subsection (e.g., "NNN.01" where NNN ≠ sectionStr)
+  // We'll check dynamically in the loop instead of assuming +1
+  // General pattern: any 3-digit section's .01 subsection (not ours)
+  const anySectionFirstSub = /(\d{3})\.01\b/g;
+  const sectionHeadingPattern = new RegExp(`SECTION\\s+${sectionStr}\\b`, 'i');
+  // Pattern to find any SECTION heading that isn't ours
+  const anySectionHeading = /SECTION\s+(\d{3})\b/gi;
 
   const sortedPages = Array.from(pageTexts.entries()).sort((a, b) => a[0] - b[0]);
 
@@ -127,11 +127,40 @@ export function findSectionContent(
   for (let i = startPageIdx; i < sortedPages.length; i++) {
     const [, text] = sortedPages[i];
 
-    // Stop if we've found the next section's real content
-    if (i > startPageIdx && nextSectionFirstSub.test(text)) {
-      // Verify it's real content for the next section (not a reference)
-      const wordCount = text.split(/\s+/).length;
-      if (wordCount > 150) break;
+    // Stop if we've hit a different section's real content
+    if (i > startPageIdx) {
+      // Check for any other section's .01 subsection on this page
+      let foundNextSection = false;
+      let match: RegExpExecArray | null;
+      anySectionFirstSub.lastIndex = 0;
+      while ((match = anySectionFirstSub.exec(text)) !== null) {
+        const foundNum = parseInt(match[1], 10);
+        if (foundNum !== sectionNumber) {
+          // Verify it's real content (not a cross-reference)
+          const wordCount = text.split(/\s+/).length;
+          if (wordCount > 150) {
+            foundNextSection = true;
+            break;
+          }
+        }
+      }
+
+      // Also check for "SECTION NNN" heading for a different section
+      if (!foundNextSection) {
+        anySectionHeading.lastIndex = 0;
+        while ((match = anySectionHeading.exec(text)) !== null) {
+          const foundNum = parseInt(match[1], 10);
+          if (foundNum !== sectionNumber) {
+            const wordCount = text.split(/\s+/).length;
+            if (wordCount > 150) {
+              foundNextSection = true;
+              break;
+            }
+          }
+        }
+      }
+
+      if (foundNextSection) break;
     }
 
     contentPages.push(text);
