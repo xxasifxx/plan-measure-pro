@@ -152,51 +152,9 @@ const Index = () => {
     const item = payItems.find(p => p.itemCode === itemCode);
     const itemName = item?.name || '';
 
-    if (!sectionNumber) {
-      setSpecViewerData({ sectionNumber: null, itemCode, itemName, fullContent: null, itemPayRequirements: null });
-      setSpecViewerOpen(true);
-      return;
-    }
+    const startPage = sectionNumber ? (sectionPageIndexRef.current.get(sectionNumber) || null) : null;
 
-    // Check cache first
-    let section = specsCacheRef.current.get(sectionNumber);
-    if (section === undefined) {
-      setSpecSearching(true);
-      setSpecViewerData({ sectionNumber, itemCode, itemName, fullContent: null, itemPayRequirements: null });
-      setSpecViewerOpen(true);
-
-      // Run synchronously but in next tick to show loading state
-      setTimeout(() => {
-        section = findSectionContent(specsTextRef.current, sectionNumber);
-        specsCacheRef.current.set(sectionNumber, section);
-
-        const payReqs = section?.basisOfPayment
-          ? findItemCodePayRequirements(section.basisOfPayment, itemCode)
-          : null;
-
-        setSpecViewerData({
-          sectionNumber,
-          itemCode,
-          itemName,
-          fullContent: section?.fullContent || null,
-          itemPayRequirements: payReqs,
-        });
-        setSpecSearching(false);
-      }, 50);
-      return;
-    }
-
-    const payReqs = section?.basisOfPayment
-      ? findItemCodePayRequirements(section.basisOfPayment, itemCode)
-      : null;
-
-    setSpecViewerData({
-      sectionNumber,
-      itemCode,
-      itemName,
-      fullContent: section?.fullContent || null,
-      itemPayRequirements: payReqs,
-    });
+    setSpecViewerData({ sectionNumber: sectionNumber || null, itemCode, itemName, startPage });
     setSpecViewerOpen(true);
   }, [specsLoaded, payItems, toast]);
 
