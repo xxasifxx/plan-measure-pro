@@ -33,17 +33,15 @@ const Index = () => {
   // Standard specs state
   const [specsLoaded, setSpecsLoaded] = useState(false);
   const [specsLoading, setSpecsLoading] = useState(false);
-  const specsTextRef = useRef<Map<number, string>>(new Map());
-  const specsCacheRef = useRef<Map<number, SpecSection | null>>(new Map());
+  const [specsPdf, setSpecsPdf] = useState<PDFDocumentProxy | null>(null);
+  const sectionPageIndexRef = useRef<Map<number, number>>(new Map());
   const [specViewerOpen, setSpecViewerOpen] = useState(false);
   const [specViewerData, setSpecViewerData] = useState<{
     sectionNumber: number | null;
     itemCode: string;
     itemName: string;
-    fullContent: string | null;
-    itemPayRequirements: string | null;
-  }>({ sectionNumber: null, itemCode: '', itemName: '', fullContent: null, itemPayRequirements: null });
-  const [specSearching, setSpecSearching] = useState(false);
+    startPage: number | null;
+  }>({ sectionNumber: null, itemCode: '', itemName: '', startPage: null });
 
   // Keyboard shortcuts: Ctrl+Z undo, Ctrl+Shift+Z redo
   useEffect(() => {
