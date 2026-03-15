@@ -75,9 +75,6 @@ export function findSectionContent(
   const sectionHeadingPattern = new RegExp(`SECTION\\s+${sectionStr}\\b`, 'i');
   // Pattern to find any SECTION heading that isn't ours
   const anySectionHeading = /SECTION\s+(\d{3})\b/gi;
-    `SECTION\\s+${sectionStr}\\b`,
-    'i'
-  );
 
   const sortedPages = Array.from(pageTexts.entries()).sort((a, b) => a[0] - b[0]);
 
