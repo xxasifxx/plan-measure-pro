@@ -113,23 +113,24 @@ const Index = () => {
       setSpecsLoading(true);
       toast({ title: 'Loading Standard Specs…', description: 'This may take a moment for large documents.' });
 
-      const specsPdf = await loadPdf(file);
-      const totalPgs = specsPdf.numPages;
+      const loadedSpecsPdf = await loadPdf(file);
+      const totalPgs = loadedSpecsPdf.numPages;
 
-      const textMap = await extractAllText(specsPdf, (done, total) => {
+      const textMap = await extractAllText(loadedSpecsPdf, (done, total) => {
         if (done % 50 === 0 || done === total) {
-          toast({ title: 'Extracting text…', description: `${done} / ${total} pages` });
+          toast({ title: 'Indexing pages…', description: `${done} / ${total} pages` });
         }
       });
 
-      specsTextRef.current = textMap;
-      specsCacheRef.current = new Map();
+      const index = buildSectionPageIndex(textMap);
+      sectionPageIndexRef.current = index;
+      setSpecsPdf(loadedSpecsPdf);
       setSpecsLoaded(true);
       setSpecsLoading(false);
 
       toast({
         title: 'Standard Specs Loaded',
-        description: `${totalPgs} pages indexed. Double-click a pay item to view its spec.`,
+        description: `${totalPgs} pages indexed, ${index.size} sections found. Double-click a pay item to view its spec.`,
       });
     } catch (err) {
       setSpecsLoading(false);
