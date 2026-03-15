@@ -3,7 +3,7 @@ import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, ChevronLeft, ChevronRight, Loader2, ZoomIn, ZoomOut } from 'lucide-react';
+import { BookOpen, ChevronLeft, ChevronRight, GripVertical, Loader2, ZoomIn, ZoomOut } from 'lucide-react';
 
 interface Props {
   open: boolean;
@@ -29,6 +29,30 @@ export function SpecViewer({
   const [currentPage, setCurrentPage] = useState(1);
   const [rendering, setRendering] = useState(false);
   const [scale, setScale] = useState(1.5);
+  const [panelWidth, setPanelWidth] = useState(896); // default ~4xl
+  const draggingRef = useRef(false);
+
+  // Drag-to-resize from left edge
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    draggingRef.current = true;
+    const startX = e.clientX;
+    const startWidth = panelWidth;
+
+    const onMove = (ev: MouseEvent) => {
+      if (!draggingRef.current) return;
+      const delta = startX - ev.clientX;
+      const newWidth = Math.min(Math.max(400, startWidth + delta), window.innerWidth - 100);
+      setPanelWidth(newWidth);
+    };
+    const onUp = () => {
+      draggingRef.current = false;
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+    };
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  }, [panelWidth]);
 
   // Reset to start page when opening
   useEffect(() => {
