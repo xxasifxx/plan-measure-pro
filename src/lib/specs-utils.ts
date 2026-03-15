@@ -70,8 +70,8 @@ export function findSectionContent(
   const firstSubsectionPattern = new RegExp(`${sectionStr}\\.01\\b`);
   // Pattern to detect ANY other section's first subsection (e.g., "NNN.01" where NNN ≠ sectionStr)
   // We'll check dynamically in the loop instead of assuming +1
-  const nextSectionFirstSub = new RegExp(`${sectionNumber + 1}\\.01\\b`);
-  // Also check for SECTION XXX heading
+  // General pattern: any 3-digit section's .01 subsection (not ours)
+  const anySectionFirstSub = /(\d{3})\.01\b/g;
   const sectionHeadingPattern = new RegExp(
     `SECTION\\s+${sectionStr}\\b`,
     'i'
