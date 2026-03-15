@@ -42,8 +42,16 @@ export async function extractAllText(
 
 /**
  * Build a map of 3-digit section number → PDF page number (1-indexed).
- * Looks for "SECTION NNN" headings or "NNN.01" first-subsection markers
- * on pages with substantial content (not TOC).
+ *
+ * Strategy: Look for "SECTION NNN" headings where the page's own subsection
+ * markers (NNN.xx) are predominantly for THAT section — not cross-references
+ * from another section's text.
+ *
+ * A page is the start of section NNN when:
+ *   1. It contains "SECTION NNN" (case-insensitive), AND
+ *   2. The subsection markers on the page (e.g. NNN.01, NNN.02) belong
+ *      predominantly to section NNN (i.e. NNN is the dominant prefix), AND
+ *   3. It's not a TOC page (detected by 5+ distinct section prefixes).
  */
 export function buildSectionPageIndex(
   pageTexts: Map<number, string>
@@ -52,31 +60,47 @@ export function buildSectionPageIndex(
   const sortedPages = Array.from(pageTexts.entries()).sort((a, b) => a[0] - b[0]);
 
   for (const [pageNum, text] of sortedPages) {
-    // Skip TOC pages: if 3+ distinct section subsection markers appear, it's a TOC
-    const allSubMatches = text.match(/(\d{3})\.\d{2}\b/g) || [];
-    const distinctSections = new Set(allSubMatches.map((m) => m.slice(0, 3)));
-    if (distinctSections.size >= 3) continue;
+    // Gather all NNN.xx subsection markers on this page
+    const allSubMatches = text.match(/\b(\d{3})\.\d{2}\b/g) || [];
 
-    // Look for "SECTION NNN" heading
-    const sectionHeadingMatches = text.matchAll(/SECTION\s+(\d{3})\b/gi);
-    for (const match of sectionHeadingMatches) {
-      const num = parseInt(match[1], 10);
-      if (!sectionToPage.has(num)) {
-        // Verify it's real content (>150 words)
-        const wordCount = text.split(/\s+/).length;
-        if (wordCount > 100) {
-          sectionToPage.set(num, pageNum);
-        }
+    // Count how many times each 3-digit prefix appears
+    const prefixCounts = new Map<string, number>();
+    for (const m of allSubMatches) {
+      const prefix = m.slice(0, 3);
+      prefixCounts.set(prefix, (prefixCounts.get(prefix) || 0) + 1);
+    }
+
+    // Skip TOC pages: many distinct section prefixes on one page
+    if (prefixCounts.size >= 5) continue;
+
+    // Find the dominant section prefix on this page
+    let dominantPrefix = '';
+    let dominantCount = 0;
+    for (const [prefix, count] of prefixCounts) {
+      if (count > dominantCount) {
+        dominantPrefix = prefix;
+        dominantCount = count;
       }
     }
 
-    // Also check for NNN.01 pattern as section start
-    const firstSubMatches = text.matchAll(/(\d{3})\.01\b/g);
-    for (const match of firstSubMatches) {
-      const num = parseInt(match[1], 10);
-      if (!sectionToPage.has(num)) {
+    // Look for "SECTION NNN" headings
+    const sectionHeadingMatches = text.matchAll(/SECTION\s+(\d{3})\b/gi);
+    for (const match of sectionHeadingMatches) {
+      const numStr = match[1];
+      const num = parseInt(numStr, 10);
+      if (sectionToPage.has(num)) continue;
+
+      // The section heading's number must match the dominant subsection prefix,
+      // OR there are no subsection markers (sparse page with just the heading)
+      const isOwnerPage =
+        prefixCounts.size === 0 ||
+        dominantPrefix === numStr ||
+        (prefixCounts.get(numStr) || 0) >= dominantCount;
+
+      if (isOwnerPage) {
+        // Also verify there's real content (not just a one-line reference)
         const wordCount = text.split(/\s+/).length;
-        if (wordCount > 100) {
+        if (wordCount > 50) {
           sectionToPage.set(num, pageNum);
         }
       }
