@@ -68,7 +68,8 @@ export function findSectionContent(
   const sectionStr = String(sectionNumber);
   // Pattern to find the first subsection (XXX.01) which marks the real section start
   const firstSubsectionPattern = new RegExp(`${sectionStr}\\.01\\b`);
-  // Pattern to find the next section's first subsection (marks the end)
+  // Pattern to detect ANY other section's first subsection (e.g., "NNN.01" where NNN ≠ sectionStr)
+  // We'll check dynamically in the loop instead of assuming +1
   const nextSectionFirstSub = new RegExp(`${sectionNumber + 1}\\.01\\b`);
   // Also check for SECTION XXX heading
   const sectionHeadingPattern = new RegExp(
