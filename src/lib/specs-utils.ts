@@ -72,7 +72,9 @@ export function findSectionContent(
   // We'll check dynamically in the loop instead of assuming +1
   // General pattern: any 3-digit section's .01 subsection (not ours)
   const anySectionFirstSub = /(\d{3})\.01\b/g;
-  const sectionHeadingPattern = new RegExp(
+  const sectionHeadingPattern = new RegExp(`SECTION\\s+${sectionStr}\\b`, 'i');
+  // Pattern to find any SECTION heading that isn't ours
+  const anySectionHeading = /SECTION\s+(\d{3})\b/gi;
     `SECTION\\s+${sectionStr}\\b`,
     'i'
   );
