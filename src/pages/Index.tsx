@@ -105,7 +105,101 @@ const Index = () => {
   const handleCloseProject = useCallback(() => {
     setPdf(null);
     closeProject();
+    setSpecsLoaded(false);
+    specsTextRef.current = new Map();
+    specsCacheRef.current = new Map();
   }, [closeProject]);
+
+  const handleSpecsUpload = useCallback(async (file: File) => {
+    try {
+      setSpecsLoading(true);
+      toast({ title: 'Loading Standard Specs…', description: 'This may take a moment for large documents.' });
+
+      const specsPdf = await loadPdf(file);
+      const totalPgs = specsPdf.numPages;
+
+      const textMap = await extractAllText(specsPdf, (done, total) => {
+        if (done % 50 === 0 || done === total) {
+          toast({ title: 'Extracting text…', description: `${done} / ${total} pages` });
+        }
+      });
+
+      specsTextRef.current = textMap;
+      specsCacheRef.current = new Map();
+      setSpecsLoaded(true);
+      setSpecsLoading(false);
+
+      toast({
+        title: 'Standard Specs Loaded',
+        description: `${totalPgs} pages indexed. Double-click a pay item to view its spec.`,
+      });
+    } catch (err) {
+      setSpecsLoading(false);
+      toast({
+        title: 'Error loading specs',
+        description: String(err),
+        variant: 'destructive',
+      });
+    }
+  }, [toast]);
+
+  const handleViewSpec = useCallback((itemCode: string) => {
+    if (!specsLoaded) {
+      toast({ title: 'No specs loaded', description: 'Upload standard specs first.', variant: 'destructive' });
+      return;
+    }
+
+    const sectionNumber = getSectionFromItemCode(itemCode);
+    const item = payItems.find(p => p.itemCode === itemCode);
+    const itemName = item?.name || '';
+
+    if (!sectionNumber) {
+      setSpecViewerData({ sectionNumber: null, itemCode, itemName, fullContent: null, itemPayRequirements: null });
+      setSpecViewerOpen(true);
+      return;
+    }
+
+    // Check cache first
+    let section = specsCacheRef.current.get(sectionNumber);
+    if (section === undefined) {
+      setSpecSearching(true);
+      setSpecViewerData({ sectionNumber, itemCode, itemName, fullContent: null, itemPayRequirements: null });
+      setSpecViewerOpen(true);
+
+      // Run synchronously but in next tick to show loading state
+      setTimeout(() => {
+        section = findSectionContent(specsTextRef.current, sectionNumber);
+        specsCacheRef.current.set(sectionNumber, section);
+
+        const payReqs = section?.basisOfPayment
+          ? findItemCodePayRequirements(section.basisOfPayment, itemCode)
+          : null;
+
+        setSpecViewerData({
+          sectionNumber,
+          itemCode,
+          itemName,
+          fullContent: section?.fullContent || null,
+          itemPayRequirements: payReqs,
+        });
+        setSpecSearching(false);
+      }, 50);
+      return;
+    }
+
+    const payReqs = section?.basisOfPayment
+      ? findItemCodePayRequirements(section.basisOfPayment, itemCode)
+      : null;
+
+    setSpecViewerData({
+      sectionNumber,
+      itemCode,
+      itemName,
+      fullContent: section?.fullContent || null,
+      itemPayRequirements: payReqs,
+    });
+    setSpecViewerOpen(true);
+  }, [specsLoaded, payItems, toast]);
 
   const handleTocRegionSelected = useCallback(async (rect: { x1: number; y1: number; x2: number; y2: number }) => {
     if (!pdf || !project) return;
