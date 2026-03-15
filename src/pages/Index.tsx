@@ -8,7 +8,7 @@ import { SummaryPanel } from '@/components/SummaryPanel';
 import { SpecViewer } from '@/components/SpecViewer';
 import { useProject } from '@/hooks/useProject';
 import { loadPdf, extractTextFromRegion, extractPayItemsFromPage } from '@/lib/pdf-utils';
-import { extractAllText, findSectionContent, getSectionFromItemCode, findItemCodePayRequirements, type SpecSection } from '@/lib/specs-utils';
+import { extractAllText, buildSectionPageIndex, getSectionFromItemCode } from '@/lib/specs-utils';
 import { exportCsv, exportPdfReport } from '@/lib/export-utils';
 import { useToast } from '@/hooks/use-toast';
 import type { TocEntry } from '@/types/project';
@@ -33,17 +33,15 @@ const Index = () => {
   // Standard specs state
   const [specsLoaded, setSpecsLoaded] = useState(false);
   const [specsLoading, setSpecsLoading] = useState(false);
-  const specsTextRef = useRef<Map<number, string>>(new Map());
-  const specsCacheRef = useRef<Map<number, SpecSection | null>>(new Map());
+  const [specsPdf, setSpecsPdf] = useState<PDFDocumentProxy | null>(null);
+  const sectionPageIndexRef = useRef<Map<number, number>>(new Map());
   const [specViewerOpen, setSpecViewerOpen] = useState(false);
   const [specViewerData, setSpecViewerData] = useState<{
     sectionNumber: number | null;
     itemCode: string;
     itemName: string;
-    fullContent: string | null;
-    itemPayRequirements: string | null;
-  }>({ sectionNumber: null, itemCode: '', itemName: '', fullContent: null, itemPayRequirements: null });
-  const [specSearching, setSpecSearching] = useState(false);
+    startPage: number | null;
+  }>({ sectionNumber: null, itemCode: '', itemName: '', startPage: null });
 
   // Keyboard shortcuts: Ctrl+Z undo, Ctrl+Shift+Z redo
   useEffect(() => {
@@ -106,8 +104,8 @@ const Index = () => {
     setPdf(null);
     closeProject();
     setSpecsLoaded(false);
-    specsTextRef.current = new Map();
-    specsCacheRef.current = new Map();
+    setSpecsPdf(null);
+    sectionPageIndexRef.current = new Map();
   }, [closeProject]);
 
   const handleSpecsUpload = useCallback(async (file: File) => {
@@ -115,23 +113,24 @@ const Index = () => {
       setSpecsLoading(true);
       toast({ title: 'Loading Standard Specs…', description: 'This may take a moment for large documents.' });
 
-      const specsPdf = await loadPdf(file);
-      const totalPgs = specsPdf.numPages;
+      const loadedSpecsPdf = await loadPdf(file);
+      const totalPgs = loadedSpecsPdf.numPages;
 
-      const textMap = await extractAllText(specsPdf, (done, total) => {
+      const textMap = await extractAllText(loadedSpecsPdf, (done, total) => {
         if (done % 50 === 0 || done === total) {
-          toast({ title: 'Extracting text…', description: `${done} / ${total} pages` });
+          toast({ title: 'Indexing pages…', description: `${done} / ${total} pages` });
         }
       });
 
-      specsTextRef.current = textMap;
-      specsCacheRef.current = new Map();
+      const index = buildSectionPageIndex(textMap);
+      sectionPageIndexRef.current = index;
+      setSpecsPdf(loadedSpecsPdf);
       setSpecsLoaded(true);
       setSpecsLoading(false);
 
       toast({
         title: 'Standard Specs Loaded',
-        description: `${totalPgs} pages indexed. Double-click a pay item to view its spec.`,
+        description: `${totalPgs} pages indexed, ${index.size} sections found. Double-click a pay item to view its spec.`,
       });
     } catch (err) {
       setSpecsLoading(false);
@@ -153,51 +152,9 @@ const Index = () => {
     const item = payItems.find(p => p.itemCode === itemCode);
     const itemName = item?.name || '';
 
-    if (!sectionNumber) {
-      setSpecViewerData({ sectionNumber: null, itemCode, itemName, fullContent: null, itemPayRequirements: null });
-      setSpecViewerOpen(true);
-      return;
-    }
+    const startPage = sectionNumber ? (sectionPageIndexRef.current.get(sectionNumber) || null) : null;
 
-    // Check cache first
-    let section = specsCacheRef.current.get(sectionNumber);
-    if (section === undefined) {
-      setSpecSearching(true);
-      setSpecViewerData({ sectionNumber, itemCode, itemName, fullContent: null, itemPayRequirements: null });
-      setSpecViewerOpen(true);
-
-      // Run synchronously but in next tick to show loading state
-      setTimeout(() => {
-        section = findSectionContent(specsTextRef.current, sectionNumber);
-        specsCacheRef.current.set(sectionNumber, section);
-
-        const payReqs = section?.basisOfPayment
-          ? findItemCodePayRequirements(section.basisOfPayment, itemCode)
-          : null;
-
-        setSpecViewerData({
-          sectionNumber,
-          itemCode,
-          itemName,
-          fullContent: section?.fullContent || null,
-          itemPayRequirements: payReqs,
-        });
-        setSpecSearching(false);
-      }, 50);
-      return;
-    }
-
-    const payReqs = section?.basisOfPayment
-      ? findItemCodePayRequirements(section.basisOfPayment, itemCode)
-      : null;
-
-    setSpecViewerData({
-      sectionNumber,
-      itemCode,
-      itemName,
-      fullContent: section?.fullContent || null,
-      itemPayRequirements: payReqs,
-    });
+    setSpecViewerData({ sectionNumber: sectionNumber || null, itemCode, itemName, startPage });
     setSpecViewerOpen(true);
   }, [specsLoaded, payItems, toast]);
 
@@ -382,9 +339,8 @@ const Index = () => {
         sectionNumber={specViewerData.sectionNumber}
         itemCode={specViewerData.itemCode}
         itemName={specViewerData.itemName}
-        fullContent={specViewerData.fullContent}
-        itemPayRequirements={specViewerData.itemPayRequirements}
-        loading={specSearching}
+        specsPdf={specsPdf}
+        startPage={specViewerData.startPage}
       />
     </SidebarProvider>
   );

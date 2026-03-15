@@ -1,7 +1,9 @@
+import { useEffect, useRef, useState, useCallback } from 'react';
+import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, Loader2 } from 'lucide-react';
+import { BookOpen, ChevronLeft, ChevronRight, Loader2, ZoomIn, ZoomOut } from 'lucide-react';
 
 interface Props {
   open: boolean;
@@ -9,18 +11,9 @@ interface Props {
   sectionNumber: number | null;
   itemCode: string;
   itemName: string;
-  fullContent: string | null;
-  itemPayRequirements: string | null;
-  loading?: boolean;
+  specsPdf: PDFDocumentProxy | null;
+  startPage: number | null;
 }
-
-const SUBSECTION_HEADINGS = [
-  'DESCRIPTION',
-  'MATERIALS',
-  'CONSTRUCTION REQUIREMENTS',
-  'METHOD OF MEASUREMENT',
-  'BASIS OF PAYMENT',
-];
 
 export function SpecViewer({
   open,
@@ -28,14 +21,69 @@ export function SpecViewer({
   sectionNumber,
   itemCode,
   itemName,
-  fullContent,
-  itemPayRequirements,
-  loading,
+  specsPdf,
+  startPage,
 }: Props) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rendering, setRendering] = useState(false);
+  const [scale, setScale] = useState(1.5);
+
+  // Reset to start page when opening
+  useEffect(() => {
+    if (open && startPage) {
+      setCurrentPage(startPage);
+    }
+  }, [open, startPage]);
+
+  // Render the current page
+  useEffect(() => {
+    if (!open || !specsPdf || !canvasRef.current) return;
+
+    let cancelled = false;
+    setRendering(true);
+
+    specsPdf.getPage(currentPage).then((page) => {
+      if (cancelled) return;
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+
+      const viewport = page.getViewport({ scale });
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+
+      page.render({ canvasContext: ctx, viewport }).promise.then(() => {
+        if (!cancelled) setRendering(false);
+      });
+    });
+
+    return () => { cancelled = true; };
+  }, [open, specsPdf, currentPage, scale]);
+
+  // Fit width on open
+  useEffect(() => {
+    if (!open || !specsPdf || !containerRef.current) return;
+
+    specsPdf.getPage(startPage || 1).then((page) => {
+      const container = containerRef.current;
+      if (!container) return;
+      const viewport = page.getViewport({ scale: 1 });
+      const containerWidth = container.clientWidth - 32;
+      const fitScale = Math.min(containerWidth / viewport.width, 3);
+      setScale(Math.max(0.5, Math.round(fitScale * 100) / 100));
+    });
+  }, [open, specsPdf, startPage]);
+
+  const totalPages = specsPdf?.numPages || 0;
+
   return (
     <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
-      <SheetContent side="right" className="w-full sm:max-w-lg p-0 flex flex-col">
-        <SheetHeader className="p-4 pb-2 border-b border-border">
+      <SheetContent side="right" className="w-full sm:max-w-2xl p-0 flex flex-col">
+        <SheetHeader className="p-3 pb-2 border-b border-border shrink-0">
           <div className="flex items-center gap-2">
             <BookOpen className="h-4 w-4 text-primary shrink-0" />
             <SheetTitle className="text-sm truncate">
@@ -46,87 +94,87 @@ export function SpecViewer({
             <Badge variant="outline" className="text-[10px] font-mono">
               {itemCode}
             </Badge>
+            {startPage && (
+              <Badge variant="secondary" className="text-[10px]">
+                Starts on page {startPage}
+              </Badge>
+            )}
           </div>
         </SheetHeader>
 
-        <ScrollArea className="flex-1 min-h-0">
-          <div className="p-4">
-            {loading && (
-              <div className="flex items-center justify-center py-12 text-muted-foreground">
-                <Loader2 className="h-5 w-5 animate-spin mr-2" />
-                <span className="text-sm">Searching standard specs…</span>
-              </div>
-            )}
+        {/* Navigation toolbar */}
+        <div className="flex items-center justify-between px-3 py-1.5 border-b border-border bg-muted/50 shrink-0">
+          <div className="flex items-center gap-1">
+            <Button
+              variant="ghost" size="icon" className="h-7 w-7"
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage <= 1}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <span className="text-xs font-mono min-w-[80px] text-center">
+              {currentPage} / {totalPages}
+            </span>
+            <Button
+              variant="ghost" size="icon" className="h-7 w-7"
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage >= totalPages}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
 
-            {!loading && !fullContent && (
-              <div className="text-sm text-muted-foreground py-8 text-center">
-                No specification found for Section {sectionNumber}.
-              </div>
-            )}
-
-            {!loading && fullContent && (
-              <div className="space-y-4">
-                {/* Item-specific pay requirements highlight */}
-                {itemPayRequirements && (
-                  <div className="rounded-md border border-primary/30 bg-primary/5 p-3">
-                    <h4 className="text-xs font-semibold text-primary mb-1.5 uppercase tracking-wide">
-                      Pay Requirements for {itemCode}
-                    </h4>
-                    <p className="text-xs leading-relaxed text-foreground whitespace-pre-wrap">
-                      {itemPayRequirements}
-                    </p>
-                  </div>
-                )}
-
-                {/* Full section content */}
-                <div>
-                  <h4 className="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wide">
-                    Full Section Content
-                  </h4>
-                  <FormattedSpecContent content={fullContent} />
-                </div>
-              </div>
+          <div className="flex items-center gap-1">
+            <Button
+              variant="ghost" size="icon" className="h-7 w-7"
+              onClick={() => setScale((s) => Math.max(0.5, s - 0.25))}
+            >
+              <ZoomOut className="h-3.5 w-3.5" />
+            </Button>
+            <span className="text-xs font-mono w-12 text-center">
+              {Math.round(scale * 100)}%
+            </span>
+            <Button
+              variant="ghost" size="icon" className="h-7 w-7"
+              onClick={() => setScale((s) => Math.min(4, s + 0.25))}
+            >
+              <ZoomIn className="h-3.5 w-3.5" />
+            </Button>
+            {startPage && (
+              <Button
+                variant="outline" size="sm" className="h-7 text-xs ml-2"
+                onClick={() => setCurrentPage(startPage)}
+              >
+                Go to start
+              </Button>
             )}
           </div>
-        </ScrollArea>
+        </div>
+
+        {/* PDF canvas */}
+        <div ref={containerRef} className="flex-1 min-h-0 overflow-auto bg-muted/30 p-4">
+          {!specsPdf && (
+            <div className="text-sm text-muted-foreground py-8 text-center">
+              No specs PDF loaded.
+            </div>
+          )}
+          {!startPage && specsPdf && (
+            <div className="text-sm text-muted-foreground py-8 text-center">
+              Could not find Section {sectionNumber} in the specs document.
+            </div>
+          )}
+          {specsPdf && startPage && (
+            <div className="flex justify-center relative">
+              {rendering && (
+                <div className="absolute inset-0 flex items-center justify-center z-10">
+                  <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                </div>
+              )}
+              <canvas ref={canvasRef} className="shadow-md" />
+            </div>
+          )}
+        </div>
       </SheetContent>
     </Sheet>
-  );
-}
-
-function FormattedSpecContent({ content }: { content: string }) {
-  // Split into paragraphs and style subsection headings
-  const paragraphs = content.split(/\n\n+/);
-
-  return (
-    <div className="space-y-2 text-xs leading-relaxed text-foreground/90">
-      {paragraphs.map((para, i) => {
-        const trimmed = para.trim();
-        if (!trimmed) return null;
-
-        // Check if this paragraph is a subsection heading
-        const upperTrimmed = trimmed.toUpperCase();
-        const isSubsectionHeading = SUBSECTION_HEADINGS.some(
-          (h) => upperTrimmed.startsWith(h) && trimmed.length < h.length + 30
-        );
-
-        if (isSubsectionHeading) {
-          return (
-            <h5
-              key={i}
-              className="font-bold text-foreground pt-3 pb-1 border-b border-border/50 text-xs uppercase tracking-wide"
-            >
-              {trimmed}
-            </h5>
-          );
-        }
-
-        return (
-          <p key={i} className="whitespace-pre-wrap">
-            {trimmed}
-          </p>
-        );
-      })}
-    </div>
   );
 }
