@@ -82,7 +82,7 @@ export function SpecViewer({
 
   return (
     <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
-      <SheetContent side="right" className="w-full sm:max-w-2xl p-0 flex flex-col">
+      <SheetContent side="right" className="w-full sm:max-w-4xl p-0 flex flex-col">
         <SheetHeader className="p-3 pb-2 border-b border-border shrink-0">
           <div className="flex items-center gap-2">
             <BookOpen className="h-4 w-4 text-primary shrink-0" />
