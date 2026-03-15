@@ -55,6 +55,14 @@ function findSectionContent(
   for (let i = 0; i < sortedPages.length; i++) {
     const [, text] = sortedPages[i];
     if (!firstSubsectionPattern.test(text)) continue;
+
+    // Count distinct section prefixes — TOC pages have 3+ different sections
+    const allSubsectionMatches = text.match(/(\d{3})\.\d{2}\b/g) || [];
+    const distinctSections = new Set(
+      allSubsectionMatches.map((m: string) => m.slice(0, 3))
+    );
+    if (distinctSections.size >= 3) continue;
+
     const wordCount = text.split(/\s+/).length;
     const subsectionMatches = text.match(new RegExp(`${sectionStr}\\.\\d{2}`, 'g'));
     const subsectionCount = subsectionMatches ? subsectionMatches.length : 0;
