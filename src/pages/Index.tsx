@@ -307,6 +307,10 @@ const Index = () => {
           onImportPayItems={handleImportPayItems}
           annotations={project?.annotations || []}
           onRemoveAnnotationsForPayItem={removeAnnotationsForPayItem}
+          onSpecsUpload={handleSpecsUpload}
+          specsLoaded={specsLoaded}
+          specsLoading={specsLoading}
+          onViewSpec={handleViewSpec}
         />
 
         <div className="flex-1 flex flex-col min-w-0 min-h-0">
