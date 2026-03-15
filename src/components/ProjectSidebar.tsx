@@ -37,6 +37,10 @@ interface Props {
   onImportPayItems?: () => void;
   annotations: Annotation[];
   onRemoveAnnotationsForPayItem?: (payItemId: string) => void;
+  onSpecsUpload?: (file: File) => void;
+  specsLoaded?: boolean;
+  specsLoading?: boolean;
+  onViewSpec?: (itemCode: string) => void;
 }
 
 const ALL_UNITS: PayItemUnit[] = ['SF', 'LF', 'CY', 'SY', 'EA', 'TON', 'LS', 'USD', 'MNTH'];
