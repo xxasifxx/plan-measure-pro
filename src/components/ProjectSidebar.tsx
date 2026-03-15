@@ -1,4 +1,4 @@
-import { FileUp, MapPin, ChevronRight, ChevronDown, Plus, Trash2, Edit2, TableOfContents, X, PenTool, Hash } from 'lucide-react';
+import { FileUp, MapPin, ChevronRight, ChevronDown, Plus, Trash2, Edit2, TableOfContents, X, PenTool, Hash, BookOpen, Loader2 } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import type { TocEntry, PayItem, PayItemUnit, Annotation } from '@/types/project';
 import { isDrawableUnit, UNIT_LABELS, getPayItemSection } from '@/types/project';
