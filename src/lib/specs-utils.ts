@@ -41,38 +41,39 @@ export async function extractAllText(
   return pageTexts;
 }
 
-const SUBSECTION_KEYWORDS = [
-  'DESCRIPTION',
-  'MATERIALS',
-  'CONSTRUCTION REQUIREMENTS',
-  'METHOD OF MEASUREMENT',
-  'BASIS OF PAYMENT',
-];
-
 export interface SpecSection {
   /** Full text content of the entire section */
   fullContent: string;
-  /** Extracted "Basis of Payment" subsection text */
+  /** Extracted "Basis of Payment" / "Measurement and Payment" subsection text */
   basisOfPayment: string | null;
 }
 
 /**
- * Given the full text corpus and a section number (e.g. 202),
+ * Given the full text corpus and a 3-digit section number (e.g. 202),
  * find the real section content (not a TOC reference).
  *
- * Heuristic: A "real" section heading is on a page where at least
- * 2 of the 5 standard subsection keywords appear within the same
- * page or the next few pages. TOC entries only list section titles briefly.
+ * Heuristic to distinguish real content from TOC entries:
+ * - Real sections have subsection numbering like "202.01", "202.02", "202.03"
+ *   followed by prose text (long strings, sentences).
+ * - TOC entries have the same headings but followed by bare page numbers
+ *   and very little prose.
+ *
+ * We look for a page where `XXX.01` appears AND the page has substantial
+ * text content (>300 chars beyond headings), indicating real content.
  */
 export function findSectionContent(
   pageTexts: Map<number, string>,
   sectionNumber: number
 ): SpecSection | null {
   const sectionStr = String(sectionNumber);
-  // Pattern: "SECTION 202" or "Section 202" or just "202 " at a boundary
-  const sectionPattern = new RegExp(
-    `(?:SECTION\\s+${sectionStr}|^\\s*${sectionStr}\\s)`,
-    'im'
+  // Pattern to find the first subsection (XXX.01) which marks the real section start
+  const firstSubsectionPattern = new RegExp(`${sectionStr}\\.01\\b`);
+  // Pattern to find the next section's first subsection (marks the end)
+  const nextSectionFirstSub = new RegExp(`${sectionNumber + 1}\\.01\\b`);
+  // Also check for SECTION XXX heading
+  const sectionHeadingPattern = new RegExp(
+    `SECTION\\s+${sectionStr}\\b`,
+    'i'
   );
 
   const sortedPages = Array.from(pageTexts.entries()).sort((a, b) => a[0] - b[0]);
@@ -81,74 +82,87 @@ export function findSectionContent(
 
   for (let i = 0; i < sortedPages.length; i++) {
     const [, text] = sortedPages[i];
-    if (!sectionPattern.test(text)) continue;
 
-    // Check if this is a real section (not TOC) by looking for subsection keywords
-    // in this page and the next few pages
-    const windowText = sortedPages
-      .slice(i, i + 5)
-      .map(([, t]) => t)
-      .join(' ')
-      .toUpperCase();
+    // Must have the first subsection marker (e.g., "202.01")
+    if (!firstSubsectionPattern.test(text)) continue;
 
-    const matchedKeywords = SUBSECTION_KEYWORDS.filter((kw) =>
-      windowText.includes(kw)
+    // Distinguish real content from TOC:
+    // Real content pages have substantial prose (long text, sentences).
+    // TOC pages are mostly headings + bare page numbers.
+    // Heuristic: count words on this page — real content has 100+ words
+    // Also check for at least 2 subsection markers (XXX.01, XXX.02, etc.)
+    const wordCount = text.split(/\s+/).length;
+    const subsectionMatches = text.match(
+      new RegExp(`${sectionStr}\\.\\d{2}`, 'g')
     );
+    const subsectionCount = subsectionMatches ? subsectionMatches.length : 0;
 
-    if (matchedKeywords.length >= 2) {
+    // Real section content: has multiple subsections AND substantial text
+    // OR has the section heading nearby AND substantial text
+    const hasSubstantialText = wordCount > 150;
+    const hasMultipleSubsections = subsectionCount >= 2;
+    const hasSectionHeading = sectionHeadingPattern.test(text);
+
+    if (hasSubstantialText && (hasMultipleSubsections || hasSectionHeading)) {
       startPageIdx = i;
       break;
+    }
+
+    // If this page alone doesn't have enough, check if the section heading
+    // is on the previous page and this page has the .01 subsection with content
+    if (i > 0 && hasSubstantialText) {
+      const [, prevText] = sortedPages[i - 1];
+      if (sectionHeadingPattern.test(prevText)) {
+        startPageIdx = i - 1;
+        break;
+      }
     }
   }
 
   if (startPageIdx === -1) return null;
 
-  // Now collect text from this page until we hit the next section heading
-  const nextSectionNum = sectionNumber + 1;
-  const nextPattern = new RegExp(
-    `(?:SECTION\\s+${nextSectionNum}|^\\s*${nextSectionNum}\\s)`,
-    'im'
-  );
-
+  // Collect text from start page until we hit the next section's content
   const contentPages: string[] = [];
 
   for (let i = startPageIdx; i < sortedPages.length; i++) {
     const [, text] = sortedPages[i];
 
-    // If we're past the first page and hit the next section, stop
-    if (i > startPageIdx && nextPattern.test(text)) {
-      // Check this isn't just a reference — same heuristic
-      const windowText = sortedPages
-        .slice(i, i + 5)
-        .map(([, t]) => t)
-        .join(' ')
-        .toUpperCase();
-      const matchedKeywords = SUBSECTION_KEYWORDS.filter((kw) =>
-        windowText.includes(kw)
-      );
-      if (matchedKeywords.length >= 2) break;
+    // Stop if we've found the next section's real content
+    if (i > startPageIdx && nextSectionFirstSub.test(text)) {
+      // Verify it's real content for the next section (not a reference)
+      const wordCount = text.split(/\s+/).length;
+      if (wordCount > 150) break;
     }
 
     contentPages.push(text);
 
-    // Safety: don't collect more than 60 pages for one section
-    if (contentPages.length > 60) break;
+    // Safety: don't collect more than 80 pages for one section
+    if (contentPages.length > 80) break;
   }
 
   const fullContent = contentPages.join('\n\n');
 
-  // Extract Basis of Payment subsection
-  const bopIndex = fullContent.toUpperCase().lastIndexOf('BASIS OF PAYMENT');
+  // Extract Basis of Payment / Measurement and Payment subsection
+  const fullUpper = fullContent.toUpperCase();
   let basisOfPayment: string | null = null;
+
+  // Try "BASIS OF PAYMENT" first (some sections split measurement and payment)
+  const bopIndex = fullUpper.lastIndexOf('BASIS OF PAYMENT');
   if (bopIndex !== -1) {
     basisOfPayment = fullContent.slice(bopIndex);
+  } else {
+    // Try "MEASUREMENT AND PAYMENT" (some sections combine them)
+    const mapIndex = fullUpper.lastIndexOf('MEASUREMENT AND PAYMENT');
+    if (mapIndex !== -1) {
+      basisOfPayment = fullContent.slice(mapIndex);
+    }
   }
 
   return { fullContent, basisOfPayment };
 }
 
 /**
- * Extract the section number from an item code.
+ * Extract the 3-digit section number from an item code.
  * e.g. "202-0002" → 202, "510-N0059" → 510
  */
 export function getSectionFromItemCode(itemCode: string): number | null {
@@ -158,8 +172,8 @@ export function getSectionFromItemCode(itemCode: string): number | null {
 }
 
 /**
- * Search the Basis of Payment text for paragraphs referencing the specific item code.
- * Returns the matching paragraph(s) or null.
+ * Search the Basis of Payment / Measurement and Payment text for paragraphs
+ * referencing the specific item code. Returns matching text or null.
  */
 export function findItemCodePayRequirements(
   basisOfPayment: string,
@@ -169,28 +183,27 @@ export function findItemCodePayRequirements(
 
   // Normalize the item code for matching (e.g., "202-0002")
   const escapedCode = itemCode.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-  const pattern = new RegExp(`[^\\n]*${escapedCode}[^\\n]*`, 'gi');
+  const pattern = new RegExp(escapedCode, 'i');
 
-  const matches = basisOfPayment.match(pattern);
-  if (!matches || matches.length === 0) return null;
-
-  // Return matching lines plus surrounding context
-  const lines = basisOfPayment.split(/\n/);
-  const resultLines = new Set<number>();
+  // Split into sentences/paragraphs and find those mentioning the item code
+  // Use double-space or period-space as rough sentence boundaries
+  const lines = basisOfPayment.split(/(?:\n\n+|(?<=\.)\s{2,})/);
+  const matchingIndices = new Set<number>();
 
   for (let i = 0; i < lines.length; i++) {
-    if (new RegExp(escapedCode, 'i').test(lines[i])) {
-      // Include 2 lines before and 3 after for context
-      for (let j = Math.max(0, i - 2); j <= Math.min(lines.length - 1, i + 3); j++) {
-        resultLines.add(j);
+    if (pattern.test(lines[i])) {
+      // Include 1 line before and 2 after for context
+      for (let j = Math.max(0, i - 1); j <= Math.min(lines.length - 1, i + 2); j++) {
+        matchingIndices.add(j);
       }
     }
   }
 
-  if (resultLines.size === 0) return null;
+  if (matchingIndices.size === 0) return null;
 
-  return Array.from(resultLines)
+  return Array.from(matchingIndices)
     .sort((a, b) => a - b)
-    .map((i) => lines[i])
-    .join('\n');
+    .map((i) => lines[i].trim())
+    .filter(Boolean)
+    .join('\n\n');
 }
