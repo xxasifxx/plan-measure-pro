@@ -5,8 +5,10 @@ import { ProjectSidebar } from '@/components/ProjectSidebar';
 import { Toolbar } from '@/components/Toolbar';
 import { PdfCanvas } from '@/components/PdfCanvas';
 import { SummaryPanel } from '@/components/SummaryPanel';
+import { SpecViewer } from '@/components/SpecViewer';
 import { useProject } from '@/hooks/useProject';
 import { loadPdf, extractTextFromRegion, extractPayItemsFromPage } from '@/lib/pdf-utils';
+import { extractAllText, findSectionContent, getSectionFromItemCode, findItemCodePayRequirements, type SpecSection } from '@/lib/specs-utils';
 import { exportCsv, exportPdfReport } from '@/lib/export-utils';
 import { useToast } from '@/hooks/use-toast';
 import type { TocEntry } from '@/types/project';
@@ -27,6 +29,21 @@ const Index = () => {
   const [selectedAnnotationId, setSelectedAnnotationId] = useState<string | null>(null);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+
+  // Standard specs state
+  const [specsLoaded, setSpecsLoaded] = useState(false);
+  const [specsLoading, setSpecsLoading] = useState(false);
+  const specsTextRef = useRef<Map<number, string>>(new Map());
+  const specsCacheRef = useRef<Map<number, SpecSection | null>>(new Map());
+  const [specViewerOpen, setSpecViewerOpen] = useState(false);
+  const [specViewerData, setSpecViewerData] = useState<{
+    sectionNumber: number | null;
+    itemCode: string;
+    itemName: string;
+    fullContent: string | null;
+    itemPayRequirements: string | null;
+  }>({ sectionNumber: null, itemCode: '', itemName: '', fullContent: null, itemPayRequirements: null });
+  const [specSearching, setSpecSearching] = useState(false);
 
   // Keyboard shortcuts: Ctrl+Z undo, Ctrl+Shift+Z redo
   useEffect(() => {
@@ -88,7 +105,101 @@ const Index = () => {
   const handleCloseProject = useCallback(() => {
     setPdf(null);
     closeProject();
+    setSpecsLoaded(false);
+    specsTextRef.current = new Map();
+    specsCacheRef.current = new Map();
   }, [closeProject]);
+
+  const handleSpecsUpload = useCallback(async (file: File) => {
+    try {
+      setSpecsLoading(true);
+      toast({ title: 'Loading Standard Specs…', description: 'This may take a moment for large documents.' });
+
+      const specsPdf = await loadPdf(file);
+      const totalPgs = specsPdf.numPages;
+
+      const textMap = await extractAllText(specsPdf, (done, total) => {
+        if (done % 50 === 0 || done === total) {
+          toast({ title: 'Extracting text…', description: `${done} / ${total} pages` });
+        }
+      });
+
+      specsTextRef.current = textMap;
+      specsCacheRef.current = new Map();
+      setSpecsLoaded(true);
+      setSpecsLoading(false);
+
+      toast({
+        title: 'Standard Specs Loaded',
+        description: `${totalPgs} pages indexed. Double-click a pay item to view its spec.`,
+      });
+    } catch (err) {
+      setSpecsLoading(false);
+      toast({
+        title: 'Error loading specs',
+        description: String(err),
+        variant: 'destructive',
+      });
+    }
+  }, [toast]);
+
+  const handleViewSpec = useCallback((itemCode: string) => {
+    if (!specsLoaded) {
+      toast({ title: 'No specs loaded', description: 'Upload standard specs first.', variant: 'destructive' });
+      return;
+    }
+
+    const sectionNumber = getSectionFromItemCode(itemCode);
+    const item = payItems.find(p => p.itemCode === itemCode);
+    const itemName = item?.name || '';
+
+    if (!sectionNumber) {
+      setSpecViewerData({ sectionNumber: null, itemCode, itemName, fullContent: null, itemPayRequirements: null });
+      setSpecViewerOpen(true);
+      return;
+    }
+
+    // Check cache first
+    let section = specsCacheRef.current.get(sectionNumber);
+    if (section === undefined) {
+      setSpecSearching(true);
+      setSpecViewerData({ sectionNumber, itemCode, itemName, fullContent: null, itemPayRequirements: null });
+      setSpecViewerOpen(true);
+
+      // Run synchronously but in next tick to show loading state
+      setTimeout(() => {
+        section = findSectionContent(specsTextRef.current, sectionNumber);
+        specsCacheRef.current.set(sectionNumber, section);
+
+        const payReqs = section?.basisOfPayment
+          ? findItemCodePayRequirements(section.basisOfPayment, itemCode)
+          : null;
+
+        setSpecViewerData({
+          sectionNumber,
+          itemCode,
+          itemName,
+          fullContent: section?.fullContent || null,
+          itemPayRequirements: payReqs,
+        });
+        setSpecSearching(false);
+      }, 50);
+      return;
+    }
+
+    const payReqs = section?.basisOfPayment
+      ? findItemCodePayRequirements(section.basisOfPayment, itemCode)
+      : null;
+
+    setSpecViewerData({
+      sectionNumber,
+      itemCode,
+      itemName,
+      fullContent: section?.fullContent || null,
+      itemPayRequirements: payReqs,
+    });
+    setSpecViewerOpen(true);
+  }, [specsLoaded, payItems, toast]);
 
   const handleTocRegionSelected = useCallback(async (rect: { x1: number; y1: number; x2: number; y2: number }) => {
     if (!pdf || !project) return;
@@ -196,6 +307,10 @@ const Index = () => {
           onImportPayItems={handleImportPayItems}
           annotations={project?.annotations || []}
           onRemoveAnnotationsForPayItem={removeAnnotationsForPayItem}
+          onSpecsUpload={handleSpecsUpload}
+          specsLoaded={specsLoaded}
+          specsLoading={specsLoading}
+          onViewSpec={handleViewSpec}
         />
 
         <div className="flex-1 flex flex-col min-w-0 min-h-0">
@@ -260,6 +375,17 @@ const Index = () => {
           onExportPdf={() => exportPdfReport(project.annotations, payItems, project.name, project.contractNumber)}
         />
       )}
+
+      <SpecViewer
+        open={specViewerOpen}
+        onClose={() => setSpecViewerOpen(false)}
+        sectionNumber={specViewerData.sectionNumber}
+        itemCode={specViewerData.itemCode}
+        itemName={specViewerData.itemName}
+        fullContent={specViewerData.fullContent}
+        itemPayRequirements={specViewerData.itemPayRequirements}
+        loading={specSearching}
+      />
     </SidebarProvider>
   );
 };

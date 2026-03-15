@@ -1,4 +1,4 @@
-import { FileUp, MapPin, ChevronRight, ChevronDown, Plus, Trash2, Edit2, TableOfContents, X, PenTool, Hash } from 'lucide-react';
+import { FileUp, MapPin, ChevronRight, ChevronDown, Plus, Trash2, Edit2, TableOfContents, X, PenTool, Hash, BookOpen, Loader2 } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import type { TocEntry, PayItem, PayItemUnit, Annotation } from '@/types/project';
 import { isDrawableUnit, UNIT_LABELS, getPayItemSection } from '@/types/project';
@@ -37,6 +37,10 @@ interface Props {
   onImportPayItems?: () => void;
   annotations: Annotation[];
   onRemoveAnnotationsForPayItem?: (payItemId: string) => void;
+  onSpecsUpload?: (file: File) => void;
+  specsLoaded?: boolean;
+  specsLoading?: boolean;
+  onViewSpec?: (itemCode: string) => void;
 }
 
 const ALL_UNITS: PayItemUnit[] = ['SF', 'LF', 'CY', 'SY', 'EA', 'TON', 'LS', 'USD', 'MNTH'];
@@ -46,6 +50,7 @@ export function ProjectSidebar({
   toc, currentPage, totalPages, onPageChange, onFileUpload,
   payItems, onUpdatePayItems, activePayItemId, onActivePayItemChange, projectName,
   hasPdf, onImportToc, onCloseProject, onImportPayItems, annotations, onRemoveAnnotationsForPayItem,
+  onSpecsUpload, specsLoaded, specsLoading, onViewSpec,
 }: Props) {
   const [editingItem, setEditingItem] = useState<PayItem | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -109,6 +114,26 @@ export function ProjectSidebar({
                   <X className="h-3 w-3 mr-1" />
                   Close Project
                 </Button>
+              )}
+              {hasPdf && onSpecsUpload && (
+                <label className="flex items-center gap-2 px-3 py-2 rounded-sm border border-dashed border-sidebar-border cursor-pointer hover:border-sidebar-primary hover:bg-sidebar-accent transition-colors text-xs">
+                  {specsLoading ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <BookOpen className="h-3.5 w-3.5" />
+                  )}
+                  <span>{specsLoaded ? 'Specs Loaded ✓' : specsLoading ? 'Loading Specs…' : 'Upload Standard Specs'}</span>
+                  <input
+                    type="file"
+                    accept=".pdf"
+                    onChange={(e) => {
+                      const f = e.target.files?.[0];
+                      if (f && f.type === 'application/pdf') onSpecsUpload(f);
+                    }}
+                    className="hidden"
+                    disabled={specsLoading}
+                  />
+                </label>
               )}
             </div>
           </SidebarGroupContent>
@@ -214,6 +239,7 @@ export function ProjectSidebar({
                 onEdit={(item) => { setEditingItem(item); setDialogOpen(true); }}
                 onDelete={deletePayItem}
                 annotations={annotations}
+                onViewSpec={specsLoaded ? onViewSpec : undefined}
               />
 
               <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -400,13 +426,14 @@ function TocSectionItem({ entry, currentPage, onPageChange }: {
   );
 }
 
-function PayItemList({ payItems, activePayItemId, onActivePayItemChange, onEdit, onDelete, annotations }: {
+function PayItemList({ payItems, activePayItemId, onActivePayItemChange, onEdit, onDelete, annotations, onViewSpec }: {
   payItems: PayItem[];
   activePayItemId: string;
   onActivePayItemChange: (id: string) => void;
   onEdit: (item: PayItem) => void;
   onDelete: (id: string) => void;
   annotations: Annotation[];
+  onViewSpec?: (itemCode: string) => void;
 }) {
   // Group by section (first digit of itemCode × 100)
   const sections = useMemo(() => {
@@ -441,6 +468,7 @@ function PayItemList({ payItems, activePayItemId, onActivePayItemChange, onEdit,
               <div
                 key={item.id}
                 onClick={() => onActivePayItemChange(item.id)}
+                onDoubleClick={() => onViewSpec?.(item.itemCode)}
                 className={`group flex items-center gap-2 px-2 py-1.5 rounded-sm cursor-pointer text-xs transition-colors ${
                   activePayItemId === item.id
                     ? 'bg-sidebar-accent ring-1 ring-sidebar-primary'
