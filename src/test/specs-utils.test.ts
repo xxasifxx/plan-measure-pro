@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect } from 'vitest';
 
 // Import only the pure functions that don't depend on pdfjs-dist
