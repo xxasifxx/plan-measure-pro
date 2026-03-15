@@ -239,6 +239,8 @@ export function ProjectSidebar({
                 onEdit={(item) => { setEditingItem(item); setDialogOpen(true); }}
                 onDelete={deletePayItem}
                 annotations={annotations}
+                onViewSpec={specsLoaded ? onViewSpec : undefined}
+              />
               />
 
               <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
