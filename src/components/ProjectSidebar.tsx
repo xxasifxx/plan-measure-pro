@@ -427,13 +427,14 @@ function TocSectionItem({ entry, currentPage, onPageChange }: {
   );
 }
 
-function PayItemList({ payItems, activePayItemId, onActivePayItemChange, onEdit, onDelete, annotations }: {
+function PayItemList({ payItems, activePayItemId, onActivePayItemChange, onEdit, onDelete, annotations, onViewSpec }: {
   payItems: PayItem[];
   activePayItemId: string;
   onActivePayItemChange: (id: string) => void;
   onEdit: (item: PayItem) => void;
   onDelete: (id: string) => void;
   annotations: Annotation[];
+  onViewSpec?: (itemCode: string) => void;
 }) {
   // Group by section (first digit of itemCode × 100)
   const sections = useMemo(() => {
