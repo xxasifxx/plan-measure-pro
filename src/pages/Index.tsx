@@ -104,8 +104,8 @@ const Index = () => {
     setPdf(null);
     closeProject();
     setSpecsLoaded(false);
-    specsTextRef.current = new Map();
-    specsCacheRef.current = new Map();
+    setSpecsPdf(null);
+    sectionPageIndexRef.current = new Map();
   }, [closeProject]);
 
   const handleSpecsUpload = useCallback(async (file: File) => {
