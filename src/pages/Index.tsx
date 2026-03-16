@@ -343,6 +343,7 @@ const Index = () => {
         itemCode={specViewerData.itemCode}
         itemName={specViewerData.itemName}
         specsPdf={specsPdf}
+        specsPageTexts={specsPageTexts}
         startPage={specViewerData.startPage}
       />
     </SidebarProvider>
