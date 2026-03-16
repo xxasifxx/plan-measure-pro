@@ -106,6 +106,7 @@ const Index = () => {
     closeProject();
     setSpecsLoaded(false);
     setSpecsPdf(null);
+    setSpecsPageTexts(new Map());
     sectionPageIndexRef.current = new Map();
   }, [closeProject]);
 
