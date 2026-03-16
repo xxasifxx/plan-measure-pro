@@ -34,6 +34,7 @@ const Index = () => {
   const [specsLoaded, setSpecsLoaded] = useState(false);
   const [specsLoading, setSpecsLoading] = useState(false);
   const [specsPdf, setSpecsPdf] = useState<PDFDocumentProxy | null>(null);
+  const [specsPageTexts, setSpecsPageTexts] = useState<Map<number, string>>(new Map());
   const sectionPageIndexRef = useRef<Map<number, number>>(new Map());
   const [specViewerOpen, setSpecViewerOpen] = useState(false);
   const [specViewerData, setSpecViewerData] = useState<{
@@ -105,6 +106,7 @@ const Index = () => {
     closeProject();
     setSpecsLoaded(false);
     setSpecsPdf(null);
+    setSpecsPageTexts(new Map());
     sectionPageIndexRef.current = new Map();
   }, [closeProject]);
 
@@ -124,6 +126,7 @@ const Index = () => {
 
       const index = buildSectionPageIndex(textMap);
       sectionPageIndexRef.current = index;
+      setSpecsPageTexts(textMap);
       setSpecsPdf(loadedSpecsPdf);
       setSpecsLoaded(true);
       setSpecsLoading(false);
@@ -340,6 +343,7 @@ const Index = () => {
         itemCode={specViewerData.itemCode}
         itemName={specViewerData.itemName}
         specsPdf={specsPdf}
+        specsPageTexts={specsPageTexts}
         startPage={specViewerData.startPage}
       />
     </SidebarProvider>
