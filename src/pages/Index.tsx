@@ -125,6 +125,7 @@ const Index = () => {
 
       const index = buildSectionPageIndex(textMap);
       sectionPageIndexRef.current = index;
+      setSpecsPageTexts(textMap);
       setSpecsPdf(loadedSpecsPdf);
       setSpecsLoaded(true);
       setSpecsLoading(false);
