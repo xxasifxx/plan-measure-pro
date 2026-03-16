@@ -1,9 +1,15 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, ChevronLeft, ChevronRight, GripVertical, Loader2, ZoomIn, ZoomOut } from 'lucide-react';
+import { BookOpen, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, GripVertical, Loader2, Search, X, ZoomIn, ZoomOut } from 'lucide-react';
+
+interface SearchMatch {
+  page: number;
+  index: number; // character index in page text
+}
 
 interface Props {
   open: boolean;
@@ -12,6 +18,7 @@ interface Props {
   itemCode: string;
   itemName: string;
   specsPdf: PDFDocumentProxy | null;
+  specsPageTexts: Map<number, string>;
   startPage: number | null;
 }
 
@@ -22,6 +29,7 @@ export function SpecViewer({
   itemCode,
   itemName,
   specsPdf,
+  specsPageTexts,
   startPage,
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -29,8 +37,61 @@ export function SpecViewer({
   const [currentPage, setCurrentPage] = useState(1);
   const [rendering, setRendering] = useState(false);
   const [scale, setScale] = useState(1.5);
-  const [panelWidth, setPanelWidth] = useState(896); // default ~4xl
+  const [panelWidth, setPanelWidth] = useState(896);
   const draggingRef = useRef(false);
+
+  // Search state
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [currentMatchIndex, setCurrentMatchIndex] = useState(0);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Compute search matches
+  const searchMatches = useMemo<SearchMatch[]>(() => {
+    if (!searchQuery || searchQuery.length < 2) return [];
+    const query = searchQuery.toLowerCase();
+    const matches: SearchMatch[] = [];
+    const sortedPages = Array.from(specsPageTexts.entries()).sort((a, b) => a[0] - b[0]);
+    for (const [page, text] of sortedPages) {
+      const lower = text.toLowerCase();
+      let idx = lower.indexOf(query);
+      while (idx !== -1) {
+        matches.push({ page, index: idx });
+        idx = lower.indexOf(query, idx + 1);
+      }
+    }
+    return matches;
+  }, [searchQuery, specsPageTexts]);
+
+  // Reset match index when matches change
+  useEffect(() => {
+    setCurrentMatchIndex(0);
+  }, [searchMatches]);
+
+  // Navigate to match page
+  const goToMatch = useCallback((matchIdx: number) => {
+    if (matchIdx < 0 || matchIdx >= searchMatches.length) return;
+    setCurrentMatchIndex(matchIdx);
+    setCurrentPage(searchMatches[matchIdx].page);
+  }, [searchMatches]);
+
+  // Keyboard shortcut: Ctrl+F to open search
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+        e.preventDefault();
+        setSearchOpen(true);
+        setTimeout(() => searchInputRef.current?.focus(), 50);
+      }
+      if (e.key === 'Escape' && searchOpen) {
+        setSearchOpen(false);
+        setSearchQuery('');
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [open, searchOpen]);
 
   // Drag-to-resize from left edge
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
@@ -58,6 +119,10 @@ export function SpecViewer({
   useEffect(() => {
     if (open && startPage) {
       setCurrentPage(startPage);
+    }
+    if (open) {
+      setSearchOpen(false);
+      setSearchQuery('');
     }
   }, [open, startPage]);
 
@@ -103,6 +168,9 @@ export function SpecViewer({
   }, [open, specsPdf, startPage]);
 
   const totalPages = specsPdf?.numPages || 0;
+
+  // Count matches on current page for badge
+  const matchesOnCurrentPage = searchMatches.filter(m => m.page === currentPage).length;
 
   return (
     <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
@@ -175,9 +243,22 @@ export function SpecViewer({
             >
               <ZoomIn className="h-3.5 w-3.5" />
             </Button>
+            <div className="w-px h-5 bg-border mx-1" />
+            <Button
+              variant={searchOpen ? 'secondary' : 'ghost'}
+              size="icon"
+              className="h-7 w-7"
+              onClick={() => {
+                setSearchOpen(!searchOpen);
+                if (!searchOpen) setTimeout(() => searchInputRef.current?.focus(), 50);
+                else setSearchQuery('');
+              }}
+            >
+              <Search className="h-3.5 w-3.5" />
+            </Button>
             {startPage && (
               <Button
-                variant="outline" size="sm" className="h-7 text-xs ml-2"
+                variant="outline" size="sm" className="h-7 text-xs ml-1"
                 onClick={() => setCurrentPage(startPage)}
               >
                 Go to start
@@ -185,6 +266,57 @@ export function SpecViewer({
             )}
           </div>
         </div>
+
+        {/* Search bar */}
+        {searchOpen && (
+          <div className="flex items-center gap-2 px-3 py-1.5 border-b border-border bg-muted/30 shrink-0">
+            <Search className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+            <Input
+              ref={searchInputRef}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  if (e.shiftKey) {
+                    goToMatch((currentMatchIndex - 1 + searchMatches.length) % searchMatches.length);
+                  } else {
+                    goToMatch((currentMatchIndex + 1) % searchMatches.length);
+                  }
+                }
+              }}
+              placeholder="Search in document…"
+              className="h-7 text-xs bg-background"
+            />
+            {searchQuery && (
+              <span className="text-[10px] text-muted-foreground font-mono whitespace-nowrap">
+                {searchMatches.length === 0
+                  ? 'No matches'
+                  : `${currentMatchIndex + 1}/${searchMatches.length}`}
+              </span>
+            )}
+            <Button
+              variant="ghost" size="icon" className="h-6 w-6 shrink-0"
+              disabled={searchMatches.length === 0}
+              onClick={() => goToMatch((currentMatchIndex - 1 + searchMatches.length) % searchMatches.length)}
+            >
+              <ChevronUp className="h-3 w-3" />
+            </Button>
+            <Button
+              variant="ghost" size="icon" className="h-6 w-6 shrink-0"
+              disabled={searchMatches.length === 0}
+              onClick={() => goToMatch((currentMatchIndex + 1) % searchMatches.length)}
+            >
+              <ChevronDown className="h-3 w-3" />
+            </Button>
+            <Button
+              variant="ghost" size="icon" className="h-6 w-6 shrink-0"
+              onClick={() => { setSearchOpen(false); setSearchQuery(''); }}
+            >
+              <X className="h-3 w-3" />
+            </Button>
+          </div>
+        )}
 
         {/* PDF canvas */}
         <div ref={containerRef} className="flex-1 min-h-0 overflow-auto bg-muted/30 p-4">
@@ -206,6 +338,14 @@ export function SpecViewer({
                 </div>
               )}
               <canvas ref={canvasRef} className="shadow-md" />
+            </div>
+          )}
+          {/* Current page match indicator */}
+          {searchOpen && searchQuery && matchesOnCurrentPage > 0 && (
+            <div className="text-center mt-2">
+              <Badge variant="secondary" className="text-[10px]">
+                {matchesOnCurrentPage} match{matchesOnCurrentPage !== 1 ? 'es' : ''} on this page
+              </Badge>
             </div>
           )}
         </div>
