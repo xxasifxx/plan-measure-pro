@@ -34,6 +34,7 @@ const Index = () => {
   const [specsLoaded, setSpecsLoaded] = useState(false);
   const [specsLoading, setSpecsLoading] = useState(false);
   const [specsPdf, setSpecsPdf] = useState<PDFDocumentProxy | null>(null);
+  const [specsPageTexts, setSpecsPageTexts] = useState<Map<number, string>>(new Map());
   const sectionPageIndexRef = useRef<Map<number, number>>(new Map());
   const [specViewerOpen, setSpecViewerOpen] = useState(false);
   const [specViewerData, setSpecViewerData] = useState<{
