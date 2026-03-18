@@ -4,11 +4,12 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sh
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, GripVertical, Loader2, Search, X, ZoomIn, ZoomOut } from 'lucide-react';
+import { BookOpen, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, GripVertical, Loader2, Search, X, ZoomIn, ZoomOut } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface SearchMatch {
   page: number;
-  index: number; // character index in page text
+  index: number;
 }
 
 interface Props {
@@ -22,29 +23,38 @@ interface Props {
   startPage: number | null;
 }
 
+const PANEL_WIDTH_KEY = 'specViewerPanelWidth';
+
+function getStoredPanelWidth(): number {
+  try {
+    const v = localStorage.getItem(PANEL_WIDTH_KEY);
+    return v ? Math.max(400, Math.min(Number(v), 1600)) : 896;
+  } catch { return 896; }
+}
+
 export function SpecViewer({
-  open,
-  onClose,
-  sectionNumber,
-  itemCode,
-  itemName,
-  specsPdf,
-  specsPageTexts,
-  startPage,
+  open, onClose, sectionNumber, itemCode, itemName, specsPdf, specsPageTexts, startPage,
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
   const [currentPage, setCurrentPage] = useState(1);
   const [rendering, setRendering] = useState(false);
   const [scale, setScale] = useState(1.5);
-  const [panelWidth, setPanelWidth] = useState(896);
+  const [panelWidth, setPanelWidth] = useState(getStoredPanelWidth);
   const draggingRef = useRef(false);
+  const refitTimerRef = useRef<ReturnType<typeof setTimeout>>();
 
   // Search state
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentMatchIndex, setCurrentMatchIndex] = useState(0);
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Page input state
+  const [pageInputValue, setPageInputValue] = useState('');
+  const [editingPage, setEditingPage] = useState(false);
+  const pageInputRef = useRef<HTMLInputElement>(null);
 
   // Compute search matches
   const searchMatches = useMemo<SearchMatch[]>(() => {
@@ -63,22 +73,19 @@ export function SpecViewer({
     return matches;
   }, [searchQuery, specsPageTexts]);
 
-  // Reset match index when matches change
-  useEffect(() => {
-    setCurrentMatchIndex(0);
-  }, [searchMatches]);
+  useEffect(() => { setCurrentMatchIndex(0); }, [searchMatches]);
 
-  // Navigate to match page
   const goToMatch = useCallback((matchIdx: number) => {
     if (matchIdx < 0 || matchIdx >= searchMatches.length) return;
     setCurrentMatchIndex(matchIdx);
     setCurrentPage(searchMatches[matchIdx].page);
   }, [searchMatches]);
 
-  // Keyboard shortcut: Ctrl+F to open search
+  // Keyboard shortcuts
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
+      // Ctrl+F for search
       if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
         e.preventDefault();
         setSearchOpen(true);
@@ -88,18 +95,50 @@ export function SpecViewer({
         setSearchOpen(false);
         setSearchQuery('');
       }
+      // Arrow keys for page nav (only when not typing in an input)
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        setCurrentPage(p => Math.max(1, p - 1));
+      }
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        setCurrentPage(p => Math.min(specsPdf?.numPages || 1, p + 1));
+      }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [open, searchOpen]);
+  }, [open, searchOpen, specsPdf]);
 
-  // Drag-to-resize from left edge
+  // Scroll wheel zoom
+  useEffect(() => {
+    if (!open) return;
+    const container = containerRef.current;
+    if (!container) return;
+    const handler = (e: WheelEvent) => {
+      if (!e.ctrlKey && !e.metaKey) return;
+      e.preventDefault();
+      const delta = e.deltaY > 0 ? -0.1 : 0.1;
+      setScale(s => Math.min(4, Math.max(0.5, Math.round((s + delta) * 100) / 100)));
+    };
+    container.addEventListener('wheel', handler, { passive: false });
+    return () => container.removeEventListener('wheel', handler);
+  }, [open]);
+
+  // Persist panel width
+  useEffect(() => {
+    if (!isMobile) {
+      localStorage.setItem(PANEL_WIDTH_KEY, String(panelWidth));
+    }
+  }, [panelWidth, isMobile]);
+
+  // Drag-to-resize
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     draggingRef.current = true;
     const startX = e.clientX;
     const startWidth = panelWidth;
-
     const onMove = (ev: MouseEvent) => {
       if (!draggingRef.current) return;
       const delta = startX - ev.clientX;
@@ -115,29 +154,22 @@ export function SpecViewer({
     document.addEventListener('mouseup', onUp);
   }, [panelWidth]);
 
-  // Reset to start page when opening
+  // Reset on open
   useEffect(() => {
-    if (open && startPage) {
-      setCurrentPage(startPage);
-    }
-    if (open) {
-      setSearchOpen(false);
-      setSearchQuery('');
-    }
+    if (open && startPage) setCurrentPage(startPage);
+    if (open) { setSearchOpen(false); setSearchQuery(''); }
   }, [open, startPage]);
 
-  // Render the current page
+  // Render page + highlight search matches
   useEffect(() => {
     if (!open || !specsPdf || !canvasRef.current) return;
-
     let cancelled = false;
     setRendering(true);
 
-    specsPdf.getPage(currentPage).then((page) => {
+    specsPdf.getPage(currentPage).then(async (page) => {
       if (cancelled) return;
       const canvas = canvasRef.current;
       if (!canvas) return;
-
       const viewport = page.getViewport({ scale });
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
@@ -145,19 +177,85 @@ export function SpecViewer({
       canvas.width = viewport.width;
       canvas.height = viewport.height;
 
-      page.render({ canvasContext: ctx, viewport }).promise.then(() => {
-        if (!cancelled) setRendering(false);
-      });
+      await page.render({ canvasContext: ctx, viewport }).promise;
+      if (cancelled) return;
+
+      // Highlight search matches on this page
+      if (searchQuery && searchQuery.length >= 2) {
+        const matchesOnPage = searchMatches.filter(m => m.page === currentPage);
+        if (matchesOnPage.length > 0) {
+          const textContent = await page.getTextContent();
+          const query = searchQuery.toLowerCase();
+          // Build a flat string with character-to-item mapping
+          let fullText = '';
+          const charMap: { itemIdx: number; charIdx: number }[] = [];
+          for (let i = 0; i < textContent.items.length; i++) {
+            const item = textContent.items[i] as any;
+            if (!item.str) continue;
+            for (let c = 0; c < item.str.length; c++) {
+              charMap.push({ itemIdx: i, charIdx: c });
+              fullText += item.str[c];
+            }
+          }
+
+          const lowerFull = fullText.toLowerCase();
+          let searchIdx = lowerFull.indexOf(query);
+          let matchNum = 0;
+          while (searchIdx !== -1) {
+            // Determine if this is the currently active match
+            const isActive = searchMatches.length > 0 &&
+              currentMatchIndex < searchMatches.length &&
+              searchMatches[currentMatchIndex].page === currentPage &&
+              matchNum === matchesOnPage.findIndex(m => m.index === searchMatches[currentMatchIndex]?.index);
+
+            // Get bounding boxes for matched characters
+            const startChar = charMap[searchIdx];
+            const endChar = charMap[searchIdx + query.length - 1];
+            if (startChar && endChar) {
+              const startItem = textContent.items[startChar.itemIdx] as any;
+              const endItem = textContent.items[endChar.itemIdx] as any;
+              // Draw highlight for each item span in the match
+              const itemIndices = new Set<number>();
+              for (let j = searchIdx; j < searchIdx + query.length && j < charMap.length; j++) {
+                itemIndices.add(charMap[j].itemIdx);
+              }
+              for (const idx of itemIndices) {
+                const item = textContent.items[idx] as any;
+                if (!item.transform) continue;
+                const tx = item.transform;
+                // Transform to viewport coordinates
+                const [a, b, c, d, e, f] = tx;
+                const fontSize = Math.sqrt(b * b + d * d);
+                const vp = viewport.convertToViewportPoint(e, f);
+                const vpEnd = viewport.convertToViewportPoint(e + item.width, f + fontSize);
+                const x = Math.min(vp[0], vpEnd[0]);
+                const y = Math.min(vp[1], vpEnd[1]);
+                const w = Math.abs(vpEnd[0] - vp[0]);
+                const h = Math.abs(vpEnd[1] - vp[1]);
+
+                ctx.save();
+                ctx.globalAlpha = isActive ? 0.45 : 0.25;
+                ctx.fillStyle = isActive ? '#f97316' : '#facc15';
+                ctx.fillRect(x, y, w, h);
+                ctx.restore();
+              }
+            }
+            matchNum++;
+            searchIdx = lowerFull.indexOf(query, searchIdx + 1);
+          }
+        }
+      }
+
+      if (!cancelled) setRendering(false);
     });
 
     return () => { cancelled = true; };
-  }, [open, specsPdf, currentPage, scale]);
+  }, [open, specsPdf, currentPage, scale, searchQuery, searchMatches, currentMatchIndex]);
 
-  // Fit width on open
-  useEffect(() => {
-    if (!open || !specsPdf || !containerRef.current) return;
-
-    specsPdf.getPage(startPage || 1).then((page) => {
+  // Fit width on open & debounced refit on panel resize
+  const fitToWidth = useCallback(() => {
+    if (!specsPdf || !containerRef.current) return;
+    specsPdf.getPage(currentPage || startPage || 1).then((page) => {
       const container = containerRef.current;
       if (!container) return;
       const viewport = page.getViewport({ scale: 1 });
@@ -165,27 +263,50 @@ export function SpecViewer({
       const fitScale = Math.min(containerWidth / viewport.width, 3);
       setScale(Math.max(0.5, Math.round(fitScale * 100) / 100));
     });
+  }, [specsPdf, currentPage, startPage]);
+
+  useEffect(() => {
+    if (!open || !specsPdf) return;
+    fitToWidth();
   }, [open, specsPdf, startPage]);
+
+  // Debounced refit on panel resize
+  useEffect(() => {
+    if (!open || !specsPdf) return;
+    clearTimeout(refitTimerRef.current);
+    refitTimerRef.current = setTimeout(fitToWidth, 300);
+    return () => clearTimeout(refitTimerRef.current);
+  }, [panelWidth, open, specsPdf, fitToWidth]);
 
   const totalPages = specsPdf?.numPages || 0;
 
-  // Count matches on current page for badge
-  const matchesOnCurrentPage = searchMatches.filter(m => m.page === currentPage).length;
+  // Page input handlers
+  const commitPageInput = () => {
+    const num = parseInt(pageInputValue, 10);
+    if (!isNaN(num) && num >= 1 && num <= totalPages) {
+      setCurrentPage(num);
+    }
+    setEditingPage(false);
+  };
+
+  const effectiveWidth = isMobile ? '100%' : panelWidth;
 
   return (
     <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
       <SheetContent
         side="right"
         className="p-0 flex flex-col"
-        style={{ maxWidth: panelWidth, width: '100%' }}
+        style={{ maxWidth: effectiveWidth, width: '100%' }}
       >
-        {/* Drag handle on left edge */}
-        <div
-          className="absolute left-0 top-0 bottom-0 w-2 cursor-col-resize z-50 flex items-center justify-center hover:bg-primary/10 transition-colors group"
-          onMouseDown={handleMouseDown}
-        >
-          <GripVertical className="h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-        </div>
+        {/* Drag handle - desktop only */}
+        {!isMobile && (
+          <div
+            className="absolute left-0 top-0 bottom-0 w-2 cursor-col-resize z-50 flex items-center justify-center hover:bg-primary/10 transition-colors group"
+            onMouseDown={handleMouseDown}
+          >
+            <GripVertical className="h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+          </div>
+        )}
         <SheetHeader className="p-3 pb-2 border-b border-border shrink-0">
           <div className="flex items-center gap-2">
             <BookOpen className="h-4 w-4 text-primary shrink-0" />
@@ -193,7 +314,7 @@ export function SpecViewer({
               Section {sectionNumber} — {itemName}
             </SheetTitle>
           </div>
-          <div className="flex items-center gap-1.5 mt-1">
+          <div className="flex items-center gap-1.5 mt-1 flex-wrap">
             <Badge variant="outline" className="text-[10px] font-mono">
               {itemCode}
             </Badge>
@@ -206,21 +327,40 @@ export function SpecViewer({
         </SheetHeader>
 
         {/* Navigation toolbar */}
-        <div className="flex items-center justify-between px-3 py-1.5 border-b border-border bg-muted/50 shrink-0">
+        <div className="flex items-center justify-between px-3 py-1.5 border-b border-border bg-muted/50 shrink-0 flex-wrap gap-1">
           <div className="flex items-center gap-1">
             <Button
               variant="ghost" size="icon" className="h-7 w-7"
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
               disabled={currentPage <= 1}
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
-            <span className="text-xs font-mono min-w-[80px] text-center">
-              {currentPage} / {totalPages}
-            </span>
+            {editingPage ? (
+              <Input
+                ref={pageInputRef}
+                value={pageInputValue}
+                onChange={(e) => setPageInputValue(e.target.value)}
+                onBlur={commitPageInput}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') commitPageInput();
+                  if (e.key === 'Escape') setEditingPage(false);
+                }}
+                className="h-6 w-14 text-xs text-center font-mono px-1"
+                autoFocus
+              />
+            ) : (
+              <button
+                className="text-xs font-mono min-w-[80px] text-center hover:bg-accent hover:text-accent-foreground rounded px-1 py-0.5 transition-colors cursor-pointer"
+                onClick={() => { setPageInputValue(String(currentPage)); setEditingPage(true); }}
+                title="Click to jump to a page"
+              >
+                {currentPage} / {totalPages}
+              </button>
+            )}
             <Button
               variant="ghost" size="icon" className="h-7 w-7"
-              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
               disabled={currentPage >= totalPages}
             >
               <ChevronRight className="h-4 w-4" />
@@ -230,7 +370,7 @@ export function SpecViewer({
           <div className="flex items-center gap-1">
             <Button
               variant="ghost" size="icon" className="h-7 w-7"
-              onClick={() => setScale((s) => Math.max(0.5, s - 0.25))}
+              onClick={() => setScale(s => Math.max(0.5, s - 0.25))}
             >
               <ZoomOut className="h-3.5 w-3.5" />
             </Button>
@@ -239,15 +379,14 @@ export function SpecViewer({
             </span>
             <Button
               variant="ghost" size="icon" className="h-7 w-7"
-              onClick={() => setScale((s) => Math.min(4, s + 0.25))}
+              onClick={() => setScale(s => Math.min(4, s + 0.25))}
             >
               <ZoomIn className="h-3.5 w-3.5" />
             </Button>
             <div className="w-px h-5 bg-border mx-1" />
             <Button
               variant={searchOpen ? 'secondary' : 'ghost'}
-              size="icon"
-              className="h-7 w-7"
+              size="icon" className="h-7 w-7"
               onClick={() => {
                 setSearchOpen(!searchOpen);
                 if (!searchOpen) setTimeout(() => searchInputRef.current?.focus(), 50);
@@ -269,7 +408,7 @@ export function SpecViewer({
 
         {/* Search bar */}
         {searchOpen && (
-          <div className="flex items-center gap-2 px-3 py-1.5 border-b border-border bg-muted/30 shrink-0">
+          <div className="flex items-center gap-2 px-3 py-1.5 border-b border-border bg-muted/30 shrink-0 flex-wrap">
             <Search className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
             <Input
               ref={searchInputRef}
@@ -278,21 +417,16 @@ export function SpecViewer({
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   e.preventDefault();
-                  if (e.shiftKey) {
-                    goToMatch((currentMatchIndex - 1 + searchMatches.length) % searchMatches.length);
-                  } else {
-                    goToMatch((currentMatchIndex + 1) % searchMatches.length);
-                  }
+                  if (e.shiftKey) goToMatch((currentMatchIndex - 1 + searchMatches.length) % searchMatches.length);
+                  else goToMatch((currentMatchIndex + 1) % searchMatches.length);
                 }
               }}
               placeholder="Search in document…"
-              className="h-7 text-xs bg-background"
+              className="h-7 text-xs bg-background flex-1 min-w-[100px]"
             />
             {searchQuery && (
               <span className="text-[10px] text-muted-foreground font-mono whitespace-nowrap">
-                {searchMatches.length === 0
-                  ? 'No matches'
-                  : `${currentMatchIndex + 1}/${searchMatches.length}`}
+                {searchMatches.length === 0 ? 'No matches' : `${currentMatchIndex + 1}/${searchMatches.length}`}
               </span>
             )}
             <Button
@@ -338,14 +472,6 @@ export function SpecViewer({
                 </div>
               )}
               <canvas ref={canvasRef} className="shadow-md" />
-            </div>
-          )}
-          {/* Current page match indicator */}
-          {searchOpen && searchQuery && matchesOnCurrentPage > 0 && (
-            <div className="text-center mt-2">
-              <Badge variant="secondary" className="text-[10px]">
-                {matchesOnCurrentPage} match{matchesOnCurrentPage !== 1 ? 'es' : ''} on this page
-              </Badge>
             </div>
           )}
         </div>
