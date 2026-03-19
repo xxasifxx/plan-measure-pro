@@ -6,12 +6,21 @@ import { Toolbar } from '@/components/Toolbar';
 import { PdfCanvas } from '@/components/PdfCanvas';
 import { SummaryPanel } from '@/components/SummaryPanel';
 import { SpecViewer } from '@/components/SpecViewer';
+import { MobileTabBar, type MobileTab } from '@/components/MobileTabBar';
+import { MobileToolbar } from '@/components/MobileToolbar';
+import { MobilePayItems } from '@/components/MobilePayItems';
+import { MobileSections } from '@/components/MobileSections';
+import { EmptyState } from '@/components/EmptyState';
 import { useProject } from '@/hooks/useProject';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { useTheme } from '@/hooks/useTheme';
 import { loadPdf, extractTextFromRegion, extractPayItemsFromPage } from '@/lib/pdf-utils';
 import { extractAllText, buildSectionPageIndex, getSectionFromItemCode } from '@/lib/specs-utils';
 import { exportCsv, exportPdfReport } from '@/lib/export-utils';
 import { useToast } from '@/hooks/use-toast';
 import type { TocEntry } from '@/types/project';
+import { Sun, Moon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const Index = () => {
   const {
@@ -29,6 +38,11 @@ const Index = () => {
   const [selectedAnnotationId, setSelectedAnnotationId] = useState<string | null>(null);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const isMobile = useIsMobile();
+  const { isDark, toggle: toggleTheme } = useTheme();
+
+  // Mobile tab state
+  const [mobileTab, setMobileTab] = useState<MobileTab>('canvas');
 
   // Standard specs state
   const [specsLoaded, setSpecsLoaded] = useState(false);
@@ -44,22 +58,13 @@ const Index = () => {
     startPage: number | null;
   }>({ sectionNumber: null, itemCode: '', itemName: '', startPage: null });
 
-  // Keyboard shortcuts: Ctrl+Z undo, Ctrl+Shift+Z redo
+  // Keyboard shortcuts
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.target as HTMLElement).tagName === 'INPUT' || (e.target as HTMLElement).tagName === 'TEXTAREA') return;
-      if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
-        e.preventDefault();
-        undo();
-      }
-      if ((e.ctrlKey || e.metaKey) && e.key === 'z' && e.shiftKey) {
-        e.preventDefault();
-        redo();
-      }
-      if ((e.ctrlKey || e.metaKey) && e.key === 'y') {
-        e.preventDefault();
-        redo();
-      }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) { e.preventDefault(); undo(); }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'z' && e.shiftKey) { e.preventDefault(); redo(); }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'y') { e.preventDefault(); redo(); }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
@@ -84,22 +89,14 @@ const Index = () => {
       const pdfDoc = await loadPdf(file);
       setPdf(pdfDoc);
       setTotalPages(pdfDoc.numPages);
-
       const name = file.name.replace(/\.pdf$/i, '');
       createProject(name, '', file.name, [], pdfDoc.numPages);
-
-      toast({
-        title: 'PDF Loaded',
-        description: `${pdfDoc.numPages} pages loaded. Select the Table of Contents area to import sections.`,
-      });
+      if (isMobile) setMobileTab('canvas');
+      toast({ title: 'PDF Loaded', description: `${pdfDoc.numPages} pages loaded.` });
     } catch (err) {
-      toast({
-        title: 'Error loading PDF',
-        description: String(err),
-        variant: 'destructive',
-      });
+      toast({ title: 'Error loading PDF', description: String(err), variant: 'destructive' });
     }
-  }, [createProject, setTotalPages, toast]);
+  }, [createProject, setTotalPages, toast, isMobile]);
 
   const handleCloseProject = useCallback(() => {
     setPdf(null);
@@ -113,123 +110,69 @@ const Index = () => {
   const handleSpecsUpload = useCallback(async (file: File) => {
     try {
       setSpecsLoading(true);
-      toast({ title: 'Loading Standard Specs…', description: 'This may take a moment for large documents.' });
-
+      toast({ title: 'Loading Standard Specs…', description: 'This may take a moment.' });
       const loadedSpecsPdf = await loadPdf(file);
-      const totalPgs = loadedSpecsPdf.numPages;
-
       const textMap = await extractAllText(loadedSpecsPdf, (done, total) => {
-        if (done % 50 === 0 || done === total) {
-          toast({ title: 'Indexing pages…', description: `${done} / ${total} pages` });
-        }
+        if (done % 50 === 0 || done === total) toast({ title: 'Indexing…', description: `${done}/${total} pages` });
       });
-
       const index = buildSectionPageIndex(textMap);
       sectionPageIndexRef.current = index;
       setSpecsPageTexts(textMap);
       setSpecsPdf(loadedSpecsPdf);
       setSpecsLoaded(true);
       setSpecsLoading(false);
-
-      toast({
-        title: 'Standard Specs Loaded',
-        description: `${totalPgs} pages indexed, ${index.size} sections found. Double-click a pay item to view its spec.`,
-      });
+      toast({ title: 'Specs Loaded', description: `${loadedSpecsPdf.numPages} pages, ${index.size} sections.` });
     } catch (err) {
       setSpecsLoading(false);
-      toast({
-        title: 'Error loading specs',
-        description: String(err),
-        variant: 'destructive',
-      });
+      toast({ title: 'Error loading specs', description: String(err), variant: 'destructive' });
     }
   }, [toast]);
 
   const handleViewSpec = useCallback((itemCode: string) => {
-    if (!specsLoaded) {
-      toast({ title: 'No specs loaded', description: 'Upload standard specs first.', variant: 'destructive' });
-      return;
-    }
-
+    if (!specsLoaded) { toast({ title: 'No specs loaded', variant: 'destructive' }); return; }
     const sectionNumber = getSectionFromItemCode(itemCode);
     const item = payItems.find(p => p.itemCode === itemCode);
-    const itemName = item?.name || '';
-
     const startPage = sectionNumber ? (sectionPageIndexRef.current.get(sectionNumber) || null) : null;
-
-    setSpecViewerData({ sectionNumber: sectionNumber || null, itemCode, itemName, startPage });
+    setSpecViewerData({ sectionNumber: sectionNumber || null, itemCode, itemName: item?.name || '', startPage });
     setSpecViewerOpen(true);
   }, [specsLoaded, payItems, toast]);
 
   const handleTocRegionSelected = useCallback(async (rect: { x1: number; y1: number; x2: number; y2: number }) => {
     if (!pdf || !project) return;
-
     try {
-      toast({ title: 'Extracting TOC...', description: 'Reading text from selected area' });
-
-      const scaledRect = {
-        x1: rect.x1 * scale, y1: rect.y1 * scale,
-        x2: rect.x2 * scale, y2: rect.y2 * scale,
-      };
+      toast({ title: 'Extracting TOC...' });
+      const scaledRect = { x1: rect.x1 * scale, y1: rect.y1 * scale, x2: rect.x2 * scale, y2: rect.y2 * scale };
       const entries: TocEntry[] = await extractTextFromRegion(pdf, currentPage, scale, scaledRect);
-
       if (entries.length === 0) {
-        toast({
-          title: 'No entries found',
-          description: 'Could not parse any TOC entries from the selected area. Try selecting a different region.',
-          variant: 'destructive',
-        });
+        toast({ title: 'No entries found', variant: 'destructive' });
         return;
       }
-
-      const updated = { ...project, toc: entries };
-      persist(updated);
+      persist({ ...project, toc: entries });
       setToolMode('select');
-
-      toast({
-        title: 'TOC Imported',
-        description: `${entries.length} sections imported from the selected area.`,
-      });
+      toast({ title: 'TOC Imported', description: `${entries.length} sections imported.` });
     } catch (err) {
-      toast({
-        title: 'Error extracting TOC',
-        description: String(err),
-        variant: 'destructive',
-      });
+      toast({ title: 'Error extracting TOC', description: String(err), variant: 'destructive' });
     }
   }, [pdf, project, currentPage, scale, persist, setToolMode, toast]);
 
   const handleImportPayItems = useCallback(async () => {
     if (!pdf) return;
     try {
-      toast({ title: 'Extracting Pay Items...', description: 'Scanning current page for Estimate of Quantities table(s)' });
+      toast({ title: 'Extracting Pay Items...' });
       const items = await extractPayItemsFromPage(pdf, currentPage, scale);
       updatePayItems(items);
-      toast({
-        title: 'Pay Items Imported',
-        description: `${items.length} pay items extracted from the Estimate of Quantities table.`,
-      });
+      toast({ title: 'Pay Items Imported', description: `${items.length} items extracted.` });
     } catch (err) {
-      toast({
-        title: 'Error extracting pay items',
-        description: String(err),
-        variant: 'destructive',
-      });
+      toast({ title: 'Error', description: String(err), variant: 'destructive' });
     }
   }, [pdf, currentPage, scale, updatePayItems, toast]);
 
   const handleCopyCalibration = useCallback(() => {
     if (!currentCalibration || !project) return;
-    // Apply to all other pages
     const otherPages = [];
-    for (let i = 1; i <= totalPages; i++) {
-      if (i !== currentPage) otherPages.push(i);
-    }
+    for (let i = 1; i <= totalPages; i++) { if (i !== currentPage) otherPages.push(i); }
     copyCalibrationToPages(currentPage, otherPages);
-    toast({
-      title: 'Calibration copied',
-      description: `Scale applied to all ${otherPages.length} other pages.`,
-    });
+    toast({ title: 'Calibration copied', description: `Applied to ${otherPages.length} pages.` });
   }, [currentCalibration, project, totalPages, currentPage, copyCalibrationToPages, toast]);
 
   const activePayItem = payItems.find(p => p.id === activePayItemId);
@@ -245,8 +188,140 @@ const Index = () => {
       case 'EA': setToolMode('count'); break;
       default: setToolMode('select'); break;
     }
-  }, [payItems, setActivePayItemId, setToolMode]);
+    if (isMobile) setMobileTab('canvas');
+  }, [payItems, setActivePayItemId, setToolMode, isMobile]);
 
+  // ──── MOBILE LAYOUT ────
+  if (isMobile) {
+    return (
+      <div className="h-screen flex flex-col w-full overflow-hidden">
+        {/* Active view */}
+        <div className="flex-1 min-h-0 relative">
+          {mobileTab === 'canvas' && (
+            <div className="flex flex-col h-full">
+              {pdf && (
+                <MobileToolbar
+                  toolMode={toolMode}
+                  onToolChange={setToolMode}
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                  scale={scale}
+                  onScaleChange={setScale}
+                  calibration={currentCalibration}
+                  activePayItem={activePayItem}
+                  onFitToScreen={handleFitToScreen}
+                  onUndo={undo}
+                  onRedo={redo}
+                  canUndo={canUndo}
+                  canRedo={canRedo}
+                  onCopyCalibration={currentCalibration ? handleCopyCalibration : undefined}
+                />
+              )}
+              <div className="flex-1 min-h-0 relative">
+                {pdf ? (
+                  <PdfCanvas
+                    pdf={pdf}
+                    currentPage={currentPage}
+                    scale={scale}
+                    toolMode={toolMode}
+                    calibration={currentCalibration}
+                    annotations={project?.annotations || []}
+                    activePayItemId={activePayItemId}
+                    payItems={payItems}
+                    onCalibrate={cal => setCalibration(currentPage, cal)}
+                    onAddAnnotation={addAnnotation}
+                    onRemoveAnnotation={removeAnnotation}
+                    onUpdateAnnotation={updateAnnotation}
+                    onTocRegionSelected={handleTocRegionSelected}
+                    externalContainerRef={canvasContainerRef}
+                    selectedAnnotationId={selectedAnnotationId}
+                    onSelectAnnotation={setSelectedAnnotationId}
+                  />
+                ) : (
+                  <EmptyState onFileUpload={handleFileUpload} />
+                )}
+              </div>
+            </div>
+          )}
+
+          {mobileTab === 'items' && (
+            <MobilePayItems
+              payItems={payItems}
+              onUpdatePayItems={updatePayItems}
+              activePayItemId={activePayItemId}
+              onActivePayItemChange={handleActivePayItemChange}
+              annotations={project?.annotations || []}
+              onRemoveAnnotationsForPayItem={removeAnnotationsForPayItem}
+              onImportPayItems={handleImportPayItems}
+              hasPdf={!!pdf}
+              onSpecsUpload={handleSpecsUpload}
+              specsLoaded={specsLoaded}
+              specsLoading={specsLoading}
+              onViewSpec={handleViewSpec}
+            />
+          )}
+
+          {mobileTab === 'sections' && (
+            <MobileSections
+              toc={project?.toc || []}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+              hasPdf={!!pdf}
+              onFileUpload={handleFileUpload}
+              onImportToc={() => setToolMode('tocSelect')}
+              onSwitchToCanvas={() => setMobileTab('canvas')}
+            />
+          )}
+
+          {mobileTab === 'summary' && (
+            <div className="h-full overflow-auto pb-20">
+              {project ? (
+                <SummaryPanel
+                  annotations={project.annotations}
+                  payItems={payItems}
+                  projectName={project.name}
+                  contractNumber={project.contractNumber}
+                  onClose={() => setMobileTab('canvas')}
+                  onExportCsv={() => exportCsv(project.annotations, payItems, project.name)}
+                  onExportPdf={() => exportPdfReport(project.annotations, payItems, project.name, project.contractNumber)}
+                  embedded
+                />
+              ) : (
+                <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
+                  Load a project first
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        <MobileTabBar
+          activeTab={mobileTab}
+          onTabChange={setMobileTab}
+          hasPdf={!!pdf}
+          itemCount={payItems.length}
+          sectionCount={(project?.toc || []).length || totalPages}
+          isDark={isDark}
+          onToggleTheme={toggleTheme}
+        />
+
+        <SpecViewer
+          open={specViewerOpen}
+          onClose={() => setSpecViewerOpen(false)}
+          sectionNumber={specViewerData.sectionNumber}
+          itemCode={specViewerData.itemCode}
+          itemName={specViewerData.itemName}
+          specsPdf={specsPdf}
+          specsPageTexts={specsPageTexts}
+          startPage={specViewerData.startPage}
+        />
+      </div>
+    );
+  }
+
+  // ──── DESKTOP LAYOUT ────
   return (
     <SidebarProvider>
       <div className="h-screen flex w-full overflow-hidden">
@@ -279,6 +354,11 @@ const Index = () => {
             <span className="text-xs font-bold uppercase tracking-wider text-foreground">
               {project?.name || 'Construction Takeoff'}
             </span>
+            <div className="ml-auto">
+              <Button variant="ghost" size="icon" className="h-7 w-7" onClick={toggleTheme} title="Toggle theme">
+                {isDark ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
+              </Button>
+            </div>
           </div>
 
           <Toolbar
@@ -292,9 +372,7 @@ const Index = () => {
             calibration={currentCalibration}
             activePayItem={activePayItem}
             onShowSummary={() => setShowSummary(true)}
-            onExport={() => {
-              if (project) exportCsv(project.annotations, payItems, project.name);
-            }}
+            onExport={() => { if (project) exportCsv(project.annotations, payItems, project.name); }}
             onFitToScreen={handleFitToScreen}
             onUndo={undo}
             onRedo={redo}
@@ -303,24 +381,30 @@ const Index = () => {
             onCopyCalibration={currentCalibration ? handleCopyCalibration : undefined}
           />
 
-          <PdfCanvas
-            pdf={pdf}
-            currentPage={currentPage}
-            scale={scale}
-            toolMode={toolMode}
-            calibration={currentCalibration}
-            annotations={project?.annotations || []}
-            activePayItemId={activePayItemId}
-            payItems={payItems}
-            onCalibrate={cal => setCalibration(currentPage, cal)}
-            onAddAnnotation={addAnnotation}
-            onRemoveAnnotation={removeAnnotation}
-            onUpdateAnnotation={updateAnnotation}
-            onTocRegionSelected={handleTocRegionSelected}
-            externalContainerRef={canvasContainerRef}
-            selectedAnnotationId={selectedAnnotationId}
-            onSelectAnnotation={setSelectedAnnotationId}
-          />
+          <div className="flex-1 min-h-0 relative">
+            {pdf ? (
+              <PdfCanvas
+                pdf={pdf}
+                currentPage={currentPage}
+                scale={scale}
+                toolMode={toolMode}
+                calibration={currentCalibration}
+                annotations={project?.annotations || []}
+                activePayItemId={activePayItemId}
+                payItems={payItems}
+                onCalibrate={cal => setCalibration(currentPage, cal)}
+                onAddAnnotation={addAnnotation}
+                onRemoveAnnotation={removeAnnotation}
+                onUpdateAnnotation={updateAnnotation}
+                onTocRegionSelected={handleTocRegionSelected}
+                externalContainerRef={canvasContainerRef}
+                selectedAnnotationId={selectedAnnotationId}
+                onSelectAnnotation={setSelectedAnnotationId}
+              />
+            ) : (
+              <EmptyState onFileUpload={handleFileUpload} />
+            )}
+          </div>
         </div>
       </div>
 
