@@ -108,4 +108,7 @@
   .toolbar-btn-active {
     @apply bg-primary text-primary-foreground border-primary;
   }
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
 }
