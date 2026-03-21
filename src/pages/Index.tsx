@@ -13,6 +13,7 @@ import { MobilePayItems } from '@/components/MobilePayItems';
 import { MobileSections } from '@/components/MobileSections';
 import { EmptyState } from '@/components/EmptyState';
 import { useProject } from '@/hooks/useProject';
+import { useAuth } from '@/hooks/useAuth';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useTheme } from '@/hooks/useTheme';
 import { loadPdf, loadPdfFromUrl, extractTextFromRegion, extractPayItemsFromPage } from '@/lib/pdf-utils';
@@ -27,6 +28,8 @@ import { Button } from '@/components/ui/button';
 const Index = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
+  const { isInspector, isManager, isAdmin } = useAuth();
+  const isReadOnly = isInspector && !isManager && !isAdmin;
 
   // Get current user for Supabase persistence
   const [currentUserId, setCurrentUserId] = useState<string | undefined>();
@@ -352,6 +355,7 @@ const Index = () => {
                   canUndo={canUndo}
                   canRedo={canRedo}
                   onCopyCalibration={currentCalibration ? handleCopyCalibration : undefined}
+                  readOnly={isReadOnly}
                 />
               )}
               <div className="flex-1 min-h-0 relative">
@@ -396,6 +400,7 @@ const Index = () => {
               specsLoaded={specsLoaded}
               specsLoading={specsLoading}
               onViewSpec={handleViewSpec}
+              readOnly={isReadOnly}
             />
           )}
 
@@ -483,6 +488,7 @@ const Index = () => {
           specsLoaded={specsLoaded}
           specsLoading={specsLoading}
           onViewSpec={handleViewSpec}
+          readOnly={isReadOnly}
         />
 
         <div className="flex-1 flex flex-col min-w-0 min-h-0">
@@ -519,6 +525,7 @@ const Index = () => {
             canUndo={canUndo}
             canRedo={canRedo}
             onCopyCalibration={currentCalibration ? handleCopyCalibration : undefined}
+            readOnly={isReadOnly}
           />
 
           <div className="flex-1 min-h-0 relative">

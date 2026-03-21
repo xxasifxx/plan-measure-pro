@@ -41,6 +41,7 @@ interface Props {
   specsLoaded?: boolean;
   specsLoading?: boolean;
   onViewSpec?: (itemCode: string) => void;
+  readOnly?: boolean;
 }
 
 const ALL_UNITS: PayItemUnit[] = ['SF', 'LF', 'CY', 'SY', 'EA', 'TON', 'LS', 'USD', 'MNTH'];
@@ -50,7 +51,7 @@ export function ProjectSidebar({
   toc, currentPage, totalPages, onPageChange, onFileUpload,
   payItems, onUpdatePayItems, activePayItemId, onActivePayItemChange, projectName,
   hasPdf, onImportToc, onCloseProject, onImportPayItems, annotations, onRemoveAnnotationsForPayItem,
-  onSpecsUpload, specsLoaded, specsLoading, onViewSpec,
+  onSpecsUpload, specsLoaded, specsLoading, onViewSpec, readOnly,
 }: Props) {
   const [editingItem, setEditingItem] = useState<PayItem | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -92,55 +93,57 @@ export function ProjectSidebar({
       <SidebarSeparator />
 
       <SidebarContent>
-        {/* Upload */}
-        <SidebarGroup>
-          <SidebarGroupLabel className="text-[10px] uppercase tracking-widest">
-            Project
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <div className="px-2 space-y-1.5 group-data-[collapsible=icon]:hidden">
-              <label className="flex items-center gap-2 px-3 py-2 rounded-sm border border-dashed border-sidebar-border cursor-pointer hover:border-sidebar-primary hover:bg-sidebar-accent transition-colors text-xs">
-                <FileUp className="h-3.5 w-3.5" />
-                <span>{projectName || 'Upload PDF'}</span>
-                <input type="file" accept=".pdf" onChange={handleFile} className="hidden" />
-              </label>
-              {hasPdf && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="w-full text-xs h-7 text-destructive hover:text-destructive"
-                  onClick={onCloseProject}
-                >
-                  <X className="h-3 w-3 mr-1" />
-                  Close Project
-                </Button>
-              )}
-              {hasPdf && onSpecsUpload && (
+        {/* Upload / Project management - hidden for inspectors */}
+        {!readOnly && (
+          <SidebarGroup>
+            <SidebarGroupLabel className="text-[10px] uppercase tracking-widest">
+              Project
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <div className="px-2 space-y-1.5 group-data-[collapsible=icon]:hidden">
                 <label className="flex items-center gap-2 px-3 py-2 rounded-sm border border-dashed border-sidebar-border cursor-pointer hover:border-sidebar-primary hover:bg-sidebar-accent transition-colors text-xs">
-                  {specsLoading ? (
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  ) : (
-                    <BookOpen className="h-3.5 w-3.5" />
-                  )}
-                  <span>{specsLoaded ? 'Specs Loaded ✓' : specsLoading ? 'Loading Specs…' : 'Upload Standard Specs'}</span>
-                  <input
-                    type="file"
-                    accept=".pdf"
-                    onChange={(e) => {
-                      const f = e.target.files?.[0];
-                      if (f && f.type === 'application/pdf') onSpecsUpload(f);
-                    }}
-                    className="hidden"
-                    disabled={specsLoading}
-                  />
+                  <FileUp className="h-3.5 w-3.5" />
+                  <span>{projectName || 'Upload PDF'}</span>
+                  <input type="file" accept=".pdf" onChange={handleFile} className="hidden" />
                 </label>
-              )}
-            </div>
-          </SidebarGroupContent>
-        </SidebarGroup>
+                {hasPdf && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full text-xs h-7 text-destructive hover:text-destructive"
+                    onClick={onCloseProject}
+                  >
+                    <X className="h-3 w-3 mr-1" />
+                    Close Project
+                  </Button>
+                )}
+                {hasPdf && onSpecsUpload && (
+                  <label className="flex items-center gap-2 px-3 py-2 rounded-sm border border-dashed border-sidebar-border cursor-pointer hover:border-sidebar-primary hover:bg-sidebar-accent transition-colors text-xs">
+                    {specsLoading ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <BookOpen className="h-3.5 w-3.5" />
+                    )}
+                    <span>{specsLoaded ? 'Specs Loaded ✓' : specsLoading ? 'Loading Specs…' : 'Upload Standard Specs'}</span>
+                    <input
+                      type="file"
+                      accept=".pdf"
+                      onChange={(e) => {
+                        const f = e.target.files?.[0];
+                        if (f && f.type === 'application/pdf') onSpecsUpload(f);
+                      }}
+                      className="hidden"
+                      disabled={specsLoading}
+                    />
+                  </label>
+                )}
+              </div>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
 
-        {/* Import TOC button */}
-        {hasPdf && toc.length === 0 && (
+        {/* Import TOC button - hidden for inspectors */}
+        {!readOnly && hasPdf && toc.length === 0 && (
           <>
             <SidebarSeparator />
             <SidebarGroup>
@@ -221,7 +224,7 @@ export function ProjectSidebar({
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <div className="px-2 space-y-1 group-data-[collapsible=icon]:hidden">
-              {hasPdf && payItems.length === 0 && (
+              {!readOnly && hasPdf && payItems.length === 0 && (
                 <Button
                   variant="outline"
                   size="sm"
@@ -236,44 +239,46 @@ export function ProjectSidebar({
                 payItems={payItems}
                 activePayItemId={activePayItemId}
                 onActivePayItemChange={onActivePayItemChange}
-                onEdit={(item) => { setEditingItem(item); setDialogOpen(true); }}
-                onDelete={deletePayItem}
+                onEdit={readOnly ? undefined : (item) => { setEditingItem(item); setDialogOpen(true); }}
+                onDelete={readOnly ? undefined : deletePayItem}
                 annotations={annotations}
                 onViewSpec={specsLoaded ? onViewSpec : undefined}
               />
 
-              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="w-full text-xs h-7 text-sidebar-foreground/70"
-                    onClick={() => {
-                      setEditingItem({
-                        id: crypto.randomUUID(),
-                        itemNumber: payItems.length > 0 ? Math.max(...payItems.map(p => p.itemNumber)) + 1 : 1,
-                        itemCode: '',
-                        name: '',
-                        unit: 'SF',
-                        unitPrice: 0,
-                        color: COLORS[payItems.length % COLORS.length],
-                        drawable: true,
-                      });
-                    }}
-                  >
-                    <Plus className="h-3 w-3 mr-1" />
-                    Add Item
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-sm">
-                  <DialogHeader>
-                    <DialogTitle className="text-sm">{editingItem?.name ? 'Edit' : 'New'} Pay Item</DialogTitle>
-                  </DialogHeader>
-                  {editingItem && (
-                    <PayItemForm item={editingItem} onSave={savePayItem} onCancel={() => setDialogOpen(false)} />
-                  )}
-                </DialogContent>
-              </Dialog>
+              {!readOnly && (
+                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full text-xs h-7 text-sidebar-foreground/70"
+                      onClick={() => {
+                        setEditingItem({
+                          id: crypto.randomUUID(),
+                          itemNumber: payItems.length > 0 ? Math.max(...payItems.map(p => p.itemNumber)) + 1 : 1,
+                          itemCode: '',
+                          name: '',
+                          unit: 'SF',
+                          unitPrice: 0,
+                          color: COLORS[payItems.length % COLORS.length],
+                          drawable: true,
+                        });
+                      }}
+                    >
+                      <Plus className="h-3 w-3 mr-1" />
+                      Add Item
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-sm">
+                    <DialogHeader>
+                      <DialogTitle className="text-sm">{editingItem?.name ? 'Edit' : 'New'} Pay Item</DialogTitle>
+                    </DialogHeader>
+                    {editingItem && (
+                      <PayItemForm item={editingItem} onSave={savePayItem} onCancel={() => setDialogOpen(false)} />
+                    )}
+                  </DialogContent>
+                </Dialog>
+              )}
             </div>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -430,8 +435,8 @@ function PayItemList({ payItems, activePayItemId, onActivePayItemChange, onEdit,
   payItems: PayItem[];
   activePayItemId: string;
   onActivePayItemChange: (id: string) => void;
-  onEdit: (item: PayItem) => void;
-  onDelete: (id: string) => void;
+  onEdit?: (item: PayItem) => void;
+  onDelete?: (id: string) => void;
   annotations: Annotation[];
   onViewSpec?: (itemCode: string) => void;
 }) {
@@ -493,18 +498,22 @@ function PayItemList({ payItems, activePayItemId, onActivePayItemChange, onEdit,
                   )}
                 </div>
                 <span className="text-[10px] text-sidebar-foreground/50 shrink-0">{UNIT_LABELS[item.unit]}</span>
-                <button
-                  onClick={(e) => { e.stopPropagation(); onEdit(item); }}
-                  className="opacity-0 group-hover:opacity-100 hover:text-sidebar-primary"
-                >
-                  <Edit2 className="h-2.5 w-2.5" />
-                </button>
-                <button
-                  onClick={(e) => { e.stopPropagation(); onDelete(item.id); }}
-                  className="opacity-0 group-hover:opacity-100 hover:text-destructive"
-                >
-                  <Trash2 className="h-2.5 w-2.5" />
-                </button>
+                {onEdit && (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); onEdit(item); }}
+                    className="opacity-0 group-hover:opacity-100 hover:text-sidebar-primary"
+                  >
+                    <Edit2 className="h-2.5 w-2.5" />
+                  </button>
+                )}
+                {onDelete && (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); onDelete(item.id); }}
+                    className="opacity-0 group-hover:opacity-100 hover:text-destructive"
+                  >
+                    <Trash2 className="h-2.5 w-2.5" />
+                  </button>
+                )}
               </div>
             );
           })}

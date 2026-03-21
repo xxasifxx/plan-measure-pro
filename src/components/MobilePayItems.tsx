@@ -24,12 +24,13 @@ interface Props {
   specsLoaded?: boolean;
   specsLoading?: boolean;
   onViewSpec?: (itemCode: string) => void;
+  readOnly?: boolean;
 }
 
 export function MobilePayItems({
   payItems, onUpdatePayItems, activePayItemId, onActivePayItemChange,
   annotations, onRemoveAnnotationsForPayItem, onImportPayItems, hasPdf,
-  onSpecsUpload, specsLoaded, specsLoading, onViewSpec,
+  onSpecsUpload, specsLoaded, specsLoading, onViewSpec, readOnly,
 }: Props) {
   const [editingItem, setEditingItem] = useState<PayItem | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -70,36 +71,38 @@ export function MobilePayItems({
       {/* Actions bar */}
       <div className="flex items-center gap-2 p-3 border-b border-border bg-card">
         <h2 className="text-sm font-bold flex-1">Pay Items</h2>
-        {hasPdf && payItems.length === 0 && (
+        {!readOnly && hasPdf && payItems.length === 0 && (
           <Button variant="outline" size="sm" className="text-xs h-8" onClick={onImportPayItems}>
             <TableOfContents className="h-3.5 w-3.5 mr-1" />
             Import
           </Button>
         )}
-        <Button
-          size="sm"
-          className="text-xs h-8"
-          onClick={() => {
-            setEditingItem({
-              id: crypto.randomUUID(),
-              itemNumber: payItems.length > 0 ? Math.max(...payItems.map(p => p.itemNumber)) + 1 : 1,
-              itemCode: '',
-              name: '',
-              unit: 'SF',
-              unitPrice: 0,
-              color: COLORS[payItems.length % COLORS.length],
-              drawable: true,
-            });
-            setSheetOpen(true);
-          }}
-        >
-          <Plus className="h-3.5 w-3.5 mr-1" />
-          Add
-        </Button>
+        {!readOnly && (
+          <Button
+            size="sm"
+            className="text-xs h-8"
+            onClick={() => {
+              setEditingItem({
+                id: crypto.randomUUID(),
+                itemNumber: payItems.length > 0 ? Math.max(...payItems.map(p => p.itemNumber)) + 1 : 1,
+                itemCode: '',
+                name: '',
+                unit: 'SF',
+                unitPrice: 0,
+                color: COLORS[payItems.length % COLORS.length],
+                drawable: true,
+              });
+              setSheetOpen(true);
+            }}
+          >
+            <Plus className="h-3.5 w-3.5 mr-1" />
+            Add
+          </Button>
+        )}
       </div>
 
-      {/* Specs upload */}
-      {hasPdf && onSpecsUpload && (
+      {/* Specs upload - only for managers */}
+      {!readOnly && hasPdf && onSpecsUpload && (
         <div className="px-3 py-2 border-b border-border">
           <label className="flex items-center gap-2 px-3 py-2.5 rounded-md border border-dashed border-border cursor-pointer hover:border-primary transition-colors text-xs">
             {specsLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <BookOpen className="h-4 w-4" />}
@@ -166,22 +169,26 @@ export function MobilePayItems({
                           <BookOpen className="h-3.5 w-3.5" />
                         </Button>
                       )}
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8"
-                        onClick={(e) => { e.stopPropagation(); setEditingItem(item); setSheetOpen(true); }}
-                      >
-                        <Edit2 className="h-3.5 w-3.5" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-destructive"
-                        onClick={(e) => { e.stopPropagation(); deletePayItem(item.id); }}
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </Button>
+                      {!readOnly && (
+                        <>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={(e) => { e.stopPropagation(); setEditingItem(item); setSheetOpen(true); }}
+                          >
+                            <Edit2 className="h-3.5 w-3.5" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-destructive"
+                            onClick={(e) => { e.stopPropagation(); deletePayItem(item.id); }}
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        </>
+                      )}
                     </div>
                   </button>
                 );

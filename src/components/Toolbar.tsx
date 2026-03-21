@@ -24,9 +24,10 @@ interface Props {
   canUndo?: boolean;
   canRedo?: boolean;
   onCopyCalibration?: () => void;
+  readOnly?: boolean;
 }
 
-const tools: { mode: ToolMode; icon: typeof MousePointer2; label: string }[] = [
+const allTools: { mode: ToolMode; icon: typeof MousePointer2; label: string }[] = [
   { mode: 'select', icon: MousePointer2, label: 'Select' },
   { mode: 'pan', icon: Move, label: 'Pan' },
   { mode: 'calibrate', icon: Ruler, label: 'Calibrate' },
@@ -35,8 +36,11 @@ const tools: { mode: ToolMode; icon: typeof MousePointer2; label: string }[] = [
 export function Toolbar({
   toolMode, onToolChange, currentPage, totalPages, onPageChange,
   scale, onScaleChange, calibration, activePayItem, onShowSummary, onExport, onFitToScreen,
-  onUndo, onRedo, canUndo, canRedo, onCopyCalibration
+  onUndo, onRedo, canUndo, canRedo, onCopyCalibration, readOnly,
 }: Props) {
+  const tools = readOnly
+    ? allTools.filter(t => t.mode !== 'calibrate')
+    : allTools;
 
   return (
     <div className="flex items-center gap-1 px-2 py-1.5 bg-card border-b border-border overflow-x-auto">
