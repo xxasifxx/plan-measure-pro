@@ -12,17 +12,19 @@ import { MobileToolbar } from '@/components/MobileToolbar';
 import { MobilePayItems } from '@/components/MobilePayItems';
 import { MobileSections } from '@/components/MobileSections';
 import { EmptyState } from '@/components/EmptyState';
+import { GuidedTour } from '@/components/GuidedTour';
 import { useProject } from '@/hooks/useProject';
 import { useAuth } from '@/hooks/useAuth';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useTheme } from '@/hooks/useTheme';
+import { useTour, type TourStep } from '@/hooks/useTour';
 import { loadPdf, loadPdfFromUrl, extractTextFromRegion, extractPayItemsFromPage } from '@/lib/pdf-utils';
 import { extractAllText, buildSectionPageIndex, getSectionFromItemCode } from '@/lib/specs-utils';
 import { exportCsv, exportPdfReport } from '@/lib/export-utils';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import type { TocEntry } from '@/types/project';
-import { Sun, Moon, ArrowLeft, Loader2 } from 'lucide-react';
+import { Sun, Moon, ArrowLeft, Loader2, HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Index = () => {
@@ -51,6 +53,23 @@ const Index = () => {
 
   const [pdf, setPdf] = useState<PDFDocumentProxy | null>(null);
   const [projectLoading, setProjectLoading] = useState(!!projectId);
+
+  // Workspace guided tour
+  const workspaceTour = useTour('workspace');
+  const workspaceSteps: TourStep[] = [
+    { target: '[data-tour="sidebar"]', title: 'Sidebar', description: 'Your project sections, pay items, and page navigation live here.', position: 'right' },
+    { target: '[data-tour="toolbar"]', title: 'Tools', description: 'Select tools: calibrate the scale, draw lines, polygons, or place counts.', position: 'bottom' },
+    { target: '[data-tour="page-controls"]', title: 'Page Navigation', description: 'Navigate between plan pages using these controls.', position: 'bottom' },
+    { target: '[data-tour="pay-item"]', title: 'Pay Items', description: 'Select a pay item, then draw on the plan to record measurements.', position: 'right' },
+    { target: '[data-tour="summary-btn"]', title: 'Summary & Export', description: 'View totals and export your takeoff as CSV or PDF.', position: 'bottom' },
+  ];
+
+  useEffect(() => {
+    if (pdf && project) {
+      const timer = setTimeout(() => workspaceTour.startIfNew(), 800);
+      return () => clearTimeout(timer);
+    }
+  }, [pdf, project]);
   const [showSummary, setShowSummary] = useState(false);
   const [selectedAnnotationId, setSelectedAnnotationId] = useState<string | null>(null);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
@@ -467,6 +486,7 @@ const Index = () => {
   return (
     <SidebarProvider>
       <div className="h-screen flex w-full overflow-hidden">
+        <div data-tour="sidebar">
         <ProjectSidebar
           toc={project?.toc || []}
           currentPage={currentPage}
@@ -490,6 +510,7 @@ const Index = () => {
           onViewSpec={handleViewSpec}
           readOnly={isReadOnly}
         />
+        </div>
 
         <div className="flex-1 flex flex-col min-w-0 min-h-0">
           <div className="h-10 flex items-center border-b border-border bg-card px-2">
@@ -500,13 +521,17 @@ const Index = () => {
             <span className="text-xs font-bold uppercase tracking-wider text-foreground">
               {project?.name || 'Construction Takeoff'}
             </span>
-            <div className="ml-auto">
+            <div className="ml-auto flex gap-1">
+              <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => workspaceTour.start()} title="Help">
+                <HelpCircle className="h-3.5 w-3.5" />
+              </Button>
               <Button variant="ghost" size="icon" className="h-7 w-7" onClick={toggleTheme} title="Toggle theme">
                 {isDark ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
               </Button>
             </div>
           </div>
 
+          <div data-tour="toolbar">
           <Toolbar
             toolMode={toolMode}
             onToolChange={setToolMode}
@@ -527,6 +552,7 @@ const Index = () => {
             onCopyCalibration={currentCalibration ? handleCopyCalibration : undefined}
             readOnly={isReadOnly}
           />
+          </div>
 
           <div className="flex-1 min-h-0 relative">
             {pdf ? (
@@ -577,6 +603,15 @@ const Index = () => {
         specsPdf={specsPdf}
         specsPageTexts={specsPageTexts}
         startPage={specViewerData.startPage}
+      />
+
+      <GuidedTour
+        steps={workspaceSteps}
+        currentStep={workspaceTour.currentStep}
+        isActive={workspaceTour.isActive}
+        onNext={() => workspaceTour.next(workspaceSteps.length)}
+        onPrev={workspaceTour.prev}
+        onSkip={workspaceTour.skip}
       />
     </SidebarProvider>
   );

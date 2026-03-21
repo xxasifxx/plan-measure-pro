@@ -1,9 +1,10 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useProjects } from '@/hooks/useProjects';
 import { useTheme } from '@/hooks/useTheme';
 import { useToast } from '@/hooks/use-toast';
+import { useTour } from '@/hooks/useTour';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,9 +13,12 @@ import {
 } from '@/components/ui/dialog';
 import {
   HardHat, Plus, LogOut, Sun, Moon, FileText, Clock, PenTool,
-  Trash2, FolderOpen, Loader2, AlertCircle, Shield,
+  Trash2, FolderOpen, Loader2, AlertCircle, Shield, HelpCircle,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { WelcomeCarousel } from '@/components/WelcomeCarousel';
+import { GuidedTour } from '@/components/GuidedTour';
+import type { TourStep } from '@/hooks/useTour';
 
 export default function Dashboard() {
   const { user, profile, isManager, isAdmin, signOut, roles } = useAuth();
@@ -64,6 +68,44 @@ export default function Dashboard() {
 
   const roleBadge = roles[0] ? roles[0].replace('_', ' ') : 'user';
 
+  // Welcome carousel
+  const [showWelcome, setShowWelcome] = useState(false);
+  useEffect(() => {
+    if (profile && !(profile as any).has_seen_welcome) {
+      setShowWelcome(true);
+    }
+  }, [profile]);
+
+  // Guided tour
+  const dashboardTour = useTour('dashboard');
+  const dashboardSteps: TourStep[] = [
+    ...(isManager || isAdmin ? [{
+      target: '[data-tour="new-project"]',
+      title: 'Create a Project',
+      description: 'Start by creating a new project. Upload a plan PDF and configure pay items for your team.',
+      position: 'bottom' as const,
+    }] : []),
+    {
+      target: '[data-tour="project-card"]',
+      title: 'Open a Project',
+      description: 'Click any project card to open the workspace and start measuring.',
+      position: 'bottom' as const,
+    },
+    {
+      target: '[data-tour="role-badge"]',
+      title: 'Your Role',
+      description: 'Your role determines what you can do — managers configure projects, inspectors annotate.',
+      position: 'bottom' as const,
+    },
+  ];
+
+  useEffect(() => {
+    if (!showWelcome && profile && !isLoading && projects.length > 0) {
+      const timer = setTimeout(() => dashboardTour.startIfNew(), 500);
+      return () => clearTimeout(timer);
+    }
+  }, [showWelcome, profile, isLoading, projects.length]);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -76,11 +118,14 @@ export default function Dashboard() {
             <h1 className="text-sm font-bold text-foreground truncate">Quantity Takeoff</h1>
             <p className="text-[10px] text-muted-foreground truncate">
               {profile?.full_name || user?.email}
-              <span className="ml-2 px-1.5 py-0.5 rounded bg-primary/10 text-primary text-[9px] font-semibold uppercase">
+              <span data-tour="role-badge" className="ml-2 px-1.5 py-0.5 rounded bg-primary/10 text-primary text-[9px] font-semibold uppercase">
                 {roleBadge}
               </span>
             </p>
           </div>
+          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => dashboardTour.start()} title="Help">
+            <HelpCircle className="h-4 w-4" />
+          </Button>
           <Button variant="ghost" size="icon" className="h-8 w-8" onClick={toggleTheme}>
             {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
@@ -100,7 +145,7 @@ export default function Dashboard() {
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-lg font-bold text-foreground">Projects</h2>
           {(isManager || isAdmin) && (
-            <Button size="sm" onClick={() => setShowCreate(true)}>
+            <Button data-tour="new-project" size="sm" onClick={() => setShowCreate(true)}>
               <Plus className="h-4 w-4 mr-1.5" />
               New Project
             </Button>
@@ -137,9 +182,10 @@ export default function Dashboard() {
 
         {/* Project cards */}
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {projects.map(project => (
+          {projects.map((project, idx) => (
             <button
               key={project.id}
+              data-tour={idx === 0 ? 'project-card' : undefined}
               onClick={() => navigate(`/project/${project.id}`)}
               className={cn(
                 'group text-left w-full rounded-xl border border-border bg-card p-4',
@@ -232,6 +278,18 @@ export default function Dashboard() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      {showWelcome && user && (
+        <WelcomeCarousel open={showWelcome} onDismiss={() => setShowWelcome(false)} userId={user.id} />
+      )}
+
+      <GuidedTour
+        steps={dashboardSteps}
+        currentStep={dashboardTour.currentStep}
+        isActive={dashboardTour.isActive}
+        onNext={() => dashboardTour.next(dashboardSteps.length)}
+        onPrev={dashboardTour.prev}
+        onSkip={dashboardTour.skip}
+      />
     </div>
   );
 }
