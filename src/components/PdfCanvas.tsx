@@ -51,6 +51,14 @@ export function PdfCanvas({
   const [pendingPolygon, setPendingPolygon] = useState<{ points: PointXY[]; areaSF: number } | null>(null);
   const [depthInput, setDepthInput] = useState('');
 
+  // Touch gesture state
+  const touchStateRef = useRef<{
+    lastTouches: { x: number; y: number }[];
+    lastDist: number;
+    lastCenter: { x: number; y: number };
+    isTwoFinger: boolean;
+  }>({ lastTouches: [], lastDist: 0, lastCenter: { x: 0, y: 0 }, isTwoFinger: false });
+
   // TOC selection rectangle
   const [tocDragStart, setTocDragStart] = useState<PointXY | null>(null);
   const [tocDragEnd, setTocDragEnd] = useState<PointXY | null>(null);
