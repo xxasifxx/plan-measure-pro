@@ -130,16 +130,17 @@ const Index = () => {
           measurementUnit: a.measurement_unit,
         }));
 
-        // Create local project state
-        createProject(
+        // Create local project state with DB data
+        initProject(
           proj.name,
           proj.contract_number || '',
           proj.pdf_storage_path || '',
           (proj.toc as any[]) || [],
-          0, // will be set when PDF loads
+          0,
+          mappedAnns,
+          mappedCals,
+          mappedPayItems,
         );
-        // Override with DB data
-        if (mappedPayItems.length > 0) updatePayItems(mappedPayItems);
 
         // Load PDF from storage
         if (proj.pdf_storage_path) {
