@@ -24,9 +24,10 @@ interface Props {
   canUndo?: boolean;
   canRedo?: boolean;
   onCopyCalibration?: () => void;
+  readOnly?: boolean;
 }
 
-const tools: { mode: ToolMode; icon: typeof MousePointer2; label: string }[] = [
+const allTools: { mode: ToolMode; icon: typeof MousePointer2; label: string }[] = [
   { mode: 'select', icon: MousePointer2, label: 'Select' },
   { mode: 'pan', icon: Move, label: 'Pan' },
   { mode: 'calibrate', icon: Ruler, label: 'Calibrate' },
