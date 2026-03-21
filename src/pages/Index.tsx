@@ -20,7 +20,7 @@ import { useTheme } from '@/hooks/useTheme';
 import { useTour, type TourStep } from '@/hooks/useTour';
 import { loadPdf, loadPdfFromUrl, extractTextFromRegion, extractPayItemsFromPage } from '@/lib/pdf-utils';
 import { extractAllText, buildSectionPageIndex, getSectionFromItemCode } from '@/lib/specs-utils';
-import { exportCsv, exportPdfReport } from '@/lib/export-utils';
+import { exportCsv, exportPdfReport, exportInspectorDaily } from '@/lib/export-utils';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import type { TocEntry } from '@/types/project';
