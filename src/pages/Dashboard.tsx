@@ -118,7 +118,7 @@ export default function Dashboard() {
             <h1 className="text-sm font-bold text-foreground truncate">Quantity Takeoff</h1>
             <p className="text-[10px] text-muted-foreground truncate">
               {profile?.full_name || user?.email}
-              <span className="ml-2 px-1.5 py-0.5 rounded bg-primary/10 text-primary text-[9px] font-semibold uppercase">
+              <span data-tour="role-badge" className="ml-2 px-1.5 py-0.5 rounded bg-primary/10 text-primary text-[9px] font-semibold uppercase">
                 {roleBadge}
               </span>
             </p>
