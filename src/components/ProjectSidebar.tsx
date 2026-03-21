@@ -435,8 +435,8 @@ function PayItemList({ payItems, activePayItemId, onActivePayItemChange, onEdit,
   payItems: PayItem[];
   activePayItemId: string;
   onActivePayItemChange: (id: string) => void;
-  onEdit: (item: PayItem) => void;
-  onDelete: (id: string) => void;
+  onEdit?: (item: PayItem) => void;
+  onDelete?: (id: string) => void;
   annotations: Annotation[];
   onViewSpec?: (itemCode: string) => void;
 }) {
