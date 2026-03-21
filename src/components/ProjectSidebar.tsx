@@ -224,7 +224,7 @@ export function ProjectSidebar({
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <div className="px-2 space-y-1 group-data-[collapsible=icon]:hidden">
-              {hasPdf && payItems.length === 0 && (
+              {!readOnly && hasPdf && payItems.length === 0 && (
                 <Button
                   variant="outline"
                   size="sm"
@@ -239,44 +239,46 @@ export function ProjectSidebar({
                 payItems={payItems}
                 activePayItemId={activePayItemId}
                 onActivePayItemChange={onActivePayItemChange}
-                onEdit={(item) => { setEditingItem(item); setDialogOpen(true); }}
-                onDelete={deletePayItem}
+                onEdit={readOnly ? undefined : (item) => { setEditingItem(item); setDialogOpen(true); }}
+                onDelete={readOnly ? undefined : deletePayItem}
                 annotations={annotations}
                 onViewSpec={specsLoaded ? onViewSpec : undefined}
               />
 
-              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="w-full text-xs h-7 text-sidebar-foreground/70"
-                    onClick={() => {
-                      setEditingItem({
-                        id: crypto.randomUUID(),
-                        itemNumber: payItems.length > 0 ? Math.max(...payItems.map(p => p.itemNumber)) + 1 : 1,
-                        itemCode: '',
-                        name: '',
-                        unit: 'SF',
-                        unitPrice: 0,
-                        color: COLORS[payItems.length % COLORS.length],
-                        drawable: true,
-                      });
-                    }}
-                  >
-                    <Plus className="h-3 w-3 mr-1" />
-                    Add Item
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-sm">
-                  <DialogHeader>
-                    <DialogTitle className="text-sm">{editingItem?.name ? 'Edit' : 'New'} Pay Item</DialogTitle>
-                  </DialogHeader>
-                  {editingItem && (
-                    <PayItemForm item={editingItem} onSave={savePayItem} onCancel={() => setDialogOpen(false)} />
-                  )}
-                </DialogContent>
-              </Dialog>
+              {!readOnly && (
+                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full text-xs h-7 text-sidebar-foreground/70"
+                      onClick={() => {
+                        setEditingItem({
+                          id: crypto.randomUUID(),
+                          itemNumber: payItems.length > 0 ? Math.max(...payItems.map(p => p.itemNumber)) + 1 : 1,
+                          itemCode: '',
+                          name: '',
+                          unit: 'SF',
+                          unitPrice: 0,
+                          color: COLORS[payItems.length % COLORS.length],
+                          drawable: true,
+                        });
+                      }}
+                    >
+                      <Plus className="h-3 w-3 mr-1" />
+                      Add Item
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-sm">
+                    <DialogHeader>
+                      <DialogTitle className="text-sm">{editingItem?.name ? 'Edit' : 'New'} Pay Item</DialogTitle>
+                    </DialogHeader>
+                    {editingItem && (
+                      <PayItemForm item={editingItem} onSave={savePayItem} onCancel={() => setDialogOpen(false)} />
+                    )}
+                  </DialogContent>
+                </Dialog>
+              )}
             </div>
           </SidebarGroupContent>
         </SidebarGroup>
