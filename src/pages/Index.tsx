@@ -305,6 +305,18 @@ const Index = () => {
     if (isMobile) setMobileTab('canvas');
   }, [payItems, setActivePayItemId, setToolMode, isMobile]);
 
+  // ──── LOADING STATE ────
+  if (projectLoading) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-sm text-muted-foreground">Loading project…</p>
+        </div>
+      </div>
+    );
+  }
+
   // ──── MOBILE LAYOUT ────
   if (isMobile) {
     return (
