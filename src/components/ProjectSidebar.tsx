@@ -93,55 +93,57 @@ export function ProjectSidebar({
       <SidebarSeparator />
 
       <SidebarContent>
-        {/* Upload */}
-        <SidebarGroup>
-          <SidebarGroupLabel className="text-[10px] uppercase tracking-widest">
-            Project
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <div className="px-2 space-y-1.5 group-data-[collapsible=icon]:hidden">
-              <label className="flex items-center gap-2 px-3 py-2 rounded-sm border border-dashed border-sidebar-border cursor-pointer hover:border-sidebar-primary hover:bg-sidebar-accent transition-colors text-xs">
-                <FileUp className="h-3.5 w-3.5" />
-                <span>{projectName || 'Upload PDF'}</span>
-                <input type="file" accept=".pdf" onChange={handleFile} className="hidden" />
-              </label>
-              {hasPdf && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="w-full text-xs h-7 text-destructive hover:text-destructive"
-                  onClick={onCloseProject}
-                >
-                  <X className="h-3 w-3 mr-1" />
-                  Close Project
-                </Button>
-              )}
-              {hasPdf && onSpecsUpload && (
+        {/* Upload / Project management - hidden for inspectors */}
+        {!readOnly && (
+          <SidebarGroup>
+            <SidebarGroupLabel className="text-[10px] uppercase tracking-widest">
+              Project
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <div className="px-2 space-y-1.5 group-data-[collapsible=icon]:hidden">
                 <label className="flex items-center gap-2 px-3 py-2 rounded-sm border border-dashed border-sidebar-border cursor-pointer hover:border-sidebar-primary hover:bg-sidebar-accent transition-colors text-xs">
-                  {specsLoading ? (
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  ) : (
-                    <BookOpen className="h-3.5 w-3.5" />
-                  )}
-                  <span>{specsLoaded ? 'Specs Loaded ✓' : specsLoading ? 'Loading Specs…' : 'Upload Standard Specs'}</span>
-                  <input
-                    type="file"
-                    accept=".pdf"
-                    onChange={(e) => {
-                      const f = e.target.files?.[0];
-                      if (f && f.type === 'application/pdf') onSpecsUpload(f);
-                    }}
-                    className="hidden"
-                    disabled={specsLoading}
-                  />
+                  <FileUp className="h-3.5 w-3.5" />
+                  <span>{projectName || 'Upload PDF'}</span>
+                  <input type="file" accept=".pdf" onChange={handleFile} className="hidden" />
                 </label>
-              )}
-            </div>
-          </SidebarGroupContent>
-        </SidebarGroup>
+                {hasPdf && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full text-xs h-7 text-destructive hover:text-destructive"
+                    onClick={onCloseProject}
+                  >
+                    <X className="h-3 w-3 mr-1" />
+                    Close Project
+                  </Button>
+                )}
+                {hasPdf && onSpecsUpload && (
+                  <label className="flex items-center gap-2 px-3 py-2 rounded-sm border border-dashed border-sidebar-border cursor-pointer hover:border-sidebar-primary hover:bg-sidebar-accent transition-colors text-xs">
+                    {specsLoading ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <BookOpen className="h-3.5 w-3.5" />
+                    )}
+                    <span>{specsLoaded ? 'Specs Loaded ✓' : specsLoading ? 'Loading Specs…' : 'Upload Standard Specs'}</span>
+                    <input
+                      type="file"
+                      accept=".pdf"
+                      onChange={(e) => {
+                        const f = e.target.files?.[0];
+                        if (f && f.type === 'application/pdf') onSpecsUpload(f);
+                      }}
+                      className="hidden"
+                      disabled={specsLoading}
+                    />
+                  </label>
+                )}
+              </div>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
 
-        {/* Import TOC button */}
-        {hasPdf && toc.length === 0 && (
+        {/* Import TOC button - hidden for inspectors */}
+        {!readOnly && hasPdf && toc.length === 0 && (
           <>
             <SidebarSeparator />
             <SidebarGroup>
