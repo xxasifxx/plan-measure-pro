@@ -19,8 +19,11 @@ export type Database = {
           created_at: string
           depth: number | null
           id: string
+          location: string | null
+          manual_quantity: number | null
           measurement: number
           measurement_unit: string
+          notes: string | null
           page: number
           pay_item_id: string | null
           points: Json
@@ -32,8 +35,11 @@ export type Database = {
           created_at?: string
           depth?: number | null
           id?: string
+          location?: string | null
+          manual_quantity?: number | null
           measurement?: number
           measurement_unit?: string
+          notes?: string | null
           page: number
           pay_item_id?: string | null
           points?: Json
@@ -45,8 +51,11 @@ export type Database = {
           created_at?: string
           depth?: number | null
           id?: string
+          location?: string | null
+          manual_quantity?: number | null
           measurement?: number
           measurement_unit?: string
+          notes?: string | null
           page?: number
           pay_item_id?: string | null
           points?: Json
