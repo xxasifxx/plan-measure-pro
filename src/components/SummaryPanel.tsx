@@ -1,4 +1,4 @@
-import { X, Download, FileText } from 'lucide-react';
+import { X, Download, FileText, FileSpreadsheet } from 'lucide-react';
 import { useState } from 'react';
 import type { Annotation, PayItem } from '@/types/project';
 import { UNIT_LABELS, getPayItemSection } from '@/types/project';
@@ -14,6 +14,7 @@ interface Props {
   onClose: () => void;
   onExportCsv: () => void;
   onExportPdf: () => void;
+  onExportDaily?: () => void;
   embedded?: boolean;
 }
 
@@ -28,7 +29,7 @@ interface SummaryRow {
 
 export function SummaryPanel({
   annotations, payItems, projectName, contractNumber,
-  onClose, onExportCsv, onExportPdf, embedded,
+  onClose, onExportCsv, onExportPdf, onExportDaily, embedded,
 }: Props) {
   const [manualQuantities, setManualQuantities] = useState<Record<string, number>>({});
 
@@ -49,15 +50,13 @@ export function SummaryPanel({
     let totalQuantity = 0;
 
     for (const ann of itemAnns) {
-      if (ann.type === 'count') {
-        totalQuantity += 1;
-      } else if (ann.depth && ann.depth > 0) {
-        totalQuantity += sfToCY(ann.measurement, ann.depth);
-      } else if (item.unit === 'SY') {
-        totalQuantity += sfToSY(ann.measurement);
-      } else {
-        totalQuantity += ann.measurement;
-      }
+      const qty = ann.manualQuantity != null ? ann.manualQuantity : (() => {
+        if (ann.type === 'count') return 1;
+        if (ann.depth && ann.depth > 0) return sfToCY(ann.measurement, ann.depth);
+        if (item.unit === 'SY') return sfToSY(ann.measurement);
+        return ann.measurement;
+      })();
+      totalQuantity += qty;
     }
 
     return {
@@ -92,6 +91,11 @@ export function SummaryPanel({
           <Button variant="ghost" size="sm" onClick={onExportPdf} className="text-xs h-7">
             <FileText className="h-3 w-3 mr-1" />PDF
           </Button>
+          {onExportDaily && (
+            <Button variant="ghost" size="sm" onClick={onExportDaily} className="text-xs h-7">
+              <FileSpreadsheet className="h-3 w-3 mr-1" />Daily
+            </Button>
+          )}
           {!embedded && (
             <Button variant="ghost" size="icon" onClick={onClose} className="h-7 w-7">
               <X className="h-4 w-4" />

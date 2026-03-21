@@ -633,17 +633,68 @@ export function PdfCanvas({
 
       {/* Selected annotation info popup */}
       {selectedAnnotation && selectedPayItem && (
-        <div className="absolute top-3 right-3 bg-card border border-border rounded-md shadow-lg p-3 z-20 min-w-[200px]">
+        <div className="absolute top-3 right-3 bg-card border border-border rounded-md shadow-lg p-3 z-20 min-w-[240px] max-w-[320px]">
           <div className="flex items-center gap-2 mb-2">
-            <div className="h-3 w-3 rounded-full" style={{ backgroundColor: selectedPayItem.color }} />
+            <div className="h-3 w-3 rounded-full shrink-0" style={{ backgroundColor: selectedPayItem.color }} />
             <span className="text-xs font-semibold truncate">{selectedPayItem.name}</span>
           </div>
           <div className="text-[10px] text-muted-foreground space-y-0.5">
             <p>Type: {selectedAnnotation.type}</p>
-            <p>Measurement: {selectedAnnotation.measurement.toFixed(2)} {selectedAnnotation.measurementUnit}</p>
+            <p>Calc'd Qty: {selectedAnnotation.measurement.toFixed(2)} {selectedAnnotation.measurementUnit}</p>
             {selectedAnnotation.depth && <p>Depth: {selectedAnnotation.depth} ft</p>}
             <p>Page: {selectedAnnotation.page}</p>
           </div>
+
+          {/* Manual quantity override */}
+          {onUpdateAnnotation && (
+            <div className="mt-2 space-y-1.5">
+              <div>
+                <label className="text-[10px] text-muted-foreground">Override Qty:</label>
+                <div className="flex gap-1 items-center">
+                  <input
+                    type="number"
+                    value={selectedAnnotation.manualQuantity ?? ''}
+                    placeholder={selectedAnnotation.measurement.toFixed(2)}
+                    onChange={e => {
+                      const val = e.target.value === '' ? undefined : parseFloat(e.target.value);
+                      onUpdateAnnotation(selectedAnnotation.id, { manualQuantity: val });
+                    }}
+                    className="h-6 w-20 px-1.5 text-[10px] border border-input rounded-sm bg-background font-mono"
+                  />
+                  <span className="text-[10px] text-muted-foreground">{selectedAnnotation.measurementUnit}</span>
+                  {selectedAnnotation.manualQuantity != null && (
+                    <button
+                      onClick={() => onUpdateAnnotation(selectedAnnotation.id, { manualQuantity: undefined })}
+                      className="text-[9px] text-primary hover:underline"
+                    >
+                      Reset
+                    </button>
+                  )}
+                </div>
+              </div>
+              <div>
+                <label className="text-[10px] text-muted-foreground">Location:</label>
+                <input
+                  type="text"
+                  value={selectedAnnotation.location || ''}
+                  placeholder="e.g. Station 42+00"
+                  onChange={e => onUpdateAnnotation(selectedAnnotation.id, { location: e.target.value })}
+                  className="h-6 w-full px-1.5 text-[10px] border border-input rounded-sm bg-background"
+                />
+              </div>
+              <div>
+                <label className="text-[10px] text-muted-foreground">Notes:</label>
+                <input
+                  type="text"
+                  value={selectedAnnotation.notes || ''}
+                  placeholder="Inspector notes…"
+                  onChange={e => onUpdateAnnotation(selectedAnnotation.id, { notes: e.target.value })}
+                  className="h-6 w-full px-1.5 text-[10px] border border-input rounded-sm bg-background"
+                />
+              </div>
+            </div>
+          )}
+
           {/* Reassign pay item */}
           {onUpdateAnnotation && (
             <div className="mt-2">
@@ -653,9 +704,7 @@ export function PdfCanvas({
                 onValueChange={(newId) => {
                   const newItem = payItems.find(p => p.id === newId);
                   if (newItem) {
-                    onUpdateAnnotation(selectedAnnotation.id, {
-                      payItemId: newId,
-                    });
+                    onUpdateAnnotation(selectedAnnotation.id, { payItemId: newId });
                   }
                 }}
               >

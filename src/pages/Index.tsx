@@ -20,11 +20,11 @@ import { useTheme } from '@/hooks/useTheme';
 import { useTour, type TourStep } from '@/hooks/useTour';
 import { loadPdf, loadPdfFromUrl, extractTextFromRegion, extractPayItemsFromPage } from '@/lib/pdf-utils';
 import { extractAllText, buildSectionPageIndex, getSectionFromItemCode } from '@/lib/specs-utils';
-import { exportCsv, exportPdfReport } from '@/lib/export-utils';
+import { exportCsv, exportPdfReport, exportInspectorDaily } from '@/lib/export-utils';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import type { TocEntry } from '@/types/project';
-import { Sun, Moon, ArrowLeft, Loader2, HelpCircle } from 'lucide-react';
+import { Sun, Moon, ArrowLeft, Loader2, HelpCircle, FileSpreadsheet } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Index = () => {
@@ -150,6 +150,10 @@ const Index = () => {
           depth: a.depth ? Number(a.depth) : undefined,
           measurement: Number(a.measurement),
           measurementUnit: a.measurement_unit,
+          manualQuantity: (a as any).manual_quantity != null ? Number((a as any).manual_quantity) : undefined,
+          location: (a as any).location || '',
+          notes: (a as any).notes || '',
+          createdAt: a.created_at,
         }));
 
         // Create local project state with DB data
@@ -447,6 +451,7 @@ const Index = () => {
                   onClose={() => setMobileTab('canvas')}
                   onExportCsv={() => exportCsv(project.annotations, payItems, project.name)}
                   onExportPdf={() => exportPdfReport(project.annotations, payItems, project.name, project.contractNumber)}
+                  onExportDaily={() => exportInspectorDaily(project.annotations, payItems, project.name, project.contractNumber, '', currentUserId || '')}
                   embedded
                 />
               ) : (
@@ -591,6 +596,7 @@ const Index = () => {
           onClose={() => setShowSummary(false)}
           onExportCsv={() => exportCsv(project.annotations, payItems, project.name)}
           onExportPdf={() => exportPdfReport(project.annotations, payItems, project.name, project.contractNumber)}
+          onExportDaily={() => exportInspectorDaily(project.annotations, payItems, project.name, project.contractNumber, '', currentUserId || '')}
         />
       )}
 

@@ -68,6 +68,10 @@ export interface Annotation {
   depth?: number; // feet, for volume calc
   measurement: number; // LF or SF or 1 for count
   measurementUnit: string;
+  manualQuantity?: number; // overrides measurement when set
+  location?: string; // e.g. "Station 42+00, NB lane"
+  notes?: string; // inspector remarks
+  createdAt?: string;
 }
 
 export interface Project {

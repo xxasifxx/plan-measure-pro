@@ -141,6 +141,9 @@ export function useProject(options: UseProjectOptions = {}) {
         depth: annotation.depth ?? null,
         measurement: annotation.measurement,
         measurement_unit: annotation.measurementUnit,
+        manual_quantity: annotation.manualQuantity ?? null,
+        location: annotation.location || '',
+        notes: annotation.notes || '',
       });
     }
   }, [project, persist, dbSync, supabaseProjectId, userId]);
@@ -176,6 +179,9 @@ export function useProject(options: UseProjectOptions = {}) {
       if (changes.depth !== undefined) dbChanges.depth = changes.depth ?? null;
       if (changes.measurement !== undefined) dbChanges.measurement = changes.measurement;
       if (changes.measurementUnit !== undefined) dbChanges.measurement_unit = changes.measurementUnit;
+      if ('manualQuantity' in changes) dbChanges.manual_quantity = changes.manualQuantity ?? null;
+      if (changes.location !== undefined) dbChanges.location = changes.location;
+      if (changes.notes !== undefined) dbChanges.notes = changes.notes;
       if (Object.keys(dbChanges).length > 0) {
         await supabase.from('annotations').update(dbChanges).eq('id', id);
       }
@@ -316,6 +322,10 @@ export function useProject(options: UseProjectOptions = {}) {
               depth: record.depth ?? undefined,
               measurement: record.measurement,
               measurementUnit: record.measurement_unit,
+              manualQuantity: record.manual_quantity ?? undefined,
+              location: record.location || '',
+              notes: record.notes || '',
+              createdAt: record.created_at,
             };
             setProject(prev => prev ? { ...prev, annotations: [...prev.annotations, ann] } : prev);
           } else if (payload.eventType === 'DELETE') {
@@ -329,7 +339,7 @@ export function useProject(options: UseProjectOptions = {}) {
               return {
                 ...prev,
                 annotations: prev.annotations.map(a =>
-                  a.id === record.id
+                    a.id === record.id
                     ? {
                         ...a,
                         type: record.type as Annotation['type'],
@@ -339,6 +349,9 @@ export function useProject(options: UseProjectOptions = {}) {
                         depth: record.depth ?? undefined,
                         measurement: record.measurement,
                         measurementUnit: record.measurement_unit,
+                        manualQuantity: record.manual_quantity ?? undefined,
+                        location: record.location || '',
+                        notes: record.notes || '',
                       }
                     : a
                 ),
