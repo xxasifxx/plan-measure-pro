@@ -355,6 +355,7 @@ const Index = () => {
                   canUndo={canUndo}
                   canRedo={canRedo}
                   onCopyCalibration={currentCalibration ? handleCopyCalibration : undefined}
+                  readOnly={isReadOnly}
                 />
               )}
               <div className="flex-1 min-h-0 relative">
