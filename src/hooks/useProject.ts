@@ -141,6 +141,9 @@ export function useProject(options: UseProjectOptions = {}) {
         depth: annotation.depth ?? null,
         measurement: annotation.measurement,
         measurement_unit: annotation.measurementUnit,
+        manual_quantity: annotation.manualQuantity ?? null,
+        location: annotation.location || '',
+        notes: annotation.notes || '',
       });
     }
   }, [project, persist, dbSync, supabaseProjectId, userId]);
