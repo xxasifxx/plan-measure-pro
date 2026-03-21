@@ -68,6 +68,44 @@ export default function Dashboard() {
 
   const roleBadge = roles[0] ? roles[0].replace('_', ' ') : 'user';
 
+  // Welcome carousel
+  const [showWelcome, setShowWelcome] = useState(false);
+  useEffect(() => {
+    if (profile && !(profile as any).has_seen_welcome) {
+      setShowWelcome(true);
+    }
+  }, [profile]);
+
+  // Guided tour
+  const dashboardTour = useTour('dashboard');
+  const dashboardSteps: TourStep[] = [
+    ...(isManager || isAdmin ? [{
+      target: '[data-tour="new-project"]',
+      title: 'Create a Project',
+      description: 'Start by creating a new project. Upload a plan PDF and configure pay items for your team.',
+      position: 'bottom' as const,
+    }] : []),
+    {
+      target: '[data-tour="project-card"]',
+      title: 'Open a Project',
+      description: 'Click any project card to open the workspace and start measuring.',
+      position: 'bottom' as const,
+    },
+    {
+      target: '[data-tour="role-badge"]',
+      title: 'Your Role',
+      description: 'Your role determines what you can do — managers configure projects, inspectors annotate.',
+      position: 'bottom' as const,
+    },
+  ];
+
+  useEffect(() => {
+    if (!showWelcome && profile && !isLoading && projects.length > 0) {
+      const timer = setTimeout(() => dashboardTour.startIfNew(), 500);
+      return () => clearTimeout(timer);
+    }
+  }, [showWelcome, profile, isLoading, projects.length]);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
