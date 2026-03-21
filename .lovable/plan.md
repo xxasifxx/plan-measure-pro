@@ -1,65 +1,87 @@
 
 
-# Tutorials: In-App Onboarding + Welcome Carousel
+# Inspector Daily Export + Annotation Manual Override
 
-## What We're Building
+## Overview
 
-Two tutorial systems:
+Two features: (1) per-annotation manual quantity override and location/notes fields, (2) a daily export function that generates an Excel workbook with a summary sheet and plan page screenshots.
 
-1. **Welcome Carousel** — A swipeable slide-based walkthrough shown on first login. Covers the app's purpose, role differences, and core workflow. Dismisses permanently (stored in a `user_onboarding` flag in the `profiles` table).
+## Database Changes
 
-2. **In-App Guided Tour** — Context-sensitive tooltip walkthrough that highlights key UI elements step-by-step. Separate tours for the Dashboard (3 steps) and the Project Workspace (5-6 steps). Triggered automatically on first visit to each screen, re-accessible via a "?" help button.
+### Modify `annotations` table — add 3 columns:
 
-## Welcome Carousel (Post-Login)
+```sql
+ALTER TABLE annotations ADD COLUMN manual_quantity numeric DEFAULT NULL;
+ALTER TABLE annotations ADD COLUMN location text DEFAULT '';
+ALTER TABLE annotations ADD COLUMN notes text DEFAULT '';
+```
 
-Shown once after first signup/login. 4-5 slides:
+- `manual_quantity`: when set, overrides the calculated measurement for that annotation
+- `location`: free-text field (e.g., "Station 42+00, NB lane")
+- `notes`: free-text field for inspector remarks
 
-1. **Welcome** — App name, logo, tagline ("Quantity takeoff for construction teams")
-2. **For Project Managers** — Create projects, upload PDFs, calibrate, import pay items, assign inspectors
-3. **For Inspectors** — Open assigned projects, draw annotations with pre-set pay items, measurements auto-calculate
-4. **Core Workflow** — Upload → Calibrate → Annotate → Export (visual diagram)
-5. **Get Started** — CTA button to dismiss and proceed
+### Update `Annotation` type in `src/types/project.ts`:
+Add `manualQuantity?: number`, `location?: string`, `notes?: string`.
 
-Swipeable on mobile (touch gestures), dot indicators, skip button. Stored as `has_seen_welcome` boolean on the `profiles` table.
+## Feature 1: Annotation Manual Override + Details
 
-## In-App Guided Tour
+### Annotation selection popup (PdfCanvas.tsx)
+When an annotation is selected, the existing popup already shows measurement info. Extend it with:
+- **Quantity override**: Input field showing calculated qty, editable to override. When changed, saves to `manual_quantity` column. A "Reset" button clears the override.
+- **Location**: Text input for station/location reference
+- **Notes**: Text input for inspector remarks
 
-A lightweight tooltip-based stepper component (`GuidedTour`) that:
-- Accepts an array of steps, each with a target CSS selector, title, description, and position
-- Renders a floating tooltip pointing at the target element with next/back/skip controls
-- Adds a subtle backdrop highlight around the target element
-- Tracks completion per tour ID in localStorage (no DB needed — low stakes)
+These fields call `onUpdateAnnotation` which already exists and persists to Supabase.
 
-### Dashboard Tour (3 steps)
-1. Points at "New Project" button — "Create your first project"
-2. Points at a project card — "Click to open a project workspace"
-3. Points at the role badge — "Your role determines what you can do"
+### Summary panel (SummaryPanel.tsx)
+Update quantity calculations to use `manual_quantity` when present (falling back to calculated `measurement`).
 
-### Workspace Tour (5 steps)
-1. Points at sidebar — "Your project sections and pay items live here"
-2. Points at toolbar — "Select tools: calibrate, draw lines, polygons, counts"
-3. Points at page controls — "Navigate between plan pages"
-4. Points at a pay item — "Select a pay item, then draw on the plan"
-5. Points at summary button — "View totals and export your takeoff"
+### Export utils (export-utils.ts)
+Update `buildRows` to respect `manual_quantity` overrides per annotation.
 
-## Technical Approach
+## Feature 2: Daily Inspector Export (Excel)
 
-### New Files
-- `src/components/WelcomeCarousel.tsx` — Full-screen modal carousel with slides
-- `src/components/GuidedTour.tsx` — Reusable tooltip tour component
-- `src/hooks/useTour.ts` — Tour state management (localStorage-based)
+### New function in `src/lib/export-utils.ts`: `exportInspectorDaily()`
 
-### Database Change
-- Add `has_seen_welcome` boolean column to `profiles` table (default `false`)
-- Update after carousel dismissal
+Parameters: annotations (today's only, filtered by user), payItems, projectName, contractNumber, inspectorName, pdf (for screenshots)
 
-### Integration Points
-- `Dashboard.tsx` — Show carousel if `!profile.has_seen_welcome`, then show dashboard tour
-- `Index.tsx` — Show workspace tour on first project open
-- Both pages get a small "?" help button to re-trigger tours
+### Sheet 1: "Daily Report"
+Columns: Pay Item Code | Pay Item Name | Calc'd Qty | Final Qty | Unit | Location | Notes | Page
+- One row per annotation (not aggregated by pay item — each annotation is a line item)
+- "Final Qty" uses `manual_quantity` if set, otherwise calculated measurement
+- Header row with project name, date, inspector name, contract number
 
-### Mobile Considerations
-- Carousel uses touch swipe (CSS scroll-snap)
-- Tour tooltips position responsively (above/below based on viewport)
-- Tour steps adapt per platform (mobile tab bar vs desktop sidebar)
+### Sheet 2: "Plan Pages"
+- For each unique page number in today's annotations, render the PDF page to a canvas and embed as an image
+- Uses existing `renderPage()` from pdf-utils to generate page images
+- Images inserted with annotations drawn on them (capture from the overlay canvas)
+
+### Implementation approach
+- Use **xlsx** (SheetJS) library for Excel generation — it's client-side, no server needed
+- For plan page images: render pages to off-screen canvas, convert to PNG blobs, embed in xlsx
+- Note: SheetJS Community Edition supports image embedding via `ws['!images']`
+- Alternative: use jsPDF for a PDF-based export if xlsx image embedding proves limited — but try xlsx first since user specifically asked for Excel
+
+### Export trigger
+- Add "Export Today's Work" button to the inspector toolbar/summary panel
+- Filters annotations by `created_at >= today` AND `user_id = current user`
+- Downloads as `{projectName}_daily_{date}.xlsx`
+
+## Files to Create/Modify
+
+1. **Migration** — Add 3 columns to annotations table
+2. **`src/types/project.ts`** — Add fields to Annotation interface
+3. **`src/components/PdfCanvas.tsx`** — Extend selection popup with override qty, location, notes inputs
+4. **`src/hooks/useProject.ts`** — Update annotation DB sync to include new fields
+5. **`src/lib/export-utils.ts`** — Add `exportInspectorDaily()` function, update `buildRows` for overrides
+6. **`src/components/SummaryPanel.tsx`** — Respect manual overrides in calculations
+7. **`src/pages/Index.tsx`** — Add "Export Today's Work" button for inspectors
+8. **`package.json`** — Add `xlsx` dependency
+
+## Phases
+
+1. DB migration + type updates
+2. Annotation override UI in selection popup
+3. Daily export function with Excel generation
+4. Wire up export button in inspector UI
 
