@@ -498,18 +498,22 @@ function PayItemList({ payItems, activePayItemId, onActivePayItemChange, onEdit,
                   )}
                 </div>
                 <span className="text-[10px] text-sidebar-foreground/50 shrink-0">{UNIT_LABELS[item.unit]}</span>
-                <button
-                  onClick={(e) => { e.stopPropagation(); onEdit(item); }}
-                  className="opacity-0 group-hover:opacity-100 hover:text-sidebar-primary"
-                >
-                  <Edit2 className="h-2.5 w-2.5" />
-                </button>
-                <button
-                  onClick={(e) => { e.stopPropagation(); onDelete(item.id); }}
-                  className="opacity-0 group-hover:opacity-100 hover:text-destructive"
-                >
-                  <Trash2 className="h-2.5 w-2.5" />
-                </button>
+                {onEdit && (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); onEdit(item); }}
+                    className="opacity-0 group-hover:opacity-100 hover:text-sidebar-primary"
+                  >
+                    <Edit2 className="h-2.5 w-2.5" />
+                  </button>
+                )}
+                {onDelete && (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); onDelete(item.id); }}
+                    className="opacity-0 group-hover:opacity-100 hover:text-destructive"
+                  >
+                    <Trash2 className="h-2.5 w-2.5" />
+                  </button>
+                )}
               </div>
             );
           })}
