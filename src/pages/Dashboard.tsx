@@ -182,9 +182,10 @@ export default function Dashboard() {
 
         {/* Project cards */}
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {projects.map(project => (
+          {projects.map((project, idx) => (
             <button
               key={project.id}
+              data-tour={idx === 0 ? 'project-card' : undefined}
               onClick={() => navigate(`/project/${project.id}`)}
               className={cn(
                 'group text-left w-full rounded-xl border border-border bg-card p-4',
