@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import type { Project, PayItem, Annotation, Calibration, TocEntry, ToolMode } from '@/types/project';
 import { supabase } from '@/integrations/supabase/client';
 
