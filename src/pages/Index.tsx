@@ -27,6 +27,8 @@ import { Button } from '@/components/ui/button';
 const Index = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
+  const { isInspector, isManager, isAdmin } = useAuth();
+  const isReadOnly = isInspector && !isManager && !isAdmin;
 
   // Get current user for Supabase persistence
   const [currentUserId, setCurrentUserId] = useState<string | undefined>();
