@@ -179,6 +179,9 @@ export function useProject(options: UseProjectOptions = {}) {
       if (changes.depth !== undefined) dbChanges.depth = changes.depth ?? null;
       if (changes.measurement !== undefined) dbChanges.measurement = changes.measurement;
       if (changes.measurementUnit !== undefined) dbChanges.measurement_unit = changes.measurementUnit;
+      if ('manualQuantity' in changes) dbChanges.manual_quantity = changes.manualQuantity ?? null;
+      if (changes.location !== undefined) dbChanges.location = changes.location;
+      if (changes.notes !== undefined) dbChanges.notes = changes.notes;
       if (Object.keys(dbChanges).length > 0) {
         await supabase.from('annotations').update(dbChanges).eq('id', id);
       }
