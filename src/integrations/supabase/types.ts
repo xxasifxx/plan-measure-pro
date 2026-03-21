@@ -14,16 +14,280 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      annotations: {
+        Row: {
+          created_at: string
+          depth: number | null
+          id: string
+          measurement: number
+          measurement_unit: string
+          page: number
+          pay_item_id: string | null
+          points: Json
+          project_id: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          depth?: number | null
+          id?: string
+          measurement?: number
+          measurement_unit?: string
+          page: number
+          pay_item_id?: string | null
+          points?: Json
+          project_id: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          depth?: number | null
+          id?: string
+          measurement?: number
+          measurement_unit?: string
+          page?: number
+          pay_item_id?: string | null
+          points?: Json
+          project_id?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "annotations_pay_item_id_fkey"
+            columns: ["pay_item_id"]
+            isOneToOne: false
+            referencedRelation: "pay_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "annotations_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      calibrations: {
+        Row: {
+          created_at: string
+          id: string
+          page: number
+          pixels_per_foot: number
+          point1: Json
+          point2: Json
+          project_id: string
+          real_distance: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          page: number
+          pixels_per_foot: number
+          point1: Json
+          point2: Json
+          project_id: string
+          real_distance: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          page?: number
+          pixels_per_foot?: number
+          point1?: Json
+          point2?: Json
+          project_id?: string
+          real_distance?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "calibrations_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pay_items: {
+        Row: {
+          color: string
+          contract_quantity: number | null
+          created_at: string
+          drawable: boolean
+          id: string
+          item_code: string
+          item_number: number
+          name: string
+          project_id: string
+          unit: string
+          unit_price: number
+        }
+        Insert: {
+          color?: string
+          contract_quantity?: number | null
+          created_at?: string
+          drawable?: boolean
+          id?: string
+          item_code: string
+          item_number: number
+          name: string
+          project_id: string
+          unit: string
+          unit_price?: number
+        }
+        Update: {
+          color?: string
+          contract_quantity?: number | null
+          created_at?: string
+          drawable?: boolean
+          id?: string
+          item_code?: string
+          item_number?: number
+          name?: string
+          project_id?: string
+          unit?: string
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pay_items_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
+      project_members: {
+        Row: {
+          created_at: string
+          id: string
+          project_id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          project_id: string
+          role?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          project_id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_members_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      projects: {
+        Row: {
+          contract_number: string | null
+          created_at: string
+          created_by: string
+          id: string
+          name: string
+          pdf_storage_path: string | null
+          specs_storage_path: string | null
+          toc: Json | null
+          updated_at: string
+        }
+        Insert: {
+          contract_number?: string | null
+          created_at?: string
+          created_by: string
+          id?: string
+          name: string
+          pdf_storage_path?: string | null
+          specs_storage_path?: string | null
+          toc?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          contract_number?: string | null
+          created_at?: string
+          created_by?: string
+          id?: string
+          name?: string
+          pdf_storage_path?: string | null
+          specs_storage_path?: string | null
+          toc?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_project_member: {
+        Args: { _project_id: string; _user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "project_manager" | "inspector"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +414,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "project_manager", "inspector"],
+    },
   },
 } as const
