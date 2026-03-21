@@ -486,6 +486,7 @@ const Index = () => {
   return (
     <SidebarProvider>
       <div className="h-screen flex w-full overflow-hidden">
+        <div data-tour="sidebar">
         <ProjectSidebar
           toc={project?.toc || []}
           currentPage={currentPage}
