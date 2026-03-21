@@ -13,6 +13,7 @@ import { MobilePayItems } from '@/components/MobilePayItems';
 import { MobileSections } from '@/components/MobileSections';
 import { EmptyState } from '@/components/EmptyState';
 import { useProject } from '@/hooks/useProject';
+import { useAuth } from '@/hooks/useAuth';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useTheme } from '@/hooks/useTheme';
 import { loadPdf, loadPdfFromUrl, extractTextFromRegion, extractPayItemsFromPage } from '@/lib/pdf-utils';
