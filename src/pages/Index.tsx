@@ -604,6 +604,15 @@ const Index = () => {
         specsPageTexts={specsPageTexts}
         startPage={specViewerData.startPage}
       />
+
+      <GuidedTour
+        steps={workspaceSteps}
+        currentStep={workspaceTour.currentStep}
+        isActive={workspaceTour.isActive}
+        onNext={() => workspaceTour.next(workspaceSteps.length)}
+        onPrev={workspaceTour.prev}
+        onSkip={workspaceTour.skip}
+      />
     </SidebarProvider>
   );
 };
