@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { ProjectSidebar } from '@/components/ProjectSidebar';
@@ -14,15 +15,18 @@ import { EmptyState } from '@/components/EmptyState';
 import { useProject } from '@/hooks/useProject';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useTheme } from '@/hooks/useTheme';
-import { loadPdf, extractTextFromRegion, extractPayItemsFromPage } from '@/lib/pdf-utils';
+import { loadPdf, loadPdfFromUrl, extractTextFromRegion, extractPayItemsFromPage } from '@/lib/pdf-utils';
 import { extractAllText, buildSectionPageIndex, getSectionFromItemCode } from '@/lib/specs-utils';
 import { exportCsv, exportPdfReport } from '@/lib/export-utils';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import type { TocEntry } from '@/types/project';
-import { Sun, Moon } from 'lucide-react';
+import { Sun, Moon, ArrowLeft, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Index = () => {
+  const { projectId } = useParams<{ projectId: string }>();
+  const navigate = useNavigate();
   const {
     project, createProject, closeProject, payItems, updatePayItems,
     currentPage, setCurrentPage, totalPages, setTotalPages,
@@ -34,6 +38,7 @@ const Index = () => {
   } = useProject();
 
   const [pdf, setPdf] = useState<PDFDocumentProxy | null>(null);
+  const [projectLoading, setProjectLoading] = useState(!!projectId);
   const [showSummary, setShowSummary] = useState(false);
   const [selectedAnnotationId, setSelectedAnnotationId] = useState<string | null>(null);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
@@ -43,6 +48,114 @@ const Index = () => {
 
   // Mobile tab state
   const [mobileTab, setMobileTab] = useState<MobileTab>('canvas');
+
+  // Load project from Supabase when projectId is in URL
+  useEffect(() => {
+    if (!projectId) return;
+    let cancelled = false;
+
+    async function load() {
+      setProjectLoading(true);
+      try {
+        // Fetch project record
+        const { data: proj, error } = await supabase
+          .from('projects')
+          .select('*')
+          .eq('id', projectId)
+          .single();
+        if (error || !proj) throw error || new Error('Project not found');
+        if (cancelled) return;
+
+        // Fetch pay items
+        const { data: dbPayItems } = await supabase
+          .from('pay_items')
+          .select('*')
+          .eq('project_id', projectId)
+          .order('item_number');
+
+        // Fetch calibrations
+        const { data: dbCals } = await supabase
+          .from('calibrations')
+          .select('*')
+          .eq('project_id', projectId);
+
+        // Fetch annotations
+        const { data: dbAnns } = await supabase
+          .from('annotations')
+          .select('*')
+          .eq('project_id', projectId);
+
+        if (cancelled) return;
+
+        // Map DB rows to local types
+        const mappedPayItems = (dbPayItems || []).map(pi => ({
+          id: pi.id,
+          itemNumber: pi.item_number,
+          itemCode: pi.item_code,
+          name: pi.name,
+          unit: pi.unit as any,
+          unitPrice: Number(pi.unit_price),
+          color: pi.color,
+          contractQuantity: pi.contract_quantity ? Number(pi.contract_quantity) : undefined,
+          drawable: pi.drawable,
+        }));
+
+        const mappedCals: Record<number, any> = {};
+        (dbCals || []).forEach(c => {
+          mappedCals[c.page] = {
+            point1: c.point1,
+            point2: c.point2,
+            realDistance: Number(c.real_distance),
+            pixelsPerFoot: Number(c.pixels_per_foot),
+          };
+        });
+
+        const mappedAnns = (dbAnns || []).map(a => ({
+          id: a.id,
+          type: a.type as any,
+          points: a.points as any,
+          payItemId: a.pay_item_id || '',
+          page: a.page,
+          depth: a.depth ? Number(a.depth) : undefined,
+          measurement: Number(a.measurement),
+          measurementUnit: a.measurement_unit,
+        }));
+
+        // Create local project state
+        createProject(
+          proj.name,
+          proj.contract_number || '',
+          proj.pdf_storage_path || '',
+          (proj.toc as any[]) || [],
+          0, // will be set when PDF loads
+        );
+        // Override with DB data
+        if (mappedPayItems.length > 0) updatePayItems(mappedPayItems);
+
+        // Load PDF from storage
+        if (proj.pdf_storage_path) {
+          const { data: signedData, error: signErr } = await supabase.storage
+            .from('project-pdfs')
+            .createSignedUrl(proj.pdf_storage_path, 3600);
+          if (signErr) throw signErr;
+          if (cancelled) return;
+          const pdfDoc = await loadPdfFromUrl(signedData.signedUrl);
+          setPdf(pdfDoc);
+          setTotalPages(pdfDoc.numPages);
+        }
+      } catch (err: any) {
+        if (!cancelled) {
+          toast({ title: 'Error loading project', description: err?.message || String(err), variant: 'destructive' });
+          navigate('/');
+        }
+      } finally {
+        if (!cancelled) setProjectLoading(false);
+      }
+    }
+
+    load();
+    return () => { cancelled = true; };
+  }, [projectId]);
 
   // Standard specs state
   const [specsLoaded, setSpecsLoaded] = useState(false);
@@ -105,7 +218,8 @@ const Index = () => {
     setSpecsPdf(null);
     setSpecsPageTexts(new Map());
     sectionPageIndexRef.current = new Map();
-  }, [closeProject]);
+    navigate('/');
+  }, [closeProject, navigate]);
 
   const handleSpecsUpload = useCallback(async (file: File) => {
     try {
@@ -190,6 +304,18 @@ const Index = () => {
     }
     if (isMobile) setMobileTab('canvas');
   }, [payItems, setActivePayItemId, setToolMode, isMobile]);
+
+  // ──── LOADING STATE ────
+  if (projectLoading) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-sm text-muted-foreground">Loading project…</p>
+        </div>
+      </div>
+    );
+  }
 
   // ──── MOBILE LAYOUT ────
   if (isMobile) {
@@ -351,6 +477,9 @@ const Index = () => {
 
         <div className="flex-1 flex flex-col min-w-0 min-h-0">
           <div className="h-10 flex items-center border-b border-border bg-card px-2">
+            <Button variant="ghost" size="icon" className="h-7 w-7 mr-1" onClick={() => navigate('/')} title="Back to projects">
+              <ArrowLeft className="h-3.5 w-3.5" />
+            </Button>
             <SidebarTrigger className="mr-2" />
             <span className="text-xs font-bold uppercase tracking-wider text-foreground">
               {project?.name || 'Construction Takeoff'}
