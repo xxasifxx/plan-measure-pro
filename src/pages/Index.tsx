@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { ProjectSidebar } from '@/components/ProjectSidebar';
@@ -14,15 +15,18 @@ import { EmptyState } from '@/components/EmptyState';
 import { useProject } from '@/hooks/useProject';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useTheme } from '@/hooks/useTheme';
-import { loadPdf, extractTextFromRegion, extractPayItemsFromPage } from '@/lib/pdf-utils';
+import { loadPdf, loadPdfFromUrl, extractTextFromRegion, extractPayItemsFromPage } from '@/lib/pdf-utils';
 import { extractAllText, buildSectionPageIndex, getSectionFromItemCode } from '@/lib/specs-utils';
 import { exportCsv, exportPdfReport } from '@/lib/export-utils';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import type { TocEntry } from '@/types/project';
-import { Sun, Moon } from 'lucide-react';
+import { Sun, Moon, ArrowLeft, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Index = () => {
+  const { projectId } = useParams<{ projectId: string }>();
+  const navigate = useNavigate();
   const {
     project, createProject, closeProject, payItems, updatePayItems,
     currentPage, setCurrentPage, totalPages, setTotalPages,
