@@ -123,6 +123,9 @@ export default function Dashboard() {
               </span>
             </p>
           </div>
+          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => dashboardTour.start()} title="Help">
+            <HelpCircle className="h-4 w-4" />
+          </Button>
           <Button variant="ghost" size="icon" className="h-8 w-8" onClick={toggleTheme}>
             {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
