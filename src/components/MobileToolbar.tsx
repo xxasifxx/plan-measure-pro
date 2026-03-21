@@ -22,9 +22,10 @@ interface Props {
   canUndo?: boolean;
   canRedo?: boolean;
   onCopyCalibration?: () => void;
+  readOnly?: boolean;
 }
 
-const tools: { mode: ToolMode; icon: typeof MousePointer2; label: string }[] = [
+const allTools: { mode: ToolMode; icon: typeof MousePointer2; label: string }[] = [
   { mode: 'select', icon: MousePointer2, label: 'Select' },
   { mode: 'pan', icon: Move, label: 'Pan' },
   { mode: 'calibrate', icon: Ruler, label: 'Scale' },
@@ -33,8 +34,11 @@ const tools: { mode: ToolMode; icon: typeof MousePointer2; label: string }[] = [
 export function MobileToolbar({
   toolMode, onToolChange, currentPage, totalPages, onPageChange,
   scale, onScaleChange, calibration, activePayItem, onFitToScreen,
-  onUndo, onRedo, canUndo, canRedo, onCopyCalibration,
+  onUndo, onRedo, canUndo, canRedo, onCopyCalibration, readOnly,
 }: Props) {
+  const tools = readOnly
+    ? allTools.filter(t => t.mode !== 'calibrate')
+    : allTools;
   return (
     <div className="flex flex-col bg-card border-b border-border">
       {/* Row 1: Tools + page nav */}
