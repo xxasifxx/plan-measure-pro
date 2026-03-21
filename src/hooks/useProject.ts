@@ -322,6 +322,10 @@ export function useProject(options: UseProjectOptions = {}) {
               depth: record.depth ?? undefined,
               measurement: record.measurement,
               measurementUnit: record.measurement_unit,
+              manualQuantity: record.manual_quantity ?? undefined,
+              location: record.location || '',
+              notes: record.notes || '',
+              createdAt: record.created_at,
             };
             setProject(prev => prev ? { ...prev, annotations: [...prev.annotations, ann] } : prev);
           } else if (payload.eventType === 'DELETE') {
