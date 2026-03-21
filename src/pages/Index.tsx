@@ -53,6 +53,23 @@ const Index = () => {
 
   const [pdf, setPdf] = useState<PDFDocumentProxy | null>(null);
   const [projectLoading, setProjectLoading] = useState(!!projectId);
+
+  // Workspace guided tour
+  const workspaceTour = useTour('workspace');
+  const workspaceSteps: TourStep[] = [
+    { target: '[data-tour="sidebar"]', title: 'Sidebar', description: 'Your project sections, pay items, and page navigation live here.', position: 'right' },
+    { target: '[data-tour="toolbar"]', title: 'Tools', description: 'Select tools: calibrate the scale, draw lines, polygons, or place counts.', position: 'bottom' },
+    { target: '[data-tour="page-controls"]', title: 'Page Navigation', description: 'Navigate between plan pages using these controls.', position: 'bottom' },
+    { target: '[data-tour="pay-item"]', title: 'Pay Items', description: 'Select a pay item, then draw on the plan to record measurements.', position: 'right' },
+    { target: '[data-tour="summary-btn"]', title: 'Summary & Export', description: 'View totals and export your takeoff as CSV or PDF.', position: 'bottom' },
+  ];
+
+  useEffect(() => {
+    if (pdf && project) {
+      const timer = setTimeout(() => workspaceTour.startIfNew(), 800);
+      return () => clearTimeout(timer);
+    }
+  }, [pdf, project]);
   const [showSummary, setShowSummary] = useState(false);
   const [selectedAnnotationId, setSelectedAnnotationId] = useState<string | null>(null);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
