@@ -71,36 +71,38 @@ export function MobilePayItems({
       {/* Actions bar */}
       <div className="flex items-center gap-2 p-3 border-b border-border bg-card">
         <h2 className="text-sm font-bold flex-1">Pay Items</h2>
-        {hasPdf && payItems.length === 0 && (
+        {!readOnly && hasPdf && payItems.length === 0 && (
           <Button variant="outline" size="sm" className="text-xs h-8" onClick={onImportPayItems}>
             <TableOfContents className="h-3.5 w-3.5 mr-1" />
             Import
           </Button>
         )}
-        <Button
-          size="sm"
-          className="text-xs h-8"
-          onClick={() => {
-            setEditingItem({
-              id: crypto.randomUUID(),
-              itemNumber: payItems.length > 0 ? Math.max(...payItems.map(p => p.itemNumber)) + 1 : 1,
-              itemCode: '',
-              name: '',
-              unit: 'SF',
-              unitPrice: 0,
-              color: COLORS[payItems.length % COLORS.length],
-              drawable: true,
-            });
-            setSheetOpen(true);
-          }}
-        >
-          <Plus className="h-3.5 w-3.5 mr-1" />
-          Add
-        </Button>
+        {!readOnly && (
+          <Button
+            size="sm"
+            className="text-xs h-8"
+            onClick={() => {
+              setEditingItem({
+                id: crypto.randomUUID(),
+                itemNumber: payItems.length > 0 ? Math.max(...payItems.map(p => p.itemNumber)) + 1 : 1,
+                itemCode: '',
+                name: '',
+                unit: 'SF',
+                unitPrice: 0,
+                color: COLORS[payItems.length % COLORS.length],
+                drawable: true,
+              });
+              setSheetOpen(true);
+            }}
+          >
+            <Plus className="h-3.5 w-3.5 mr-1" />
+            Add
+          </Button>
+        )}
       </div>
 
-      {/* Specs upload */}
-      {hasPdf && onSpecsUpload && (
+      {/* Specs upload - only for managers */}
+      {!readOnly && hasPdf && onSpecsUpload && (
         <div className="px-3 py-2 border-b border-border">
           <label className="flex items-center gap-2 px-3 py-2.5 rounded-md border border-dashed border-border cursor-pointer hover:border-primary transition-colors text-xs">
             {specsLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <BookOpen className="h-4 w-4" />}
