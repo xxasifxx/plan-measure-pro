@@ -22,6 +22,7 @@ function buildRows(annotations: Annotation[], payItems: PayItem[]): ExportRow[] 
       const anns = annotations.filter(a => a.payItemId === item.id);
       let qty = 0;
       for (const a of anns) {
+        if (a.manualQuantity != null) { qty += a.manualQuantity; continue; }
         if (a.type === 'count') { qty += 1; continue; }
         if (a.depth && a.depth > 0) qty += sfToCY(a.measurement, a.depth);
         else if (item.unit === 'SY') qty += sfToSY(a.measurement);
