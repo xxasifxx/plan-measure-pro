@@ -451,6 +451,7 @@ const Index = () => {
                   onClose={() => setMobileTab('canvas')}
                   onExportCsv={() => exportCsv(project.annotations, payItems, project.name)}
                   onExportPdf={() => exportPdfReport(project.annotations, payItems, project.name, project.contractNumber)}
+                  onExportDaily={() => exportInspectorDaily(project.annotations, payItems, project.name, project.contractNumber, '', currentUserId || '')}
                   embedded
                 />
               ) : (
