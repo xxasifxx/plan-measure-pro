@@ -8,6 +8,7 @@ import Admin from "./pages/Admin";
 import Dashboard from "./pages/Dashboard";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+import Landing from "./pages/Landing";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -19,7 +20,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
       <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full" />
     </div>
   );
-  if (!user) return <Navigate to="/auth" replace />;
+  if (!user) return <Navigate to="/landing" replace />;
   return <>{children}</>;
 }
 
@@ -38,6 +39,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
+            <Route path="/landing" element={<Landing />} />
             <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
             <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/project/:projectId" element={<ProtectedRoute><Index /></ProtectedRoute>} />
