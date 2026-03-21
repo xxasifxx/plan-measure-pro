@@ -12,17 +12,19 @@ import { MobileToolbar } from '@/components/MobileToolbar';
 import { MobilePayItems } from '@/components/MobilePayItems';
 import { MobileSections } from '@/components/MobileSections';
 import { EmptyState } from '@/components/EmptyState';
+import { GuidedTour } from '@/components/GuidedTour';
 import { useProject } from '@/hooks/useProject';
 import { useAuth } from '@/hooks/useAuth';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useTheme } from '@/hooks/useTheme';
+import { useTour, type TourStep } from '@/hooks/useTour';
 import { loadPdf, loadPdfFromUrl, extractTextFromRegion, extractPayItemsFromPage } from '@/lib/pdf-utils';
 import { extractAllText, buildSectionPageIndex, getSectionFromItemCode } from '@/lib/specs-utils';
 import { exportCsv, exportPdfReport } from '@/lib/export-utils';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import type { TocEntry } from '@/types/project';
-import { Sun, Moon, ArrowLeft, Loader2 } from 'lucide-react';
+import { Sun, Moon, ArrowLeft, Loader2, HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Index = () => {
