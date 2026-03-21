@@ -400,6 +400,7 @@ const Index = () => {
               specsLoaded={specsLoaded}
               specsLoading={specsLoading}
               onViewSpec={handleViewSpec}
+              readOnly={isReadOnly}
             />
           )}
 
