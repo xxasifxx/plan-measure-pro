@@ -1,130 +1,65 @@
 
 
-# Production-Ready Architecture: Multi-User System with Supabase
+# Tutorials: In-App Onboarding + Welcome Carousel
 
-## The Shift
+## What We're Building
 
-Currently: Everything in `localStorage`, single user, PDFs lost on refresh, no auth.
+Two tutorial systems:
 
-Target: Project managers configure projects server-side; inspectors log in and work on pre-configured projects. PDFs, calibrations, annotations, and pay items all persist in the cloud.
+1. **Welcome Carousel** — A swipeable slide-based walkthrough shown on first login. Covers the app's purpose, role differences, and core workflow. Dismisses permanently (stored in a `user_onboarding` flag in the `profiles` table).
 
-## Prerequisites
+2. **In-App Guided Tour** — Context-sensitive tooltip walkthrough that highlights key UI elements step-by-step. Separate tours for the Dashboard (3 steps) and the Project Workspace (5-6 steps). Triggered automatically on first visit to each screen, re-accessible via a "?" help button.
 
-**Lovable Cloud (Supabase)** must be enabled first. No connection exists yet — we need to set this up before any implementation.
+## Welcome Carousel (Post-Login)
 
-## Database Schema
+Shown once after first signup/login. 4-5 slides:
 
-```text
-┌─────────────┐     ┌──────────────┐     ┌──────────────┐
-│  auth.users  │────▶│  user_roles   │     │   profiles    │
-│              │     │  (admin/mgr/  │     │  (name, etc.) │
-│              │     │   inspector)  │     │               │
-└──────┬───────┘     └──────────────┘     └───────────────┘
-       │
-       │  ┌──────────────────┐
-       └──▶│    projects      │
-           │ name, contract#  │
-           │ pdf_storage_path │
-           │ toc (jsonb)      │
-           │ created_by (FK)  │
-           └───────┬──────────┘
-                   │
-      ┌────────────┼────────────┐
-      ▼            ▼            ▼
-┌───────────┐ ┌───────────┐ ┌────────────────┐
-│ pay_items  │ │calibrations│ │project_members │
-│ per project│ │ per page   │ │ user + project │
-└───────────┘ └───────────┘ │ (assignment)   │
-                             └────────────────┘
-                                    │
-                                    ▼
-                            ┌──────────────┐
-                            │ annotations   │
-                            │ per project   │
-                            │ per user      │
-                            └──────────────┘
-```
+1. **Welcome** — App name, logo, tagline ("Quantity takeoff for construction teams")
+2. **For Project Managers** — Create projects, upload PDFs, calibrate, import pay items, assign inspectors
+3. **For Inspectors** — Open assigned projects, draw annotations with pre-set pay items, measurements auto-calculate
+4. **Core Workflow** — Upload → Calibrate → Annotate → Export (visual diagram)
+5. **Get Started** — CTA button to dismiss and proceed
 
-### Tables
+Swipeable on mobile (touch gestures), dot indicators, skip button. Stored as `has_seen_welcome` boolean on the `profiles` table.
 
-1. **profiles** — `id (FK auth.users)`, `full_name`, `email`, `created_at`
-2. **user_roles** — `user_id (FK)`, `role` (enum: `admin`, `project_manager`, `inspector`)
-3. **projects** — `id`, `name`, `contract_number`, `pdf_storage_path`, `toc (jsonb)`, `created_by`, timestamps
-4. **pay_items** — `id`, `project_id (FK)`, `item_number`, `item_code`, `name`, `unit`, `unit_price`, `color`, `contract_quantity`, `drawable`
-5. **calibrations** — `id`, `project_id (FK)`, `page`, `point1/point2 (jsonb)`, `real_distance`, `pixels_per_foot`
-6. **project_members** — `project_id`, `user_id`, `role` (manager vs inspector on this project)
-7. **annotations** — `id`, `project_id (FK)`, `user_id (FK)`, `type`, `points (jsonb)`, `pay_item_id (FK)`, `page`, `depth`, `measurement`, `measurement_unit`
+## In-App Guided Tour
 
-### Storage
+A lightweight tooltip-based stepper component (`GuidedTour`) that:
+- Accepts an array of steps, each with a target CSS selector, title, description, and position
+- Renders a floating tooltip pointing at the target element with next/back/skip controls
+- Adds a subtle backdrop highlight around the target element
+- Tracks completion per tour ID in localStorage (no DB needed — low stakes)
 
-- **Bucket: `project-pdfs`** — stores plan PDFs, accessed via signed URLs
-- **Bucket: `specs-pdfs`** — stores standard specs PDFs (shared across projects or per-org)
+### Dashboard Tour (3 steps)
+1. Points at "New Project" button — "Create your first project"
+2. Points at a project card — "Click to open a project workspace"
+3. Points at the role badge — "Your role determines what you can do"
 
-### RLS Policies
+### Workspace Tour (5 steps)
+1. Points at sidebar — "Your project sections and pay items live here"
+2. Points at toolbar — "Select tools: calibrate, draw lines, polygons, counts"
+3. Points at page controls — "Navigate between plan pages"
+4. Points at a pay item — "Select a pay item, then draw on the plan"
+5. Points at summary button — "View totals and export your takeoff"
 
-- **Project managers** can CRUD projects they created, manage pay items/calibrations, assign inspectors
-- **Inspectors** can only read project config (TOC, calibrations, pay items) and CRUD their own annotations
-- Uses `has_role()` security definer function to avoid recursive RLS
+## Technical Approach
 
-## Authentication
+### New Files
+- `src/components/WelcomeCarousel.tsx` — Full-screen modal carousel with slides
+- `src/components/GuidedTour.tsx` — Reusable tooltip tour component
+- `src/hooks/useTour.ts` — Tour state management (localStorage-based)
 
-- Email/password login (expandable to OAuth later)
-- Auto-create profile on signup via DB trigger
-- Role assignment: first user = admin, then admin assigns roles
+### Database Change
+- Add `has_seen_welcome` boolean column to `profiles` table (default `false`)
+- Update after carousel dismissal
 
-## Application Flow Changes
+### Integration Points
+- `Dashboard.tsx` — Show carousel if `!profile.has_seen_welcome`, then show dashboard tour
+- `Index.tsx` — Show workspace tour on first project open
+- Both pages get a small "?" help button to re-trigger tours
 
-```text
-Current:  Upload PDF → configure locally → annotate → export
-                    (all in one session, one user)
-
-Production:
-  Project Manager:  Login → Create project → Upload PDF → Set TOC →
-                    Calibrate pages → Import pay items → Assign inspectors
-
-  Inspector:        Login → See assigned projects → Select project →
-                    PDF loads from storage → Annotate with pre-set pay items →
-                    Annotations save to DB in real-time
-```
-
-## Implementation Phases
-
-### Phase 1: Enable Lovable Cloud + Auth
-- Enable Supabase via Lovable Cloud
-- Set up auth with login/signup pages
-- Create profiles table + trigger
-- Create user_roles table + `has_role()` function
-
-### Phase 2: Database Migration
-- Create all tables (projects, pay_items, calibrations, project_members, annotations)
-- Set up RLS policies
-- Create storage buckets with policies
-
-### Phase 3: Replace localStorage with Supabase
-- New `useProject` hook that reads/writes to Supabase instead of localStorage
-- PDF upload → Supabase Storage, load via signed URL
-- Annotations auto-save to DB
-- Pay items, calibrations, TOC all persist server-side
-
-### Phase 4: Role-Based UI
-- **Project Manager view**: project creation wizard, calibration tools, pay item import, inspector assignment
-- **Inspector view**: project list (assigned only), streamlined annotation-focused UI
-- Shared: the canvas, toolbar, and annotation tools remain the same
-
-### Phase 5: Project List & Dashboard
-- Landing page shows assigned projects (not empty state)
-- Project cards with status, last updated, annotation counts
-- Quick-open to jump into a project
-
-## Technical Notes
-
-- The `useProject` hook is the primary refactor target — it currently wraps `localStorage` calls and will wrap Supabase queries instead
-- `storage.ts` gets replaced entirely with Supabase client calls
-- PDF loading changes from `File` object to signed URL from Supabase Storage
-- The canvas, drawing tools, and measurement logic remain unchanged
-- Annotations gain a `user_id` field so inspectors see only their own work (or all, depending on policy)
-
-## First Step
-
-Before any code: **enable Lovable Cloud** to get a Supabase instance. Want me to proceed with that?
+### Mobile Considerations
+- Carousel uses touch swipe (CSS scroll-snap)
+- Tour tooltips position responsively (above/below based on viewport)
+- Tour steps adapt per platform (mobile tab bar vs desktop sidebar)
 
