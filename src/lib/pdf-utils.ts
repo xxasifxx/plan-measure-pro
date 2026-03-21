@@ -11,6 +11,11 @@ export async function loadPdf(file: File): Promise<pdfjsLib.PDFDocumentProxy> {
   return pdf;
 }
 
+export async function loadPdfFromUrl(url: string): Promise<pdfjsLib.PDFDocumentProxy> {
+  const pdf = await pdfjsLib.getDocument({ url }).promise;
+  return pdf;
+}
+
 export async function renderPage(
   pdf: pdfjsLib.PDFDocumentProxy,
   pageNum: number,
