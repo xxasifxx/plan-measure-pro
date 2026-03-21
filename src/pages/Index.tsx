@@ -213,13 +213,13 @@ const Index = () => {
       setPdf(pdfDoc);
       setTotalPages(pdfDoc.numPages);
       const name = file.name.replace(/\.pdf$/i, '');
-      createProject(name, '', file.name, [], pdfDoc.numPages);
+      initProject(name, '', file.name, [], pdfDoc.numPages);
       if (isMobile) setMobileTab('canvas');
       toast({ title: 'PDF Loaded', description: `${pdfDoc.numPages} pages loaded.` });
     } catch (err) {
       toast({ title: 'Error loading PDF', description: String(err), variant: 'destructive' });
     }
-  }, [createProject, setTotalPages, toast, isMobile]);
+  }, [initProject, setTotalPages, toast, isMobile]);
 
   const handleCloseProject = useCallback(() => {
     setPdf(null);
