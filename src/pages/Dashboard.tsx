@@ -145,7 +145,7 @@ export default function Dashboard() {
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-lg font-bold text-foreground">Projects</h2>
           {(isManager || isAdmin) && (
-            <Button size="sm" onClick={() => setShowCreate(true)}>
+            <Button data-tour="new-project" size="sm" onClick={() => setShowCreate(true)}>
               <Plus className="h-4 w-4 mr-1.5" />
               New Project
             </Button>
