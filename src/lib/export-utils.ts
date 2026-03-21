@@ -162,3 +162,100 @@ export async function exportPdfReport(
 
   doc.save(`${projectName || 'takeoff'}_report.pdf`);
 }
+
+/**
+ * Export today's annotations by one inspector as an Excel workbook.
+ * Sheet 1: line-item detail with overrides, location, notes.
+ * Sheet 2: placeholder for plan page images (images require pro xlsx features,
+ *          so we list pages with annotation counts instead).
+ */
+export function exportInspectorDaily(
+  allAnnotations: Annotation[],
+  payItems: PayItem[],
+  projectName: string,
+  contractNumber: string,
+  inspectorName: string,
+  userId: string,
+): void {
+  const today = new Date();
+  const todayStr = today.toISOString().slice(0, 10);
+
+  // Filter: today's annotations by this user
+  const todayAnns = allAnnotations.filter(a => {
+    if (!a.createdAt) return false;
+    return a.createdAt.slice(0, 10) === todayStr;
+  });
+
+  // Filter by user — we match on userId if annotation was created by this user
+  // Since annotations don't store user_id locally, we include all today's annotations
+  // (the caller should pre-filter if needed)
+
+  const wb = XLSX.utils.book_new();
+
+  // ── Sheet 1: Daily Report ──
+  const headerRows = [
+    ['Daily Inspector Report'],
+    [`Project: ${projectName}`, '', `Contract: ${contractNumber || 'N/A'}`],
+    [`Inspector: ${inspectorName}`, '', `Date: ${today.toLocaleDateString()}`],
+    [],
+    ['Pay Item Code', 'Pay Item Name', "Calc'd Qty", 'Final Qty', 'Unit', 'Location', 'Notes', 'Page'],
+  ];
+
+  const dataRows = todayAnns.map(ann => {
+    const item = payItems.find(p => p.id === ann.payItemId);
+    const calcQty = ann.measurement;
+    const finalQty = ann.manualQuantity != null ? ann.manualQuantity : calcQty;
+    return [
+      item?.itemCode || '',
+      item?.name || '',
+      Number(calcQty.toFixed(2)),
+      Number(finalQty.toFixed(2)),
+      ann.measurementUnit,
+      ann.location || '',
+      ann.notes || '',
+      ann.page,
+    ];
+  });
+
+  const ws1Data = [...headerRows, ...dataRows];
+  const ws1 = XLSX.utils.aoa_to_sheet(ws1Data);
+
+  // Set column widths
+  ws1['!cols'] = [
+    { wch: 16 }, { wch: 30 }, { wch: 12 }, { wch: 12 },
+    { wch: 8 }, { wch: 24 }, { wch: 30 }, { wch: 8 },
+  ];
+
+  // Merge title row
+  ws1['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 7 } }];
+
+  XLSX.utils.book_append_sheet(wb, ws1, 'Daily Report');
+
+  // ── Sheet 2: Plan Pages Summary ──
+  const pageSet = new Set(todayAnns.map(a => a.page));
+  const sortedPages = Array.from(pageSet).sort((a, b) => a - b);
+
+  const ws2Header = [
+    ['Plan Pages with Annotations'],
+    [],
+    ['Page #', 'Annotation Count', 'Pay Items Used'],
+  ];
+
+  const ws2Data = sortedPages.map(pg => {
+    const pageAnns = todayAnns.filter(a => a.page === pg);
+    const items = new Set(pageAnns.map(a => {
+      const item = payItems.find(p => p.id === a.payItemId);
+      return item?.name || 'Unknown';
+    }));
+    return [pg, pageAnns.length, Array.from(items).join(', ')];
+  });
+
+  const ws2 = XLSX.utils.aoa_to_sheet([...ws2Header, ...ws2Data]);
+  ws2['!cols'] = [{ wch: 10 }, { wch: 18 }, { wch: 50 }];
+  ws2['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 2 } }];
+
+  XLSX.utils.book_append_sheet(wb, ws2, 'Plan Pages');
+
+  // Download
+  XLSX.writeFile(wb, `${projectName || 'takeoff'}_daily_${todayStr}.xlsx`);
+}
