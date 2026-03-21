@@ -271,7 +271,7 @@ const Index = () => {
         toast({ title: 'No entries found', variant: 'destructive' });
         return;
       }
-      persist({ ...project, toc: entries });
+      updateToc(entries);
       setToolMode('select');
       toast({ title: 'TOC Imported', description: `${entries.length} sections imported.` });
     } catch (err) {
