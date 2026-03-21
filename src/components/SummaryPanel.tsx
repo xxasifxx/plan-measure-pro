@@ -1,4 +1,4 @@
-import { X, Download, FileText } from 'lucide-react';
+import { X, Download, FileText, FileSpreadsheet } from 'lucide-react';
 import { useState } from 'react';
 import type { Annotation, PayItem } from '@/types/project';
 import { UNIT_LABELS, getPayItemSection } from '@/types/project';
@@ -14,6 +14,7 @@ interface Props {
   onClose: () => void;
   onExportCsv: () => void;
   onExportPdf: () => void;
+  onExportDaily?: () => void;
   embedded?: boolean;
 }
 
