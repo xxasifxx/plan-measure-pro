@@ -167,18 +167,21 @@ export type Database = {
           created_at: string
           email: string | null
           full_name: string | null
+          has_seen_welcome: boolean
           id: string
         }
         Insert: {
           created_at?: string
           email?: string | null
           full_name?: string | null
+          has_seen_welcome?: boolean
           id: string
         }
         Update: {
           created_at?: string
           email?: string | null
           full_name?: string | null
+          has_seen_welcome?: boolean
           id?: string
         }
         Relationships: []
