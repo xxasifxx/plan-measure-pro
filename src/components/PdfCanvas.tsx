@@ -11,6 +11,7 @@ interface Props {
   pdf: PDFDocumentProxy | null;
   currentPage: number;
   scale: number;
+  onScaleChange?: (scale: number) => void;
   toolMode: ToolMode;
   calibration: Calibration | null;
   annotations: Annotation[];
