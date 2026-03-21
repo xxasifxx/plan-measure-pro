@@ -287,6 +287,73 @@ export function useProject(options: UseProjectOptions = {}) {
     }
   }, [project, persist, dbSync, supabaseProjectId]);
 
+  // ── Realtime subscription for annotations ──
+  useEffect(() => {
+    if (!supabaseProjectId || !userId) return;
+
+    const channel = supabase
+      .channel(`annotations:${supabaseProjectId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'annotations',
+          filter: `project_id=eq.${supabaseProjectId}`,
+        },
+        (payload) => {
+          // Ignore changes from the current user
+          const record = (payload.new as any);
+          const oldRecord = (payload.old as any);
+
+          if (payload.eventType === 'INSERT' && record.user_id !== userId) {
+            const ann: Annotation = {
+              id: record.id,
+              type: record.type as Annotation['type'],
+              points: record.points as any,
+              payItemId: record.pay_item_id || '',
+              page: record.page,
+              depth: record.depth ?? undefined,
+              measurement: record.measurement,
+              measurementUnit: record.measurement_unit,
+            };
+            setProject(prev => prev ? { ...prev, annotations: [...prev.annotations, ann] } : prev);
+          } else if (payload.eventType === 'DELETE') {
+            const deletedId = oldRecord?.id;
+            if (deletedId) {
+              setProject(prev => prev ? { ...prev, annotations: prev.annotations.filter(a => a.id !== deletedId) } : prev);
+            }
+          } else if (payload.eventType === 'UPDATE' && record.user_id !== userId) {
+            setProject(prev => {
+              if (!prev) return prev;
+              return {
+                ...prev,
+                annotations: prev.annotations.map(a =>
+                  a.id === record.id
+                    ? {
+                        ...a,
+                        type: record.type as Annotation['type'],
+                        points: record.points as any,
+                        payItemId: record.pay_item_id || '',
+                        page: record.page,
+                        depth: record.depth ?? undefined,
+                        measurement: record.measurement,
+                        measurementUnit: record.measurement_unit,
+                      }
+                    : a
+                ),
+              };
+            });
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabaseProjectId, userId]);
+
   // ── Close ──
   const closeProject = useCallback(() => {
     setProject(null);
