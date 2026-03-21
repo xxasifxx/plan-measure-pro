@@ -531,6 +531,7 @@ const Index = () => {
             </div>
           </div>
 
+          <div data-tour="toolbar">
           <Toolbar
             toolMode={toolMode}
             onToolChange={setToolMode}
