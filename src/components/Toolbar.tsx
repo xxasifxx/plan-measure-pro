@@ -36,8 +36,11 @@ const allTools: { mode: ToolMode; icon: typeof MousePointer2; label: string }[] 
 export function Toolbar({
   toolMode, onToolChange, currentPage, totalPages, onPageChange,
   scale, onScaleChange, calibration, activePayItem, onShowSummary, onExport, onFitToScreen,
-  onUndo, onRedo, canUndo, canRedo, onCopyCalibration
+  onUndo, onRedo, canUndo, canRedo, onCopyCalibration, readOnly,
 }: Props) {
+  const tools = readOnly
+    ? allTools.filter(t => t.mode !== 'calibrate')
+    : allTools;
 
   return (
     <div className="flex items-center gap-1 px-2 py-1.5 bg-card border-b border-border overflow-x-auto">
