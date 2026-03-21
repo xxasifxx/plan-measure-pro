@@ -521,7 +521,10 @@ const Index = () => {
             <span className="text-xs font-bold uppercase tracking-wider text-foreground">
               {project?.name || 'Construction Takeoff'}
             </span>
-            <div className="ml-auto">
+            <div className="ml-auto flex gap-1">
+              <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => workspaceTour.start()} title="Help">
+                <HelpCircle className="h-3.5 w-3.5" />
+              </Button>
               <Button variant="ghost" size="icon" className="h-7 w-7" onClick={toggleTheme} title="Toggle theme">
                 {isDark ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
               </Button>
