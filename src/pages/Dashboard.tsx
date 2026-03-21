@@ -1,9 +1,10 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useProjects } from '@/hooks/useProjects';
 import { useTheme } from '@/hooks/useTheme';
 import { useToast } from '@/hooks/use-toast';
+import { useTour } from '@/hooks/useTour';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,9 +13,12 @@ import {
 } from '@/components/ui/dialog';
 import {
   HardHat, Plus, LogOut, Sun, Moon, FileText, Clock, PenTool,
-  Trash2, FolderOpen, Loader2, AlertCircle, Shield,
+  Trash2, FolderOpen, Loader2, AlertCircle, Shield, HelpCircle,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { WelcomeCarousel } from '@/components/WelcomeCarousel';
+import { GuidedTour } from '@/components/GuidedTour';
+import type { TourStep } from '@/hooks/useTour';
 
 export default function Dashboard() {
   const { user, profile, isManager, isAdmin, signOut, roles } = useAuth();
