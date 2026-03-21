@@ -41,6 +41,7 @@ interface Props {
   specsLoaded?: boolean;
   specsLoading?: boolean;
   onViewSpec?: (itemCode: string) => void;
+  readOnly?: boolean;
 }
 
 const ALL_UNITS: PayItemUnit[] = ['SF', 'LF', 'CY', 'SY', 'EA', 'TON', 'LS', 'USD', 'MNTH'];
@@ -50,7 +51,7 @@ export function ProjectSidebar({
   toc, currentPage, totalPages, onPageChange, onFileUpload,
   payItems, onUpdatePayItems, activePayItemId, onActivePayItemChange, projectName,
   hasPdf, onImportToc, onCloseProject, onImportPayItems, annotations, onRemoveAnnotationsForPayItem,
-  onSpecsUpload, specsLoaded, specsLoading, onViewSpec,
+  onSpecsUpload, specsLoaded, specsLoading, onViewSpec, readOnly,
 }: Props) {
   const [editingItem, setEditingItem] = useState<PayItem | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
