@@ -477,6 +477,9 @@ const Index = () => {
 
         <div className="flex-1 flex flex-col min-w-0 min-h-0">
           <div className="h-10 flex items-center border-b border-border bg-card px-2">
+            <Button variant="ghost" size="icon" className="h-7 w-7 mr-1" onClick={() => navigate('/')} title="Back to projects">
+              <ArrowLeft className="h-3.5 w-3.5" />
+            </Button>
             <SidebarTrigger className="mr-2" />
             <span className="text-xs font-bold uppercase tracking-wider text-foreground">
               {project?.name || 'Construction Takeoff'}
