@@ -24,12 +24,13 @@ interface Props {
   specsLoaded?: boolean;
   specsLoading?: boolean;
   onViewSpec?: (itemCode: string) => void;
+  readOnly?: boolean;
 }
 
 export function MobilePayItems({
   payItems, onUpdatePayItems, activePayItemId, onActivePayItemChange,
   annotations, onRemoveAnnotationsForPayItem, onImportPayItems, hasPdf,
-  onSpecsUpload, specsLoaded, specsLoading, onViewSpec,
+  onSpecsUpload, specsLoaded, specsLoading, onViewSpec, readOnly,
 }: Props) {
   const [editingItem, setEditingItem] = useState<PayItem | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
