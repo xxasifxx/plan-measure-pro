@@ -224,6 +224,7 @@ const Index = () => {
                     pdf={pdf}
                     currentPage={currentPage}
                     scale={scale}
+                    onScaleChange={setScale}
                     toolMode={toolMode}
                     calibration={currentCalibration}
                     annotations={project?.annotations || []}
@@ -387,6 +388,7 @@ const Index = () => {
                 pdf={pdf}
                 currentPage={currentPage}
                 scale={scale}
+                onScaleChange={setScale}
                 toolMode={toolMode}
                 calibration={currentCalibration}
                 annotations={project?.annotations || []}

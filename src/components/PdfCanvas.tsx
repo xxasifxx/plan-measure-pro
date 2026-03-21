@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useCallback } from 'react';
+import { useRef, useEffect, useState, useCallback, type TouchEvent as ReactTouchEvent } from 'react';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { renderPage } from '@/lib/pdf-utils';
 import { distancePx, polygonAreaSF, lineLength, pointToSegmentDistance, pointInPolygon, pointToMarkerDistance } from '@/lib/geometry';
@@ -11,6 +11,7 @@ interface Props {
   pdf: PDFDocumentProxy | null;
   currentPage: number;
   scale: number;
+  onScaleChange?: (scale: number) => void;
   toolMode: ToolMode;
   calibration: Calibration | null;
   annotations: Annotation[];
@@ -30,7 +31,7 @@ const HIT_TOLERANCE = 8; // pixels at scale=1
 const MARKER_RADIUS = 8;
 
 export function PdfCanvas({
-  pdf, currentPage, scale, toolMode, calibration,
+  pdf, currentPage, scale, onScaleChange, toolMode, calibration,
   annotations, activePayItemId, payItems, onCalibrate, onAddAnnotation, onRemoveAnnotation,
   onUpdateAnnotation, onTocRegionSelected, externalContainerRef, selectedAnnotationId, onSelectAnnotation,
 }: Props) {
@@ -50,6 +51,14 @@ export function PdfCanvas({
   // Depth prompt for CY polygons
   const [pendingPolygon, setPendingPolygon] = useState<{ points: PointXY[]; areaSF: number } | null>(null);
   const [depthInput, setDepthInput] = useState('');
+
+  // Touch gesture state
+  const touchStateRef = useRef<{
+    lastTouches: { x: number; y: number }[];
+    lastDist: number;
+    lastCenter: { x: number; y: number };
+    isTwoFinger: boolean;
+  }>({ lastTouches: [], lastDist: 0, lastCenter: { x: 0, y: 0 }, isTwoFinger: false });
 
   // TOC selection rectangle
   const [tocDragStart, setTocDragStart] = useState<PointXY | null>(null);
@@ -519,6 +528,69 @@ export function PdfCanvas({
     return () => window.removeEventListener('keydown', handler);
   }, [selectedAnnotationId, toolMode, onRemoveAnnotation, onSelectAnnotation]);
 
+  // ──── Touch gesture handlers (pinch-to-zoom + two-finger pan) ────
+  const handleTouchStart = useCallback((e: ReactTouchEvent) => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      const t0 = e.touches[0], t1 = e.touches[1];
+      const dist = Math.hypot(t1.clientX - t0.clientX, t1.clientY - t0.clientY);
+      const center = { x: (t0.clientX + t1.clientX) / 2, y: (t0.clientY + t1.clientY) / 2 };
+      touchStateRef.current = {
+        lastTouches: [{ x: t0.clientX, y: t0.clientY }, { x: t1.clientX, y: t1.clientY }],
+        lastDist: dist,
+        lastCenter: center,
+        isTwoFinger: true,
+      };
+    }
+  }, []);
+
+  const handleTouchMove = useCallback((e: ReactTouchEvent) => {
+    const ts = touchStateRef.current;
+    if (e.touches.length === 2 && ts.isTwoFinger) {
+      e.preventDefault();
+      const t0 = e.touches[0], t1 = e.touches[1];
+      const dist = Math.hypot(t1.clientX - t0.clientX, t1.clientY - t0.clientY);
+      const center = { x: (t0.clientX + t1.clientX) / 2, y: (t0.clientY + t1.clientY) / 2 };
+
+      // Pinch zoom
+      if (ts.lastDist > 0 && onScaleChange) {
+        const ratio = dist / ts.lastDist;
+        const newScale = Math.min(4, Math.max(0.25, scale * ratio));
+        onScaleChange(Math.round(newScale * 100) / 100);
+      }
+
+      // Two-finger pan
+      const dx = center.x - ts.lastCenter.x;
+      const dy = center.y - ts.lastCenter.y;
+      setPanOffset(prev => ({ x: prev.x + dx, y: prev.y + dy }));
+
+      ts.lastDist = dist;
+      ts.lastCenter = center;
+      ts.lastTouches = [{ x: t0.clientX, y: t0.clientY }, { x: t1.clientX, y: t1.clientY }];
+    }
+  }, [scale, onScaleChange]);
+
+  const handleTouchEnd = useCallback((e: ReactTouchEvent) => {
+    if (e.touches.length < 2) {
+      touchStateRef.current.isTwoFinger = false;
+    }
+  }, []);
+
+  // Prevent default touch zoom on the container
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    const prevent = (e: TouchEvent) => {
+      if (e.touches.length >= 2) e.preventDefault();
+    };
+    container.addEventListener('touchmove', prevent, { passive: false });
+    container.addEventListener('touchstart', prevent, { passive: false });
+    return () => {
+      container.removeEventListener('touchmove', prevent);
+      container.removeEventListener('touchstart', prevent);
+    };
+  }, []);
+
   const cursorClass = toolMode === 'pan'
     ? (isPanning ? 'cursor-grabbing' : 'cursor-grab')
     : toolMode === 'select'
@@ -535,8 +607,11 @@ export function PdfCanvas({
         (containerRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
         if (externalContainerRef) (externalContainerRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
       }}
-      className="flex-1 overflow-auto bg-muted/50 relative min-h-0"
+      className="flex-1 overflow-auto bg-muted/50 relative min-h-0 touch-none"
       onMouseUp={handleMouseUp}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
       <div
         className="relative inline-block"
