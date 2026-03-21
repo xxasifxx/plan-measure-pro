@@ -1,65 +1,98 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import type { Project, PayItem, Annotation, Calibration, TocEntry, ToolMode } from '@/types/project';
-import { DEFAULT_PAY_ITEMS } from '@/types/project';
-import * as storage from '@/lib/storage';
+import { supabase } from '@/integrations/supabase/client';
 
 interface UndoAction {
   type: 'add' | 'remove';
   annotation: Annotation;
 }
 
-export function useProject() {
+/** Optional Supabase project ID + user ID for cloud persistence */
+interface UseProjectOptions {
+  supabaseProjectId?: string;
+  userId?: string;
+}
+
+export function useProject(options: UseProjectOptions = {}) {
+  const { supabaseProjectId, userId } = options;
+
   const [project, setProject] = useState<Project | null>(null);
-  const [payItems, setPayItems] = useState<PayItem[]>(() => {
-    // We can't restore PDFs across refreshes, so always start clean
-    storage.clearActiveProject();
-    return [];
-  });
+  const [payItems, setPayItems] = useState<PayItem[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [toolMode, setToolMode] = useState<ToolMode>('select');
-  const [activePayItemId, setActivePayItemId] = useState<string>(payItems[0]?.id || '');
+  const [activePayItemId, setActivePayItemId] = useState<string>('');
   const [scale, setScale] = useState(1.5);
 
-  // Undo/redo stacks
   const undoStack = useRef<UndoAction[]>([]);
   const redoStack = useRef<UndoAction[]>([]);
 
-  const createProject = useCallback((name: string, contractNumber: string, pdfFileName: string, toc: TocEntry[], numPages: number) => {
+  // Helper: sync to Supabase if connected
+  const dbSync = useCallback(() => !!supabaseProjectId && !!userId, [supabaseProjectId, userId]);
+
+  const initProject = useCallback((
+    name: string, contractNumber: string, pdfFileName: string, toc: TocEntry[], numPages: number,
+    existingAnnotations?: Annotation[], existingCalibrations?: Record<number, Calibration>, existingPayItems?: PayItem[],
+  ) => {
     const proj: Project = {
-      id: crypto.randomUUID(),
+      id: supabaseProjectId || crypto.randomUUID(),
       name,
       contractNumber,
       pdfFileName,
       toc,
-      calibrations: {},
-      annotations: [],
-      payItems: [...payItems],
+      calibrations: existingCalibrations || {},
+      annotations: existingAnnotations || [],
+      payItems: existingPayItems || [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
     setProject(proj);
-    setTotalPages(numPages);
+    if (numPages > 0) setTotalPages(numPages);
     setCurrentPage(1);
-    storage.saveProject(proj);
-    storage.setActiveProjectId(proj.id);
+    if (existingPayItems && existingPayItems.length > 0) {
+      setPayItems(existingPayItems);
+    }
     undoStack.current = [];
     redoStack.current = [];
     return proj;
-  }, [payItems]);
+  }, [supabaseProjectId]);
 
   const persist = useCallback((updated: Project) => {
     setProject(updated);
-    storage.saveProject(updated);
   }, []);
 
-  const setCalibration = useCallback((page: number, cal: Calibration) => {
+  // ── Calibrations ──
+  const setCalibration = useCallback(async (page: number, cal: Calibration) => {
     if (!project) return;
     const updated = { ...project, calibrations: { ...project.calibrations, [page]: cal } };
     persist(updated);
-  }, [project, persist]);
 
-  const copyCalibrationToPages = useCallback((fromPage: number, toPages: number[]) => {
+    if (dbSync() && supabaseProjectId) {
+      // Upsert calibration in DB
+      const existing = await supabase.from('calibrations')
+        .select('id').eq('project_id', supabaseProjectId).eq('page', page).maybeSingle();
+
+      if (existing.data) {
+        await supabase.from('calibrations').update({
+          point1: cal.point1 as any,
+          point2: cal.point2 as any,
+          real_distance: cal.realDistance,
+          pixels_per_foot: cal.pixelsPerFoot,
+        }).eq('id', existing.data.id);
+      } else {
+        await supabase.from('calibrations').insert({
+          project_id: supabaseProjectId,
+          page,
+          point1: cal.point1 as any,
+          point2: cal.point2 as any,
+          real_distance: cal.realDistance,
+          pixels_per_foot: cal.pixelsPerFoot,
+        });
+      }
+    }
+  }, [project, persist, dbSync, supabaseProjectId]);
+
+  const copyCalibrationToPages = useCallback(async (fromPage: number, toPages: number[]) => {
     if (!project) return;
     const cal = project.calibrations[fromPage];
     if (!cal) return;
@@ -68,17 +101,51 @@ export function useProject() {
       newCals[p] = { ...cal };
     }
     persist({ ...project, calibrations: newCals });
-  }, [project, persist]);
 
-  const addAnnotation = useCallback((annotation: Annotation) => {
+    if (dbSync() && supabaseProjectId) {
+      // Batch upsert calibrations
+      const rows = toPages.map(p => ({
+        project_id: supabaseProjectId,
+        page: p,
+        point1: cal.point1 as any,
+        point2: cal.point2 as any,
+        real_distance: cal.realDistance,
+        pixels_per_foot: cal.pixelsPerFoot,
+      }));
+      // Delete existing then insert
+      for (const p of toPages) {
+        await supabase.from('calibrations').delete()
+          .eq('project_id', supabaseProjectId).eq('page', p);
+      }
+      await supabase.from('calibrations').insert(rows);
+    }
+  }, [project, persist, dbSync, supabaseProjectId]);
+
+  // ── Annotations ──
+  const addAnnotation = useCallback(async (annotation: Annotation) => {
     if (!project) return;
     const updated = { ...project, annotations: [...project.annotations, annotation] };
     persist(updated);
     undoStack.current.push({ type: 'add', annotation });
     redoStack.current = [];
-  }, [project, persist]);
 
-  const removeAnnotation = useCallback((id: string) => {
+    if (dbSync() && supabaseProjectId && userId) {
+      await supabase.from('annotations').insert({
+        id: annotation.id,
+        project_id: supabaseProjectId,
+        user_id: userId,
+        type: annotation.type,
+        points: annotation.points as any,
+        pay_item_id: annotation.payItemId || null,
+        page: annotation.page,
+        depth: annotation.depth ?? null,
+        measurement: annotation.measurement,
+        measurement_unit: annotation.measurementUnit,
+      });
+    }
+  }, [project, persist, dbSync, supabaseProjectId, userId]);
+
+  const removeAnnotation = useCallback(async (id: string) => {
     if (!project) return;
     const ann = project.annotations.find(a => a.id === id);
     if (!ann) return;
@@ -86,87 +153,157 @@ export function useProject() {
     persist(updated);
     undoStack.current.push({ type: 'remove', annotation: ann });
     redoStack.current = [];
-  }, [project, persist]);
 
-  const updateAnnotation = useCallback((id: string, changes: Partial<Annotation>) => {
+    if (dbSync()) {
+      await supabase.from('annotations').delete().eq('id', id);
+    }
+  }, [project, persist, dbSync]);
+
+  const updateAnnotation = useCallback(async (id: string, changes: Partial<Annotation>) => {
     if (!project) return;
     const updated = {
       ...project,
-      annotations: project.annotations.map(a => a.id === id ? { ...a, ...changes } : a)
+      annotations: project.annotations.map(a => a.id === id ? { ...a, ...changes } : a),
     };
     persist(updated);
-  }, [project, persist]);
 
-  const undo = useCallback(() => {
-    if (!project || undoStack.current.length === 0) return;
-    const action = undoStack.current.pop()!;
-    if (action.type === 'add') {
-      // Undo an add = remove
-      const updated = { ...project, annotations: project.annotations.filter(a => a.id !== action.annotation.id) };
-      persist(updated);
-    } else {
-      // Undo a remove = add back
-      const updated = { ...project, annotations: [...project.annotations, action.annotation] };
-      persist(updated);
+    if (dbSync()) {
+      const dbChanges: Record<string, any> = {};
+      if (changes.type !== undefined) dbChanges.type = changes.type;
+      if (changes.points !== undefined) dbChanges.points = changes.points;
+      if (changes.payItemId !== undefined) dbChanges.pay_item_id = changes.payItemId || null;
+      if (changes.page !== undefined) dbChanges.page = changes.page;
+      if (changes.depth !== undefined) dbChanges.depth = changes.depth ?? null;
+      if (changes.measurement !== undefined) dbChanges.measurement = changes.measurement;
+      if (changes.measurementUnit !== undefined) dbChanges.measurement_unit = changes.measurementUnit;
+      if (Object.keys(dbChanges).length > 0) {
+        await supabase.from('annotations').update(dbChanges).eq('id', id);
+      }
     }
-    redoStack.current.push(action);
-  }, [project, persist]);
+  }, [project, persist, dbSync]);
 
-  const redo = useCallback(() => {
-    if (!project || redoStack.current.length === 0) return;
-    const action = redoStack.current.pop()!;
-    if (action.type === 'add') {
-      // Redo an add = add again
-      const updated = { ...project, annotations: [...project.annotations, action.annotation] };
-      persist(updated);
-    } else {
-      // Redo a remove = remove again
-      const updated = { ...project, annotations: project.annotations.filter(a => a.id !== action.annotation.id) };
-      persist(updated);
-    }
-    undoStack.current.push(action);
-  }, [project, persist]);
-
-  const canUndo = project ? undoStack.current.length > 0 : false;
-  const canRedo = project ? redoStack.current.length > 0 : false;
-
-  const removeAnnotationsForPayItem = useCallback((payItemId: string) => {
+  const removeAnnotationsForPayItem = useCallback(async (payItemId: string) => {
     if (!project) return;
+    const toRemove = project.annotations.filter(a => a.payItemId === payItemId);
     const updated = {
       ...project,
       annotations: project.annotations.filter(a => a.payItemId !== payItemId),
     };
     persist(updated);
-  }, [project, persist]);
 
-  const updatePayItems = useCallback((items: PayItem[]) => {
+    if (dbSync() && supabaseProjectId) {
+      const ids = toRemove.map(a => a.id);
+      if (ids.length > 0) {
+        await supabase.from('annotations').delete().in('id', ids);
+      }
+    }
+  }, [project, persist, dbSync, supabaseProjectId]);
+
+  // ── Undo/Redo ──
+  const undo = useCallback(async () => {
+    if (!project || undoStack.current.length === 0) return;
+    const action = undoStack.current.pop()!;
+    if (action.type === 'add') {
+      const updated = { ...project, annotations: project.annotations.filter(a => a.id !== action.annotation.id) };
+      persist(updated);
+      if (dbSync()) await supabase.from('annotations').delete().eq('id', action.annotation.id);
+    } else {
+      const updated = { ...project, annotations: [...project.annotations, action.annotation] };
+      persist(updated);
+      if (dbSync() && supabaseProjectId && userId) {
+        const ann = action.annotation;
+        await supabase.from('annotations').insert({
+          id: ann.id, project_id: supabaseProjectId, user_id: userId,
+          type: ann.type, points: ann.points as any, pay_item_id: ann.payItemId || null,
+          page: ann.page, depth: ann.depth ?? null, measurement: ann.measurement,
+          measurement_unit: ann.measurementUnit,
+        });
+      }
+    }
+    redoStack.current.push(action);
+  }, [project, persist, dbSync, supabaseProjectId, userId]);
+
+  const redo = useCallback(async () => {
+    if (!project || redoStack.current.length === 0) return;
+    const action = redoStack.current.pop()!;
+    if (action.type === 'add') {
+      const updated = { ...project, annotations: [...project.annotations, action.annotation] };
+      persist(updated);
+      if (dbSync() && supabaseProjectId && userId) {
+        const ann = action.annotation;
+        await supabase.from('annotations').insert({
+          id: ann.id, project_id: supabaseProjectId, user_id: userId,
+          type: ann.type, points: ann.points as any, pay_item_id: ann.payItemId || null,
+          page: ann.page, depth: ann.depth ?? null, measurement: ann.measurement,
+          measurement_unit: ann.measurementUnit,
+        });
+      }
+    } else {
+      const updated = { ...project, annotations: project.annotations.filter(a => a.id !== action.annotation.id) };
+      persist(updated);
+      if (dbSync()) await supabase.from('annotations').delete().eq('id', action.annotation.id);
+    }
+    undoStack.current.push(action);
+  }, [project, persist, dbSync, supabaseProjectId, userId]);
+
+  const canUndo = project ? undoStack.current.length > 0 : false;
+  const canRedo = project ? redoStack.current.length > 0 : false;
+
+  // ── Pay Items ──
+  const updatePayItems = useCallback(async (items: PayItem[]) => {
     setPayItems(items);
-    storage.savePayItems(items);
     if (project) {
       persist({ ...project, payItems: items });
     }
-  }, [project, persist]);
 
-  const closeProject = useCallback(() => {
-    if (project) {
-      storage.clearActiveProject();
+    if (dbSync() && supabaseProjectId) {
+      // Delete all existing pay items for this project, then insert new ones
+      await supabase.from('pay_items').delete().eq('project_id', supabaseProjectId);
+      if (items.length > 0) {
+        const rows = items.map(pi => ({
+          id: pi.id,
+          project_id: supabaseProjectId,
+          item_number: pi.itemNumber,
+          item_code: pi.itemCode,
+          name: pi.name,
+          unit: pi.unit,
+          unit_price: pi.unitPrice,
+          color: pi.color,
+          contract_quantity: pi.contractQuantity ?? null,
+          drawable: pi.drawable,
+        }));
+        await supabase.from('pay_items').insert(rows);
+      }
     }
+  }, [project, persist, dbSync, supabaseProjectId]);
+
+  // ── TOC persistence ──
+  const updateToc = useCallback(async (toc: TocEntry[]) => {
+    if (!project) return;
+    persist({ ...project, toc });
+
+    if (dbSync() && supabaseProjectId) {
+      await supabase.from('projects').update({ toc: toc as any }).eq('id', supabaseProjectId);
+    }
+  }, [project, persist, dbSync, supabaseProjectId]);
+
+  // ── Close ──
+  const closeProject = useCallback(() => {
     setProject(null);
     setPayItems([]);
-    storage.savePayItems([]);
     setCurrentPage(1);
     setTotalPages(0);
     setToolMode('select');
     setActivePayItemId('');
     undoStack.current = [];
     redoStack.current = [];
-  }, [project]);
+  }, []);
 
   const currentCalibration = project?.calibrations[currentPage] || null;
 
   return {
     project,
-    createProject,
+    initProject,
     closeProject,
     payItems,
     updatePayItems,
@@ -188,6 +325,7 @@ export function useProject() {
     removeAnnotationsForPayItem,
     currentCalibration,
     persist,
+    updateToc,
     undo,
     redo,
     canUndo,

@@ -27,15 +27,24 @@ import { Button } from '@/components/ui/button';
 const Index = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
+
+  // Get current user for Supabase persistence
+  const [currentUserId, setCurrentUserId] = useState<string | undefined>();
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setCurrentUserId(data.session?.user?.id);
+    });
+  }, []);
+
   const {
-    project, createProject, closeProject, payItems, updatePayItems,
+    project, initProject, closeProject, payItems, updatePayItems,
     currentPage, setCurrentPage, totalPages, setTotalPages,
     toolMode, setToolMode, activePayItemId, setActivePayItemId,
     scale, setScale, setCalibration, copyCalibrationToPages,
     addAnnotation, removeAnnotation, updateAnnotation, removeAnnotationsForPayItem,
-    currentCalibration, persist,
+    currentCalibration, persist, updateToc,
     undo, redo, canUndo, canRedo,
-  } = useProject();
+  } = useProject({ supabaseProjectId: projectId, userId: currentUserId });
 
   const [pdf, setPdf] = useState<PDFDocumentProxy | null>(null);
   const [projectLoading, setProjectLoading] = useState(!!projectId);
@@ -121,16 +130,17 @@ const Index = () => {
           measurementUnit: a.measurement_unit,
         }));
 
-        // Create local project state
-        createProject(
+        // Create local project state with DB data
+        initProject(
           proj.name,
           proj.contract_number || '',
           proj.pdf_storage_path || '',
           (proj.toc as any[]) || [],
-          0, // will be set when PDF loads
+          0,
+          mappedAnns,
+          mappedCals,
+          mappedPayItems,
         );
-        // Override with DB data
-        if (mappedPayItems.length > 0) updatePayItems(mappedPayItems);
 
         // Load PDF from storage
         if (proj.pdf_storage_path) {
@@ -203,13 +213,13 @@ const Index = () => {
       setPdf(pdfDoc);
       setTotalPages(pdfDoc.numPages);
       const name = file.name.replace(/\.pdf$/i, '');
-      createProject(name, '', file.name, [], pdfDoc.numPages);
+      initProject(name, '', file.name, [], pdfDoc.numPages);
       if (isMobile) setMobileTab('canvas');
       toast({ title: 'PDF Loaded', description: `${pdfDoc.numPages} pages loaded.` });
     } catch (err) {
       toast({ title: 'Error loading PDF', description: String(err), variant: 'destructive' });
     }
-  }, [createProject, setTotalPages, toast, isMobile]);
+  }, [initProject, setTotalPages, toast, isMobile]);
 
   const handleCloseProject = useCallback(() => {
     setPdf(null);
@@ -261,7 +271,7 @@ const Index = () => {
         toast({ title: 'No entries found', variant: 'destructive' });
         return;
       }
-      persist({ ...project, toc: entries });
+      updateToc(entries);
       setToolMode('select');
       toast({ title: 'TOC Imported', description: `${entries.length} sections imported.` });
     } catch (err) {
