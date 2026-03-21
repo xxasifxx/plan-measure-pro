@@ -218,7 +218,8 @@ const Index = () => {
     setSpecsPdf(null);
     setSpecsPageTexts(new Map());
     sectionPageIndexRef.current = new Map();
-  }, [closeProject]);
+    navigate('/');
+  }, [closeProject, navigate]);
 
   const handleSpecsUpload = useCallback(async (file: File) => {
     try {
