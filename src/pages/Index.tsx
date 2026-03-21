@@ -150,6 +150,10 @@ const Index = () => {
           depth: a.depth ? Number(a.depth) : undefined,
           measurement: Number(a.measurement),
           measurementUnit: a.measurement_unit,
+          manualQuantity: (a as any).manual_quantity != null ? Number((a as any).manual_quantity) : undefined,
+          location: (a as any).location || '',
+          notes: (a as any).notes || '',
+          createdAt: a.created_at,
         }));
 
         // Create local project state with DB data

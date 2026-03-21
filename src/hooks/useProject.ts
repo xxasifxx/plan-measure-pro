@@ -339,7 +339,7 @@ export function useProject(options: UseProjectOptions = {}) {
               return {
                 ...prev,
                 annotations: prev.annotations.map(a =>
-                  a.id === record.id
+                    a.id === record.id
                     ? {
                         ...a,
                         type: record.type as Annotation['type'],
@@ -349,6 +349,9 @@ export function useProject(options: UseProjectOptions = {}) {
                         depth: record.depth ?? undefined,
                         measurement: record.measurement,
                         measurementUnit: record.measurement_unit,
+                        manualQuantity: record.manual_quantity ?? undefined,
+                        location: record.location || '',
+                        notes: record.notes || '',
                       }
                     : a
                 ),
