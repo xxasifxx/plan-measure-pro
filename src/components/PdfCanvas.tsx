@@ -31,7 +31,7 @@ const HIT_TOLERANCE = 8; // pixels at scale=1
 const MARKER_RADIUS = 8;
 
 export function PdfCanvas({
-  pdf, currentPage, scale, toolMode, calibration,
+  pdf, currentPage, scale, onScaleChange, toolMode, calibration,
   annotations, activePayItemId, payItems, onCalibrate, onAddAnnotation, onRemoveAnnotation,
   onUpdateAnnotation, onTocRegionSelected, externalContainerRef, selectedAnnotationId, onSelectAnnotation,
 }: Props) {
