@@ -91,6 +91,11 @@ export function SummaryPanel({
           <Button variant="ghost" size="sm" onClick={onExportPdf} className="text-xs h-7">
             <FileText className="h-3 w-3 mr-1" />PDF
           </Button>
+          {onExportDaily && (
+            <Button variant="ghost" size="sm" onClick={onExportDaily} className="text-xs h-7">
+              <FileSpreadsheet className="h-3 w-3 mr-1" />Daily
+            </Button>
+          )}
           {!embedded && (
             <Button variant="ghost" size="icon" onClick={onClose} className="h-7 w-7">
               <X className="h-4 w-4" />

@@ -24,7 +24,7 @@ import { exportCsv, exportPdfReport, exportInspectorDaily } from '@/lib/export-u
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import type { TocEntry } from '@/types/project';
-import { Sun, Moon, ArrowLeft, Loader2, HelpCircle } from 'lucide-react';
+import { Sun, Moon, ArrowLeft, Loader2, HelpCircle, FileSpreadsheet } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Index = () => {
