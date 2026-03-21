@@ -278,6 +278,18 @@ export default function Dashboard() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      {showWelcome && user && (
+        <WelcomeCarousel open={showWelcome} onDismiss={() => setShowWelcome(false)} userId={user.id} />
+      )}
+
+      <GuidedTour
+        steps={dashboardSteps}
+        currentStep={dashboardTour.currentStep}
+        isActive={dashboardTour.isActive}
+        onNext={() => dashboardTour.next(dashboardSteps.length)}
+        onPrev={dashboardTour.prev}
+        onSkip={dashboardTour.skip}
+      />
     </div>
   );
 }
