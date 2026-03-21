@@ -552,6 +552,7 @@ const Index = () => {
             onCopyCalibration={currentCalibration ? handleCopyCalibration : undefined}
             readOnly={isReadOnly}
           />
+          </div>
 
           <div className="flex-1 min-h-0 relative">
             {pdf ? (
