@@ -49,15 +49,13 @@ export function SummaryPanel({
     let totalQuantity = 0;
 
     for (const ann of itemAnns) {
-      if (ann.type === 'count') {
-        totalQuantity += 1;
-      } else if (ann.depth && ann.depth > 0) {
-        totalQuantity += sfToCY(ann.measurement, ann.depth);
-      } else if (item.unit === 'SY') {
-        totalQuantity += sfToSY(ann.measurement);
-      } else {
-        totalQuantity += ann.measurement;
-      }
+      const qty = ann.manualQuantity != null ? ann.manualQuantity : (() => {
+        if (ann.type === 'count') return 1;
+        if (ann.depth && ann.depth > 0) return sfToCY(ann.measurement, ann.depth);
+        if (item.unit === 'SY') return sfToSY(ann.measurement);
+        return ann.measurement;
+      })();
+      totalQuantity += qty;
     }
 
     return {
