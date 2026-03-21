@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import {
   HardHat, Plus, LogOut, Sun, Moon, FileText, Clock, PenTool,
-  Trash2, FolderOpen, Loader2, AlertCircle,
+  Trash2, FolderOpen, Loader2, AlertCircle, Shield,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -84,6 +84,11 @@ export default function Dashboard() {
           <Button variant="ghost" size="icon" className="h-8 w-8" onClick={toggleTheme}>
             {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
+          {isAdmin && (
+            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => navigate('/admin')} title="Admin Panel">
+              <Shield className="h-4 w-4" />
+            </Button>
+          )}
           <Button variant="ghost" size="icon" className="h-8 w-8" onClick={signOut}>
             <LogOut className="h-4 w-4" />
           </Button>
