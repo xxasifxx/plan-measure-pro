@@ -160,6 +160,8 @@ export function useProject(options: UseProjectOptions = {}) {
     persist(updated);
     undoStack.current.push({ type: 'remove', annotation: ann });
     redoStack.current = [];
+    setUndoCount(undoStack.current.length);
+    setRedoCount(0);
 
     if (dbSync()) {
       await supabase.from('annotations').delete().eq('id', id);
