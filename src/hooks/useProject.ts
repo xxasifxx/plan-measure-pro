@@ -233,6 +233,8 @@ export function useProject(options: UseProjectOptions = {}) {
       }
     }
     redoStack.current.push(action);
+    setUndoCount(undoStack.current.length);
+    setRedoCount(redoStack.current.length);
   }, [project, persist, dbSync, supabaseProjectId, userId]);
 
   const redo = useCallback(async () => {
