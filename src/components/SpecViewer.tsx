@@ -476,20 +476,25 @@ export function SpecViewer({
               No specs PDF loaded.
             </div>
           )}
-          {!startPage && specsPdf && (
-            <div className="text-sm text-muted-foreground py-8 text-center">
-              Could not find Section {sectionNumber} in the specs document.
-            </div>
-          )}
-          {specsPdf && startPage && (
-            <div className="flex justify-center relative">
-              {rendering && (
-                <div className="absolute inset-0 flex items-center justify-center z-10">
-                  <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-                </div>
+          {specsPdf && (
+            <>
+              {sectionNotFound && (
+                <Alert variant="default" className="mb-3">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription className="text-xs">
+                    Section {sectionNumber} not found automatically — use search to locate it.
+                  </AlertDescription>
+                </Alert>
               )}
-              <canvas ref={canvasRef} className="shadow-md" />
-            </div>
+              <div className="flex justify-center relative">
+                {rendering && (
+                  <div className="absolute inset-0 flex items-center justify-center z-10">
+                    <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                  </div>
+                )}
+                <canvas ref={canvasRef} className="shadow-md" />
+              </div>
+            </>
           )}
         </div>
       </SheetContent>
