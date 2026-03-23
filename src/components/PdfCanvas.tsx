@@ -130,6 +130,15 @@ export function PdfCanvas({
     };
   }, [scale]);
 
+  // Get canvas-relative position from a Touch object
+  const getTouchCanvasPos = useCallback((touch: Touch): PointXY => {
+    const rect = overlayCanvasRef.current!.getBoundingClientRect();
+    return {
+      x: (touch.clientX - rect.left) / scale,
+      y: (touch.clientY - rect.top) / scale,
+    };
+  }, [scale]);
+
   // Helper to scale a normalized point to current canvas pixels
   const s = useCallback((pt: PointXY): PointXY => ({ x: pt.x * scale, y: pt.y * scale }), [scale]);
 
