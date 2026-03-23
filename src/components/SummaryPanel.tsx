@@ -1,5 +1,5 @@
 import { X, Download, FileText, FileSpreadsheet, CalendarIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import type { Annotation, PayItem } from '@/types/project';
 import { UNIT_LABELS, getPayItemSection } from '@/types/project';
@@ -19,7 +19,8 @@ interface Props {
   onExportCsv: () => void;
   onExportPdf: () => void;
   onExportDaily?: (date?: Date) => void;
-  onUpdatePayItems?: (items: PayItem[]) => void;
+  onAddManualAnnotation?: (annotation: Annotation) => void;
+  onUpdateManualAnnotation?: (id: string, changes: Partial<Annotation>) => void;
   embedded?: boolean;
 }
 
@@ -29,33 +30,38 @@ interface SummaryRow {
   displayUnit: string;
   extendedCost: number;
   count: number;
-  manualQuantity?: number;
+  manualAnnotation?: Annotation;
   contractQuantity?: number;
   variancePercent?: number;
 }
 
 export function SummaryPanel({
   annotations, payItems, projectName, contractNumber,
-  onClose, onExportCsv, onExportPdf, onExportDaily, onUpdatePayItems, embedded,
+  onClose, onExportCsv, onExportPdf, onExportDaily,
+  onAddManualAnnotation, onUpdateManualAnnotation, embedded,
 }: Props) {
-  const [manualQuantities, setManualQuantities] = useState<Record<string, number>>({});
   const [dailyDate, setDailyDate] = useState<Date>(new Date());
+
+  // Find existing manual annotations for non-drawable items
+  const getManualAnnotation = (payItemId: string): Annotation | undefined =>
+    annotations.find(a => a.type === 'manual' && a.payItemId === payItemId);
 
   const rows: SummaryRow[] = payItems.map(item => {
     if (!item.drawable) {
-      const manualQty = manualQuantities[item.id] ?? item.contractQuantity ?? 0;
+      const manualAnn = getManualAnnotation(item.id);
+      const manualQty = manualAnn?.manualQuantity ?? 0;
       return {
         payItem: item,
         totalQuantity: manualQty,
         displayUnit: UNIT_LABELS[item.unit],
         extendedCost: manualQty * item.unitPrice,
-        count: 0,
-        manualQuantity: manualQty,
+        count: manualAnn ? 1 : 0,
+        manualAnnotation: manualAnn,
         contractQuantity: item.contractQuantity,
       };
     }
 
-    const itemAnns = annotations.filter(a => a.payItemId === item.id);
+    const itemAnns = annotations.filter(a => a.payItemId === item.id && a.type !== 'manual');
     let totalQuantity = 0;
 
     for (const ann of itemAnns) {
@@ -86,11 +92,23 @@ export function SummaryPanel({
 
   const grandTotal = rows.reduce((sum, r) => sum + r.extendedCost, 0);
 
-  const updateManualQty = (itemId: string, value: number) => {
-    setManualQuantities(prev => ({ ...prev, [itemId]: value }));
-    if (onUpdatePayItems) {
-      const updated = payItems.map(p => p.id === itemId ? { ...p, contractQuantity: value } : p);
-      onUpdatePayItems(updated);
+  const handleManualQtyChange = (item: PayItem, value: number) => {
+    const existing = getManualAnnotation(item.id);
+    if (existing) {
+      // Update existing manual annotation
+      onUpdateManualAnnotation?.(existing.id, { manualQuantity: value });
+    } else {
+      // Create new manual annotation
+      onAddManualAnnotation?.({
+        id: crypto.randomUUID(),
+        type: 'manual',
+        points: [],
+        payItemId: item.id,
+        page: 0,
+        measurement: 0,
+        measurementUnit: UNIT_LABELS[item.unit],
+        manualQuantity: value,
+      });
     }
   };
 
@@ -204,8 +222,8 @@ export function SummaryPanel({
                             ) : (
                               <Input
                                 type="number"
-                                value={row.manualQuantity ?? 0}
-                                onChange={e => updateManualQty(row.payItem.id, parseFloat(e.target.value) || 0)}
+                                value={row.manualAnnotation?.manualQuantity ?? 0}
+                                onChange={e => handleManualQtyChange(row.payItem, parseFloat(e.target.value) || 0)}
                                 className="h-6 w-20 text-xs text-right inline-block"
                               />
                             )}
@@ -220,7 +238,7 @@ export function SummaryPanel({
                           </td>
                           <td className="text-right py-2 px-2 font-mono">${row.payItem.unitPrice.toFixed(2)}</td>
                           <td className="text-right py-2 px-2 font-mono font-semibold">
-                            ${(row.payItem.drawable ? row.extendedCost : (row.manualQuantity ?? 0) * row.payItem.unitPrice).toFixed(2)}
+                            ${row.extendedCost.toFixed(2)}
                           </td>
                         </tr>
                       ))}

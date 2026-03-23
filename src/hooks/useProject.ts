@@ -352,7 +352,12 @@ export function useProject(options: UseProjectOptions = {}) {
               createdAt: record.created_at,
               userId: record.user_id,
             };
-            setProject(prev => prev ? { ...prev, annotations: [...prev.annotations, ann] } : prev);
+            setProject(prev => {
+              if (!prev) return prev;
+              // Dedup check — prevent duplicate annotations from race conditions
+              if (prev.annotations.some(a => a.id === ann.id)) return prev;
+              return { ...prev, annotations: [...prev.annotations, ann] };
+            });
           } else if (payload.eventType === 'DELETE') {
             const deletedId = oldRecord?.id;
             if (deletedId) {

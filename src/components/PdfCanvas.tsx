@@ -25,6 +25,7 @@ interface Props {
   externalContainerRef?: React.RefObject<HTMLDivElement>;
   selectedAnnotationId: string | null;
   onSelectAnnotation: (id: string | null) => void;
+  isMobile?: boolean;
 }
 
 const HIT_TOLERANCE = 8; // pixels at scale=1
@@ -34,6 +35,7 @@ export function PdfCanvas({
   pdf, currentPage, scale, onScaleChange, toolMode, calibration,
   annotations, activePayItemId, payItems, onCalibrate, onAddAnnotation, onRemoveAnnotation,
   onUpdateAnnotation, onTocRegionSelected, externalContainerRef, selectedAnnotationId, onSelectAnnotation,
+  isMobile,
 }: Props) {
   const pdfCanvasRef = useRef<HTMLCanvasElement>(null);
   const overlayCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -144,7 +146,7 @@ export function PdfCanvas({
 
   // Hit-test annotations at a normalized point
   const hitTestAnnotations = useCallback((pos: PointXY): Annotation | null => {
-    const pageAnnotations = annotations.filter(a => a.page === currentPage);
+    const pageAnnotations = annotations.filter(a => a.page === currentPage && a.type !== 'manual');
     // Reverse order so topmost drawn annotation is selected first
     for (let i = pageAnnotations.length - 1; i >= 0; i--) {
       const ann = pageAnnotations[i];
@@ -166,7 +168,7 @@ export function PdfCanvas({
     const ctx = canvas.getContext('2d')!;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const pageAnnotations = annotations.filter(a => a.page === currentPage);
+    const pageAnnotations = annotations.filter(a => a.page === currentPage && a.type !== 'manual');
 
     for (const ann of pageAnnotations) {
       const item = payItems.find(p => p.id === ann.payItemId);
@@ -815,8 +817,8 @@ export function PdfCanvas({
         />
       </div>
 
-      {/* Selected annotation info popup */}
-      {selectedAnnotation && selectedPayItem && (
+      {/* Selected annotation info popup — desktop only */}
+      {!isMobile && selectedAnnotation && selectedPayItem && (
         <div className="absolute top-3 right-3 bg-card border border-border rounded-md shadow-lg p-3 z-20 min-w-[240px] max-w-[320px]">
           <div className="flex items-center gap-2 mb-2">
             <div className="h-3 w-3 rounded-full shrink-0" style={{ backgroundColor: selectedPayItem.color }} />

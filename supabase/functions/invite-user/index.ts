@@ -108,8 +108,18 @@ Deno.serve(async (req) => {
     }
 
     // Send invite email via Supabase Auth Admin API
-    const siteUrl =
-      req.headers.get("origin") || req.headers.get("referer") || supabaseUrl;
+    // Use Referer or Origin to determine the app URL; never fall back to supabaseUrl
+    const referer = req.headers.get("referer") || "";
+    const origin = req.headers.get("origin") || "";
+    // Extract origin from referer if available (e.g. "https://app.com/admin" → "https://app.com")
+    let siteUrl = origin;
+    if (!siteUrl && referer) {
+      try { siteUrl = new URL(referer).origin; } catch { siteUrl = ""; }
+    }
+    // Hardcoded fallback to the published app URL — never use supabaseUrl
+    if (!siteUrl || siteUrl.includes("supabase")) {
+      siteUrl = "https://draw-quantify-dash.lovable.app";
+    }
     const redirectTo = `${siteUrl}/auth?invitation=${token}`;
 
     const { error: inviteErr } =
