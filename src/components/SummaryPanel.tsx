@@ -30,7 +30,7 @@ interface SummaryRow {
 
 export function SummaryPanel({
   annotations, payItems, projectName, contractNumber,
-  onClose, onExportCsv, onExportPdf, onExportDaily, embedded,
+  onClose, onExportCsv, onExportPdf, onExportDaily, onUpdatePayItems, embedded,
 }: Props) {
   const [manualQuantities, setManualQuantities] = useState<Record<string, number>>({});
 
