@@ -1,87 +1,79 @@
 
 
-# Inspector Daily Export + Annotation Manual Override
+# Touch Interaction Overhaul — Single-Finger Draw + Multi-Finger Pan
 
-## Overview
+## The Problem
 
-Two features: (1) per-annotation manual quantity override and location/notes fields, (2) a daily export function that generates an Excel workbook with a summary sheet and plan page screenshots.
+Current touch handling is broken for the core inspector workflow. The overlay canvas only has mouse event handlers (`onClick`, `onMouseDown`, etc.) — touch events on mobile never trigger these. Two-finger gestures partially work on the container, but single-finger interactions (the primary workflow) do nothing useful.
 
-## Database Changes
+## The Correct Workflow Model
 
-### Modify `annotations` table — add 3 columns:
+An inspector on a tablet needs to:
 
-```sql
-ALTER TABLE annotations ADD COLUMN manual_quantity numeric DEFAULT NULL;
-ALTER TABLE annotations ADD COLUMN location text DEFAULT '';
-ALTER TABLE annotations ADD COLUMN notes text DEFAULT '';
+1. **Single-finger tap** → place a point (count marker, calibration point, line endpoint, polygon vertex)
+2. **Single-finger drag** → draw a line from A to B in one gesture (for `line` tool), or drag to pan (for `pan`/`select` tools), or rubber-band visual feedback while drawing
+3. **Single-finger double-tap** → close a polygon
+4. **Two-finger pinch** → zoom in/out
+5. **Two-finger drag** → pan the canvas (regardless of tool)
+
+The key insight the previous plan missed: **single-finger drag IS the primary drawing gesture**. On desktop you click-click to place two line endpoints. On mobile, a drag from A to B should place both endpoints in one motion — this is far more natural than two separate taps for lines. For polygons, taps place vertices (same as desktop clicks). For pan/select mode, single-finger drag pans.
+
+## Behavior Matrix
+
+```text
+Gesture              | pan/select  | calibrate     | line          | polygon       | count
+─────────────────────|─────────────|───────────────|───────────────|───────────────|──────────
+1-finger tap         | hit-test    | place point   | place point   | place vertex  | place marker
+1-finger drag        | pan canvas  | drag between  | drag A→B      | (no-op/pan)   | (pan)
+                     |             | two points    | places both   |               |
+1-finger double-tap  | —           | —             | —             | close polygon | —
+2-finger pinch       | zoom        | zoom          | zoom          | zoom          | zoom
+2-finger drag        | pan         | pan           | pan           | pan           | pan
 ```
 
-- `manual_quantity`: when set, overrides the calculated measurement for that annotation
-- `location`: free-text field (e.g., "Station 42+00, NB lane")
-- `notes`: free-text field for inspector remarks
+## Technical Implementation — `src/components/PdfCanvas.tsx`
 
-### Update `Annotation` type in `src/types/project.ts`:
-Add `manualQuantity?: number`, `location?: string`, `notes?: string`.
+### 1. Add touch position helper
+`getTouchCanvasPos(touch: Touch): PointXY` — mirrors `getCanvasPos` but reads from a Touch object instead of MouseEvent.
 
-## Feature 1: Annotation Manual Override + Details
+### 2. Touch state refs
+- `touchStartPos: PointXY` — where finger landed
+- `touchStartTime: number` — for tap vs drag discrimination  
+- `lastTapTime: number` — for double-tap detection
+- `touchDragging: boolean` — set true once finger moves > 10px threshold
+- `suppressNextClick: boolean` — prevent ghost click after touch
 
-### Annotation selection popup (PdfCanvas.tsx)
-When an annotation is selected, the existing popup already shows measurement info. Extend it with:
-- **Quantity override**: Input field showing calculated qty, editable to override. When changed, saves to `manual_quantity` column. A "Reset" button clears the override.
-- **Location**: Text input for station/location reference
-- **Notes**: Text input for inspector remarks
+### 3. Touch handlers on the overlay canvas
 
-These fields call `onUpdateAnnotation` which already exists and persists to Supabase.
+**`onTouchStart`** (single finger):
+- Record position and timestamp
+- If two fingers: delegate to existing pinch/pan logic (move from container to overlay)
 
-### Summary panel (SummaryPanel.tsx)
-Update quantity calculations to use `manual_quantity` when present (falling back to calculated `measurement`).
+**`onTouchMove`** (single finger):
+- If movement > 10px from start → set `touchDragging = true`
+- Tool = `pan` or `select`: update `panOffset` (single-finger pan)
+- Tool = `line` or `calibrate`: update `mousePos` for rubber-band feedback, and if no points placed yet, place the first point at drag start
+- Tool = `polygon`: update `mousePos` for rubber-band
+- Two fingers: pinch-zoom + pan (existing logic)
 
-### Export utils (export-utils.ts)
-Update `buildRows` to respect `manual_quantity` overrides per annotation.
+**`onTouchEnd`** (single finger):
+- **If NOT dragging** (tap): synthesize `handleCanvasClick` with the touch position
+- **If dragging + line tool**: place the second endpoint at the release position → complete the line annotation
+- **If dragging + calibrate tool**: place second calibration point at release → show distance prompt
+- **Double-tap detection**: if two taps within 300ms → call `handleDoubleClick` logic
+- Set `suppressNextClick = true` to block ghost click
 
-## Feature 2: Daily Inspector Export (Excel)
+### 4. Move touch handlers from container to overlay canvas
+Currently `onTouchStart/Move/End` are on the outer container div. Move them to the overlay `<canvas>` so coordinates map correctly. Keep the native `preventDefault` on the container for multi-touch browser zoom prevention.
 
-### New function in `src/lib/export-utils.ts`: `exportInspectorDaily()`
+### 5. CSS changes
+- Remove `touch-none` from the container div
+- Add `touch-action: none` as inline style on the overlay canvas only
 
-Parameters: annotations (today's only, filtered by user), payItems, projectName, contractNumber, inspectorName, pdf (for screenshots)
+### 6. Refactor `handleCanvasClick` and `handleDoubleClick`
+Extract the position-dependent logic into helpers that accept a `PointXY` directly (not a `React.MouseEvent`), so both mouse clicks and touch taps can call the same logic without synthesizing fake mouse events.
 
-### Sheet 1: "Daily Report"
-Columns: Pay Item Code | Pay Item Name | Calc'd Qty | Final Qty | Unit | Location | Notes | Page
-- One row per annotation (not aggregated by pay item — each annotation is a line item)
-- "Final Qty" uses `manual_quantity` if set, otherwise calculated measurement
-- Header row with project name, date, inspector name, contract number
+## Files Modified
 
-### Sheet 2: "Plan Pages"
-- For each unique page number in today's annotations, render the PDF page to a canvas and embed as an image
-- Uses existing `renderPage()` from pdf-utils to generate page images
-- Images inserted with annotations drawn on them (capture from the overlay canvas)
-
-### Implementation approach
-- Use **xlsx** (SheetJS) library for Excel generation — it's client-side, no server needed
-- For plan page images: render pages to off-screen canvas, convert to PNG blobs, embed in xlsx
-- Note: SheetJS Community Edition supports image embedding via `ws['!images']`
-- Alternative: use jsPDF for a PDF-based export if xlsx image embedding proves limited — but try xlsx first since user specifically asked for Excel
-
-### Export trigger
-- Add "Export Today's Work" button to the inspector toolbar/summary panel
-- Filters annotations by `created_at >= today` AND `user_id = current user`
-- Downloads as `{projectName}_daily_{date}.xlsx`
-
-## Files to Create/Modify
-
-1. **Migration** — Add 3 columns to annotations table
-2. **`src/types/project.ts`** — Add fields to Annotation interface
-3. **`src/components/PdfCanvas.tsx`** — Extend selection popup with override qty, location, notes inputs
-4. **`src/hooks/useProject.ts`** — Update annotation DB sync to include new fields
-5. **`src/lib/export-utils.ts`** — Add `exportInspectorDaily()` function, update `buildRows` for overrides
-6. **`src/components/SummaryPanel.tsx`** — Respect manual overrides in calculations
-7. **`src/pages/Index.tsx`** — Add "Export Today's Work" button for inspectors
-8. **`package.json`** — Add `xlsx` dependency
-
-## Phases
-
-1. DB migration + type updates
-2. Annotation override UI in selection popup
-3. Daily export function with Excel generation
-4. Wire up export button in inspector UI
+- `src/components/PdfCanvas.tsx` — all changes in this single file
 
