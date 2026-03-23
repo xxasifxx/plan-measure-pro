@@ -74,13 +74,40 @@ export function PdfCanvas({
     }
   }, [toolMode]);
 
-  // Render PDF page
+  // Render PDF page (cancel previous render to avoid concurrent canvas use)
+  const renderTaskRef = useRef<{ cancel: () => void } | null>(null);
+
   useEffect(() => {
     if (!pdf || !pdfCanvasRef.current) return;
-    renderPage(pdf, currentPage, pdfCanvasRef.current, scale).then(() => {
-      const c = pdfCanvasRef.current!;
-      setCanvasSize({ width: c.width, height: c.height });
+    // Cancel any in-flight render
+    if (renderTaskRef.current) {
+      renderTaskRef.current.cancel();
+      renderTaskRef.current = null;
+    }
+    let cancelled = false;
+    const pagePromise = pdf.getPage(currentPage);
+    pagePromise.then(page => {
+      if (cancelled) return;
+      const viewport = page.getViewport({ scale });
+      const canvas = pdfCanvasRef.current!;
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      const ctx = canvas.getContext('2d')!;
+      const task = page.render({ canvasContext: ctx, viewport });
+      renderTaskRef.current = { cancel: () => task.cancel() };
+      task.promise.then(() => {
+        if (!cancelled) {
+          setCanvasSize({ width: canvas.width, height: canvas.height });
+        }
+      }).catch(() => { /* cancelled */ });
     });
+    return () => {
+      cancelled = true;
+      if (renderTaskRef.current) {
+        renderTaskRef.current.cancel();
+        renderTaskRef.current = null;
+      }
+    };
   }, [pdf, currentPage, scale]);
 
   // Get canvas-relative position normalized to scale=1
