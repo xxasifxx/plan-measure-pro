@@ -1,64 +1,33 @@
 
 
-# Continuous Scroll PDF Viewer for SpecViewer
+# Incomplete Workflows Audit
 
-## Problem
-The SpecViewer renders one page at a time, requiring explicit prev/next navigation. Real PDF viewers like Acrobat show a continuous vertical scroll of all pages — you just scroll down to see the next page. This is the single biggest UX gap.
+## 1. Annotation Deletion on Mobile — No Way to Delete
+On mobile, when a user taps an annotation in `select` mode, the selected annotation info popup appears (PdfCanvas lines 819-925). However, delete requires pressing `Delete`/`Backspace` keys (line 576-581), which don't exist on mobile. The popup has a "Delete" button, but the `select` tool isn't easily reachable on mobile — `MobileToolbar` auto-switches tools based on pay item unit. There's no dedicated select/edit mode toggle on mobile for managing existing annotations.
 
-## Solution — Multi-page continuous scroll
+## 2. Specs PDF Not Persisted to Cloud
+When a user uploads a Standard Specs PDF (`handleSpecsUpload` in Index.tsx), it's loaded into memory (`specsPdf`, `specsPageTexts`) but never saved to cloud storage. If the user closes and reopens the project, specs are gone. The `projects` table has a `specs_storage_path` column but it's never written to. The section page index is also lost.
 
-Replace the single-canvas architecture with a scrollable container holding one canvas per visible page (virtualized). Pages render on-demand as they scroll into view.
+## 3. Pay Items Import Only Works on Current Page
+`handleImportPayItems` (Index.tsx line 308) calls `extractPayItemsFromPage` for the current page only. If pay items span multiple pages (common in construction docs), the user gets a partial import with no way to append from additional pages — calling import again replaces the entire list via `updatePayItems`.
 
-### Architecture
+## 4. Project Update Timestamp Never Written
+`useProject.persist()` calls `setProject(updated)` locally but never updates `updated_at` in the database. The `projects` table `updated_at` stays frozen at creation time, making the "last updated" display on Dashboard cards misleading.
 
-```text
-┌─────────────────────────────┐
-│  SheetContent (flex col)    │
-│  ┌───────────────────────┐  │
-│  │ Header / Toolbar      │  │
-│  ├───────────────────────┤  │
-│  │ Scroll container      │  │  ← overflow-y: auto
-│  │  ┌─────────────────┐  │  │
-│  │  │ Spacer (above)  │  │  │  ← maintains scroll height
-│  │  ├─────────────────┤  │  │
-│  │  │ Canvas page N   │  │  │  ← rendered pages
-│  │  │ Canvas page N+1 │  │  │
-│  │  │ Canvas page N+2 │  │  │
-│  │  ├─────────────────┤  │  │
-│  │  │ Spacer (below)  │  │  │
-│  │  └─────────────────┘  │  │
-│  └───────────────────────┘  │
-└─────────────────────────────┘
-```
+## 5. Daily Export Doesn't Filter by User
+`exportInspectorDaily` (export-utils.ts line 184-191) filters by today's date but explicitly comments that it does NOT filter by user ID, despite accepting `userId` as a parameter. On a shared project, one inspector's daily report includes everyone's annotations.
 
-### Implementation in `src/components/SpecViewer.tsx`
+## 6. Manual Quantities in Summary Not Persisted
+`SummaryPanel` maintains `manualQuantities` as local React state (line 34). Non-drawable pay items (TON, LS, USD, MNTH) let users type quantities, but these vanish on re-render or page navigation. They're never saved to the database or project state.
 
-1. **Page height calculation**: On open/scale change, get page 1 viewport to compute `pageHeight` (at current renderScale). All pages assumed same size (standard for spec PDFs). Add a gap (e.g. 12px) between pages.
+## 7. No Annotation Location/Notes Entry on Mobile
+The annotation detail popup (PdfCanvas lines 859-878) shows Location and Notes inputs when an annotation is selected. On mobile, accessing this popup requires select mode (see issue #1), and the popup is positioned `absolute top-3 right-3` which may be clipped or hard to reach. There's no mobile-optimized annotation detail sheet.
 
-2. **Virtual scroll container**: Replace the single `<canvas>` with a tall `<div>` whose total height = `totalPages * (pageHeight + gap)`. This gives the scrollbar correct proportions.
+## 8. Calibration Copy Has No Granularity
+`handleCopyCalibration` (Index.tsx line 320) copies calibration to ALL other pages indiscriminately. Construction plan sets often have different scales per sheet group (e.g., plans at 1"=20', details at 1"=10'). There's no UI to select which pages to copy to.
 
-3. **Visible page detection**: On scroll, compute which pages are in the viewport using `scrollTop / (pageHeight + gap)`. Render a window of ~3 pages (current ± 1 buffer).
+## 9. TOC Import Fires Twice on Touch
+In `handleOverlayTouchEnd` (PdfCanvas line 735-746), when `tocSelect` drag ends, it calls `onTocRegionSelected` directly. But `handleImportToc` (line 545-550) also calls `onTocRegionSelected` when the user clicks "Import TOC" on the confirmation popup. The touch path bypasses the confirmation entirely — the TOC gets imported without the user confirming the selection.
 
-4. **Canvas pool**: Maintain a small pool of canvas elements (3-5). Position them absolutely within the tall div at their correct `top` offset. When a page scrolls out, reuse its canvas for the next page entering view.
-
-5. **Render pipeline**: When a page enters the visible window, render it to its canvas using the existing `specsPdf.getPage(n).render()` logic. Cancel renders for pages that scroll out before completing.
-
-6. **Scroll-to-page**: `setCurrentPage(n)` scrolls the container to `(n-1) * (pageHeight + gap)`. The page counter updates on scroll by reading which page is centered.
-
-7. **Search highlight**: Apply the existing highlight logic per-page during render — no change needed except it now runs per visible page instead of one page.
-
-8. **Preserve existing features**: Pinch-zoom, Ctrl+wheel zoom, search, page input, fit-to-width all continue to work. The debounced `renderScale` still controls actual PDF rendering. Scale changes re-calculate `pageHeight` and re-render visible pages.
-
-9. **Performance**: Only 3 canvases exist at any time. `IntersectionObserver` or scroll-position math triggers renders. Cancelled renders prevent stale draws.
-
-### Changes summary
-- Remove single `canvasEl` state → add `visiblePages` state (array of page numbers)
-- Add `pageHeight` state computed from PDF + renderScale
-- Replace single canvas with positioned canvas pool in a tall scroll div
-- Add scroll handler to update `visiblePages` and `currentPage`
-- Render effect loops over `visiblePages` instead of single page
-- `scrollTo` replaces `setCurrentPage` for navigation buttons, search, and "Go to start"
-
-### Single file change
-All modifications in `src/components/SpecViewer.tsx`.
-
+## 10. Undo/Redo State Not Reactive
+`canUndo`/`canRedo` (use
