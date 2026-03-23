@@ -58,7 +58,18 @@ export function PdfCanvas({
     lastDist: number;
     lastCenter: { x: number; y: number };
     isTwoFinger: boolean;
-  }>({ lastTouches: [], lastDist: 0, lastCenter: { x: 0, y: 0 }, isTwoFinger: false });
+    // Single-finger touch tracking
+    startPos: PointXY | null;
+    startTime: number;
+    dragging: boolean;
+    dragFirstPointPlaced: boolean;
+    lastTapTime: number;
+    suppressClick: boolean;
+  }>({
+    lastTouches: [], lastDist: 0, lastCenter: { x: 0, y: 0 }, isTwoFinger: false,
+    startPos: null, startTime: 0, dragging: false, dragFirstPointPlaced: false,
+    lastTapTime: 0, suppressClick: false,
+  });
 
   // TOC selection rectangle
   const [tocDragStart, setTocDragStart] = useState<PointXY | null>(null);
