@@ -619,6 +619,13 @@ export function PdfCanvas({
       if (toolMode === 'pan' || toolMode === 'select') {
         panStart.current = { x: touch.clientX, y: touch.clientY };
       }
+
+      // TOC select: start drag rectangle
+      if (toolMode === 'tocSelect') {
+        setTocDragStart(ts.startPos);
+        setTocDragEnd(null);
+        setTocRect(null);
+      }
     }
   }, [getTouchCanvasPos, toolMode]);
 
