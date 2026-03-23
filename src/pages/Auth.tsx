@@ -1,38 +1,95 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { HardHat, LogIn, UserPlus } from 'lucide-react';
+import { HardHat, LogIn, UserPlus, Mail, KeyRound } from 'lucide-react';
 
 export default function Auth() {
-  const [isSignUp, setIsSignUp] = useState(false);
+  const [searchParams] = useSearchParams();
+  const invitationToken = searchParams.get('invitation');
+
+  const [mode, setMode] = useState<'signin' | 'signup' | 'forgot'>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
+  const [orgName, setOrgName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [acceptingInvite, setAcceptingInvite] = useState(false);
   const { toast } = useToast();
+
+  // Accept invitation after login if token present
+  useEffect(() => {
+    if (!invitationToken) return;
+
+    const acceptInvitation = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return; // user needs to sign in first
+
+      setAcceptingInvite(true);
+      try {
+        const { data, error } = await supabase.rpc('accept_invitation', { _token: invitationToken });
+        if (error) throw error;
+        if (data === 'ok') {
+          toast({ title: 'Welcome!', description: 'Your role has been assigned.' });
+        } else if (data === 'email_mismatch') {
+          toast({ title: 'Email mismatch', description: 'This invitation was sent to a different email.', variant: 'destructive' });
+        } else {
+          toast({ title: 'Invalid invitation', description: 'This invitation link has expired or already been used.', variant: 'destructive' });
+        }
+      } catch (err: any) {
+        toast({ title: 'Error', description: err.message, variant: 'destructive' });
+      } finally {
+        setAcceptingInvite(false);
+      }
+    };
+
+    acceptInvitation();
+  }, [invitationToken, toast]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      if (isSignUp) {
+      if (mode === 'forgot') {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/reset-password`,
+        });
+        if (error) throw error;
+        toast({ title: 'Check your email', description: 'We sent you a password reset link.' });
+        return;
+      }
+
+      if (mode === 'signup') {
         const { error } = await supabase.auth.signUp({
           email,
           password,
           options: {
-            data: { full_name: fullName },
+            data: { full_name: fullName, org_name: orgName },
             emailRedirectTo: window.location.origin,
           },
         });
         if (error) throw error;
         toast({ title: 'Account created', description: 'Check your email to confirm your account.' });
       } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
+
+        // After sign-in, try to assign owner role (no-op if already has roles)
+        if (data.user) {
+          await supabase.rpc('assign_owner_role', { _user_id: data.user.id });
+        }
+
+        // If there's an invitation token, accept it
+        if (invitationToken) {
+          const { data: result } = await supabase.rpc('accept_invitation', { _token: invitationToken });
+          if (result === 'ok') {
+            toast({ title: 'Invitation accepted!' });
+          }
+        }
       }
     } catch (err: any) {
       toast({ title: 'Error', description: err.message, variant: 'destructive' });
@@ -50,40 +107,82 @@ export default function Auth() {
           </div>
           <h1 className="text-xl font-bold text-foreground">Quantity Takeoff</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            {isSignUp ? 'Create your account' : 'Sign in to continue'}
+            {invitationToken
+              ? 'Sign in to accept your invitation'
+              : mode === 'signup'
+                ? 'Create your organization account'
+                : mode === 'forgot'
+                  ? 'Reset your password'
+                  : 'Sign in to continue'}
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4 bg-card border border-border rounded-xl p-6">
-          {isSignUp && (
-            <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
-              <Input id="name" value={fullName} onChange={e => setFullName(e.target.value)} placeholder="John Smith" required />
-            </div>
+          {mode === 'signup' && (
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="name">Full Name</Label>
+                <Input id="name" value={fullName} onChange={e => setFullName(e.target.value)} placeholder="John Smith" required />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="org">Organization Name</Label>
+                <Input id="org" value={orgName} onChange={e => setOrgName(e.target.value)} placeholder="Smith Construction LLC" required />
+              </div>
+            </>
           )}
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@company.com" required />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" minLength={6} required />
-          </div>
+          {mode !== 'forgot' && (
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" minLength={6} required />
+            </div>
+          )}
 
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? 'Please wait...' : isSignUp ? (
-              <><UserPlus className="h-4 w-4 mr-2" /> Sign Up</>
+          <Button type="submit" className="w-full" disabled={loading || acceptingInvite}>
+            {loading ? 'Please wait...' : mode === 'signup' ? (
+              <><UserPlus className="h-4 w-4 mr-2" /> Create Account</>
+            ) : mode === 'forgot' ? (
+              <><Mail className="h-4 w-4 mr-2" /> Send Reset Link</>
             ) : (
               <><LogIn className="h-4 w-4 mr-2" /> Sign In</>
             )}
           </Button>
 
-          <p className="text-center text-xs text-muted-foreground">
-            {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
-            <button type="button" onClick={() => setIsSignUp(!isSignUp)} className="text-primary font-medium hover:underline">
-              {isSignUp ? 'Sign in' : 'Sign up'}
-            </button>
-          </p>
+          <div className="text-center text-xs text-muted-foreground space-y-1">
+            {mode === 'signin' && (
+              <>
+                <p>
+                  Don't have an account?{' '}
+                  <button type="button" onClick={() => setMode('signup')} className="text-primary font-medium hover:underline">
+                    Sign up
+                  </button>
+                </p>
+                <p>
+                  <button type="button" onClick={() => setMode('forgot')} className="text-primary font-medium hover:underline">
+                    Forgot password?
+                  </button>
+                </p>
+              </>
+            )}
+            {mode === 'signup' && (
+              <p>
+                Already have an account?{' '}
+                <button type="button" onClick={() => setMode('signin')} className="text-primary font-medium hover:underline">
+                  Sign in
+                </button>
+              </p>
+            )}
+            {mode === 'forgot' && (
+              <p>
+                <button type="button" onClick={() => setMode('signin')} className="text-primary font-medium hover:underline">
+                  Back to sign in
+                </button>
+              </p>
+            )}
+          </div>
         </form>
       </div>
     </div>
