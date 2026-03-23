@@ -1,24 +1,37 @@
 
 
-# Add Touch Support for TOC Region Selection
+# Relax Section Detection Heuristic
 
 ## Problem
 
-The TOC import uses a drag-to-select-rectangle gesture, but this only works with mouse events (`onMouseDown/Move/Up`). The touch handlers don't support `tocSelect` mode — single-finger drags during `tocSelect` fall through without doing anything.
+The `buildSectionPageIndex` function requires THREE conditions to match a section start: "SECTION NNN" heading + NNN.01 subsection on the same page + dominant prefix check. This is too strict — PDF text extraction often mangles or splits text across items, so `NNN.01` may not appear as a clean token on the heading page. The user confirms there are exactly 9 top-level sections (100–900) and the current logic is missing many of them.
 
-## Solution
+## Solution — Progressive Fallback in `src/lib/specs-utils.ts`
 
-Add `tocSelect` handling to the three touch event handlers in `PdfCanvas.tsx`:
+Replace the current all-or-nothing approach with a tiered detection strategy:
 
-### Changes in `src/components/PdfCanvas.tsx`
+### Tier 1 (current strict match)
+Keep existing logic as the first pass: "SECTION NNN" + NNN.01 on page + dominant prefix. This catches clean cases.
 
-1. **`handleOverlayTouchStart`** — When `toolMode === 'tocSelect'` and single finger: set `tocDragStart` to the touch position (same as `handleMouseDown` does), clear previous rect.
+### Tier 2 (relaxed — drop NNN.01 requirement)
+Second pass for sections 100–900 not found in Tier 1: accept any page with "SECTION NNN" heading where NNN is the dominant prefix (or the only prefix). Drop the NNN.01 requirement entirely.
 
-2. **`handleOverlayTouchMove`** — When `toolMode === 'tocSelect'` and dragging: update `tocDragEnd` with current touch position (same as `handleMouseMove` does). Add `tocSelect` to the drag detection block so it calls `preventDefault` and updates the rubber-band rectangle.
+### Tier 3 (fallback — just the heading)
+Third pass for still-missing sections: accept the first page containing "SECTION NNN" that isn't a TOC page (< 5 distinct prefixes) and has > 50 words. No subsection marker requirements at all.
 
-3. **`handleOverlayTouchEnd`** — When `toolMode === 'tocSelect'` and was dragging: finalize the rectangle into `tocRect` if large enough (w > 20 && h > 20), same logic as `handleMouseUp`. This triggers the confirmation prompt.
+### Implementation
+- After the existing loop, check which of sections 100, 200, 300, 400, 500, 600, 700, 800, 900 are missing
+- Run Tier 2 pass over sorted pages for missing sections only
+- Run Tier 3 pass for any still missing
+- This ensures all 9 sections are found if the heading text exists anywhere in the document
 
-4. **Skip tap handling** — When `tocSelect` is active, single-finger taps should be ignored (no point placement), which is already handled since `handleClickAtPos` returns early for `tocSelect`.
+## Also fix SpecViewer fallback (`src/components/SpecViewer.tsx`)
+Even with better detection, some pay items may map to sub-sections not in the index. Apply the previously approved fix:
+- Use `effectiveStartPage = startPage ?? 1`
+- Always render the PDF canvas (remove the dead-end blocker)
+- Show an info banner + auto-open search pre-filled with "SECTION {num}" when section not found
 
-Single file change, ~20 lines added across the three touch handlers.
+## Files Modified
+1. `src/lib/specs-utils.ts` — tiered detection in `buildSectionPageIndex`
+2. `src/components/SpecViewer.tsx` — fallback to page 1 + search when section still not found
 
