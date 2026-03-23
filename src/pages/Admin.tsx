@@ -260,9 +260,49 @@ export default function Admin() {
                       <CheckCircle className="h-2.5 w-2.5" /> Accepted
                     </Badge>
                   ) : (
-                    <Badge variant="outline" className="text-[10px] gap-1 text-muted-foreground">
-                      <Clock className="h-2.5 w-2.5" /> Pending
-                    </Badge>
+                    <>
+                      <Badge variant="outline" className="text-[10px] gap-1 text-muted-foreground">
+                        <Clock className="h-2.5 w-2.5" /> Pending
+                      </Badge>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 text-muted-foreground hover:text-primary"
+                        title="Resend invitation"
+                        onClick={async () => {
+                          try {
+                            const { data, error } = await supabase.functions.invoke('invite-user', {
+                              body: { email: inv.email, role: inv.role },
+                            });
+                            if (error) throw error;
+                            if (data?.error) throw new Error(data.error);
+                            toast({ title: 'Invitation resent', description: `Re-sent to ${inv.email}` });
+                          } catch (err: any) {
+                            toast({ title: 'Error', description: err.message, variant: 'destructive' });
+                          }
+                        }}
+                      >
+                        <Send className="h-3 w-3" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                        title="Delete invitation"
+                        onClick={async () => {
+                          if (!confirm(`Delete invitation for ${inv.email}?`)) return;
+                          const { error } = await supabase.from('invitations').delete().eq('id', inv.id);
+                          if (error) {
+                            toast({ title: 'Error', description: error.message, variant: 'destructive' });
+                          } else {
+                            toast({ title: 'Invitation deleted' });
+                            fetchData();
+                          }
+                        }}
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
+                    </>
                   )}
                 </div>
               ))}

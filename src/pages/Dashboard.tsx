@@ -290,7 +290,7 @@ export default function Dashboard() {
         </DialogContent>
       </Dialog>
       {showWelcome && user && (
-        <WelcomeCarousel open={showWelcome} onDismiss={() => setShowWelcome(false)} userId={user.id} />
+        <WelcomeCarousel open={showWelcome} onDismiss={() => setShowWelcome(false)} userId={user.id} roles={roles as any} />
       )}
 
       <GuidedTour
