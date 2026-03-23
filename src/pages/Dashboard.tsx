@@ -222,15 +222,23 @@ export default function Dashboard() {
               {project.contract_number && (
                 <p className="text-[10px] text-muted-foreground truncate mb-2">#{project.contract_number}</p>
               )}
-              <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
+              <div className="flex items-center gap-3 text-[10px] text-muted-foreground flex-wrap">
                 <span className="flex items-center gap-1">
                   <Clock className="h-3 w-3" />
-                  {new Date(project.updated_at).toLocaleDateString()}
+                  {project.latest_annotation_at
+                    ? `Active ${new Date(project.latest_annotation_at).toLocaleDateString()}`
+                    : new Date(project.updated_at).toLocaleDateString()}
                 </span>
                 <span className="flex items-center gap-1">
                   <PenTool className="h-3 w-3" />
-                  {project.annotation_count || 0} annotations
+                  {project.annotation_count || 0}
                 </span>
+                {project.member_role === 'owner' && (project.member_count ?? 0) > 0 && (
+                  <span className="flex items-center gap-1">
+                    <Users className="h-3 w-3" />
+                    {project.member_count} member{project.member_count !== 1 ? 's' : ''}
+                  </span>
+                )}
               </div>
               <div className="mt-2">
                 <span className={cn(
