@@ -389,6 +389,8 @@ export function useProject(options: UseProjectOptions = {}) {
     setActivePayItemId('');
     undoStack.current = [];
     redoStack.current = [];
+    setUndoCount(0);
+    setRedoCount(0);
   }, []);
 
   const currentCalibration = project?.calibrations[currentPage] || null;
