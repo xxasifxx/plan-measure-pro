@@ -359,8 +359,9 @@ export function SpecViewer({
 
   useEffect(() => {
     if (!open || !specsPdf) return;
-    fitToWidth();
-  }, [open, specsPdf, startPage]);
+    const t = setTimeout(fitToWidth, 150);
+    return () => clearTimeout(t);
+  }, [open, specsPdf, fitToWidth]);
 
   // Debounced refit on panel resize
   useEffect(() => {
