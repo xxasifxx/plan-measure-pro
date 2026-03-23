@@ -559,6 +559,18 @@ const Index = () => {
           specsPageTexts={specsPageTexts}
           startPage={specViewerData.startPage}
         />
+
+        {/* Mobile annotation detail sheet */}
+        {selectedAnnotationId && project && (
+          <MobileAnnotationSheet
+            annotation={project.annotations.find(a => a.id === selectedAnnotationId) || null}
+            payItem={payItems.find(p => p.id === project.annotations.find(a => a.id === selectedAnnotationId)?.payItemId) || null}
+            payItems={payItems}
+            onClose={() => setSelectedAnnotationId(null)}
+            onUpdate={updateAnnotation}
+            onDelete={removeAnnotation}
+          />
+        )}
       </div>
     );
   }
