@@ -166,7 +166,7 @@ export function PdfCanvas({
     const ctx = canvas.getContext('2d')!;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const pageAnnotations = annotations.filter(a => a.page === currentPage);
+    const pageAnnotations = annotations.filter(a => a.page === currentPage && a.type !== 'manual');
 
     for (const ann of pageAnnotations) {
       const item = payItems.find(p => p.id === ann.payItemId);
