@@ -144,7 +144,7 @@ export function PdfCanvas({
 
   // Hit-test annotations at a normalized point
   const hitTestAnnotations = useCallback((pos: PointXY): Annotation | null => {
-    const pageAnnotations = annotations.filter(a => a.page === currentPage);
+    const pageAnnotations = annotations.filter(a => a.page === currentPage && a.type !== 'manual');
     // Reverse order so topmost drawn annotation is selected first
     for (let i = pageAnnotations.length - 1; i >= 0; i--) {
       const ann = pageAnnotations[i];

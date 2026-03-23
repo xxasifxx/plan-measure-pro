@@ -61,7 +61,7 @@ export interface Calibration {
 
 export interface Annotation {
   id: string;
-  type: 'line' | 'polygon' | 'count';
+  type: 'line' | 'polygon' | 'count' | 'manual';
   points: PointXY[];
   payItemId: string;
   page: number;
