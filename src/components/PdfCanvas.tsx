@@ -817,8 +817,8 @@ export function PdfCanvas({
         />
       </div>
 
-      {/* Selected annotation info popup */}
-      {selectedAnnotation && selectedPayItem && (
+      {/* Selected annotation info popup — desktop only */}
+      {!isMobile && selectedAnnotation && selectedPayItem && (
         <div className="absolute top-3 right-3 bg-card border border-border rounded-md shadow-lg p-3 z-20 min-w-[240px] max-w-[320px]">
           <div className="flex items-center gap-2 mb-2">
             <div className="h-3 w-3 rounded-full shrink-0" style={{ backgroundColor: selectedPayItem.color }} />
