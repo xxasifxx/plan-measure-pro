@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AlertCircle, BookOpen, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, GripVertical, Loader2, Search, X, ZoomIn, ZoomOut } from 'lucide-react';
+import { AlertCircle, BookOpen, ChevronDown, ChevronUp, GripVertical, Loader2, Search, X, ZoomIn, ZoomOut } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface SearchMatch {
@@ -25,6 +25,8 @@ interface Props {
 }
 
 const PANEL_WIDTH_KEY = 'specViewerPanelWidth';
+const PAGE_GAP = 12;
+const BUFFER_PAGES = 1;
 
 function getStoredPanelWidth(): number {
   try {
@@ -36,22 +38,21 @@ function getStoredPanelWidth(): number {
 export function SpecViewer({
   open, onClose, sectionNumber, itemCode, itemName, specsPdf, specsPageTexts, startPage,
 }: Props) {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
   const [currentPage, setCurrentPage] = useState(1);
-  const [rendering, setRendering] = useState(false);
   const [scale, setScale] = useState(1.5);
   const [renderScale, setRenderScale] = useState(1.5);
   const [panelWidth, setPanelWidth] = useState(getStoredPanelWidth);
+  const [pageHeight, setPageHeight] = useState(0);
+  const [pageWidth, setPageWidth] = useState(0);
+  const [visiblePages, setVisiblePages] = useState<number[]>([1]);
   const draggingRef = useRef(false);
-  const refitTimerRef = useRef<ReturnType<typeof setTimeout>>();
   const scaleTimerRef = useRef<ReturnType<typeof setTimeout>>();
-
-  // Callback ref so rendering triggers when canvas mounts in portal
-  const [canvasEl, setCanvasEl] = useState<HTMLCanvasElement | null>(null);
-  const canvasRefCb = useCallback((node: HTMLCanvasElement | null) => {
-    setCanvasEl(node);
-  }, []);
+  const canvasMapRef = useRef<Map<number, HTMLCanvasElement>>(new Map());
+  const renderingRef = useRef<Set<number>>(new Set());
+  const cancelMapRef = useRef<Map<number, () => void>>(new Map());
+  const scrollingToRef = useRef(false);
 
   // Search state
   const [searchOpen, setSearchOpen] = useState(false);
@@ -62,7 +63,10 @@ export function SpecViewer({
   // Page input state
   const [pageInputValue, setPageInputValue] = useState('');
   const [editingPage, setEditingPage] = useState(false);
-  const pageInputRef = useRef<HTMLInputElement>(null);
+
+  const totalPages = specsPdf?.numPages || 0;
+  const effectiveStartPage = startPage ?? 1;
+  const sectionNotFound = specsPdf && !startPage;
 
   // Compute search matches
   const searchMatches = useMemo<SearchMatch[]>(() => {
@@ -83,17 +87,28 @@ export function SpecViewer({
 
   useEffect(() => { setCurrentMatchIndex(0); }, [searchMatches]);
 
+  // Scroll to a specific page
+  const scrollToPage = useCallback((pageNum: number) => {
+    const container = scrollRef.current;
+    if (!container || pageHeight <= 0) return;
+    scrollingToRef.current = true;
+    const top = (pageNum - 1) * (pageHeight + PAGE_GAP);
+    container.scrollTo({ top, behavior: 'smooth' });
+    setTimeout(() => { scrollingToRef.current = false; }, 500);
+  }, [pageHeight]);
+
   const goToMatch = useCallback((matchIdx: number) => {
     if (matchIdx < 0 || matchIdx >= searchMatches.length) return;
     setCurrentMatchIndex(matchIdx);
-    setCurrentPage(searchMatches[matchIdx].page);
-  }, [searchMatches]);
+    const targetPage = searchMatches[matchIdx].page;
+    setCurrentPage(targetPage);
+    scrollToPage(targetPage);
+  }, [searchMatches, scrollToPage]);
 
   // Keyboard shortcuts
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
-      // Ctrl+F for search
       if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
         e.preventDefault();
         setSearchOpen(true);
@@ -103,26 +118,15 @@ export function SpecViewer({
         setSearchOpen(false);
         setSearchQuery('');
       }
-      // Arrow keys for page nav (only when not typing in an input)
-      const tag = (e.target as HTMLElement)?.tagName;
-      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
-      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        e.preventDefault();
-        setCurrentPage(p => Math.max(1, p - 1));
-      }
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-        e.preventDefault();
-        setCurrentPage(p => Math.min(specsPdf?.numPages || 1, p + 1));
-      }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [open, searchOpen, specsPdf]);
+  }, [open, searchOpen]);
 
   // Scroll wheel zoom
   useEffect(() => {
     if (!open) return;
-    const container = containerRef.current;
+    const container = scrollRef.current;
     if (!container) return;
     const handler = (e: WheelEvent) => {
       if (!e.ctrlKey && !e.metaKey) return;
@@ -137,7 +141,7 @@ export function SpecViewer({
   // Two-finger touch zoom & pan
   useEffect(() => {
     if (!open) return;
-    const container = containerRef.current;
+    const container = scrollRef.current;
     if (!container) return;
 
     let lastDist = 0;
@@ -157,21 +161,16 @@ export function SpecViewer({
         lastCenter = getCenter(e.touches[0], e.touches[1]);
       }
     };
-
     const onTouchMove = (e: TouchEvent) => {
       if (e.touches.length === 2) {
         e.preventDefault();
         const dist = getDist(e.touches[0], e.touches[1]);
         const center = getCenter(e.touches[0], e.touches[1]);
-
-        // Pinch zoom
         const ratio = lastDist > 0 ? dist / lastDist : 1;
         if (Math.abs(ratio - 1) > 0.01) {
           setScale(s => Math.min(4, Math.max(0.5, Math.round(s * ratio * 100) / 100)));
         }
         lastDist = dist;
-
-        // Two-finger pan
         const dx = center.x - lastCenter.x;
         const dy = center.y - lastCenter.y;
         if (Math.abs(dx) > 1 || Math.abs(dy) > 1) {
@@ -181,11 +180,8 @@ export function SpecViewer({
         }
       }
     };
-
     const onTouchEnd = (e: TouchEvent) => {
-      if (e.touches.length < 2) {
-        lastDist = 0;
-      }
+      if (e.touches.length < 2) lastDist = 0;
     };
 
     container.addEventListener('touchstart', onTouchStart, { passive: false });
@@ -200,9 +196,7 @@ export function SpecViewer({
 
   // Persist panel width
   useEffect(() => {
-    if (!isMobile) {
-      localStorage.setItem(PANEL_WIDTH_KEY, String(panelWidth));
-    }
+    if (!isMobile) localStorage.setItem(PANEL_WIDTH_KEY, String(panelWidth));
   }, [panelWidth, isMobile]);
 
   // Drag-to-resize
@@ -214,8 +208,7 @@ export function SpecViewer({
     const onMove = (ev: MouseEvent) => {
       if (!draggingRef.current) return;
       const delta = startX - ev.clientX;
-      const newWidth = Math.min(Math.max(400, startWidth + delta), window.innerWidth - 100);
-      setPanelWidth(newWidth);
+      setPanelWidth(Math.min(Math.max(400, startWidth + delta), window.innerWidth - 100));
     };
     const onUp = () => {
       draggingRef.current = false;
@@ -226,25 +219,6 @@ export function SpecViewer({
     document.addEventListener('mouseup', onUp);
   }, [panelWidth]);
 
-  // Reset on open — fallback to page 1 if section not found
-  const effectiveStartPage = startPage ?? 1;
-  const sectionNotFound = specsPdf && !startPage;
-
-  useEffect(() => {
-    if (open) {
-      setCurrentPage(effectiveStartPage);
-      if (sectionNotFound) {
-        // Auto-open search pre-filled with the section number
-        setSearchOpen(true);
-        setSearchQuery(sectionNumber ? `SECTION ${sectionNumber}` : '');
-        setTimeout(() => searchInputRef.current?.focus(), 100);
-      } else {
-        setSearchOpen(false);
-        setSearchQuery('');
-      }
-    }
-  }, [open, effectiveStartPage, sectionNotFound, sectionNumber]);
-
   // Debounce scale → renderScale
   useEffect(() => {
     clearTimeout(scaleTimerRef.current);
@@ -252,118 +226,93 @@ export function SpecViewer({
     return () => clearTimeout(scaleTimerRef.current);
   }, [scale]);
 
-  // Render page + highlight search matches
+  // Compute page dimensions when PDF or renderScale changes
   useEffect(() => {
-    if (!open || !specsPdf || !canvasEl) return;
-    let cancelled = false;
-    setRendering(true);
-
-    specsPdf.getPage(currentPage).then(async (page) => {
-      if (cancelled) return;
-      const canvas = canvasEl;
-      if (!canvas) return;
-      const viewport = page.getViewport({ scale: renderScale });
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
-
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
-
-      await page.render({ canvasContext: ctx, viewport }).promise;
-      if (cancelled) return;
-
-      // Highlight search matches on this page
-      if (searchQuery && searchQuery.length >= 2) {
-        const matchesOnPage = searchMatches.filter(m => m.page === currentPage);
-        if (matchesOnPage.length > 0) {
-          const textContent = await page.getTextContent();
-          const query = searchQuery.toLowerCase();
-          // Build a flat string with character-to-item mapping
-          let fullText = '';
-          const charMap: { itemIdx: number; charIdx: number }[] = [];
-          for (let i = 0; i < textContent.items.length; i++) {
-            const item = textContent.items[i] as any;
-            if (!item.str) continue;
-            for (let c = 0; c < item.str.length; c++) {
-              charMap.push({ itemIdx: i, charIdx: c });
-              fullText += item.str[c];
-            }
-          }
-
-          const lowerFull = fullText.toLowerCase();
-          let searchIdx = lowerFull.indexOf(query);
-          let matchNum = 0;
-          while (searchIdx !== -1) {
-            // Determine if this is the currently active match
-            const isActive = searchMatches.length > 0 &&
-              currentMatchIndex < searchMatches.length &&
-              searchMatches[currentMatchIndex].page === currentPage &&
-              matchNum === matchesOnPage.findIndex(m => m.index === searchMatches[currentMatchIndex]?.index);
-
-            // Get bounding boxes for matched characters
-            const startChar = charMap[searchIdx];
-            const endChar = charMap[searchIdx + query.length - 1];
-            if (startChar && endChar) {
-              const startItem = textContent.items[startChar.itemIdx] as any;
-              const endItem = textContent.items[endChar.itemIdx] as any;
-              // Draw highlight for each item span in the match
-              const itemIndices = new Set<number>();
-              for (let j = searchIdx; j < searchIdx + query.length && j < charMap.length; j++) {
-                itemIndices.add(charMap[j].itemIdx);
-              }
-              for (const idx of itemIndices) {
-                const item = textContent.items[idx] as any;
-                if (!item.transform) continue;
-                const tx = item.transform;
-                // Transform to viewport coordinates
-                const [a, b, c, d, e, f] = tx;
-                const fontSize = Math.sqrt(b * b + d * d);
-                const vp = viewport.convertToViewportPoint(e, f);
-                const vpEnd = viewport.convertToViewportPoint(e + item.width, f + fontSize);
-                const x = Math.min(vp[0], vpEnd[0]);
-                const y = Math.min(vp[1], vpEnd[1]);
-                const w = Math.abs(vpEnd[0] - vp[0]);
-                const h = Math.abs(vpEnd[1] - vp[1]);
-
-                ctx.save();
-                ctx.globalAlpha = isActive ? 0.45 : 0.25;
-                ctx.fillStyle = isActive ? '#f97316' : '#facc15';
-                ctx.fillRect(x, y, w, h);
-                ctx.restore();
-              }
-            }
-            matchNum++;
-            searchIdx = lowerFull.indexOf(query, searchIdx + 1);
-          }
-        }
-      }
-
-      if (!cancelled) setRendering(false);
-    });
-
-    return () => { cancelled = true; };
-  }, [open, specsPdf, currentPage, renderScale, searchQuery, searchMatches, currentMatchIndex, canvasEl]);
-
-  // Fit width on open & debounced refit on panel resize
-  const fitToWidth = useCallback(() => {
-    if (!specsPdf || !containerRef.current) return;
+    if (!specsPdf) return;
     specsPdf.getPage(1).then((page) => {
-      const container = containerRef.current;
+      const vp = page.getViewport({ scale: renderScale });
+      setPageHeight(Math.ceil(vp.height));
+      setPageWidth(Math.ceil(vp.width));
+    });
+  }, [specsPdf, renderScale]);
+
+  // Compute visible pages from scroll position
+  const updateVisiblePages = useCallback(() => {
+    const container = scrollRef.current;
+    if (!container || pageHeight <= 0 || totalPages === 0) return;
+
+    const scrollTop = container.scrollTop;
+    const viewportHeight = container.clientHeight;
+    const stride = pageHeight + PAGE_GAP;
+
+    const firstVisible = Math.max(1, Math.floor(scrollTop / stride) + 1 - BUFFER_PAGES);
+    const lastVisible = Math.min(totalPages, Math.ceil((scrollTop + viewportHeight) / stride) + BUFFER_PAGES);
+
+    const pages: number[] = [];
+    for (let i = firstVisible; i <= lastVisible; i++) pages.push(i);
+    setVisiblePages(pages);
+
+    // Update current page indicator from center of viewport
+    if (!scrollingToRef.current) {
+      const centerPage = Math.max(1, Math.min(totalPages, Math.floor((scrollTop + viewportHeight / 2) / stride) + 1));
+      setCurrentPage(centerPage);
+    }
+  }, [pageHeight, totalPages]);
+
+  // Scroll handler
+  useEffect(() => {
+    if (!open) return;
+    const container = scrollRef.current;
+    if (!container) return;
+    const handler = () => updateVisiblePages();
+    container.addEventListener('scroll', handler, { passive: true });
+    // Initial calculation
+    updateVisiblePages();
+    return () => container.removeEventListener('scroll', handler);
+  }, [open, updateVisiblePages]);
+
+  // Recalculate visible pages when pageHeight changes
+  useEffect(() => {
+    if (pageHeight > 0) updateVisiblePages();
+  }, [pageHeight, updateVisiblePages]);
+
+  // Reset on open
+  useEffect(() => {
+    if (open && specsPdf) {
+      setCurrentPage(effectiveStartPage);
+      if (sectionNotFound) {
+        setSearchOpen(true);
+        setSearchQuery(sectionNumber ? `SECTION ${sectionNumber}` : '');
+        setTimeout(() => searchInputRef.current?.focus(), 100);
+      } else {
+        setSearchOpen(false);
+        setSearchQuery('');
+      }
+      // Scroll to start page after dimensions are ready
+      setTimeout(() => scrollToPage(effectiveStartPage), 200);
+    }
+  }, [open, specsPdf, effectiveStartPage, sectionNotFound, sectionNumber, scrollToPage]);
+
+  // Fit to width
+  const fitToWidth = useCallback(() => {
+    if (!specsPdf || !scrollRef.current) return;
+    specsPdf.getPage(1).then((page) => {
+      const container = scrollRef.current;
       if (!container || container.clientWidth === 0) return;
-      const viewport = page.getViewport({ scale: 1 });
-      const containerWidth = container.clientWidth - 32;
-      const fitScale = Math.min(containerWidth / viewport.width, 3);
+      const vp = page.getViewport({ scale: 1 });
+      const fitScale = Math.min((container.clientWidth - 32) / vp.width, 3);
       setScale(Math.max(0.5, Math.round(fitScale * 100) / 100));
     });
   }, [specsPdf]);
 
   useEffect(() => {
     if (!open || !specsPdf) return;
-    const t = setTimeout(fitToWidth, 150);
+    const t = setTimeout(fitToWidth, 200);
     return () => clearTimeout(t);
   }, [open, specsPdf, fitToWidth]);
 
   // Debounced refit on panel resize
+  const refitTimerRef = useRef<ReturnType<typeof setTimeout>>();
   useEffect(() => {
     if (!open || !specsPdf) return;
     clearTimeout(refitTimerRef.current);
@@ -371,18 +320,144 @@ export function SpecViewer({
     return () => clearTimeout(refitTimerRef.current);
   }, [panelWidth, open, specsPdf, fitToWidth]);
 
-  const totalPages = specsPdf?.numPages || 0;
+  // Render visible pages
+  useEffect(() => {
+    if (!open || !specsPdf || pageHeight <= 0) return;
+
+    // Cancel renders for pages no longer visible
+    for (const [pg, cancel] of cancelMapRef.current.entries()) {
+      if (!visiblePages.includes(pg)) {
+        cancel();
+        cancelMapRef.current.delete(pg);
+      }
+    }
+
+    visiblePages.forEach((pageNum) => {
+      if (renderingRef.current.has(pageNum)) return;
+
+      // Check if already rendered at current scale
+      const existingCanvas = canvasMapRef.current.get(pageNum);
+      if (existingCanvas && existingCanvas.dataset.renderedScale === String(renderScale) &&
+          existingCanvas.dataset.renderedSearch === searchQuery + '|' + currentMatchIndex) {
+        return;
+      }
+
+      renderingRef.current.add(pageNum);
+      let cancelled = false;
+      cancelMapRef.current.set(pageNum, () => { cancelled = true; });
+
+      specsPdf.getPage(pageNum).then(async (page) => {
+        if (cancelled) { renderingRef.current.delete(pageNum); return; }
+
+        const viewport = page.getViewport({ scale: renderScale });
+        let canvas = canvasMapRef.current.get(pageNum);
+        if (!canvas) {
+          canvas = document.createElement('canvas');
+          canvasMapRef.current.set(pageNum, canvas);
+        }
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) { renderingRef.current.delete(pageNum); return; }
+
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+
+        await page.render({ canvasContext: ctx, viewport }).promise;
+        if (cancelled) { renderingRef.current.delete(pageNum); return; }
+
+        // Search highlight
+        if (searchQuery && searchQuery.length >= 2) {
+          const matchesOnPage = searchMatches.filter(m => m.page === pageNum);
+          if (matchesOnPage.length > 0) {
+            const textContent = await page.getTextContent();
+            const query = searchQuery.toLowerCase();
+            let fullText = '';
+            const charMap: { itemIdx: number; charIdx: number }[] = [];
+            for (let i = 0; i < textContent.items.length; i++) {
+              const item = textContent.items[i] as any;
+              if (!item.str) continue;
+              for (let c = 0; c < item.str.length; c++) {
+                charMap.push({ itemIdx: i, charIdx: c });
+                fullText += item.str[c];
+              }
+            }
+            const lowerFull = fullText.toLowerCase();
+            let searchIdx = lowerFull.indexOf(query);
+            let matchNum = 0;
+            while (searchIdx !== -1) {
+              const isActive = searchMatches.length > 0 &&
+                currentMatchIndex < searchMatches.length &&
+                searchMatches[currentMatchIndex].page === pageNum &&
+                matchNum === matchesOnPage.findIndex(m => m.index === searchMatches[currentMatchIndex]?.index);
+
+              const startChar = charMap[searchIdx];
+              const endChar = charMap[searchIdx + query.length - 1];
+              if (startChar && endChar) {
+                const itemIndices = new Set<number>();
+                for (let j = searchIdx; j < searchIdx + query.length && j < charMap.length; j++) {
+                  itemIndices.add(charMap[j].itemIdx);
+                }
+                for (const idx of itemIndices) {
+                  const item = textContent.items[idx] as any;
+                  if (!item.transform) continue;
+                  const tx = item.transform;
+                  const [, b, , d, e, f] = tx;
+                  const fontSize = Math.sqrt(b * b + d * d);
+                  const vp2 = viewport.convertToViewportPoint(e, f);
+                  const vpEnd = viewport.convertToViewportPoint(e + item.width, f + fontSize);
+                  const x = Math.min(vp2[0], vpEnd[0]);
+                  const y = Math.min(vp2[1], vpEnd[1]);
+                  const w = Math.abs(vpEnd[0] - vp2[0]);
+                  const h = Math.abs(vpEnd[1] - vp2[1]);
+                  ctx.save();
+                  ctx.globalAlpha = isActive ? 0.45 : 0.25;
+                  ctx.fillStyle = isActive ? '#f97316' : '#facc15';
+                  ctx.fillRect(x, y, w, h);
+                  ctx.restore();
+                }
+              }
+              matchNum++;
+              searchIdx = lowerFull.indexOf(query, searchIdx + 1);
+            }
+          }
+        }
+
+        canvas.dataset.renderedScale = String(renderScale);
+        canvas.dataset.renderedSearch = searchQuery + '|' + currentMatchIndex;
+        renderingRef.current.delete(pageNum);
+      }).catch(() => { renderingRef.current.delete(pageNum); });
+    });
+  }, [open, specsPdf, visiblePages, renderScale, pageHeight, searchQuery, searchMatches, currentMatchIndex]);
+
+  // Clean up canvases for non-visible pages (keep a buffer)
+  useEffect(() => {
+    const keep = new Set(visiblePages);
+    // Keep extra buffer
+    for (const pg of visiblePages) {
+      keep.add(pg - 1);
+      keep.add(pg + 1);
+    }
+    for (const [pg] of canvasMapRef.current) {
+      if (!keep.has(pg)) {
+        canvasMapRef.current.delete(pg);
+      }
+    }
+  }, [visiblePages]);
 
   // Page input handlers
   const commitPageInput = () => {
     const num = parseInt(pageInputValue, 10);
     if (!isNaN(num) && num >= 1 && num <= totalPages) {
       setCurrentPage(num);
+      scrollToPage(num);
     }
     setEditingPage(false);
   };
 
   const effectiveWidth = isMobile ? '100%' : panelWidth;
+  const totalHeight = totalPages > 0 && pageHeight > 0
+    ? totalPages * pageHeight + (totalPages - 1) * PAGE_GAP
+    : 0;
 
   return (
     <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
@@ -400,16 +475,16 @@ export function SpecViewer({
             <GripVertical className="h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
         )}
-         <SheetHeader className="p-3 pb-2 border-b border-border shrink-0">
-           <div className="flex items-center gap-2">
-             <BookOpen className="h-4 w-4 text-primary shrink-0" />
-             <SheetTitle className="text-sm truncate">
-               Section {sectionNumber} — {itemName}
-             </SheetTitle>
-           </div>
-           <SheetDescription className="sr-only">
-             Viewing standard specifications for {itemName}
-           </SheetDescription>
+        <SheetHeader className="p-3 pb-2 border-b border-border shrink-0">
+          <div className="flex items-center gap-2">
+            <BookOpen className="h-4 w-4 text-primary shrink-0" />
+            <SheetTitle className="text-sm truncate">
+              Section {sectionNumber} — {itemName}
+            </SheetTitle>
+          </div>
+          <SheetDescription className="sr-only">
+            Viewing standard specifications for {itemName}
+          </SheetDescription>
           <div className="flex items-center gap-1.5 mt-1 flex-wrap">
             <Badge variant="outline" className="text-[10px] font-mono">
               {itemCode}
@@ -425,16 +500,8 @@ export function SpecViewer({
         {/* Navigation toolbar */}
         <div className="flex items-center justify-between px-3 py-1.5 border-b border-border bg-muted/50 shrink-0 flex-wrap gap-1">
           <div className="flex items-center gap-1">
-            <Button
-              variant="ghost" size="icon" className="h-7 w-7"
-              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-              disabled={currentPage <= 1}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
             {editingPage ? (
               <Input
-                ref={pageInputRef}
                 value={pageInputValue}
                 onChange={(e) => setPageInputValue(e.target.value)}
                 onBlur={commitPageInput}
@@ -454,13 +521,6 @@ export function SpecViewer({
                 {currentPage} / {totalPages}
               </button>
             )}
-            <Button
-              variant="ghost" size="icon" className="h-7 w-7"
-              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-              disabled={currentPage >= totalPages}
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
           </div>
 
           <div className="flex items-center gap-1">
@@ -494,7 +554,7 @@ export function SpecViewer({
             {startPage && (
               <Button
                 variant="outline" size="sm" className="h-7 text-xs ml-1"
-                onClick={() => setCurrentPage(effectiveStartPage)}
+                onClick={() => { setCurrentPage(effectiveStartPage); scrollToPage(effectiveStartPage); }}
               >
                 Go to start
               </Button>
@@ -548,8 +608,12 @@ export function SpecViewer({
           </div>
         )}
 
-        {/* PDF canvas */}
-        <div ref={containerRef} className="flex-1 min-h-0 overflow-auto bg-muted/30 p-4" style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}>
+        {/* Continuous scroll PDF area */}
+        <div
+          ref={scrollRef}
+          className="flex-1 min-h-0 overflow-auto bg-muted/30"
+          style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}
+        >
           {!specsPdf && (
             <div className="text-sm text-muted-foreground py-8 text-center">
               No specs PDF loaded.
@@ -558,25 +622,75 @@ export function SpecViewer({
           {specsPdf && (
             <>
               {sectionNotFound && (
-                <Alert variant="default" className="mb-3">
+                <Alert variant="default" className="mx-4 mt-3 mb-1">
                   <AlertCircle className="h-4 w-4" />
                   <AlertDescription className="text-xs">
                     Section {sectionNumber} not found automatically — use search to locate it.
                   </AlertDescription>
                 </Alert>
               )}
-              <div className="flex justify-center relative">
-                {rendering && (
-                  <div className="absolute inset-0 flex items-center justify-center z-10">
-                    <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-                  </div>
-                )}
-                <canvas ref={canvasRefCb} className="shadow-md" />
+              <div
+                className="relative mx-auto"
+                style={{
+                  height: totalHeight,
+                  width: pageWidth > 0 ? pageWidth : undefined,
+                }}
+              >
+                {visiblePages.map((pageNum) => (
+                  <PageCanvas
+                    key={pageNum}
+                    pageNum={pageNum}
+                    pageHeight={pageHeight}
+                    canvasMap={canvasMapRef.current}
+                  />
+                ))}
               </div>
             </>
           )}
         </div>
       </SheetContent>
     </Sheet>
+  );
+}
+
+/** Mounts a canvas for a single page at the correct vertical offset */
+function PageCanvas({
+  pageNum,
+  pageHeight,
+  canvasMap,
+}: {
+  pageNum: number;
+  pageHeight: number;
+  canvasMap: Map<number, HTMLCanvasElement>;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const canvas = canvasMap.get(pageNum);
+    if (canvas) {
+      // Clear previous children and append
+      el.innerHTML = '';
+      canvas.style.display = 'block';
+      canvas.style.width = '100%';
+      canvas.style.height = '100%';
+      el.appendChild(canvas);
+    }
+    return () => {
+      if (el && canvas && el.contains(canvas)) {
+        el.removeChild(canvas);
+      }
+    };
+  }, [pageNum, canvasMap, canvasMap.get(pageNum)?.dataset.renderedScale]);
+
+  const top = (pageNum - 1) * (pageHeight + PAGE_GAP);
+
+  return (
+    <div
+      ref={containerRef}
+      className="absolute left-0 right-0 flex justify-center shadow-md bg-background"
+      style={{ top, height: pageHeight }}
+    />
   );
 }
