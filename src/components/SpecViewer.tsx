@@ -144,7 +144,6 @@ export function SpecViewer({
     });
 
     const onTouchStart = (e: TouchEvent) => {
-      activeTouches = e.touches.length;
       if (e.touches.length === 2) {
         e.preventDefault();
         lastDist = getDist(e.touches[0], e.touches[1]);
