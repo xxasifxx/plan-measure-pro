@@ -342,21 +342,34 @@ const Index = () => {
     if (!pdf) return;
     try {
       toast({ title: 'Extracting Pay Items...' });
-      const newItems = await extractPayItemsFromPage(pdf, currentPage, scale);
-      if (newItems.length === 0) {
-        toast({ title: 'No pay items found on this page', variant: 'destructive' });
+      // Scan current page + next 4 pages (5 total) to handle multi-page tables
+      const endPage = Math.min(currentPage + 4, pdf.numPages);
+      let allNewItems: any[] = [];
+      for (let pg = currentPage; pg <= endPage; pg++) {
+        const pageItems = await extractPayItemsFromPage(pdf, pg, scale);
+        allNewItems.push(...pageItems);
+      }
+      if (allNewItems.length === 0) {
+        toast({ title: 'No pay items found', description: `Scanned pages ${currentPage}–${endPage}.`, variant: 'destructive' });
         return;
       }
+      // Deduplicate by itemCode within the scanned pages
+      const seen = new Set<string>();
+      allNewItems = allNewItems.filter(item => {
+        if (seen.has(item.itemCode)) return false;
+        seen.add(item.itemCode);
+        return true;
+      });
       // Merge: add only items not already present (by itemCode)
       const existingCodes = new Set(payItems.map(p => p.itemCode));
-      const toAdd = newItems.filter(item => !existingCodes.has(item.itemCode));
+      const toAdd = allNewItems.filter(item => !existingCodes.has(item.itemCode));
       if (toAdd.length === 0) {
-        toast({ title: 'All items already imported', description: `${newItems.length} items found, all duplicates.` });
+        toast({ title: 'All items already imported', description: `${allNewItems.length} items found, all duplicates.` });
         return;
       }
       const merged = [...payItems, ...toAdd];
       updatePayItems(merged);
-      toast({ title: 'Pay Items Imported', description: `${toAdd.length} new items added (${payItems.length} existing kept).` });
+      toast({ title: 'Pay Items Imported', description: `${toAdd.length} new items from pages ${currentPage}–${endPage}.` });
     } catch (err) {
       toast({ title: 'Error', description: String(err), variant: 'destructive' });
     }
