@@ -676,7 +676,7 @@ const Index = () => {
           onClose={() => setShowSummary(false)}
           onExportCsv={() => exportCsv(project.annotations, payItems, project.name)}
           onExportPdf={() => exportPdfReport(project.annotations, payItems, project.name, project.contractNumber)}
-          onExportDaily={() => exportInspectorDaily(project.annotations, payItems, project.name, project.contractNumber, '', currentUserId || '')}
+          onExportDaily={(date) => exportInspectorDaily(project.annotations, payItems, project.name, project.contractNumber, profile?.full_name || '', currentUserId || '', date)}
           onUpdatePayItems={updatePayItems}
         />
       )}
