@@ -1,37 +1,24 @@
 
 
-# Relax Section Detection Heuristic
+# Fix SpecViewer Rendering & Debounce Issues
 
-## Problem
+## Problems
 
-The `buildSectionPageIndex` function requires THREE conditions to match a section start: "SECTION NNN" heading + NNN.01 subsection on the same page + dominant prefix check. This is too strict — PDF text extraction often mangles or splits text across items, so `NNN.01` may not appear as a clean token on the heading page. The user confirms there are exactly 9 top-level sections (100–900) and the current logic is missing many of them.
+1. **Canvas ref not ready on first render**: The render effect (line 243) checks `!canvasRef.current` and bails — but when the Sheet portal mounts, the canvas may not exist yet. Since `open` doesn't re-trigger after mount, the effect never re-fires and the page stays blank.
 
-## Solution — Progressive Fallback in `src/lib/specs-utils.ts`
+2. **fitToWidth fires before container has dimensions**: Called immediately on `open` change (line 348), but the Sheet is still animating — `container.clientWidth` is 0, producing a bad scale.
 
-Replace the current all-or-nothing approach with a tiered detection strategy:
+3. **fitToWidth depends on `currentPage`** (line 344) but the debounced refit effect (line 352) includes `fitToWidth` as a dependency — so every page change triggers a refit, which is unnecessary and causes scale flickering.
 
-### Tier 1 (current strict match)
-Keep existing logic as the first pass: "SECTION NNN" + NNN.01 on page + dominant prefix. This catches clean cases.
+4. **Scale changes during pinch-zoom trigger re-render of the PDF**: Every small scale delta from pinch gestures fires the render effect (depends on `scale`), causing constant expensive PDF re-renders mid-gesture.
 
-### Tier 2 (relaxed — drop NNN.01 requirement)
-Second pass for sections 100–900 not found in Tier 1: accept any page with "SECTION NNN" heading where NNN is the dominant prefix (or the only prefix). Drop the NNN.01 requirement entirely.
+## Fixes in `src/components/SpecViewer.tsx`
 
-### Tier 3 (fallback — just the heading)
-Third pass for still-missing sections: accept the first page containing "SECTION NNN" that isn't a TOC page (< 5 distinct prefixes) and has > 50 words. No subsection marker requirements at all.
+### 1. Callback ref for canvas mount detection
+Add `canvasEl` state set via a callback ref. Add it to the render effect's dependency array so rendering triggers when the canvas actually appears in the DOM.
 
-### Implementation
-- After the existing loop, check which of sections 100, 200, 300, 400, 500, 600, 700, 800, 900 are missing
-- Run Tier 2 pass over sorted pages for missing sections only
-- Run Tier 3 pass for any still missing
-- This ensures all 9 sections are found if the heading text exists anywhere in the document
+### 2. Delay fitToWidth on open
+Replace the immediate `fitToWidth()` call with `setTimeout(fitToWidth, 150)` to wait for the Sheet animation to give the container real dimensions.
 
-## Also fix SpecViewer fallback (`src/components/SpecViewer.tsx`)
-Even with better detection, some pay items may map to sub-sections not in the index. Apply the previously approved fix:
-- Use `effectiveStartPage = startPage ?? 1`
-- Always render the PDF canvas (remove the dead-end blocker)
-- Show an info banner + auto-open search pre-filled with "SECTION {num}" when section not found
-
-## Files Modified
-1. `src/lib/specs-utils.ts` — tiered detection in `buildSectionPageIndex`
-2. `src/components/SpecViewer.tsx` — fallback to page 1 + search when section still not found
-
+### 3. Remove `currentPage` from fitToWidth deps
+The fit calculation only needs the PDF page dimensions (which are the same for all pages in
