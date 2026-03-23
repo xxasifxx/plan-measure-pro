@@ -541,7 +541,8 @@ const Index = () => {
                   onExportCsv={() => exportCsv(project.annotations, payItems, project.name)}
                   onExportPdf={() => exportPdfReport(project.annotations, payItems, project.name, project.contractNumber)}
                   onExportDaily={(date) => exportInspectorDaily(project.annotations, payItems, project.name, project.contractNumber, profile?.full_name || '', currentUserId || '', date)}
-                  onUpdatePayItems={updatePayItems}
+                  onAddManualAnnotation={addAnnotation}
+                  onUpdateManualAnnotation={(id, changes) => updateAnnotation(id, changes)}
                   embedded
                 />
               ) : (
