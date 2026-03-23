@@ -154,6 +154,7 @@ const Index = () => {
           location: (a as any).location || '',
           notes: (a as any).notes || '',
           createdAt: a.created_at,
+          userId: a.user_id,
         }));
 
         // Create local project state with DB data
@@ -178,6 +179,28 @@ const Index = () => {
           const pdfDoc = await loadPdfFromUrl(signedData.signedUrl);
           setPdf(pdfDoc);
           setTotalPages(pdfDoc.numPages);
+        }
+
+        // Load specs PDF from storage if available
+        if (proj.specs_storage_path) {
+          try {
+            const { data: specsSignedData, error: specsSignErr } = await supabase.storage
+              .from('specs-pdfs')
+              .createSignedUrl(proj.specs_storage_path, 3600);
+            if (!specsSignErr && specsSignedData && !cancelled) {
+              const loadedSpecsPdf = await loadPdfFromUrl(specsSignedData.signedUrl);
+              const textMap = await extractAllText(loadedSpecsPdf);
+              const index = buildSectionPageIndex(textMap);
+              if (!cancelled) {
+                sectionPageIndexRef.current = index;
+                setSpecsPageTexts(textMap);
+                setSpecsPdf(loadedSpecsPdf);
+                setSpecsLoaded(true);
+              }
+            }
+          } catch {
+            // Specs loading is non-critical
+          }
         }
       } catch (err: any) {
         if (!cancelled) {
@@ -272,11 +295,18 @@ const Index = () => {
       setSpecsLoaded(true);
       setSpecsLoading(false);
       toast({ title: 'Specs Loaded', description: `${loadedSpecsPdf.numPages} pages, ${index.size} sections.` });
+
+      // Upload to cloud storage if project exists
+      if (projectId && currentUserId) {
+        const storagePath = `${projectId}/specs.pdf`;
+        await supabase.storage.from('specs-pdfs').upload(storagePath, file, { upsert: true });
+        await supabase.from('projects').update({ specs_storage_path: storagePath }).eq('id', projectId);
+      }
     } catch (err) {
       setSpecsLoading(false);
       toast({ title: 'Error loading specs', description: String(err), variant: 'destructive' });
     }
-  }, [toast]);
+  }, [toast, projectId, currentUserId]);
 
   const handleViewSpec = useCallback((itemCode: string) => {
     if (!specsLoaded) { toast({ title: 'No specs loaded', variant: 'destructive' }); return; }
@@ -309,20 +339,62 @@ const Index = () => {
     if (!pdf) return;
     try {
       toast({ title: 'Extracting Pay Items...' });
-      const items = await extractPayItemsFromPage(pdf, currentPage, scale);
-      updatePayItems(items);
-      toast({ title: 'Pay Items Imported', description: `${items.length} items extracted.` });
+      const newItems = await extractPayItemsFromPage(pdf, currentPage, scale);
+      if (newItems.length === 0) {
+        toast({ title: 'No pay items found on this page', variant: 'destructive' });
+        return;
+      }
+      // Merge: add only items not already present (by itemCode)
+      const existingCodes = new Set(payItems.map(p => p.itemCode));
+      const toAdd = newItems.filter(item => !existingCodes.has(item.itemCode));
+      if (toAdd.length === 0) {
+        toast({ title: 'All items already imported', description: `${newItems.length} items found, all duplicates.` });
+        return;
+      }
+      const merged = [...payItems, ...toAdd];
+      updatePayItems(merged);
+      toast({ title: 'Pay Items Imported', description: `${toAdd.length} new items added (${payItems.length} existing kept).` });
     } catch (err) {
       toast({ title: 'Error', description: String(err), variant: 'destructive' });
     }
-  }, [pdf, currentPage, scale, updatePayItems, toast]);
+  }, [pdf, currentPage, scale, payItems, updatePayItems, toast]);
 
   const handleCopyCalibration = useCallback(() => {
     if (!currentCalibration || !project) return;
-    const otherPages = [];
-    for (let i = 1; i <= totalPages; i++) { if (i !== currentPage) otherPages.push(i); }
-    copyCalibrationToPages(currentPage, otherPages);
-    toast({ title: 'Calibration copied', description: `Applied to ${otherPages.length} pages.` });
+    const input = window.prompt(
+      `Copy calibration from page ${currentPage} to which pages?\nExamples: "all", "1-20", "5,8,12"`,
+      'all'
+    );
+    if (!input) return;
+    let targetPages: number[] = [];
+    if (input.trim().toLowerCase() === 'all') {
+      for (let i = 1; i <= totalPages; i++) { if (i !== currentPage) targetPages.push(i); }
+    } else {
+      // Parse comma-separated values and ranges like "1-5,8,10-12"
+      for (const part of input.split(',')) {
+        const trimmed = part.trim();
+        const rangeMatch = trimmed.match(/^(\d+)\s*-\s*(\d+)$/);
+        if (rangeMatch) {
+          const start = parseInt(rangeMatch[1]);
+          const end = parseInt(rangeMatch[2]);
+          for (let i = Math.max(1, start); i <= Math.min(totalPages, end); i++) {
+            if (i !== currentPage) targetPages.push(i);
+          }
+        } else {
+          const num = parseInt(trimmed);
+          if (!isNaN(num) && num >= 1 && num <= totalPages && num !== currentPage) {
+            targetPages.push(num);
+          }
+        }
+      }
+      targetPages = [...new Set(targetPages)].sort((a, b) => a - b);
+    }
+    if (targetPages.length === 0) {
+      toast({ title: 'No valid pages selected', variant: 'destructive' });
+      return;
+    }
+    copyCalibrationToPages(currentPage, targetPages);
+    toast({ title: 'Calibration copied', description: `Applied to ${targetPages.length} pages.` });
   }, [currentCalibration, project, totalPages, currentPage, copyCalibrationToPages, toast]);
 
   const activePayItem = payItems.find(p => p.id === activePayItemId);
@@ -452,6 +524,7 @@ const Index = () => {
                   onExportCsv={() => exportCsv(project.annotations, payItems, project.name)}
                   onExportPdf={() => exportPdfReport(project.annotations, payItems, project.name, project.contractNumber)}
                   onExportDaily={() => exportInspectorDaily(project.annotations, payItems, project.name, project.contractNumber, '', currentUserId || '')}
+                  onUpdatePayItems={updatePayItems}
                   embedded
                 />
               ) : (
@@ -597,6 +670,7 @@ const Index = () => {
           onExportCsv={() => exportCsv(project.annotations, payItems, project.name)}
           onExportPdf={() => exportPdfReport(project.annotations, payItems, project.name, project.contractNumber)}
           onExportDaily={() => exportInspectorDaily(project.annotations, payItems, project.name, project.contractNumber, '', currentUserId || '')}
+          onUpdatePayItems={updatePayItems}
         />
       )}
 

@@ -26,6 +26,8 @@ export function useProject(options: UseProjectOptions = {}) {
 
   const undoStack = useRef<UndoAction[]>([]);
   const redoStack = useRef<UndoAction[]>([]);
+  const [undoCount, setUndoCount] = useState(0);
+  const [redoCount, setRedoCount] = useState(0);
 
   // Helper: sync to Supabase if connected
   const dbSync = useCallback(() => !!supabaseProjectId && !!userId, [supabaseProjectId, userId]);
@@ -54,12 +56,25 @@ export function useProject(options: UseProjectOptions = {}) {
     }
     undoStack.current = [];
     redoStack.current = [];
+    setUndoCount(0);
+    setRedoCount(0);
     return proj;
   }, [supabaseProjectId]);
 
+  // Debounced updated_at sync
+  const updateTimestampTimer = useRef<ReturnType<typeof setTimeout>>();
+  const touchUpdatedAt = useCallback(() => {
+    if (!supabaseProjectId || !userId) return;
+    clearTimeout(updateTimestampTimer.current);
+    updateTimestampTimer.current = setTimeout(() => {
+      supabase.from('projects').update({ updated_at: new Date().toISOString() }).eq('id', supabaseProjectId).then();
+    }, 5000);
+  }, [supabaseProjectId, userId]);
+
   const persist = useCallback((updated: Project) => {
     setProject(updated);
-  }, []);
+    touchUpdatedAt();
+  }, [touchUpdatedAt]);
 
   // ── Calibrations ──
   const setCalibration = useCallback(async (page: number, cal: Calibration) => {
@@ -124,10 +139,13 @@ export function useProject(options: UseProjectOptions = {}) {
   // ── Annotations ──
   const addAnnotation = useCallback(async (annotation: Annotation) => {
     if (!project) return;
-    const updated = { ...project, annotations: [...project.annotations, annotation] };
+    const annWithUser = { ...annotation, userId: userId || annotation.userId };
+    const updated = { ...project, annotations: [...project.annotations, annWithUser] };
     persist(updated);
     undoStack.current.push({ type: 'add', annotation });
     redoStack.current = [];
+    setUndoCount(undoStack.current.length);
+    setRedoCount(0);
 
     if (dbSync() && supabaseProjectId && userId) {
       await supabase.from('annotations').insert({
@@ -156,6 +174,8 @@ export function useProject(options: UseProjectOptions = {}) {
     persist(updated);
     undoStack.current.push({ type: 'remove', annotation: ann });
     redoStack.current = [];
+    setUndoCount(undoStack.current.length);
+    setRedoCount(0);
 
     if (dbSync()) {
       await supabase.from('annotations').delete().eq('id', id);
@@ -227,6 +247,8 @@ export function useProject(options: UseProjectOptions = {}) {
       }
     }
     redoStack.current.push(action);
+    setUndoCount(undoStack.current.length);
+    setRedoCount(redoStack.current.length);
   }, [project, persist, dbSync, supabaseProjectId, userId]);
 
   const redo = useCallback(async () => {
@@ -250,10 +272,12 @@ export function useProject(options: UseProjectOptions = {}) {
       if (dbSync()) await supabase.from('annotations').delete().eq('id', action.annotation.id);
     }
     undoStack.current.push(action);
+    setUndoCount(undoStack.current.length);
+    setRedoCount(redoStack.current.length);
   }, [project, persist, dbSync, supabaseProjectId, userId]);
 
-  const canUndo = project ? undoStack.current.length > 0 : false;
-  const canRedo = project ? redoStack.current.length > 0 : false;
+  const canUndo = !!project && undoCount > 0;
+  const canRedo = !!project && redoCount > 0;
 
   // ── Pay Items ──
   const updatePayItems = useCallback(async (items: PayItem[]) => {
@@ -326,6 +350,7 @@ export function useProject(options: UseProjectOptions = {}) {
               location: record.location || '',
               notes: record.notes || '',
               createdAt: record.created_at,
+              userId: record.user_id,
             };
             setProject(prev => prev ? { ...prev, annotations: [...prev.annotations, ann] } : prev);
           } else if (payload.eventType === 'DELETE') {
@@ -377,6 +402,8 @@ export function useProject(options: UseProjectOptions = {}) {
     setActivePayItemId('');
     undoStack.current = [];
     redoStack.current = [];
+    setUndoCount(0);
+    setRedoCount(0);
   }, []);
 
   const currentCalibration = project?.calibrations[currentPage] || null;

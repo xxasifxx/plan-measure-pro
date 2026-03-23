@@ -15,6 +15,7 @@ interface Props {
   onExportCsv: () => void;
   onExportPdf: () => void;
   onExportDaily?: () => void;
+  onUpdatePayItems?: (items: PayItem[]) => void;
   embedded?: boolean;
 }
 
@@ -29,7 +30,7 @@ interface SummaryRow {
 
 export function SummaryPanel({
   annotations, payItems, projectName, contractNumber,
-  onClose, onExportCsv, onExportPdf, onExportDaily, embedded,
+  onClose, onExportCsv, onExportPdf, onExportDaily, onUpdatePayItems, embedded,
 }: Props) {
   const [manualQuantities, setManualQuantities] = useState<Record<string, number>>({});
 
@@ -72,6 +73,11 @@ export function SummaryPanel({
 
   const updateManualQty = (itemId: string, value: number) => {
     setManualQuantities(prev => ({ ...prev, [itemId]: value }));
+    // Persist by updating contractQuantity on the pay item
+    if (onUpdatePayItems) {
+      const updated = payItems.map(p => p.id === itemId ? { ...p, contractQuantity: value } : p);
+      onUpdatePayItems(updated);
+    }
   };
 
   const content = (
