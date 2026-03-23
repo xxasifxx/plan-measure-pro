@@ -158,11 +158,11 @@ export function SpecViewer({
         const center = getCenter(e.touches[0], e.touches[1]);
 
         // Pinch zoom
-        const ratio = dist / lastDist;
+        const ratio = lastDist > 0 ? dist / lastDist : 1;
         if (Math.abs(ratio - 1) > 0.01) {
           setScale(s => Math.min(4, Math.max(0.5, Math.round(s * ratio * 100) / 100)));
-          lastDist = dist;
         }
+        lastDist = dist;
 
         // Two-finger pan
         const dx = center.x - lastCenter.x;
