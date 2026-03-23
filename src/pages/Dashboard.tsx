@@ -76,6 +76,8 @@ export default function Dashboard() {
     }
   }, [profile]);
 
+  // Pass roles to WelcomeCarousel - find where it's rendered
+
   // Guided tour
   const dashboardTour = useTour('dashboard');
   const dashboardSteps: TourStep[] = [
