@@ -584,38 +584,60 @@ export function PdfCanvas({
     return () => window.removeEventListener('keydown', handler);
   }, [selectedAnnotationId, toolMode, onRemoveAnnotation, onSelectAnnotation]);
 
-  // ──── Touch gesture handlers (pinch-to-zoom + two-finger pan) ────
-  const handleTouchStart = useCallback((e: ReactTouchEvent) => {
+  // ──── Touch gesture handlers ────
+  // Single-finger: tap → click, drag → draw or pan
+  // Two-finger: pinch-zoom + pan (always, regardless of tool)
+
+  const handleOverlayTouchStart = useCallback((e: React.TouchEvent) => {
+    const ts = touchStateRef.current;
+
     if (e.touches.length === 2) {
       e.preventDefault();
       const t0 = e.touches[0], t1 = e.touches[1];
       const dist = Math.hypot(t1.clientX - t0.clientX, t1.clientY - t0.clientY);
       const center = { x: (t0.clientX + t1.clientX) / 2, y: (t0.clientY + t1.clientY) / 2 };
-      touchStateRef.current = {
-        lastTouches: [{ x: t0.clientX, y: t0.clientY }, { x: t1.clientX, y: t1.clientY }],
-        lastDist: dist,
-        lastCenter: center,
-        isTwoFinger: true,
-      };
+      ts.isTwoFinger = true;
+      ts.lastDist = dist;
+      ts.lastCenter = center;
+      ts.lastTouches = [{ x: t0.clientX, y: t0.clientY }, { x: t1.clientX, y: t1.clientY }];
+      // Cancel any in-progress single-finger action
+      ts.startPos = null;
+      ts.dragging = false;
+      ts.dragFirstPointPlaced = false;
+      return;
     }
-  }, []);
 
-  const handleTouchMove = useCallback((e: ReactTouchEvent) => {
+    if (e.touches.length === 1) {
+      const touch = e.touches[0];
+      ts.startPos = getTouchCanvasPos(touch);
+      ts.startTime = Date.now();
+      ts.dragging = false;
+      ts.dragFirstPointPlaced = false;
+      ts.isTwoFinger = false;
+
+      // For pan/select, start panning immediately
+      if (toolMode === 'pan' || toolMode === 'select') {
+        panStart.current = { x: touch.clientX, y: touch.clientY };
+      }
+    }
+  }, [getTouchCanvasPos, toolMode]);
+
+  const handleOverlayTouchMove = useCallback((e: React.TouchEvent) => {
     const ts = touchStateRef.current;
+
+    // Two-finger: pinch-zoom + pan (always)
     if (e.touches.length === 2 && ts.isTwoFinger) {
       e.preventDefault();
       const t0 = e.touches[0], t1 = e.touches[1];
       const dist = Math.hypot(t1.clientX - t0.clientX, t1.clientY - t0.clientY);
       const center = { x: (t0.clientX + t1.clientX) / 2, y: (t0.clientY + t1.clientY) / 2 };
 
-      // Pinch zoom
       if (ts.lastDist > 0 && onScaleChange) {
         const ratio = dist / ts.lastDist;
         const newScale = Math.min(4, Math.max(0.25, scale * ratio));
         onScaleChange(Math.round(newScale * 100) / 100);
       }
 
-      // Two-finger pan
       const dx = center.x - ts.lastCenter.x;
       const dy = center.y - ts.lastCenter.y;
       setPanOffset(prev => ({ x: prev.x + dx, y: prev.y + dy }));
@@ -623,14 +645,87 @@ export function PdfCanvas({
       ts.lastDist = dist;
       ts.lastCenter = center;
       ts.lastTouches = [{ x: t0.clientX, y: t0.clientY }, { x: t1.clientX, y: t1.clientY }];
+      return;
     }
-  }, [scale, onScaleChange]);
 
-  const handleTouchEnd = useCallback((e: ReactTouchEvent) => {
-    if (e.touches.length < 2) {
-      touchStateRef.current.isTwoFinger = false;
+    // Single finger
+    if (e.touches.length === 1 && !ts.isTwoFinger && ts.startPos) {
+      const touch = e.touches[0];
+      const currentPos = getTouchCanvasPos(touch);
+      const moveDistance = distancePx(ts.startPos, currentPos);
+
+      // Threshold to distinguish tap from drag
+      if (!ts.dragging && moveDistance > 10) {
+        ts.dragging = true;
+
+        // For line/calibrate tools, place first point at drag start
+        if ((toolMode === 'line' || toolMode === 'calibrate') && !ts.dragFirstPointPlaced) {
+          handleClickAtPos(ts.startPos);
+          ts.dragFirstPointPlaced = true;
+        }
+      }
+
+      if (ts.dragging) {
+        e.preventDefault();
+
+        // Pan/select/count/polygon: single-finger drag = pan
+        if (toolMode === 'pan' || toolMode === 'select' || toolMode === 'count' || toolMode === 'polygon') {
+          const dx = touch.clientX - panStart.current.x;
+          const dy = touch.clientY - panStart.current.y;
+          setPanOffset(prev => ({ x: prev.x + dx, y: prev.y + dy }));
+          panStart.current = { x: touch.clientX, y: touch.clientY };
+        }
+
+        // Line/calibrate: update rubber-band visual
+        if (toolMode === 'line' || toolMode === 'calibrate') {
+          setMousePos(currentPos);
+        }
+      }
     }
-  }, []);
+  }, [scale, onScaleChange, getTouchCanvasPos, toolMode, handleClickAtPos]);
+
+  const handleOverlayTouchEnd = useCallback((e: React.TouchEvent) => {
+    const ts = touchStateRef.current;
+
+    if (e.touches.length < 2) {
+      ts.isTwoFinger = false;
+    }
+
+    // Only process single-finger end when no fingers remain
+    if (e.touches.length === 0 && ts.startPos) {
+      const touch = e.changedTouches[0];
+      const endPos = getTouchCanvasPos(touch);
+
+      if (!ts.dragging) {
+        // It was a tap
+        const now = Date.now();
+        const timeSinceLastTap = now - ts.lastTapTime;
+
+        if (timeSinceLastTap < 300) {
+          // Double-tap → close polygon
+          handleDoubleClickAtPos();
+          ts.lastTapTime = 0;
+        } else {
+          // Single tap → place point
+          handleClickAtPos(endPos);
+          ts.lastTapTime = now;
+        }
+      } else {
+        // It was a drag
+        if ((toolMode === 'line' || toolMode === 'calibrate') && ts.dragFirstPointPlaced) {
+          // Place second point at drag end → complete the line/calibration
+          handleClickAtPos(endPos);
+        }
+      }
+
+      // Suppress the ghost click event
+      ts.suppressClick = true;
+      ts.startPos = null;
+      ts.dragging = false;
+      ts.dragFirstPointPlaced = false;
+      setMousePos(null);
+    }
+  }, [getTouchCanvasPos, handleClickAtPos, handleDoubleClickAtPos, toolMode]);
 
   // Prevent default touch zoom on the container (only multi-touch)
   useEffect(() => {
