@@ -24,8 +24,9 @@ import { exportCsv, exportPdfReport, exportInspectorDaily } from '@/lib/export-u
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import type { TocEntry } from '@/types/project';
-import { Sun, Moon, ArrowLeft, Loader2, HelpCircle, FileSpreadsheet } from 'lucide-react';
+import { Sun, Moon, ArrowLeft, Loader2, HelpCircle, FileSpreadsheet, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { TeamManager } from '@/components/TeamManager';
 
 const Index = () => {
   const { projectId } = useParams<{ projectId: string }>();
