@@ -603,18 +603,21 @@ export function PdfCanvas({
     }
   }, []);
 
-  // Prevent default touch zoom on the container
+  // Prevent default touch zoom on the container (only multi-touch)
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-    const prevent = (e: TouchEvent) => {
+    const preventMove = (e: TouchEvent) => {
       if (e.touches.length >= 2) e.preventDefault();
     };
-    container.addEventListener('touchmove', prevent, { passive: false });
-    container.addEventListener('touchstart', prevent, { passive: false });
+    const preventStart = (e: TouchEvent) => {
+      if (e.touches.length >= 2) e.preventDefault();
+    };
+    container.addEventListener('touchmove', preventMove, { passive: false });
+    container.addEventListener('touchstart', preventStart, { passive: false });
     return () => {
-      container.removeEventListener('touchmove', prevent);
-      container.removeEventListener('touchstart', prevent);
+      container.removeEventListener('touchmove', preventMove);
+      container.removeEventListener('touchstart', preventStart);
     };
   }, []);
 
