@@ -15,6 +15,7 @@ interface Props {
   onExportCsv: () => void;
   onExportPdf: () => void;
   onExportDaily?: () => void;
+  onUpdatePayItems?: (items: PayItem[]) => void;
   embedded?: boolean;
 }
 
