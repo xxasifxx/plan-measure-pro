@@ -738,8 +738,8 @@ export function PdfCanvas({
           const x2 = Math.max(tocDragStart.x, endPos.x);
           const y2 = Math.max(tocDragStart.y, endPos.y);
           if (x2 - x1 > 20 && y2 - y1 > 20) {
+            // Just show the rect for confirmation — don't call onTocRegionSelected
             setTocRect({ x1, y1, x2, y2 });
-            onTocRegionSelected?.({ x1, y1, x2, y2 });
           }
           setTocDragStart(null);
           setTocDragEnd(null);
