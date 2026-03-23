@@ -309,13 +309,25 @@ const Index = () => {
     if (!pdf) return;
     try {
       toast({ title: 'Extracting Pay Items...' });
-      const items = await extractPayItemsFromPage(pdf, currentPage, scale);
-      updatePayItems(items);
-      toast({ title: 'Pay Items Imported', description: `${items.length} items extracted.` });
+      const newItems = await extractPayItemsFromPage(pdf, currentPage, scale);
+      if (newItems.length === 0) {
+        toast({ title: 'No pay items found on this page', variant: 'destructive' });
+        return;
+      }
+      // Merge: add only items not already present (by itemCode)
+      const existingCodes = new Set(payItems.map(p => p.itemCode));
+      const toAdd = newItems.filter(item => !existingCodes.has(item.itemCode));
+      if (toAdd.length === 0) {
+        toast({ title: 'All items already imported', description: `${newItems.length} items found, all duplicates.` });
+        return;
+      }
+      const merged = [...payItems, ...toAdd];
+      updatePayItems(merged);
+      toast({ title: 'Pay Items Imported', description: `${toAdd.length} new items added (${payItems.length} existing kept).` });
     } catch (err) {
       toast({ title: 'Error', description: String(err), variant: 'destructive' });
     }
-  }, [pdf, currentPage, scale, updatePayItems, toast]);
+  }, [pdf, currentPage, scale, payItems, updatePayItems, toast]);
 
   const handleCopyCalibration = useCallback(() => {
     if (!currentCalibration || !project) return;
