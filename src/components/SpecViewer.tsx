@@ -36,15 +36,22 @@ function getStoredPanelWidth(): number {
 export function SpecViewer({
   open, onClose, sectionNumber, itemCode, itemName, specsPdf, specsPageTexts, startPage,
 }: Props) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
   const [currentPage, setCurrentPage] = useState(1);
   const [rendering, setRendering] = useState(false);
   const [scale, setScale] = useState(1.5);
+  const [renderScale, setRenderScale] = useState(1.5);
   const [panelWidth, setPanelWidth] = useState(getStoredPanelWidth);
   const draggingRef = useRef(false);
   const refitTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const scaleTimerRef = useRef<ReturnType<typeof setTimeout>>();
+
+  // Callback ref so rendering triggers when canvas mounts in portal
+  const [canvasEl, setCanvasEl] = useState<HTMLCanvasElement | null>(null);
+  const canvasRefCb = useCallback((node: HTMLCanvasElement | null) => {
+    setCanvasEl(node);
+  }, []);
 
   // Search state
   const [searchOpen, setSearchOpen] = useState(false);
