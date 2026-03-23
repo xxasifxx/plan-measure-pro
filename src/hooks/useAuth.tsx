@@ -42,7 +42,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(session?.user ?? null);
       if (session?.user) {
         // Defer to avoid deadlock
-        setTimeout(() => fetchRolesAndProfile(session.user.id), 0);
+        setTimeout(async () => {
+          // Try to assign owner role on first login (no-op if already has roles)
+          await supabase.rpc('assign_owner_role', { _user_id: session.user.id }).catch(() => {});
+          fetchRolesAndProfile(session.user.id);
+        }, 0);
       } else {
         setRoles([]);
         setProfile(null);

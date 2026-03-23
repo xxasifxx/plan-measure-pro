@@ -167,9 +167,18 @@ export default function Dashboard() {
             </div>
             <p className="text-sm font-medium text-foreground mb-1">No projects yet</p>
             <p className="text-xs text-muted-foreground max-w-xs">
-              {isManager
-                ? 'Create a new project to get started with your quantity takeoff.'
-                : 'You haven\'t been assigned to any projects yet. Ask your project manager to add you.'}
+              {isAdmin
+                ? 'Create a project or invite your team from the Admin panel.'
+                : isManager
+                  ? 'Create a new project to get started with your quantity takeoff.'
+                  : (
+                    <>
+                      You haven't been assigned to any projects yet.
+                      <br />
+                      Share your email with your project manager so they can add you:
+                      <span className="block mt-1 font-medium text-foreground select-all">{user?.email}</span>
+                    </>
+                  )}
             </p>
             {(isManager || isAdmin) && (
               <Button size="sm" className="mt-4" onClick={() => setShowCreate(true)}>
