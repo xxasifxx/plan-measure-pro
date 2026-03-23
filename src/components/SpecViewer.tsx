@@ -245,17 +245,24 @@ export function SpecViewer({
     }
   }, [open, effectiveStartPage, sectionNotFound, sectionNumber]);
 
+  // Debounce scale → renderScale
+  useEffect(() => {
+    clearTimeout(scaleTimerRef.current);
+    scaleTimerRef.current = setTimeout(() => setRenderScale(scale), 150);
+    return () => clearTimeout(scaleTimerRef.current);
+  }, [scale]);
+
   // Render page + highlight search matches
   useEffect(() => {
-    if (!open || !specsPdf || !canvasRef.current) return;
+    if (!open || !specsPdf || !canvasEl) return;
     let cancelled = false;
     setRendering(true);
 
     specsPdf.getPage(currentPage).then(async (page) => {
       if (cancelled) return;
-      const canvas = canvasRef.current;
+      const canvas = canvasEl;
       if (!canvas) return;
-      const viewport = page.getViewport({ scale });
+      const viewport = page.getViewport({ scale: renderScale });
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
