@@ -676,7 +676,7 @@ const Index = () => {
                 onScaleChange={setScale}
                 toolMode={toolMode}
                 calibration={currentCalibration}
-                annotations={project?.annotations || []}
+                annotations={(project?.annotations || []).filter(a => a.type !== 'manual')}
                 activePayItemId={activePayItemId}
                 payItems={payItems}
                 onCalibrate={cal => setCalibration(currentPage, cal)}
