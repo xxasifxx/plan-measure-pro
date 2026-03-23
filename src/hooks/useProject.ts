@@ -128,7 +128,8 @@ export function useProject(options: UseProjectOptions = {}) {
   // ── Annotations ──
   const addAnnotation = useCallback(async (annotation: Annotation) => {
     if (!project) return;
-    const updated = { ...project, annotations: [...project.annotations, annotation] };
+    const annWithUser = { ...annotation, userId: userId || annotation.userId };
+    const updated = { ...project, annotations: [...project.annotations, annWithUser] };
     persist(updated);
     undoStack.current.push({ type: 'add', annotation });
     redoStack.current = [];
