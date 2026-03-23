@@ -154,7 +154,7 @@ const Index = () => {
           location: (a as any).location || '',
           notes: (a as any).notes || '',
           createdAt: a.created_at,
-        }));
+          userId: a.user_id,
 
         // Create local project state with DB data
         initProject(
