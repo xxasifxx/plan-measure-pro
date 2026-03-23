@@ -534,7 +534,7 @@ export function SpecViewer({
         )}
 
         {/* PDF canvas */}
-        <div ref={containerRef} className="flex-1 min-h-0 overflow-auto bg-muted/30 p-4" style={{ touchAction: 'none' }}>
+        <div ref={containerRef} className="flex-1 min-h-0 overflow-auto bg-muted/30 p-4" style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}>
           {!specsPdf && (
             <div className="text-sm text-muted-foreground py-8 text-center">
               No specs PDF loaded.
