@@ -176,7 +176,6 @@ export function SpecViewer({
     };
 
     const onTouchEnd = (e: TouchEvent) => {
-      activeTouches = e.touches.length;
       if (e.touches.length < 2) {
         lastDist = 0;
       }
