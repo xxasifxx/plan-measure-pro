@@ -72,6 +72,7 @@ export interface Annotation {
   location?: string; // e.g. "Station 42+00, NB lane"
   notes?: string; // inspector remarks
   createdAt?: string;
+  userId?: string; // the user who created this annotation
 }
 
 export interface Project {
