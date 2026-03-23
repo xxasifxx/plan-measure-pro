@@ -127,6 +127,73 @@ export function SpecViewer({
     return () => container.removeEventListener('wheel', handler);
   }, [open]);
 
+  // Two-finger touch zoom & pan
+  useEffect(() => {
+    if (!open) return;
+    const container = containerRef.current;
+    if (!container) return;
+
+    let lastDist = 0;
+    let lastCenter = { x: 0, y: 0 };
+    let activeTouches = 0;
+
+    const getDist = (t1: Touch, t2: Touch) =>
+      Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+    const getCenter = (t1: Touch, t2: Touch) => ({
+      x: (t1.clientX + t2.clientX) / 2,
+      y: (t1.clientY + t2.clientY) / 2,
+    });
+
+    const onTouchStart = (e: TouchEvent) => {
+      activeTouches = e.touches.length;
+      if (e.touches.length === 2) {
+        e.preventDefault();
+        lastDist = getDist(e.touches[0], e.touches[1]);
+        lastCenter = getCenter(e.touches[0], e.touches[1]);
+      }
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (e.touches.length === 2) {
+        e.preventDefault();
+        const dist = getDist(e.touches[0], e.touches[1]);
+        const center = getCenter(e.touches[0], e.touches[1]);
+
+        // Pinch zoom
+        const ratio = dist / lastDist;
+        if (Math.abs(ratio - 1) > 0.01) {
+          setScale(s => Math.min(4, Math.max(0.5, Math.round(s * ratio * 100) / 100)));
+          lastDist = dist;
+        }
+
+        // Two-finger pan
+        const dx = center.x - lastCenter.x;
+        const dy = center.y - lastCenter.y;
+        if (Math.abs(dx) > 1 || Math.abs(dy) > 1) {
+          container.scrollLeft -= dx;
+          container.scrollTop -= dy;
+          lastCenter = center;
+        }
+      }
+    };
+
+    const onTouchEnd = (e: TouchEvent) => {
+      activeTouches = e.touches.length;
+      if (e.touches.length < 2) {
+        lastDist = 0;
+      }
+    };
+
+    container.addEventListener('touchstart', onTouchStart, { passive: false });
+    container.addEventListener('touchmove', onTouchMove, { passive: false });
+    container.addEventListener('touchend', onTouchEnd);
+    return () => {
+      container.removeEventListener('touchstart', onTouchStart);
+      container.removeEventListener('touchmove', onTouchMove);
+      container.removeEventListener('touchend', onTouchEnd);
+    };
+  }, [open]);
+
   // Persist panel width
   useEffect(() => {
     if (!isMobile) {
@@ -470,7 +537,7 @@ export function SpecViewer({
         )}
 
         {/* PDF canvas */}
-        <div ref={containerRef} className="flex-1 min-h-0 overflow-auto bg-muted/30 p-4">
+        <div ref={containerRef} className="flex-1 min-h-0 overflow-auto bg-muted/30 p-4" style={{ touchAction: 'none' }}>
           {!specsPdf && (
             <div className="text-sm text-muted-foreground py-8 text-center">
               No specs PDF loaded.
