@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, GripVertical, Loader2, Search, X, ZoomIn, ZoomOut } from 'lucide-react';
+import { AlertCircle, BookOpen, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, GripVertical, Loader2, Search, X, ZoomIn, ZoomOut } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface SearchMatch {
