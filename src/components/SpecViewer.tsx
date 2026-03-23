@@ -155,11 +155,24 @@ export function SpecViewer({
     document.addEventListener('mouseup', onUp);
   }, [panelWidth]);
 
-  // Reset on open
+  // Reset on open — fallback to page 1 if section not found
+  const effectiveStartPage = startPage ?? 1;
+  const sectionNotFound = specsPdf && !startPage;
+
   useEffect(() => {
-    if (open && startPage) setCurrentPage(startPage);
-    if (open) { setSearchOpen(false); setSearchQuery(''); }
-  }, [open, startPage]);
+    if (open) {
+      setCurrentPage(effectiveStartPage);
+      if (sectionNotFound) {
+        // Auto-open search pre-filled with the section number
+        setSearchOpen(true);
+        setSearchQuery(sectionNumber ? `SECTION ${sectionNumber}` : '');
+        setTimeout(() => searchInputRef.current?.focus(), 100);
+      } else {
+        setSearchOpen(false);
+        setSearchQuery('');
+      }
+    }
+  }, [open, effectiveStartPage, sectionNotFound, sectionNumber]);
 
   // Render page + highlight search matches
   useEffect(() => {
