@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, GripVertical, Loader2, Search, X, ZoomIn, ZoomOut } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { AlertCircle, BookOpen, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, GripVertical, Loader2, Search, X, ZoomIn, ZoomOut } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface SearchMatch {
@@ -154,11 +155,24 @@ export function SpecViewer({
     document.addEventListener('mouseup', onUp);
   }, [panelWidth]);
 
-  // Reset on open
+  // Reset on open — fallback to page 1 if section not found
+  const effectiveStartPage = startPage ?? 1;
+  const sectionNotFound = specsPdf && !startPage;
+
   useEffect(() => {
-    if (open && startPage) setCurrentPage(startPage);
-    if (open) { setSearchOpen(false); setSearchQuery(''); }
-  }, [open, startPage]);
+    if (open) {
+      setCurrentPage(effectiveStartPage);
+      if (sectionNotFound) {
+        // Auto-open search pre-filled with the section number
+        setSearchOpen(true);
+        setSearchQuery(sectionNumber ? `SECTION ${sectionNumber}` : '');
+        setTimeout(() => searchInputRef.current?.focus(), 100);
+      } else {
+        setSearchOpen(false);
+        setSearchQuery('');
+      }
+    }
+  }, [open, effectiveStartPage, sectionNotFound, sectionNumber]);
 
   // Render page + highlight search matches
   useEffect(() => {
@@ -307,13 +321,16 @@ export function SpecViewer({
             <GripVertical className="h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
         )}
-        <SheetHeader className="p-3 pb-2 border-b border-border shrink-0">
-          <div className="flex items-center gap-2">
-            <BookOpen className="h-4 w-4 text-primary shrink-0" />
-            <SheetTitle className="text-sm truncate">
-              Section {sectionNumber} — {itemName}
-            </SheetTitle>
-          </div>
+         <SheetHeader className="p-3 pb-2 border-b border-border shrink-0">
+           <div className="flex items-center gap-2">
+             <BookOpen className="h-4 w-4 text-primary shrink-0" />
+             <SheetTitle className="text-sm truncate">
+               Section {sectionNumber} — {itemName}
+             </SheetTitle>
+           </div>
+           <SheetDescription className="sr-only">
+             Viewing standard specifications for {itemName}
+           </SheetDescription>
           <div className="flex items-center gap-1.5 mt-1 flex-wrap">
             <Badge variant="outline" className="text-[10px] font-mono">
               {itemCode}
@@ -398,7 +415,7 @@ export function SpecViewer({
             {startPage && (
               <Button
                 variant="outline" size="sm" className="h-7 text-xs ml-1"
-                onClick={() => setCurrentPage(startPage)}
+                onClick={() => setCurrentPage(effectiveStartPage)}
               >
                 Go to start
               </Button>
@@ -459,20 +476,25 @@ export function SpecViewer({
               No specs PDF loaded.
             </div>
           )}
-          {!startPage && specsPdf && (
-            <div className="text-sm text-muted-foreground py-8 text-center">
-              Could not find Section {sectionNumber} in the specs document.
-            </div>
-          )}
-          {specsPdf && startPage && (
-            <div className="flex justify-center relative">
-              {rendering && (
-                <div className="absolute inset-0 flex items-center justify-center z-10">
-                  <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-                </div>
+          {specsPdf && (
+            <>
+              {sectionNotFound && (
+                <Alert variant="default" className="mb-3">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription className="text-xs">
+                    Section {sectionNumber} not found automatically — use search to locate it.
+                  </AlertDescription>
+                </Alert>
               )}
-              <canvas ref={canvasRef} className="shadow-md" />
-            </div>
+              <div className="flex justify-center relative">
+                {rendering && (
+                  <div className="absolute inset-0 flex items-center justify-center z-10">
+                    <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                  </div>
+                )}
+                <canvas ref={canvasRef} className="shadow-md" />
+              </div>
+            </>
           )}
         </div>
       </SheetContent>
