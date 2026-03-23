@@ -25,6 +25,7 @@ interface Props {
   externalContainerRef?: React.RefObject<HTMLDivElement>;
   selectedAnnotationId: string | null;
   onSelectAnnotation: (id: string | null) => void;
+  isMobile?: boolean;
 }
 
 const HIT_TOLERANCE = 8; // pixels at scale=1
