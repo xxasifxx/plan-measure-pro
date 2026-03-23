@@ -342,7 +342,7 @@ export function SpecViewer({
     });
 
     return () => { cancelled = true; };
-  }, [open, specsPdf, currentPage, scale, searchQuery, searchMatches, currentMatchIndex]);
+  }, [open, specsPdf, currentPage, renderScale, searchQuery, searchMatches, currentMatchIndex, canvasEl]);
 
   // Fit width on open & debounced refit on panel resize
   const fitToWidth = useCallback(() => {
