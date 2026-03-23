@@ -61,9 +61,20 @@ export function useProject(options: UseProjectOptions = {}) {
     return proj;
   }, [supabaseProjectId]);
 
+  // Debounced updated_at sync
+  const updateTimestampTimer = useRef<ReturnType<typeof setTimeout>>();
+  const touchUpdatedAt = useCallback(() => {
+    if (!supabaseProjectId || !userId) return;
+    clearTimeout(updateTimestampTimer.current);
+    updateTimestampTimer.current = setTimeout(() => {
+      supabase.from('projects').update({ updated_at: new Date().toISOString() }).eq('id', supabaseProjectId).then();
+    }, 5000);
+  }, [supabaseProjectId, userId]);
+
   const persist = useCallback((updated: Project) => {
     setProject(updated);
-  }, []);
+    touchUpdatedAt();
+  }, [touchUpdatedAt]);
 
   // ── Calibrations ──
   const setCalibration = useCallback(async (page: number, cal: Calibration) => {
