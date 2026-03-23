@@ -790,6 +790,7 @@ export function PdfCanvas({
         if (externalContainerRef) (externalContainerRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
       }}
       className="flex-1 overflow-auto bg-muted/50 relative min-h-0"
+      style={{ touchAction: 'none', overscrollBehavior: 'none', WebkitOverflowScrolling: 'auto' } as React.CSSProperties}
       onMouseUp={handleMouseUp}
     >
       <div
