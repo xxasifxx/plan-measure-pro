@@ -31,7 +31,7 @@ import { TeamManager } from '@/components/TeamManager';
 const Index = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
-  const { isInspector, isManager, isAdmin } = useAuth();
+  const { isInspector, isManager, isAdmin, profile } = useAuth();
   const isReadOnly = isInspector && !isManager && !isAdmin;
 
   // Get current user for Supabase persistence
