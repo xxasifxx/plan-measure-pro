@@ -347,15 +347,15 @@ export function SpecViewer({
   // Fit width on open & debounced refit on panel resize
   const fitToWidth = useCallback(() => {
     if (!specsPdf || !containerRef.current) return;
-    specsPdf.getPage(currentPage || startPage || 1).then((page) => {
+    specsPdf.getPage(1).then((page) => {
       const container = containerRef.current;
-      if (!container) return;
+      if (!container || container.clientWidth === 0) return;
       const viewport = page.getViewport({ scale: 1 });
       const containerWidth = container.clientWidth - 32;
       const fitScale = Math.min(containerWidth / viewport.width, 3);
       setScale(Math.max(0.5, Math.round(fitScale * 100) / 100));
     });
-  }, [specsPdf, currentPage, startPage]);
+  }, [specsPdf]);
 
   useEffect(() => {
     if (!open || !specsPdf) return;
