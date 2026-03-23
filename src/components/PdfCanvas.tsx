@@ -687,6 +687,11 @@ export function PdfCanvas({
         if (toolMode === 'line' || toolMode === 'calibrate') {
           setMousePos(currentPos);
         }
+
+        // TOC select: update drag rectangle
+        if (toolMode === 'tocSelect') {
+          setTocDragEnd(currentPos);
+        }
       }
     }
   }, [scale, onScaleChange, getTouchCanvasPos, toolMode, handleClickAtPos]);
