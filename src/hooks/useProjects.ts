@@ -14,6 +14,8 @@ export interface ProjectRow {
   updated_at: string;
   annotation_count?: number;
   member_role?: string;
+  member_count?: number;
+  latest_annotation_at?: string | null;
 }
 
 export function useProjects() {
@@ -66,19 +68,40 @@ export function useProjects() {
         })),
       ];
 
-      // Fetch annotation counts
+      // Fetch annotation counts and latest annotation date
       const projectIds = allProjects.map(p => p.id);
       if (projectIds.length > 0) {
         const { data: annotations } = await supabase
           .from('annotations')
-          .select('project_id')
+          .select('project_id, created_at')
           .in('project_id', projectIds);
 
         const counts: Record<string, number> = {};
+        const latest: Record<string, string> = {};
         (annotations || []).forEach(a => {
           counts[a.project_id] = (counts[a.project_id] || 0) + 1;
+          if (!latest[a.project_id] || a.created_at > latest[a.project_id]) {
+            latest[a.project_id] = a.created_at;
+          }
         });
-        allProjects.forEach(p => { p.annotation_count = counts[p.id] || 0; });
+        allProjects.forEach(p => {
+          p.annotation_count = counts[p.id] || 0;
+          p.latest_annotation_at = latest[p.id] || null;
+        });
+
+        // Fetch member counts for owned projects
+        const ownedIds = allProjects.filter(p => p.member_role === 'owner').map(p => p.id);
+        if (ownedIds.length > 0) {
+          const { data: members } = await supabase
+            .from('project_members')
+            .select('project_id')
+            .in('project_id', ownedIds);
+          const memberCounts: Record<string, number> = {};
+          (members || []).forEach(m => {
+            memberCounts[m.project_id] = (memberCounts[m.project_id] || 0) + 1;
+          });
+          allProjects.forEach(p => { p.member_count = memberCounts[p.id] || 0; });
+        }
       }
 
       return allProjects;

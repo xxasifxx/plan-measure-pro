@@ -1,10 +1,14 @@
-import { X, Download, FileText, FileSpreadsheet } from 'lucide-react';
+import { X, Download, FileText, FileSpreadsheet, CalendarIcon } from 'lucide-react';
 import { useState } from 'react';
+import { format } from 'date-fns';
 import type { Annotation, PayItem } from '@/types/project';
 import { UNIT_LABELS, getPayItemSection } from '@/types/project';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
 import { sfToCY, sfToSY } from '@/lib/geometry';
+import { cn } from '@/lib/utils';
 
 interface Props {
   annotations: Annotation[];
@@ -14,7 +18,7 @@ interface Props {
   onClose: () => void;
   onExportCsv: () => void;
   onExportPdf: () => void;
-  onExportDaily?: () => void;
+  onExportDaily?: (date?: Date) => void;
   onUpdatePayItems?: (items: PayItem[]) => void;
   embedded?: boolean;
 }
@@ -26,6 +30,8 @@ interface SummaryRow {
   extendedCost: number;
   count: number;
   manualQuantity?: number;
+  contractQuantity?: number;
+  variancePercent?: number;
 }
 
 export function SummaryPanel({
@@ -33,6 +39,7 @@ export function SummaryPanel({
   onClose, onExportCsv, onExportPdf, onExportDaily, onUpdatePayItems, embedded,
 }: Props) {
   const [manualQuantities, setManualQuantities] = useState<Record<string, number>>({});
+  const [dailyDate, setDailyDate] = useState<Date>(new Date());
 
   const rows: SummaryRow[] = payItems.map(item => {
     if (!item.drawable) {
@@ -44,6 +51,7 @@ export function SummaryPanel({
         extendedCost: manualQty * item.unitPrice,
         count: 0,
         manualQuantity: manualQty,
+        contractQuantity: item.contractQuantity,
       };
     }
 
@@ -60,12 +68,19 @@ export function SummaryPanel({
       totalQuantity += qty;
     }
 
+    const contractQty = item.contractQuantity;
+    const variancePercent = contractQty && contractQty > 0
+      ? ((totalQuantity - contractQty) / contractQty) * 100
+      : undefined;
+
     return {
       payItem: item,
       totalQuantity,
       displayUnit: UNIT_LABELS[item.unit],
       extendedCost: totalQuantity * item.unitPrice,
       count: itemAnns.length,
+      contractQuantity: contractQty,
+      variancePercent,
     };
   }).filter(r => r.count > 0 || !r.payItem.drawable);
 
@@ -73,11 +88,17 @@ export function SummaryPanel({
 
   const updateManualQty = (itemId: string, value: number) => {
     setManualQuantities(prev => ({ ...prev, [itemId]: value }));
-    // Persist by updating contractQuantity on the pay item
     if (onUpdatePayItems) {
       const updated = payItems.map(p => p.id === itemId ? { ...p, contractQuantity: value } : p);
       onUpdatePayItems(updated);
     }
+  };
+
+  const getVarianceColor = (pct: number | undefined) => {
+    if (pct === undefined) return '';
+    if (pct <= 0) return 'text-green-600 dark:text-green-400';
+    if (pct <= 10) return 'text-amber-600 dark:text-amber-400';
+    return 'text-destructive';
   };
 
   const content = (
@@ -98,9 +119,28 @@ export function SummaryPanel({
             <FileText className="h-3 w-3 mr-1" />PDF
           </Button>
           {onExportDaily && (
-            <Button variant="ghost" size="sm" onClick={onExportDaily} className="text-xs h-7">
-              <FileSpreadsheet className="h-3 w-3 mr-1" />Daily
-            </Button>
+            <div className="flex items-center gap-1">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="ghost" size="sm" className="text-xs h-7 px-1.5">
+                    <CalendarIcon className="h-3 w-3" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="end">
+                  <Calendar
+                    mode="single"
+                    selected={dailyDate}
+                    onSelect={(d) => d && setDailyDate(d)}
+                    initialFocus
+                    className={cn("p-3 pointer-events-auto")}
+                    disabled={(d) => d > new Date()}
+                  />
+                </PopoverContent>
+              </Popover>
+              <Button variant="ghost" size="sm" onClick={() => onExportDaily(dailyDate)} className="text-xs h-7">
+                <FileSpreadsheet className="h-3 w-3 mr-1" />Daily {format(dailyDate, 'M/d')}
+              </Button>
+            </div>
           )}
           {!embedded && (
             <Button variant="ghost" size="icon" onClick={onClose} className="h-7 w-7">
@@ -118,13 +158,15 @@ export function SummaryPanel({
           </p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-xs min-w-[500px]">
+            <table className="w-full text-xs min-w-[650px]">
               <thead>
                 <tr className="border-b border-border">
                   <th className="text-left py-2 px-2 font-semibold text-muted-foreground">Item #</th>
                   <th className="text-left py-2 px-2 font-semibold text-muted-foreground">Description</th>
                   <th className="text-left py-2 px-2 font-semibold text-muted-foreground">Unit</th>
-                  <th className="text-right py-2 px-2 font-semibold text-muted-foreground">Qty</th>
+                  <th className="text-right py-2 px-2 font-semibold text-muted-foreground">Measured</th>
+                  <th className="text-right py-2 px-2 font-semibold text-muted-foreground">Contract</th>
+                  <th className="text-right py-2 px-2 font-semibold text-muted-foreground">Var %</th>
                   <th className="text-right py-2 px-2 font-semibold text-muted-foreground">Price</th>
                   <th className="text-right py-2 px-2 font-semibold text-muted-foreground">Extended</th>
                 </tr>
@@ -140,9 +182,9 @@ export function SummaryPanel({
                   const sortedSections = Array.from(sections.entries()).sort((a, b) => a[0] - b[0]);
                   
                   return sortedSections.map(([sec, sectionRows]) => (
-                    <>
+                    <>{/* Section group */}
                       <tr key={`section-${sec}`}>
-                        <td colSpan={6} className="py-1.5 px-2 text-[10px] uppercase tracking-widest font-semibold text-muted-foreground bg-muted/30">
+                        <td colSpan={8} className="py-1.5 px-2 text-[10px] uppercase tracking-widest font-semibold text-muted-foreground bg-muted/30">
                           Section {sec}
                         </td>
                       </tr>
@@ -168,6 +210,14 @@ export function SummaryPanel({
                               />
                             )}
                           </td>
+                          <td className="text-right py-2 px-2 font-mono text-muted-foreground">
+                            {row.contractQuantity != null ? row.contractQuantity.toFixed(1) : '—'}
+                          </td>
+                          <td className={cn("text-right py-2 px-2 font-mono text-[10px] font-semibold", getVarianceColor(row.variancePercent))}>
+                            {row.variancePercent !== undefined
+                              ? `${row.variancePercent > 0 ? '+' : ''}${row.variancePercent.toFixed(0)}%`
+                              : '—'}
+                          </td>
                           <td className="text-right py-2 px-2 font-mono">${row.payItem.unitPrice.toFixed(2)}</td>
                           <td className="text-right py-2 px-2 font-mono font-semibold">
                             ${(row.payItem.drawable ? row.extendedCost : (row.manualQuantity ?? 0) * row.payItem.unitPrice).toFixed(2)}
@@ -180,7 +230,7 @@ export function SummaryPanel({
               </tbody>
               <tfoot>
                 <tr className="border-t-2 border-border">
-                  <td colSpan={5} className="py-3 px-2 font-bold text-right">Grand Total</td>
+                  <td colSpan={7} className="py-3 px-2 font-bold text-right">Grand Total</td>
                   <td className="py-3 px-2 font-bold text-right font-mono text-primary">
                     ${grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                   </td>
@@ -199,7 +249,7 @@ export function SummaryPanel({
 
   return (
     <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-card border border-border rounded-md shadow-xl w-full max-w-3xl max-h-[80vh] overflow-hidden flex flex-col">
+      <div className="bg-card border border-border rounded-md shadow-xl w-full max-w-4xl max-h-[80vh] overflow-hidden flex flex-col">
         {content}
       </div>
     </div>

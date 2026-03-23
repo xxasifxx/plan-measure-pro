@@ -27,11 +27,12 @@ import type { TocEntry } from '@/types/project';
 import { Sun, Moon, ArrowLeft, Loader2, HelpCircle, FileSpreadsheet, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { TeamManager } from '@/components/TeamManager';
+import { MobileAnnotationSheet } from '@/components/MobileAnnotationSheet';
 
 const Index = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
-  const { isInspector, isManager, isAdmin } = useAuth();
+  const { isInspector, isManager, isAdmin, profile } = useAuth();
   const isReadOnly = isInspector && !isManager && !isAdmin;
 
   // Get current user for Supabase persistence
@@ -525,7 +526,7 @@ const Index = () => {
                   onClose={() => setMobileTab('canvas')}
                   onExportCsv={() => exportCsv(project.annotations, payItems, project.name)}
                   onExportPdf={() => exportPdfReport(project.annotations, payItems, project.name, project.contractNumber)}
-                  onExportDaily={() => exportInspectorDaily(project.annotations, payItems, project.name, project.contractNumber, '', currentUserId || '')}
+                  onExportDaily={(date) => exportInspectorDaily(project.annotations, payItems, project.name, project.contractNumber, profile?.full_name || '', currentUserId || '', date)}
                   onUpdatePayItems={updatePayItems}
                   embedded
                 />
@@ -558,6 +559,18 @@ const Index = () => {
           specsPageTexts={specsPageTexts}
           startPage={specViewerData.startPage}
         />
+
+        {/* Mobile annotation detail sheet */}
+        {selectedAnnotationId && project && (
+          <MobileAnnotationSheet
+            annotation={project.annotations.find(a => a.id === selectedAnnotationId) || null}
+            payItem={payItems.find(p => p.id === project.annotations.find(a => a.id === selectedAnnotationId)?.payItemId) || null}
+            payItems={payItems}
+            onClose={() => setSelectedAnnotationId(null)}
+            onUpdate={updateAnnotation}
+            onDelete={removeAnnotation}
+          />
+        )}
       </div>
     );
   }
@@ -676,7 +689,7 @@ const Index = () => {
           onClose={() => setShowSummary(false)}
           onExportCsv={() => exportCsv(project.annotations, payItems, project.name)}
           onExportPdf={() => exportPdfReport(project.annotations, payItems, project.name, project.contractNumber)}
-          onExportDaily={() => exportInspectorDaily(project.annotations, payItems, project.name, project.contractNumber, '', currentUserId || '')}
+          onExportDaily={(date) => exportInspectorDaily(project.annotations, payItems, project.name, project.contractNumber, profile?.full_name || '', currentUserId || '', date)}
           onUpdatePayItems={updatePayItems}
         />
       )}
