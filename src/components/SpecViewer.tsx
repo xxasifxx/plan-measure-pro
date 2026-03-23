@@ -135,7 +135,6 @@ export function SpecViewer({
 
     let lastDist = 0;
     let lastCenter = { x: 0, y: 0 };
-    let activeTouches = 0;
 
     const getDist = (t1: Touch, t2: Touch) =>
       Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
