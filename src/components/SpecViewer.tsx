@@ -36,15 +36,22 @@ function getStoredPanelWidth(): number {
 export function SpecViewer({
   open, onClose, sectionNumber, itemCode, itemName, specsPdf, specsPageTexts, startPage,
 }: Props) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
   const [currentPage, setCurrentPage] = useState(1);
   const [rendering, setRendering] = useState(false);
   const [scale, setScale] = useState(1.5);
+  const [renderScale, setRenderScale] = useState(1.5);
   const [panelWidth, setPanelWidth] = useState(getStoredPanelWidth);
   const draggingRef = useRef(false);
   const refitTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const scaleTimerRef = useRef<ReturnType<typeof setTimeout>>();
+
+  // Callback ref so rendering triggers when canvas mounts in portal
+  const [canvasEl, setCanvasEl] = useState<HTMLCanvasElement | null>(null);
+  const canvasRefCb = useCallback((node: HTMLCanvasElement | null) => {
+    setCanvasEl(node);
+  }, []);
 
   // Search state
   const [searchOpen, setSearchOpen] = useState(false);
@@ -238,17 +245,24 @@ export function SpecViewer({
     }
   }, [open, effectiveStartPage, sectionNotFound, sectionNumber]);
 
+  // Debounce scale → renderScale
+  useEffect(() => {
+    clearTimeout(scaleTimerRef.current);
+    scaleTimerRef.current = setTimeout(() => setRenderScale(scale), 150);
+    return () => clearTimeout(scaleTimerRef.current);
+  }, [scale]);
+
   // Render page + highlight search matches
   useEffect(() => {
-    if (!open || !specsPdf || !canvasRef.current) return;
+    if (!open || !specsPdf || !canvasEl) return;
     let cancelled = false;
     setRendering(true);
 
     specsPdf.getPage(currentPage).then(async (page) => {
       if (cancelled) return;
-      const canvas = canvasRef.current;
+      const canvas = canvasEl;
       if (!canvas) return;
-      const viewport = page.getViewport({ scale });
+      const viewport = page.getViewport({ scale: renderScale });
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
@@ -328,25 +342,26 @@ export function SpecViewer({
     });
 
     return () => { cancelled = true; };
-  }, [open, specsPdf, currentPage, scale, searchQuery, searchMatches, currentMatchIndex]);
+  }, [open, specsPdf, currentPage, renderScale, searchQuery, searchMatches, currentMatchIndex, canvasEl]);
 
   // Fit width on open & debounced refit on panel resize
   const fitToWidth = useCallback(() => {
     if (!specsPdf || !containerRef.current) return;
-    specsPdf.getPage(currentPage || startPage || 1).then((page) => {
+    specsPdf.getPage(1).then((page) => {
       const container = containerRef.current;
-      if (!container) return;
+      if (!container || container.clientWidth === 0) return;
       const viewport = page.getViewport({ scale: 1 });
       const containerWidth = container.clientWidth - 32;
       const fitScale = Math.min(containerWidth / viewport.width, 3);
       setScale(Math.max(0.5, Math.round(fitScale * 100) / 100));
     });
-  }, [specsPdf, currentPage, startPage]);
+  }, [specsPdf]);
 
   useEffect(() => {
     if (!open || !specsPdf) return;
-    fitToWidth();
-  }, [open, specsPdf, startPage]);
+    const t = setTimeout(fitToWidth, 150);
+    return () => clearTimeout(t);
+  }, [open, specsPdf, fitToWidth]);
 
   // Debounced refit on panel resize
   useEffect(() => {
@@ -556,7 +571,7 @@ export function SpecViewer({
                     <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
                   </div>
                 )}
-                <canvas ref={canvasRef} className="shadow-md" />
+                <canvas ref={canvasRefCb} className="shadow-md" />
               </div>
             </>
           )}
