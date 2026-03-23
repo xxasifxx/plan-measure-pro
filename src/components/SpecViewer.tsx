@@ -321,13 +321,16 @@ export function SpecViewer({
             <GripVertical className="h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
         )}
-        <SheetHeader className="p-3 pb-2 border-b border-border shrink-0">
-          <div className="flex items-center gap-2">
-            <BookOpen className="h-4 w-4 text-primary shrink-0" />
-            <SheetTitle className="text-sm truncate">
-              Section {sectionNumber} — {itemName}
-            </SheetTitle>
-          </div>
+         <SheetHeader className="p-3 pb-2 border-b border-border shrink-0">
+           <div className="flex items-center gap-2">
+             <BookOpen className="h-4 w-4 text-primary shrink-0" />
+             <SheetTitle className="text-sm truncate">
+               Section {sectionNumber} — {itemName}
+             </SheetTitle>
+           </div>
+           <SheetDescription className="sr-only">
+             Viewing standard specifications for {itemName}
+           </SheetDescription>
           <div className="flex items-center gap-1.5 mt-1 flex-wrap">
             <Badge variant="outline" className="text-[10px] font-mono">
               {itemCode}
