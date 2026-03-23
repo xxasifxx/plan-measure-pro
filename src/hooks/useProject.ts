@@ -26,6 +26,8 @@ export function useProject(options: UseProjectOptions = {}) {
 
   const undoStack = useRef<UndoAction[]>([]);
   const redoStack = useRef<UndoAction[]>([]);
+  const [undoCount, setUndoCount] = useState(0);
+  const [redoCount, setRedoCount] = useState(0);
 
   // Helper: sync to Supabase if connected
   const dbSync = useCallback(() => !!supabaseProjectId && !!userId, [supabaseProjectId, userId]);
