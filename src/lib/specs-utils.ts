@@ -59,21 +59,14 @@ export function buildSectionPageIndex(
   const sectionToPage = new Map<number, number>();
   const sortedPages = Array.from(pageTexts.entries()).sort((a, b) => a[0] - b[0]);
 
-  for (const [pageNum, text] of sortedPages) {
-    // Gather all NNN.xx subsection markers on this page
+  // Helper: get prefix counts for a page's subsection markers
+  const getPagePrefixInfo = (text: string) => {
     const allSubMatches = text.match(/\b(\d{3})\.\d{2}\b/g) || [];
-
-    // Count how many times each 3-digit prefix appears
     const prefixCounts = new Map<string, number>();
     for (const m of allSubMatches) {
       const prefix = m.slice(0, 3);
       prefixCounts.set(prefix, (prefixCounts.get(prefix) || 0) + 1);
     }
-
-    // Skip TOC pages: many distinct section prefixes on one page
-    if (prefixCounts.size >= 5) continue;
-
-    // Find the dominant section prefix on this page
     let dominantPrefix = '';
     let dominantCount = 0;
     for (const [prefix, count] of prefixCounts) {
@@ -82,23 +75,23 @@ export function buildSectionPageIndex(
         dominantCount = count;
       }
     }
+    return { prefixCounts, dominantPrefix, dominantCount };
+  };
 
-    // Look for "SECTION NNN" on the page. To confirm it's the ACTUAL section start
-    // (not a cross-reference), require that NNN.01 also appears on this page.
-    // Real section pages always contain the first subsection (NNN.01 Description).
+  // --- Tier 1: Strict match (SECTION NNN + NNN.01 + dominant prefix) ---
+  for (const [pageNum, text] of sortedPages) {
+    const { prefixCounts, dominantPrefix, dominantCount } = getPagePrefixInfo(text);
+    if (prefixCounts.size >= 5) continue; // skip TOC pages
+
     const sectionHeadingMatches = text.matchAll(/SECTION\s+(\d{3})\b/gi);
     for (const match of sectionHeadingMatches) {
       const numStr = match[1];
       const num = parseInt(numStr, 10);
       if (sectionToPage.has(num)) continue;
 
-      // Require NNN.01 on the same page — this is the strongest signal
-      // that this page is where the section actually starts
       const hasFirstSubsection = new RegExp(`\\b${numStr}\\.01\\b`).test(text);
       if (!hasFirstSubsection) continue;
 
-      // The section heading's number must match the dominant subsection prefix,
-      // OR there are few/no other subsection markers
       const isOwnerPage =
         prefixCounts.size === 0 ||
         dominantPrefix === numStr ||
@@ -109,6 +102,65 @@ export function buildSectionPageIndex(
         if (wordCount > 50) {
           sectionToPage.set(num, pageNum);
         }
+      }
+    }
+  }
+
+  // Standard top-level sections to ensure we find
+  const standardSections = [100, 200, 300, 400, 500, 600, 700, 800, 900];
+  const missingSections = standardSections.filter(s => !sectionToPage.has(s));
+
+  // --- Tier 2: Relaxed (SECTION NNN + dominant prefix, no NNN.01 required) ---
+  if (missingSections.length > 0) {
+    const stillMissing = new Set(missingSections);
+    for (const [pageNum, text] of sortedPages) {
+      if (stillMissing.size === 0) break;
+      const { prefixCounts, dominantPrefix, dominantCount } = getPagePrefixInfo(text);
+      if (prefixCounts.size >= 5) continue;
+
+      const sectionHeadingMatches = text.matchAll(/SECTION\s+(\d{3})\b/gi);
+      for (const match of sectionHeadingMatches) {
+        const numStr = match[1];
+        const num = parseInt(numStr, 10);
+        if (!stillMissing.has(num)) continue;
+        if (sectionToPage.has(num)) continue;
+
+        const isOwnerPage =
+          prefixCounts.size === 0 ||
+          dominantPrefix === numStr ||
+          (prefixCounts.get(numStr) || 0) >= dominantCount;
+
+        if (isOwnerPage) {
+          const wordCount = text.split(/\s+/).length;
+          if (wordCount > 50) {
+            sectionToPage.set(num, pageNum);
+            stillMissing.delete(num);
+          }
+        }
+      }
+    }
+  }
+
+  // --- Tier 3: Fallback (any page with SECTION NNN heading, not TOC, >50 words) ---
+  const stillMissing3 = standardSections.filter(s => !sectionToPage.has(s));
+  if (stillMissing3.length > 0) {
+    const remaining = new Set(stillMissing3);
+    for (const [pageNum, text] of sortedPages) {
+      if (remaining.size === 0) break;
+      const { prefixCounts } = getPagePrefixInfo(text);
+      if (prefixCounts.size >= 5) continue;
+
+      const wordCount = text.split(/\s+/).length;
+      if (wordCount <= 50) continue;
+
+      const sectionHeadingMatches = text.matchAll(/SECTION\s+(\d{3})\b/gi);
+      for (const match of sectionHeadingMatches) {
+        const num = parseInt(match[1], 10);
+        if (!remaining.has(num)) continue;
+        if (sectionToPage.has(num)) continue;
+
+        sectionToPage.set(num, pageNum);
+        remaining.delete(num);
       }
     }
   }
