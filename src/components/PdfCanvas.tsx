@@ -35,6 +35,7 @@ export function PdfCanvas({
   pdf, currentPage, scale, onScaleChange, toolMode, calibration,
   annotations, activePayItemId, payItems, onCalibrate, onAddAnnotation, onRemoveAnnotation,
   onUpdateAnnotation, onTocRegionSelected, externalContainerRef, selectedAnnotationId, onSelectAnnotation,
+  isMobile,
 }: Props) {
   const pdfCanvasRef = useRef<HTMLCanvasElement>(null);
   const overlayCanvasRef = useRef<HTMLCanvasElement>(null);
