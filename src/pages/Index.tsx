@@ -179,6 +179,28 @@ const Index = () => {
           setPdf(pdfDoc);
           setTotalPages(pdfDoc.numPages);
         }
+
+        // Load specs PDF from storage if available
+        if (proj.specs_storage_path) {
+          try {
+            const { data: specsSignedData, error: specsSignErr } = await supabase.storage
+              .from('specs-pdfs')
+              .createSignedUrl(proj.specs_storage_path, 3600);
+            if (!specsSignErr && specsSignedData && !cancelled) {
+              const loadedSpecsPdf = await loadPdfFromUrl(specsSignedData.signedUrl);
+              const textMap = await extractAllText(loadedSpecsPdf);
+              const index = buildSectionPageIndex(textMap);
+              if (!cancelled) {
+                sectionPageIndexRef.current = index;
+                setSpecsPageTexts(textMap);
+                setSpecsPdf(loadedSpecsPdf);
+                setSpecsLoaded(true);
+              }
+            }
+          } catch {
+            // Specs loading is non-critical
+          }
+        }
       } catch (err: any) {
         if (!cancelled) {
           toast({ title: 'Error loading project', description: err?.message || String(err), variant: 'destructive' });
