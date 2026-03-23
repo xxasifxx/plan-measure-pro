@@ -48,9 +48,8 @@ function buildRows(annotations: Annotation[], payItems: PayItem[]): ExportRow[] 
 
 export function exportCsv(annotations: Annotation[], payItems: PayItem[], projectName: string): void {
   const rows = buildRows(annotations, payItems);
-  const header = 'Section,Item #,Item Code,Pay Item,Count,Quantity,Unit,Unit Price,Contract Qty,Extended Cost';
+  const header = 'Section,Item #,Item Code,Pay Item,Count,Measured Qty,Unit,Unit Price,Contract Qty,Variance %,Extended Cost';
 
-  // Group by section
   const sections = new Map<number, ExportRow[]>();
   for (const r of rows) {
     if (!sections.has(r.section)) sections.set(r.section, []);
@@ -61,14 +60,17 @@ export function exportCsv(annotations: Annotation[], payItems: PayItem[], projec
   const sortedSections = Array.from(sections.entries()).sort((a, b) => a[0] - b[0]);
   for (const [sec, sectionRows] of sortedSections) {
     for (const r of sectionRows) {
+      const variance = r.contractQuantity && r.contractQuantity > 0
+        ? (((r.quantity - r.contractQuantity) / r.contractQuantity) * 100).toFixed(1) + '%'
+        : '';
       lines.push(
-        `${sec},${r.itemNumber},"${r.itemCode}","${r.name}",${r.count},${r.quantity.toFixed(1)},${r.unitLabel},${r.unitPrice.toFixed(2)},${r.contractQuantity ?? ''},${r.extended.toFixed(2)}`
+        `${sec},${r.itemNumber},"${r.itemCode}","${r.name}",${r.count},${r.quantity.toFixed(1)},${r.unitLabel},${r.unitPrice.toFixed(2)},${r.contractQuantity ?? ''},${variance},${r.extended.toFixed(2)}`
       );
     }
   }
 
   const total = rows.reduce((s, r) => s + r.extended, 0);
-  lines.push(`,,,,,,,,TOTAL,${total.toFixed(2)}`);
+  lines.push(`,,,,,,,,,TOTAL,${total.toFixed(2)}`);
 
   const csv = [header, ...lines].join('\n');
   const blob = new Blob([csv], { type: 'text/csv' });
@@ -91,7 +93,6 @@ export async function exportPdfReport(
   const rows = buildRows(annotations, payItems);
   const total = rows.reduce((s, r) => s + r.extended, 0);
 
-  // Title
   doc.setFontSize(16);
   doc.text('Quantity Takeoff Summary', 14, 20);
   doc.setFontSize(10);
@@ -99,7 +100,6 @@ export async function exportPdfReport(
   if (contractNumber) doc.text(`Contract: ${contractNumber}`, 14, 36);
   doc.text(`Date: ${new Date().toLocaleDateString()}`, 14, contractNumber ? 42 : 36);
 
-  // Group by section
   const sections = new Map<number, ExportRow[]>();
   for (const r of rows) {
     if (!sections.has(r.section)) sections.set(r.section, []);
@@ -110,15 +110,14 @@ export async function exportPdfReport(
   let y = contractNumber ? 52 : 46;
   doc.setFontSize(7);
 
-  // Table header
   const drawHeader = () => {
     doc.setFont('helvetica', 'bold');
     doc.text('Item #', 14, y);
     doc.text('Code', 28, y);
     doc.text('Description', 52, y);
-    doc.text('Qty', 115, y, { align: 'right' });
-    doc.text('Unit', 120, y);
-    doc.text('Contract', 145, y, { align: 'right' });
+    doc.text('Measured', 108, y, { align: 'right' });
+    doc.text('Contract', 128, y, { align: 'right' });
+    doc.text('Var %', 143, y, { align: 'right' });
     doc.text('Price', 162, y, { align: 'right' });
     doc.text('Extended', 185, y, { align: 'right' });
     y += 2;
@@ -129,7 +128,6 @@ export async function exportPdfReport(
   drawHeader();
 
   for (const [sec, sectionRows] of sortedSections) {
-    // Section header
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(8);
     doc.text(`Section ${sec}`, 14, y);
@@ -138,12 +136,15 @@ export async function exportPdfReport(
 
     doc.setFont('helvetica', 'normal');
     for (const r of sectionRows) {
+      const variance = r.contractQuantity && r.contractQuantity > 0
+        ? `${(((r.quantity - r.contractQuantity) / r.contractQuantity) * 100).toFixed(0)}%`
+        : '-';
       doc.text(String(r.itemNumber), 14, y);
       doc.text(r.itemCode, 28, y);
-      doc.text(r.name.substring(0, 35), 52, y);
-      doc.text(r.quantity.toFixed(1), 115, y, { align: 'right' });
-      doc.text(r.unitLabel, 120, y);
-      doc.text(r.contractQuantity != null ? r.contractQuantity.toFixed(1) : '-', 145, y, { align: 'right' });
+      doc.text(r.name.substring(0, 30), 52, y);
+      doc.text(r.quantity.toFixed(1), 108, y, { align: 'right' });
+      doc.text(r.contractQuantity != null ? r.contractQuantity.toFixed(1) : '-', 128, y, { align: 'right' });
+      doc.text(variance, 143, y, { align: 'right' });
       doc.text(`$${r.unitPrice.toFixed(2)}`, 162, y, { align: 'right' });
       doc.text(`$${r.extended.toFixed(2)}`, 185, y, { align: 'right' });
       y += 5;
@@ -164,10 +165,8 @@ export async function exportPdfReport(
 }
 
 /**
- * Export today's annotations by one inspector as an Excel workbook.
- * Sheet 1: line-item detail with overrides, location, notes.
- * Sheet 2: placeholder for plan page images (images require pro xlsx features,
- *          so we list pages with annotation counts instead).
+ * Export annotations by one inspector as an Excel workbook.
+ * Filters by date and strictly by userId.
  */
 export function exportInspectorDaily(
   allAnnotations: Annotation[],
@@ -176,31 +175,31 @@ export function exportInspectorDaily(
   contractNumber: string,
   inspectorName: string,
   userId: string,
+  date?: Date,
 ): void {
-  const today = new Date();
-  const todayStr = today.toISOString().slice(0, 10);
+  const targetDate = date || new Date();
+  const dateStr = targetDate.toISOString().slice(0, 10);
 
-  // Filter: today's annotations by this user
-  const todayAnns = allAnnotations.filter(a => {
+  // Strict filtering: must match date AND userId
+  const filtered = allAnnotations.filter(a => {
     if (!a.createdAt) return false;
-    if (a.createdAt.slice(0, 10) !== todayStr) return false;
-    // Filter by user if userId is provided and annotation has userId
-    if (userId && a.userId && a.userId !== userId) return false;
+    if (a.createdAt.slice(0, 10) !== dateStr) return false;
+    // Strictly filter by userId — exclude annotations without userId or from other users
+    if (!a.userId || a.userId !== userId) return false;
     return true;
   });
 
   const wb = XLSX.utils.book_new();
 
-  // ── Sheet 1: Daily Report ──
   const headerRows = [
     ['Daily Inspector Report'],
     [`Project: ${projectName}`, '', `Contract: ${contractNumber || 'N/A'}`],
-    [`Inspector: ${inspectorName}`, '', `Date: ${today.toLocaleDateString()}`],
+    [`Inspector: ${inspectorName || 'Unknown'}`, '', `Date: ${targetDate.toLocaleDateString()}`],
     [],
     ['Pay Item Code', 'Pay Item Name', "Calc'd Qty", 'Final Qty', 'Unit', 'Location', 'Notes', 'Page'],
   ];
 
-  const dataRows = todayAnns.map(ann => {
+  const dataRows = filtered.map(ann => {
     const item = payItems.find(p => p.id === ann.payItemId);
     const calcQty = ann.measurement;
     const finalQty = ann.manualQuantity != null ? ann.manualQuantity : calcQty;
@@ -218,20 +217,14 @@ export function exportInspectorDaily(
 
   const ws1Data = [...headerRows, ...dataRows];
   const ws1 = XLSX.utils.aoa_to_sheet(ws1Data);
-
-  // Set column widths
   ws1['!cols'] = [
     { wch: 16 }, { wch: 30 }, { wch: 12 }, { wch: 12 },
     { wch: 8 }, { wch: 24 }, { wch: 30 }, { wch: 8 },
   ];
-
-  // Merge title row
   ws1['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 7 } }];
-
   XLSX.utils.book_append_sheet(wb, ws1, 'Daily Report');
 
-  // ── Sheet 2: Plan Pages Summary ──
-  const pageSet = new Set(todayAnns.map(a => a.page));
+  const pageSet = new Set(filtered.map(a => a.page));
   const sortedPages = Array.from(pageSet).sort((a, b) => a - b);
 
   const ws2Header = [
@@ -241,7 +234,7 @@ export function exportInspectorDaily(
   ];
 
   const ws2Data = sortedPages.map(pg => {
-    const pageAnns = todayAnns.filter(a => a.page === pg);
+    const pageAnns = filtered.filter(a => a.page === pg);
     const items = new Set(pageAnns.map(a => {
       const item = payItems.find(p => p.id === a.payItemId);
       return item?.name || 'Unknown';
@@ -252,9 +245,7 @@ export function exportInspectorDaily(
   const ws2 = XLSX.utils.aoa_to_sheet([...ws2Header, ...ws2Data]);
   ws2['!cols'] = [{ wch: 10 }, { wch: 18 }, { wch: 50 }];
   ws2['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 2 } }];
-
   XLSX.utils.book_append_sheet(wb, ws2, 'Plan Pages');
 
-  // Download
-  XLSX.writeFile(wb, `${projectName || 'takeoff'}_daily_${todayStr}.xlsx`);
+  XLSX.writeFile(wb, `${projectName || 'takeoff'}_daily_${dateStr}.xlsx`);
 }
