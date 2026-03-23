@@ -135,7 +135,6 @@ export function SpecViewer({
 
     let lastDist = 0;
     let lastCenter = { x: 0, y: 0 };
-    let activeTouches = 0;
 
     const getDist = (t1: Touch, t2: Touch) =>
       Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
@@ -145,7 +144,6 @@ export function SpecViewer({
     });
 
     const onTouchStart = (e: TouchEvent) => {
-      activeTouches = e.touches.length;
       if (e.touches.length === 2) {
         e.preventDefault();
         lastDist = getDist(e.touches[0], e.touches[1]);
@@ -160,11 +158,11 @@ export function SpecViewer({
         const center = getCenter(e.touches[0], e.touches[1]);
 
         // Pinch zoom
-        const ratio = dist / lastDist;
+        const ratio = lastDist > 0 ? dist / lastDist : 1;
         if (Math.abs(ratio - 1) > 0.01) {
           setScale(s => Math.min(4, Math.max(0.5, Math.round(s * ratio * 100) / 100)));
-          lastDist = dist;
         }
+        lastDist = dist;
 
         // Two-finger pan
         const dx = center.x - lastCenter.x;
@@ -178,7 +176,6 @@ export function SpecViewer({
     };
 
     const onTouchEnd = (e: TouchEvent) => {
-      activeTouches = e.touches.length;
       if (e.touches.length < 2) {
         lastDist = 0;
       }
@@ -537,7 +534,7 @@ export function SpecViewer({
         )}
 
         {/* PDF canvas */}
-        <div ref={containerRef} className="flex-1 min-h-0 overflow-auto bg-muted/30 p-4" style={{ touchAction: 'none' }}>
+        <div ref={containerRef} className="flex-1 min-h-0 overflow-auto bg-muted/30 p-4" style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}>
           {!specsPdf && (
             <div className="text-sm text-muted-foreground py-8 text-center">
               No specs PDF loaded.
