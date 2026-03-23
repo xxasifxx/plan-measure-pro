@@ -692,6 +692,15 @@ const Index = () => {
         startPage={specViewerData.startPage}
       />
 
+      {projectId && (
+        <TeamManager
+          open={showTeam}
+          onOpenChange={setShowTeam}
+          projectId={projectId}
+          projectName={project?.name || 'Project'}
+        />
+      )}
+
       <GuidedTour
         steps={workspaceSteps}
         currentStep={workspaceTour.currentStep}
