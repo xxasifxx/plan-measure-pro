@@ -258,10 +258,12 @@ export function useProject(options: UseProjectOptions = {}) {
       if (dbSync()) await supabase.from('annotations').delete().eq('id', action.annotation.id);
     }
     undoStack.current.push(action);
+    setUndoCount(undoStack.current.length);
+    setRedoCount(redoStack.current.length);
   }, [project, persist, dbSync, supabaseProjectId, userId]);
 
-  const canUndo = project ? undoStack.current.length > 0 : false;
-  const canRedo = project ? redoStack.current.length > 0 : false;
+  const canUndo = !!project && undoCount > 0;
+  const canRedo = !!project && redoCount > 0;
 
   // ── Pay Items ──
   const updatePayItems = useCallback(async (items: PayItem[]) => {
