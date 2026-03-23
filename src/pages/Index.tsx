@@ -361,10 +361,40 @@ const Index = () => {
 
   const handleCopyCalibration = useCallback(() => {
     if (!currentCalibration || !project) return;
-    const otherPages = [];
-    for (let i = 1; i <= totalPages; i++) { if (i !== currentPage) otherPages.push(i); }
-    copyCalibrationToPages(currentPage, otherPages);
-    toast({ title: 'Calibration copied', description: `Applied to ${otherPages.length} pages.` });
+    const input = window.prompt(
+      `Copy calibration from page ${currentPage} to which pages?\nExamples: "all", "1-20", "5,8,12"`,
+      'all'
+    );
+    if (!input) return;
+    let targetPages: number[] = [];
+    if (input.trim().toLowerCase() === 'all') {
+      for (let i = 1; i <= totalPages; i++) { if (i !== currentPage) targetPages.push(i); }
+    } else {
+      // Parse comma-separated values and ranges like "1-5,8,10-12"
+      for (const part of input.split(',')) {
+        const trimmed = part.trim();
+        const rangeMatch = trimmed.match(/^(\d+)\s*-\s*(\d+)$/);
+        if (rangeMatch) {
+          const start = parseInt(rangeMatch[1]);
+          const end = parseInt(rangeMatch[2]);
+          for (let i = Math.max(1, start); i <= Math.min(totalPages, end); i++) {
+            if (i !== currentPage) targetPages.push(i);
+          }
+        } else {
+          const num = parseInt(trimmed);
+          if (!isNaN(num) && num >= 1 && num <= totalPages && num !== currentPage) {
+            targetPages.push(num);
+          }
+        }
+      }
+      targetPages = [...new Set(targetPages)].sort((a, b) => a - b);
+    }
+    if (targetPages.length === 0) {
+      toast({ title: 'No valid pages selected', variant: 'destructive' });
+      return;
+    }
+    copyCalibrationToPages(currentPage, targetPages);
+    toast({ title: 'Calibration copied', description: `Applied to ${targetPages.length} pages.` });
   }, [currentCalibration, project, totalPages, currentPage, copyCalibrationToPages, toast]);
 
   const activePayItem = payItems.find(p => p.id === activePayItemId);
