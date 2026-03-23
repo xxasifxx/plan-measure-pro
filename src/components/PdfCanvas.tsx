@@ -347,18 +347,16 @@ export function PdfCanvas({
     return true;
   }, [activePayItemId, payItems, calibration]);
 
-  const handleCanvasClick = useCallback((e: React.MouseEvent) => {
+  // Core click logic extracted to accept PointXY directly (shared by mouse + touch)
+  const handleClickAtPos = useCallback((pos: PointXY) => {
     if (toolMode === 'pan' || toolMode === 'tocSelect') return;
-    const pos = getCanvasPos(e);
 
-    // Select tool: hit-test
     if (toolMode === 'select') {
       const hit = hitTestAnnotations(pos);
       onSelectAnnotation(hit?.id || null);
       return;
     }
 
-    // Count tool: place marker
     if (toolMode === 'count') {
       if (!guardDrawing(false)) return;
       onAddAnnotation({
@@ -406,9 +404,18 @@ export function PdfCanvas({
       if (drawingPoints.length === 0 && !guardDrawing(true)) return;
       setDrawingPoints(prev => [...prev, pos]);
     }
-  }, [toolMode, calibratePoints, drawingPoints, calibration, activePayItemId, currentPage, onAddAnnotation, getCanvasPos, hitTestAnnotations, onSelectAnnotation, guardDrawing]);
+  }, [toolMode, calibratePoints, drawingPoints, calibration, activePayItemId, currentPage, onAddAnnotation, hitTestAnnotations, onSelectAnnotation, guardDrawing]);
 
-  const handleDoubleClick = useCallback((e: React.MouseEvent) => {
+  const handleCanvasClick = useCallback((e: React.MouseEvent) => {
+    if (touchStateRef.current.suppressClick) {
+      touchStateRef.current.suppressClick = false;
+      return;
+    }
+    handleClickAtPos(getCanvasPos(e));
+  }, [handleClickAtPos, getCanvasPos]);
+
+  // Core double-click logic (shared by mouse + touch)
+  const handleDoubleClickAtPos = useCallback(() => {
     if (toolMode !== 'polygon' || drawingPoints.length < 3) return;
     if (!calibration) {
       toast({ title: 'No calibration set', description: 'Calibrate the scale before measuring areas.', variant: 'destructive' });
@@ -419,7 +426,6 @@ export function PdfCanvas({
     const areaSF = polygonAreaSF(drawingPoints, calibration.pixelsPerFoot);
     const activeItem = payItems.find(p => p.id === activePayItemId);
 
-    // If CY pay item, prompt for depth
     if (activeItem?.unit === 'CY') {
       setPendingPolygon({ points: [...drawingPoints], areaSF });
       setDepthInput('');
@@ -427,7 +433,6 @@ export function PdfCanvas({
       return;
     }
 
-    // SY conversion: divide SF by 9
     const isSY = activeItem?.unit === 'SY';
     const measurement = isSY ? areaSF / 9 : areaSF;
 
@@ -442,6 +447,10 @@ export function PdfCanvas({
     });
     setDrawingPoints([]);
   }, [toolMode, drawingPoints, calibration, activePayItemId, currentPage, onAddAnnotation, payItems]);
+
+  const handleDoubleClick = useCallback((_e: React.MouseEvent) => {
+    handleDoubleClickAtPos();
+  }, [handleDoubleClickAtPos]);
 
   const submitDepth = useCallback(() => {
     if (!pendingPolygon || !calibration) return;
