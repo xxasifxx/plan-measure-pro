@@ -72,6 +72,7 @@ const Index = () => {
     }
   }, [pdf, project]);
   const [showSummary, setShowSummary] = useState(false);
+  const [showTeam, setShowTeam] = useState(false);
   const [selectedAnnotationId, setSelectedAnnotationId] = useState<string | null>(null);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
