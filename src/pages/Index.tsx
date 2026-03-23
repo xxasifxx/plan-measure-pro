@@ -272,11 +272,18 @@ const Index = () => {
       setSpecsLoaded(true);
       setSpecsLoading(false);
       toast({ title: 'Specs Loaded', description: `${loadedSpecsPdf.numPages} pages, ${index.size} sections.` });
+
+      // Upload to cloud storage if project exists
+      if (projectId && currentUserId) {
+        const storagePath = `${projectId}/specs.pdf`;
+        await supabase.storage.from('specs-pdfs').upload(storagePath, file, { upsert: true });
+        await supabase.from('projects').update({ specs_storage_path: storagePath }).eq('id', projectId);
+      }
     } catch (err) {
       setSpecsLoading(false);
       toast({ title: 'Error loading specs', description: String(err), variant: 'destructive' });
     }
-  }, [toast]);
+  }, [toast, projectId, currentUserId]);
 
   const handleViewSpec = useCallback((itemCode: string) => {
     if (!specsLoaded) { toast({ title: 'No specs loaded', variant: 'destructive' }); return; }
