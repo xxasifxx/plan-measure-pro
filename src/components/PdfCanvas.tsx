@@ -761,11 +761,8 @@ export function PdfCanvas({
         (containerRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
         if (externalContainerRef) (externalContainerRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
       }}
-      className="flex-1 overflow-auto bg-muted/50 relative min-h-0 touch-none"
+      className="flex-1 overflow-auto bg-muted/50 relative min-h-0"
       onMouseUp={handleMouseUp}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
     >
       <div
         className="relative inline-block"
@@ -777,11 +774,15 @@ export function PdfCanvas({
           width={canvasSize.width}
           height={canvasSize.height}
           className={`absolute top-0 left-0 ${cursorClass}`}
+          style={{ touchAction: 'none' }}
           onClick={handleCanvasClick}
           onDoubleClick={handleDoubleClick}
           onMouseMove={handleMouseMove}
           onMouseDown={handleMouseDown}
           onContextMenu={handleContextMenu}
+          onTouchStart={handleOverlayTouchStart}
+          onTouchMove={handleOverlayTouchMove}
+          onTouchEnd={handleOverlayTouchEnd}
         />
       </div>
 
