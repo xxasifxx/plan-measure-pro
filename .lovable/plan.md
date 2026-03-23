@@ -1,96 +1,81 @@
 
 
-# Expanding Scope: Claims vs Reality Audit
+# Fix Half Measures — Comprehensive Iteration
 
-## What We Claim (Landing Page + Features)
+## What's Still Broken or Half-Done
 
-The landing page and feature cards promise:
+After auditing every file, here are the concrete problems remaining:
 
-1. **PDF Plan Viewer** — "navigate seamlessly between sheets with a table of contents"
-2. **Precision Calibration** — "One calibration click and every measurement is accurate"
-3. **Smart Annotations** — "Draw lines, polygons, and counts — quantities auto-calculate"
-4. **Pay Item Management** — "Import pay items from specs, assign unit prices, track contract quantities vs. measured"
-5. **Role-Based Collaboration** — "Project managers configure; inspectors measure. Everyone stays in sync"
-6. **Real-Time Sync** — "Annotations appear instantly across all team members' screens. No refresh, no waiting"
-7. **For PMs**: "Create projects, set calibrations, import pay items, assign inspectors, review progress, export summary reports for billing"
-8. **For Inspectors**: "Open assigned projects, annotate with pre-configured pay items, override quantities with field actuals, export daily logs"
+### 1. Manual Quantities for Non-Drawable Items Still Corrupt Data
+**SummaryPanel.tsx line 89-95**: `updateManualQty` calls `onUpdatePayItems` and sets `contractQuantity` to the entered value — this **overwrites the original contract quantity**. The plan said to persist manual quantities as `type: 'manual'` annotations. Never done.
 
-## What Actually Works vs What Doesn't
+### 2. Mobile: No Select Mode Toggle → Can't Edit/Delete Annotations
+`MobileToolbar` shows Select/Pan/Calibrate tools, but when a pay item is selected (`handleActivePayItemChange` line 405-416), the tool auto-switches to line/polygon/count. There's no way for a mobile user to switch back to select mode to tap and edit existing annotations. The `MobileAnnotationSheet` exists but is unreachable because `selectedAnnotationId` never gets set on mobile — the click handler in PdfCanvas only runs in `select` mode.
 
-### Real-Time Sync — **Completely Missing**
-The landing page headline feature. Zero implementation. No Supabase Realtime subscriptions. No `postgres_changes` listeners. Annotations are fetched once on project load and never update. Two users on the same project see stale data.
+### 3. Desktop Annotation Popup Not Hidden on Mobile
+**PdfCanvas.tsx line 818-925**: The selected annotation popup renders as `absolute top-3 right-3` regardless of viewport. On mobile, both this popup AND the `MobileAnnotationSheet` would render if `selectedAnnotationId` is set. The desktop popup should be hidden on mobile.
 
-### "Review Progress" for PMs — **No Mechanism**
-PMs cannot see what inspectors have done without opening each project, and even then there's no activity feed, no progress dashboard, no notification system. The Dashboard shows annotation count but not who did what or when.
+### 4. Multi-Page Pay Item Import Never Done
+**Index.tsx line 341-363**: `handleImportPayItems` still only scans `currentPage`. The plan said to scan current + next N pages. Never implemented.
 
-### Contract Quantity vs Measured Tracking — **Incomplete**
-The SummaryPanel shows measured quantities but doesn't display contract quantities side-by-side for comparison. The PDF export does show contract qty, but the in-app summary table has no "Contract Qty" column and no variance/percentage indicator. The whole value proposition of "track contract vs measured" is buried.
+### 5. Realtime INSERT Doesn't Check for Duplicates
+**useProject.ts line 339-355**: On INSERT event, the annotation is blindly appended. If the local user's own annotation hasn't been excluded (race condition with the `user_id !== userId` check and delayed DB insert), it could appear twice. Need a dedup check by annotation id.
 
-### Inspector Daily Export — **Partially Broken**
-- `exportInspectorDaily` accepts `inspectorName` param but it's always passed as empty string `''`
-- Filter logic is weak: `if (userId && a.userId && a.userId !== userId)` — if annotation has no `userId`, it's included in everyone's report
-- No date picker — locked to today only, can't export yesterday's work
+### 6. No Online Presence Indicator
+The plan called for "Show a subtle indicator when other users are active." Never done.
 
-### Manual Quantities Not Persisted
-`SummaryPanel` `manualQuantities` is React state only. Non-drawable items (TON, LS, USD, MNTH) let you type quantities, but they vanish on re-render. The `updateManualQty` function overwrites `contractQuantity` on the pay item as a workaround — this corrupts the original contract quantity.
+### 7. Invitation Redirect URL Uses Origin Header
+**invite-user/index.ts line 111-113**: `const siteUrl = req.headers.get("origin") || req.headers.get("referer") || supabaseUrl` — this could resolve to the Supabase URL if Origin is missing, sending the user to a broken link. Should use the published app URL.
 
-### No Annotation Location/Notes on Mobile
-The landing page shows mobile as a key use case (field inspectors). But annotation detail entry (Location, Notes) requires `select` mode which is hard to reach on mobile. No dedicated mobile annotation detail sheet.
+### 8. Dashboard Progress View for PMs is Shallow
+Project cards show `latest_annotation_at` and `member_count` but no per-inspector breakdown, no pages-annotated-vs-total metric, no expandable detail view. The "review progress" claim remains mostly unmet.
 
-### No Notification System
-When an admin invites someone, when a PM assigns an inspector to a project — the user has no way to know unless they check the app. No email notifications, no in-app notifications.
+---
 
-### Missing "Progress Review" Dashboard
-PMs see the same flat project list as everyone. No way to see: which pages have been annotated, percentage complete, which inspectors are active, annotation timeline.
+## Fixes
 
-### No Multi-Page Pay Item Import
-`handleImportPayItems` extracts from current page only. Pay item tables in construction PDFs commonly span 2-5 pages. No way to append from additional pages.
+### File: `src/components/SummaryPanel.tsx`
+- Remove the `updateManualQty` function that corrupts `contractQuantity`
+- For non-drawable items, save/load manual quantities as annotations with `type: 'manual'` via a new `onAddAnnotation` / `onUpdateAnnotation` prop
+- On mount, read existing `type: 'manual'` annotations to populate the inputs
+- When user changes value, upsert the manual annotation (one per pay item)
 
-## Proposed Fixes (Priority Order)
+### File: `src/components/MobileToolbar.tsx`
+- Always show the `select` tool in the tools list (it's already there but gets overridden)
+- Add a visual indicator (e.g., long-press on canvas or a floating "edit" FAB) that switches to select mode
 
-### 1. Real-Time Annotations (addresses the #1 headline claim)
-- Add Realtime subscription in `useProject` for the `annotations` table filtered by `project_id`
-- On `INSERT`/`UPDATE`/`DELETE` events from other users, merge into local state
-- Migration: `ALTER PUBLICATION supabase_realtime ADD TABLE public.annotations;`
-- Show a subtle indicator when other users are active ("2 team members online")
+### File: `src/components/PdfCanvas.tsx`
+- Accept an `isMobile` prop (or use the hook internally)
+- Hide the desktop annotation popup when mobile (the MobileAnnotationSheet handles it)
+- In touch end handler, when in `select` mode and a tap hits an annotation, call `onSelectAnnotation` — this triggers the MobileAnnotationSheet in Index.tsx
 
-### 2. Contract vs Measured Summary Column
-- Add "Contract Qty" and "Variance %" columns to `SummaryPanel` table
-- Color-code: green when measured ≤ contract, amber when close, red when over
-- Same columns in CSV and PDF exports (PDF export already has contract qty)
+### File: `src/pages/Index.tsx`
+- Pass `onAddAnnotation` and `onUpdateAnnotation` to SummaryPanel for manual quantity persistence
+- Update `handleImportPayItems` to scan current page through current+4 (5 pages), merging by itemCode
+- Filter out `type: 'manual'` annotations from the visible canvas annotations (they have no real points)
 
-### 3. Fix Daily Export
-- Pass `profile.full_name` as `inspectorName` instead of empty string
-- Add date picker to Summary panel (default today, allow selecting past dates)
-- Strictly filter by `userId` — don't include annotations without a userId
+### File: `src/hooks/useProject.ts`
+- In realtime INSERT handler, check `prev.annotations.some(a => a.id === record.id)` before appending to prevent duplicates
 
-### 4. Persist Manual Quantities as Annotations
-- Instead of corrupting `contractQuantity`, save non-drawable quantities as annotations with `type: 'manual'` and `manualQuantity` field
-- This makes them persist to the database and appear in realtime
+### File: `supabase/functions/invite-user/index.ts`
+- Replace the origin-sniffing logic with a hardcoded app URL derived from the Referer header or a known constant, falling back to `req.headers.get("origin")`
 
-### 5. Mobile Annotation Details Sheet
-- When tapping an annotation on mobile, open a bottom sheet with Location, Notes, and Delete
-- Replace the desktop-only absolute-positioned popup
+### File: `src/types/project.ts`
+- Add `'manual'` to the Annotation `type` union: `'line' | 'polygon' | 'count' | 'manual'`
 
-### 6. PM Progress Dashboard
-- Add a "Progress" tab or expandable section on Dashboard for PMs
-- Per-project: pages annotated / total pages, annotation count by inspector, last activity timestamp
-- Fetch via a simple query joining annotations + profiles grouped by project
-
-### 7. Invitation Email Notifications
-- When PM adds inspector to project via TeamManager, send a notification
-- Use a backend function to send a simple "You've been added to [Project]" email
-
-### 8. Multi-Page Pay Item Import
-- Change "Import Pay Items" to scan current + next N pages (configurable, default 5)
-- Merge by itemCode (already implemented for single page)
+### File: `src/pages/Dashboard.tsx`
+- For PM/admin users, add an expandable project detail section showing:
+  - Annotation count by team member (query `annotations` grouped by `user_id`, join profiles)
+  - Pages with annotations vs total pages
+- Fetch this data lazily when the user expands a project card
 
 ## Files Modified
-1. `src/hooks/useProject.ts` — Realtime subscription for annotations
-2. `src/components/SummaryPanel.tsx` — contract qty column, date picker, manual qty fix
-3. `src/pages/Index.tsx` — pass inspector name to daily export, multi-page import
-4. `src/pages/Dashboard.tsx` — progress indicators for PMs
-5. `src/lib/export-utils.ts` — fix daily export filtering
-6. `src/components/PdfCanvas.tsx` — mobile annotation detail sheet
-7. **Migration** — enable realtime on annotations table
+1. `src/types/project.ts` — add `'manual'` annotation type
+2. `src/components/SummaryPanel.tsx` — fix manual qty persistence, stop corrupting contractQuantity
+3. `src/components/PdfCanvas.tsx` — hide desktop popup on mobile, improve mobile select-tap
+4. `src/components/MobileToolbar.tsx` — ensure select mode is always reachable
+5. `src/pages/Index.tsx` — multi-page import, pass annotation handlers to SummaryPanel, filter manual annotations from canvas
+6. `src/hooks/useProject.ts` — dedup realtime inserts
+7. `supabase/functions/invite-user/index.ts` — fix redirect URL
+8. `src/pages/Dashboard.tsx` — expandable progress detail for PMs
 
