@@ -415,7 +415,7 @@ export function SpecViewer({
             {startPage && (
               <Button
                 variant="outline" size="sm" className="h-7 text-xs ml-1"
-                onClick={() => setCurrentPage(startPage)}
+                onClick={() => setCurrentPage(effectiveStartPage)}
               >
                 Go to start
               </Button>
