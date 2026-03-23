@@ -73,6 +73,11 @@ export function SummaryPanel({
 
   const updateManualQty = (itemId: string, value: number) => {
     setManualQuantities(prev => ({ ...prev, [itemId]: value }));
+    // Persist by updating contractQuantity on the pay item
+    if (onUpdatePayItems) {
+      const updated = payItems.map(p => p.id === itemId ? { ...p, contractQuantity: value } : p);
+      onUpdatePayItems(updated);
+    }
   };
 
   const content = (
