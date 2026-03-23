@@ -5,19 +5,23 @@ import { HardHat, FileText, PenTool, ArrowRight, Ruler, Download, ChevronLeft, C
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 
+type AppRole = 'admin' | 'project_manager' | 'inspector';
+
 interface WelcomeCarouselProps {
   open: boolean;
   onDismiss: () => void;
   userId: string;
+  roles?: AppRole[];
 }
 
-const slides = [
+const allSlides = [
   {
     icon: HardHat,
     title: 'Welcome to Quantity Takeoff',
     subtitle: 'Precision measurement for construction teams',
     description: 'Upload construction plans, measure quantities, and generate accurate takeoff reports — all from your browser or phone.',
     accent: true,
+    showFor: ['admin', 'project_manager', 'inspector'] as AppRole[],
   },
   {
     icon: FileText,
@@ -25,6 +29,7 @@ const slides = [
     subtitle: 'Configure projects for your team',
     description: 'Create projects, upload PDFs, set calibration scales, import pay items from specs, and assign inspectors to start measuring.',
     accent: false,
+    showFor: ['admin', 'project_manager'] as AppRole[],
   },
   {
     icon: PenTool,
@@ -32,6 +37,7 @@ const slides = [
     subtitle: 'Measure with pre-configured tools',
     description: 'Open assigned projects with pay items ready to go. Draw lines, areas, and counts directly on the plans — measurements calculate automatically.',
     accent: false,
+    showFor: ['admin', 'inspector'] as AppRole[],
   },
   {
     icon: Ruler,
@@ -39,6 +45,7 @@ const slides = [
     subtitle: 'Upload → Calibrate → Annotate → Export',
     description: 'Calibrate the scale on each page, select a pay item, draw your measurement, and export your quantities as CSV or PDF.',
     accent: false,
+    showFor: ['admin', 'project_manager', 'inspector'] as AppRole[],
   },
   {
     icon: Download,
@@ -46,12 +53,18 @@ const slides = [
     subtitle: 'Start your first project',
     description: 'Create a project or jump into one assigned to you. Need help later? Tap the ? button for a guided tour anytime.',
     accent: true,
+    showFor: ['admin', 'project_manager', 'inspector'] as AppRole[],
   },
 ];
 
-export function WelcomeCarousel({ open, onDismiss, userId }: WelcomeCarouselProps) {
+export function WelcomeCarousel({ open, onDismiss, userId, roles = [] }: WelcomeCarouselProps) {
   const [current, setCurrent] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Filter slides based on user roles (show all if no roles yet)
+  const slides = roles.length > 0
+    ? allSlides.filter(s => s.showFor.some(r => roles.includes(r)))
+    : allSlides;
 
   const goTo = (idx: number) => {
     setCurrent(idx);

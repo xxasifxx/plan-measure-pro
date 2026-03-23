@@ -7,6 +7,8 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { HardHat, LogIn, UserPlus, Mail, KeyRound } from 'lucide-react';
 
+const INVITATION_TOKEN_KEY = 'pending_invitation_token';
+
 export default function Auth() {
   const [searchParams] = useSearchParams();
   const invitationToken = searchParams.get('invitation');
@@ -20,20 +22,31 @@ export default function Auth() {
   const [acceptingInvite, setAcceptingInvite] = useState(false);
   const { toast } = useToast();
 
-  // Accept invitation after login if token present
+  const isInvitedFlow = !!invitationToken;
+
+  // Persist invitation token to localStorage so it survives email confirmation redirect
   useEffect(() => {
-    if (!invitationToken) return;
+    if (invitationToken) {
+      localStorage.setItem(INVITATION_TOKEN_KEY, invitationToken);
+    }
+  }, [invitationToken]);
+
+  // Accept invitation after login if token present (URL or localStorage)
+  useEffect(() => {
+    const token = invitationToken || localStorage.getItem(INVITATION_TOKEN_KEY);
+    if (!token) return;
 
     const acceptInvitation = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return; // user needs to sign in first
+      if (!session) return;
 
       setAcceptingInvite(true);
       try {
-        const { data, error } = await supabase.rpc('accept_invitation', { _token: invitationToken });
+        const { data, error } = await supabase.rpc('accept_invitation', { _token: token });
         if (error) throw error;
         if (data === 'ok') {
           toast({ title: 'Welcome!', description: 'Your role has been assigned.' });
+          localStorage.removeItem(INVITATION_TOKEN_KEY);
         } else if (data === 'email_mismatch') {
           toast({ title: 'Email mismatch', description: 'This invitation was sent to a different email.', variant: 'destructive' });
         } else {
@@ -64,12 +77,19 @@ export default function Auth() {
       }
 
       if (mode === 'signup') {
+        const metadata: Record<string, string> = { full_name: fullName };
+        if (!isInvitedFlow) {
+          metadata.org_name = orgName;
+        }
+
         const { error } = await supabase.auth.signUp({
           email,
           password,
           options: {
-            data: { full_name: fullName, org_name: orgName },
-            emailRedirectTo: window.location.origin,
+            data: metadata,
+            emailRedirectTo: invitationToken
+              ? `${window.location.origin}/auth?invitation=${invitationToken}`
+              : window.location.origin,
           },
         });
         if (error) throw error;
@@ -78,16 +98,18 @@ export default function Auth() {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
 
-        // After sign-in, try to assign owner role (no-op if already has roles)
+        // After sign-in, try to assign owner role (no-op if already has roles or was invited)
         if (data.user) {
           await supabase.rpc('assign_owner_role', { _user_id: data.user.id });
         }
 
-        // If there's an invitation token, accept it
-        if (invitationToken) {
-          const { data: result } = await supabase.rpc('accept_invitation', { _token: invitationToken });
+        // If there's an invitation token (URL or localStorage), accept it
+        const token = invitationToken || localStorage.getItem(INVITATION_TOKEN_KEY);
+        if (token) {
+          const { data: result } = await supabase.rpc('accept_invitation', { _token: token });
           if (result === 'ok') {
             toast({ title: 'Invitation accepted!' });
+            localStorage.removeItem(INVITATION_TOKEN_KEY);
           }
         }
       }
@@ -107,8 +129,8 @@ export default function Auth() {
           </div>
           <h1 className="text-xl font-bold text-foreground">Quantity Takeoff</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            {invitationToken
-              ? 'Sign in to accept your invitation'
+            {isInvitedFlow
+              ? 'Sign in or create an account to join your team'
               : mode === 'signup'
                 ? 'Create your organization account'
                 : mode === 'forgot'
@@ -124,10 +146,12 @@ export default function Auth() {
                 <Label htmlFor="name">Full Name</Label>
                 <Input id="name" value={fullName} onChange={e => setFullName(e.target.value)} placeholder="John Smith" required />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="org">Organization Name</Label>
-                <Input id="org" value={orgName} onChange={e => setOrgName(e.target.value)} placeholder="Smith Construction LLC" required />
-              </div>
+              {!isInvitedFlow && (
+                <div className="space-y-2">
+                  <Label htmlFor="org">Organization Name</Label>
+                  <Input id="org" value={orgName} onChange={e => setOrgName(e.target.value)} placeholder="Smith Construction LLC" required />
+                </div>
+              )}
             </>
           )}
           <div className="space-y-2">
@@ -143,7 +167,7 @@ export default function Auth() {
 
           <Button type="submit" className="w-full" disabled={loading || acceptingInvite}>
             {loading ? 'Please wait...' : mode === 'signup' ? (
-              <><UserPlus className="h-4 w-4 mr-2" /> Create Account</>
+              <><UserPlus className="h-4 w-4 mr-2" /> {isInvitedFlow ? 'Join Team' : 'Create Account'}</>
             ) : mode === 'forgot' ? (
               <><Mail className="h-4 w-4 mr-2" /> Send Reset Link</>
             ) : (

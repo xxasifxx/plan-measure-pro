@@ -24,8 +24,9 @@ import { exportCsv, exportPdfReport, exportInspectorDaily } from '@/lib/export-u
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import type { TocEntry } from '@/types/project';
-import { Sun, Moon, ArrowLeft, Loader2, HelpCircle, FileSpreadsheet } from 'lucide-react';
+import { Sun, Moon, ArrowLeft, Loader2, HelpCircle, FileSpreadsheet, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { TeamManager } from '@/components/TeamManager';
 
 const Index = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -71,6 +72,7 @@ const Index = () => {
     }
   }, [pdf, project]);
   const [showSummary, setShowSummary] = useState(false);
+  const [showTeam, setShowTeam] = useState(false);
   const [selectedAnnotationId, setSelectedAnnotationId] = useState<string | null>(null);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
@@ -600,6 +602,11 @@ const Index = () => {
               {project?.name || 'Construction Takeoff'}
             </span>
             <div className="ml-auto flex gap-1">
+              {(isManager || isAdmin) && projectId && (
+                <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setShowTeam(true)} title="Manage team">
+                  <Users className="h-3.5 w-3.5" />
+                </Button>
+              )}
               <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => workspaceTour.start()} title="Help">
                 <HelpCircle className="h-3.5 w-3.5" />
               </Button>
@@ -684,6 +691,15 @@ const Index = () => {
         specsPageTexts={specsPageTexts}
         startPage={specViewerData.startPage}
       />
+
+      {projectId && (
+        <TeamManager
+          open={showTeam}
+          onOpenChange={setShowTeam}
+          projectId={projectId}
+          projectName={project?.name || 'Project'}
+        />
+      )}
 
       <GuidedTour
         steps={workspaceSteps}

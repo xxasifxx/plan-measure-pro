@@ -76,6 +76,8 @@ export default function Dashboard() {
     }
   }, [profile]);
 
+  // Pass roles to WelcomeCarousel - find where it's rendered
+
   // Guided tour
   const dashboardTour = useTour('dashboard');
   const dashboardSteps: TourStep[] = [
@@ -288,7 +290,7 @@ export default function Dashboard() {
         </DialogContent>
       </Dialog>
       {showWelcome && user && (
-        <WelcomeCarousel open={showWelcome} onDismiss={() => setShowWelcome(false)} userId={user.id} />
+        <WelcomeCarousel open={showWelcome} onDismiss={() => setShowWelcome(false)} userId={user.id} roles={roles as any} />
       )}
 
       <GuidedTour

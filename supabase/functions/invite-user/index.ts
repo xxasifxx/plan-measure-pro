@@ -24,21 +24,19 @@ Deno.serve(async (req) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
 
-    // Verify caller is admin
+    // Verify caller identity using getUser()
     const userClient = createClient(supabaseUrl, anonKey, {
       global: { headers: { Authorization: authHeader } },
     });
-    const { data: claims, error: claimsErr } = await userClient.auth.getClaims(
-      authHeader.replace("Bearer ", "")
-    );
-    if (claimsErr || !claims?.claims?.sub) {
+    const { data: userData, error: userErr } = await userClient.auth.getUser();
+    if (userErr || !userData?.user?.id) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const callerId = claims.claims.sub as string;
+    const callerId = userData.user.id;
 
     // Check admin role
     const adminClient = createClient(supabaseUrl, supabaseServiceKey);
@@ -87,7 +85,6 @@ Deno.serve(async (req) => {
     // Upsert invitation
     let token: string;
     if (existing) {
-      // Update existing pending invitation
       const { data: updated, error: updateErr } = await adminClient
         .from("invitations")
         .update({ role, invited_by: callerId })
@@ -110,8 +107,7 @@ Deno.serve(async (req) => {
       token = inserted.token;
     }
 
-    // Invite user via Supabase Auth Admin API
-    // This sends a magic link / invite email
+    // Send invite email via Supabase Auth Admin API
     const siteUrl =
       req.headers.get("origin") || req.headers.get("referer") || supabaseUrl;
     const redirectTo = `${siteUrl}/auth?invitation=${token}`;
@@ -122,7 +118,6 @@ Deno.serve(async (req) => {
         data: { invited_role: role },
       });
 
-    // inviteErr with "already registered" is fine - they can still accept
     if (inviteErr && !inviteErr.message?.includes("already been registered")) {
       console.error("Invite error:", inviteErr);
     }
