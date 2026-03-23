@@ -571,7 +571,7 @@ export function SpecViewer({
                     <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
                   </div>
                 )}
-                <canvas ref={canvasRef} className="shadow-md" />
+                <canvas ref={canvasRefCb} className="shadow-md" />
               </div>
             </>
           )}
