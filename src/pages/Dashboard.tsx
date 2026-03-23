@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/dialog';
 import {
   HardHat, Plus, LogOut, Sun, Moon, FileText, Clock, PenTool,
-  Trash2, FolderOpen, Loader2, AlertCircle, Shield, HelpCircle,
+  Trash2, FolderOpen, Loader2, AlertCircle, Shield, HelpCircle, Users,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { WelcomeCarousel } from '@/components/WelcomeCarousel';
