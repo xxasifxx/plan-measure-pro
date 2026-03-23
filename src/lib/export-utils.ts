@@ -183,12 +183,11 @@ export function exportInspectorDaily(
   // Filter: today's annotations by this user
   const todayAnns = allAnnotations.filter(a => {
     if (!a.createdAt) return false;
-    return a.createdAt.slice(0, 10) === todayStr;
+    if (a.createdAt.slice(0, 10) !== todayStr) return false;
+    // Filter by user if userId is provided and annotation has userId
+    if (userId && a.userId && a.userId !== userId) return false;
+    return true;
   });
-
-  // Filter by user — we match on userId if annotation was created by this user
-  // Since annotations don't store user_id locally, we include all today's annotations
-  // (the caller should pre-filter if needed)
 
   const wb = XLSX.utils.book_new();
 

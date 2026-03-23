@@ -339,6 +339,7 @@ export function useProject(options: UseProjectOptions = {}) {
               location: record.location || '',
               notes: record.notes || '',
               createdAt: record.created_at,
+              userId: record.user_id,
             };
             setProject(prev => prev ? { ...prev, annotations: [...prev.annotations, ann] } : prev);
           } else if (payload.eventType === 'DELETE') {
