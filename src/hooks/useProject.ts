@@ -130,6 +130,8 @@ export function useProject(options: UseProjectOptions = {}) {
     persist(updated);
     undoStack.current.push({ type: 'add', annotation });
     redoStack.current = [];
+    setUndoCount(undoStack.current.length);
+    setRedoCount(0);
 
     if (dbSync() && supabaseProjectId && userId) {
       await supabase.from('annotations').insert({
