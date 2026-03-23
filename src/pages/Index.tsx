@@ -27,6 +27,7 @@ import type { TocEntry } from '@/types/project';
 import { Sun, Moon, ArrowLeft, Loader2, HelpCircle, FileSpreadsheet, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { TeamManager } from '@/components/TeamManager';
+import { MobileAnnotationSheet } from '@/components/MobileAnnotationSheet';
 
 const Index = () => {
   const { projectId } = useParams<{ projectId: string }>();
