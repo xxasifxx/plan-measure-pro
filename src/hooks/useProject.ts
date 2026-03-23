@@ -56,6 +56,8 @@ export function useProject(options: UseProjectOptions = {}) {
     }
     undoStack.current = [];
     redoStack.current = [];
+    setUndoCount(0);
+    setRedoCount(0);
     return proj;
   }, [supabaseProjectId]);
 
