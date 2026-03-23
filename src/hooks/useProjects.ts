@@ -14,6 +14,8 @@ export interface ProjectRow {
   updated_at: string;
   annotation_count?: number;
   member_role?: string;
+  member_count?: number;
+  latest_annotation_at?: string | null;
 }
 
 export function useProjects() {
