@@ -718,8 +718,10 @@ export function PdfCanvas({
           handleDoubleClickAtPos();
           ts.lastTapTime = 0;
         } else {
-          // Single tap → place point
-          handleClickAtPos(endPos);
+          // Single tap → place point (skip for tocSelect)
+          if (toolMode !== 'tocSelect') {
+            handleClickAtPos(endPos);
+          }
           ts.lastTapTime = now;
         }
       } else {
@@ -727,6 +729,20 @@ export function PdfCanvas({
         if ((toolMode === 'line' || toolMode === 'calibrate') && ts.dragFirstPointPlaced) {
           // Place second point at drag end → complete the line/calibration
           handleClickAtPos(endPos);
+        }
+
+        // TOC select: finalize rectangle
+        if (toolMode === 'tocSelect' && tocDragStart) {
+          const x1 = Math.min(tocDragStart.x, endPos.x);
+          const y1 = Math.min(tocDragStart.y, endPos.y);
+          const x2 = Math.max(tocDragStart.x, endPos.x);
+          const y2 = Math.max(tocDragStart.y, endPos.y);
+          if (x2 - x1 > 20 && y2 - y1 > 20) {
+            setTocRect({ x1, y1, x2, y2 });
+            onTocRegionSelected?.({ x1, y1, x2, y2 });
+          }
+          setTocDragStart(null);
+          setTocDragEnd(null);
         }
       }
 
