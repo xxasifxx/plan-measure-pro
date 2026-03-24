@@ -26,6 +26,7 @@ import { supabase } from '@/integrations/supabase/client';
 import type { TocEntry } from '@/types/project';
 import { Sun, Moon, ArrowLeft, Loader2, HelpCircle, FileSpreadsheet, Users, MousePointer2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { TeamManager } from '@/components/TeamManager';
 import { MobileAnnotationSheet } from '@/components/MobileAnnotationSheet';
 
