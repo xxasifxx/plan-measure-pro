@@ -14,7 +14,9 @@ import {
 import {
   HardHat, Plus, LogOut, Sun, Moon, FileText, Clock, PenTool,
   Trash2, FolderOpen, Loader2, AlertCircle, Shield, HelpCircle, Users,
+  ChevronDown, ChevronUp,
 } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
 import { WelcomeCarousel } from '@/components/WelcomeCarousel';
 import { GuidedTour } from '@/components/GuidedTour';
@@ -67,6 +69,63 @@ export default function Dashboard() {
   };
 
   const roleBadge = roles[0] ? roles[0].replace('_', ' ') : 'user';
+
+  // PM progress detail
+  const [expandedProject, setExpandedProject] = useState<string | null>(null);
+  const [projectDetail, setProjectDetail] = useState<{
+    inspectors: { name: string; count: number; lastActive: string }[];
+    pagesAnnotated: number;
+    totalPages: number;
+  } | null>(null);
+  const [detailLoading, setDetailLoading] = useState(false);
+
+  const loadProjectDetail = async (projectId: string) => {
+    if (expandedProject === projectId) { setExpandedProject(null); return; }
+    setExpandedProject(projectId);
+    setProjectDetail(null);
+    setDetailLoading(true);
+    try {
+      const { data: anns } = await supabase
+        .from('annotations')
+        .select('user_id, page, created_at')
+        .eq('project_id', projectId);
+
+      const { data: proj } = await supabase.storage
+        .from('project-pdfs')
+        .list(projectId.split('/')[0]); // rough estimate
+
+      // Group by user
+      const byUser: Record<string, { count: number; lastActive: string }> = {};
+      const pages = new Set<number>();
+      (anns || []).forEach(a => {
+        pages.add(a.page);
+        if (!byUser[a.user_id]) byUser[a.user_id] = { count: 0, lastActive: a.created_at };
+        byUser[a.user_id].count++;
+        if (a.created_at > byUser[a.user_id].lastActive) byUser[a.user_id].lastActive = a.created_at;
+      });
+
+      // Get names
+      const userIds = Object.keys(byUser);
+      let inspectors: { name: string; count: number; lastActive: string }[] = [];
+      if (userIds.length > 0) {
+        const { data: profiles } = await supabase
+          .from('profiles')
+          .select('id, full_name, email')
+          .in('id', userIds);
+        inspectors = userIds.map(uid => {
+          const p = (profiles || []).find(pr => pr.id === uid);
+          return {
+            name: p?.full_name || p?.email || 'Unknown',
+            count: byUser[uid].count,
+            lastActive: byUser[uid].lastActive,
+          };
+        }).sort((a, b) => b.count - a.count);
+      }
+
+      setProjectDetail({ inspectors, pagesAnnotated: pages.size, totalPages: 0 });
+    } catch { /* ignore */ }
+    setDetailLoading(false);
+  };
 
   // Welcome carousel
   const [showWelcome, setShowWelcome] = useState(false);
@@ -240,7 +299,7 @@ export default function Dashboard() {
                   </span>
                 )}
               </div>
-              <div className="mt-2">
+              <div className="mt-2 flex items-center justify-between">
                 <span className={cn(
                   'text-[9px] font-semibold uppercase px-1.5 py-0.5 rounded',
                   project.member_role === 'owner'
@@ -249,7 +308,46 @@ export default function Dashboard() {
                 )}>
                   {project.member_role === 'owner' ? 'Manager' : project.member_role}
                 </span>
+                {project.member_role === 'owner' && (
+                  <span
+                    role="button"
+                    onClick={e => { e.stopPropagation(); loadProjectDetail(project.id); }}
+                    className="text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-0.5"
+                  >
+                    Details
+                    {expandedProject === project.id ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+                  </span>
+                )}
               </div>
+
+              {/* Expanded progress detail */}
+              {expandedProject === project.id && (
+                <div className="mt-3 pt-3 border-t border-border" onClick={e => e.stopPropagation()}>
+                  {detailLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground mx-auto" />
+                  ) : projectDetail ? (
+                    <div className="space-y-2">
+                      <p className="text-[10px] text-muted-foreground">
+                        {projectDetail.pagesAnnotated} pages with annotations
+                      </p>
+                      {projectDetail.inspectors.length > 0 ? (
+                        <div className="space-y-1">
+                          {projectDetail.inspectors.map((insp, i) => (
+                            <div key={i} className="flex items-center justify-between text-[10px]">
+                              <span className="text-foreground truncate max-w-[120px]">{insp.name}</span>
+                              <span className="text-muted-foreground">
+                                {insp.count} ann · {new Date(insp.lastActive).toLocaleDateString()}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-[10px] text-muted-foreground">No annotations yet</p>
+                      )}
+                    </div>
+                  ) : null}
+                </div>
+              )}
             </button>
           ))}
         </div>
