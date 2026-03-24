@@ -49,6 +49,7 @@ function buildRows(annotations: Annotation[], payItems: PayItem[]): ExportRow[] 
 export function exportCsv(annotations: Annotation[], payItems: PayItem[], projectName: string): void {
   const rows = buildRows(annotations, payItems);
   const header = 'Section,Item #,Item Code,Pay Item,Count,Measured Qty,Unit,Unit Price,Contract Qty,Variance %,Extended Cost';
+  // Contract Qty and Variance % are already in the header and row output below
 
   const sections = new Map<number, ExportRow[]>();
   for (const r of rows) {

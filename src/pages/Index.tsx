@@ -24,8 +24,9 @@ import { exportCsv, exportPdfReport, exportInspectorDaily } from '@/lib/export-u
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import type { TocEntry } from '@/types/project';
-import { Sun, Moon, ArrowLeft, Loader2, HelpCircle, FileSpreadsheet, Users } from 'lucide-react';
+import { Sun, Moon, ArrowLeft, Loader2, HelpCircle, FileSpreadsheet, Users, MousePointer2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { TeamManager } from '@/components/TeamManager';
 import { MobileAnnotationSheet } from '@/components/MobileAnnotationSheet';
 
@@ -51,6 +52,7 @@ const Index = () => {
     addAnnotation, removeAnnotation, updateAnnotation, removeAnnotationsForPayItem,
     currentCalibration, persist, updateToc,
     undo, redo, canUndo, canRedo,
+    onlineUsers,
   } = useProject({ supabaseProjectId: projectId, userId: currentUserId });
 
   const [pdf, setPdf] = useState<PDFDocumentProxy | null>(null);
@@ -554,6 +556,28 @@ const Index = () => {
           )}
         </div>
 
+        {/* Mobile select/edit FAB */}
+        {mobileTab === 'canvas' && pdf && (project?.annotations || []).filter(a => a.type !== 'manual').length > 0 && (
+          <button
+            onClick={() => setToolMode(toolMode === 'select' ? (activePayItem ? (() => {
+              switch (activePayItem.unit) {
+                case 'LF': return 'line' as const;
+                case 'SF': case 'SY': case 'CY': return 'polygon' as const;
+                case 'EA': return 'count' as const;
+                default: return 'select' as const;
+              }
+            })() : 'pan') : 'select')}
+            className={cn(
+              'absolute bottom-20 right-4 z-30 h-12 w-12 rounded-full shadow-lg flex items-center justify-center transition-colors',
+              toolMode === 'select'
+                ? 'bg-primary text-primary-foreground'
+                : 'bg-card text-foreground border border-border'
+            )}
+          >
+            <MousePointer2 className="h-5 w-5" />
+          </button>
+        )}
+
         <MobileTabBar
           activeTab={mobileTab}
           onTabChange={setMobileTab}
@@ -629,7 +653,12 @@ const Index = () => {
             <span className="text-xs font-bold uppercase tracking-wider text-foreground">
               {project?.name || 'Construction Takeoff'}
             </span>
-            <div className="ml-auto flex gap-1">
+            <div className="ml-auto flex items-center gap-1">
+              {onlineUsers.length > 0 && (
+                <span className="text-[10px] text-muted-foreground bg-muted px-2 py-0.5 rounded-full mr-1">
+                  {onlineUsers.length} online
+                </span>
+              )}
               {(isManager || isAdmin) && projectId && (
                 <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setShowTeam(true)} title="Manage team">
                   <Users className="h-3.5 w-3.5" />

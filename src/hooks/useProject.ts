@@ -397,6 +397,38 @@ export function useProject(options: UseProjectOptions = {}) {
     };
   }, [supabaseProjectId, userId]);
 
+  // ── Presence ──
+  const [onlineUsers, setOnlineUsers] = useState<{ userId: string; name: string }[]>([]);
+
+  useEffect(() => {
+    if (!supabaseProjectId || !userId) return;
+
+    const presenceChannel = supabase.channel(`presence:${supabaseProjectId}`, {
+      config: { presence: { key: userId } },
+    });
+
+    presenceChannel
+      .on('presence', { event: 'sync' }, () => {
+        const state = presenceChannel.presenceState();
+        const users: { userId: string; name: string }[] = [];
+        for (const [key, presences] of Object.entries(state)) {
+          if (key !== userId && Array.isArray(presences) && presences.length > 0) {
+            users.push({ userId: key, name: (presences[0] as any).name || 'User' });
+          }
+        }
+        setOnlineUsers(users);
+      })
+      .subscribe(async (status) => {
+        if (status === 'SUBSCRIBED') {
+          await presenceChannel.track({ name: '' });
+        }
+      });
+
+    return () => {
+      supabase.removeChannel(presenceChannel);
+    };
+  }, [supabaseProjectId, userId]);
+
   // ── Close ──
   const closeProject = useCallback(() => {
     setProject(null);
@@ -442,5 +474,6 @@ export function useProject(options: UseProjectOptions = {}) {
     redo,
     canUndo,
     canRedo,
+    onlineUsers,
   };
 }
