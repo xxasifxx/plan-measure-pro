@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import heroScreenshot from '@/assets/hero-screenshot.jpg';
 import { Button } from '@/components/ui/button';
 import {
   HardHat, Ruler, Layers, Users, Zap, FileSpreadsheet,
@@ -220,41 +221,15 @@ export default function Landing() {
           </div>
 
           {/* Hero visual */}
-          <div className="hidden lg:block absolute right-0 top-16 w-[420px] h-[320px]">
-            <div className="relative w-full h-full">
-              <div className="absolute inset-0 rounded-xl bg-card border border-border shadow-2xl overflow-hidden">
-                <div className="h-8 bg-muted/50 border-b border-border flex items-center px-3 gap-1.5">
-                  <div className="h-2 w-2 rounded-full bg-destructive/40" />
-                  <div className="h-2 w-2 rounded-full bg-warning/40" />
-                  <div className="h-2 w-2 rounded-full bg-success/40" />
-                  <span className="text-[9px] text-muted-foreground ml-2 font-mono">NJTA_Contract_Plans.pdf</span>
-                </div>
-                <div className="p-4 space-y-3">
-                  <div className="flex gap-2">
-                    <div className="h-6 w-16 rounded bg-primary/20 animate-pulse" />
-                    <div className="h-6 w-12 rounded bg-muted animate-pulse" />
-                    <div className="h-6 w-14 rounded bg-muted animate-pulse" />
-                  </div>
-                  <div className="h-40 rounded bg-muted/30 border border-border/50 relative overflow-hidden">
-                    <svg className="absolute inset-0 w-full h-full" viewBox="0 0 400 160">
-                      <line x1="60" y1="40" x2="200" y2="40" stroke="hsl(var(--primary))" strokeWidth="2" />
-                      <text x="130" y="35" fill="hsl(var(--primary))" fontSize="8" textAnchor="middle">142.5 LF — Guardrail</text>
-                      <polygon points="250,60 350,60 350,120 280,120 250,90" fill="hsl(var(--primary))" fillOpacity="0.12" stroke="hsl(var(--primary))" strokeWidth="1.5" />
-                      <text x="300" y="95" fill="hsl(var(--primary))" fontSize="8" textAnchor="middle">1,280 SY — HMA</text>
-                      <circle cx="80" cy="110" r="6" fill="hsl(var(--primary))" />
-                      <text x="80" y="113" fill="hsl(var(--primary-foreground))" fontSize="7" textAnchor="middle">1</text>
-                      <circle cx="120" cy="100" r="6" fill="hsl(var(--primary))" />
-                      <text x="120" y="103" fill="hsl(var(--primary-foreground))" fontSize="7" textAnchor="middle">2</text>
-                    </svg>
-                  </div>
-                  <div className="flex gap-2">
-                    <div className="h-4 w-28 rounded bg-primary/10 flex items-center justify-center">
-                      <span className="text-[7px] text-primary font-medium">Pay Item 401-0003</span>
-                    </div>
-                    <div className="ml-auto h-4 w-20 rounded bg-muted" />
-                  </div>
-                </div>
-              </div>
+          <div className="hidden lg:block absolute right-0 top-12 w-[480px]">
+            <div className="rounded-xl border border-border shadow-2xl overflow-hidden">
+              <img
+                src={heroScreenshot}
+                alt="TakeoffPro interface showing NJTA highway plan with quantity measurements, pay item sidebar, and annotation tools"
+                width={1024}
+                height={1024}
+                className="w-full h-auto"
+              />
             </div>
           </div>
         </div>
