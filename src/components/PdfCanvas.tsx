@@ -893,7 +893,7 @@ export function PdfCanvas({
       ts.dragFirstPointPlaced = false;
       setMousePos(null);
     }
-  }, [getTouchCanvasPos, handleClickAtPos, handleDoubleClickAtPos, toolMode, tocDragStart, onTocRegionSelected]);
+  }, [getTouchCanvasPos, handleClickAtPos, handleDoubleClickAtPos, toolMode, tocDragStart, onTocRegionSelected, draggingHandle, onUpdateAnnotation, calibration, annotations]);
 
   // Prevent default touch zoom on the container (only multi-touch)
   useEffect(() => {
