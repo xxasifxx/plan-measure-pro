@@ -245,10 +245,13 @@ export function PdfCanvas({
           }
         }
 
-        // Measurement label — recalc if dragging
-        const measLabel = (draggingHandle && draggingHandle.annotationId === ann.id && calibration)
-          ? lineLength(pts, calibration.pixelsPerFoot).toFixed(1)
-          : ann.measurement.toFixed(1);
+        // Measurement label — recalc if dragging (only if no manual override)
+        let measLabel: string;
+        if (draggingHandle && draggingHandle.annotationId === ann.id && calibration && ann.manualQuantity == null) {
+          measLabel = lineLength(pts, calibration.pixelsPerFoot).toFixed(1);
+        } else {
+          measLabel = (ann.manualQuantity != null ? ann.manualQuantity : ann.measurement).toFixed(1);
+        }
         const mid = { x: (p0.x + p1.x) / 2, y: (p0.y + p1.y) / 2 };
         ctx.fillStyle = color;
         ctx.font = 'bold 11px monospace';
@@ -256,7 +259,13 @@ export function PdfCanvas({
       }
 
       if (ann.type === 'polygon' && ann.points.length >= 3) {
-        const scaled = ann.points.map(s);
+        // If dragging a handle on this polygon, use the preview position
+        let polyPts = ann.points;
+        if (draggingHandle && draggingHandle.annotationId === ann.id) {
+          polyPts = polyPts.map((p, i) => i === draggingHandle.pointIndex ? draggingHandle.currentPos : p);
+        }
+
+        const scaled = polyPts.map(s);
         ctx.beginPath();
         ctx.moveTo(scaled[0].x, scaled[0].y);
         for (let i = 1; i < scaled.length; i++) {
@@ -272,13 +281,38 @@ export function PdfCanvas({
           ctx.setLineDash([4, 4]);
           ctx.stroke();
           ctx.setLineDash([]);
+
+          // Draw vertex drag handles
+          for (const ep of scaled) {
+            ctx.beginPath();
+            ctx.arc(ep.x, ep.y, HANDLE_RADIUS * scale, 0, Math.PI * 2);
+            ctx.fillStyle = '#fff';
+            ctx.fill();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+          }
         }
 
         const cx = scaled.reduce((sum, p) => sum + p.x, 0) / scaled.length;
         const cy = scaled.reduce((sum, p) => sum + p.y, 0) / scaled.length;
         ctx.fillStyle = color;
         const unitLabel = ann.measurementUnit || (ann.depth ? 'CY' : 'SF');
-        const label = `${ann.measurement.toFixed(1)} ${unitLabel}`;
+        // Live preview measurement during drag (only if no manual override)
+        let polyMeas: number;
+        if (draggingHandle && draggingHandle.annotationId === ann.id && calibration && ann.manualQuantity == null) {
+          const areaSF = polygonAreaSF(polyPts, calibration.pixelsPerFoot);
+          if (ann.depth) {
+            polyMeas = (areaSF * ann.depth) / 27;
+          } else if (ann.measurementUnit === 'SY') {
+            polyMeas = areaSF / 9;
+          } else {
+            polyMeas = areaSF;
+          }
+        } else {
+          polyMeas = ann.manualQuantity != null ? ann.manualQuantity : ann.measurement;
+        }
+        const label = `${polyMeas.toFixed(1)} ${unitLabel}`;
         ctx.fillText(label, cx - 20, cy);
       }
     }
@@ -383,7 +417,7 @@ export function PdfCanvas({
   const hitTestHandles = useCallback((pos: PointXY): { annotationId: string; pointIndex: number } | null => {
     if (!selectedAnnotationId) return null;
     const ann = annotations.find(a => a.id === selectedAnnotationId);
-    if (!ann || ann.type !== 'line' || ann.points.length !== 2) return null;
+    if (!ann || (ann.type !== 'line' && ann.type !== 'polygon')) return null;
     for (let i = 0; i < ann.points.length; i++) {
       if (distancePx(pos, ann.points[i]) <= HANDLE_HIT_RADIUS) {
         return { annotationId: ann.id, pointIndex: i };
@@ -591,11 +625,23 @@ export function PdfCanvas({
         const newPoints = ann.points.map((p, i) =>
           i === draggingHandle.pointIndex ? draggingHandle.currentPos : p
         );
-        const newMeasurement = lineLength(newPoints, calibration.pixelsPerFoot);
-        onUpdateAnnotation(draggingHandle.annotationId, {
-          points: newPoints,
-          measurement: newMeasurement,
-        });
+        // Only recalculate if no manual quantity override
+        const changes: Partial<Annotation> = { points: newPoints };
+        if (ann.manualQuantity == null) {
+          if (ann.type === 'line') {
+            changes.measurement = lineLength(newPoints, calibration.pixelsPerFoot);
+          } else if (ann.type === 'polygon' && newPoints.length >= 3) {
+            const areaSF = polygonAreaSF(newPoints, calibration.pixelsPerFoot);
+            if (ann.depth) {
+              changes.measurement = (areaSF * ann.depth) / 27;
+            } else if (ann.measurementUnit === 'SY') {
+              changes.measurement = areaSF / 9;
+            } else {
+              changes.measurement = areaSF;
+            }
+          }
+        }
+        onUpdateAnnotation(draggingHandle.annotationId, changes);
       }
       setDraggingHandle(null);
       handleDragJustFinished.current = true;
@@ -830,11 +876,22 @@ export function PdfCanvas({
           const newPoints = ann.points.map((p, i) =>
             i === draggingHandle.pointIndex ? draggingHandle.currentPos : p
           );
-          const newMeasurement = lineLength(newPoints, calibration.pixelsPerFoot);
-          onUpdateAnnotation(draggingHandle.annotationId, {
-            points: newPoints,
-            measurement: newMeasurement,
-          });
+          const changes: Partial<Annotation> = { points: newPoints };
+          if (ann.manualQuantity == null) {
+            if (ann.type === 'line') {
+              changes.measurement = lineLength(newPoints, calibration.pixelsPerFoot);
+            } else if (ann.type === 'polygon' && newPoints.length >= 3) {
+              const areaSF = polygonAreaSF(newPoints, calibration.pixelsPerFoot);
+              if (ann.depth) {
+                changes.measurement = (areaSF * ann.depth) / 27;
+              } else if (ann.measurementUnit === 'SY') {
+                changes.measurement = areaSF / 9;
+              } else {
+                changes.measurement = areaSF;
+              }
+            }
+          }
+          onUpdateAnnotation(draggingHandle.annotationId, changes);
         }
       }
       setDraggingHandle(null);
