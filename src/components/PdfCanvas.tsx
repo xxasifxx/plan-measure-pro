@@ -743,6 +743,14 @@ export function PdfCanvas({
   const handleOverlayTouchMove = useCallback((e: React.TouchEvent) => {
     const ts = touchStateRef.current;
 
+    // Handle endpoint dragging (touch)
+    if (draggingHandle && e.touches.length === 1) {
+      e.preventDefault();
+      const pos = getTouchCanvasPos(e.touches[0]);
+      setDraggingHandle(prev => prev ? { ...prev, currentPos: pos } : null);
+      return;
+    }
+
     // Two-finger: pinch-zoom + pan (always)
     if (e.touches.length === 2 && ts.isTwoFinger) {
       e.preventDefault();
@@ -805,7 +813,7 @@ export function PdfCanvas({
         }
       }
     }
-  }, [scale, onScaleChange, getTouchCanvasPos, toolMode, handleClickAtPos]);
+  }, [scale, onScaleChange, getTouchCanvasPos, toolMode, handleClickAtPos, draggingHandle]);
 
   const handleOverlayTouchEnd = useCallback((e: React.TouchEvent) => {
     const ts = touchStateRef.current;
