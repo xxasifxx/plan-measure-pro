@@ -577,6 +577,23 @@ export function PdfCanvas({
   }, [toolMode, getCanvasPos, hitTestHandles, annotations]);
 
   const handleMouseUp = useCallback(() => {
+    // Finalize endpoint drag
+    if (draggingHandle && onUpdateAnnotation && calibration) {
+      const ann = annotations.find(a => a.id === draggingHandle.annotationId);
+      if (ann) {
+        const newPoints = ann.points.map((p, i) =>
+          i === draggingHandle.pointIndex ? draggingHandle.currentPos : p
+        );
+        const newMeasurement = lineLength(newPoints, calibration.pixelsPerFoot);
+        onUpdateAnnotation(draggingHandle.annotationId, {
+          points: newPoints,
+          measurement: newMeasurement,
+        });
+      }
+      setDraggingHandle(null);
+      return;
+    }
+
     if (isPanning) {
       setIsPanning(false);
       return;
@@ -596,7 +613,7 @@ export function PdfCanvas({
       setTocDragStart(null);
       setTocDragEnd(null);
     }
-  }, [isPanning, toolMode, tocDragStart, tocDragEnd]);
+  }, [isPanning, toolMode, tocDragStart, tocDragEnd, draggingHandle, onUpdateAnnotation, calibration, annotations]);
 
   const submitCalibration = () => {
     const dist = parseFloat(calibrateDistance);
