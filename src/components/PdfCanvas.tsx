@@ -822,6 +822,27 @@ export function PdfCanvas({
       ts.isTwoFinger = false;
     }
 
+    // Finalize handle drag (touch)
+    if (e.touches.length === 0 && draggingHandle) {
+      if (onUpdateAnnotation && calibration) {
+        const ann = annotations.find(a => a.id === draggingHandle.annotationId);
+        if (ann) {
+          const newPoints = ann.points.map((p, i) =>
+            i === draggingHandle.pointIndex ? draggingHandle.currentPos : p
+          );
+          const newMeasurement = lineLength(newPoints, calibration.pixelsPerFoot);
+          onUpdateAnnotation(draggingHandle.annotationId, {
+            points: newPoints,
+            measurement: newMeasurement,
+          });
+        }
+      }
+      setDraggingHandle(null);
+      touchStateRef.current.startPos = null;
+      touchStateRef.current.suppressClick = true;
+      return;
+    }
+
     // Only process single-finger end when no fingers remain
     if (e.touches.length === 0 && ts.startPos) {
       const touch = e.changedTouches[0];
