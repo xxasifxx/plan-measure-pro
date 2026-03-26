@@ -451,9 +451,16 @@ export function PdfCanvas({
     }
   }, [toolMode, calibratePoints, drawingPoints, calibration, activePayItemId, currentPage, onAddAnnotation, hitTestAnnotations, onSelectAnnotation, guardDrawing]);
 
+  // Suppress click after handle drag
+  const handleDragJustFinished = useRef(false);
+
   const handleCanvasClick = useCallback((e: React.MouseEvent) => {
     if (touchStateRef.current.suppressClick) {
       touchStateRef.current.suppressClick = false;
+      return;
+    }
+    if (handleDragJustFinished.current) {
+      handleDragJustFinished.current = false;
       return;
     }
     handleClickAtPos(getCanvasPos(e));
