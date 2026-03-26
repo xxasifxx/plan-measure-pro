@@ -710,6 +710,22 @@ export function PdfCanvas({
       ts.dragFirstPointPlaced = false;
       ts.isTwoFinger = false;
 
+      // Check for handle drag on selected line (touch)
+      if (toolMode === 'select') {
+        const handle = hitTestHandles(ts.startPos);
+        if (handle) {
+          const ann = annotations.find(a => a.id === handle.annotationId);
+          if (ann) {
+            setDraggingHandle({
+              annotationId: handle.annotationId,
+              pointIndex: handle.pointIndex,
+              currentPos: ann.points[handle.pointIndex],
+            });
+            return;
+          }
+        }
+      }
+
       // For pan/select, start panning immediately
       if (toolMode === 'pan' || toolMode === 'select') {
         panStart.current = { x: touch.clientX, y: touch.clientY };
@@ -722,7 +738,7 @@ export function PdfCanvas({
         setTocRect(null);
       }
     }
-  }, [getTouchCanvasPos, toolMode]);
+  }, [getTouchCanvasPos, toolMode, hitTestHandles, annotations]);
 
   const handleOverlayTouchMove = useCallback((e: React.TouchEvent) => {
     const ts = touchStateRef.current;
