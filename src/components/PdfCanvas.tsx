@@ -598,7 +598,7 @@ export function PdfCanvas({
         });
       }
       setDraggingHandle(null);
-      return;
+      handleDragJustFinished.current = true;
     }
 
     if (isPanning) {
