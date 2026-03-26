@@ -30,6 +30,8 @@ interface Props {
 
 const HIT_TOLERANCE = 8; // pixels at scale=1
 const MARKER_RADIUS = 8;
+const HANDLE_RADIUS = 6; // endpoint drag handle radius at scale=1
+const HANDLE_HIT_RADIUS = 12; // hit-test radius for handles
 
 export function PdfCanvas({
   pdf, currentPage, scale, onScaleChange, toolMode, calibration,
@@ -53,6 +55,13 @@ export function PdfCanvas({
   // Depth prompt for CY polygons
   const [pendingPolygon, setPendingPolygon] = useState<{ points: PointXY[]; areaSF: number } | null>(null);
   const [depthInput, setDepthInput] = useState('');
+
+  // Endpoint drag handle state
+  const [draggingHandle, setDraggingHandle] = useState<{
+    annotationId: string;
+    pointIndex: number;
+    currentPos: PointXY;
+  } | null>(null);
 
   // Touch gesture state
   const touchStateRef = useRef<{
@@ -206,7 +215,13 @@ export function PdfCanvas({
       }
 
       if (ann.type === 'line' && ann.points.length === 2) {
-        const p0 = s(ann.points[0]), p1 = s(ann.points[1]);
+        // If dragging a handle on this annotation, use the preview position
+        let pts = ann.points;
+        if (draggingHandle && draggingHandle.annotationId === ann.id) {
+          pts = pts.map((p, i) => i === draggingHandle.pointIndex ? draggingHandle.currentPos : p);
+        }
+
+        const p0 = s(pts[0]), p1 = s(pts[1]);
         ctx.beginPath();
         ctx.moveTo(p0.x, p0.y);
         ctx.lineTo(p1.x, p1.y);
@@ -217,12 +232,27 @@ export function PdfCanvas({
           ctx.setLineDash([4, 4]);
           ctx.stroke();
           ctx.setLineDash([]);
+
+          // Draw endpoint drag handles
+          for (const ep of [p0, p1]) {
+            ctx.beginPath();
+            ctx.arc(ep.x, ep.y, HANDLE_RADIUS * scale, 0, Math.PI * 2);
+            ctx.fillStyle = '#fff';
+            ctx.fill();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+          }
         }
 
+        // Measurement label — recalc if dragging
+        const measLabel = (draggingHandle && draggingHandle.annotationId === ann.id && calibration)
+          ? lineLength(pts, calibration.pixelsPerFoot).toFixed(1)
+          : ann.measurement.toFixed(1);
         const mid = { x: (p0.x + p1.x) / 2, y: (p0.y + p1.y) / 2 };
         ctx.fillStyle = color;
         ctx.font = 'bold 11px monospace';
-        ctx.fillText(`${ann.measurement.toFixed(1)} LF`, mid.x + 5, mid.y - 5);
+        ctx.fillText(`${measLabel} LF`, mid.x + 5, mid.y - 5);
       }
 
       if (ann.type === 'polygon' && ann.points.length >= 3) {
@@ -334,7 +364,7 @@ export function PdfCanvas({
     if (tocRect && toolMode === 'tocSelect') {
       drawTocRect(tocRect.x1, tocRect.y1, tocRect.x2, tocRect.y2);
     }
-  }, [annotations, currentPage, drawingPoints, mousePos, payItems, activePayItemId, toolMode, calibratePoints, tocDragStart, tocDragEnd, tocRect, scale, s, selectedAnnotationId, calibration]);
+  }, [annotations, currentPage, drawingPoints, mousePos, payItems, activePayItemId, toolMode, calibratePoints, tocDragStart, tocDragEnd, tocRect, scale, s, selectedAnnotationId, calibration, draggingHandle]);
 
   // Guard: check active pay item and calibration before drawing
   const guardDrawing = useCallback((needsCalibration: boolean): boolean => {
@@ -348,6 +378,19 @@ export function PdfCanvas({
     }
     return true;
   }, [activePayItemId, payItems, calibration]);
+
+  // Hit-test drag handles on selected line annotation
+  const hitTestHandles = useCallback((pos: PointXY): { annotationId: string; pointIndex: number } | null => {
+    if (!selectedAnnotationId) return null;
+    const ann = annotations.find(a => a.id === selectedAnnotationId);
+    if (!ann || ann.type !== 'line' || ann.points.length !== 2) return null;
+    for (let i = 0; i < ann.points.length; i++) {
+      if (distancePx(pos, ann.points[i]) <= HANDLE_HIT_RADIUS) {
+        return { annotationId: ann.id, pointIndex: i };
+      }
+    }
+    return null;
+  }, [selectedAnnotationId, annotations]);
 
   // Core click logic extracted to accept PointXY directly (shared by mouse + touch)
   const handleClickAtPos = useCallback((pos: PointXY) => {
@@ -408,9 +451,16 @@ export function PdfCanvas({
     }
   }, [toolMode, calibratePoints, drawingPoints, calibration, activePayItemId, currentPage, onAddAnnotation, hitTestAnnotations, onSelectAnnotation, guardDrawing]);
 
+  // Suppress click after handle drag
+  const handleDragJustFinished = useRef(false);
+
   const handleCanvasClick = useCallback((e: React.MouseEvent) => {
     if (touchStateRef.current.suppressClick) {
       touchStateRef.current.suppressClick = false;
+      return;
+    }
+    if (handleDragJustFinished.current) {
+      handleDragJustFinished.current = false;
       return;
     }
     handleClickAtPos(getCanvasPos(e));
@@ -474,6 +524,14 @@ export function PdfCanvas({
   }, [pendingPolygon, depthInput, calibration, activePayItemId, currentPage, onAddAnnotation]);
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    // Handle endpoint dragging
+    if (draggingHandle) {
+      e.preventDefault();
+      const pos = getCanvasPos(e);
+      setDraggingHandle(prev => prev ? { ...prev, currentPos: pos } : null);
+      return;
+    }
+
     if (isPanning) {
       const dx = e.clientX - panStart.current.x;
       const dy = e.clientY - panStart.current.y;
@@ -490,9 +548,27 @@ export function PdfCanvas({
 
     const pos = getCanvasPos(e);
     setMousePos(pos);
-  }, [isPanning, getCanvasPos, toolMode, tocDragStart]);
+  }, [isPanning, getCanvasPos, toolMode, tocDragStart, draggingHandle]);
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    // Check for handle drag on selected line
+    if (toolMode === 'select') {
+      const pos = getCanvasPos(e);
+      const handle = hitTestHandles(pos);
+      if (handle) {
+        e.preventDefault();
+        const ann = annotations.find(a => a.id === handle.annotationId);
+        if (ann) {
+          setDraggingHandle({
+            annotationId: handle.annotationId,
+            pointIndex: handle.pointIndex,
+            currentPos: ann.points[handle.pointIndex],
+          });
+        }
+        return;
+      }
+    }
+
     if (toolMode === 'pan') {
       setIsPanning(true);
       panStart.current = { x: e.clientX, y: e.clientY };
@@ -505,9 +581,26 @@ export function PdfCanvas({
       setTocDragEnd(null);
       setTocRect(null);
     }
-  }, [toolMode, getCanvasPos]);
+  }, [toolMode, getCanvasPos, hitTestHandles, annotations]);
 
   const handleMouseUp = useCallback(() => {
+    // Finalize endpoint drag
+    if (draggingHandle && onUpdateAnnotation && calibration) {
+      const ann = annotations.find(a => a.id === draggingHandle.annotationId);
+      if (ann) {
+        const newPoints = ann.points.map((p, i) =>
+          i === draggingHandle.pointIndex ? draggingHandle.currentPos : p
+        );
+        const newMeasurement = lineLength(newPoints, calibration.pixelsPerFoot);
+        onUpdateAnnotation(draggingHandle.annotationId, {
+          points: newPoints,
+          measurement: newMeasurement,
+        });
+      }
+      setDraggingHandle(null);
+      handleDragJustFinished.current = true;
+    }
+
     if (isPanning) {
       setIsPanning(false);
       return;
@@ -527,7 +620,7 @@ export function PdfCanvas({
       setTocDragStart(null);
       setTocDragEnd(null);
     }
-  }, [isPanning, toolMode, tocDragStart, tocDragEnd]);
+  }, [isPanning, toolMode, tocDragStart, tocDragEnd, draggingHandle, onUpdateAnnotation, calibration, annotations]);
 
   const submitCalibration = () => {
     const dist = parseFloat(calibrateDistance);
@@ -617,6 +710,22 @@ export function PdfCanvas({
       ts.dragFirstPointPlaced = false;
       ts.isTwoFinger = false;
 
+      // Check for handle drag on selected line (touch)
+      if (toolMode === 'select') {
+        const handle = hitTestHandles(ts.startPos);
+        if (handle) {
+          const ann = annotations.find(a => a.id === handle.annotationId);
+          if (ann) {
+            setDraggingHandle({
+              annotationId: handle.annotationId,
+              pointIndex: handle.pointIndex,
+              currentPos: ann.points[handle.pointIndex],
+            });
+            return;
+          }
+        }
+      }
+
       // For pan/select, start panning immediately
       if (toolMode === 'pan' || toolMode === 'select') {
         panStart.current = { x: touch.clientX, y: touch.clientY };
@@ -629,10 +738,18 @@ export function PdfCanvas({
         setTocRect(null);
       }
     }
-  }, [getTouchCanvasPos, toolMode]);
+  }, [getTouchCanvasPos, toolMode, hitTestHandles, annotations]);
 
   const handleOverlayTouchMove = useCallback((e: React.TouchEvent) => {
     const ts = touchStateRef.current;
+
+    // Handle endpoint dragging (touch)
+    if (draggingHandle && e.touches.length === 1) {
+      e.preventDefault();
+      const pos = getTouchCanvasPos(e.touches[0]);
+      setDraggingHandle(prev => prev ? { ...prev, currentPos: pos } : null);
+      return;
+    }
 
     // Two-finger: pinch-zoom + pan (always)
     if (e.touches.length === 2 && ts.isTwoFinger) {
@@ -696,13 +813,34 @@ export function PdfCanvas({
         }
       }
     }
-  }, [scale, onScaleChange, getTouchCanvasPos, toolMode, handleClickAtPos]);
+  }, [scale, onScaleChange, getTouchCanvasPos, toolMode, handleClickAtPos, draggingHandle]);
 
   const handleOverlayTouchEnd = useCallback((e: React.TouchEvent) => {
     const ts = touchStateRef.current;
 
     if (e.touches.length < 2) {
       ts.isTwoFinger = false;
+    }
+
+    // Finalize handle drag (touch)
+    if (e.touches.length === 0 && draggingHandle) {
+      if (onUpdateAnnotation && calibration) {
+        const ann = annotations.find(a => a.id === draggingHandle.annotationId);
+        if (ann) {
+          const newPoints = ann.points.map((p, i) =>
+            i === draggingHandle.pointIndex ? draggingHandle.currentPos : p
+          );
+          const newMeasurement = lineLength(newPoints, calibration.pixelsPerFoot);
+          onUpdateAnnotation(draggingHandle.annotationId, {
+            points: newPoints,
+            measurement: newMeasurement,
+          });
+        }
+      }
+      setDraggingHandle(null);
+      touchStateRef.current.startPos = null;
+      touchStateRef.current.suppressClick = true;
+      return;
     }
 
     // Only process single-finger end when no fingers remain
@@ -755,7 +893,7 @@ export function PdfCanvas({
       ts.dragFirstPointPlaced = false;
       setMousePos(null);
     }
-  }, [getTouchCanvasPos, handleClickAtPos, handleDoubleClickAtPos, toolMode, tocDragStart, onTocRegionSelected]);
+  }, [getTouchCanvasPos, handleClickAtPos, handleDoubleClickAtPos, toolMode, tocDragStart, onTocRegionSelected, draggingHandle, onUpdateAnnotation, calibration, annotations]);
 
   // Prevent default touch zoom on the container (only multi-touch)
   useEffect(() => {
@@ -775,7 +913,9 @@ export function PdfCanvas({
     };
   }, []);
 
-  const cursorClass = toolMode === 'pan'
+  const cursorClass = draggingHandle
+    ? 'cursor-grabbing'
+    : toolMode === 'pan'
     ? (isPanning ? 'cursor-grabbing' : 'cursor-grab')
     : toolMode === 'select'
     ? 'cursor-default'
