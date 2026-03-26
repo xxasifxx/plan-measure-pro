@@ -30,6 +30,8 @@ interface Props {
 
 const HIT_TOLERANCE = 8; // pixels at scale=1
 const MARKER_RADIUS = 8;
+const HANDLE_RADIUS = 6; // endpoint drag handle radius at scale=1
+const HANDLE_HIT_RADIUS = 12; // hit-test radius for handles
 
 export function PdfCanvas({
   pdf, currentPage, scale, onScaleChange, toolMode, calibration,
