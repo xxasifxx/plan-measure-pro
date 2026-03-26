@@ -868,7 +868,9 @@ export function PdfCanvas({
     };
   }, []);
 
-  const cursorClass = toolMode === 'pan'
+  const cursorClass = draggingHandle
+    ? 'cursor-grabbing'
+    : toolMode === 'pan'
     ? (isPanning ? 'cursor-grabbing' : 'cursor-grab')
     : toolMode === 'select'
     ? 'cursor-default'
