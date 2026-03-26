@@ -517,6 +517,14 @@ export function PdfCanvas({
   }, [pendingPolygon, depthInput, calibration, activePayItemId, currentPage, onAddAnnotation]);
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    // Handle endpoint dragging
+    if (draggingHandle) {
+      e.preventDefault();
+      const pos = getCanvasPos(e);
+      setDraggingHandle(prev => prev ? { ...prev, currentPos: pos } : null);
+      return;
+    }
+
     if (isPanning) {
       const dx = e.clientX - panStart.current.x;
       const dy = e.clientY - panStart.current.y;
@@ -533,9 +541,27 @@ export function PdfCanvas({
 
     const pos = getCanvasPos(e);
     setMousePos(pos);
-  }, [isPanning, getCanvasPos, toolMode, tocDragStart]);
+  }, [isPanning, getCanvasPos, toolMode, tocDragStart, draggingHandle]);
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    // Check for handle drag on selected line
+    if (toolMode === 'select') {
+      const pos = getCanvasPos(e);
+      const handle = hitTestHandles(pos);
+      if (handle) {
+        e.preventDefault();
+        const ann = annotations.find(a => a.id === handle.annotationId);
+        if (ann) {
+          setDraggingHandle({
+            annotationId: handle.annotationId,
+            pointIndex: handle.pointIndex,
+            currentPos: ann.points[handle.pointIndex],
+          });
+        }
+        return;
+      }
+    }
+
     if (toolMode === 'pan') {
       setIsPanning(true);
       panStart.current = { x: e.clientX, y: e.clientY };
@@ -548,7 +574,7 @@ export function PdfCanvas({
       setTocDragEnd(null);
       setTocRect(null);
     }
-  }, [toolMode, getCanvasPos]);
+  }, [toolMode, getCanvasPos, hitTestHandles, annotations]);
 
   const handleMouseUp = useCallback(() => {
     if (isPanning) {
