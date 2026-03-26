@@ -56,6 +56,13 @@ export function PdfCanvas({
   const [pendingPolygon, setPendingPolygon] = useState<{ points: PointXY[]; areaSF: number } | null>(null);
   const [depthInput, setDepthInput] = useState('');
 
+  // Endpoint drag handle state
+  const [draggingHandle, setDraggingHandle] = useState<{
+    annotationId: string;
+    pointIndex: number;
+    currentPos: PointXY;
+  } | null>(null);
+
   // Touch gesture state
   const touchStateRef = useRef<{
     lastTouches: { x: number; y: number }[];
@@ -208,7 +215,13 @@ export function PdfCanvas({
       }
 
       if (ann.type === 'line' && ann.points.length === 2) {
-        const p0 = s(ann.points[0]), p1 = s(ann.points[1]);
+        // If dragging a handle on this annotation, use the preview position
+        let pts = ann.points;
+        if (draggingHandle && draggingHandle.annotationId === ann.id) {
+          pts = pts.map((p, i) => i === draggingHandle.pointIndex ? draggingHandle.currentPos : p);
+        }
+
+        const p0 = s(pts[0]), p1 = s(pts[1]);
         ctx.beginPath();
         ctx.moveTo(p0.x, p0.y);
         ctx.lineTo(p1.x, p1.y);
@@ -219,12 +232,27 @@ export function PdfCanvas({
           ctx.setLineDash([4, 4]);
           ctx.stroke();
           ctx.setLineDash([]);
+
+          // Draw endpoint drag handles
+          for (const ep of [p0, p1]) {
+            ctx.beginPath();
+            ctx.arc(ep.x, ep.y, HANDLE_RADIUS * scale, 0, Math.PI * 2);
+            ctx.fillStyle = '#fff';
+            ctx.fill();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+          }
         }
 
+        // Measurement label — recalc if dragging
+        const measLabel = (draggingHandle && draggingHandle.annotationId === ann.id && calibration)
+          ? lineLength(pts, calibration.pixelsPerFoot).toFixed(1)
+          : ann.measurement.toFixed(1);
         const mid = { x: (p0.x + p1.x) / 2, y: (p0.y + p1.y) / 2 };
         ctx.fillStyle = color;
         ctx.font = 'bold 11px monospace';
-        ctx.fillText(`${ann.measurement.toFixed(1)} LF`, mid.x + 5, mid.y - 5);
+        ctx.fillText(`${measLabel} LF`, mid.x + 5, mid.y - 5);
       }
 
       if (ann.type === 'polygon' && ann.points.length >= 3) {
