@@ -379,6 +379,19 @@ export function PdfCanvas({
     return true;
   }, [activePayItemId, payItems, calibration]);
 
+  // Hit-test drag handles on selected line annotation
+  const hitTestHandles = useCallback((pos: PointXY): { annotationId: string; pointIndex: number } | null => {
+    if (!selectedAnnotationId) return null;
+    const ann = annotations.find(a => a.id === selectedAnnotationId);
+    if (!ann || ann.type !== 'line' || ann.points.length !== 2) return null;
+    for (let i = 0; i < ann.points.length; i++) {
+      if (distancePx(pos, ann.points[i]) <= HANDLE_HIT_RADIUS) {
+        return { annotationId: ann.id, pointIndex: i };
+      }
+    }
+    return null;
+  }, [selectedAnnotationId, annotations]);
+
   // Core click logic extracted to accept PointXY directly (shared by mouse + touch)
   const handleClickAtPos = useCallback((pos: PointXY) => {
     if (toolMode === 'pan' || toolMode === 'tocSelect') return;
