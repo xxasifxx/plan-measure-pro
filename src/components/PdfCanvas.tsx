@@ -539,7 +539,7 @@ export function PdfCanvas({
       if (drawingPoints.length === 0 && !guardDrawing(true)) return;
       setDrawingPoints(prev => [...prev, pos]);
     }
-  }, [toolMode, calibratePoints, drawingPoints, calibration, activePayItemId, currentPage, onAddAnnotation, hitTestAnnotations, onSelectAnnotation, guardDrawing]);
+  }, [toolMode, calibratePoints, drawingPoints, calibration, activePayItemId, currentPage, onAddAnnotation, hitTestAnnotations, onSelectAnnotation, guardDrawing, onGpsPlanTap]);
 
   // Suppress click after handle drag
   const handleDragJustFinished = useRef(false);
