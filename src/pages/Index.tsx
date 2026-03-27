@@ -554,6 +554,46 @@ const Index = () => {
                 ) : (
                   <EmptyState onFileUpload={handleFileUpload} />
                 )}
+
+                {/* Mobile GPS calibration */}
+                {showGpsCalibration && (
+                  <GpsCalibration
+                    onComplete={handleGpsCalibrationComplete}
+                    onCancel={() => { setShowGpsCalibration(false); setGpsPlanTapCallback(null); }}
+                    onRequestPlanTap={handleRequestGpsPlanTap}
+                    existingCalibration={geoCalibration}
+                  />
+                )}
+
+                {/* Mobile GPS trace controls */}
+                {pdf && geoCalibration && !showGpsCalibration && (
+                  <div className="absolute bottom-3 left-3 right-3 z-20 flex justify-center">
+                    <GpsTraceControls
+                      geoCalibration={geoCalibration}
+                      scaleCalibration={currentCalibration}
+                      activePayItem={activePayItem}
+                      currentPage={currentPage}
+                      onAddAnnotation={addAnnotation}
+                      onPositionUpdate={setGpsPosition}
+                      onTracePointsUpdate={setGpsTracePoints}
+                    />
+                  </div>
+                )}
+
+                {/* Mobile GPS setup button */}
+                {pdf && !showGpsCalibration && !geoCalibration && (
+                  <div className="absolute bottom-3 right-3 z-20">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="gap-1.5 bg-card/90 backdrop-blur-sm"
+                      onClick={() => setShowGpsCalibration(true)}
+                    >
+                      <Navigation className="h-4 w-4" />
+                      <span className="text-xs font-mono">GPS</span>
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
           )}
