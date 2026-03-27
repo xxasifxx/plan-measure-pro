@@ -547,6 +547,9 @@ const Index = () => {
                     selectedAnnotationId={selectedAnnotationId}
                     onSelectAnnotation={setSelectedAnnotationId}
                     isMobile
+                    gpsPosition={gpsPosition}
+                    gpsTracePoints={gpsTracePoints}
+                    onGpsPlanTap={gpsPlanTapCallback}
                   />
                 ) : (
                   <EmptyState onFileUpload={handleFileUpload} />
