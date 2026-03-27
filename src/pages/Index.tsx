@@ -786,6 +786,61 @@ const Index = () => {
             ) : (
               <EmptyState onFileUpload={handleFileUpload} />
             )}
+
+            {/* GPS Calibration wizard overlay */}
+            {showGpsCalibration && (
+              <GpsCalibration
+                onComplete={handleGpsCalibrationComplete}
+                onCancel={() => { setShowGpsCalibration(false); setGpsPlanTapCallback(null); }}
+                onRequestPlanTap={handleRequestGpsPlanTap}
+                existingCalibration={geoCalibration}
+              />
+            )}
+
+            {/* GPS Trace controls */}
+            {pdf && geoCalibration && !showGpsCalibration && (
+              <div className="absolute bottom-3 right-3 z-20">
+                <GpsTraceControls
+                  geoCalibration={geoCalibration}
+                  scaleCalibration={currentCalibration}
+                  activePayItem={activePayItem}
+                  currentPage={currentPage}
+                  onAddAnnotation={addAnnotation}
+                  onPositionUpdate={setGpsPosition}
+                  onTracePointsUpdate={setGpsTracePoints}
+                />
+              </div>
+            )}
+
+            {/* GPS calibrate button */}
+            {pdf && !showGpsCalibration && !geoCalibration && (
+              <div className="absolute bottom-3 right-3 z-20">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-1.5 bg-card/90 backdrop-blur-sm"
+                  onClick={() => setShowGpsCalibration(true)}
+                >
+                  <Navigation className="h-4 w-4" />
+                  <span className="text-xs font-mono">GPS Setup</span>
+                </Button>
+              </div>
+            )}
+
+            {/* GPS recalibrate button when already calibrated */}
+            {pdf && geoCalibration && !showGpsCalibration && (
+              <div className="absolute top-3 right-3 z-20">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="gap-1 text-xs text-muted-foreground"
+                  onClick={() => setShowGpsCalibration(true)}
+                >
+                  <Navigation className="h-3 w-3" />
+                  GPS ✓
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>
