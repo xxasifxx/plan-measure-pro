@@ -85,6 +85,13 @@ const Index = () => {
   const isMobile = useIsMobile();
   const { isDark, toggle: toggleTheme } = useTheme();
 
+  // GPS georeferencing state
+  const [showGpsCalibration, setShowGpsCalibration] = useState(false);
+  const [geoCalibration, setGeoCalibration] = useState<GeoCalibration | null>(null);
+  const [gpsPosition, setGpsPosition] = useState<PointXY | null>(null);
+  const [gpsTracePoints, setGpsTracePoints] = useState<PointXY[]>([]);
+  const [gpsPlanTapCallback, setGpsPlanTapCallback] = useState<((point: PointXY) => void) | null>(null);
+
   // Mobile tab state
   const [mobileTab, setMobileTab] = useState<MobileTab>('canvas');
 
