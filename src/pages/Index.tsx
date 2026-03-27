@@ -701,7 +701,7 @@ const Index = () => {
           />
           </div>
 
-          <div className="flex-1 min-h-0 relative">
+          <div className={cn("flex-1 min-h-0 relative", !pdf && "blueprint-grid")}>
             {pdf ? (
               <PdfCanvas
                 pdf={pdf}
