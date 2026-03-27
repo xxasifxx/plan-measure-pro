@@ -779,6 +779,9 @@ const Index = () => {
                 externalContainerRef={canvasContainerRef}
                 selectedAnnotationId={selectedAnnotationId}
                 onSelectAnnotation={setSelectedAnnotationId}
+                gpsPosition={gpsPosition}
+                gpsTracePoints={gpsTracePoints}
+                onGpsPlanTap={gpsPlanTapCallback}
               />
             ) : (
               <EmptyState onFileUpload={handleFileUpload} />
