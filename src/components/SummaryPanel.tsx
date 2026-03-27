@@ -178,15 +178,15 @@ export function SummaryPanel({
           <div className="overflow-x-auto">
             <table className="w-full text-xs min-w-[650px]">
               <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left py-2 px-2 font-semibold text-muted-foreground">Item #</th>
-                  <th className="text-left py-2 px-2 font-semibold text-muted-foreground">Description</th>
-                  <th className="text-left py-2 px-2 font-semibold text-muted-foreground">Unit</th>
-                  <th className="text-right py-2 px-2 font-semibold text-muted-foreground">Measured</th>
-                  <th className="text-right py-2 px-2 font-semibold text-muted-foreground">Contract</th>
-                  <th className="text-right py-2 px-2 font-semibold text-muted-foreground">Var %</th>
-                  <th className="text-right py-2 px-2 font-semibold text-muted-foreground">Price</th>
-                  <th className="text-right py-2 px-2 font-semibold text-muted-foreground">Extended</th>
+                <tr className="border-b-2 border-border">
+                  <th className="text-left py-2.5 px-3 font-bold text-muted-foreground text-[11px] uppercase tracking-wider">Item #</th>
+                  <th className="text-left py-2.5 px-3 font-bold text-muted-foreground text-[11px] uppercase tracking-wider">Description</th>
+                  <th className="text-left py-2.5 px-3 font-bold text-muted-foreground text-[11px] uppercase tracking-wider">Unit</th>
+                  <th className="text-right py-2.5 px-3 font-bold text-muted-foreground text-[11px] uppercase tracking-wider">Measured</th>
+                  <th className="text-right py-2.5 px-3 font-bold text-muted-foreground text-[11px] uppercase tracking-wider">Contract</th>
+                  <th className="text-right py-2.5 px-3 font-bold text-muted-foreground text-[11px] uppercase tracking-wider">Var %</th>
+                  <th className="text-right py-2.5 px-3 font-bold text-muted-foreground text-[11px] uppercase tracking-wider">Price</th>
+                  <th className="text-right py-2.5 px-3 font-bold text-muted-foreground text-[11px] uppercase tracking-wider">Extended</th>
                 </tr>
               </thead>
               <tbody>
@@ -202,21 +202,24 @@ export function SummaryPanel({
                   return sortedSections.map(([sec, sectionRows]) => (
                     <>{/* Section group */}
                       <tr key={`section-${sec}`}>
-                        <td colSpan={8} className="py-1.5 px-2 text-[10px] uppercase tracking-widest font-semibold text-muted-foreground bg-muted/30">
+                        <td colSpan={8} className="py-2 px-3 text-[11px] uppercase tracking-widest font-bold text-muted-foreground bg-muted/50 border-b border-border">
                           Section {sec}
                         </td>
                       </tr>
-                      {sectionRows.map(row => (
-                        <tr key={row.payItem.id} className="border-b border-border/50 hover:bg-muted/30">
-                          <td className="py-2 px-2 font-mono">{row.payItem.itemNumber}</td>
-                          <td className="py-2 px-2">
+                      {sectionRows.map((row, rowIdx) => (
+                        <tr key={row.payItem.id} className={cn(
+                          'border-b border-border/50 hover:bg-muted/30 transition-colors',
+                          rowIdx % 2 === 1 ? 'bg-muted/20' : ''
+                        )}>
+                          <td className="py-2.5 px-3 font-mono">{row.payItem.itemNumber}</td>
+                          <td className="py-2.5 px-3">
                             <div className="flex items-center gap-2">
-                              <div className="h-2.5 w-2.5 rounded-full shrink-0" style={{ backgroundColor: row.payItem.color }} />
+                              <div className="h-3 w-3 rounded-full shrink-0 shadow-sm" style={{ backgroundColor: row.payItem.color }} />
                               <span className="truncate">{row.payItem.name}</span>
                             </div>
                           </td>
-                          <td className="py-2 px-2">{row.displayUnit}</td>
-                          <td className="text-right py-2 px-2 font-mono">
+                          <td className="py-2.5 px-3 font-mono">{row.displayUnit}</td>
+                          <td className="text-right py-2.5 px-3 font-mono font-semibold">
                             {row.payItem.drawable ? (
                               row.totalQuantity.toFixed(1)
                             ) : (
@@ -224,20 +227,20 @@ export function SummaryPanel({
                                 type="number"
                                 value={row.manualAnnotation?.manualQuantity ?? 0}
                                 onChange={e => handleManualQtyChange(row.payItem, parseFloat(e.target.value) || 0)}
-                                className="h-6 w-20 text-xs text-right inline-block"
+                                className="h-7 w-20 text-xs text-right inline-block"
                               />
                             )}
                           </td>
-                          <td className="text-right py-2 px-2 font-mono text-muted-foreground">
+                          <td className="text-right py-2.5 px-3 font-mono text-muted-foreground">
                             {row.contractQuantity != null ? row.contractQuantity.toFixed(1) : '—'}
                           </td>
-                          <td className={cn("text-right py-2 px-2 font-mono text-[10px] font-semibold", getVarianceColor(row.variancePercent))}>
+                          <td className={cn("text-right py-2.5 px-3 font-mono text-[11px] font-bold", getVarianceColor(row.variancePercent))}>
                             {row.variancePercent !== undefined
                               ? `${row.variancePercent > 0 ? '+' : ''}${row.variancePercent.toFixed(0)}%`
                               : '—'}
                           </td>
-                          <td className="text-right py-2 px-2 font-mono">${row.payItem.unitPrice.toFixed(2)}</td>
-                          <td className="text-right py-2 px-2 font-mono font-semibold">
+                          <td className="text-right py-2.5 px-3 font-mono">${row.payItem.unitPrice.toFixed(2)}</td>
+                          <td className="text-right py-2.5 px-3 font-mono font-bold">
                             ${row.extendedCost.toFixed(2)}
                           </td>
                         </tr>
@@ -247,9 +250,9 @@ export function SummaryPanel({
                 })()}
               </tbody>
               <tfoot>
-                <tr className="border-t-2 border-border">
-                  <td colSpan={7} className="py-3 px-2 font-bold text-right">Grand Total</td>
-                  <td className="py-3 px-2 font-bold text-right font-mono text-primary">
+                <tr className="border-t-2 border-border bg-muted/30">
+                  <td colSpan={7} className="py-3.5 px-3 font-bold text-right text-sm">Grand Total</td>
+                  <td className="py-3.5 px-3 font-bold text-right font-mono text-primary text-sm">
                     ${grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                   </td>
                 </tr>
@@ -267,7 +270,7 @@ export function SummaryPanel({
 
   return (
     <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-card border border-border rounded-md shadow-xl w-full max-w-4xl max-h-[80vh] overflow-hidden flex flex-col">
+      <div className="bg-card border border-border rounded-xl shadow-2xl w-full max-w-4xl max-h-[80vh] overflow-hidden flex flex-col">
         {content}
       </div>
     </div>
