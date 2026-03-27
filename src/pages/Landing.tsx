@@ -3,6 +3,7 @@ import heroScreenshot from '@/assets/hero-screenshot.jpg';
 import highwayAerial from '@/assets/highway-construction-aerial.jpg';
 import inspectorTablet from '@/assets/inspector-tablet.jpg';
 import blueprintPlans from '@/assets/blueprint-plans.jpg';
+import gpsFieldMeasurement from '@/assets/gps-field-measurement.jpg';
 import { Button } from '@/components/ui/button';
 import {
   HardHat, Ruler, Layers, Users, Zap, FileSpreadsheet,
@@ -11,7 +12,7 @@ import {
   ShieldCheck, Smartphone, BarChart3, Camera, Globe,
   ClipboardList, Clock, DollarSign, AlertTriangle,
   Eye, FileText, MapPin, Wrench, TrendingUp, Lock,
-  Server, Headphones, BookOpen, Mail,
+  Server, Headphones, BookOpen, Mail, Navigation, Crosshair,
 } from 'lucide-react';
 
 /* ─────────────────────────── DATA ─────────────────────────── */
@@ -97,7 +98,7 @@ const capabilityPairs = [
 const workflowSteps = [
   { icon: Upload, label: 'Upload Contract Plans', description: 'Drop the PDF plan set from ProjectWise or your file system' },
   { icon: ClipboardList, label: 'Import Pay Items', description: 'Paste from the bid schedule or extract from spec pages' },
-  { icon: PenTool, label: 'Measure in the Field', description: 'Inspectors draw lines, areas, and counts on their tablets' },
+  { icon: PenTool, label: 'Measure in the Field', description: 'Draw on tablets or walk the site with GPS trace mode' },
   { icon: Download, label: 'Export for Payment', description: 'Download daily logs, monthly summaries, or full contract reports' },
 ];
 
@@ -347,6 +348,56 @@ export default function Landing() {
                 </div>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* ── GPS Field Measurement — Full-bleed image section ── */}
+      <section className="relative overflow-hidden">
+        <img
+          src={gpsFieldMeasurement}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-[hsl(220,20%,6%,0.95)] via-[hsl(220,20%,6%,0.88)] to-[hsl(220,20%,6%,0.75)]" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-20 sm:py-28 relative z-10">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[10px] font-semibold text-primary uppercase tracking-wider mb-6">
+              <Navigation className="h-3 w-3" /> New Feature
+            </div>
+            <h2 className="text-2xl sm:text-4xl font-bold text-white mb-4">
+              Walk the site. Measure automatically.
+            </h2>
+            <p className="text-sm text-white/60 leading-relaxed mb-8 max-w-xl">
+              GPS-to-Plan georeferencing lets inspectors physically walk a perimeter or line on the job site
+              while the app traces their path directly on the contract plan sheet — computing LF, SF, and CY
+              measurements in real time.
+            </p>
+
+            <div className="space-y-5 mb-10">
+              {[
+                { icon: Crosshair, title: 'Calibrate in 60 seconds', description: 'Stand at 2–3 known points (survey monuments, station markers) and tap matching spots on the plan. The app builds an affine transform mapping GPS to plan coordinates.' },
+                { icon: Navigation, title: 'Walk & trace', description: 'Select a pay item, start GPS trace, and walk the area. Your position appears as a live dot on the plan with a breadcrumb trail — Kalman-smoothed for accuracy.' },
+                { icon: MapPin, title: 'Auto-calculate quantities', description: 'When you finish, the traced path becomes an annotation with auto-calculated LF or SF/SY/CY measurements tied to the pay item.' },
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-3">
+                  <div className="h-9 w-9 rounded-lg bg-primary/15 flex items-center justify-center shrink-0 mt-0.5">
+                    <item.icon className="h-4 w-4 text-primary" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-white mb-0.5">{item.title}</p>
+                    <p className="text-xs text-white/50 leading-relaxed">{item.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <p className="text-[10px] text-white/30 italic">
+              Best for large-area measurements — paving, embankments, guardrail runs. Phone GPS accuracy is typically ±10–15 ft;
+              the app displays real-time accuracy and warns when signal is poor.
+            </p>
           </div>
         </div>
       </section>
