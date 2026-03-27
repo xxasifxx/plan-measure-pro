@@ -5,6 +5,7 @@ import {
 import type { ToolMode, PayItem, Calibration } from '@/types/project';
 import { UNIT_LABELS } from '@/types/project';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface Props {
   toolMode: ToolMode;
@@ -40,69 +41,74 @@ export function MobileToolbar({
     ? allTools.filter(t => t.mode !== 'calibrate')
     : allTools;
   return (
-    <div className="flex flex-col bg-card border-b border-border">
+    <div className="flex flex-col bg-card/95 backdrop-blur-sm border-b border-border shadow-sm">
       {/* Row 1: Tools + page nav */}
-      <div className="flex items-center gap-1 px-2 py-1.5">
+      <div className="flex items-center gap-1 px-2 py-2">
         {/* Tools */}
-        <div className="flex items-center gap-0.5">
+        <div className="flex items-center gap-0.5 bg-muted/50 rounded-lg p-0.5">
           {tools.map(t => (
             <button
               key={t.mode}
               onClick={() => onToolChange(t.mode)}
-              className={`flex items-center justify-center h-9 w-9 rounded-md transition-colors ${
+              className={cn(
+                'flex items-center justify-center h-10 w-10 rounded-md transition-colors',
                 toolMode === t.mode
-                  ? 'bg-primary text-primary-foreground'
+                  ? 'bg-primary text-primary-foreground shadow-sm'
                   : 'text-muted-foreground active:bg-muted'
-              }`}
+              )}
             >
-              <t.icon className="h-4 w-4" />
+              <t.icon className="h-5 w-5" />
             </button>
           ))}
         </div>
 
-        <div className="w-px h-6 bg-border mx-1" />
+        <div className="w-px h-7 bg-border mx-1" />
 
         {/* Undo/Redo */}
-        <Button variant="ghost" size="icon" className="h-9 w-9" onClick={onUndo} disabled={!canUndo}>
-          <Undo2 className="h-4 w-4" />
+        <Button variant="ghost" size="icon" className="h-10 w-10" onClick={onUndo} disabled={!canUndo}>
+          <Undo2 className="h-5 w-5" />
         </Button>
-        <Button variant="ghost" size="icon" className="h-9 w-9" onClick={onRedo} disabled={!canRedo}>
-          <Redo2 className="h-4 w-4" />
+        <Button variant="ghost" size="icon" className="h-10 w-10" onClick={onRedo} disabled={!canRedo}>
+          <Redo2 className="h-5 w-5" />
         </Button>
 
         <div className="flex-1" />
 
         {/* Page nav */}
         <div className="flex items-center gap-0.5">
-          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onPageChange(Math.max(1, currentPage - 1))} disabled={currentPage <= 1}>
+          <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => onPageChange(Math.max(1, currentPage - 1))} disabled={currentPage <= 1}>
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <span className="text-xs font-mono text-muted-foreground min-w-[40px] text-center">
+          <span className="text-xs font-mono text-muted-foreground min-w-[44px] text-center">
             {currentPage}/{totalPages}
           </span>
-          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))} disabled={currentPage >= totalPages}>
+          <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))} disabled={currentPage >= totalPages}>
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
       </div>
 
-      {/* Row 2: Context info - active item, calibration, zoom */}
-      <div className="flex items-center gap-1.5 px-2 pb-1.5 overflow-x-auto">
+      {/* Row 2: Context info */}
+      <div className="flex items-center gap-1.5 px-2 pb-2 overflow-x-auto">
         {/* Active pay item chip */}
         {activePayItem && (
-          <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-muted shrink-0">
-            <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: activePayItem.color }} />
-            <span className="text-[10px] font-medium truncate max-w-[100px]">{activePayItem.name}</span>
-            <span className="text-[9px] text-muted-foreground">{UNIT_LABELS[activePayItem.unit]}</span>
+          <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-muted/70 border border-border/50 shrink-0">
+            <div className="h-3 w-3 rounded-full shadow-sm" style={{ backgroundColor: activePayItem.color }} />
+            <span className="text-xs font-medium truncate max-w-[120px]">{activePayItem.name}</span>
+            <span className="text-[10px] text-muted-foreground font-mono">{UNIT_LABELS[activePayItem.unit]}</span>
           </div>
         )}
 
         {/* Calibration chip */}
-        <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-muted shrink-0">
+        <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-muted/50 shrink-0">
+          <Ruler className="h-3 w-3 text-muted-foreground" />
           {calibration ? (
             <>
-              <span className="text-[10px] text-success font-mono">
-                1px={(1 / calibration.pixelsPerFoot).toFixed(3)}ft
+              <span className="text-xs text-success font-mono font-semibold">
+                {(() => {
+                  const ftPerInch = (1 / calibration.pixelsPerFoot) * 96;
+                  return ftPerInch >= 1 ? `1″=${Math.round(ftPerInch)}′` : `1px=${(1/calibration.pixelsPerFoot).toFixed(3)}ft`;
+                })()}
               </span>
               {onCopyCalibration && (
                 <button onClick={onCopyCalibration} className="ml-0.5">
@@ -111,7 +117,7 @@ export function MobileToolbar({
               )}
             </>
           ) : (
-            <span className="text-[10px] text-muted-foreground">No scale</span>
+            <span className="text-xs text-muted-foreground">No scale</span>
           )}
         </div>
 
@@ -119,16 +125,16 @@ export function MobileToolbar({
 
         {/* Zoom */}
         <div className="flex items-center gap-0.5 shrink-0">
-          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => onScaleChange(Math.max(0.5, scale - 0.25))}>
-            <ZoomOut className="h-3.5 w-3.5" />
+          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onScaleChange(Math.max(0.5, scale - 0.25))}>
+            <ZoomOut className="h-4 w-4" />
           </Button>
-          <span className="text-[10px] font-mono text-muted-foreground min-w-[32px] text-center">{Math.round(scale * 100)}%</span>
-          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => onScaleChange(Math.min(4, scale + 0.25))}>
-            <ZoomIn className="h-3.5 w-3.5" />
+          <span className="text-xs font-mono text-muted-foreground min-w-[36px] text-center">{Math.round(scale * 100)}%</span>
+          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onScaleChange(Math.min(4, scale + 0.25))}>
+            <ZoomIn className="h-4 w-4" />
           </Button>
           {onFitToScreen && (
-            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={onFitToScreen}>
-              <Maximize className="h-3.5 w-3.5" />
+            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onFitToScreen}>
+              <Maximize className="h-4 w-4" />
             </Button>
           )}
         </div>

@@ -645,30 +645,35 @@ const Index = () => {
         </div>
 
         <div className="flex-1 flex flex-col min-w-0 min-h-0">
-          <div className="h-10 flex items-center border-b border-border bg-card px-2">
-            <Button variant="ghost" size="icon" className="h-7 w-7 mr-1" onClick={() => navigate('/')} title="Back to projects">
-              <ArrowLeft className="h-3.5 w-3.5" />
+          <div className="h-11 flex items-center border-b border-border bg-card/95 backdrop-blur-sm px-3 shadow-sm">
+            <Button variant="ghost" size="icon" className="h-8 w-8 mr-1" onClick={() => navigate('/')} title="Back to projects">
+              <ArrowLeft className="h-4 w-4" />
             </Button>
             <SidebarTrigger className="mr-2" />
-            <span className="text-xs font-bold uppercase tracking-wider text-foreground">
-              {project?.name || 'Construction Takeoff'}
-            </span>
+            <div className="flex-1 min-w-0">
+              <span className="text-sm font-bold tracking-wide text-foreground">
+                {project?.name || 'TakeoffPro'}
+              </span>
+              {project?.contractNumber && (
+                <span className="text-xs text-muted-foreground font-mono ml-2">#{project.contractNumber}</span>
+              )}
+            </div>
             <div className="ml-auto flex items-center gap-1">
               {onlineUsers.length > 0 && (
-                <span className="text-[10px] text-muted-foreground bg-muted px-2 py-0.5 rounded-full mr-1">
+                <span className="text-[10px] text-muted-foreground bg-success/15 text-success px-2.5 py-1 rounded-full mr-1 font-semibold">
                   {onlineUsers.length} online
                 </span>
               )}
               {(isManager || isAdmin) && projectId && (
-                <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setShowTeam(true)} title="Manage team">
-                  <Users className="h-3.5 w-3.5" />
+                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setShowTeam(true)} title="Manage team">
+                  <Users className="h-4 w-4" />
                 </Button>
               )}
-              <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => workspaceTour.start()} title="Help">
-                <HelpCircle className="h-3.5 w-3.5" />
+              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => workspaceTour.start()} title="Help">
+                <HelpCircle className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="icon" className="h-7 w-7" onClick={toggleTheme} title="Toggle theme">
-                {isDark ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
+              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={toggleTheme} title="Toggle theme">
+                {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
               </Button>
             </div>
           </div>
@@ -696,7 +701,7 @@ const Index = () => {
           />
           </div>
 
-          <div className="flex-1 min-h-0 relative">
+          <div className={cn("flex-1 min-h-0 relative", !pdf && "blueprint-grid")}>
             {pdf ? (
               <PdfCanvas
                 pdf={pdf}

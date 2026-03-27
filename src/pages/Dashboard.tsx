@@ -8,19 +8,27 @@ import { useTour } from '@/hooks/useTour';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Progress } from '@/components/ui/progress';
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from '@/components/ui/dialog';
 import {
   HardHat, Plus, LogOut, Sun, Moon, FileText, Clock, PenTool,
   Trash2, FolderOpen, Loader2, AlertCircle, Shield, HelpCircle, Users,
-  ChevronDown, ChevronUp,
+  ChevronDown, ChevronUp, Ruler,
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
 import { WelcomeCarousel } from '@/components/WelcomeCarousel';
 import { GuidedTour } from '@/components/GuidedTour';
 import type { TourStep } from '@/hooks/useTour';
+
+const ROLE_STYLES: Record<string, string> = {
+  admin: 'bg-info/15 text-info border-info/30',
+  project_manager: 'bg-success/15 text-success border-success/30',
+  inspector: 'bg-primary/15 text-primary border-primary/30',
+  user: 'bg-muted text-muted-foreground border-border',
+};
 
 export default function Dashboard() {
   const { user, profile, isManager, isAdmin, signOut, roles } = useAuth();
@@ -69,6 +77,7 @@ export default function Dashboard() {
   };
 
   const roleBadge = roles[0] ? roles[0].replace('_', ' ') : 'user';
+  const roleKey = roles[0] || 'user';
 
   // PM progress detail
   const [expandedProject, setExpandedProject] = useState<string | null>(null);
@@ -92,9 +101,8 @@ export default function Dashboard() {
 
       const { data: proj } = await supabase.storage
         .from('project-pdfs')
-        .list(projectId.split('/')[0]); // rough estimate
+        .list(projectId.split('/')[0]);
 
-      // Group by user
       const byUser: Record<string, { count: number; lastActive: string }> = {};
       const pages = new Set<number>();
       (anns || []).forEach(a => {
@@ -104,7 +112,6 @@ export default function Dashboard() {
         if (a.created_at > byUser[a.user_id].lastActive) byUser[a.user_id].lastActive = a.created_at;
       });
 
-      // Get names
       const userIds = Object.keys(byUser);
       let inspectors: { name: string; count: number; lastActive: string }[] = [];
       if (userIds.length > 0) {
@@ -134,8 +141,6 @@ export default function Dashboard() {
       setShowWelcome(true);
     }
   }, [profile]);
-
-  // Pass roles to WelcomeCarousel - find where it's rendered
 
   // Guided tour
   const dashboardTour = useTour('dashboard');
@@ -168,45 +173,54 @@ export default function Dashboard() {
   }, [showWelcome, profile, isLoading, projects.length]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background blueprint-grid">
       {/* Header */}
-      <header className="sticky top-0 z-10 bg-card border-b border-border">
-        <div className="max-w-5xl mx-auto px-4 h-14 flex items-center gap-3">
-          <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center">
-            <HardHat className="h-5 w-5 text-primary" />
+      <header className="sticky top-0 z-10 bg-card/95 backdrop-blur-sm border-b border-border shadow-sm">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-3">
+          <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center shadow-md">
+            <Ruler className="h-5 w-5 text-primary-foreground" />
           </div>
           <div className="flex-1 min-w-0">
-            <h1 className="text-sm font-bold text-foreground truncate">Quantity Takeoff</h1>
-            <p className="text-[10px] text-muted-foreground truncate">
+            <h1 className="text-base font-bold text-foreground tracking-wide">TakeoffPro</h1>
+            <p className="text-xs text-muted-foreground truncate">
               {profile?.full_name || user?.email}
-              <span data-tour="role-badge" className="ml-2 px-1.5 py-0.5 rounded bg-primary/10 text-primary text-[9px] font-semibold uppercase">
-                {roleBadge}
-              </span>
             </p>
           </div>
-          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => dashboardTour.start()} title="Help">
+          <span
+            data-tour="role-badge"
+            className={cn(
+              'px-2.5 py-1 rounded-md text-[11px] font-bold uppercase tracking-wider border',
+              ROLE_STYLES[roleKey] || ROLE_STYLES.user
+            )}
+          >
+            {roleBadge}
+          </span>
+          <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => dashboardTour.start()} title="Help">
             <HelpCircle className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={toggleTheme}>
+          <Button variant="ghost" size="icon" className="h-9 w-9" onClick={toggleTheme}>
             {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
           {isAdmin && (
-            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => navigate('/admin')} title="Admin Panel">
+            <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => navigate('/admin')} title="Admin Panel">
               <Shield className="h-4 w-4" />
             </Button>
           )}
-          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={signOut}>
+          <Button variant="ghost" size="icon" className="h-9 w-9" onClick={signOut}>
             <LogOut className="h-4 w-4" />
           </Button>
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-4 py-6">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
         {/* Title + Create button */}
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-bold text-foreground">Projects</h2>
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h2 className="text-xl font-bold text-foreground tracking-tight">Projects</h2>
+            <p className="text-xs text-muted-foreground mt-0.5">NJTA & NJDOT Construction Takeoffs</p>
+          </div>
           {(isManager || isAdmin) && (
-            <Button data-tour="new-project" size="sm" onClick={() => setShowCreate(true)}>
+            <Button data-tour="new-project" onClick={() => setShowCreate(true)} className="shadow-md">
               <Plus className="h-4 w-4 mr-1.5" />
               New Project
             </Button>
@@ -216,18 +230,18 @@ export default function Dashboard() {
         {/* Loading state */}
         {isLoading && (
           <div className="flex items-center justify-center py-20">
-            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
         )}
 
         {/* Empty state */}
         {!isLoading && projects.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20 text-center">
-            <div className="h-16 w-16 rounded-2xl bg-muted flex items-center justify-center mb-4">
-              <FolderOpen className="h-8 w-8 text-muted-foreground" />
+            <div className="h-20 w-20 rounded-2xl bg-primary/10 flex items-center justify-center mb-5 shadow-inner">
+              <FolderOpen className="h-10 w-10 text-primary" />
             </div>
-            <p className="text-sm font-medium text-foreground mb-1">No projects yet</p>
-            <p className="text-xs text-muted-foreground max-w-xs">
+            <p className="text-base font-semibold text-foreground mb-2">No projects yet</p>
+            <p className="text-sm text-muted-foreground max-w-sm leading-relaxed">
               {isAdmin
                 ? 'Create a project or invite your team from the Admin panel.'
                 : isManager
@@ -236,13 +250,13 @@ export default function Dashboard() {
                     <>
                       You haven't been assigned to any projects yet.
                       <br />
-                      Share your email with your project manager so they can add you:
-                      <span className="block mt-1 font-medium text-foreground select-all">{user?.email}</span>
+                      Share your email with your project manager:
+                      <span className="block mt-2 font-semibold text-foreground select-all text-base">{user?.email}</span>
                     </>
                   )}
             </p>
             {(isManager || isAdmin) && (
-              <Button size="sm" className="mt-4" onClick={() => setShowCreate(true)}>
+              <Button className="mt-6 shadow-md" onClick={() => setShowCreate(true)}>
                 <Plus className="h-4 w-4 mr-1.5" />
                 Create Your First Project
               </Button>
@@ -251,105 +265,131 @@ export default function Dashboard() {
         )}
 
         {/* Project cards */}
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project, idx) => (
-            <button
-              key={project.id}
-              data-tour={idx === 0 ? 'project-card' : undefined}
-              onClick={() => navigate(`/project/${project.id}`)}
-              className={cn(
-                'group text-left w-full rounded-xl border border-border bg-card p-4',
-                'hover:border-primary/40 hover:shadow-md transition-all',
-                'focus:outline-none focus:ring-2 focus:ring-ring'
-              )}
-            >
-              <div className="flex items-start justify-between mb-3">
-                <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <FileText className="h-5 w-5 text-primary" />
-                </div>
-                {project.member_role === 'owner' && (
-                  <span
-                    role="button"
-                    onClick={e => { e.stopPropagation(); handleDelete(project.id, project.name); }}
-                    className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-md hover:bg-destructive/10"
-                  >
-                    <Trash2 className="h-3.5 w-3.5 text-destructive" />
-                  </span>
-                )}
-              </div>
-              <h3 className="text-sm font-semibold text-foreground truncate mb-0.5">{project.name}</h3>
-              {project.contract_number && (
-                <p className="text-[10px] text-muted-foreground truncate mb-2">#{project.contract_number}</p>
-              )}
-              <div className="flex items-center gap-3 text-[10px] text-muted-foreground flex-wrap">
-                <span className="flex items-center gap-1">
-                  <Clock className="h-3 w-3" />
-                  {project.latest_annotation_at
-                    ? `Active ${new Date(project.latest_annotation_at).toLocaleDateString()}`
-                    : new Date(project.updated_at).toLocaleDateString()}
-                </span>
-                <span className="flex items-center gap-1">
-                  <PenTool className="h-3 w-3" />
-                  {project.annotation_count || 0}
-                </span>
-                {project.member_role === 'owner' && (project.member_count ?? 0) > 0 && (
-                  <span className="flex items-center gap-1">
-                    <Users className="h-3 w-3" />
-                    {project.member_count} member{project.member_count !== 1 ? 's' : ''}
-                  </span>
-                )}
-              </div>
-              <div className="mt-2 flex items-center justify-between">
-                <span className={cn(
-                  'text-[9px] font-semibold uppercase px-1.5 py-0.5 rounded',
-                  project.member_role === 'owner'
-                    ? 'bg-primary/10 text-primary'
-                    : 'bg-muted text-muted-foreground'
-                )}>
-                  {project.member_role === 'owner' ? 'Manager' : project.member_role}
-                </span>
-                {project.member_role === 'owner' && (
-                  <span
-                    role="button"
-                    onClick={e => { e.stopPropagation(); loadProjectDetail(project.id); }}
-                    className="text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-0.5"
-                  >
-                    Details
-                    {expandedProject === project.id ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
-                  </span>
-                )}
-              </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {projects.map((project, idx) => {
+            const annCount = project.annotation_count || 0;
+            const progressPct = annCount > 0 ? Math.min(100, Math.round((annCount / Math.max(annCount, 50)) * 100)) : 0;
 
-              {/* Expanded progress detail */}
-              {expandedProject === project.id && (
-                <div className="mt-3 pt-3 border-t border-border" onClick={e => e.stopPropagation()}>
-                  {detailLoading ? (
-                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground mx-auto" />
-                  ) : projectDetail ? (
-                    <div className="space-y-2">
-                      <p className="text-[10px] text-muted-foreground">
-                        {projectDetail.pagesAnnotated} pages with annotations
-                      </p>
-                      {projectDetail.inspectors.length > 0 ? (
-                        <div className="space-y-1">
-                          {projectDetail.inspectors.map((insp, i) => (
-                            <div key={i} className="flex items-center justify-between text-[10px]">
-                              <span className="text-foreground truncate max-w-[120px]">{insp.name}</span>
-                              <span className="text-muted-foreground">
-                                {insp.count} ann · {new Date(insp.lastActive).toLocaleDateString()}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <p className="text-[10px] text-muted-foreground">No annotations yet</p>
+            return (
+              <button
+                key={project.id}
+                data-tour={idx === 0 ? 'project-card' : undefined}
+                onClick={() => navigate(`/project/${project.id}`)}
+                className={cn(
+                  'group text-left w-full rounded-xl border bg-card p-5',
+                  'hover:border-primary/50 hover:shadow-lg transition-all duration-200',
+                  'focus:outline-none focus:ring-2 focus:ring-ring',
+                  'border-border'
+                )}
+              >
+                {/* Top row: icon + contract + delete */}
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="h-11 w-11 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <FileText className="h-5 w-5 text-primary" />
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="text-sm font-bold text-foreground truncate leading-tight">{project.name}</h3>
+                      {project.contract_number && (
+                        <p className="text-xs text-muted-foreground font-mono mt-0.5">#{project.contract_number}</p>
                       )}
                     </div>
-                  ) : null}
+                  </div>
+                  {project.member_role === 'owner' && (
+                    <span
+                      role="button"
+                      onClick={e => { e.stopPropagation(); handleDelete(project.id, project.name); }}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-md hover:bg-destructive/10"
+                    >
+                      <Trash2 className="h-4 w-4 text-destructive" />
+                    </span>
+                  )}
                 </div>
-              )}
-            </button>
-          ))}
+
+                {/* Progress bar */}
+                {annCount > 0 && (
+                  <div className="mb-3">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Progress</span>
+                      <span className="text-[10px] font-mono text-muted-foreground">{annCount} annotations</span>
+                    </div>
+                    <Progress value={progressPct} className="h-1.5" />
+                  </div>
+                )}
+
+                {/* Stats row */}
+                <div className="flex items-center gap-4 text-xs text-muted-foreground flex-wrap">
+                  <span className="flex items-center gap-1.5">
+                    <Clock className="h-3.5 w-3.5" />
+                    {project.latest_annotation_at
+                      ? `${new Date(project.latest_annotation_at).toLocaleDateString()}`
+                      : new Date(project.updated_at).toLocaleDateString()}
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <PenTool className="h-3.5 w-3.5" />
+                    {annCount}
+                  </span>
+                  {project.member_role === 'owner' && (project.member_count ?? 0) > 0 && (
+                    <span className="flex items-center gap-1.5">
+                      <Users className="h-3.5 w-3.5" />
+                      {project.member_count}
+                    </span>
+                  )}
+                </div>
+
+                {/* Footer: role badge + details */}
+                <div className="mt-3 pt-3 border-t border-border flex items-center justify-between">
+                  <span className={cn(
+                    'text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border',
+                    project.member_role === 'owner'
+                      ? ROLE_STYLES.project_manager
+                      : ROLE_STYLES.inspector
+                  )}>
+                    {project.member_role === 'owner' ? 'Manager' : project.member_role}
+                  </span>
+                  {project.member_role === 'owner' && (
+                    <span
+                      role="button"
+                      onClick={e => { e.stopPropagation(); loadProjectDetail(project.id); }}
+                      className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
+                    >
+                      Details
+                      {expandedProject === project.id ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+                    </span>
+                  )}
+                </div>
+
+                {/* Expanded progress detail */}
+                {expandedProject === project.id && (
+                  <div className="mt-3 pt-3 border-t border-border" onClick={e => e.stopPropagation()}>
+                    {detailLoading ? (
+                      <Loader2 className="h-4 w-4 animate-spin text-muted-foreground mx-auto" />
+                    ) : projectDetail ? (
+                      <div className="space-y-2">
+                        <p className="text-xs text-muted-foreground">
+                          {projectDetail.pagesAnnotated} pages with annotations
+                        </p>
+                        {projectDetail.inspectors.length > 0 ? (
+                          <div className="space-y-1.5">
+                            {projectDetail.inspectors.map((insp, i) => (
+                              <div key={i} className="flex items-center justify-between text-xs">
+                                <span className="text-foreground truncate max-w-[140px]">{insp.name}</span>
+                                <span className="text-muted-foreground font-mono">
+                                  {insp.count} ann · {new Date(insp.lastActive).toLocaleDateString()}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-xs text-muted-foreground">No annotations yet</p>
+                        )}
+                      </div>
+                    ) : null}
+                  </div>
+                )}
+              </button>
+            );
+          })}
         </div>
       </main>
 
@@ -373,7 +413,7 @@ export default function Dashboard() {
               <div
                 onClick={() => fileRef.current?.click()}
                 className={cn(
-                  'flex items-center gap-3 p-3 rounded-lg border-2 border-dashed cursor-pointer transition-colors',
+                  'flex items-center gap-3 p-4 rounded-lg border-2 border-dashed cursor-pointer transition-colors',
                   newPdf ? 'border-primary/40 bg-primary/5' : 'border-border hover:border-primary/30'
                 )}
               >

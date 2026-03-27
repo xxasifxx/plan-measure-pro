@@ -80,12 +80,12 @@ export function ProjectSidebar({
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border">
       <SidebarHeader className="p-3">
-        <div className="flex items-center gap-2">
-          <div className="h-7 w-7 rounded-sm bg-primary flex items-center justify-center">
-            <MapPin className="h-4 w-4 text-primary-foreground" />
+        <div className="flex items-center gap-2.5">
+          <div className="h-8 w-8 rounded-lg bg-sidebar-primary flex items-center justify-center shadow-sm">
+            <PenTool className="h-4 w-4 text-sidebar-primary-foreground" />
           </div>
-          <span className="text-xs font-bold uppercase tracking-wider text-sidebar-foreground group-data-[collapsible=icon]:hidden">
-            Takeoff
+          <span className="text-sm font-bold tracking-wide text-sidebar-foreground group-data-[collapsible=icon]:hidden">
+            TakeoffPro
           </span>
         </div>
       </SidebarHeader>
@@ -96,14 +96,14 @@ export function ProjectSidebar({
         {/* Upload / Project management - hidden for inspectors */}
         {!readOnly && (
           <SidebarGroup>
-            <SidebarGroupLabel className="text-[10px] uppercase tracking-widest">
-              Project
-            </SidebarGroupLabel>
+          <SidebarGroupLabel className="text-[11px] uppercase tracking-widest font-bold">
+            Project
+          </SidebarGroupLabel>
             <SidebarGroupContent>
               <div className="px-2 space-y-1.5 group-data-[collapsible=icon]:hidden">
-                <label className="flex items-center gap-2 px-3 py-2 rounded-sm border border-dashed border-sidebar-border cursor-pointer hover:border-sidebar-primary hover:bg-sidebar-accent transition-colors text-xs">
-                  <FileUp className="h-3.5 w-3.5" />
-                  <span>{projectName || 'Upload PDF'}</span>
+                <label className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-sidebar-accent/50 border border-sidebar-border cursor-pointer hover:border-sidebar-primary hover:bg-sidebar-accent transition-colors text-xs font-medium">
+                  <FileUp className="h-4 w-4 text-sidebar-primary" />
+                  <span className="truncate">{projectName || 'Upload PDF'}</span>
                   <input type="file" accept=".pdf" onChange={handleFile} className="hidden" />
                 </label>
                 {hasPdf && (
@@ -118,11 +118,11 @@ export function ProjectSidebar({
                   </Button>
                 )}
                 {hasPdf && onSpecsUpload && (
-                  <label className="flex items-center gap-2 px-3 py-2 rounded-sm border border-dashed border-sidebar-border cursor-pointer hover:border-sidebar-primary hover:bg-sidebar-accent transition-colors text-xs">
+                  <label className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-sidebar-accent/50 border border-sidebar-border cursor-pointer hover:border-sidebar-primary hover:bg-sidebar-accent transition-colors text-xs font-medium">
                     {specsLoading ? (
-                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      <Loader2 className="h-4 w-4 animate-spin" />
                     ) : (
-                      <BookOpen className="h-3.5 w-3.5" />
+                      <BookOpen className="h-4 w-4 text-sidebar-primary" />
                     )}
                     <span>{specsLoaded ? 'Specs Loaded ✓' : specsLoading ? 'Loading Specs…' : 'Upload Standard Specs'}</span>
                     <input
@@ -169,7 +169,7 @@ export function ProjectSidebar({
           <>
             <SidebarSeparator />
             <SidebarGroup>
-              <SidebarGroupLabel className="text-[10px] uppercase tracking-widest">
+              <SidebarGroupLabel className="text-[11px] uppercase tracking-widest font-bold">
                 Sections
               </SidebarGroupLabel>
               <SidebarGroupContent>
@@ -193,7 +193,7 @@ export function ProjectSidebar({
           <>
             <SidebarSeparator />
             <SidebarGroup>
-              <SidebarGroupLabel className="text-[10px] uppercase tracking-widest">
+              <SidebarGroupLabel className="text-[11px] uppercase tracking-widest font-bold">
                 Pages
               </SidebarGroupLabel>
               <SidebarGroupContent>
@@ -219,7 +219,7 @@ export function ProjectSidebar({
         {/* Pay Items */}
         <SidebarSeparator />
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[10px] uppercase tracking-widest">
+          <SidebarGroupLabel className="text-[11px] uppercase tracking-widest font-bold">
             Pay Items
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -461,7 +461,7 @@ function PayItemList({ payItems, activePayItemId, onActivePayItemChange, onEdit,
     <>
       {sections.map(({ section, label, items }) => (
         <div key={section} className="space-y-0.5">
-          <div className="text-[9px] uppercase tracking-widest text-sidebar-foreground/40 px-2 pt-1.5 pb-0.5 font-semibold">
+          <div className="text-[10px] uppercase tracking-widest text-sidebar-foreground/50 px-2 pt-2 pb-1 font-bold border-b border-sidebar-border/50 mb-0.5">
             {label}
           </div>
           {items.map(item => {
@@ -474,30 +474,30 @@ function PayItemList({ payItems, activePayItemId, onActivePayItemChange, onEdit,
                 key={item.id}
                 onClick={() => onActivePayItemChange(item.id)}
                 onDoubleClick={() => onViewSpec?.(item.itemCode)}
-                className={`group flex items-center gap-2 px-2 py-1.5 rounded-sm cursor-pointer text-xs transition-colors ${
+                className={`group flex items-center gap-2 px-2 py-2 rounded-lg cursor-pointer text-xs transition-colors ${
                   activePayItemId === item.id
                     ? 'bg-sidebar-accent ring-1 ring-sidebar-primary'
                     : 'hover:bg-sidebar-accent/50'
                 }`}
               >
-                <div className="h-3 w-3 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
+                <div className="h-3.5 w-3.5 rounded-full shrink-0 shadow-sm" style={{ backgroundColor: item.color }} />
                 {item.drawable ? (
-                  <PenTool className="h-2.5 w-2.5 shrink-0 text-sidebar-foreground/40" />
+                  <PenTool className="h-3 w-3 shrink-0 text-sidebar-foreground/40" />
                 ) : (
-                  <Hash className="h-2.5 w-2.5 shrink-0 text-sidebar-foreground/40" />
+                  <Hash className="h-3 w-3 shrink-0 text-sidebar-foreground/40" />
                 )}
                 <div className="flex-1 min-w-0">
-                  <span className="truncate block text-sidebar-foreground">
+                  <span className="truncate block text-sidebar-foreground text-[13px] leading-tight">
                     <span className="font-mono text-sidebar-foreground/60">{item.itemNumber}.</span>{' '}
                     {item.name}
                   </span>
                   {count > 0 && (
-                    <span className="block text-[9px] text-sidebar-foreground/50 mt-0.5">
+                    <span className="block text-[10px] text-sidebar-foreground/50 mt-0.5">
                       {count} ann · {totalMeasurement.toFixed(1)} {UNIT_LABELS[item.unit]}
                     </span>
                   )}
                 </div>
-                <span className="text-[10px] text-sidebar-foreground/50 shrink-0">{UNIT_LABELS[item.unit]}</span>
+                <span className="text-[10px] text-sidebar-foreground/50 shrink-0 font-mono">{UNIT_LABELS[item.unit]}</span>
                 {onEdit && (
                   <button
                     onClick={(e) => { e.stopPropagation(); onEdit(item); }}
