@@ -478,6 +478,12 @@ export function PdfCanvas({
 
   // Core click logic extracted to accept PointXY directly (shared by mouse + touch)
   const handleClickAtPos = useCallback((pos: PointXY) => {
+    // Intercept for GPS calibration plan-tap
+    if (onGpsPlanTap) {
+      onGpsPlanTap(pos);
+      return;
+    }
+
     if (toolMode === 'pan' || toolMode === 'tocSelect') return;
 
     if (toolMode === 'select') {
