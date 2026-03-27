@@ -26,6 +26,12 @@ interface Props {
   selectedAnnotationId: string | null;
   onSelectAnnotation: (id: string | null) => void;
   isMobile?: boolean;
+  /** GPS position dot (normalized to scale=1) */
+  gpsPosition?: PointXY | null;
+  /** GPS trace polyline (normalized to scale=1) */
+  gpsTracePoints?: PointXY[];
+  /** Callback for GPS calibration plan-tap */
+  onGpsPlanTap?: ((point: PointXY) => void) | null;
 }
 
 const HIT_TOLERANCE = 8; // pixels at scale=1
@@ -37,7 +43,7 @@ export function PdfCanvas({
   pdf, currentPage, scale, onScaleChange, toolMode, calibration,
   annotations, activePayItemId, payItems, onCalibrate, onAddAnnotation, onRemoveAnnotation,
   onUpdateAnnotation, onTocRegionSelected, externalContainerRef, selectedAnnotationId, onSelectAnnotation,
-  isMobile,
+  isMobile, gpsPosition, gpsTracePoints, onGpsPlanTap,
 }: Props) {
   const pdfCanvasRef = useRef<HTMLCanvasElement>(null);
   const overlayCanvasRef = useRef<HTMLCanvasElement>(null);
