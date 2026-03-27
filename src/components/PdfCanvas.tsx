@@ -26,6 +26,12 @@ interface Props {
   selectedAnnotationId: string | null;
   onSelectAnnotation: (id: string | null) => void;
   isMobile?: boolean;
+  /** GPS position dot (normalized to scale=1) */
+  gpsPosition?: PointXY | null;
+  /** GPS trace polyline (normalized to scale=1) */
+  gpsTracePoints?: PointXY[];
+  /** Callback for GPS calibration plan-tap */
+  onGpsPlanTap?: ((point: PointXY) => void) | null;
 }
 
 const HIT_TOLERANCE = 8; // pixels at scale=1
@@ -37,7 +43,7 @@ export function PdfCanvas({
   pdf, currentPage, scale, onScaleChange, toolMode, calibration,
   annotations, activePayItemId, payItems, onCalibrate, onAddAnnotation, onRemoveAnnotation,
   onUpdateAnnotation, onTocRegionSelected, externalContainerRef, selectedAnnotationId, onSelectAnnotation,
-  isMobile,
+  isMobile, gpsPosition, gpsTracePoints, onGpsPlanTap,
 }: Props) {
   const pdfCanvasRef = useRef<HTMLCanvasElement>(null);
   const overlayCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -398,7 +404,51 @@ export function PdfCanvas({
     if (tocRect && toolMode === 'tocSelect') {
       drawTocRect(tocRect.x1, tocRect.y1, tocRect.x2, tocRect.y2);
     }
-  }, [annotations, currentPage, drawingPoints, mousePos, payItems, activePayItemId, toolMode, calibratePoints, tocDragStart, tocDragEnd, tocRect, scale, s, selectedAnnotationId, calibration, draggingHandle]);
+
+    // Draw GPS trace polyline
+    if (gpsTracePoints && gpsTracePoints.length > 0) {
+      const scaled = gpsTracePoints.map(s);
+      ctx.strokeStyle = '#22d3ee';
+      ctx.lineWidth = 3;
+      ctx.setLineDash([6, 3]);
+      ctx.beginPath();
+      ctx.moveTo(scaled[0].x, scaled[0].y);
+      for (let i = 1; i < scaled.length; i++) {
+        ctx.lineTo(scaled[i].x, scaled[i].y);
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Breadcrumb dots
+      for (const pt of scaled) {
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = '#22d3ee';
+        ctx.fill();
+      }
+    }
+
+    // Draw GPS position dot
+    if (gpsPosition) {
+      const gp = s(gpsPosition);
+      // Accuracy ring
+      ctx.beginPath();
+      ctx.arc(gp.x, gp.y, 16, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(34, 211, 238, 0.15)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(34, 211, 238, 0.4)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      // Center dot
+      ctx.beginPath();
+      ctx.arc(gp.x, gp.y, 6, 0, Math.PI * 2);
+      ctx.fillStyle = '#22d3ee';
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+  }, [annotations, currentPage, drawingPoints, mousePos, payItems, activePayItemId, toolMode, calibratePoints, tocDragStart, tocDragEnd, tocRect, scale, s, selectedAnnotationId, calibration, draggingHandle, gpsPosition, gpsTracePoints]);
 
   // Guard: check active pay item and calibration before drawing
   const guardDrawing = useCallback((needsCalibration: boolean): boolean => {
@@ -428,6 +478,12 @@ export function PdfCanvas({
 
   // Core click logic extracted to accept PointXY directly (shared by mouse + touch)
   const handleClickAtPos = useCallback((pos: PointXY) => {
+    // Intercept for GPS calibration plan-tap
+    if (onGpsPlanTap) {
+      onGpsPlanTap(pos);
+      return;
+    }
+
     if (toolMode === 'pan' || toolMode === 'tocSelect') return;
 
     if (toolMode === 'select') {
@@ -483,7 +539,7 @@ export function PdfCanvas({
       if (drawingPoints.length === 0 && !guardDrawing(true)) return;
       setDrawingPoints(prev => [...prev, pos]);
     }
-  }, [toolMode, calibratePoints, drawingPoints, calibration, activePayItemId, currentPage, onAddAnnotation, hitTestAnnotations, onSelectAnnotation, guardDrawing]);
+  }, [toolMode, calibratePoints, drawingPoints, calibration, activePayItemId, currentPage, onAddAnnotation, hitTestAnnotations, onSelectAnnotation, guardDrawing, onGpsPlanTap]);
 
   // Suppress click after handle drag
   const handleDragJustFinished = useRef(false);

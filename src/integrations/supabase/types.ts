@@ -121,6 +121,47 @@ export type Database = {
           },
         ]
       }
+      geo_calibrations: {
+        Row: {
+          control_points: Json
+          created_at: string
+          estimated_error_ft: number
+          id: string
+          page: number
+          project_id: string
+          transform_matrix: Json
+          user_id: string
+        }
+        Insert: {
+          control_points?: Json
+          created_at?: string
+          estimated_error_ft?: number
+          id?: string
+          page: number
+          project_id: string
+          transform_matrix?: Json
+          user_id: string
+        }
+        Update: {
+          control_points?: Json
+          created_at?: string
+          estimated_error_ft?: number
+          id?: string
+          page?: number
+          project_id?: string
+          transform_matrix?: Json
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "geo_calibrations_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       invitations: {
         Row: {
           accepted_at: string | null

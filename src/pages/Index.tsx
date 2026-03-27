@@ -13,6 +13,8 @@ import { MobilePayItems } from '@/components/MobilePayItems';
 import { MobileSections } from '@/components/MobileSections';
 import { EmptyState } from '@/components/EmptyState';
 import { GuidedTour } from '@/components/GuidedTour';
+import { GpsCalibration } from '@/components/GpsCalibration';
+import { GpsTraceControls } from '@/components/GpsTraceControls';
 import { useProject } from '@/hooks/useProject';
 import { useAuth } from '@/hooks/useAuth';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -23,8 +25,9 @@ import { extractAllText, buildSectionPageIndex, getSectionFromItemCode } from '@
 import { exportCsv, exportPdfReport, exportInspectorDaily } from '@/lib/export-utils';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import type { TocEntry } from '@/types/project';
-import { Sun, Moon, ArrowLeft, Loader2, HelpCircle, FileSpreadsheet, Users, MousePointer2 } from 'lucide-react';
+import type { TocEntry, PointXY } from '@/types/project';
+import type { GeoCalibration } from '@/lib/geo-transform';
+import { Sun, Moon, ArrowLeft, Loader2, HelpCircle, FileSpreadsheet, Users, MousePointer2, Navigation } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { TeamManager } from '@/components/TeamManager';
@@ -81,6 +84,13 @@ const Index = () => {
   const { toast } = useToast();
   const isMobile = useIsMobile();
   const { isDark, toggle: toggleTheme } = useTheme();
+
+  // GPS georeferencing state
+  const [showGpsCalibration, setShowGpsCalibration] = useState(false);
+  const [geoCalibration, setGeoCalibration] = useState<GeoCalibration | null>(null);
+  const [gpsPosition, setGpsPosition] = useState<PointXY | null>(null);
+  const [gpsTracePoints, setGpsTracePoints] = useState<PointXY[]>([]);
+  const [gpsPlanTapCallback, setGpsPlanTapCallback] = useState<((point: PointXY) => void) | null>(null);
 
   // Mobile tab state
   const [mobileTab, setMobileTab] = useState<MobileTab>('canvas');
@@ -415,6 +425,51 @@ const Index = () => {
     toast({ title: 'Calibration copied', description: `Applied to ${targetPages.length} pages.` });
   }, [currentCalibration, project, totalPages, currentPage, copyCalibrationToPages, toast]);
 
+  // GPS calibration handlers
+  const handleGpsCalibrationComplete = useCallback(async (cal: GeoCalibration) => {
+    setGeoCalibration(cal);
+    setShowGpsCalibration(false);
+    setGpsPlanTapCallback(null);
+    toast({ title: 'GPS Calibrated', description: `${cal.controlPoints.length} control points. Error: ~${cal.estimatedErrorFt.toFixed(1)} px` });
+
+    // Persist to DB
+    if (projectId && currentUserId) {
+      await supabase.from('geo_calibrations').upsert({
+        project_id: projectId,
+        page: currentPage,
+        control_points: cal.controlPoints as any,
+        transform_matrix: cal.transform as any,
+        estimated_error_ft: cal.estimatedErrorFt,
+        user_id: currentUserId,
+      }, { onConflict: 'project_id,page' });
+    }
+  }, [projectId, currentUserId, currentPage, toast]);
+
+  const handleRequestGpsPlanTap = useCallback((callback: (point: PointXY) => void) => {
+    setGpsPlanTapCallback(() => callback);
+  }, []);
+
+  // Load geo calibration for current page
+  useEffect(() => {
+    if (!projectId) return;
+    let cancelled = false;
+    supabase.from('geo_calibrations')
+      .select('*')
+      .eq('project_id', projectId)
+      .eq('page', currentPage)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (cancelled || !data) { setGeoCalibration(null); return; }
+        const cal: GeoCalibration = {
+          controlPoints: data.control_points as any,
+          transform: data.transform_matrix as any,
+          estimatedErrorFt: Number(data.estimated_error_ft),
+        };
+        setGeoCalibration(cal);
+      });
+    return () => { cancelled = true; };
+  }, [projectId, currentPage]);
+
   const activePayItem = payItems.find(p => p.id === activePayItemId);
 
   const handleActivePayItemChange = useCallback((id: string | null) => {
@@ -492,9 +547,52 @@ const Index = () => {
                     selectedAnnotationId={selectedAnnotationId}
                     onSelectAnnotation={setSelectedAnnotationId}
                     isMobile
+                    gpsPosition={gpsPosition}
+                    gpsTracePoints={gpsTracePoints}
+                    onGpsPlanTap={gpsPlanTapCallback}
                   />
                 ) : (
                   <EmptyState onFileUpload={handleFileUpload} />
+                )}
+
+                {/* Mobile GPS calibration */}
+                {showGpsCalibration && (
+                  <GpsCalibration
+                    onComplete={handleGpsCalibrationComplete}
+                    onCancel={() => { setShowGpsCalibration(false); setGpsPlanTapCallback(null); }}
+                    onRequestPlanTap={handleRequestGpsPlanTap}
+                    existingCalibration={geoCalibration}
+                  />
+                )}
+
+                {/* Mobile GPS trace controls */}
+                {pdf && geoCalibration && !showGpsCalibration && (
+                  <div className="absolute bottom-3 left-3 right-3 z-20 flex justify-center">
+                    <GpsTraceControls
+                      geoCalibration={geoCalibration}
+                      scaleCalibration={currentCalibration}
+                      activePayItem={activePayItem}
+                      currentPage={currentPage}
+                      onAddAnnotation={addAnnotation}
+                      onPositionUpdate={setGpsPosition}
+                      onTracePointsUpdate={setGpsTracePoints}
+                    />
+                  </div>
+                )}
+
+                {/* Mobile GPS setup button */}
+                {pdf && !showGpsCalibration && !geoCalibration && (
+                  <div className="absolute bottom-3 right-3 z-20">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="gap-1.5 bg-card/90 backdrop-blur-sm"
+                      onClick={() => setShowGpsCalibration(true)}
+                    >
+                      <Navigation className="h-4 w-4" />
+                      <span className="text-xs font-mono">GPS</span>
+                    </Button>
+                  </div>
                 )}
               </div>
             </div>
@@ -721,9 +819,67 @@ const Index = () => {
                 externalContainerRef={canvasContainerRef}
                 selectedAnnotationId={selectedAnnotationId}
                 onSelectAnnotation={setSelectedAnnotationId}
+                gpsPosition={gpsPosition}
+                gpsTracePoints={gpsTracePoints}
+                onGpsPlanTap={gpsPlanTapCallback}
               />
             ) : (
               <EmptyState onFileUpload={handleFileUpload} />
+            )}
+
+            {/* GPS Calibration wizard overlay */}
+            {showGpsCalibration && (
+              <GpsCalibration
+                onComplete={handleGpsCalibrationComplete}
+                onCancel={() => { setShowGpsCalibration(false); setGpsPlanTapCallback(null); }}
+                onRequestPlanTap={handleRequestGpsPlanTap}
+                existingCalibration={geoCalibration}
+              />
+            )}
+
+            {/* GPS Trace controls */}
+            {pdf && geoCalibration && !showGpsCalibration && (
+              <div className="absolute bottom-3 right-3 z-20">
+                <GpsTraceControls
+                  geoCalibration={geoCalibration}
+                  scaleCalibration={currentCalibration}
+                  activePayItem={activePayItem}
+                  currentPage={currentPage}
+                  onAddAnnotation={addAnnotation}
+                  onPositionUpdate={setGpsPosition}
+                  onTracePointsUpdate={setGpsTracePoints}
+                />
+              </div>
+            )}
+
+            {/* GPS calibrate button */}
+            {pdf && !showGpsCalibration && !geoCalibration && (
+              <div className="absolute bottom-3 right-3 z-20">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-1.5 bg-card/90 backdrop-blur-sm"
+                  onClick={() => setShowGpsCalibration(true)}
+                >
+                  <Navigation className="h-4 w-4" />
+                  <span className="text-xs font-mono">GPS Setup</span>
+                </Button>
+              </div>
+            )}
+
+            {/* GPS recalibrate button when already calibrated */}
+            {pdf && geoCalibration && !showGpsCalibration && (
+              <div className="absolute top-3 right-3 z-20">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="gap-1 text-xs text-muted-foreground"
+                  onClick={() => setShowGpsCalibration(true)}
+                >
+                  <Navigation className="h-3 w-3" />
+                  GPS ✓
+                </Button>
+              </div>
             )}
           </div>
         </div>
