@@ -404,7 +404,51 @@ export function PdfCanvas({
     if (tocRect && toolMode === 'tocSelect') {
       drawTocRect(tocRect.x1, tocRect.y1, tocRect.x2, tocRect.y2);
     }
-  }, [annotations, currentPage, drawingPoints, mousePos, payItems, activePayItemId, toolMode, calibratePoints, tocDragStart, tocDragEnd, tocRect, scale, s, selectedAnnotationId, calibration, draggingHandle]);
+
+    // Draw GPS trace polyline
+    if (gpsTracePoints && gpsTracePoints.length > 0) {
+      const scaled = gpsTracePoints.map(s);
+      ctx.strokeStyle = '#22d3ee';
+      ctx.lineWidth = 3;
+      ctx.setLineDash([6, 3]);
+      ctx.beginPath();
+      ctx.moveTo(scaled[0].x, scaled[0].y);
+      for (let i = 1; i < scaled.length; i++) {
+        ctx.lineTo(scaled[i].x, scaled[i].y);
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Breadcrumb dots
+      for (const pt of scaled) {
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = '#22d3ee';
+        ctx.fill();
+      }
+    }
+
+    // Draw GPS position dot
+    if (gpsPosition) {
+      const gp = s(gpsPosition);
+      // Accuracy ring
+      ctx.beginPath();
+      ctx.arc(gp.x, gp.y, 16, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(34, 211, 238, 0.15)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(34, 211, 238, 0.4)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      // Center dot
+      ctx.beginPath();
+      ctx.arc(gp.x, gp.y, 6, 0, Math.PI * 2);
+      ctx.fillStyle = '#22d3ee';
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+  }, [annotations, currentPage, drawingPoints, mousePos, payItems, activePayItemId, toolMode, calibratePoints, tocDragStart, tocDragEnd, tocRect, scale, s, selectedAnnotationId, calibration, draggingHandle, gpsPosition, gpsTracePoints]);
 
   // Guard: check active pay item and calibration before drawing
   const guardDrawing = useCallback((needsCalibration: boolean): boolean => {
