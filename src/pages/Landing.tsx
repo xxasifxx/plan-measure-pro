@@ -3,6 +3,7 @@ import heroScreenshot from '@/assets/hero-screenshot.jpg';
 import highwayAerial from '@/assets/highway-construction-aerial.jpg';
 import inspectorTablet from '@/assets/inspector-tablet.jpg';
 import blueprintPlans from '@/assets/blueprint-plans.jpg';
+import gpsFieldMeasurement from '@/assets/gps-field-measurement.jpg';
 import { Button } from '@/components/ui/button';
 import {
   HardHat, Ruler, Layers, Users, Zap, FileSpreadsheet,
@@ -11,7 +12,7 @@ import {
   ShieldCheck, Smartphone, BarChart3, Camera, Globe,
   ClipboardList, Clock, DollarSign, AlertTriangle,
   Eye, FileText, MapPin, Wrench, TrendingUp, Lock,
-  Server, Headphones, BookOpen, Mail,
+  Server, Headphones, BookOpen, Mail, Navigation, Crosshair,
 } from 'lucide-react';
 
 /* ─────────────────────────── DATA ─────────────────────────── */
@@ -97,7 +98,7 @@ const capabilityPairs = [
 const workflowSteps = [
   { icon: Upload, label: 'Upload Contract Plans', description: 'Drop the PDF plan set from ProjectWise or your file system' },
   { icon: ClipboardList, label: 'Import Pay Items', description: 'Paste from the bid schedule or extract from spec pages' },
-  { icon: PenTool, label: 'Measure in the Field', description: 'Inspectors draw lines, areas, and counts on their tablets' },
+  { icon: PenTool, label: 'Measure in the Field', description: 'Draw on tablets or walk the site with GPS trace mode' },
   { icon: Download, label: 'Export for Payment', description: 'Download daily logs, monthly summaries, or full contract reports' },
 ];
 
