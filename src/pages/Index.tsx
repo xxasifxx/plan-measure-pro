@@ -425,6 +425,51 @@ const Index = () => {
     toast({ title: 'Calibration copied', description: `Applied to ${targetPages.length} pages.` });
   }, [currentCalibration, project, totalPages, currentPage, copyCalibrationToPages, toast]);
 
+  // GPS calibration handlers
+  const handleGpsCalibrationComplete = useCallback(async (cal: GeoCalibration) => {
+    setGeoCalibration(cal);
+    setShowGpsCalibration(false);
+    setGpsPlanTapCallback(null);
+    toast({ title: 'GPS Calibrated', description: `${cal.controlPoints.length} control points. Error: ~${cal.estimatedErrorFt.toFixed(1)} px` });
+
+    // Persist to DB
+    if (projectId && currentUserId) {
+      await supabase.from('geo_calibrations').upsert({
+        project_id: projectId,
+        page: currentPage,
+        control_points: cal.controlPoints as any,
+        transform_matrix: cal.transform as any,
+        estimated_error_ft: cal.estimatedErrorFt,
+        user_id: currentUserId,
+      }, { onConflict: 'project_id,page' });
+    }
+  }, [projectId, currentUserId, currentPage, toast]);
+
+  const handleRequestGpsPlanTap = useCallback((callback: (point: PointXY) => void) => {
+    setGpsPlanTapCallback(() => callback);
+  }, []);
+
+  // Load geo calibration for current page
+  useEffect(() => {
+    if (!projectId) return;
+    let cancelled = false;
+    supabase.from('geo_calibrations')
+      .select('*')
+      .eq('project_id', projectId)
+      .eq('page', currentPage)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (cancelled || !data) { setGeoCalibration(null); return; }
+        const cal: GeoCalibration = {
+          controlPoints: data.control_points as any,
+          transform: data.transform_matrix as any,
+          estimatedErrorFt: Number(data.estimated_error_ft),
+        };
+        setGeoCalibration(cal);
+      });
+    return () => { cancelled = true; };
+  }, [projectId, currentPage]);
+
   const activePayItem = payItems.find(p => p.id === activePayItemId);
 
   const handleActivePayItemChange = useCallback((id: string | null) => {
