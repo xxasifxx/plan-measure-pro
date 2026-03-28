@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, type Easing } from 'framer-motion';
 import heroScreenshot from '@/assets/hero-screenshot.jpg';
 import highwayAerial from '@/assets/highway-construction-aerial.jpg';
 import inspectorTablet from '@/assets/inspector-tablet.jpg';
