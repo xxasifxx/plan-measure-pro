@@ -872,6 +872,9 @@ export function PdfCanvas({
         setTocDragEnd(null);
         setTocRect(null);
         setPendingPolygon(null);
+        setLabelPoints([]);
+        setShowLabelPrompt(false);
+        setLabelTextInput('');
         onSelectAnnotation(null);
       }
       if ((e.key === 'Delete' || e.key === 'Backspace') && selectedAnnotationId && toolMode === 'select') {
@@ -1030,14 +1033,14 @@ export function PdfCanvas({
 
     // Finalize handle drag (touch)
     if (e.touches.length === 0 && draggingHandle) {
-      if (onUpdateAnnotation && calibration) {
+      if (onUpdateAnnotation) {
         const ann = annotations.find(a => a.id === draggingHandle.annotationId);
         if (ann) {
           const newPoints = ann.points.map((p, i) =>
             i === draggingHandle.pointIndex ? draggingHandle.currentPos : p
           );
           const changes: Partial<Annotation> = { points: newPoints };
-          if (ann.manualQuantity == null) {
+          if (ann.manualQuantity == null && calibration) {
             if (ann.type === 'line') {
               changes.measurement = lineLength(newPoints, calibration.pixelsPerFoot);
             } else if (ann.type === 'polygon' && newPoints.length >= 3) {
@@ -1363,6 +1366,33 @@ export function PdfCanvas({
         </div>
       )}
 
+      {/* Label text prompt */}
+      {showLabelPrompt && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-card border border-border rounded-md shadow-lg p-3 z-50">
+          <p className="text-xs text-muted-foreground mb-2">Enter label text:</p>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={labelTextInput}
+              onChange={e => setLabelTextInput(e.target.value)}
+              className="h-8 w-48 px-2 text-xs border border-input rounded-sm bg-background"
+              placeholder="e.g. Station 42+00"
+              autoFocus
+              onKeyDown={e => e.key === 'Enter' && submitLabel()}
+            />
+            <button onClick={submitLabel} className="toolbar-btn toolbar-btn-active text-xs">
+              Add Label
+            </button>
+            <button
+              onClick={() => { setLabelPoints([]); setShowLabelPrompt(false); setLabelTextInput(''); }}
+              className="toolbar-btn text-xs"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Empty state */}
       {!pdf && (
         <div className="absolute inset-0 flex items-center justify-center">
@@ -1386,6 +1416,7 @@ export function PdfCanvas({
             {toolMode === 'line' && 'Click two points to measure length'}
             {toolMode === 'polygon' && 'Click to place vertices • Double-click to close • Right-click to cancel'}
             {toolMode === 'count' && 'Click to place count markers'}
+            {toolMode === 'label' && 'Click anchor point, then click where label goes'}
             {toolMode === 'tocSelect' && 'Click and drag to select the Table of Contents area'}
           </span>
         </div>
