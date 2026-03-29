@@ -1,6 +1,6 @@
 import {
   MousePointer2, Ruler, Move, ZoomIn, ZoomOut, Maximize,
-  ChevronLeft, ChevronRight, Download, BarChart3, Undo2, Redo2, Copy
+  ChevronLeft, ChevronRight, Download, BarChart3, Undo2, Redo2, Copy, Type
 } from 'lucide-react';
 import type { ToolMode, PayItem, Calibration } from '@/types/project';
 import { UNIT_LABELS } from '@/types/project';
@@ -32,6 +32,7 @@ const allTools: { mode: ToolMode; icon: typeof MousePointer2; label: string }[] 
   { mode: 'select', icon: MousePointer2, label: 'Select' },
   { mode: 'pan', icon: Move, label: 'Pan' },
   { mode: 'calibrate', icon: Ruler, label: 'Calibrate' },
+  { mode: 'label', icon: Type, label: 'Label' },
 ];
 
 function formatScale(calibration: Calibration | null): string {
