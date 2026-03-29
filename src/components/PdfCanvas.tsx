@@ -330,7 +330,6 @@ export function PdfCanvas({
         const label = `${polyMeas.toFixed(1)} ${unitLabel}`;
         ctx.fillText(label, cx - 20, cy);
       }
-    }
 
       if (ann.type === 'label' && ann.points.length >= 2) {
         let labelPts = ann.points;
@@ -399,7 +398,7 @@ export function PdfCanvas({
         }
         continue;
       }
-
+    }
     // Draw in-progress shape
     if (drawingPoints.length > 0) {
       const item = payItems.find(p => p.id === activePayItemId);
