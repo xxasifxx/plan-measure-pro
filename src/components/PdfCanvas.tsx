@@ -62,6 +62,11 @@ export function PdfCanvas({
   const [pendingPolygon, setPendingPolygon] = useState<{ points: PointXY[]; areaSF: number } | null>(null);
   const [depthInput, setDepthInput] = useState('');
 
+  // Label annotation state
+  const [labelPoints, setLabelPoints] = useState<PointXY[]>([]);
+  const [showLabelPrompt, setShowLabelPrompt] = useState(false);
+  const [labelTextInput, setLabelTextInput] = useState('');
+
   // Endpoint drag handle state
   const [draggingHandle, setDraggingHandle] = useState<{
     annotationId: string;
@@ -167,6 +172,10 @@ export function PdfCanvas({
       const ann = pageAnnotations[i];
       if (ann.type === 'count') {
         if (pointToMarkerDistance(pos, ann.points[0]) <= MARKER_RADIUS) return ann;
+      } else if (ann.type === 'label' && ann.points.length >= 2) {
+        if (pointToSegmentDistance(pos, ann.points[0], ann.points[1]) <= HIT_TOLERANCE) return ann;
+        if (distancePx(pos, ann.points[0]) <= MARKER_RADIUS) return ann;
+        if (distancePx(pos, ann.points[1]) <= 20) return ann;
       } else if (ann.type === 'line' && ann.points.length === 2) {
         if (pointToSegmentDistance(pos, ann.points[0], ann.points[1]) <= HIT_TOLERANCE) return ann;
       } else if (ann.type === 'polygon' && ann.points.length >= 3) {
@@ -321,8 +330,75 @@ export function PdfCanvas({
         const label = `${polyMeas.toFixed(1)} ${unitLabel}`;
         ctx.fillText(label, cx - 20, cy);
       }
-    }
 
+      if (ann.type === 'label' && ann.points.length >= 2) {
+        let labelPts = ann.points;
+        if (draggingHandle && draggingHandle.annotationId === ann.id) {
+          labelPts = labelPts.map((p, i) => i === draggingHandle.pointIndex ? draggingHandle.currentPos : p);
+        }
+        const anchor = s(labelPts[0]);
+        const labelPos = s(labelPts[1]);
+        const text = (ann as any).labelText || '';
+
+        // Leader line (dashed)
+        ctx.beginPath();
+        ctx.moveTo(anchor.x, anchor.y);
+        ctx.lineTo(labelPos.x, labelPos.y);
+        ctx.strokeStyle = isSelected ? '#fff' : color;
+        ctx.lineWidth = isSelected ? 2 : 1.5;
+        ctx.setLineDash([3, 3]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Anchor dot
+        ctx.beginPath();
+        ctx.arc(anchor.x, anchor.y, 4, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+
+        // Text box
+        const fontSize = Math.max(10, Math.round(11 * scale));
+        ctx.font = `bold ${fontSize}px monospace`;
+        const metrics = ctx.measureText(text || ' ');
+        const pad = 4 * scale;
+        const boxW = metrics.width + pad * 2;
+        const boxH = fontSize + pad * 2;
+
+        ctx.fillStyle = 'rgba(0,0,0,0.75)';
+        ctx.beginPath();
+        if (ctx.roundRect) {
+          ctx.roundRect(labelPos.x - pad, labelPos.y - boxH / 2, boxW, boxH, 3);
+        } else {
+          ctx.rect(labelPos.x - pad, labelPos.y - boxH / 2, boxW, boxH);
+        }
+        ctx.fill();
+
+        if (isSelected) {
+          ctx.strokeStyle = '#fff';
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+        }
+
+        ctx.fillStyle = '#fff';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(text, labelPos.x + pad, labelPos.y);
+        ctx.textBaseline = 'alphabetic';
+
+        // Drag handles when selected
+        if (isSelected) {
+          for (const ep of [anchor, labelPos]) {
+            ctx.beginPath();
+            ctx.arc(ep.x, ep.y, HANDLE_RADIUS * scale, 0, Math.PI * 2);
+            ctx.fillStyle = '#fff';
+            ctx.fill();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+          }
+        }
+        continue;
+      }
+    }
     // Draw in-progress shape
     if (drawingPoints.length > 0) {
       const item = payItems.find(p => p.id === activePayItemId);
@@ -467,7 +543,7 @@ export function PdfCanvas({
   const hitTestHandles = useCallback((pos: PointXY): { annotationId: string; pointIndex: number } | null => {
     if (!selectedAnnotationId) return null;
     const ann = annotations.find(a => a.id === selectedAnnotationId);
-    if (!ann || (ann.type !== 'line' && ann.type !== 'polygon')) return null;
+    if (!ann || (ann.type !== 'line' && ann.type !== 'polygon' && ann.type !== 'label')) return null;
     for (let i = 0; i < ann.points.length; i++) {
       if (distancePx(pos, ann.points[i]) <= HANDLE_HIT_RADIUS) {
         return { annotationId: ann.id, pointIndex: i };
@@ -530,6 +606,17 @@ export function PdfCanvas({
           measurement,
           measurementUnit: 'LF',
         });
+        setDrawingPoints([]);
+      }
+      return;
+    }
+
+    if (toolMode === 'label') {
+      const pts = [...drawingPoints, pos];
+      setDrawingPoints(pts);
+      if (pts.length === 2) {
+        setLabelPoints(pts);
+        setShowLabelPrompt(true);
         setDrawingPoints([]);
       }
       return;
@@ -613,6 +700,23 @@ export function PdfCanvas({
     setDepthInput('');
   }, [pendingPolygon, depthInput, calibration, activePayItemId, currentPage, onAddAnnotation]);
 
+  const submitLabel = useCallback(() => {
+    if (labelPoints.length !== 2 || !labelTextInput.trim()) return;
+    onAddAnnotation({
+      id: crypto.randomUUID(),
+      type: 'label',
+      points: labelPoints,
+      payItemId: activePayItemId || '',
+      page: currentPage,
+      measurement: 0,
+      measurementUnit: '',
+      labelText: labelTextInput.trim(),
+    });
+    setLabelPoints([]);
+    setLabelTextInput('');
+    setShowLabelPrompt(false);
+  }, [labelPoints, labelTextInput, activePayItemId, currentPage, onAddAnnotation]);
+
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     // Handle endpoint dragging
     if (draggingHandle) {
@@ -675,7 +779,7 @@ export function PdfCanvas({
 
   const handleMouseUp = useCallback(() => {
     // Finalize endpoint drag
-    if (draggingHandle && onUpdateAnnotation && calibration) {
+    if (draggingHandle && onUpdateAnnotation) {
       const ann = annotations.find(a => a.id === draggingHandle.annotationId);
       if (ann) {
         const newPoints = ann.points.map((p, i) =>
@@ -683,7 +787,7 @@ export function PdfCanvas({
         );
         // Only recalculate if no manual quantity override
         const changes: Partial<Annotation> = { points: newPoints };
-        if (ann.manualQuantity == null) {
+        if (ann.manualQuantity == null && calibration) {
           if (ann.type === 'line') {
             changes.measurement = lineLength(newPoints, calibration.pixelsPerFoot);
           } else if (ann.type === 'polygon' && newPoints.length >= 3) {
@@ -768,6 +872,9 @@ export function PdfCanvas({
         setTocDragEnd(null);
         setTocRect(null);
         setPendingPolygon(null);
+        setLabelPoints([]);
+        setShowLabelPrompt(false);
+        setLabelTextInput('');
         onSelectAnnotation(null);
       }
       if ((e.key === 'Delete' || e.key === 'Backspace') && selectedAnnotationId && toolMode === 'select') {
@@ -926,14 +1033,14 @@ export function PdfCanvas({
 
     // Finalize handle drag (touch)
     if (e.touches.length === 0 && draggingHandle) {
-      if (onUpdateAnnotation && calibration) {
+      if (onUpdateAnnotation) {
         const ann = annotations.find(a => a.id === draggingHandle.annotationId);
         if (ann) {
           const newPoints = ann.points.map((p, i) =>
             i === draggingHandle.pointIndex ? draggingHandle.currentPos : p
           );
           const changes: Partial<Annotation> = { points: newPoints };
-          if (ann.manualQuantity == null) {
+          if (ann.manualQuantity == null && calibration) {
             if (ann.type === 'line') {
               changes.measurement = lineLength(newPoints, calibration.pixelsPerFoot);
             } else if (ann.type === 'polygon' && newPoints.length >= 3) {
@@ -1259,6 +1366,33 @@ export function PdfCanvas({
         </div>
       )}
 
+      {/* Label text prompt */}
+      {showLabelPrompt && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-card border border-border rounded-md shadow-lg p-3 z-50">
+          <p className="text-xs text-muted-foreground mb-2">Enter label text:</p>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={labelTextInput}
+              onChange={e => setLabelTextInput(e.target.value)}
+              className="h-8 w-48 px-2 text-xs border border-input rounded-sm bg-background"
+              placeholder="e.g. Station 42+00"
+              autoFocus
+              onKeyDown={e => e.key === 'Enter' && submitLabel()}
+            />
+            <button onClick={submitLabel} className="toolbar-btn toolbar-btn-active text-xs">
+              Add Label
+            </button>
+            <button
+              onClick={() => { setLabelPoints([]); setShowLabelPrompt(false); setLabelTextInput(''); }}
+              className="toolbar-btn text-xs"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Empty state */}
       {!pdf && (
         <div className="absolute inset-0 flex items-center justify-center">
@@ -1282,6 +1416,7 @@ export function PdfCanvas({
             {toolMode === 'line' && 'Click two points to measure length'}
             {toolMode === 'polygon' && 'Click to place vertices • Double-click to close • Right-click to cancel'}
             {toolMode === 'count' && 'Click to place count markers'}
+            {toolMode === 'label' && 'Click anchor point, then click where label goes'}
             {toolMode === 'tocSelect' && 'Click and drag to select the Table of Contents area'}
           </span>
         </div>

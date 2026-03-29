@@ -61,7 +61,7 @@ export interface Calibration {
 
 export interface Annotation {
   id: string;
-  type: 'line' | 'polygon' | 'count' | 'manual';
+  type: 'line' | 'polygon' | 'count' | 'manual' | 'label';
   points: PointXY[];
   payItemId: string;
   page: number;
@@ -71,6 +71,7 @@ export interface Annotation {
   manualQuantity?: number; // overrides measurement when set
   location?: string; // e.g. "Station 42+00, NB lane"
   notes?: string; // inspector remarks
+  labelText?: string; // text content for label annotations
   createdAt?: string;
   userId?: string; // the user who created this annotation
 }
@@ -88,6 +89,6 @@ export interface Project {
   updatedAt: string;
 }
 
-export type ToolMode = 'select' | 'calibrate' | 'line' | 'polygon' | 'pan' | 'tocSelect' | 'count';
+export type ToolMode = 'select' | 'calibrate' | 'line' | 'polygon' | 'pan' | 'tocSelect' | 'count' | 'label';
 
 export const DEFAULT_PAY_ITEMS: PayItem[] = [];

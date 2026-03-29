@@ -321,8 +321,11 @@ export default function Landing() {
               pay item formats.
             </motion.p>
             <motion.div variants={fadeUpChild} className="flex flex-wrap justify-center gap-3 mt-8">
-              <Button size="lg" onClick={() => scrollTo('demo')} className="gap-2 text-sm">
-                Request a Demo <ArrowRight className="h-4 w-4" />
+              <Button size="lg" onClick={() => navigate('/demo')} className="gap-2 text-sm bg-primary hover:bg-primary/90">
+                Try the Demo <ArrowRight className="h-4 w-4" />
+              </Button>
+              <Button size="lg" onClick={() => scrollTo('demo')} className="gap-2 text-sm" variant="outline">
+                Request a Demo <ChevronRight className="h-4 w-4" />
               </Button>
               <Button size="lg" variant="outline" onClick={() => navigate('/auth')} className="gap-2 text-sm border-white/30 text-white hover:bg-white/10 hover:text-white">
                 Start Free Trial

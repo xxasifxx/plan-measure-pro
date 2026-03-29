@@ -1,6 +1,6 @@
 import {
   MousePointer2, Ruler, Move, ZoomIn, ZoomOut, Maximize,
-  ChevronLeft, ChevronRight, Undo2, Redo2, PenTool, Hash, Copy
+  ChevronLeft, ChevronRight, Undo2, Redo2, PenTool, Hash, Copy, Type
 } from 'lucide-react';
 import type { ToolMode, PayItem, Calibration } from '@/types/project';
 import { UNIT_LABELS } from '@/types/project';
@@ -30,6 +30,7 @@ const allTools: { mode: ToolMode; icon: typeof MousePointer2; label: string }[] 
   { mode: 'select', icon: MousePointer2, label: 'Select' },
   { mode: 'pan', icon: Move, label: 'Pan' },
   { mode: 'calibrate', icon: Ruler, label: 'Scale' },
+  { mode: 'label', icon: Type, label: 'Label' },
 ];
 
 export function MobileToolbar({
