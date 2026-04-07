@@ -191,7 +191,7 @@ export function useProject(options: UseProjectOptions = {}) {
     persist(updated);
 
     if (dbSync()) {
-      const dbChanges: Record<string, any> = {};
+      const dbChanges: Record<string, unknown> = {};
       if (changes.type !== undefined) dbChanges.type = changes.type;
       if (changes.points !== undefined) dbChanges.points = changes.points;
       if (changes.payItemId !== undefined) dbChanges.pay_item_id = changes.payItemId || null;
@@ -203,7 +203,7 @@ export function useProject(options: UseProjectOptions = {}) {
       if (changes.location !== undefined) dbChanges.location = changes.location;
       if (changes.notes !== undefined) dbChanges.notes = changes.notes;
       if (Object.keys(dbChanges).length > 0) {
-        await supabase.from('annotations').update(dbChanges).eq('id', id);
+        await supabase.from('annotations').update(dbChanges as any).eq('id', id);
       }
     }
   }, [project, persist, dbSync]);
