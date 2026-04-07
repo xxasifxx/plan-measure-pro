@@ -24,6 +24,7 @@ interface Props {
   canRedo?: boolean;
   onCopyCalibration?: () => void;
   readOnly?: boolean;
+  onCalibrationChipTap?: () => void;
 }
 
 const allTools: { mode: ToolMode; icon: typeof MousePointer2; label: string }[] = [
@@ -37,6 +38,7 @@ export function MobileToolbar({
   toolMode, onToolChange, currentPage, totalPages, onPageChange,
   scale, onScaleChange, calibration, activePayItem, onFitToScreen,
   onUndo, onRedo, canUndo, canRedo, onCopyCalibration, readOnly,
+  onCalibrationChipTap,
 }: Props) {
   const tools = readOnly
     ? allTools.filter(t => t.mode !== 'calibrate')
@@ -101,7 +103,10 @@ export function MobileToolbar({
         )}
 
         {/* Calibration chip */}
-        <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-muted/50 shrink-0">
+        <button
+          onClick={() => onCalibrationChipTap ? onCalibrationChipTap() : onToolChange('calibrate')}
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-muted/50 shrink-0 border border-transparent hover:border-border active:bg-muted transition-colors cursor-pointer"
+        >
           <Ruler className="h-3 w-3 text-muted-foreground" />
           {calibration ? (
             <>
@@ -112,15 +117,15 @@ export function MobileToolbar({
                 })()}
               </span>
               {onCopyCalibration && (
-                <button onClick={onCopyCalibration} className="ml-0.5">
+                <span onClick={(e) => { e.stopPropagation(); onCopyCalibration(); }} className="ml-0.5">
                   <Copy className="h-3 w-3 text-muted-foreground" />
-                </button>
+                </span>
               )}
             </>
           ) : (
             <span className="text-xs text-muted-foreground">No scale</span>
           )}
-        </div>
+        </button>
 
         <div className="flex-1" />
 

@@ -138,3 +138,16 @@
     z-index: 2;
   }
 }
+
+@keyframes tour-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 hsl(var(--primary) / 0.4); }
+  50% { box-shadow: 0 0 0 8px hsl(var(--primary) / 0); }
+}
+.tour-highlight {
+  animation: tour-pulse 1.5s ease-in-out infinite;
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+  border-radius: 8px;
+  position: relative;
+  z-index: 5;
+}
