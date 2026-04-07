@@ -34,6 +34,20 @@ const TOOLS: { mode: ToolMode; icon: typeof MousePointer2; label: string }[] = [
   { mode: 'label', icon: Type, label: 'Label' },
 ];
 
+const MOBILE_TOOLBAR_TOOLS: { mode: ToolMode; icon: typeof MousePointer2; label: string }[] = [
+  { mode: 'select', icon: MousePointer2, label: 'Select' },
+  { mode: 'pan', icon: Move, label: 'Pan' },
+];
+
+/* Tour target IDs per walkthrough step */
+const TOUR_TARGETS: Record<number, string> = {
+  0: 'tour-upload',
+  1: 'tour-scale',
+  2: 'tour-items',
+  3: 'tour-canvas',
+  4: 'tour-label',
+};
+
 /* ─── Walkthrough Steps ─── */
 
 interface WalkthroughStep {
