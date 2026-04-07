@@ -19,7 +19,7 @@ import { isDrawableUnit, UNIT_LABELS } from '@/types/project';
 import {
   HardHat, Sun, Moon, Upload, Plus, Trash2, ChevronLeft, ChevronRight,
   ZoomIn, ZoomOut, Maximize, MousePointer2, Move, Ruler, Type, Undo2, Redo2,
-  PenTool, ArrowRight, CheckCircle2, X, ListChecks, Map,
+  PenTool, ArrowRight, CheckCircle2, X, ListChecks,
 } from 'lucide-react';
 
 /* ─── Constants ─── */
