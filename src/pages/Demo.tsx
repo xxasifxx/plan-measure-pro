@@ -462,8 +462,20 @@ export default function Demo() {
         </div>
       )}
 
+      {/* ── Main area ── */}
+      <div className="flex-1 flex min-h-0">
+        {/* Desktop Sidebar — Pay Items */}
+        {pdf && !isMobile && (
+          <div className="w-60 border-r border-border bg-card shrink-0 flex flex-col overflow-hidden">
+            <div className="p-3 border-b border-border">
+              <span className="text-[11px] uppercase tracking-widest font-bold text-muted-foreground">Pay Items</span>
+            </div>
+            {payItemsContent}
+          </div>
+        )}
+
         {/* Canvas area */}
-        <div className={cn('flex-1 min-w-0 min-h-0 relative', isMobile && 'pb-14')}>
+        <div className={cn('flex-1 min-w-0 min-h-0 relative', isMobile && 'pb-14')} data-tour-target="tour-canvas">
           {pdf ? (
             <PdfCanvas
               pdf={pdf}
@@ -491,10 +503,14 @@ export default function Demo() {
               onDragOver={e => e.preventDefault()}
               onDrop={handleDrop}
             >
-              <label className={cn(
-                'cursor-pointer text-center border-2 border-dashed border-border rounded-xl hover:border-primary/50 transition-colors bg-card/50 backdrop-blur-sm',
-                isMobile ? 'p-8 mx-6 max-w-sm' : 'p-12 max-w-md mx-4'
-              )}>
+              <label
+                data-tour-target="tour-upload"
+                className={cn(
+                  'cursor-pointer text-center border-2 border-dashed border-border rounded-xl hover:border-primary/50 transition-colors bg-card/50 backdrop-blur-sm',
+                  isMobile ? 'p-8 mx-6 max-w-sm' : 'p-12 max-w-md mx-4',
+                  !walkthroughComplete && walkthroughStep === 0 && 'tour-highlight'
+                )}
+              >
                 <Upload className={cn('text-muted-foreground mx-auto mb-4', isMobile ? 'h-10 w-10' : 'h-12 w-12')} />
                 <p className={cn('font-bold mb-1', isMobile ? 'text-base' : 'text-lg')}>Upload Construction Plans</p>
                 <p className="text-sm text-muted-foreground mb-4">
@@ -521,7 +537,9 @@ export default function Demo() {
             <div className={cn(
               'absolute z-30 px-3',
               isMobile
-                ? 'bottom-16 left-0 right-0'
+                ? walkthroughStep === 2 || walkthroughStep === 4
+                  ? 'top-4 left-0 right-0'
+                  : 'bottom-20 left-0 right-0'
                 : 'bottom-4 left-1/2 -translate-x-1/2 w-full max-w-md'
             )}>
               <div className="bg-card border border-border rounded-xl shadow-xl p-3.5 animate-in fade-in-0 slide-in-from-bottom-4">
@@ -575,15 +593,25 @@ export default function Demo() {
         <div className="fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border safe-area-bottom">
           <div className="flex items-stretch">
             <button
-              className="flex-1 flex flex-col items-center gap-0.5 py-2.5 px-1 min-h-[56px] text-primary"
+              onClick={() => setToolMode('calibrate')}
+              data-tour-target="tour-scale-bar"
+              className={cn(
+                'flex-1 flex flex-col items-center gap-0.5 py-2.5 px-1 min-h-[56px] transition-colors',
+                toolMode === 'calibrate' ? 'text-primary' : 'text-muted-foreground',
+                !walkthroughComplete && walkthroughStep === 1 && 'tour-highlight'
+              )}
             >
-              <Map className="h-5 w-5" />
-              <span className="text-[10px] font-medium">Plans</span>
+              <Ruler className="h-5 w-5" />
+              <span className="text-[10px] font-medium">Scale</span>
             </button>
 
             <button
               onClick={() => setItemsSheetOpen(true)}
-              className="flex-1 flex flex-col items-center gap-0.5 py-2.5 px-1 min-h-[56px] text-muted-foreground relative"
+              data-tour-target="tour-items"
+              className={cn(
+                'flex-1 flex flex-col items-center gap-0.5 py-2.5 px-1 min-h-[56px] text-muted-foreground relative transition-colors',
+                !walkthroughComplete && walkthroughStep === 2 && 'tour-highlight'
+              )}
             >
               <ListChecks className="h-5 w-5" />
               <span className="text-[10px] font-medium">Items</span>
@@ -595,11 +623,16 @@ export default function Demo() {
             </button>
 
             <button
-              onClick={toggleTheme}
-              className="flex flex-col items-center gap-0.5 py-2.5 px-3 text-muted-foreground min-h-[56px]"
+              onClick={() => setToolMode('label')}
+              data-tour-target="tour-label"
+              className={cn(
+                'flex-1 flex flex-col items-center gap-0.5 py-2.5 px-1 min-h-[56px] transition-colors',
+                toolMode === 'label' ? 'text-primary' : 'text-muted-foreground',
+                !walkthroughComplete && walkthroughStep === 4 && 'tour-highlight'
+              )}
             >
-              {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-              <span className="text-[10px] font-medium">Theme</span>
+              <Type className="h-5 w-5" />
+              <span className="text-[10px] font-medium">Label</span>
             </button>
 
             <button
