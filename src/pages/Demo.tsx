@@ -371,10 +371,10 @@ export default function Demo() {
       {/* ── Mobile Toolbar (compact, above canvas) ── */}
       {pdf && isMobile && (
         <div className="flex flex-col bg-card/95 backdrop-blur-sm border-b border-border shrink-0">
-          {/* Row 1: Tools + undo/redo + page nav */}
+          {/* Row 1: Select/Pan + undo/redo + page nav */}
           <div className="flex items-center gap-1 px-2 py-1.5">
             <div className="flex items-center gap-0.5 bg-muted/50 rounded-lg p-0.5">
-              {TOOLS.map(t => (
+              {MOBILE_TOOLBAR_TOOLS.map(t => (
                 <button
                   key={t.mode}
                   onClick={() => setToolMode(t.mode)}
@@ -413,7 +413,7 @@ export default function Demo() {
             </div>
           </div>
 
-          {/* Row 2: Active item + calibration + zoom */}
+          {/* Row 2: Active item + calibration (tappable) + zoom */}
           <div className="flex items-center gap-1.5 px-2 pb-1.5 overflow-x-auto">
             {activePayItem && (
               <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-muted/70 border border-border/50 shrink-0">
@@ -423,7 +423,14 @@ export default function Demo() {
               </div>
             )}
 
-            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-muted/50 shrink-0">
+            <button
+              onClick={() => setToolMode('calibrate')}
+              data-tour-target="tour-scale"
+              className={cn(
+                'flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-muted/50 shrink-0 border border-transparent active:bg-muted transition-colors cursor-pointer',
+                !walkthroughComplete && walkthroughStep === 1 && 'tour-highlight'
+              )}
+            >
               <Ruler className="h-3 w-3 text-muted-foreground" />
               {currentCalibration ? (
                 <span className="text-xs text-success font-mono font-semibold">
@@ -435,7 +442,7 @@ export default function Demo() {
               ) : (
                 <span className="text-xs text-muted-foreground">No scale</span>
               )}
-            </div>
+            </button>
 
             <div className="flex-1" />
 
@@ -454,18 +461,6 @@ export default function Demo() {
           </div>
         </div>
       )}
-
-      {/* ── Main area ── */}
-      <div className="flex-1 flex min-h-0">
-        {/* Desktop Sidebar — Pay Items */}
-        {pdf && !isMobile && (
-          <div className="w-60 border-r border-border bg-card shrink-0 flex flex-col overflow-hidden">
-            <div className="p-3 border-b border-border">
-              <span className="text-[11px] uppercase tracking-widest font-bold text-muted-foreground">Pay Items</span>
-            </div>
-            {payItemsContent}
-          </div>
-        )}
 
         {/* Canvas area */}
         <div className={cn('flex-1 min-w-0 min-h-0 relative', isMobile && 'pb-14')}>
