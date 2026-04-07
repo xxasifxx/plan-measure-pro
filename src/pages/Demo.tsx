@@ -12,13 +12,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
-import type { PayItem, PayItemUnit, Annotation } from '@/types/project';
+import type { PayItem, PayItemUnit, ToolMode } from '@/types/project';
 import { isDrawableUnit, UNIT_LABELS } from '@/types/project';
 import {
   HardHat, Sun, Moon, Upload, Plus, Trash2, ChevronLeft, ChevronRight,
   ZoomIn, ZoomOut, Maximize, MousePointer2, Move, Ruler, Type, Undo2, Redo2,
-  PenTool, ArrowRight, CheckCircle2, X,
+  PenTool, ArrowRight, CheckCircle2, X, ListChecks, Map,
 } from 'lucide-react';
 
 /* ─── Constants ─── */
@@ -26,11 +27,11 @@ import {
 const ALL_UNITS: PayItemUnit[] = ['SF', 'LF', 'CY', 'SY', 'EA', 'TON', 'LS', 'USD', 'MNTH'];
 const COLORS = ['#e74c3c', '#f39c12', '#3498db', '#2ecc71', '#9b59b6', '#1abc9c', '#e67e22', '#34495e', '#e91e63', '#00bcd4'];
 
-const TOOLS = [
-  { mode: 'select' as const, icon: MousePointer2, label: 'Select' },
-  { mode: 'pan' as const, icon: Move, label: 'Pan' },
-  { mode: 'calibrate' as const, icon: Ruler, label: 'Scale' },
-  { mode: 'label' as const, icon: Type, label: 'Label' },
+const TOOLS: { mode: ToolMode; icon: typeof MousePointer2; label: string }[] = [
+  { mode: 'select', icon: MousePointer2, label: 'Select' },
+  { mode: 'pan', icon: Move, label: 'Pan' },
+  { mode: 'calibrate', icon: Ruler, label: 'Scale' },
+  { mode: 'label', icon: Type, label: 'Label' },
 ];
 
 /* ─── Walkthrough Steps ─── */
@@ -44,11 +45,11 @@ interface WalkthroughStep {
 
 const WALKTHROUGH_STEPS: WalkthroughStep[] = [
   { id: 'upload', title: '1. Upload Your Plans', instruction: 'Drag and drop a PDF or click the upload area to load your construction plan sheets.', icon: Upload },
-  { id: 'calibrate', title: '2. Set the Scale', instruction: 'Select the Scale tool (ruler icon) in the toolbar, click two points on a known dimension, then enter the real distance in feet.', icon: Ruler },
-  { id: 'payitem', title: '3. Add a Pay Item', instruction: 'Click "+ Add Item" in the left panel to create a pay item. Give it a name, unit (SF, LF, EA), and color.', icon: Plus },
-  { id: 'draw', title: '4. Draw a Measurement', instruction: 'Select your pay item, then draw on the plan. The tool auto-selects: lines for LF, polygons for SF/SY, markers for EA.', icon: PenTool },
-  { id: 'label', title: '5. Add a Text Label', instruction: 'Select the Label tool (T icon), click an anchor point on the plan, click where you want the label, and type your text.', icon: Type },
-  { id: 'done', title: 'You\'re Ready!', instruction: 'You now have the tools to digitally measure construction quantities. Sign up to save your work and collaborate with your team.', icon: CheckCircle2 },
+  { id: 'calibrate', title: '2. Set the Scale', instruction: 'Select the Scale tool (ruler icon), click two points on a known dimension, then enter the real distance in feet.', icon: Ruler },
+  { id: 'payitem', title: '3. Add a Pay Item', instruction: 'Open the Items panel and tap "+ Add Item" to create a pay item with a name, unit, and color.', icon: Plus },
+  { id: 'draw', title: '4. Draw a Measurement', instruction: 'Select your pay item, then draw on the plan. Lines for LF, polygons for SF/SY, markers for EA.', icon: PenTool },
+  { id: 'label', title: '5. Add a Text Label', instruction: 'Select the Label tool (T), tap an anchor point, tap where you want the label, then type your text.', icon: Type },
+  { id: 'done', title: 'You\'re Ready!', instruction: 'You now have the tools to digitally measure construction quantities. Sign up to save your work and collaborate.', icon: CheckCircle2 },
 ];
 
 /* ─── Demo Page ─── */
@@ -59,7 +60,6 @@ export default function Demo() {
   const isMobile = useIsMobile();
   const { isDark, toggle: toggleTheme } = useTheme();
 
-  // Project state (local only, no Supabase)
   const {
     project, initProject, payItems, updatePayItems,
     currentPage, setCurrentPage, totalPages, setTotalPages,
@@ -78,14 +78,12 @@ export default function Demo() {
   const [walkthroughComplete, setWalkthroughComplete] = useState(false);
   const [walkthroughDismissed, setWalkthroughDismissed] = useState(false);
 
-  // Pay item dialog
+  // Pay item dialog & sheet
   const [editingItem, setEditingItem] = useState<PayItem | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [itemsSheetOpen, setItemsSheetOpen] = useState(false);
 
-  // Sidebar collapsed (mobile)
-  const [sidebarOpen, setSidebarOpen] = useState(!isMobile);
-
-  // Auto-advance walkthrough based on state
+  // Auto-advance walkthrough
   useEffect(() => {
     if (walkthroughComplete) return;
     if (walkthroughStep === 0 && pdf) setWalkthroughStep(1);
@@ -136,7 +134,6 @@ export default function Demo() {
     } catch {}
   }, [pdf, currentPage, setScale]);
 
-  // Auto-select tool based on pay item unit
   const handleActivePayItemChange = useCallback((id: string) => {
     setActivePayItemId(id);
     const item = payItems.find(p => p.id === id);
@@ -147,7 +144,8 @@ export default function Demo() {
       case 'EA': setToolMode('count'); break;
       default: setToolMode('select'); break;
     }
-  }, [payItems, setActivePayItemId, setToolMode]);
+    if (isMobile) setItemsSheetOpen(false);
+  }, [payItems, setActivePayItemId, setToolMode, isMobile]);
 
   const savePayItem = useCallback((item: PayItem) => {
     const exists = payItems.find(p => p.id === item.id);
@@ -180,16 +178,75 @@ export default function Demo() {
   const showWalkthrough = !walkthroughDismissed;
   const currentStepData = WALKTHROUGH_STEPS[walkthroughStep];
 
+  /* ─── Pay Items Panel Content (shared between sidebar and sheet) ─── */
+  const payItemsContent = (
+    <div className="flex-1 overflow-auto p-3 space-y-1.5">
+      {payItems.map(item => (
+        <button
+          key={item.id}
+          onClick={() => handleActivePayItemChange(item.id)}
+          className={cn(
+            'w-full flex items-center gap-2.5 px-3 py-3 rounded-lg text-sm transition-colors text-left group',
+            activePayItemId === item.id
+              ? 'bg-primary/10 border border-primary/30'
+              : 'hover:bg-muted/50'
+          )}
+        >
+          <div className="h-4 w-4 rounded-full shrink-0 shadow-sm" style={{ backgroundColor: item.color }} />
+          <span className="flex-1 truncate font-medium">{item.name}</span>
+          <span className="text-xs text-muted-foreground font-mono">{UNIT_LABELS[item.unit]}</span>
+          <button
+            onClick={e => { e.stopPropagation(); deletePayItem(item.id); }}
+            className="opacity-0 group-hover:opacity-100 hover:text-destructive transition-opacity"
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+          </button>
+        </button>
+      ))}
+
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogTrigger asChild>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="w-full text-sm h-10 mt-2"
+            onClick={() => setEditingItem({
+              id: crypto.randomUUID(),
+              itemNumber: payItems.length + 1,
+              itemCode: '',
+              name: '',
+              unit: 'SF',
+              unitPrice: 0,
+              color: COLORS[payItems.length % COLORS.length],
+              drawable: true,
+            })}
+          >
+            <Plus className="h-4 w-4 mr-1.5" />
+            Add Item
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="text-sm">New Pay Item</DialogTitle>
+          </DialogHeader>
+          {editingItem && (
+            <DemoPayItemForm item={editingItem} onSave={savePayItem} onCancel={() => setDialogOpen(false)} />
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+
   return (
     <div className="h-screen flex flex-col w-full overflow-hidden bg-background">
       {/* ── Header ── */}
-      <div className="h-11 flex items-center border-b border-border bg-card/95 backdrop-blur-sm px-3 shrink-0">
+      <div className="h-12 flex items-center border-b border-border bg-card/95 backdrop-blur-sm px-3 shrink-0 safe-area-top">
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => navigate('/landing')}>
-            <ChevronLeft className="h-4 w-4" />
+          <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => navigate('/landing')}>
+            <ChevronLeft className="h-5 w-5" />
           </Button>
-          <div className="h-7 w-7 rounded-md bg-primary flex items-center justify-center">
-            <HardHat className="h-3.5 w-3.5 text-primary-foreground" />
+          <div className="h-8 w-8 rounded-md bg-primary flex items-center justify-center">
+            <HardHat className="h-4 w-4 text-primary-foreground" />
           </div>
           <span className="text-sm font-bold tracking-wide">TakeoffPro Demo</span>
           {!walkthroughComplete && (
@@ -198,21 +255,22 @@ export default function Demo() {
             </span>
           )}
         </div>
-        <div className="ml-auto flex items-center gap-1">
-          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={toggleTheme}>
+        <div className="ml-auto flex items-center gap-1.5">
+          <Button variant="ghost" size="icon" className="h-9 w-9" onClick={toggleTheme}>
             {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
-          <Button size="sm" className="text-xs gap-1" onClick={() => navigate('/auth')}>
-            Sign Up <ArrowRight className="h-3 w-3" />
-          </Button>
+          {!isMobile && (
+            <Button size="sm" className="text-xs gap-1" onClick={() => navigate('/auth')}>
+              Sign Up <ArrowRight className="h-3 w-3" />
+            </Button>
+          )}
         </div>
       </div>
 
-      {/* ── Toolbar ── */}
-      {pdf && (
+      {/* ── Desktop Toolbar (hidden on mobile) ── */}
+      {pdf && !isMobile && (
         <div className="flex items-center gap-1 px-2 py-1.5 bg-card/95 border-b border-border shrink-0 overflow-x-auto">
-          {/* Tool buttons */}
-          <div className="flex items-center gap-0.5 bg-muted/50 rounded-lg p-0.5" data-demo-tour="tools">
+          <div className="flex items-center gap-0.5 bg-muted/50 rounded-lg p-0.5">
             {TOOLS.map(t => (
               <button
                 key={t.mode}
@@ -226,14 +284,13 @@ export default function Demo() {
                 )}
               >
                 <t.icon className="h-4 w-4" />
-                {!isMobile && <span>{t.label}</span>}
+                <span>{t.label}</span>
               </button>
             ))}
           </div>
 
           <div className="w-px h-6 bg-border mx-1" />
 
-          {/* Undo/Redo */}
           <Button variant="ghost" size="icon" className="h-8 w-8" onClick={undo} disabled={!canUndo}>
             <Undo2 className="h-4 w-4" />
           </Button>
@@ -243,7 +300,6 @@ export default function Demo() {
 
           <div className="w-px h-6 bg-border mx-1" />
 
-          {/* Active pay item pill */}
           {activePayItem && (
             <>
               <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-muted/70 border border-border/50">
@@ -255,8 +311,7 @@ export default function Demo() {
             </>
           )}
 
-          {/* Calibration indicator */}
-          <div className="flex items-center gap-1 px-2 py-1 rounded-lg bg-muted/50" data-demo-tour="calibration">
+          <div className="flex items-center gap-1 px-2 py-1 rounded-lg bg-muted/50">
             <Ruler className="h-3.5 w-3.5 text-muted-foreground" />
             {currentCalibration ? (
               <span className="text-xs text-success font-mono font-semibold">
@@ -272,7 +327,6 @@ export default function Demo() {
 
           <div className="flex-1" />
 
-          {/* Page nav */}
           <div className="flex items-center gap-0.5">
             <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setCurrentPage(Math.max(1, currentPage - 1))} disabled={currentPage <= 1}>
               <ChevronLeft className="h-4 w-4" />
@@ -285,7 +339,6 @@ export default function Demo() {
 
           <div className="w-px h-6 bg-border mx-1" />
 
-          {/* Zoom */}
           <div className="flex items-center gap-0.5">
             <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setScale(Math.max(0.5, scale - 0.25))}>
               <ZoomOut className="h-4 w-4" />
@@ -301,84 +354,107 @@ export default function Demo() {
         </div>
       )}
 
-      {/* ── Main area ── */}
-      <div className="flex-1 flex min-h-0">
-        {/* Sidebar — Pay Items */}
-        {pdf && (
-          <div className={cn(
-            'border-r border-border bg-card shrink-0 flex flex-col transition-all duration-200 overflow-hidden',
-            sidebarOpen ? 'w-60' : 'w-0',
-            isMobile && !sidebarOpen && 'hidden'
-          )}>
-            <div className="p-2 border-b border-border flex items-center justify-between">
-              <span className="text-[11px] uppercase tracking-widest font-bold text-muted-foreground">Pay Items</span>
-              {isMobile && (
-                <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => setSidebarOpen(false)}>
-                  <X className="h-3 w-3" />
-                </Button>
-              )}
-            </div>
-            <div className="flex-1 overflow-auto p-2 space-y-1" data-demo-tour="pay-items">
-              {payItems.map(item => (
+      {/* ── Mobile Toolbar (compact, above canvas) ── */}
+      {pdf && isMobile && (
+        <div className="flex flex-col bg-card/95 backdrop-blur-sm border-b border-border shrink-0">
+          {/* Row 1: Tools + undo/redo + page nav */}
+          <div className="flex items-center gap-1 px-2 py-1.5">
+            <div className="flex items-center gap-0.5 bg-muted/50 rounded-lg p-0.5">
+              {TOOLS.map(t => (
                 <button
-                  key={item.id}
-                  onClick={() => handleActivePayItemChange(item.id)}
+                  key={t.mode}
+                  onClick={() => setToolMode(t.mode)}
                   className={cn(
-                    'w-full flex items-center gap-2 px-2.5 py-2 rounded-md text-xs transition-colors text-left',
-                    activePayItemId === item.id
-                      ? 'bg-primary/10 border border-primary/30'
-                      : 'hover:bg-muted/50'
+                    'flex items-center justify-center h-10 w-10 rounded-md transition-colors',
+                    toolMode === t.mode
+                      ? 'bg-primary text-primary-foreground shadow-sm'
+                      : 'text-muted-foreground active:bg-muted'
                   )}
                 >
-                  <div className="h-3 w-3 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
-                  <span className="flex-1 truncate font-medium">{item.name}</span>
-                  <span className="text-[10px] text-muted-foreground font-mono">{UNIT_LABELS[item.unit]}</span>
-                  <button
-                    onClick={e => { e.stopPropagation(); deletePayItem(item.id); }}
-                    className="opacity-0 group-hover:opacity-100 hover:text-destructive"
-                  >
-                    <Trash2 className="h-3 w-3" />
-                  </button>
+                  <t.icon className="h-5 w-5" />
                 </button>
               ))}
-
-              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="w-full text-xs h-8"
-                    data-demo-tour="add-item"
-                    onClick={() => setEditingItem({
-                      id: crypto.randomUUID(),
-                      itemNumber: payItems.length + 1,
-                      itemCode: '',
-                      name: '',
-                      unit: 'SF',
-                      unitPrice: 0,
-                      color: COLORS[payItems.length % COLORS.length],
-                      drawable: true,
-                    })}
-                  >
-                    <Plus className="h-3 w-3 mr-1" />
-                    Add Item
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-sm">
-                  <DialogHeader>
-                    <DialogTitle className="text-sm">New Pay Item</DialogTitle>
-                  </DialogHeader>
-                  {editingItem && (
-                    <DemoPayItemForm item={editingItem} onSave={savePayItem} onCancel={() => setDialogOpen(false)} />
-                  )}
-                </DialogContent>
-              </Dialog>
             </div>
+
+            <div className="w-px h-7 bg-border mx-0.5" />
+
+            <Button variant="ghost" size="icon" className="h-10 w-10" onClick={undo} disabled={!canUndo}>
+              <Undo2 className="h-5 w-5" />
+            </Button>
+            <Button variant="ghost" size="icon" className="h-10 w-10" onClick={redo} disabled={!canRedo}>
+              <Redo2 className="h-5 w-5" />
+            </Button>
+
+            <div className="flex-1" />
+
+            {/* Page nav */}
+            <div className="flex items-center gap-0.5">
+              <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => setCurrentPage(Math.max(1, currentPage - 1))} disabled={currentPage <= 1}>
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <span className="text-xs font-mono text-muted-foreground min-w-[36px] text-center">{currentPage}/{totalPages}</span>
+              <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))} disabled={currentPage >= totalPages}>
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+
+          {/* Row 2: Active item + calibration + zoom */}
+          <div className="flex items-center gap-1.5 px-2 pb-1.5 overflow-x-auto">
+            {activePayItem && (
+              <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-muted/70 border border-border/50 shrink-0">
+                <div className="h-3 w-3 rounded-full shadow-sm" style={{ backgroundColor: activePayItem.color }} />
+                <span className="text-xs font-medium truncate max-w-[100px]">{activePayItem.name}</span>
+                <span className="text-[10px] text-muted-foreground font-mono">{UNIT_LABELS[activePayItem.unit]}</span>
+              </div>
+            )}
+
+            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-muted/50 shrink-0">
+              <Ruler className="h-3 w-3 text-muted-foreground" />
+              {currentCalibration ? (
+                <span className="text-xs text-success font-mono font-semibold">
+                  {(() => {
+                    const ftPerInch = (1 / currentCalibration.pixelsPerFoot) * 96;
+                    return ftPerInch >= 1 ? `1″=${Math.round(ftPerInch)}′` : `scaled`;
+                  })()}
+                </span>
+              ) : (
+                <span className="text-xs text-muted-foreground">No scale</span>
+              )}
+            </div>
+
+            <div className="flex-1" />
+
+            <div className="flex items-center gap-0.5 shrink-0">
+              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setScale(Math.max(0.5, scale - 0.25))}>
+                <ZoomOut className="h-4 w-4" />
+              </Button>
+              <span className="text-xs font-mono text-muted-foreground min-w-[32px] text-center">{Math.round(scale * 100)}%</span>
+              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setScale(Math.min(4, scale + 0.25))}>
+                <ZoomIn className="h-4 w-4" />
+              </Button>
+              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleFitToScreen}>
+                <Maximize className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Main area ── */}
+      <div className="flex-1 flex min-h-0">
+        {/* Desktop Sidebar — Pay Items */}
+        {pdf && !isMobile && (
+          <div className="w-60 border-r border-border bg-card shrink-0 flex flex-col overflow-hidden">
+            <div className="p-3 border-b border-border">
+              <span className="text-[11px] uppercase tracking-widest font-bold text-muted-foreground">Pay Items</span>
+            </div>
+            {payItemsContent}
           </div>
         )}
 
         {/* Canvas area */}
-        <div className="flex-1 min-w-0 min-h-0 relative">
+        <div className={cn('flex-1 min-w-0 min-h-0 relative', isMobile && 'pb-14')}>
           {pdf ? (
             <PdfCanvas
               pdf={pdf}
@@ -406,11 +482,14 @@ export default function Demo() {
               onDragOver={e => e.preventDefault()}
               onDrop={handleDrop}
             >
-              <label className="cursor-pointer text-center p-12 border-2 border-dashed border-border rounded-xl hover:border-primary/50 transition-colors bg-card/50 backdrop-blur-sm max-w-md mx-4">
-                <Upload className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <p className="text-lg font-bold mb-1">Upload Construction Plans</p>
+              <label className={cn(
+                'cursor-pointer text-center border-2 border-dashed border-border rounded-xl hover:border-primary/50 transition-colors bg-card/50 backdrop-blur-sm',
+                isMobile ? 'p-8 mx-6 max-w-sm' : 'p-12 max-w-md mx-4'
+              )}>
+                <Upload className={cn('text-muted-foreground mx-auto mb-4', isMobile ? 'h-10 w-10' : 'h-12 w-12')} />
+                <p className={cn('font-bold mb-1', isMobile ? 'text-base' : 'text-lg')}>Upload Construction Plans</p>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Drag and drop a PDF file or click to browse
+                  {isMobile ? 'Tap to select a PDF file' : 'Drag and drop a PDF file or click to browse'}
                 </p>
                 <p className="text-xs text-muted-foreground/60">
                   Your file stays in your browser — nothing is uploaded to a server
@@ -428,22 +507,15 @@ export default function Demo() {
             </div>
           )}
 
-          {/* Toggle sidebar button (mobile) */}
-          {pdf && isMobile && !sidebarOpen && (
-            <Button
-              variant="outline"
-              size="sm"
-              className="absolute top-3 left-3 z-20 bg-card/90 backdrop-blur-sm gap-1"
-              onClick={() => setSidebarOpen(true)}
-            >
-              <PenTool className="h-3 w-3" /> Items
-            </Button>
-          )}
-
           {/* ── Walkthrough Card ── */}
           {showWalkthrough && currentStepData && (
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 w-full max-w-md px-4">
-              <div className="bg-card border border-border rounded-xl shadow-xl p-4 animate-in fade-in-0 slide-in-from-bottom-4">
+            <div className={cn(
+              'absolute z-30 px-3',
+              isMobile
+                ? 'bottom-16 left-0 right-0'
+                : 'bottom-4 left-1/2 -translate-x-1/2 w-full max-w-md'
+            )}>
+              <div className="bg-card border border-border rounded-xl shadow-xl p-3.5 animate-in fade-in-0 slide-in-from-bottom-4">
                 <div className="flex items-start gap-3">
                   <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                     <currentStepData.icon className="h-5 w-5 text-primary" />
@@ -451,15 +523,14 @@ export default function Demo() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-1">
                       <h4 className="text-sm font-bold">{currentStepData.title}</h4>
-                      <button onClick={() => setWalkthroughDismissed(true)} className="p-0.5 rounded hover:bg-muted">
-                        <X className="h-3.5 w-3.5 text-muted-foreground" />
+                      <button onClick={() => setWalkthroughDismissed(true)} className="p-1 rounded hover:bg-muted -mr-1">
+                        <X className="h-4 w-4 text-muted-foreground" />
                       </button>
                     </div>
                     <p className="text-xs text-muted-foreground leading-relaxed">{currentStepData.instruction}</p>
                   </div>
                 </div>
 
-                {/* Progress dots */}
                 <div className="flex items-center justify-between mt-3">
                   <div className="flex gap-1">
                     {WALKTHROUGH_STEPS.map((_, i) => (
@@ -475,7 +546,7 @@ export default function Demo() {
                     ))}
                   </div>
                   {walkthroughStep === WALKTHROUGH_STEPS.length - 1 ? (
-                    <Button size="sm" className="h-7 text-xs gap-1" onClick={handleCompleteWalkthrough}>
+                    <Button size="sm" className="h-8 text-xs gap-1" onClick={handleCompleteWalkthrough}>
                       Start Using Demo <ArrowRight className="h-3 w-3" />
                     </Button>
                   ) : (
@@ -489,11 +560,66 @@ export default function Demo() {
           )}
         </div>
       </div>
+
+      {/* ── Mobile Bottom Tab Bar ── */}
+      {isMobile && pdf && (
+        <div className="fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border safe-area-bottom">
+          <div className="flex items-stretch">
+            <button
+              className="flex-1 flex flex-col items-center gap-0.5 py-2.5 px-1 min-h-[56px] text-primary"
+            >
+              <Map className="h-5 w-5" />
+              <span className="text-[10px] font-medium">Plans</span>
+            </button>
+
+            <button
+              onClick={() => setItemsSheetOpen(true)}
+              className="flex-1 flex flex-col items-center gap-0.5 py-2.5 px-1 min-h-[56px] text-muted-foreground relative"
+            >
+              <ListChecks className="h-5 w-5" />
+              <span className="text-[10px] font-medium">Items</span>
+              {payItems.length > 0 && (
+                <span className="absolute top-1.5 right-1/4 h-4 min-w-[16px] px-1 rounded-full bg-primary text-primary-foreground text-[9px] font-bold flex items-center justify-center">
+                  {payItems.length}
+                </span>
+              )}
+            </button>
+
+            <button
+              onClick={toggleTheme}
+              className="flex flex-col items-center gap-0.5 py-2.5 px-3 text-muted-foreground min-h-[56px]"
+            >
+              {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              <span className="text-[10px] font-medium">Theme</span>
+            </button>
+
+            <button
+              onClick={() => navigate('/auth')}
+              className="flex flex-col items-center gap-0.5 py-2.5 px-3 text-primary min-h-[56px]"
+            >
+              <ArrowRight className="h-5 w-5" />
+              <span className="text-[10px] font-medium">Sign Up</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ── Mobile Pay Items Sheet ── */}
+      {isMobile && (
+        <Sheet open={itemsSheetOpen} onOpenChange={setItemsSheetOpen}>
+          <SheetContent side="bottom" className="h-[60vh] rounded-t-2xl flex flex-col p-0">
+            <SheetHeader className="p-4 pb-2 border-b border-border">
+              <SheetTitle className="text-sm font-bold">Pay Items</SheetTitle>
+            </SheetHeader>
+            {payItemsContent}
+          </SheetContent>
+        </Sheet>
+      )}
     </div>
   );
 }
 
-/* ─── Pay Item Form (simplified for demo) ─── */
+/* ─── Pay Item Form ─── */
 
 function DemoPayItemForm({ item, onSave, onCancel }: {
   item: PayItem;
@@ -509,7 +635,7 @@ function DemoPayItemForm({ item, onSave, onCancel }: {
         <Input
           value={form.name}
           onChange={e => setForm({ ...form, name: e.target.value })}
-          className="h-8 text-xs"
+          className="h-9 text-sm"
           placeholder="e.g. HMA Surface Course"
           autoFocus
         />
@@ -518,7 +644,7 @@ function DemoPayItemForm({ item, onSave, onCancel }: {
         <div>
           <Label className="text-xs">Unit</Label>
           <Select value={form.unit} onValueChange={v => setForm({ ...form, unit: v as PayItemUnit, drawable: isDrawableUnit(v as PayItemUnit) })}>
-            <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+            <SelectTrigger className="h-9 text-sm"><SelectValue /></SelectTrigger>
             <SelectContent>
               {ALL_UNITS.map(u => (
                 <SelectItem key={u} value={u}>{UNIT_LABELS[u]}</SelectItem>
@@ -531,19 +657,19 @@ function DemoPayItemForm({ item, onSave, onCancel }: {
           <Input
             value={form.itemCode}
             onChange={e => setForm({ ...form, itemCode: e.target.value })}
-            className="h-8 text-xs"
+            className="h-9 text-sm"
             placeholder="Optional"
           />
         </div>
       </div>
       <div>
         <Label className="text-xs">Color</Label>
-        <div className="flex gap-1.5 mt-1">
+        <div className="flex gap-2 mt-1.5">
           {COLORS.map(c => (
             <button
               key={c}
               onClick={() => setForm({ ...form, color: c })}
-              className={`h-6 w-6 rounded-full border-2 transition-transform ${
+              className={`h-7 w-7 rounded-full border-2 transition-transform ${
                 form.color === c ? 'border-foreground scale-110' : 'border-transparent'
               }`}
               style={{ backgroundColor: c }}
@@ -551,9 +677,9 @@ function DemoPayItemForm({ item, onSave, onCancel }: {
           ))}
         </div>
       </div>
-      <div className="flex gap-2 justify-end">
-        <Button variant="ghost" size="sm" onClick={onCancel} className="text-xs h-7">Cancel</Button>
-        <Button size="sm" onClick={() => onSave(form)} className="text-xs h-7" disabled={!form.name}>Save</Button>
+      <div className="flex gap-2 justify-end pt-1">
+        <Button variant="ghost" size="sm" onClick={onCancel} className="text-xs h-8">Cancel</Button>
+        <Button size="sm" onClick={() => onSave(form)} className="text-xs h-8" disabled={!form.name}>Save</Button>
       </div>
     </div>
   );
