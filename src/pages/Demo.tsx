@@ -19,7 +19,7 @@ import { cn } from '@/lib/utils';
 import type { PayItem, ToolMode, PointXY, Annotation, TocEntry } from '@/types/project';
 import { isDrawableUnit, UNIT_LABELS } from '@/types/project';
 import type { GeoCalibration } from '@/lib/geo-transform';
-import { exportSummaryCsv, exportSummaryPdf } from '@/lib/export-utils';
+import { exportCsv, exportPdfReport } from '@/lib/export-utils';
 import {
   HardHat, Sun, Moon, Upload, ChevronLeft, ChevronRight,
   ZoomIn, ZoomOut, Maximize, MousePointer2, Move, Ruler, Type, Undo2, Redo2,
