@@ -310,11 +310,11 @@ export default function Demo() {
 
   // Export handlers (for SummaryPanel)
   const handleExportCsv = useCallback(() => {
-    exportSummaryCsv(annotations, payItems, project?.name || 'Demo');
+    exportCsv(annotations, payItems, project?.name || 'Demo');
   }, [annotations, payItems, project?.name]);
 
   const handleExportPdf = useCallback(() => {
-    exportSummaryPdf(annotations, payItems, project?.name || 'Demo', project?.contractNumber || '');
+    exportPdfReport(annotations, payItems, project?.name || 'Demo', project?.contractNumber || '');
   }, [annotations, payItems, project?.name, project?.contractNumber]);
 
   // Tour highlight: should current step highlight something?
