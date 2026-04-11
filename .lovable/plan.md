@@ -1,71 +1,84 @@
 
+# Demo walkthrough reset
 
-# Demo Mobile Interface — Usability Fix Pass
+## Core correction
+The demo should stop teaching tools in isolation and instead mirror the real setup flow already present in the main workspace.
 
-## Problems Identified
+What already exists in the product and must be visible in `/demo`:
+- TOC import / section navigation
+- automatic pay-item extraction from the current page plus the next 4 pages
+- one-time scale calibration that can be propagated across the set
+- label annotations
+- measurement by drawing first, with GPS as a later branch once the sheet is ready
 
-1. **Calibration chip is passive** — The "No scale" chip in the mobile toolbar row 2 is just a label. Tapping it does nothing. It should activate the calibrate tool when tapped, especially since the walkthrough tells the user to "select the Scale tool."
+## Real demo workflow to implement
+1. Upload the PDF
+2. Go to the index / TOC sheet
+3. Import the TOC by boxing the sheet list
+4. Open Sections and jump to the Estimate of Quantities sheet
+5. Import pay items automatically from the current page + next 4 pages
+6. Open Sections and jump to the work sheet to measure
+7. Calibrate one known dimension on that sheet
+8. Apply that calibration as the document default
+9. Select a pay item
+10. Measure it:
+   - draw manually, or
+   - if geolocation is available, continue into GPS calibration + trace
+11. Add a text label / note
+12. Unlock free use of the demo
 
-2. **Walkthrough doesn't highlight the target UI element** — Step 2 says "select the Scale tool (ruler icon)" but nothing pulses, glows, or points to the actual ruler button in the toolbar. Same for all other steps — the instructions reference UI elements but there's no visual connection.
+## UI changes
+- Replace the demo’s custom mobile nav with the real workflow nav: Plans / Items / Sections / Summary
+- Keep Scale and Label as visible tools, not hidden behind walkthrough wording
+- Add explicit demo actions for:
+  - Import TOC
+  - Import Pay Items
+  - Apply Scale to All Sheets
+- On desktop, show a real sections/items rail instead of a pay-item-only panel
+- Manual “Add Item” remains fallback, not the primary path
 
-3. **Bottom tab bar is wasteful** — "Plans" tab does nothing (always active, no action). "Theme" toggle doesn't belong in primary navigation. Two of four tabs are essentially dead space.
+## Implementation approach
+Use the same workflow logic already in the main workspace, but keep state local/browser-only in the demo.
 
-4. **Mobile toolbar is overloaded** — Row 1 crams 4 tool buttons + 2 undo/redo buttons + page nav into 390px. That's 8 interactive elements competing for space.
+In `src/pages/Demo.tsx`:
+- reuse TOC import flow from the main workspace (`tocSelect` + region extraction)
+- reuse pay-item import flow (`extractPayItemsFromPage` on current page through current+4)
+- reuse calibration propagation via `copyCalibrationToPages`
+- wire Sections and Items into the demo layout instead of a custom stripped-down panel
+- keep GPS as the measurement branch after scale + item selection, not as the opening experience
 
-5. **No way to access calibration from bottom bar** — The walkthrough says to calibrate, but the bottom tab bar (the most prominent mobile UI) has no calibration entry point.
+## Walkthrough behavior
+Use manual “Next” only when the app cannot infer intent:
+- user is on the TOC sheet
+- user is on the Estimate of Quantities sheet
+- user is on the target work sheet
 
-6. **Walkthrough card obscures content** — Positioned at `bottom-16`, it sits right above the tab bar and can cover the area where the user needs to interact.
+Auto-advance only on real milestones:
+- PDF loaded
+- TOC imported
+- pay items imported
+- calibration created
+- calibration applied beyond the current page
+- pay item selected
+- first measurement created
+- first label created
 
-## Changes
+If extraction fails, do not skip ahead. Keep the user on that step and explain the correction:
+- TOC step: tighten the selection around the sheet list
+- pay-item step: navigate to the Estimate of Quantities page and retry
 
-### 1. Make calibration chip tappable (Demo.tsx + MobileToolbar.tsx)
-- Tapping the "No scale" / scale chip activates `calibrate` tool mode
-- Add a subtle tap affordance (border, cursor) so it looks interactive
+## Important UX correction
+The first successful scale calibration in the demo should immediately surface a clear choice:
+- Apply to all sheets
+- Apply to a range
 
-### 2. Add walkthrough highlight system (Demo.tsx)
-- For each walkthrough step, identify the target element using a `data-tour-target` attribute
-- Apply a pulsing ring/glow CSS class to the target element during the relevant step
-- Targets:
-  - Step 0 (upload): the upload label
-  - Step 1 (calibrate): the Scale tool button in toolbar
-  - Step 2 (pay item): the "Items" tab in bottom bar
-  - Step 3 (draw): the canvas area
-  - Step 4 (label): the Label tool button in toolbar
+That makes the “document default scale” behavior obvious instead of hiding it behind a tiny copy affordance.
 
-### 3. Redesign mobile bottom tab bar (Demo.tsx)
-Replace the 4-tab bar with contextual actions that match the workflow:
-- **Items** — opens pay items sheet (keep)
-- **Scale** — activates calibrate tool (new, replaces useless "Plans" tab)
-- **Label** — activates label tool (new, replaces "Theme" toggle)
-- **Sign Up** — keep
-- Move theme toggle to the header (it's already there)
+## Files likely affected
+- `src/pages/Demo.tsx`
+- `src/components/MobileSections.tsx` or demo mobile wiring
+- `src/components/MobilePayItems.tsx` or demo mobile wiring
+- possibly `src/components/Toolbar.tsx` / `src/components/MobileToolbar.tsx` to make scale propagation explicit
 
-### 4. Simplify mobile toolbar (Demo.tsx)
-- Row 1: Only **Select** and **Pan** tool buttons + undo/redo + page nav (remove Scale and Label — they're now in the bottom bar)
-- Row 2: Active pay item chip + calibration status (tappable) + zoom controls
-- This reduces row 1 from 8 elements to 6
-
-### 5. Position walkthrough card smarter (Demo.tsx)
-- When step targets the toolbar area (calibrate, label), position the card lower
-- When step targets the bottom bar (items), position the card higher
-- Add a small arrow/chevron pointing toward the highlighted element's general direction
-
-### 6. Add pulse animation (index.css)
-```css
-@keyframes tour-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 hsl(var(--primary) / 0.4); }
-  50% { box-shadow: 0 0 0 8px hsl(var(--primary) / 0); }
-}
-.tour-highlight {
-  animation: tour-pulse 1.5s ease-in-out infinite;
-  outline: 2px solid hsl(var(--primary));
-  outline-offset: 2px;
-  border-radius: 8px;
-}
-```
-
-## Files Modified
-1. `src/pages/Demo.tsx` — bottom bar redesign, toolbar simplification, walkthrough highlights, card positioning
-2. `src/index.css` — tour-pulse animation
-3. `src/components/MobileToolbar.tsx` — make calibration chip tappable (for main app too)
-
+## End state
+`/demo` becomes a guided version of the real product workflow: structure the plan set, import contract items, set the default scale once, then measure and label. That is the correct mental model for the app.
