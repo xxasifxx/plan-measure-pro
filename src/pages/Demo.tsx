@@ -9,6 +9,7 @@ import { MobilePayItems } from '@/components/MobilePayItems';
 import { SummaryPanel } from '@/components/SummaryPanel';
 import { GpsCalibration } from '@/components/GpsCalibration';
 import { GpsTraceControls } from '@/components/GpsTraceControls';
+import { MobileAnnotationSheet } from '@/components/MobileAnnotationSheet';
 import { useProject } from '@/hooks/useProject';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useTheme } from '@/hooks/useTheme';
@@ -62,6 +63,81 @@ const WALKTHROUGH_STEPS: WalkthroughStep[] = [
   { id: 'label', title: '11. Add a Text Label', instruction: 'Select the Label tool (T). Tap an anchor point, then tap where the label should appear, and type your text.', icon: Type },
   { id: 'done', title: 'You\'re Ready!', instruction: 'You just completed a full quantity takeoff workflow. Sign up to save your work, collaborate, and export reports.', icon: CheckCircle2 },
 ];
+
+/* ─── Desktop Sidebar with tab switching ─── */
+function DesktopSidebar({ toc, currentPage, totalPages, onPageChange, hasPdf, onFileUpload, onImportToc, payItems, onUpdatePayItems, activePayItemId, onActivePayItemChange, annotations, onRemoveAnnotationsForPayItem, onImportPayItems, highlightTarget }: {
+  toc: TocEntry[];
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (p: number) => void;
+  hasPdf: boolean;
+  onFileUpload: (f: File) => void;
+  onImportToc: () => void;
+  payItems: PayItem[];
+  onUpdatePayItems: (items: PayItem[]) => void;
+  activePayItemId: string;
+  onActivePayItemChange: (id: string) => void;
+  annotations: Annotation[];
+  onRemoveAnnotationsForPayItem: (id: string) => void;
+  onImportPayItems: () => void;
+  highlightTarget: string | null;
+}) {
+  const [tab, setTab] = useState<'sections' | 'items'>('sections');
+
+  return (
+    <div className="w-72 border-r border-border bg-card shrink-0 flex flex-col overflow-hidden">
+      <div className="flex border-b border-border">
+        <button
+          onClick={() => setTab('sections')}
+          data-tour-target="tour-sections-tab"
+          className={cn(
+            'flex-1 px-3 py-2 text-[11px] uppercase tracking-widest font-bold transition-colors',
+            tab === 'sections' ? 'text-foreground border-b-2 border-primary' : 'text-muted-foreground hover:text-foreground',
+            highlightTarget === 'tour-sections-tab' && 'tour-highlight',
+          )}
+        >
+          Sections
+        </button>
+        <button
+          onClick={() => setTab('items')}
+          data-tour-target="tour-items-tab"
+          className={cn(
+            'flex-1 px-3 py-2 text-[11px] uppercase tracking-widest font-bold transition-colors',
+            tab === 'items' ? 'text-foreground border-b-2 border-primary' : 'text-muted-foreground hover:text-foreground',
+            highlightTarget === 'tour-items-tab' && 'tour-highlight',
+          )}
+        >
+          Items
+        </button>
+      </div>
+      <div className="flex-1 overflow-auto">
+        {tab === 'sections' ? (
+          <MobileSections
+            toc={toc}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={onPageChange}
+            hasPdf={hasPdf}
+            onFileUpload={onFileUpload}
+            onImportToc={onImportToc}
+            onSwitchToCanvas={() => {}}
+          />
+        ) : (
+          <MobilePayItems
+            payItems={payItems}
+            onUpdatePayItems={onUpdatePayItems}
+            activePayItemId={activePayItemId}
+            onActivePayItemChange={onActivePayItemChange}
+            annotations={annotations}
+            onRemoveAnnotationsForPayItem={onRemoveAnnotationsForPayItem}
+            onImportPayItems={onImportPayItems}
+            hasPdf={hasPdf}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
 
 /* ─── Demo Page ─── */
 export default function Demo() {
@@ -180,7 +256,8 @@ export default function Demo() {
   const handleTocRegionSelected = useCallback(async (rect: { x1: number; y1: number; x2: number; y2: number }) => {
     if (!pdf) return;
     try {
-      const entries = await extractTextFromRegion(pdf, currentPage, scale, rect);
+      const scaledRect = { x1: rect.x1 * scale, y1: rect.y1 * scale, x2: rect.x2 * scale, y2: rect.y2 * scale };
+      const entries = await extractTextFromRegion(pdf, currentPage, scale, scaledRect);
       if (entries.length > 0) {
         updateToc(entries);
         toast({ title: 'TOC Imported', description: `${entries.length} sections found.` });
@@ -529,6 +606,7 @@ export default function Demo() {
           canRedo={canRedo}
           onCopyCalibration={currentCalibration ? () => setShowScaleDialog(true) : undefined}
           onCalibrationChipTap={currentCalibration ? () => setShowScaleDialog(true) : undefined}
+          readOnly={false}
         />
       )}
 
@@ -536,43 +614,23 @@ export default function Demo() {
       <div className="flex-1 flex min-h-0">
         {/* Desktop Sidebar — Sections + Items */}
         {pdf && !isMobile && (
-          <div className="w-64 border-r border-border bg-card shrink-0 flex flex-col overflow-hidden">
-            <div className="flex border-b border-border">
-              <button
-                onClick={() => {}}
-                className="flex-1 px-3 py-2 text-[11px] uppercase tracking-widest font-bold text-muted-foreground border-b-2 border-primary"
-              >
-                Sections
-              </button>
-            </div>
-            <div className="flex-1 overflow-auto">
-              <MobileSections
-                toc={toc}
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-                hasPdf={!!pdf}
-                onFileUpload={handleFileUpload}
-                onImportToc={handleTocImport}
-                onSwitchToCanvas={() => {}}
-              />
-            </div>
-          </div>
-        )}
-
-        {pdf && !isMobile && (
-          <div className="w-56 border-r border-border bg-card shrink-0 flex flex-col overflow-hidden">
-            <MobilePayItems
-              payItems={payItems}
-              onUpdatePayItems={updatePayItems}
-              activePayItemId={activePayItemId}
-              onActivePayItemChange={handleActivePayItemChange}
-              annotations={annotations.filter(a => a.type !== 'manual')}
-              onRemoveAnnotationsForPayItem={removeAnnotationsForPayItem}
-              onImportPayItems={handleImportPayItems}
-              hasPdf={!!pdf}
-            />
-          </div>
+          <DesktopSidebar
+            toc={toc}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            hasPdf={!!pdf}
+            onFileUpload={handleFileUpload}
+            onImportToc={handleTocImport}
+            payItems={payItems}
+            onUpdatePayItems={updatePayItems}
+            activePayItemId={activePayItemId}
+            onActivePayItemChange={handleActivePayItemChange}
+            annotations={annotations}
+            onRemoveAnnotationsForPayItem={removeAnnotationsForPayItem}
+            onImportPayItems={handleImportPayItems}
+            highlightTarget={highlightTarget}
+          />
         )}
 
         {/* Canvas / mobile tab content area */}
@@ -584,7 +642,7 @@ export default function Demo() {
               onUpdatePayItems={updatePayItems}
               activePayItemId={activePayItemId}
               onActivePayItemChange={handleActivePayItemChange}
-              annotations={annotations.filter(a => a.type !== 'manual')}
+              annotations={annotations}
               onRemoveAnnotationsForPayItem={removeAnnotationsForPayItem}
               onImportPayItems={handleImportPayItems}
               hasPdf={!!pdf}
@@ -696,6 +754,17 @@ export default function Demo() {
                 />
               )}
 
+              {/* GPS Setup button (mobile, floating) */}
+              {isMobile && pdf && !showGpsCal && !geoCalibration && currentCalibration && (
+                <Button
+                  size="icon"
+                  className="absolute bottom-20 right-3 z-30 h-12 w-12 rounded-full shadow-lg"
+                  onClick={() => setShowGpsCal(true)}
+                >
+                  <Navigation className="h-5 w-5" />
+                </Button>
+              )}
+
               {/* GPS Trace HUD (mobile, floating) */}
               {isMobile && geoCalibration && activePayItem && currentCalibration && (
                 <div className="absolute bottom-20 left-3 right-3 z-30">
@@ -709,6 +778,21 @@ export default function Demo() {
                     onTracePointsUpdate={setGpsTracePoints}
                   />
                 </div>
+              )}
+
+              {/* Mobile Select/Edit FAB */}
+              {isMobile && pdf && mobileTab === 'canvas' && annotations.filter(a => a.type !== 'manual').length > 0 && (
+                <Button
+                  size="icon"
+                  variant={toolMode === 'select' ? 'default' : 'outline'}
+                  className={cn(
+                    'absolute z-30 h-12 w-12 rounded-full shadow-lg',
+                    geoCalibration ? 'bottom-20 right-3' : (!geoCalibration && currentCalibration) ? 'bottom-20 right-[4.5rem]' : 'bottom-20 right-3'
+                  )}
+                  onClick={() => setToolMode(toolMode === 'select' ? 'pan' : 'select')}
+                >
+                  <MousePointer2 className="h-5 w-5" />
+                </Button>
               )}
             </>
           )}
@@ -779,9 +863,21 @@ export default function Demo() {
           onTabChange={setMobileTab}
           hasPdf={!!pdf}
           itemCount={payItems.length}
-          sectionCount={toc.length}
+          sectionCount={toc.length || totalPages}
           isDark={isDark}
           onToggleTheme={toggleTheme}
+        />
+      )}
+
+      {/* ── Mobile Annotation Sheet ── */}
+      {isMobile && (
+        <MobileAnnotationSheet
+          annotation={annotations.find(a => a.id === selectedAnnotationId) || null}
+          payItem={payItems.find(p => p.id === annotations.find(a => a.id === selectedAnnotationId)?.payItemId) || null}
+          payItems={payItems}
+          onClose={() => setSelectedAnnotationId(null)}
+          onUpdate={(id, changes) => updateAnnotation(id, changes)}
+          onDelete={(id) => { removeAnnotation(id); setSelectedAnnotationId(null); }}
         />
       )}
 
