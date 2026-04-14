@@ -1,84 +1,57 @@
 
-# Demo walkthrough reset
+# Demo vs Real App — Bug Fix Pass
 
-## Core correction
-The demo should stop teaching tools in isolation and instead mirror the real setup flow already present in the main workspace.
+## Bugs Found
 
-What already exists in the product and must be visible in `/demo`:
-- TOC import / section navigation
-- automatic pay-item extraction from the current page plus the next 4 pages
-- one-time scale calibration that can be propagated across the set
-- label annotations
-- measurement by drawing first, with GPS as a later branch once the sheet is ready
+### 1. TOC region scaling is wrong (critical)
+**Demo** (line 183): passes `rect` directly to `extractTextFromRegion`
+**Real app** (line 339): scales the rect first: `const scaledRect = { x1: rect.x1 * scale, y1: rect.y1 * scale, x2: rect.x2 * scale, y2: rect.y2 * scale }`
+Result: TOC import silently extracts from the wrong region and returns nothing or garbage.
 
-## Real demo workflow to implement
-1. Upload the PDF
-2. Go to the index / TOC sheet
-3. Import the TOC by boxing the sheet list
-4. Open Sections and jump to the Estimate of Quantities sheet
-5. Import pay items automatically from the current page + next 4 pages
-6. Open Sections and jump to the work sheet to measure
-7. Calibrate one known dimension on that sheet
-8. Apply that calibration as the document default
-9. Select a pay item
-10. Measure it:
-   - draw manually, or
-   - if geolocation is available, continue into GPS calibration + trace
-11. Add a text label / note
-12. Unlock free use of the demo
+### 2. Missing mobile GPS setup button
+**Real app** (lines 584-596): shows a floating "GPS" button at bottom-right when `!geoCalibration`
+**Demo**: only shows GPS trace controls when `geoCalibration && activePayItem && currentCalibration` — there's no way to *start* GPS calibration on mobile
 
-## UI changes
-- Replace the demo’s custom mobile nav with the real workflow nav: Plans / Items / Sections / Summary
-- Keep Scale and Label as visible tools, not hidden behind walkthrough wording
-- Add explicit demo actions for:
-  - Import TOC
-  - Import Pay Items
-  - Apply Scale to All Sheets
-- On desktop, show a real sections/items rail instead of a pay-item-only panel
-- Manual “Add Item” remains fallback, not the primary path
+### 3. Missing mobile select/edit FAB
+**Real app** (lines 658-677): floating MousePointer2 button to toggle select mode when annotations exist
+**Demo**: missing entirely — no way to tap-select annotations on mobile
 
-## Implementation approach
-Use the same workflow logic already in the main workspace, but keep state local/browser-only in the demo.
+### 4. Missing MobileAnnotationSheet
+**Real app** (lines 701-710): shows annotation detail/edit sheet when an annotation is selected on mobile
+**Demo**: missing — selecting an annotation on mobile does nothing useful
 
-In `src/pages/Demo.tsx`:
-- reuse TOC import flow from the main workspace (`tocSelect` + region extraction)
-- reuse pay-item import flow (`extractPayItemsFromPage` on current page through current+4)
-- reuse calibration propagation via `copyCalibrationToPages`
-- wire Sections and Items into the demo layout instead of a custom stripped-down panel
-- keep GPS as the measurement branch after scale + item selection, not as the opening experience
+### 5. MobileTabBar sectionCount falls back wrong
+**Real app** (line 684): `sectionCount={(project?.toc || []).length || totalPages}` — shows total pages as fallback
+**Demo** (line 782): `sectionCount={toc.length}` — shows 0, making Sections tab look empty/broken
 
-## Walkthrough behavior
-Use manual “Next” only when the app cannot infer intent:
-- user is on the TOC sheet
-- user is on the Estimate of Quantities sheet
-- user is on the target work sheet
+### 6. MobilePayItems gets filtered annotations
+**Real app** (line 607): passes `project?.annotations || []` (all annotations including manual)
+**Demo** (line 587): passes `annotations.filter(a => a.type !== 'manual')` — manual quantities won't show in item totals
 
-Auto-advance only on real milestones:
-- PDF loaded
-- TOC imported
-- pay items imported
-- calibration created
-- calibration applied beyond the current page
-- pay item selected
-- first measurement created
-- first label created
+### 7. Desktop sidebar is a dead stub
+**Demo** (lines 539-561): hardcoded "Sections" tab header with no switching to Items. Real app uses `ProjectSidebar` with full tab navigation.
 
-If extraction fails, do not skip ahead. Keep the user on that step and explain the correction:
-- TOC step: tighten the selection around the sheet list
-- pay-item step: navigate to the Estimate of Quantities page and retry
+### 8. Missing `readOnly` prop on MobileToolbar
+**Real app** (line 527): passes `readOnly={isReadOnly}`
+**Demo** (line 531): doesn't pass `readOnly` — not a crash but inconsistent
 
-## Important UX correction
-The first successful scale calibration in the demo should immediately surface a clear choice:
-- Apply to all sheets
-- Apply to a range
+## Changes
 
-That makes the “document default scale” behavior obvious instead of hiding it behind a tiny copy affordance.
+### File: `src/pages/Demo.tsx`
 
-## Files likely affected
-- `src/pages/Demo.tsx`
-- `src/components/MobileSections.tsx` or demo mobile wiring
-- `src/components/MobilePayItems.tsx` or demo mobile wiring
-- possibly `src/components/Toolbar.tsx` / `src/components/MobileToolbar.tsx` to make scale propagation explicit
+1. **Fix TOC scaling** — add `scale` multiplication to rect before passing to `extractTextFromRegion`, matching Index.tsx line 339
 
-## End state
-`/demo` becomes a guided version of the real product workflow: structure the plan set, import contract items, set the default scale once, then measure and label. That is the correct mental model for the app.
+2. **Add mobile GPS setup button** — floating Navigation button at bottom-right when `!showGpsCal && !geoCalibration && pdf`, same as Index.tsx lines 584-596
+
+3. **Add mobile select FAB** — floating MousePointer2 button when canvas tab is active and annotations exist, matching Index.tsx lines 658-677
+
+4. **Add MobileAnnotationSheet** — import and render when `selectedAnnotationId` is set on mobile, matching Index.tsx lines 701-710
+
+5. **Fix MobileTabBar sectionCount** — change from `toc.length` to `toc.length || totalPages`
+
+6. **Fix MobilePayItems annotations prop** — pass unfiltered `annotations` instead of filtering out manual type
+
+7. **Fix desktop sidebar** — add a second column for Items (matching the existing dual-panel layout) with tab switching between Sections and Items, instead of the dead stub
+
+8. **Import MobileAnnotationSheet** — add to imports at top of file
+
