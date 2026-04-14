@@ -181,7 +181,8 @@ export default function Demo() {
   const handleTocRegionSelected = useCallback(async (rect: { x1: number; y1: number; x2: number; y2: number }) => {
     if (!pdf) return;
     try {
-      const entries = await extractTextFromRegion(pdf, currentPage, scale, rect);
+      const scaledRect = { x1: rect.x1 * scale, y1: rect.y1 * scale, x2: rect.x2 * scale, y2: rect.y2 * scale };
+      const entries = await extractTextFromRegion(pdf, currentPage, scale, scaledRect);
       if (entries.length > 0) {
         updateToc(entries);
         toast({ title: 'TOC Imported', description: `${entries.length} sections found.` });
@@ -530,6 +531,7 @@ export default function Demo() {
           canRedo={canRedo}
           onCopyCalibration={currentCalibration ? () => setShowScaleDialog(true) : undefined}
           onCalibrationChipTap={currentCalibration ? () => setShowScaleDialog(true) : undefined}
+          readOnly={false}
         />
       )}
 
@@ -537,43 +539,23 @@ export default function Demo() {
       <div className="flex-1 flex min-h-0">
         {/* Desktop Sidebar — Sections + Items */}
         {pdf && !isMobile && (
-          <div className="w-64 border-r border-border bg-card shrink-0 flex flex-col overflow-hidden">
-            <div className="flex border-b border-border">
-              <button
-                onClick={() => {}}
-                className="flex-1 px-3 py-2 text-[11px] uppercase tracking-widest font-bold text-muted-foreground border-b-2 border-primary"
-              >
-                Sections
-              </button>
-            </div>
-            <div className="flex-1 overflow-auto">
-              <MobileSections
-                toc={toc}
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-                hasPdf={!!pdf}
-                onFileUpload={handleFileUpload}
-                onImportToc={handleTocImport}
-                onSwitchToCanvas={() => {}}
-              />
-            </div>
-          </div>
-        )}
-
-        {pdf && !isMobile && (
-          <div className="w-56 border-r border-border bg-card shrink-0 flex flex-col overflow-hidden">
-            <MobilePayItems
-              payItems={payItems}
-              onUpdatePayItems={updatePayItems}
-              activePayItemId={activePayItemId}
-              onActivePayItemChange={handleActivePayItemChange}
-              annotations={annotations.filter(a => a.type !== 'manual')}
-              onRemoveAnnotationsForPayItem={removeAnnotationsForPayItem}
-              onImportPayItems={handleImportPayItems}
-              hasPdf={!!pdf}
-            />
-          </div>
+          <DesktopSidebar
+            toc={toc}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            hasPdf={!!pdf}
+            onFileUpload={handleFileUpload}
+            onImportToc={handleTocImport}
+            payItems={payItems}
+            onUpdatePayItems={updatePayItems}
+            activePayItemId={activePayItemId}
+            onActivePayItemChange={handleActivePayItemChange}
+            annotations={annotations}
+            onRemoveAnnotationsForPayItem={removeAnnotationsForPayItem}
+            onImportPayItems={handleImportPayItems}
+            highlightTarget={highlightTarget}
+          />
         )}
 
         {/* Canvas / mobile tab content area */}
@@ -585,7 +567,7 @@ export default function Demo() {
               onUpdatePayItems={updatePayItems}
               activePayItemId={activePayItemId}
               onActivePayItemChange={handleActivePayItemChange}
-              annotations={annotations.filter(a => a.type !== 'manual')}
+              annotations={annotations}
               onRemoveAnnotationsForPayItem={removeAnnotationsForPayItem}
               onImportPayItems={handleImportPayItems}
               hasPdf={!!pdf}
@@ -697,6 +679,17 @@ export default function Demo() {
                 />
               )}
 
+              {/* GPS Setup button (mobile, floating) */}
+              {isMobile && pdf && !showGpsCal && !geoCalibration && currentCalibration && (
+                <Button
+                  size="icon"
+                  className="absolute bottom-20 right-3 z-30 h-12 w-12 rounded-full shadow-lg"
+                  onClick={() => setShowGpsCal(true)}
+                >
+                  <Navigation className="h-5 w-5" />
+                </Button>
+              )}
+
               {/* GPS Trace HUD (mobile, floating) */}
               {isMobile && geoCalibration && activePayItem && currentCalibration && (
                 <div className="absolute bottom-20 left-3 right-3 z-30">
@@ -710,6 +703,21 @@ export default function Demo() {
                     onTracePointsUpdate={setGpsTracePoints}
                   />
                 </div>
+              )}
+
+              {/* Mobile Select/Edit FAB */}
+              {isMobile && pdf && mobileTab === 'canvas' && annotations.filter(a => a.type !== 'manual').length > 0 && (
+                <Button
+                  size="icon"
+                  variant={toolMode === 'select' ? 'default' : 'outline'}
+                  className={cn(
+                    'absolute z-30 h-12 w-12 rounded-full shadow-lg',
+                    geoCalibration ? 'bottom-20 right-3' : (!geoCalibration && currentCalibration) ? 'bottom-20 right-[4.5rem]' : 'bottom-20 right-3'
+                  )}
+                  onClick={() => setToolMode(toolMode === 'select' ? 'pan' : 'select')}
+                >
+                  <MousePointer2 className="h-5 w-5" />
+                </Button>
               )}
             </>
           )}
@@ -780,7 +788,7 @@ export default function Demo() {
           onTabChange={setMobileTab}
           hasPdf={!!pdf}
           itemCount={payItems.length}
-          sectionCount={toc.length}
+          sectionCount={toc.length || totalPages}
           isDark={isDark}
           onToggleTheme={toggleTheme}
         />
