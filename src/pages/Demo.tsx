@@ -9,6 +9,7 @@ import { MobilePayItems } from '@/components/MobilePayItems';
 import { SummaryPanel } from '@/components/SummaryPanel';
 import { GpsCalibration } from '@/components/GpsCalibration';
 import { GpsTraceControls } from '@/components/GpsTraceControls';
+import { MobileAnnotationSheet } from '@/components/MobileAnnotationSheet';
 import { useProject } from '@/hooks/useProject';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useTheme } from '@/hooks/useTheme';
