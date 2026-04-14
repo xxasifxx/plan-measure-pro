@@ -64,6 +64,81 @@ const WALKTHROUGH_STEPS: WalkthroughStep[] = [
   { id: 'done', title: 'You\'re Ready!', instruction: 'You just completed a full quantity takeoff workflow. Sign up to save your work, collaborate, and export reports.', icon: CheckCircle2 },
 ];
 
+/* ─── Desktop Sidebar with tab switching ─── */
+function DesktopSidebar({ toc, currentPage, totalPages, onPageChange, hasPdf, onFileUpload, onImportToc, payItems, onUpdatePayItems, activePayItemId, onActivePayItemChange, annotations, onRemoveAnnotationsForPayItem, onImportPayItems, highlightTarget }: {
+  toc: TocEntry[];
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (p: number) => void;
+  hasPdf: boolean;
+  onFileUpload: (f: File) => void;
+  onImportToc: () => void;
+  payItems: PayItem[];
+  onUpdatePayItems: (items: PayItem[]) => void;
+  activePayItemId: string;
+  onActivePayItemChange: (id: string) => void;
+  annotations: Annotation[];
+  onRemoveAnnotationsForPayItem: (id: string) => void;
+  onImportPayItems: () => void;
+  highlightTarget: string | null;
+}) {
+  const [tab, setTab] = useState<'sections' | 'items'>('sections');
+
+  return (
+    <div className="w-72 border-r border-border bg-card shrink-0 flex flex-col overflow-hidden">
+      <div className="flex border-b border-border">
+        <button
+          onClick={() => setTab('sections')}
+          data-tour-target="tour-sections-tab"
+          className={cn(
+            'flex-1 px-3 py-2 text-[11px] uppercase tracking-widest font-bold transition-colors',
+            tab === 'sections' ? 'text-foreground border-b-2 border-primary' : 'text-muted-foreground hover:text-foreground',
+            highlightTarget === 'tour-sections-tab' && 'tour-highlight',
+          )}
+        >
+          Sections
+        </button>
+        <button
+          onClick={() => setTab('items')}
+          data-tour-target="tour-items-tab"
+          className={cn(
+            'flex-1 px-3 py-2 text-[11px] uppercase tracking-widest font-bold transition-colors',
+            tab === 'items' ? 'text-foreground border-b-2 border-primary' : 'text-muted-foreground hover:text-foreground',
+            highlightTarget === 'tour-items-tab' && 'tour-highlight',
+          )}
+        >
+          Items
+        </button>
+      </div>
+      <div className="flex-1 overflow-auto">
+        {tab === 'sections' ? (
+          <MobileSections
+            toc={toc}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={onPageChange}
+            hasPdf={hasPdf}
+            onFileUpload={onFileUpload}
+            onImportToc={onImportToc}
+            onSwitchToCanvas={() => {}}
+          />
+        ) : (
+          <MobilePayItems
+            payItems={payItems}
+            onUpdatePayItems={onUpdatePayItems}
+            activePayItemId={activePayItemId}
+            onActivePayItemChange={onActivePayItemChange}
+            annotations={annotations}
+            onRemoveAnnotationsForPayItem={onRemoveAnnotationsForPayItem}
+            onImportPayItems={onImportPayItems}
+            hasPdf={hasPdf}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
 /* ─── Demo Page ─── */
 export default function Demo() {
   const navigate = useNavigate();
