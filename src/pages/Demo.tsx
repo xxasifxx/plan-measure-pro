@@ -869,6 +869,18 @@ export default function Demo() {
         />
       )}
 
+      {/* ── Mobile Annotation Sheet ── */}
+      {isMobile && (
+        <MobileAnnotationSheet
+          annotation={annotations.find(a => a.id === selectedAnnotationId) || null}
+          payItem={payItems.find(p => p.id === annotations.find(a => a.id === selectedAnnotationId)?.payItemId) || null}
+          payItems={payItems}
+          onClose={() => setSelectedAnnotationId(null)}
+          onUpdate={(id, changes) => updateAnnotation(id, changes)}
+          onDelete={(id) => { removeAnnotation(id); setSelectedAnnotationId(null); }}
+        />
+      )}
+
       {/* ── Scale Propagation Dialog ── */}
       <Dialog open={showScaleDialog} onOpenChange={setShowScaleDialog}>
         <DialogContent className="sm:max-w-sm">
