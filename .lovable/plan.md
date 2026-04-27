@@ -1,57 +1,86 @@
+# Pitch Landing Page: Asif Muhammad → mcfa "Software Solution Integrator" (BYOR)
 
-# Demo vs Real App — Bug Fix Pass
+## Goal
+A standalone, single-purpose landing page targeted at **mcfa leadership** (Haddonfield, NJ) that pitches Asif Muhammad, PMP for the *Build Your Own Role* Software Solution Integrator position — using **Draw-Quantify-Dash / TakeoffPro** as the live, working proof-of-concept.
 
-## Bugs Found
+This is **not** a product page. It is a personal proposal page styled like an enterprise pitch deck. It lives at a new route and does not touch the existing `/landing` (TakeoffPro marketing site).
 
-### 1. TOC region scaling is wrong (critical)
-**Demo** (line 183): passes `rect` directly to `extractTextFromRegion`
-**Real app** (line 339): scales the rect first: `const scaledRect = { x1: rect.x1 * scale, y1: rect.y1 * scale, x2: rect.x2 * scale, y2: rect.y2 * scale }`
-Result: TOC import silently extracts from the wrong region and returns nothing or garbage.
+## Route & Files
+- New route: **`/mcfa`** (added to `src/App.tsx`, public, no auth)
+- New page: **`src/pages/McfaPitch.tsx`**
+- Reuse existing components: `Button`, `Card`, `Accordion`, framer-motion animation helpers, lucide icons, existing hero/inspector imagery from `src/assets/`
+- No backend changes, no new tables — single CTA mailto + link to live demo at `/demo`
 
-### 2. Missing mobile GPS setup button
-**Real app** (lines 584-596): shows a floating "GPS" button at bottom-right when `!geoCalibration`
-**Demo**: only shows GPS trace controls when `geoCalibration && activePayItem && currentCalibration` — there's no way to *start* GPS calibration on mobile
+## Visual Identity
+Match the existing TakeoffPro landing aesthetic (dark, monospace JetBrains Mono accents, blueprint motif) so mcfa sees that the candidate *built the very tool they are reading about*. Add subtle mcfa-aligned cues (LEADS values callouts, EOS terminology) without infringing on mcfa branding.
 
-### 3. Missing mobile select/edit FAB
-**Real app** (lines 658-677): floating MousePointer2 button to toggle select mode when annotations exist
-**Demo**: missing entirely — no way to tap-select annotations on mobile
+## Page Structure (top → bottom)
 
-### 4. Missing MobileAnnotationSheet
-**Real app** (lines 701-710): shows annotation detail/edit sheet when an annotation is selected on mobile
-**Demo**: missing — selecting an annotation on mobile does nothing useful
+### 1. Hero
+- Eyebrow: `BUILD YOUR OWN ROLE · PROPOSAL`
+- Headline: **"A Software Solution Integrator for mcfa's Transportation & Infrastructure Division"**
+- Subhead: Bridging field-level inspection reality with Agentic AI, Primavera P6, and the modern AEC stack.
+- Two CTAs: `View Live Proof-of-Concept` → `/demo` ・ `Contact Asif` → mailto
+- Right side: screenshot of TakeoffPro / Draw-Quantify-Dash with annotated callouts (TOC import, pay-item extraction, GPS calibration)
 
-### 5. MobileTabBar sectionCount falls back wrong
-**Real app** (line 684): `sectionCount={(project?.toc || []).length || totalPages}` — shows total pages as fallback
-**Demo** (line 782): `sectionCount={toc.length}` — shows 0, making Sections tab look empty/broken
+### 2. The Candidate (one-line credibility strip)
+Asif Muhammad, PMP · ~7 yrs GenAI/Full-Stack · Highway Inspector (Churchill / Trilon) · Documentation QA ≥95% · Aerospace safety-critical background (Airbus A400M)
 
-### 6. MobilePayItems gets filtered annotations
-**Real app** (line 607): passes `project?.annotations || []` (all annotations including manual)
-**Demo** (line 587): passes `annotations.filter(a => a.type !== 'manual')` — manual quantities won't show in item totals
+### 3. Why This Role, Why Now
+Short narrative tying the $2B NJTA I-4 expansion, mcfa's SDVOSB / EOS culture, and the data-volume problem to the need for a hybrid Inspector + Software Integrator.
 
-### 7. Desktop sidebar is a dead stub
-**Demo** (lines 539-561): hardcoded "Sections" tab header with no switching to Items. Real app uses `ProjectSidebar` with full tab navigation.
+### 4. The Hybrid Edge (4-card grid)
+| AI & GenAI | Full Stack | Project Governance | Domain |
+|---|---|---|---|
+| LLM, RAG, MCP, A2A | C#, React, Azure Fns, REST | PMP, EOS, WCAG | Highway inspection, P6, BIM |
 
-### 8. Missing `readOnly` prop on MobileToolbar
-**Real app** (line 527): passes `readOnly={isReadOnly}`
-**Demo** (line 531): doesn't pass `readOnly` — not a crash but inconsistent
+### 5. Proof of Concept: Draw-Quantify-Dash
+Embedded screenshot grid + bullet list of capabilities **already shipped**:
+- TOC auto-detection from plan sets
+- Automatic pay-item extraction (current page + next 4)
+- One-time scale calibration → document-wide default
+- GPS field measurement w/ affine georeferencing
+- Real-time multi-user sync, NJDOT-compliant exports
 
-## Changes
+CTA button: **`Open the live app at /demo`**
 
-### File: `src/pages/Demo.tsx`
+### 6. LEADS Alignment Table
+Reproduce the LEADS → Strategic Alignment → Project Outcome table from the brief verbatim (Love / Entrepreneurial / Accountability / Delight / Stretch).
 
-1. **Fix TOC scaling** — add `scale` multiplication to rect before passing to `extractTextFromRegion`, matching Index.tsx line 339
+### 7. The Solution Integrator Archetype
+Side-by-side comparison: *Traditional Scheduler* vs *Solution Integrator* (Schedule Mgmt, QC, Reporting, Workflow) — same content as the brief's table.
 
-2. **Add mobile GPS setup button** — floating Navigation button at bottom-right when `!showGpsCal && !geoCalibration && pdf`, same as Index.tsx lines 584-596
+### 8. Technical Vision: P6 + BIM 360 + Agentic AI
+Three stacked sections with diagrams (CSS/SVG, no images required):
+- **P6 Integration** — REST API, Local/Remote modes, JWT auth
+- **Modern Design Stack** — Revit → APS → P6 → Power BI flow
+- **Agentic Layer** — MCP (tool grounding) + A2A (multi-agent coordination), with the Procurement-Agent ↔ Schedule-Agent example
 
-3. **Add mobile select FAB** — floating MousePointer2 button when canvas tab is active and annotations exist, matching Index.tsx lines 658-677
+### 9. ROI Table
+The 9.7× value-multiplier table from the brief (Direct Revenue, Internal Savings, Efficiency Gains, Net Annual Benefit: $62k → $604,517) plus the proposal-tier value-add ladder ($25k / $75k / $150k+).
 
-4. **Add MobileAnnotationSheet** — import and render when `selectedAnnotationId` is set on mobile, matching Index.tsx lines 701-710
+### 10. EOS Integration
+Four-card grid: Scorecards · Rocks · Accountability Chart · Level 10 Meetings — each tied to the Integrator role.
 
-5. **Fix MobileTabBar sectionCount** — change from `toc.length` to `toc.length || totalPages`
+### 11. 8-Year Career Pathway
+Timeline component (Yr 1-2 Foundation → Yr 3-5 Strategic Expansion → Yr 6-8 Practice Leadership), capped with the Senior Integrator / PM / RE progression table.
 
-6. **Fix MobilePayItems annotations prop** — pass unfiltered `annotations` instead of filtering out manual type
+### 12. Closing CTA
+Large dark panel:
+> "Let's bridge the digital divide in NJ infrastructure together."
+- Primary CTA: `Schedule a 30-min conversation` (mailto with prefilled subject "mcfa BYOR — Software Solution Integrator")
+- Secondary: `Explore the working prototype` → `/demo`
+- Footer line: links to LinkedIn, GitHub, the live app, and a small "Built with the same stack proposed for mcfa" note.
 
-7. **Fix desktop sidebar** — add a second column for Items (matching the existing dual-panel layout) with tab switching between Sections and Items, instead of the dead stub
+## Technical Notes
+- Single file `src/pages/McfaPitch.tsx` (~600-800 lines, similar shape to `Landing.tsx`)
+- Framer-motion fade-up animations reused from existing landing
+- Tailwind only, no new dependencies
+- Fully responsive (mobile-first; tables collapse to stacked cards under `md`)
+- SEO: page-level `<title>` via React (no index.html changes needed for a pitch page); `noindex` meta to keep it private-ish
+- Add `/mcfa` route to `src/App.tsx` as a public route (no auth wrapper)
 
-8. **Import MobileAnnotationSheet** — add to imports at top of file
-
+## Out of Scope
+- No changes to existing `/landing`, `/demo`, or app functionality
+- No new database tables or edge functions
+- No mcfa logo usage (text references only, to avoid trademark issues)
