@@ -957,6 +957,17 @@ const SectionHeader = ({ number, eyebrow, title }: { number: string; eyebrow: st
   </div>
 );
 
+const ScriptStep = ({ n, title, children }: { n: string; title: string; children: React.ReactNode }) => (
+  <div className="border-l-2 border-cyan-500/40 pl-4 py-1">
+    <div className="flex items-center gap-2 mb-1">
+      <span className="text-[10px] tracking-widest text-cyan-400 font-bold">STEP {n}</span>
+      <div className="h-px flex-1 bg-border/60" />
+    </div>
+    <div className="text-sm font-semibold text-foreground mb-1.5">{title}</div>
+    <p className="text-xs text-muted-foreground leading-relaxed italic">"{children}"</p>
+  </div>
+);
+
 const Mini = ({ icon: Icon, label }: { icon: React.ComponentType<{ className?: string }>; label: string }) => (
   <div className="flex flex-col items-center gap-1.5 py-1">
     <Icon className="h-4 w-4 text-cyan-400" />
