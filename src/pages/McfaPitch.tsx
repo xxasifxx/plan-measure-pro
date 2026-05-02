@@ -843,40 +843,40 @@ const McfaPitch = () => {
               </div>
             </div>
 
-            {/* Script panel */}
+            {/* Recruiter Q&A panel */}
             <div className="lg:col-span-5">
               <div className="flex items-center gap-2 mb-4">
                 <MessageSquare className="h-4 w-4 text-cyan-400" />
-                <div className="text-[11px] tracking-[0.25em] text-cyan-400">NEGOTIATION SCRIPT</div>
+                <div className="text-[11px] tracking-[0.25em] text-cyan-400">RECRUITER Q&amp;A · READY-TO-READ</div>
               </div>
-              <h3 className="text-2xl font-bold mb-4">How to anchor the ask.</h3>
+              <h3 className="text-2xl font-bold mb-4">Likely objections, answered.</h3>
+              <p className="text-sm text-muted-foreground mb-5 leading-relaxed">
+                Tap a question to reveal the response. Each answer is &lt;30 seconds spoken — short enough to deliver in
+                a screening call without losing the room.
+              </p>
 
-              <div className="space-y-4">
-                <ScriptStep n="1" title="Open with the consolidation, not the number">
-                  "You're already hiring for a Senior Scheduler <em>and</em> a NICET Inspector. The combined NJ market base
-                  for those two roles alone is <span className="text-cyan-400 font-mono">$185K–$235K</span>. This proposal
-                  collapses both into one hybrid asset — <span className="text-foreground">and</span> ships the digital
-                  platform you'd otherwise outsource."
-                </ScriptStep>
-
-                <ScriptStep n="2" title="Anchor at the consolidated cost">
-                  "Anchored against that <span className="text-cyan-400 font-mono">$185K–$235K</span> baseline, a base of
-                  <span className="text-emerald-400 font-mono"> $130K–$155K</span> is materially below market for the
-                  combined scope — that's the cost-avoidance MCFA captures the moment I sign."
-                </ScriptStep>
-
-                <ScriptStep n="3" title="Tie variable comp to the EOS framework">
-                  "I'm asking for the standard EOS Value-Add structure already in your operating model — up to
-                  <span className="text-foreground"> 10% bonus</span> tied to the quarterly Rocks. That keeps every dollar
-                  above base contingent on measurable, scoreboard-grade contribution."
-                </ScriptStep>
-
-                <ScriptStep n="4" title="Close with the asymmetry">
-                  "The downside for MCFA is one mid-senior salary. The upside is the
-                  <span className="text-cyan-400"> $755K Realistic ROI</span> from Section 7 — plus a proprietary platform
-                  on the cost side instead of the SaaS column."
-                </ScriptStep>
-              </div>
+              <Accordion type="single" collapsible className="border border-border rounded-md bg-card/30 divide-y divide-border">
+                {recruiterQA.map((qa, i) => (
+                  <AccordionItem key={qa.q} value={`q${i}`} className="border-0 px-4">
+                    <AccordionTrigger className="text-left text-sm font-semibold hover:no-underline py-4">
+                      <div className="flex items-start gap-3 pr-2">
+                        <span className="text-[10px] tracking-widest text-cyan-400 font-bold mt-0.5 shrink-0">
+                          Q{String(i + 1).padStart(2, '0')}
+                        </span>
+                        <span>{qa.q}</span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="pb-4 pl-9 pr-2">
+                      <p className="text-xs text-muted-foreground leading-relaxed italic">"{qa.a}"</p>
+                      {qa.tag && (
+                        <div className="mt-2 inline-block text-[10px] tracking-widest text-cyan-400 border border-cyan-500/30 bg-cyan-500/5 px-2 py-0.5 rounded-sm">
+                          {qa.tag}
+                        </div>
+                      )}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
 
               <div className="mt-6 p-4 border border-amber-500/30 bg-amber-500/5 rounded-md">
                 <div className="text-[10px] tracking-widest text-amber-400 mb-2">IF PUSHED LOWER</div>
