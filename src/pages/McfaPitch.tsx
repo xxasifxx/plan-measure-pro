@@ -208,6 +208,10 @@ const proofBullets = [
 /* component                                                          */
 /* ------------------------------------------------------------------ */
 const McfaPitch = () => {
+  const [scenario, setScenario] = useState<ScenarioKey>('realistic');
+  const activeRows = roiScenarios[scenario].rows;
+  const activeTotal = activeRows.reduce((s, r) => s + r.value, 0);
+  const maxRow = Math.max(...activeRows.map(r => r.value));
   useEffect(() => {
     document.title = 'BYOR Proposal · Hybrid Construction Inspector & Systems Integrator — Asif Muhammad, PMP';
     const meta = document.querySelector('meta[name="description"]');
