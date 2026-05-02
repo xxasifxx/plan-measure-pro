@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
 import heroScreenshot from '@/assets/hero-screenshot.jpg';
 import inspectorTablet from '@/assets/inspector-tablet.jpg';
 import gpsFieldMeasurement from '@/assets/gps-field-measurement.jpg';
