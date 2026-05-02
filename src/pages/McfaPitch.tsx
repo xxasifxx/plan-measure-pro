@@ -12,6 +12,7 @@ import {
   TrendingUp, Award, Users, Zap, Linkedin, Github, WifiOff, Image as ImageIcon,
   GitBranch, Clock, DollarSign, FileSpreadsheet, Building2, Plane, MapPin,
   Gauge, Layers, Activity, FileCheck, Briefcase, X, Check, Minus,
+  MessageSquare, Anchor, TrendingDown,
 } from 'lucide-react';
 
 /* ------------------------------------------------------------------ */
@@ -777,6 +778,116 @@ const McfaPitch = () => {
               </Card>
             ))}
           </div>
+
+          {/* ---------- Negotiation Script & Anchor ---------- */}
+          <div className="mt-16 grid lg:grid-cols-12 gap-6">
+            {/* Anchor table */}
+            <div className="lg:col-span-7">
+              <div className="flex items-center gap-2 mb-4">
+                <Anchor className="h-4 w-4 text-cyan-400" />
+                <div className="text-[11px] tracking-[0.25em] text-cyan-400">ANCHOR · NJ MARKET BENCHMARKS (2025)</div>
+              </div>
+              <h3 className="text-2xl font-bold mb-4">The roles being absorbed.</h3>
+              <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
+                A traditional MCFA hire to cover even <span className="text-foreground">two</span> of these costs ~$200K+ in
+                base alone — and still doesn't ship the AI/P6 platform.
+              </p>
+
+              <div className="border border-border rounded-md overflow-hidden">
+                <table className="w-full text-sm">
+                  <thead className="bg-card/60">
+                    <tr>
+                      <th className="text-left p-3 border-b border-border font-semibold">Role being consolidated</th>
+                      <th className="text-right p-3 border-b border-border font-semibold w-40">NJ Base (2025)</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-muted-foreground">
+                    {[
+                      ['NICET HCI Level I/II Inspector',           '$75K – $95K',   'Churchill / Trilon / WSP range'],
+                      ['Senior P6 Scheduler (PMP)',                '$110K – $140K', 'NJTA / NJDOT consultant rate'],
+                      ['Office Engineer',                          '$70K – $90K',   'Usually a separate hire'],
+                      ['Mid Full-Stack + AI Developer',            '$120K – $160K', 'NJ/NYC metro · ~7 yrs exp'],
+                    ].map(([role, range, sub]) => (
+                      <tr key={role} className="border-b border-border last:border-0 hover:bg-card/40">
+                        <td className="p-3">
+                          <div className="text-foreground">{role}</div>
+                          <div className="text-[11px] text-muted-foreground/80 mt-0.5">{sub}</div>
+                        </td>
+                        <td className="p-3 text-right font-mono text-cyan-400">{range}</td>
+                      </tr>
+                    ))}
+                    <tr className="bg-cyan-500/5">
+                      <td className="p-3 font-semibold text-foreground">Cost of two siloed hires (Scheduler + Inspector)</td>
+                      <td className="p-3 text-right font-mono font-bold text-foreground">$185K – $235K</td>
+                    </tr>
+                    <tr className="bg-emerald-500/10 border-t border-emerald-500/30">
+                      <td className="p-3">
+                        <div className="font-bold text-foreground">BYOR Hybrid Ask</div>
+                        <div className="text-[11px] text-emerald-400/90 mt-0.5">One asset · two billable lanes · platform delivered</div>
+                      </td>
+                      <td className="p-3 text-right">
+                        <div className="font-mono font-bold text-emerald-400 text-base">$130K – $155K</div>
+                        <div className="text-[10px] text-muted-foreground mt-0.5">+ up to 10% EOS Value-Add bonus</div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="mt-4 flex items-start gap-2 text-xs text-muted-foreground">
+                <TrendingDown className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
+                <span>
+                  Net savings to MCFA on Day 1: <span className="text-emerald-400 font-semibold">$55K – $80K vs. two siloed hires</span>,
+                  before counting the platform value or the 10% bonus.
+                </span>
+              </div>
+            </div>
+
+            {/* Script panel */}
+            <div className="lg:col-span-5">
+              <div className="flex items-center gap-2 mb-4">
+                <MessageSquare className="h-4 w-4 text-cyan-400" />
+                <div className="text-[11px] tracking-[0.25em] text-cyan-400">NEGOTIATION SCRIPT</div>
+              </div>
+              <h3 className="text-2xl font-bold mb-4">How to anchor the ask.</h3>
+
+              <div className="space-y-4">
+                <ScriptStep n="1" title="Open with the consolidation, not the number">
+                  "You're already hiring for a Senior Scheduler <em>and</em> a NICET Inspector. The combined NJ market base
+                  for those two roles alone is <span className="text-cyan-400 font-mono">$185K–$235K</span>. This proposal
+                  collapses both into one hybrid asset — <span className="text-foreground">and</span> ships the digital
+                  platform you'd otherwise outsource."
+                </ScriptStep>
+
+                <ScriptStep n="2" title="Anchor at the consolidated cost">
+                  "Anchored against that <span className="text-cyan-400 font-mono">$185K–$235K</span> baseline, a base of
+                  <span className="text-emerald-400 font-mono"> $130K–$155K</span> is materially below market for the
+                  combined scope — that's the cost-avoidance MCFA captures the moment I sign."
+                </ScriptStep>
+
+                <ScriptStep n="3" title="Tie variable comp to the EOS framework">
+                  "I'm asking for the standard EOS Value-Add structure already in your operating model — up to
+                  <span className="text-foreground"> 10% bonus</span> tied to the quarterly Rocks. That keeps every dollar
+                  above base contingent on measurable, scoreboard-grade contribution."
+                </ScriptStep>
+
+                <ScriptStep n="4" title="Close with the asymmetry">
+                  "The downside for MCFA is one mid-senior salary. The upside is the
+                  <span className="text-cyan-400"> $755K Realistic ROI</span> from Section 7 — plus a proprietary platform
+                  on the cost side instead of the SaaS column."
+                </ScriptStep>
+              </div>
+
+              <div className="mt-6 p-4 border border-amber-500/30 bg-amber-500/5 rounded-md">
+                <div className="text-[10px] tracking-widest text-amber-400 mb-2">IF PUSHED LOWER</div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Hold base at minimum <span className="text-foreground font-mono">$130K</span>. Trade flex by
+                  expanding the Value-Add cap from 10% → 15%, or by carving out a fixed milestone bonus when Phase 3
+                  (P6 telemetry) goes live in Q3.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -843,6 +954,17 @@ const SectionHeader = ({ number, eyebrow, title }: { number: string; eyebrow: st
       </div>
       <h2 className="text-3xl md:text-4xl font-bold mt-3 tracking-tight" dangerouslySetInnerHTML={{ __html: title }} />
     </div>
+  </div>
+);
+
+const ScriptStep = ({ n, title, children }: { n: string; title: string; children: React.ReactNode }) => (
+  <div className="border-l-2 border-cyan-500/40 pl-4 py-1">
+    <div className="flex items-center gap-2 mb-1">
+      <span className="text-[10px] tracking-widest text-cyan-400 font-bold">STEP {n}</span>
+      <div className="h-px flex-1 bg-border/60" />
+    </div>
+    <div className="text-sm font-semibold text-foreground mb-1.5">{title}</div>
+    <p className="text-xs text-muted-foreground leading-relaxed italic">"{children}"</p>
   </div>
 );
 
