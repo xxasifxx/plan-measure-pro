@@ -605,46 +605,96 @@ const McfaPitch = () => {
       {/* ============================================================ */}
       <section className="border-b border-border/60 py-20">
         <div className="container mx-auto px-4">
-          <SectionHeader number="07" eyebrow="RETURN ON INVESTMENT" title="ROI Waterfall · 3 Projects · Annual" />
+          <SectionHeader number="07" eyebrow="RETURN ON INVESTMENT" title="ROI Waterfall · Annual" />
           <p className="text-muted-foreground max-w-3xl mt-4">
-            Conservative assumptions; value counted only after sustained adoption. The 1,600 billable hours fully fund base
-            salary — every dollar below is high-margin overhead avoidance and BD upside.
+            The PDF cites the conservative floor: <span className="text-foreground">$180K</span> across 3 projects in Year 1.
+            That number assumes <em>partial</em> adoption. Toggle the scenarios below to see what happens when the platform
+            scales across the T&amp;I division and Phase 3 P6 telemetry comes online.
           </p>
 
-          <div className="mt-12 grid lg:grid-cols-5 gap-3 items-end">
-            {roiWaterfall.map((r, i) => {
-              const pct = (r.value / roiTotal) * 100;
-              const colors = ['bg-emerald-500/70', 'bg-cyan-500/70', 'bg-amber-500/70', 'bg-purple-500/70'];
+          {/* scenario toggle */}
+          <div className="mt-8 inline-flex items-center gap-1 p-1 border border-border rounded-md bg-card/40">
+            {(Object.keys(roiScenarios) as ScenarioKey[]).map((k) => (
+              <button
+                key={k}
+                onClick={() => setScenario(k)}
+                className={`px-4 py-2 text-xs tracking-widest rounded-sm transition-colors ${
+                  scenario === k
+                    ? 'bg-cyan-500 text-cyan-950 font-bold'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                {roiScenarios[k].label.toUpperCase()}
+              </button>
+            ))}
+            <div className="px-4 text-xs text-muted-foreground border-l border-border ml-1">
+              {roiScenarios[scenario].sub}
+            </div>
+          </div>
+
+          <div className="mt-10 grid gap-3 items-end" style={{ gridTemplateColumns: `repeat(${activeRows.length + 1}, minmax(0, 1fr))` }}>
+            {activeRows.map((r, i) => {
+              const pct = (r.value / maxRow) * 100;
+              const palette = [
+                'bg-emerald-500/70', 'bg-cyan-500/70', 'bg-amber-500/70',
+                'bg-purple-500/70', 'bg-pink-500/70', 'bg-blue-500/70', 'bg-orange-500/70',
+              ];
               return (
                 <motion.div
-                  key={r.label}
+                  key={`${scenario}-${r.label}`}
                   initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.05, duration: 0.4 }}
                   className="relative"
                 >
-                  <div className="text-xs tracking-widest text-muted-foreground mb-1">{`+ $${(r.value / 1000).toFixed(0)}K`}</div>
-                  <div className={`${colors[i]} border border-border/60 rounded-sm`} style={{ height: `${pct * 3}px`, minHeight: '60px' }} />
-                  <div className="mt-3 text-sm font-semibold leading-tight">{r.label}</div>
-                  <div className="text-[11px] text-muted-foreground mt-1 leading-relaxed">{r.sub}</div>
+                  <div className="text-xs tracking-widest text-muted-foreground mb-1 whitespace-nowrap">
+                    + ${(r.value / 1000).toFixed(0)}K
+                  </div>
+                  <div className={`${palette[i % palette.length]} border border-border/60 rounded-sm transition-all`} style={{ height: `${pct * 2.4 + 30}px` }} />
+                  <div className="mt-3 text-xs font-semibold leading-tight">{r.label}</div>
+                  <div className="text-[10px] text-muted-foreground mt-1 leading-relaxed">{r.sub}</div>
                 </motion.div>
               );
             })}
             <motion.div
+              key={`${scenario}-net`}
               initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.5 }}
-              className="relative border-l-2 border-dashed border-cyan-500/40 pl-4"
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+              className="relative border-l-2 border-dashed border-cyan-500/60 pl-4"
             >
               <div className="text-xs tracking-widest text-cyan-400 mb-1">NET VALUE</div>
-              <div className="bg-cyan-500 text-cyan-950 border border-cyan-300 rounded-sm flex items-center justify-center font-bold text-lg" style={{ height: '240px' }}>
-                ${(roiTotal / 1000).toFixed(0)}K
+              <div
+                className="bg-gradient-to-t from-cyan-600 to-cyan-400 text-cyan-950 border border-cyan-300 rounded-sm flex flex-col items-center justify-center font-bold shadow-lg shadow-cyan-500/20"
+                style={{ height: '270px' }}
+              >
+                <div className="text-2xl">${(activeTotal / 1000).toFixed(0)}K</div>
+                <div className="text-[10px] tracking-widest opacity-70 mt-1">ANNUAL</div>
               </div>
-              <div className="mt-3 text-sm font-semibold leading-tight">Illustrative Annual Net</div>
-              <div className="text-[11px] text-muted-foreground mt-1">Above &amp; beyond billable salary recovery</div>
+              <div className="mt-3 text-xs font-semibold leading-tight">{roiScenarios[scenario].label} Net</div>
+              <div className="text-[10px] text-muted-foreground mt-1">Above &amp; beyond billable salary recovery</div>
             </motion.div>
+          </div>
+
+          {/* multiplier callout */}
+          <div className="mt-10 grid sm:grid-cols-3 gap-3">
+            {(Object.keys(roiScenarios) as ScenarioKey[]).map((k) => {
+              const total = roiScenarios[k].rows.reduce((s, r) => s + r.value, 0);
+              const isActive = scenario === k;
+              return (
+                <button
+                  key={k}
+                  onClick={() => setScenario(k)}
+                  className={`text-left p-4 border rounded-md transition-all ${
+                    isActive ? 'border-cyan-500/60 bg-cyan-500/10' : 'border-border/60 bg-card/30 hover:border-cyan-500/30'
+                  }`}
+                >
+                  <div className="text-[10px] tracking-widest text-muted-foreground mb-1">{roiScenarios[k].label.toUpperCase()}</div>
+                  <div className="text-3xl font-bold text-foreground">${(total / 1000).toFixed(0)}K</div>
+                  <div className="text-[11px] text-muted-foreground mt-1">{roiScenarios[k].sub}</div>
+                </button>
+              );
+            })}
           </div>
 
           <div className="grid md:grid-cols-3 gap-4 mt-12 text-sm">
