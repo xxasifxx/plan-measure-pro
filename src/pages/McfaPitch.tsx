@@ -206,6 +206,40 @@ const proofBullets = [
   'NJDOT / NJTA-compliant CSV, PDF & Excel exports',
 ];
 
+/* Recruiter Q&A — short spoken answers, ~30 sec each */
+const recruiterQA: { q: string; a: string; tag?: string }[] = [
+  {
+    q: 'Why are you asking below the market for a Senior Scheduler?',
+    a: "I'm not. The $130K–$155K base is below the combined market for the two roles being absorbed — Scheduler and NICET Inspector total $185K–$235K. Against the consolidated scope, the ask is competitive; against either single role in isolation, it's premium. I've priced the consolidation, not just one seat.",
+    tag: 'ANCHOR',
+  },
+  {
+    q: "What if the ROI projections slip — what's MCFA actually exposed to?",
+    a: "The downside is bounded at one mid-senior salary, and even that's covered by the 1,600 billable hours alone. The Conservative ROI scenario in Section 7 — $180K — is the floor cited verbatim from the proposal. Realistic and Stretch are upside, not commitments. MCFA never pays for ROI it doesn't see.",
+    tag: 'DOWNSIDE BOUNDED',
+  },
+  {
+    q: "What's the guardrail on the bonus? How do you prevent runaway payouts?",
+    a: "Capped at 10% of base, tied directly to the EOS Quarterly Conversation. Every dollar is gated on Rocks: Q1 platform launch, Q2 AI photo-tagging, Q3 IDR-to-P6 beta. No Rock delivered, no bonus paid. The scoreboard is the gate.",
+    tag: 'EOS-GATED',
+  },
+  {
+    q: 'How do we know you can deliver the platform alongside billable work?',
+    a: "Phase 1 is already live at /demo — built on personal time. The 600 flexible hours are non-supervision time inspectors already have on most projects; I'm just allocating that time to the platform instead of letting it idle. Worst case, MCFA gets a competent NICET inspector and a Senior Scheduler. Best case, the platform too.",
+    tag: 'PROOF SHIPPED',
+  },
+  {
+    q: 'Why not just hire a developer separately and keep the inspector role pure?',
+    a: "A standalone NJ developer with this stack costs $120K–$160K and has zero domain context — they'll spend a year learning what an IDR is. The hybrid model removes that translation layer. Field signals come from someone who's actually written the IDR they're now automating.",
+    tag: 'DOMAIN MOAT',
+  },
+  {
+    q: 'Who owns TakeoffPro? Is MCFA buying it or licensing it?',
+    a: "MCFA gets full internal use across its project portfolio under the employment agreement — no per-seat fees, no SaaS contract. I retain ownership of the core IP so it stays improvable. MCFA pays only the external footprint: hosting, storage, and AI API calls. Standard 'Shop Tool' arrangement.",
+    tag: 'IP CLEAN',
+  },
+];
+
 /* ------------------------------------------------------------------ */
 /* component                                                          */
 /* ------------------------------------------------------------------ */
