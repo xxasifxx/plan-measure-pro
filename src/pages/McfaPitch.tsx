@@ -127,14 +127,48 @@ const integrationLayers = [
   },
 ];
 
-/* ROI waterfall (annual, 3 projects shared resources) */
-const roiWaterfall = [
-  { label: 'Reporting Time Saved',       value: 90_000, sub: '600 hrs × $150/hr · 3 projects × 4 hrs/wk × 50 wks' },
-  { label: 'Reduced Rework',             value: 24_000, sub: 'Quantity & documentation accuracy' },
-  { label: 'Earlier Risk Visibility',    value: 16_000, sub: 'Live IDR ↔ P6 variance flagging' },
-  { label: 'Proposal Differentiator',    value: 50_000, sub: 'Faster takeoffs · higher BD throughput' },
-];
-const roiTotal = roiWaterfall.reduce((s, r) => s + r.value, 0);
+/* ROI waterfall — three scenarios, annual, full portfolio adoption.
+ * Conservative = the proposal's stated floor (3 projects, partial adoption).
+ * Realistic    = full T&I division adoption (~8 active projects).
+ * Stretch      = portfolio-wide + BD multiplier + SaaS replacement once Phase 3 is live. */
+const roiScenarios = {
+  conservative: {
+    label: 'Conservative',
+    sub: '3 projects · partial adoption · Year 1',
+    rows: [
+      { label: 'Reporting Time Saved',    value: 90_000,  sub: '600 hrs × $150/hr · 3 proj × 4 hrs/wk × 50 wks' },
+      { label: 'Reduced Rework',          value: 24_000,  sub: 'Quantity & documentation accuracy' },
+      { label: 'Earlier Risk Visibility', value: 16_000,  sub: 'Live IDR ↔ P6 variance flagging' },
+      { label: 'Proposal Differentiator', value: 50_000,  sub: 'Faster takeoffs · higher BD throughput' },
+    ],
+  },
+  realistic: {
+    label: 'Realistic',
+    sub: '8 projects · full T&I division · Year 2',
+    rows: [
+      { label: 'Reporting Time Saved',    value: 240_000, sub: '8 proj × 4 hrs/wk × 50 wks × $150/hr' },
+      { label: 'Reduced Rework & Claims', value: 95_000,  sub: 'Audit-grade evidence · claim defense' },
+      { label: 'Earlier Risk Visibility', value: 75_000,  sub: 'Float-erosion caught weeks earlier' },
+      { label: 'Proposal Win-Rate Lift',  value: 180_000, sub: '+2 wins/yr × ~$90k avg margin contribution' },
+      { label: 'SaaS Cost Avoidance',     value: 45_000,  sub: 'Bluebeam · PlanGrid · scheduling add-ons' },
+      { label: 'Senior Scheduler Hrs',    value: 120_000, sub: '~600 hrs reclaimed × $200/hr fully loaded' },
+    ],
+  },
+  stretch: {
+    label: 'Stretch',
+    sub: 'Portfolio-wide · Phase 3 P6 telemetry live',
+    rows: [
+      { label: 'Reporting Time Saved',     value: 420_000, sub: '14+ projects on automated IDR pipeline' },
+      { label: 'Reduced Rework & Claims',  value: 180_000, sub: 'Defensible audit trail across portfolio' },
+      { label: 'Earlier Risk Visibility',  value: 200_000, sub: 'Live telemetry · proactive mitigation' },
+      { label: 'Proposal Win-Rate Lift',   value: 360_000, sub: '+4 wins/yr · differentiated digital pitch' },
+      { label: 'SaaS Cost Avoidance',      value: 90_000,  sub: 'Full takeoff + field reporting stack replaced' },
+      { label: 'Senior Scheduler Hrs',     value: 240_000, sub: '~1,200 hrs reclaimed firm-wide' },
+      { label: 'New Service Line Revenue', value: 350_000, sub: 'Productized digital-controls offering to clients' },
+    ],
+  },
+} as const;
+type ScenarioKey = keyof typeof roiScenarios;
 
 const kpis = [
   { quarter: 'Q1', icon: Zap,         text: 'Customized MCFA TakeoffPro launched in 90 days — cloud infra + offline mobile interface live.' },
