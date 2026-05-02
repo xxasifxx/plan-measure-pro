@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
 import heroScreenshot from '@/assets/hero-screenshot.jpg';
 import inspectorTablet from '@/assets/inspector-tablet.jpg';
 import gpsFieldMeasurement from '@/assets/gps-field-measurement.jpg';
@@ -203,6 +204,40 @@ const proofBullets = [
   'Offline-capable PWA · GPS-tagged field annotations',
   'Real-time multi-user sync · role-based access',
   'NJDOT / NJTA-compliant CSV, PDF & Excel exports',
+];
+
+/* Recruiter Q&A — short spoken answers, ~30 sec each */
+const recruiterQA: { q: string; a: string; tag?: string }[] = [
+  {
+    q: 'Why are you asking below the market for a Senior Scheduler?',
+    a: "I'm not. The $130K–$155K base is below the combined market for the two roles being absorbed — Scheduler and NICET Inspector total $185K–$235K. Against the consolidated scope, the ask is competitive; against either single role in isolation, it's premium. I've priced the consolidation, not just one seat.",
+    tag: 'ANCHOR',
+  },
+  {
+    q: "What if the ROI projections slip — what's MCFA actually exposed to?",
+    a: "The downside is bounded at one mid-senior salary, and even that's covered by the 1,600 billable hours alone. The Conservative ROI scenario in Section 7 — $180K — is the floor cited verbatim from the proposal. Realistic and Stretch are upside, not commitments. MCFA never pays for ROI it doesn't see.",
+    tag: 'DOWNSIDE BOUNDED',
+  },
+  {
+    q: "What's the guardrail on the bonus? How do you prevent runaway payouts?",
+    a: "Capped at 10% of base, tied directly to the EOS Quarterly Conversation. Every dollar is gated on Rocks: Q1 platform launch, Q2 AI photo-tagging, Q3 IDR-to-P6 beta. No Rock delivered, no bonus paid. The scoreboard is the gate.",
+    tag: 'EOS-GATED',
+  },
+  {
+    q: 'How do we know you can deliver the platform alongside billable work?',
+    a: "Phase 1 is already live at /demo — built on personal time. The 600 flexible hours are non-supervision time inspectors already have on most projects; I'm just allocating that time to the platform instead of letting it idle. Worst case, MCFA gets a competent NICET inspector and a Senior Scheduler. Best case, the platform too.",
+    tag: 'PROOF SHIPPED',
+  },
+  {
+    q: 'Why not just hire a developer separately and keep the inspector role pure?',
+    a: "A standalone NJ developer with this stack costs $120K–$160K and has zero domain context — they'll spend a year learning what an IDR is. The hybrid model removes that translation layer. Field signals come from someone who's actually written the IDR they're now automating.",
+    tag: 'DOMAIN MOAT',
+  },
+  {
+    q: 'Who owns TakeoffPro? Is MCFA buying it or licensing it?',
+    a: "MCFA gets full internal use across its project portfolio under the employment agreement — no per-seat fees, no SaaS contract. I retain ownership of the core IP so it stays improvable. MCFA pays only the external footprint: hosting, storage, and AI API calls. Standard 'Shop Tool' arrangement.",
+    tag: 'IP CLEAN',
+  },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -843,40 +878,40 @@ const McfaPitch = () => {
               </div>
             </div>
 
-            {/* Script panel */}
+            {/* Recruiter Q&A panel */}
             <div className="lg:col-span-5">
               <div className="flex items-center gap-2 mb-4">
                 <MessageSquare className="h-4 w-4 text-cyan-400" />
-                <div className="text-[11px] tracking-[0.25em] text-cyan-400">NEGOTIATION SCRIPT</div>
+                <div className="text-[11px] tracking-[0.25em] text-cyan-400">RECRUITER Q&amp;A · READY-TO-READ</div>
               </div>
-              <h3 className="text-2xl font-bold mb-4">How to anchor the ask.</h3>
+              <h3 className="text-2xl font-bold mb-4">Likely objections, answered.</h3>
+              <p className="text-sm text-muted-foreground mb-5 leading-relaxed">
+                Tap a question to reveal the response. Each answer is &lt;30 seconds spoken — short enough to deliver in
+                a screening call without losing the room.
+              </p>
 
-              <div className="space-y-4">
-                <ScriptStep n="1" title="Open with the consolidation, not the number">
-                  "You're already hiring for a Senior Scheduler <em>and</em> a NICET Inspector. The combined NJ market base
-                  for those two roles alone is <span className="text-cyan-400 font-mono">$185K–$235K</span>. This proposal
-                  collapses both into one hybrid asset — <span className="text-foreground">and</span> ships the digital
-                  platform you'd otherwise outsource."
-                </ScriptStep>
-
-                <ScriptStep n="2" title="Anchor at the consolidated cost">
-                  "Anchored against that <span className="text-cyan-400 font-mono">$185K–$235K</span> baseline, a base of
-                  <span className="text-emerald-400 font-mono"> $130K–$155K</span> is materially below market for the
-                  combined scope — that's the cost-avoidance MCFA captures the moment I sign."
-                </ScriptStep>
-
-                <ScriptStep n="3" title="Tie variable comp to the EOS framework">
-                  "I'm asking for the standard EOS Value-Add structure already in your operating model — up to
-                  <span className="text-foreground"> 10% bonus</span> tied to the quarterly Rocks. That keeps every dollar
-                  above base contingent on measurable, scoreboard-grade contribution."
-                </ScriptStep>
-
-                <ScriptStep n="4" title="Close with the asymmetry">
-                  "The downside for MCFA is one mid-senior salary. The upside is the
-                  <span className="text-cyan-400"> $755K Realistic ROI</span> from Section 7 — plus a proprietary platform
-                  on the cost side instead of the SaaS column."
-                </ScriptStep>
-              </div>
+              <Accordion type="single" collapsible className="border border-border rounded-md bg-card/30 divide-y divide-border">
+                {recruiterQA.map((qa, i) => (
+                  <AccordionItem key={qa.q} value={`q${i}`} className="border-0 px-4">
+                    <AccordionTrigger className="text-left text-sm font-semibold hover:no-underline py-4">
+                      <div className="flex items-start gap-3 pr-2">
+                        <span className="text-[10px] tracking-widest text-cyan-400 font-bold mt-0.5 shrink-0">
+                          Q{String(i + 1).padStart(2, '0')}
+                        </span>
+                        <span>{qa.q}</span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="pb-4 pl-9 pr-2">
+                      <p className="text-xs text-muted-foreground leading-relaxed italic">"{qa.a}"</p>
+                      {qa.tag && (
+                        <div className="mt-2 inline-block text-[10px] tracking-widest text-cyan-400 border border-cyan-500/30 bg-cyan-500/5 px-2 py-0.5 rounded-sm">
+                          {qa.tag}
+                        </div>
+                      )}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
 
               <div className="mt-6 p-4 border border-amber-500/30 bg-amber-500/5 rounded-md">
                 <div className="text-[10px] tracking-widest text-amber-400 mb-2">IF PUSHED LOWER</div>
@@ -954,17 +989,6 @@ const SectionHeader = ({ number, eyebrow, title }: { number: string; eyebrow: st
       </div>
       <h2 className="text-3xl md:text-4xl font-bold mt-3 tracking-tight" dangerouslySetInnerHTML={{ __html: title }} />
     </div>
-  </div>
-);
-
-const ScriptStep = ({ n, title, children }: { n: string; title: string; children: React.ReactNode }) => (
-  <div className="border-l-2 border-cyan-500/40 pl-4 py-1">
-    <div className="flex items-center gap-2 mb-1">
-      <span className="text-[10px] tracking-widest text-cyan-400 font-bold">STEP {n}</span>
-      <div className="h-px flex-1 bg-border/60" />
-    </div>
-    <div className="text-sm font-semibold text-foreground mb-1.5">{title}</div>
-    <p className="text-xs text-muted-foreground leading-relaxed italic">"{children}"</p>
   </div>
 );
 
