@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -127,14 +127,48 @@ const integrationLayers = [
   },
 ];
 
-/* ROI waterfall (annual, 3 projects shared resources) */
-const roiWaterfall = [
-  { label: 'Reporting Time Saved',       value: 90_000, sub: '600 hrs × $150/hr · 3 projects × 4 hrs/wk × 50 wks' },
-  { label: 'Reduced Rework',             value: 24_000, sub: 'Quantity & documentation accuracy' },
-  { label: 'Earlier Risk Visibility',    value: 16_000, sub: 'Live IDR ↔ P6 variance flagging' },
-  { label: 'Proposal Differentiator',    value: 50_000, sub: 'Faster takeoffs · higher BD throughput' },
-];
-const roiTotal = roiWaterfall.reduce((s, r) => s + r.value, 0);
+/* ROI waterfall — three scenarios, annual, full portfolio adoption.
+ * Conservative = the proposal's stated floor (3 projects, partial adoption).
+ * Realistic    = full T&I division adoption (~8 active projects).
+ * Stretch      = portfolio-wide + BD multiplier + SaaS replacement once Phase 3 is live. */
+const roiScenarios = {
+  conservative: {
+    label: 'Conservative',
+    sub: '3 projects · partial adoption · Year 1',
+    rows: [
+      { label: 'Reporting Time Saved',    value: 90_000,  sub: '600 hrs × $150/hr · 3 proj × 4 hrs/wk × 50 wks' },
+      { label: 'Reduced Rework',          value: 24_000,  sub: 'Quantity & documentation accuracy' },
+      { label: 'Earlier Risk Visibility', value: 16_000,  sub: 'Live IDR ↔ P6 variance flagging' },
+      { label: 'Proposal Differentiator', value: 50_000,  sub: 'Faster takeoffs · higher BD throughput' },
+    ],
+  },
+  realistic: {
+    label: 'Realistic',
+    sub: '8 projects · full T&I division · Year 2',
+    rows: [
+      { label: 'Reporting Time Saved',    value: 240_000, sub: '8 proj × 4 hrs/wk × 50 wks × $150/hr' },
+      { label: 'Reduced Rework & Claims', value: 95_000,  sub: 'Audit-grade evidence · claim defense' },
+      { label: 'Earlier Risk Visibility', value: 75_000,  sub: 'Float-erosion caught weeks earlier' },
+      { label: 'Proposal Win-Rate Lift',  value: 180_000, sub: '+2 wins/yr × ~$90k avg margin contribution' },
+      { label: 'SaaS Cost Avoidance',     value: 45_000,  sub: 'Bluebeam · PlanGrid · scheduling add-ons' },
+      { label: 'Senior Scheduler Hrs',    value: 120_000, sub: '~600 hrs reclaimed × $200/hr fully loaded' },
+    ],
+  },
+  stretch: {
+    label: 'Stretch',
+    sub: 'Portfolio-wide · Phase 3 P6 telemetry live',
+    rows: [
+      { label: 'Reporting Time Saved',     value: 420_000, sub: '14+ projects on automated IDR pipeline' },
+      { label: 'Reduced Rework & Claims',  value: 180_000, sub: 'Defensible audit trail across portfolio' },
+      { label: 'Earlier Risk Visibility',  value: 200_000, sub: 'Live telemetry · proactive mitigation' },
+      { label: 'Proposal Win-Rate Lift',   value: 360_000, sub: '+4 wins/yr · differentiated digital pitch' },
+      { label: 'SaaS Cost Avoidance',      value: 90_000,  sub: 'Full takeoff + field reporting stack replaced' },
+      { label: 'Senior Scheduler Hrs',     value: 240_000, sub: '~1,200 hrs reclaimed firm-wide' },
+      { label: 'New Service Line Revenue', value: 350_000, sub: 'Productized digital-controls offering to clients' },
+    ],
+  },
+} as const;
+type ScenarioKey = keyof typeof roiScenarios;
 
 const kpis = [
   { quarter: 'Q1', icon: Zap,         text: 'Customized MCFA TakeoffPro launched in 90 days — cloud infra + offline mobile interface live.' },
@@ -174,6 +208,10 @@ const proofBullets = [
 /* component                                                          */
 /* ------------------------------------------------------------------ */
 const McfaPitch = () => {
+  const [scenario, setScenario] = useState<ScenarioKey>('realistic');
+  const activeRows = roiScenarios[scenario].rows;
+  const activeTotal = activeRows.reduce((s, r) => s + r.value, 0);
+  const maxRow = Math.max(...activeRows.map(r => r.value));
   useEffect(() => {
     document.title = 'BYOR Proposal · Hybrid Construction Inspector & Systems Integrator — Asif Muhammad, PMP';
     const meta = document.querySelector('meta[name="description"]');
@@ -567,46 +605,96 @@ const McfaPitch = () => {
       {/* ============================================================ */}
       <section className="border-b border-border/60 py-20">
         <div className="container mx-auto px-4">
-          <SectionHeader number="07" eyebrow="RETURN ON INVESTMENT" title="ROI Waterfall · 3 Projects · Annual" />
+          <SectionHeader number="07" eyebrow="RETURN ON INVESTMENT" title="ROI Waterfall · Annual" />
           <p className="text-muted-foreground max-w-3xl mt-4">
-            Conservative assumptions; value counted only after sustained adoption. The 1,600 billable hours fully fund base
-            salary — every dollar below is high-margin overhead avoidance and BD upside.
+            The PDF cites the conservative floor: <span className="text-foreground">$180K</span> across 3 projects in Year 1.
+            That number assumes <em>partial</em> adoption. Toggle the scenarios below to see what happens when the platform
+            scales across the T&amp;I division and Phase 3 P6 telemetry comes online.
           </p>
 
-          <div className="mt-12 grid lg:grid-cols-5 gap-3 items-end">
-            {roiWaterfall.map((r, i) => {
-              const pct = (r.value / roiTotal) * 100;
-              const colors = ['bg-emerald-500/70', 'bg-cyan-500/70', 'bg-amber-500/70', 'bg-purple-500/70'];
+          {/* scenario toggle */}
+          <div className="mt-8 inline-flex items-center gap-1 p-1 border border-border rounded-md bg-card/40">
+            {(Object.keys(roiScenarios) as ScenarioKey[]).map((k) => (
+              <button
+                key={k}
+                onClick={() => setScenario(k)}
+                className={`px-4 py-2 text-xs tracking-widest rounded-sm transition-colors ${
+                  scenario === k
+                    ? 'bg-cyan-500 text-cyan-950 font-bold'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                {roiScenarios[k].label.toUpperCase()}
+              </button>
+            ))}
+            <div className="px-4 text-xs text-muted-foreground border-l border-border ml-1">
+              {roiScenarios[scenario].sub}
+            </div>
+          </div>
+
+          <div className="mt-10 grid gap-3 items-end" style={{ gridTemplateColumns: `repeat(${activeRows.length + 1}, minmax(0, 1fr))` }}>
+            {activeRows.map((r, i) => {
+              const pct = (r.value / maxRow) * 100;
+              const palette = [
+                'bg-emerald-500/70', 'bg-cyan-500/70', 'bg-amber-500/70',
+                'bg-purple-500/70', 'bg-pink-500/70', 'bg-blue-500/70', 'bg-orange-500/70',
+              ];
               return (
                 <motion.div
-                  key={r.label}
+                  key={`${scenario}-${r.label}`}
                   initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.05, duration: 0.4 }}
                   className="relative"
                 >
-                  <div className="text-xs tracking-widest text-muted-foreground mb-1">{`+ $${(r.value / 1000).toFixed(0)}K`}</div>
-                  <div className={`${colors[i]} border border-border/60 rounded-sm`} style={{ height: `${pct * 3}px`, minHeight: '60px' }} />
-                  <div className="mt-3 text-sm font-semibold leading-tight">{r.label}</div>
-                  <div className="text-[11px] text-muted-foreground mt-1 leading-relaxed">{r.sub}</div>
+                  <div className="text-xs tracking-widest text-muted-foreground mb-1 whitespace-nowrap">
+                    + ${(r.value / 1000).toFixed(0)}K
+                  </div>
+                  <div className={`${palette[i % palette.length]} border border-border/60 rounded-sm transition-all`} style={{ height: `${pct * 2.4 + 30}px` }} />
+                  <div className="mt-3 text-xs font-semibold leading-tight">{r.label}</div>
+                  <div className="text-[10px] text-muted-foreground mt-1 leading-relaxed">{r.sub}</div>
                 </motion.div>
               );
             })}
             <motion.div
+              key={`${scenario}-net`}
               initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.5 }}
-              className="relative border-l-2 border-dashed border-cyan-500/40 pl-4"
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+              className="relative border-l-2 border-dashed border-cyan-500/60 pl-4"
             >
               <div className="text-xs tracking-widest text-cyan-400 mb-1">NET VALUE</div>
-              <div className="bg-cyan-500 text-cyan-950 border border-cyan-300 rounded-sm flex items-center justify-center font-bold text-lg" style={{ height: '240px' }}>
-                ${(roiTotal / 1000).toFixed(0)}K
+              <div
+                className="bg-gradient-to-t from-cyan-600 to-cyan-400 text-cyan-950 border border-cyan-300 rounded-sm flex flex-col items-center justify-center font-bold shadow-lg shadow-cyan-500/20"
+                style={{ height: '270px' }}
+              >
+                <div className="text-2xl">${(activeTotal / 1000).toFixed(0)}K</div>
+                <div className="text-[10px] tracking-widest opacity-70 mt-1">ANNUAL</div>
               </div>
-              <div className="mt-3 text-sm font-semibold leading-tight">Illustrative Annual Net</div>
-              <div className="text-[11px] text-muted-foreground mt-1">Above &amp; beyond billable salary recovery</div>
+              <div className="mt-3 text-xs font-semibold leading-tight">{roiScenarios[scenario].label} Net</div>
+              <div className="text-[10px] text-muted-foreground mt-1">Above &amp; beyond billable salary recovery</div>
             </motion.div>
+          </div>
+
+          {/* multiplier callout */}
+          <div className="mt-10 grid sm:grid-cols-3 gap-3">
+            {(Object.keys(roiScenarios) as ScenarioKey[]).map((k) => {
+              const total = roiScenarios[k].rows.reduce((s, r) => s + r.value, 0);
+              const isActive = scenario === k;
+              return (
+                <button
+                  key={k}
+                  onClick={() => setScenario(k)}
+                  className={`text-left p-4 border rounded-md transition-all ${
+                    isActive ? 'border-cyan-500/60 bg-cyan-500/10' : 'border-border/60 bg-card/30 hover:border-cyan-500/30'
+                  }`}
+                >
+                  <div className="text-[10px] tracking-widest text-muted-foreground mb-1">{roiScenarios[k].label.toUpperCase()}</div>
+                  <div className="text-3xl font-bold text-foreground">${(total / 1000).toFixed(0)}K</div>
+                  <div className="text-[11px] text-muted-foreground mt-1">{roiScenarios[k].sub}</div>
+                </button>
+              );
+            })}
           </div>
 
           <div className="grid md:grid-cols-3 gap-4 mt-12 text-sm">
