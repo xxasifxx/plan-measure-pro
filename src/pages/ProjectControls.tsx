@@ -13,8 +13,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import {
   ArrowLeft, LayoutDashboard, GanttChart, Target, Camera, FileSpreadsheet,
-  Plus, Loader2, AlertTriangle, CheckCircle2, Clock, TrendingUp, TrendingDown,
-  Sparkles, Upload, Activity,
+  Plus, Loader2, AlertTriangle, CheckCircle2, Clock, TrendingUp,
+  Sparkles, Upload,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
