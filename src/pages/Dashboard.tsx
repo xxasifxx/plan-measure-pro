@@ -15,7 +15,7 @@ import {
 import {
   HardHat, Plus, LogOut, Sun, Moon, FileText, Clock, PenTool,
   Trash2, FolderOpen, Loader2, AlertCircle, Shield, HelpCircle, Users,
-  ChevronDown, ChevronUp, Ruler,
+  ChevronDown, ChevronUp, Ruler, LayoutDashboard,
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
@@ -348,14 +348,25 @@ export default function Dashboard() {
                     {project.member_role === 'owner' ? 'Manager' : project.member_role}
                   </span>
                   {project.member_role === 'owner' && (
-                    <span
-                      role="button"
-                      onClick={e => { e.stopPropagation(); loadProjectDetail(project.id); }}
-                      className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
-                    >
-                      Details
-                      {expandedProject === project.id ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
-                    </span>
+                    <div className="flex items-center gap-3">
+                      <span
+                        role="button"
+                        onClick={e => { e.stopPropagation(); navigate(`/project/${project.id}/controls`); }}
+                        className="text-xs text-primary hover:underline flex items-center gap-1"
+                        title="Open Project Controls Hub (PM tools)"
+                      >
+                        <LayoutDashboard className="h-3.5 w-3.5" />
+                        Controls
+                      </span>
+                      <span
+                        role="button"
+                        onClick={e => { e.stopPropagation(); loadProjectDetail(project.id); }}
+                        className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
+                      >
+                        Details
+                        {expandedProject === project.id ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+                      </span>
+                    </div>
                   )}
                 </div>
 

@@ -1,86 +1,82 @@
-# Pitch Landing Page: Asif Muhammad → mcfa "Software Solution Integrator" (BYOR)
 
-## Goal
-A standalone, single-purpose landing page targeted at **mcfa leadership** (Haddonfield, NJ) that pitches Asif Muhammad, PMP for the *Build Your Own Role* Software Solution Integrator position — using **Draw-Quantify-Dash / TakeoffPro** as the live, working proof-of-concept.
+## PM-Targeted Features Identified in the Proposal
 
-This is **not** a product page. It is a personal proposal page styled like an enterprise pitch deck. It lives at a new route and does not touch the existing `/landing` (TakeoffPro marketing site).
+Reading the BYOR proposal end-to-end, the features explicitly pitched to **Project Managers / Project Controls leadership** (not inspectors) cluster into six themes. Several already exist in the app (variance tracking in exports, PM dashboard activity, team management); the items below are the **gaps** worth building.
 
-## Route & Files
-- New route: **`/mcfa`** (added to `src/App.tsx`, public, no auth)
-- New page: **`src/pages/McfaPitch.tsx`**
-- Reuse existing components: `Button`, `Card`, `Accordion`, framer-motion animation helpers, lucide icons, existing hero/inspector imagery from `src/assets/`
-- No backend changes, no new tables — single CTA mailto + link to live demo at `/demo`
+### What to add
 
-## Visual Identity
-Match the existing TakeoffPro landing aesthetic (dark, monospace JetBrains Mono accents, blueprint motif) so mcfa sees that the candidate *built the very tool they are reading about*. Add subtle mcfa-aligned cues (LEADS values callouts, EOS terminology) without infringing on mcfa branding.
+**1. Executive Controls Dashboard** (proposal pages 7–8)
+A PM-only landing view per project with the four headline tiles from the proposal mockup:
+- Schedule Status (% on-track) with CPI / SPI placeholders
+- Milestones On Track (x of y, behind-schedule count)
+- Critical Issues (high / medium priority counts)
+- **Reporting Freshness** — derived from `latest_annotation_at` and daily-report submission timestamps per inspector
 
-## Page Structure (top → bottom)
+**2. Schedule Variance / P6-Style Activity Tracking** (Phase 3 of AI Roadmap)
+- New `schedule_activities` table (WBS code, name, baseline start/end, % complete, linked pay_item_ids)
+- "Activities" tab on the project showing baseline vs actual quantity progress
+- Variance flag when actual installed quantity (sum of annotation measurements) deviates >10% from baseline-expected at today's date
+- CSV import for activities (P6 export stand-in until a real P6 connector exists)
 
-### 1. Hero
-- Eyebrow: `BUILD YOUR OWN ROLE · PROPOSAL`
-- Headline: **"A Software Solution Integrator for mcfa's Transportation & Infrastructure Division"**
-- Subhead: Bridging field-level inspection reality with Agentic AI, Primavera P6, and the modern AEC stack.
-- Two CTAs: `View Live Proof-of-Concept` → `/demo` ・ `Contact Asif` → mailto
-- Right side: screenshot of TakeoffPro / Draw-Quantify-Dash with annotated callouts (TOC import, pay-item extraction, GPS calibration)
+**3. AI Photo Auto-Tagging** (Phase 2)
+- Photo upload on annotations (already partial via storage)
+- Edge function calling `google/gemini-2.5-flash` with image + project pay-item list → suggests pay item assignment
+- PM review queue: "Untagged photos" panel where the PM accepts/overrides AI suggestions
 
-### 2. The Candidate (one-line credibility strip)
-Asif Muhammad, PMP · ~7 yrs GenAI/Full-Stack · Highway Inspector (Churchill / Trilon) · Documentation QA ≥95% · Aerospace safety-critical background (Airbus A400M)
+**4. EOS Scorecard & Rocks Tracker** (KPIs section, page 5)
+- `rocks` table (quarter, owner, title, target, status, due_date)
+- `scorecard_metrics` table (week, metric_name, value, target) — pre-seeded with "Billable Hours," "TakeoffPro Adoption," "Reporting On-Time %"
+- PM-only "Scorecard" tab with weekly grid + Rock progress bars
 
-### 3. Why This Role, Why Now
-Short narrative tying the $2B NJTA I-4 expansion, mcfa's SDVOSB / EOS culture, and the data-volume problem to the need for a hybrid Inspector + Software Integrator.
+**5. Reporting Freshness & Adoption Monitor**
+- Per-inspector tile: last submission, 7-day submission rate, overdue flag
+- Project-level "Adoption %" (active inspectors ÷ assigned inspectors this week)
+- Surfaces directly into the Executive Dashboard freshness tile
 
-### 4. The Hybrid Edge (4-card grid)
-| AI & GenAI | Full Stack | Project Governance | Domain |
-|---|---|---|---|
-| LLM, RAG, MCP, A2A | C#, React, Azure Fns, REST | PMP, EOS, WCAG | Highway inspection, P6, BIM |
+**6. BD / Proposal Takeoff Mode** (Section 2, BD support)
+- Lightweight project type flag `is_bid: true` (skips team requirement, no daily reports)
+- "Bid Summary" export: pay-item totals × unit price → estimated bid value, ready to hand to a BD manager
+- Faster-create flow optimized for one-off takeoffs from a bid PDF
 
-### 5. Proof of Concept: Draw-Quantify-Dash
-Embedded screenshot grid + bullet list of capabilities **already shipped**:
-- TOC auto-detection from plan sets
-- Automatic pay-item extraction (current page + next 4)
-- One-time scale calibration → document-wide default
-- GPS field measurement w/ affine georeferencing
-- Real-time multi-user sync, NJDOT-compliant exports
+### Explicitly NOT building (out of scope / already present / requires real integrations)
+- Live Primavera P6 API sync — needs Oracle credentials; ship CSV import instead
+- BIM 360 design traceability — requires Autodesk auth; defer
+- Power BI semantic model — external tool; export-ready CSVs cover this
+- Variance tracking in exports — already implemented (per memory)
 
-CTA button: **`Open the live app at /demo`**
+## Technical Plan
 
-### 6. LEADS Alignment Table
-Reproduce the LEADS → Strategic Alignment → Project Outcome table from the brief verbatim (Love / Entrepreneurial / Accountability / Delight / Stretch).
+**Database migrations**
+- `schedule_activities` (id, project_id, wbs_code, name, baseline_start, baseline_end, baseline_quantity, pay_item_id nullable, created_at) + RLS via `is_project_member`
+- `rocks` (id, project_id, quarter, owner_user_id, title, target, status enum, due_date) + RLS
+- `scorecard_metrics` (id, project_id, week_start, metric_key, value numeric, target numeric) + RLS
+- `annotation_photos` (id, annotation_id, storage_path, ai_suggested_pay_item_id, confirmed boolean, created_at) + RLS
+- Add `is_bid boolean default false` to `projects`
 
-### 7. The Solution Integrator Archetype
-Side-by-side comparison: *Traditional Scheduler* vs *Solution Integrator* (Schedule Mgmt, QC, Reporting, Workflow) — same content as the brief's table.
+**Routes / pages**
+- `/project/:id/dashboard` — Executive Controls Dashboard (PM/admin only via `has_role`)
+- `/project/:id/activities` — schedule activities + variance
+- `/project/:id/scorecard` — Rocks + weekly metrics
+- `/project/:id/photo-queue` — AI tagging review
 
-### 8. Technical Vision: P6 + BIM 360 + Agentic AI
-Three stacked sections with diagrams (CSS/SVG, no images required):
-- **P6 Integration** — REST API, Local/Remote modes, JWT auth
-- **Modern Design Stack** — Revit → APS → P6 → Power BI flow
-- **Agentic Layer** — MCP (tool grounding) + A2A (multi-agent coordination), with the Procurement-Agent ↔ Schedule-Agent example
+**Components**
+- `ExecutiveDashboard.tsx`, `ActivityTable.tsx`, `VarianceBadge.tsx`, `ScorecardGrid.tsx`, `RockCard.tsx`, `PhotoReviewQueue.tsx`, `BidSummaryExport.tsx`
 
-### 9. ROI Table
-The 9.7× value-multiplier table from the brief (Direct Revenue, Internal Savings, Efficiency Gains, Net Annual Benefit: $62k → $604,517) plus the proposal-tier value-add ladder ($25k / $75k / $150k+).
+**Edge function**
+- `tag-photo` — accepts photo URL + pay-item list, calls Lovable AI Gateway (`google/gemini-2.5-flash`), returns suggested pay_item_id + confidence
 
-### 10. EOS Integration
-Four-card grid: Scorecards · Rocks · Accountability Chart · Level 10 Meetings — each tied to the Integrator role.
+**Access control**
+- All new routes gated on `has_role(uid, 'project_manager')` OR `has_role(uid, 'admin')` OR ownership; inspectors see read-only versions where appropriate
 
-### 11. 8-Year Career Pathway
-Timeline component (Yr 1-2 Foundation → Yr 3-5 Strategic Expansion → Yr 6-8 Practice Leadership), capped with the Senior Integrator / PM / RE progression table.
+**Engineering aesthetic**
+- Reuse blueprint-grid / dark navy palette, JetBrains Mono numerics, status chips matching existing variance color coding (green/amber/red)
 
-### 12. Closing CTA
-Large dark panel:
-> "Let's bridge the digital divide in NJ infrastructure together."
-- Primary CTA: `Schedule a 30-min conversation` (mailto with prefilled subject "mcfa BYOR — Software Solution Integrator")
-- Secondary: `Explore the working prototype` → `/demo`
-- Footer line: links to LinkedIn, GitHub, the live app, and a small "Built with the same stack proposed for mcfa" note.
+## Suggested build order
+1. DB migrations + `is_bid` flag
+2. Executive Dashboard (uses existing data — fastest visible win)
+3. Schedule Activities + variance
+4. Scorecard / Rocks
+5. AI photo tagging (edge function + queue UI)
+6. BD / Bid mode + Bid Summary export
 
-## Technical Notes
-- Single file `src/pages/McfaPitch.tsx` (~600-800 lines, similar shape to `Landing.tsx`)
-- Framer-motion fade-up animations reused from existing landing
-- Tailwind only, no new dependencies
-- Fully responsive (mobile-first; tables collapse to stacked cards under `md`)
-- SEO: page-level `<title>` via React (no index.html changes needed for a pitch page); `noindex` meta to keep it private-ish
-- Add `/mcfa` route to `src/App.tsx` as a public route (no auth wrapper)
-
-## Out of Scope
-- No changes to existing `/landing`, `/demo`, or app functionality
-- No new database tables or edge functions
-- No mcfa logo usage (text references only, to avoid trademark issues)
+Want me to proceed with all six, or trim to a subset (e.g., 1–3 first)?

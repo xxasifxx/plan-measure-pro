@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      annotation_photos: {
+        Row: {
+          ai_confidence: number | null
+          ai_rationale: string | null
+          ai_suggested_pay_item_id: string | null
+          annotation_id: string | null
+          confirmed: boolean
+          created_at: string
+          id: string
+          project_id: string
+          storage_path: string
+          uploaded_by: string
+        }
+        Insert: {
+          ai_confidence?: number | null
+          ai_rationale?: string | null
+          ai_suggested_pay_item_id?: string | null
+          annotation_id?: string | null
+          confirmed?: boolean
+          created_at?: string
+          id?: string
+          project_id: string
+          storage_path: string
+          uploaded_by: string
+        }
+        Update: {
+          ai_confidence?: number | null
+          ai_rationale?: string | null
+          ai_suggested_pay_item_id?: string | null
+          annotation_id?: string | null
+          confirmed?: boolean
+          created_at?: string
+          id?: string
+          project_id?: string
+          storage_path?: string
+          uploaded_by?: string
+        }
+        Relationships: []
+      }
       annotations: {
         Row: {
           created_at: string
@@ -334,6 +373,7 @@ export type Database = {
           created_at: string
           created_by: string
           id: string
+          is_bid: boolean
           name: string
           pdf_storage_path: string | null
           specs_storage_path: string | null
@@ -345,6 +385,7 @@ export type Database = {
           created_at?: string
           created_by: string
           id?: string
+          is_bid?: boolean
           name: string
           pdf_storage_path?: string | null
           specs_storage_path?: string | null
@@ -356,11 +397,123 @@ export type Database = {
           created_at?: string
           created_by?: string
           id?: string
+          is_bid?: boolean
           name?: string
           pdf_storage_path?: string | null
           specs_storage_path?: string | null
           toc?: Json | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      rocks: {
+        Row: {
+          created_at: string
+          due_date: string | null
+          id: string
+          owner_user_id: string | null
+          project_id: string
+          quarter: string
+          status: string
+          target: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          owner_user_id?: string | null
+          project_id: string
+          quarter: string
+          status?: string
+          target?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          owner_user_id?: string | null
+          project_id?: string
+          quarter?: string
+          status?: string
+          target?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      schedule_activities: {
+        Row: {
+          baseline_end: string | null
+          baseline_quantity: number | null
+          baseline_start: string | null
+          created_at: string
+          id: string
+          name: string
+          pay_item_id: string | null
+          percent_complete: number | null
+          project_id: string
+          updated_at: string
+          wbs_code: string
+        }
+        Insert: {
+          baseline_end?: string | null
+          baseline_quantity?: number | null
+          baseline_start?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          pay_item_id?: string | null
+          percent_complete?: number | null
+          project_id: string
+          updated_at?: string
+          wbs_code: string
+        }
+        Update: {
+          baseline_end?: string | null
+          baseline_quantity?: number | null
+          baseline_start?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          pay_item_id?: string | null
+          percent_complete?: number | null
+          project_id?: string
+          updated_at?: string
+          wbs_code?: string
+        }
+        Relationships: []
+      }
+      scorecard_metrics: {
+        Row: {
+          created_at: string
+          id: string
+          metric_key: string
+          project_id: string
+          target: number | null
+          value: number | null
+          week_start: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          metric_key: string
+          project_id: string
+          target?: number | null
+          value?: number | null
+          week_start: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          metric_key?: string
+          project_id?: string
+          target?: number | null
+          value?: number | null
+          week_start?: string
         }
         Relationships: []
       }
