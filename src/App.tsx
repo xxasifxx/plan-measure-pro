@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import Admin from "./pages/Admin";
 import Dashboard from "./pages/Dashboard";
 import Index from "./pages/Index";
+import ProjectControls from "./pages/ProjectControls";
 import Demo from "./pages/Demo";
 import McfaPitch from "./pages/McfaPitch";
 import Auth from "./pages/Auth";
@@ -49,6 +50,7 @@ const App = () => (
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/project/:projectId" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+            <Route path="/project/:projectId/controls" element={<ProtectedRoute><ProjectControls /></ProtectedRoute>} />
             <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
