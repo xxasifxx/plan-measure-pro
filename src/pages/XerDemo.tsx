@@ -658,7 +658,7 @@ const ProgressPanel = ({ baseline, update, onLoadUpdate }: {
               </thead>
               <tbody>
                 {report.topSlipping.map(v => (
-                  <tr key={v.task_id} className="border-t border-border">
+                  <tr key={v.task_id} id={`slip-row-${v.task_id}`} className="border-t border-border transition-shadow rounded-sm">
                     <td className="py-2"><span className="font-mono text-cyan-400 mr-2">{v.task_code}</span>{v.task_name}</td>
                     <td className="py-2 font-mono text-xs text-muted-foreground">{fmt(v.baselineFinish)}</td>
                     <td className="py-2 font-mono text-xs text-muted-foreground">{fmt(v.updateFinish)}</td>
