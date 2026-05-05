@@ -538,6 +538,7 @@ const ProgressPanel = ({ baseline, update, onLoadUpdate }: {
     toast({ title: 'Summary PDF downloaded', description: `progress-summary-${projName}.pdf` });
   };
 
+  return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <KPI label="SPI · Schedule Performance" value={report.spi.toFixed(2)} good={report.spi >= 0.95} />
