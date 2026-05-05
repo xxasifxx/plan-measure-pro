@@ -264,6 +264,8 @@ const recruiterQA: { q: string; a: string; tag?: string }[] = [
     a: "Then we use it. XerLens isn't a Fuse replacement — it's the auth-agnostic, in-browser layer that PMs run themselves without bothering the scheduler. Fuse stays for deep forensic work; XerLens covers the daily 'is this submission acceptable?' question that today consumes an hour per project per week.",
     tag: 'COEXISTS',
   },
+];
+
 /* ------------------------------------------------------------------ */
 const McfaPitch = () => {
   const [scenario, setScenario] = useState<ScenarioKey>('realistic');
