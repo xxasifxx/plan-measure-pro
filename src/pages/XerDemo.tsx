@@ -792,7 +792,7 @@ const ProgressPanel = ({ baseline, update, onLoadUpdate }: {
       </Card>
 
       {/* Baseline vs 60-day update comparison chart */}
-      <Card className="p-5 bg-card/40 border-border/60">
+      <Card data-tour="progress-chart" className="p-5 bg-card/40 border-border/60">
         <div className="flex items-start justify-between gap-3 mb-4 flex-wrap">
           <div>
             <div className="text-[11px] tracking-widest text-cyan-400">BASELINE vs 60-DAY UPDATE · FINISH-DATE VARIANCE</div>
