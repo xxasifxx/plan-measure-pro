@@ -1085,7 +1085,7 @@ const TiaPanel = ({ tables }: { tables: XerTables }) => {
         </div>
       </Card>
 
-      <div className="space-y-4">
+      <div data-tour="tia-output" className="space-y-4">
         <Card className="p-5 bg-card/40 border-border/60">
           <div className="flex items-center justify-between mb-3">
             <div className="text-[11px] tracking-widest text-cyan-400">FRAGNET PREVIEW</div>
