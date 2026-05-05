@@ -212,8 +212,8 @@ const compensation = [
   },
   {
     icon: Award,
-    title: 'EOS Value-Add Bonus',
-    body: 'Up to 10% bonus tied to high-value efficiency, cost avoidance, and proposal support — reviewed during Quarterly Conversations on EOS cycles. Directed work outside scope and standard hours follows standard overtime compensation.',
+    title: '10 Growth Units · Profit-Share',
+    body: 'Full participation in the quarterly profit-share program plus the 10 Growth Units described in the JD (PDF §6). Standard MCFA benefits: 15 days vacation, 5 sick, 11 federal holidays.',
   },
 ];
 
