@@ -226,52 +226,52 @@ const proofBullets = [
   'NJDOT / NJTA-compliant CSV, PDF & Excel exports',
 ];
 
-/* Recruiter Q&A — short spoken answers, ~30 sec each */
+/* Recruiter Q&A — short spoken answers, ~30 sec each. Reframed for a Project Controls Director hiring a Scheduler. */
 const recruiterQA: { q: string; a: string; tag?: string }[] = [
   {
-    q: 'Why are you asking below the market for a Senior Scheduler?',
-    a: "I'm not. The $130K–$155K base is below the combined market for the two roles being absorbed — Scheduler and NICET Inspector total $185K–$235K. Against the consolidated scope, the ask is competitive; against either single role in isolation, it's premium. I've priced the consolidation, not just one seat.",
+    q: 'Why $130K–$140K — is that within band for an Evergreen Senior Scheduler at MCFA?',
+    a: "Yes. The PDF anchors the ask to the JD's Experienced level: $130K–$140K base, the 10 Growth Units, and standard quarterly profit-share. The PMP plus the systems-integration work that would otherwise need a separate developer hire is what justifies the upper half of that band, not a markup above it.",
     tag: 'ANCHOR',
   },
   {
-    q: "What if the ROI projections slip — what's MCFA actually exposed to?",
-    a: "The downside is bounded at one mid-senior salary, and even that's covered by the 1,600 billable hours alone. The Conservative ROI scenario in Section 7 — $180K — is the floor cited verbatim from the proposal. Realistic and Stretch are upside, not commitments. MCFA never pays for ROI it doesn't see.",
-    tag: 'DOWNSIDE BOUNDED',
+    q: 'How will you handle Resident Engineer communication on contractor schedule reviews?',
+    a: "Plain-English memos, not screenshots of P6. The /mcfa/demo Module A turns every DCMA-14 audit into a one-page memo addressed to the RE — recommendation (accept / accept-with-conditions / reject), hard blockers, advisory flags, and next steps. The RE never has to interpret a Gantt to act on the review.",
+    tag: 'RE COMMS',
   },
   {
-    q: "What's the guardrail on the bonus? How do you prevent runaway payouts?",
-    a: "Capped at 10% of base, tied directly to the EOS Quarterly Conversation. Every dollar is gated on Rocks: Q1 platform launch, Q2 AI photo-tagging, Q3 IDR-to-P6 beta. No Rock delivered, no bonus paid. The scoreboard is the gate.",
-    tag: 'EOS-GATED',
+    q: 'How does this scale across the Newark / PANYNJ portfolio?',
+    a: "Module B in the demo computes SPI/CPI and slip from a baseline + monthly update XER pair. Roll that across every active project, plug the scores into the L10 scorecard, and the Project Controls Director sees the entire portfolio's health on one strip. That's the Section 3 'Integrated Reporting' deliverable, productized.",
+    tag: 'PORTFOLIO',
   },
   {
-    q: 'How do we know you can deliver the platform alongside billable work?',
-    a: "Phase 1 is already live at /demo — built on personal time. The 600 flexible hours are non-supervision time inspectors already have on most projects; I'm just allocating that time to the platform instead of letting it idle. Worst case, MCFA gets a competent NICET inspector and a Senior Scheduler. Best case, the platform too.",
-    tag: 'PROOF SHIPPED',
+    q: "What's your AACE Class 5 → Class 1 estimate progression cadence?",
+    a: "Tied to design milestones, not the calendar. Concept Development → Class 5. Preliminary Engineering → Class 4. Final Design submission → Class 3 for budget authorization. PS&E package → Class 2 control estimate. Award → Class 1 for bid check and change-order pricing. Module E in the demo walks the bands explicitly.",
+    tag: 'AACE 98R-18',
   },
   {
-    q: 'Why not just hire a developer separately and keep the inspector role pure?',
-    a: "A standalone NJ developer with this stack costs $120K–$160K and has zero domain context — they'll spend a year learning what an IDR is. The hybrid model removes that translation layer. Field signals come from someone who's actually written the IDR they're now automating.",
-    tag: 'DOMAIN MOAT',
-  },
-  {
-    q: 'Who owns TakeoffPro? Is MCFA buying it or licensing it?',
-    a: "MCFA gets full internal use across its project portfolio under the employment agreement — no per-seat fees, no SaaS contract. I retain ownership of the core IP so it stays improvable. MCFA pays only the external footprint: hosting, storage, and AI API calls. Standard 'Shop Tool' arrangement.",
-    tag: 'IP CLEAN',
-  },
-  {
-    q: 'Why CPM scheduling now and not field inspection?',
-    a: "Field inspection generates the data; CPM scheduling is where that data either prevents or causes million-dollar claims. The proposal repositions me where the leverage is highest — and where my software background actually compounds. The TakeoffPro field tool keeps shipping; it just feeds the scheduler instead of being the destination.",
-    tag: 'LEVERAGE',
-  },
-  {
-    q: 'How does this satisfy NJDOT\'s no-negative-lag rule?',
-    a: "The XerLens demo flags every negative lag and open-ended activity in the contractor's submission before MCFA accepts it. Section 5.1 of the NJDOT Scheduling Manual prohibits both. Catching them at submission instead of at month-end is the difference between one email and a re-baseline.",
+    q: "How do you satisfy NJDOT's no-negative-lag rule on contractor submissions?",
+    a: "The XerLens demo flags every negative lag and open-ended activity before MCFA accepts the submission. Section 5.1 of the NJDOT Scheduling Manual prohibits both. Catching them at submission instead of at month-end is the difference between one email and a re-baseline.",
     tag: 'NJDOT COMPLIANT',
   },
   {
     q: "What if MCFA already licenses Acumen Fuse or a similar analytics tool?",
-    a: "Then we use it. XerLens isn't a Fuse replacement — it's the auth-agnostic, in-browser layer that PMs run themselves without bothering the scheduler. Fuse stays for deep forensic work; XerLens covers the daily 'is this submission acceptable?' question that today consumes an hour per project per week.",
+    a: "Then we use it. XerLens isn't a Fuse replacement — it's the auth-agnostic, in-browser layer that PMs and REs run themselves without bothering the scheduler. Fuse stays for deep forensic work; XerLens covers the daily 'is this submission acceptable?' question that today consumes an hour per project per week.",
     tag: 'COEXISTS',
+  },
+  {
+    q: "How will the Project Controls Director see your performance every week?",
+    a: "Two numbers on the L10 Scorecard, per PDF Section 5: Schedule Health Score (DCMA-14 logic ≥ 95%) and Reporting Latency (≤ 72 hours from data date). Quarterly Rocks are PM-approved before the quarter starts, so every Rock solves a real problem the team has flagged — not a side project.",
+    tag: 'EOS L10',
+  },
+  {
+    q: "Who owns the TakeoffPro / XerLens tooling?",
+    a: "MCFA gets full internal use across its project portfolio under the employment agreement — no per-seat fees, no SaaS contract. MCFA covers the basic cloud hosting (estimated <$100/mo per the PDF) to keep the tools running for the team. Standard 'Shop Tool' arrangement.",
+    tag: 'IP CLEAN',
+  },
+  {
+    q: "How will you reduce administrative time by 30% (PDF long-term KPI)?",
+    a: "By collapsing the four manual passes — XER review, monthly update report, IDR collation, executive snapshot — into one ingest pipeline. Phase 1 of TakeoffPro already eliminates the field-to-spreadsheet re-keying. XerLens collapses the contractor-review pass. The 30% target is a documented before/after, not a promise.",
+    tag: 'EFFICIENCY',
   },
 ];
 
