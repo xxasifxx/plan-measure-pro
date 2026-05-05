@@ -51,7 +51,7 @@ export const XerLensTour = ({
   const step = steps[idx];
 
   useEffect(() => {
-    if (!open) setIdx(0);
+    if (open) { setIdx(0); setPlaying(true); }
   }, [open]);
 
   // Run beforeShow + tab change when step changes
