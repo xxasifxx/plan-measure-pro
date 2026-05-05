@@ -42,6 +42,7 @@ export const XerLensTour = ({
   const [extraRects, setExtraRects] = useState<Rect[]>([]);
   const [tabRect, setTabRect] = useState<Rect | null>(null);
   const [tick, setTick] = useState(0);
+  const [playing, setPlaying] = useState(true);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const titleId = useRef(`xerlens-tour-title-${Math.random().toString(36).slice(2, 8)}`).current;
   const bodyId = useRef(`xerlens-tour-body-${Math.random().toString(36).slice(2, 8)}`).current;
