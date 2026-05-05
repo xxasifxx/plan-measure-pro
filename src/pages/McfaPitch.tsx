@@ -801,23 +801,24 @@ const McfaPitch = () => {
               <Activity className="h-6 w-6 text-primary mb-3" />
               <div className="font-semibold mb-2">L10 Meeting Integration</div>
               <div className="text-sm text-muted-foreground leading-relaxed">
-                Weekly Level 10 meetings with scorecard reporting on Billable Hours Completed, TakeoffPro Adoption, and
-                AI/P6 integration milestones.
+                Weekly Level 10 meetings with scorecard reporting on Schedule Health (DCMA-14), Reporting Latency
+                (≤ 72 hr), and L10 Scorecard contribution.
               </div>
             </Card>
             <Card className="p-6 bg-card/40 border-border/60">
               <Target className="h-6 w-6 text-emerald-400 mb-3" />
               <div className="font-semibold mb-2">"The Rock" Ownership</div>
               <div className="text-sm text-muted-foreground leading-relaxed">
-                Every 90 days, ownership of one measurable Rock: Q1 offline mobile · Q2 AI photo-tagging · Q3 IDR-to-P6 beta.
+                Every 90 days, ownership of one measurable Rock: Q1 XerLens DCMA-14 GA · Q2 Automated TIA fragnet ·
+                Q3 Portfolio EVM telemetry on the L10 scorecard.
               </div>
             </Card>
             <Card className="p-6 bg-card/40 border-border/60">
               <FileCheck className="h-6 w-6 text-amber-400 mb-3" />
-              <div className="font-semibold mb-2">Hybrid Evaluation</div>
+              <div className="font-semibold mb-2">Scheduler Evaluation</div>
               <div className="text-sm text-muted-foreground leading-relaxed">
-                Equitable assessment of field/scheduling competency alongside operational efficiency contributions — tool
-                development, proposal expediency, overhead reduction.
+                Schedule-health and reporting-velocity metrics alongside efficiency contributions — fewer rejected
+                baselines, faster RE response, lower per-project controls overhead.
               </div>
             </Card>
           </div>
