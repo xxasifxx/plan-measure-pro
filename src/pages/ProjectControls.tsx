@@ -17,6 +17,7 @@ import {
   Sparkles, Upload,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { GanttUploader } from '@/components/GanttUploader';
 
 type Activity = {
   id: string; project_id: string; wbs_code: string; name: string;
