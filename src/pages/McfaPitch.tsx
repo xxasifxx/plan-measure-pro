@@ -316,7 +316,7 @@ const McfaPitch = () => {
           <div className="hidden sm:flex items-center gap-4 text-muted-foreground">
             <span>v1.0</span>
             <span className="text-border">|</span>
-            <span>Newark Airport · North Jersey · Hybrid</span>
+            <span>Newark Airport · North Jersey · On-site / Remote</span>
           </div>
         </div>
       </div>
