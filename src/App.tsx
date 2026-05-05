@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import ProjectControls from "./pages/ProjectControls";
 import Demo from "./pages/Demo";
 import McfaPitch from "./pages/McfaPitch";
+import XerDemo from "./pages/XerDemo";
 import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
 import Landing from "./pages/Landing";
@@ -46,6 +47,7 @@ const App = () => (
             <Route path="/landing" element={<Landing />} />
             <Route path="/demo" element={<Demo />} />
             <Route path="/mcfa" element={<McfaPitch />} />
+            <Route path="/mcfa/demo" element={<XerDemo />} />
             <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
