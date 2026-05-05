@@ -110,6 +110,7 @@ const XerDemo = () => {
           </div>
 
           <div
+            data-tour="dropzone"
             onDragOver={(e) => e.preventDefault()}
             onDrop={onDrop}
             className="mt-10 border-2 border-dashed border-border hover:border-cyan-500/60 transition-colors rounded-md p-10 text-center bg-card/30"
