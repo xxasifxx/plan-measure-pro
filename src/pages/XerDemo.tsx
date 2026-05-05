@@ -193,7 +193,7 @@ const XerDemo = () => {
       tab: 'tia',
       target: '[data-tour="tia-output"]',
       title: 'Wed · Module C — defend the EOT with a TIA',
-      body: 'We pre-filled the form with the actual delay (A2020 · Differing Site Condition · 14 days). XerLens generated a fragnet (FS, zero lag — NJDOT 108-03 compliant) and a draft narrative. Copy and paste into the EOT request letter.',
+      body: 'We pre-filled the form with a real differing-site-condition narrative (rock at Pier 1 · 14 working days). XerLens generated a fragnet (FS, zero lag — NJDOT 108-03 compliant) and a draft narrative on the right. Copy and paste into the EOT request letter.',
       dwellMs: 8500,
       beforeShow: async () => {
         setTab('tia');
