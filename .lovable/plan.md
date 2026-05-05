@@ -1,83 +1,49 @@
-## Problem
+## Two-part fix
 
-The current `/xer` tour is just captions floating over static panels. It tells the user what each module does instead of showing them. The dummy NJTA project is already loaded, but no buttons get clicked, no memo appears, no update is loaded, no fragnet is built, no estimate gets progressed. It reads like sticky notes on a blank wall.
+### Part A — XerLens tour: stop being a reading exercise
 
-## Goal
+Three concrete UX changes so the demo *shows* the workflow instead of narrating it:
 
-Make the tour a **scripted live demo**: each step actually drives the UI on the sample NJTA bridge project — opening panels, clicking buttons, scrolling to results, highlighting freshly-generated artifacts. The user watches the Mon→Fri scheduler workflow execute end-to-end in ~90 seconds, then can explore on their own.
+1. **Animated cursor sprite (the headline change).** A faux mouse cursor that flies across the screen to the next target before each scripted action, then plays a pulsing "click" ring on top of the target. The user actually watches the tour click "Generate RE feedback memo," watches it click "Load 60-day update," watches it click each AACE class card. This single change converts the experience from "captions over a static page" to "watch the system work."
+   - New component `<TourCursor>` portaled at z-index just under the tooltip.
+   - Imperative `cursor.flyTo(selector).click()` exposed via a ref the tour passes into each step's `beforeShow`.
+   - Movement is a 700 ms cubic-bezier transform; click is a 250 ms scale-pulse + concentric ring.
 
-## What the tour will do at each step
+2. **Mon → Fri storyline rail in the tooltip header.** Replaces the cryptic "STEP 7 / 17". Five segmented chips (MON · TUE · WED · THU · FRI) — current day pulses cyan, completed days are filled, future days are dim. Each step declares which `day` it belongs to. The user always knows where they are in the week.
 
-The existing `XerLensTour` already supports `beforeShow: () => Promise<void>` and `extraTargets`. We will use both to script real interactions. State that the tour mutates (memo open, update loaded, expanded DCMA row, TIA form, AACE class) is hoisted to `XerDemo` so step callbacks can drive it.
+3. **Spotlight + tooltip polish.**
+   - Tooltip width grows to 420 px and gains a `pointer-events: auto` bottom-right "drag handle" so it can be repositioned if it covers the spotlit element.
+   - On the chart step, the spotlight tightens to just the `ResponsiveContainer` (not the whole card).
+   - On the DCMA "offenders" step, `extraTargets` includes the expanded detail row so both the failed check row *and* its offender list are ringed together.
+   - Pause autoplay automatically when the user hovers any spotlit area, so they can read.
 
-```text
-Step  Module  What the user SEES happen
-────  ──────  ──────────────────────────────────────────────────────────────
- 1    —       Dropzone glows. Caption: "Contractor just submitted this .xer."
- 2    —       Six-tab strip lights up; each tab pulses in sequence.
- 3    —       Mon→Fri cadence overlay (same tab strip, animated arrows).
- 4    A       Switches to Audit tab. Score card animates from 0 → 71%.
- 5    A       Auto-expands the first failing DCMA row (Hard Constraints) so
-              offending activity codes appear; row is spotlighted.
- 6    A       Clicks "Generate RE feedback memo" → memo card slides open,
-              spotlight on the PDF/DOCX buttons. Caption: "This is the
-              artifact you'd actually email the RE."
- 7    B       Switches to Update tab. Empty-state spotlighted.
- 8    B       Clicks "Load sample 60-day update". KPI strip + chart appear.
-              Spotlight moves to SPI/CPI tiles, then to the bar chart, then
-              to the lag-highlight chips and the slipping table.
- 9    B       Spotlight on "PNG" / "Summary PDF" export buttons.
-10    C       Switches to Defend tab. Pre-fills the TIA form (Activity
-              A2020 · 14 days · "Differing site condition — rock at Pier 1"),
-              clicks Generate. Spotlight on the fragnet + draft narrative.
-11    D       Switches to Comply tab. Negative-lag and open-end activities
-              are highlighted; right panel's NJDOT milestone checklist is
-              spotlighted.
-12    E       Switches to Estimate tab. Cycles the Class selector
-              5 → 3 → 1; the accuracy band visibly narrows each step.
-13    F       Switches to File tab. Spotlight on the auto-tag chips and
-              the search box.
-14    —       Spotlight back on "Take the tour" button. Caption: "Replay
-              anytime. Now drop your own .xer."
-```
+4. **Honest TIA pre-fill.** Stop poking DOM `value` setters at a Radix-controlled form. Instead default `TiaPanel`'s initial state to: activity = A2020 Remove Substructure, days = 14, type = "Differing site condition", cause = pier-1 rock narrative. The body copy that promises "rock at Pier 1" then matches what's actually on screen.
 
-Pacing: ~5–7 s per step (auto-advance optional via a "Play" toggle in the tour header, default off so users still control with arrow keys / Next button).
+5. **Two genuine "read this" beats.** On the memo step and the TIA narrative step, set `dwellMs = 11000` and fade the tooltip to 60 % opacity for the second half so the user can actually read the artifact the demo produced.
 
-## Implementation outline
+### Part B — McfaPitch: cut the noise around the scheduler value prop
 
-### `src/components/XerLensTour.tsx`
-- Add an optional `autoPlay` prop and a `Play / Pause` button in the tooltip header. When playing, advance after `step.dwellMs ?? 6000`.
-- Add `dwellMs?: number` to `TourStep`.
-- Keep the existing keyboard / focus-trap behaviour. Pause auto-play when the user presses any nav key.
+The page currently dilutes "scheduler with an efficient workflow" with field-inspector / TakeoffPro / iPad-PWA content. Cuts and consolidations:
 
-### `src/pages/XerDemo.tsx`
-- Lift workflow state up so steps can drive it:
-  - `dcmaOpenRowId`, `setDcmaOpenRowId`
-  - `memoOpen`, `setMemoOpen`
-  - `tiaForm`, `setTiaForm` (activity, days, cause)
-  - `aaceClass`, `setAaceClass`
-  - Pass setters into `DcmaPanel`, `TiaPanel`, `AacePanel` (current local state moves up).
-- Add small `data-tour=` hooks where missing:
-  - `data-tour="dcma-score"`, `data-tour="dcma-memo"`, `data-tour="dcma-row-hardcstr"`
-  - `data-tour="progress-empty"`, `data-tour="progress-kpis"`, `data-tour="progress-chart"`, `data-tour="progress-laglinks"`, `data-tour="progress-exports"`
-  - `data-tour="tia-form"`, `data-tour="tia-output"`
-  - `data-tour="wbs-issues"`, `data-tour="wbs-milestones"`
-  - `data-tour="aace-band"`, `data-tour="aace-selector"`
-  - `data-tour="files-tags"`, `data-tour="files-search"`
-- Rewrite `tourSteps` per the table above. Each scripted step gets a `beforeShow` that calls the relevant setter (e.g. `setMemoOpen(true)`, `loadUpdate()`, `setTiaForm({activity:'A2020', days:14, cause:'Differing site condition — rock at Pier 1'})`, `setAaceClass(3)`). The `target` is the freshly-revealed element so the spotlight lands on real output, not an empty panel.
-- After the tour closes, **leave the demo state populated** (memo open, update loaded, TIA generated) so the user can immediately explore what they just watched.
+- **Remove "Section 00 · What we replace on day one"** (the manual-chain vs TakeoffPro comparison — that's an inspector pitch, not a scheduler pitch).
+- **Remove "Section 03 · TakeoffPro 3-Phase AI Roadmap"** entirely, including the inspector tablet / GPS field-measurement images and the OFFLINE PWA / GPS-TAGGED / AI-INDEXED mini chips.
+- **Remove the hero secondary CTA "Open Field Demo"** (already a noise CTA, points to /demo not /mcfa/demo).
+- **Remove the closing-CTA "Field Demo" tertiary button** for the same reason.
+- **Promote "A Week in the Role"** (currently §02·5) up to §02 as the hero of role description, and demote the 10-activity grid to §03 so the *workflow* is what the recruiter sees first after the hero.
+- **Hero stat ribbon** — keep the three numbers but rewrite labels so all three are scheduler-centric: DCMA-14 LOGIC TARGET / UPDATE DISTRIBUTION SLA / AACE CLASS 1 ACCURACY are already good; no change needed.
+- **Hero right column** — replace the TakeoffPro `heroScreenshot` with a static screenshot card labelled "XERLENS · WEEKLY DEMO" pointing at /mcfa/demo. (Reuse the existing image asset; just relabel the chrome strip from "TAKEOFFPRO · LIVE" to "XERLENS · LIVE — /mcfa/demo".)
+- **Top-ribbon copy** stays.
 
-### `src/lib/xer/dcma.ts` (read-only check)
-- Verify the Hard Constraints check id so the auto-expand step targets the right row. No code change expected — if the id differs, just update the `setDcmaOpenRowId(...)` value used in the step.
+Net result: the McfaPitch page reads as Hero → Weekly Cadence → 10 Core Activities → KPIs/Rocks → Archetype Matrix → Architecture → ROI → Performance Mgmt → Compensation → Recruiter Q&A → Closing. Every section is about the scheduler.
 
-## Out of scope
+### Files touched
+
+- **edit** `src/components/XerLensTour.tsx` — add `<TourCursor>` (new sub-component within the file), `day` field on `TourStep`, Mon→Fri rail in the tooltip header, hover-pause, spotlight tightening helpers.
+- **edit** `src/pages/XerDemo.tsx` — pass cursor ref into `beforeShow`, replace `click(sel)` calls with `cursor.click(sel)`, set `TiaPanel` default state to A2020/14d/DSC/Pier-1-rock, drop the `setVal()` DOM-poke block, fix the chart step target.
+- **edit** `src/pages/McfaPitch.tsx` — remove §00 and §03 sections + their imports; reorder weekly cadence above 10 activities; relabel hero mockup chrome; trim secondary CTAs.
+
+### Out of scope
 
 - No new dependencies.
-- No backend / data changes.
-- No redesign of individual module panels — only state hoisting + `data-tour` hooks.
-- The McfaPitch page is untouched.
-
-## Files touched
-
-- **edit** `src/components/XerLensTour.tsx` — autoplay + dwellMs.
-- **edit** `src/pages/XerDemo.tsx` — hoist workflow state, add `data-tour` hooks, rewrite `tourSteps` as a scripted demo, thread setters into module panels.
+- No changes to `dcma.ts`, `tia.ts`, `progress.ts`, `feedback.ts`, or any data file.
+- No backend changes.
