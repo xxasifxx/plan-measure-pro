@@ -235,64 +235,7 @@ const XerDemo = () => {
   );
 };
 
-const tourSteps: TourStep[] = [
-  {
-    target: '[data-tour="dropzone"]',
-    title: 'Welcome — start with a contractor submission',
-    body: 'Every Monday a contractor sends an .xer. Drop it here. Parsing runs entirely in your browser. We loaded a sample NJTA bridge project so you can walk every module.',
-  },
-  {
-    target: '[data-tour="tabs"]',
-    title: 'Six modules, one weekly workflow',
-    body: 'Audit → Update → Defend → Comply → Estimate → File. Six recurring deliverables of the CPM Scheduler/Estimator role per NJDOT 108-03 and AACE 98R-18.',
-  },
-  {
-    target: '[data-tour="tabs"]',
-    title: 'Weekly cadence — Mon → Fri',
-    body: 'Mon: audit the contractor submission (A). Tue: update progress vs baseline (B). Wed: defend the EOT with a TIA (C). Thu: verify NJDOT WBS compliance (D). Fri: progress the AACE estimate (E) and file the week\'s artifacts (F). The same loop runs every week of the project.',
-  },
-  {
-    tab: 'dcma',
-    target: '[data-tour="panel-dcma"]',
-    title: 'A · Audit — DCMA 14-Point Health Check',
-    body: 'All 14 industry checks (Logic, Leads, Lags, Hard Constraints, CPLI, BEI…) run instantly. The "Generate RE feedback memo" button turns the failures into a plain-English review letter — the artifact you actually send to the Resident Engineer.',
-  },
-  {
-    tab: 'progress',
-    target: '[data-tour="panel-progress"]',
-    title: 'B · Update — Progress vs Baseline (SPI / CPI)',
-    body: 'Click "Load 60-day update" to compare a monthly status XER against the baseline. SPI, CPI, top-10 slipping activities, forecast finish variance — the recurring deliverable for every monthly progress payment.',
-  },
-  {
-    tab: 'tia',
-    target: '[data-tour="panel-tia"]',
-    title: 'C · Defend — Time Impact Analysis',
-    body: 'Pick the affected activity, enter delay days and cause. XerLens generates a NJDOT-compliant fragnet (FS, zero lag) plus a draft 108-03 narrative — ready to paste into the EOT request letter.',
-  },
-  {
-    tab: 'wbs',
-    target: '[data-tour="panel-wbs"]',
-    title: 'D · Comply — NJDOT WBS & Milestones',
-    body: 'See negative lags and open-ended activities at a glance. The right panel cross-references the WBS against the required NJDOT milestones (M100 Advertise, M500 Construction Start, M950 Completion) and flags missing inserts.',
-  },
-  {
-    tab: 'aace',
-    target: '[data-tour="panel-aace"]',
-    title: 'E · Estimate — AACE Class 5 → 1 Progression',
-    body: 'The estimating side of the role. Progress the project estimate from Concept (Class 5, ±100%) down to Bid Check (Class 1, ±15%) as design matures. Ties the cost and schedule deliverables together.',
-  },
-  {
-    tab: 'files',
-    target: '[data-tour="panel-files"]',
-    title: 'F · File — ISO 19650 Explorer',
-    body: 'Drop any RFI, IDR, drawing, or schedule. XerLens auto-tags each file with discipline, status, and an ISO 19650 code, then lets you search across all of them. No nested folders required.',
-  },
-  {
-    target: '[data-tour="tour-button"]',
-    title: 'You are ready',
-    body: 'Re-run this tour anytime from the "Take the tour" button. Drop your own .xer next — nothing leaves the page.',
-  },
-];
+/* tourSteps moved inside the component below — they need access to ingest/loadUpdate/setTab */
 
 /* ─────────────────────  PORTFOLIO ROLLUP STRIP  ───────────────────── */
 const PortfolioStrip = ({ activeName, tables }: { activeName: string; tables: XerTables }) => {
