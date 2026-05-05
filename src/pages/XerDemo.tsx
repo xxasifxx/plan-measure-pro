@@ -81,12 +81,14 @@ const XerDemo = () => {
             <div className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse" />
             <span className="text-muted-foreground tracking-widest">XERLENS · AUTH-AGNOSTIC · IN-BROWSER PARSER · v0.1</span>
           </div>
-          <Button asChild variant="ghost" size="sm" className="text-xs">
-            <Link to="/mcfa"><ArrowLeft className="h-3.5 w-3.5" /> Back to pitch</Link>
-          </Button>
-          <Button size="sm" variant="outline" className="text-xs" onClick={startTour} data-tour="tour-button">
-            <Sparkles className="h-3.5 w-3.5" /> Take the tour
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button size="sm" variant="outline" className="text-xs" onClick={startTour} data-tour="tour-button">
+              <Sparkles className="h-3.5 w-3.5" /> Take the tour
+            </Button>
+            <Button asChild variant="ghost" size="sm" className="text-xs">
+              <Link to="/mcfa"><ArrowLeft className="h-3.5 w-3.5" /> Back to pitch</Link>
+            </Button>
+          </div>
         </div>
       </div>
 
