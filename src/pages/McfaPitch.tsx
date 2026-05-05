@@ -516,19 +516,22 @@ const McfaPitch = () => {
           <div className="grid lg:grid-cols-2 gap-10 mt-10">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="space-y-4 text-muted-foreground leading-relaxed">
               <p>
-                MCFA's current hiring initiatives suggest a <span className="text-foreground">dual requirement</span> for high-level
-                Project Controls / Scheduling expertise <em>and</em> dedicated NICET field inspection. Recruiting these roles
-                independently risks operational silos and increased overhead.
+                MCFA's Evergreen CPM Scheduler/Estimator posting calls for disciplined Primavera P6 work, AACE-compliant
+                estimating, and DOT-grade compliance — with a clear opening for an "Entrepreneurial" team member who
+                automates the grunt work of project controls. Referred by <span className="text-foreground">Saqeeb Muhammad</span>,
+                this proposal answers that call directly.
               </p>
               <p>
-                This proposal eliminates that silo. <span className="text-cyan-400 font-semibold">~1,600 hours</span> deliver core
-                billable capacity; <span className="text-emerald-400 font-semibold">~600 hours</span> of flexible capacity service
-                Office Engineer support, BD proposal coordination, and the development of proprietary "Shop Tools" — anchored by
-                the TakeoffPro quantity-tracking application already shipping at <Link to="/demo" className="text-foreground underline underline-offset-4">/demo</Link>.
+                The role reports to the <span className="text-foreground">Project Controls Director</span>, supports
+                Resident Engineers on contractor schedule reviews, and feeds the L10 Scorecard with two predictive numbers
+                every week. The Entrepreneurial value-add is the in-browser <span className="text-cyan-400 font-semibold">XerLens</span> tooling
+                shown at <Link to="/mcfa/demo" className="text-foreground underline underline-offset-4">/mcfa/demo</Link> —
+                accelerators that make the scheduler faster, not a separate role.
               </p>
               <p>
-                The end-state vision: a <span className="text-foreground">full Primavera P6 integration</span> creating a digital
-                ecosystem where field data dynamically updates executive schedules — turning static baselines into live telemetry.
+                The end-state vision aligns to MCFA's mission of <em className="text-foreground">Inspiring People and Places</em>:
+                give every PM the most reliable, up-to-date schedule data on the program, so they can lead their projects
+                successfully across the Newark Airport / PANYNJ portfolio.
               </p>
             </motion.div>
 
