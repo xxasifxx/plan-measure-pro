@@ -29,31 +29,29 @@ const stagger = { hidden: {}, visible: { transition: { staggerChildren: 0.08 } }
 /* data — sourced verbatim from MCFA_BYOR_Proposal.pdf                */
 /* ------------------------------------------------------------------ */
 
-const capacityModel = [
-  {
-    hours: '1,600',
-    label: 'Core Billable',
-    desc: 'NICET Inspector OR Senior Scheduler — base salary fully covered by traditional contract billing.',
-    color: 'from-emerald-500/20 to-emerald-500/5 border-emerald-500/40',
-    iconColor: 'text-emerald-400',
-    icon: HardHat,
-  },
-  {
-    hours: '600',
-    label: 'Flexible Capacity',
-    desc: 'Office Engineer support · RFI / IDR processing · BD proposal takeoffs · internal "Shop Tool" development.',
-    color: 'from-cyan-500/20 to-cyan-500/5 border-cyan-500/40',
-    iconColor: 'text-cyan-400',
-    icon: Code2,
-  },
-  {
-    hours: '2,200',
-    label: 'Total Annual Capacity',
-    desc: 'Single hybrid asset replacing two siloed hires while delivering an internal AI/P6 platform.',
-    color: 'from-amber-500/20 to-amber-500/5 border-amber-500/40',
-    iconColor: 'text-amber-400',
-    icon: Gauge,
-  },
+/* The 10 core activities of the systems-enabled CPM Scheduler/Estimator role.
+ * Sourced from the Strategic Realignment proposal, Section 3. */
+const tenCoreActivities = [
+  { n: '01', icon: GitBranch,      title: 'Baseline Schedule Engineering & Compliance',
+    body: 'Develop and maintain resource-loaded P6 baselines for transportation projects in strict accordance with NJDOT\'s Construction Scheduling Standard Coding & Procedures Manual — required WBS hierarchies and milestone codes (M100 Advertise, M500 Construction Start, M950 Completion).' },
+  { n: '02', icon: FileCheck,      title: 'Algorithmic Contractor Schedule Assessment',
+    body: 'Move beyond visual review. Automated parsing flags negative lags, open-ended activities, and out-of-sequence progress before formal acceptance — aligning with Trauner methodologies enforced by NYSDOT.' },
+  { n: '03', icon: ClipboardCheck, title: 'DCMA 14-Point QA & Mathematical Stability',
+    body: 'Continuous auditing against the DCMA 14 — logic ≥ 95%, hard constraints < 5%, high duration > 44d flagged, negative float instantly mitigated. The schedule network stays defensible.' },
+  { n: '04', icon: DollarSign,     title: 'AACE-Compliant Cost Estimating',
+    body: 'Deterministic and probabilistic estimates structured per AACE International 98R-18, evolving Class 5 (Concept) → Class 1 (Bid Check) as design matures.' },
+  { n: '05', icon: TrendingUp,     title: 'Dynamic Progress Telemetry & EVM',
+    body: 'Replace static PDF Gantts with live dashboards. SPI / CPI computed weekly so deviations surface in the L10 — not in the post-mortem.' },
+  { n: '06', icon: Users,          title: 'Cross-Disciplinary Coordination & L10 Integration',
+    body: 'Translate P6 network logic into weekly operational targets. Schedule deviations drop straight to the L10 Issues List for IDS resolution.' },
+  { n: '07', icon: AlertTriangle,  title: 'Automated Time Impact Analysis (TIA)',
+    body: 'PMs type a plain-text delay note → the system drafts the fragnet and TIA narrative. No tedious manual reconstruction of CPM logic.' },
+  { n: '08', icon: WifiOff,        title: 'Drag-and-Drop XER Tools',
+    body: 'Auth-agnostic, in-browser PWAs that translate proprietary .xer files into clear progress dashboards — bridging legacy P6 and modern reporting without IT integration.' },
+  { n: '09', icon: Layers,         title: 'Multi-Project Portfolio Integration',
+    body: 'Independent project schedules rolled into a master program view, resolving cross-project resource constraints and giving executives a holistic Mid-Atlantic snapshot.' },
+  { n: '10', icon: Briefcase,      title: 'Bid Scheduling & Proposal Support',
+    body: 'Rapid quantity extraction and high-level CPM logic for prospective bids — a competitive differentiator in public-sector procurement, with no added estimating headcount.' },
 ];
 
 const credentials = [
