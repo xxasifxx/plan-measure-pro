@@ -284,7 +284,7 @@ const McfaPitch = () => {
   useEffect(() => {
     document.title = 'BYOR Proposal · Hybrid Construction Inspector & Systems Integrator — Asif Muhammad, PMP';
     const meta = document.querySelector('meta[name="description"]');
-    const desc = 'Build Your Own Role proposal for MCFA Transportation & Infrastructure: a 2,200-hour hybrid asset combining NICET inspection / P6 scheduling with internal AI + P6 systems development.';
+    const desc = 'Build Your Own Role proposal for the MCFA Evergreen CPM Scheduler/Estimator role: PMP-certified, NJDOT/NYSDOT compliant, AACE 98R-18 estimating, with auth-agnostic in-browser P6 XER tooling.';
     if (meta) meta.setAttribute('content', desc);
     else {
       const m = document.createElement('meta');
