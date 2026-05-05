@@ -249,10 +249,21 @@ const recruiterQA: { q: string; a: string; tag?: string }[] = [
     a: "MCFA gets full internal use across its project portfolio under the employment agreement — no per-seat fees, no SaaS contract. I retain ownership of the core IP so it stays improvable. MCFA pays only the external footprint: hosting, storage, and AI API calls. Standard 'Shop Tool' arrangement.",
     tag: 'IP CLEAN',
   },
-];
-
-/* ------------------------------------------------------------------ */
-/* component                                                          */
+  {
+    q: 'Why CPM scheduling now and not field inspection?',
+    a: "Field inspection generates the data; CPM scheduling is where that data either prevents or causes million-dollar claims. The proposal repositions me where the leverage is highest — and where my software background actually compounds. The TakeoffPro field tool keeps shipping; it just feeds the scheduler instead of being the destination.",
+    tag: 'LEVERAGE',
+  },
+  {
+    q: 'How does this satisfy NJDOT\'s no-negative-lag rule?',
+    a: "The XerLens demo flags every negative lag and open-ended activity in the contractor's submission before MCFA accepts it. Section 5.1 of the NJDOT Scheduling Manual prohibits both. Catching them at submission instead of at month-end is the difference between one email and a re-baseline.",
+    tag: 'NJDOT COMPLIANT',
+  },
+  {
+    q: "What if MCFA already licenses Acumen Fuse or a similar analytics tool?",
+    a: "Then we use it. XerLens isn't a Fuse replacement — it's the auth-agnostic, in-browser layer that PMs run themselves without bothering the scheduler. Fuse stays for deep forensic work; XerLens covers the daily 'is this submission acceptable?' question that today consumes an hour per project per week.",
+    tag: 'COEXISTS',
+  },
 /* ------------------------------------------------------------------ */
 const McfaPitch = () => {
   const [scenario, setScenario] = useState<ScenarioKey>('realistic');
@@ -325,17 +336,17 @@ const McfaPitch = () => {
               </motion.div>
 
               <motion.h1 variants={fadeUp} className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.05] tracking-tight">
-                Hybrid Construction Inspector{' '}
-                <span className="text-cyan-400">&amp; Systems Integrator</span>{' '}
+                Systems-Enabled{' '}
+                <span className="text-cyan-400">CPM Scheduler / Estimator</span>{' '}
                 <span className="block text-muted-foreground/80 text-2xl md:text-3xl mt-3 font-normal">
                   for MCFA Transportation &amp; Infrastructure
                 </span>
               </motion.h1>
 
               <motion.p variants={fadeUp} className="text-lg text-muted-foreground max-w-2xl leading-relaxed">
-                A single, high-utilization asset consolidating <span className="text-foreground font-semibold">three functions</span> —
-                primary billable resource (NICET Inspector or P6 Scheduler), responsive Office Engineer, and internal Systems
-                Developer — across <span className="text-cyan-400 font-semibold">2,200 annual hours</span>.
+                <span className="text-foreground font-semibold">PMP-certified</span> · DO-178B-grade rigor ·
+                auth-agnostic <span className="text-cyan-400 font-semibold">XER tooling</span> for NJDOT &amp; NYSDOT.
+                Schedule integrity, AACE-compliant estimates, and a live drag-and-drop P6 audit — built into one project-controls function.
               </motion.p>
 
               <motion.div variants={fadeUp} className="grid grid-cols-3 gap-4 pt-4 border-t border-border/60">
@@ -355,14 +366,15 @@ const McfaPitch = () => {
 
               <motion.div variants={fadeUp} className="flex flex-wrap gap-3 pt-2">
                 <Button asChild size="lg" className="font-mono">
-                  <Link to="/demo">
-                    Open Live Demo <ArrowRight className="h-4 w-4" />
+                  <Link to="/mcfa/demo">
+                    Open XER Live Demo <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
                 <Button asChild size="lg" variant="outline" className="font-mono">
-                  <a href={mailto}>
-                    <Mail className="h-4 w-4" /> Schedule a 30-min Conversation
-                  </a>
+                  <Link to="/demo">Open Field Demo</Link>
+                </Button>
+                <Button asChild size="lg" variant="ghost" className="font-mono">
+                  <a href={mailto}><Mail className="h-4 w-4" /> 30-min walkthrough</a>
                 </Button>
               </motion.div>
 
