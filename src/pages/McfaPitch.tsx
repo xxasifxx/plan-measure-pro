@@ -160,7 +160,7 @@ const roiScenarios = {
       { label: 'Reduced Rework & Claims',  value: 180_000, sub: 'Defensible audit trail across portfolio' },
       { label: 'Earlier Risk Visibility',  value: 200_000, sub: 'Live telemetry · proactive mitigation' },
       { label: 'Proposal Win-Rate Lift',   value: 360_000, sub: '+4 wins/yr · differentiated digital pitch' },
-      { label: 'SaaS Cost Avoidance',      value: 90_000,  sub: 'Full takeoff + field reporting stack replaced' },
+      { label: 'SaaS Cost Avoidance',      value: 90_000,  sub: 'Acumen + ad-hoc scheduling analytics replaced' },
       { label: 'Senior Scheduler Hrs',     value: 240_000, sub: '~1,200 hrs reclaimed firm-wide' },
       { label: 'New Service Line Revenue', value: 350_000, sub: 'Productized digital-controls offering to clients' },
     ],
