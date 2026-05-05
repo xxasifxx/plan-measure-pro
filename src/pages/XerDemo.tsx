@@ -1247,7 +1247,7 @@ const WbsPanel = ({ tables }: { tables: XerTables }) => {
             {tree.map(n => <WbsRow key={n.wbs_id} node={n} depth={0} />)}
           </div>
         </Card>
-        <Card className="p-5 bg-card/40 border-border/60">
+        <Card data-tour="wbs-milestones" className="p-5 bg-card/40 border-border/60">
           <div className="text-[11px] tracking-widest text-cyan-400 mb-3">NJDOT REQUIRED MILESTONES</div>
           <div className="space-y-1.5">
             {milestones.map(m => (
