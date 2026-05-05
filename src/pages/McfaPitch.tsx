@@ -228,7 +228,7 @@ const proofBullets = [
 const recruiterQA: { q: string; a: string; tag?: string }[] = [
   {
     q: 'Why $130K–$140K — is that within band for an Evergreen Senior Scheduler at MCFA?',
-    a: "Yes. The PDF anchors the ask to the JD's Experienced level: $130K–$140K base, the 10 Growth Units, and standard quarterly profit-share. The PMP plus the systems-integration work that would otherwise need a separate developer hire is what justifies the upper half of that band, not a markup above it.",
+    a: "Yes. The PDF anchors the ask to the JD's Experienced level: $130K–$140K base, the 10 Growth Units, and standard quarterly profit-share. The PMP plus the cross-discipline depth — CPM + AACE estimating + NJDOT controls fluency in one seat — is what justifies the upper half of that band, not a markup above it.",
     tag: 'ANCHOR',
   },
   {
