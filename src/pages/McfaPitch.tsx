@@ -773,8 +773,8 @@ const McfaPitch = () => {
               <Layers className="h-5 w-5 text-primary mb-2" />
               <div className="font-semibold mb-1">Software Cost Avoidance</div>
               <div className="text-xs text-muted-foreground leading-relaxed">
-                Internally operated TakeoffPro bypasses traditional SaaS. MCFA pays only the raw external footprint — hosting,
-                DB transit, AI API calls. Internal dev budget scales fluidly.
+                Internally operated XerLens bypasses traditional SaaS. MCFA pays only the raw external footprint — hosting,
+                DB transit, AI API calls. Internal tooling budget scales fluidly.
               </div>
             </Card>
             <Card className="p-5 bg-card/40 border-border/60">
