@@ -300,7 +300,7 @@ const McfaPitch = () => {
   }, []);
 
   const mailto =
-    'mailto:asif@example.com?subject=MCFA%20BYOR%20%E2%80%94%20Hybrid%20Construction%20Inspector%20%26%20Systems%20Integrator&body=Hi%20Asif%2C%0A%0AI%27d%20like%20to%20schedule%20a%2030-minute%20conversation%20about%20the%20BYOR%20proposal.';
+    'mailto:asif@example.com?subject=MCFA%20BYOR%20%E2%80%94%20Senior%20CPM%20Scheduler%20%2F%20Estimator&body=Hi%20Asif%2C%0A%0AI%27d%20like%20to%20schedule%20a%2030-minute%20conversation%20about%20the%20BYOR%20proposal.';
 
   return (
     <div className="min-h-screen bg-background text-foreground font-mono antialiased">
