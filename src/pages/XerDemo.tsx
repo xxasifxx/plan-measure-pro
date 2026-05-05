@@ -8,49 +8,59 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ChevronRight, ChevronDown, Upload, FileCode2, CheckCircle2, XCircle, Copy, Download, AlertTriangle, FolderTree, FileSearch, Activity, Search, ArrowLeft, Sparkles } from 'lucide-react';
+import {
+  ChevronRight, ChevronDown, Upload, FileCode2, CheckCircle2, XCircle, Copy, Download,
+  AlertTriangle, FolderTree, FileSearch, Activity, Search, ArrowLeft, Sparkles,
+  TrendingUp, DollarSign, Mail, Layers, Gauge,
+} from 'lucide-react';
 import { XerLensTour, type TourStep } from '@/components/XerLensTour';
 import { toast } from '@/hooks/use-toast';
 import { parseXer } from '@/lib/xer/parser';
 import { runDcma, dcmaSummary, type DcmaResult } from '@/lib/xer/dcma';
 import { buildTia, type DelayType } from '@/lib/xer/tia';
 import { buildWbsTree, checkNjdotMilestones, complianceSnapshot, type WbsNode } from '@/lib/xer/wbs';
+import { buildReMemo } from '@/lib/xer/feedback';
+import { compareProgress } from '@/lib/xer/progress';
+import { AACE_CLASSES, accuracyBand, type AaceClass } from '@/lib/xer/aace';
 import { SAMPLE_XER } from '@/lib/xer/sample';
+import { SAMPLE_XER_UPDATE } from '@/lib/xer/sample-update';
 import type { XerTables } from '@/lib/xer/types';
+
+type TabKey = 'dcma' | 'progress' | 'tia' | 'wbs' | 'aace' | 'files';
 
 const XerDemo = () => {
   const [tables, setTables] = useState<XerTables | null>(null);
+  const [updateTables, setUpdateTables] = useState<XerTables | null>(null);
   const [filename, setFilename] = useState<string>('');
-  const [tab, setTab] = useState<'dcma' | 'tia' | 'files' | 'wbs'>('dcma');
+  const [tab, setTab] = useState<TabKey>('dcma');
   const [tourOpen, setTourOpen] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    document.title = 'XerLens · Live XER Audit Demo · MCFA';
+    document.title = 'XerLens · CPM Scheduler Workflow Demo · MCFA';
     const meta = document.querySelector('meta[name="description"]');
-    const desc = 'Drag any Primavera P6 .xer file. Nothing leaves your browser. Get an instant DCMA-14 audit, NJDOT WBS check, and TIA fragnet draft.';
+    const desc = 'Six modules covering the weekly CPM Scheduler/Estimator workflow: DCMA-14 audit, RE feedback memo, progress vs baseline (SPI/CPI), NJDOT WBS, TIA fragnet, AACE Class 5→1 progression.';
     if (meta) meta.setAttribute('content', desc); else {
       const m = document.createElement('meta'); m.name = 'description'; m.content = desc;
       document.head.appendChild(m);
     }
-    // Auto-open tour on first visit
     try {
-      if (!localStorage.getItem('xerlens.tour.seen')) {
+      if (!localStorage.getItem('xerlens.tour.seen.v2')) {
         setTimeout(() => setTourOpen(true), 600);
-        localStorage.setItem('xerlens.tour.seen', '1');
+        localStorage.setItem('xerlens.tour.seen.v2', '1');
       }
     } catch {}
   }, []);
 
   const startTour = () => {
-    if (!tables) ingest(SAMPLE_XER, 'NJTA-MP123-SAMPLE.xer');
+    if (!tables) ingest(SAMPLE_XER, 'NJTA-MP123-BASELINE.xer');
     setTourOpen(true);
   };
 
   const ingest = (text: string, name: string) => {
     try {
       const t = parseXer(text);
-      if (!t.TASK.length) { toast({ title: 'No TASK rows found', description: 'File parsed but contained no activities.', variant: 'destructive' }); return; }
+      if (!t.TASK.length) { toast({ title: 'No TASK rows found', variant: 'destructive' }); return; }
       setTables(t);
       setFilename(name);
       toast({ title: 'XER parsed', description: `${t.TASK.length} activities · ${t.TASKPRED.length} relationships · ${t.PROJWBS.length} WBS nodes.` });
@@ -70,7 +80,12 @@ const XerDemo = () => {
     if (f) onFile(f);
   };
 
-  const loadSample = () => ingest(SAMPLE_XER, 'NJTA-MP123-SAMPLE.xer');
+  const loadSample = () => ingest(SAMPLE_XER, 'NJTA-MP123-BASELINE.xer');
+  const loadUpdate = () => {
+    const t = parseXer(SAMPLE_XER_UPDATE);
+    setUpdateTables(t);
+    toast({ title: '60-day update loaded', description: 'Compare against the baseline in Module B · Progress.' });
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground font-mono antialiased">
@@ -79,7 +94,7 @@ const XerDemo = () => {
         <div className="container mx-auto px-4 py-3 flex items-center justify-between text-xs">
           <div className="flex items-center gap-3">
             <div className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse" />
-            <span className="text-muted-foreground tracking-widest">XERLENS · AUTH-AGNOSTIC · IN-BROWSER PARSER · v0.1</span>
+            <span className="text-muted-foreground tracking-widest">XERLENS · THE WEEKLY SCHEDULER WORKFLOW · IN-BROWSER</span>
           </div>
           <div className="flex items-center gap-2">
             <Button size="sm" variant="outline" className="text-xs" onClick={startTour} data-tour="tour-button">
@@ -96,16 +111,17 @@ const XerDemo = () => {
       <section className="border-b border-border/60 py-12 lg:py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl">
-            <div className="text-[11px] tracking-[0.25em] text-cyan-400 mb-3">LIVE DEMO · MODULE OF THE PROPOSED CPM SCHEDULER ROLE</div>
+            <div className="text-[11px] tracking-[0.25em] text-cyan-400 mb-3">WHAT THIS ROLE DOES EVERY MONDAY MORNING</div>
             <h1 className="text-3xl md:text-5xl font-bold leading-tight tracking-tight">
-              Drop a Primavera P6 <span className="text-cyan-400">.xer</span> file.
+              A contractor submits an <span className="text-cyan-400">.xer</span>.
               <span className="block text-muted-foreground/80 text-xl md:text-2xl mt-3 font-normal">
-                Get a DCMA-14 audit, NJDOT WBS check, and a TIA draft in ten seconds — without leaving your browser.
+                The CPM Scheduler audits it, writes a memo to the Resident Engineer, updates progress vs baseline,
+                rolls into the portfolio, and progresses the AACE estimate — before lunch.
               </span>
             </h1>
             <p className="text-sm text-muted-foreground mt-6 leading-relaxed">
-              Nothing uploads. The parser runs entirely on this page. This is the auth-agnostic tooling described in
-              the proposal — the same module a CPM Scheduler/Estimator would run on every contractor schedule submission.
+              Six modules below mirror the recurring deliverables of the role per NJDOT Standard Specification 108-03 and
+              AACE 98R-18. Nothing uploads — the parser runs entirely in this tab.
             </p>
           </div>
 
@@ -116,12 +132,12 @@ const XerDemo = () => {
             className="mt-10 border-2 border-dashed border-border hover:border-cyan-500/60 transition-colors rounded-md p-10 text-center bg-card/30"
           >
             <Upload className="h-8 w-8 mx-auto text-cyan-400 mb-3" />
-            <div className="text-sm text-muted-foreground mb-5">Drag a <span className="text-foreground">.xer</span> file here, or</div>
+            <div className="text-sm text-muted-foreground mb-5">Drag a contractor <span className="text-foreground">.xer</span> file here, or</div>
             <div className="flex flex-wrap gap-3 justify-center">
               <Button onClick={() => fileInput.current?.click()}>
                 <FileCode2 className="h-4 w-4" /> Choose .xer file
               </Button>
-              <Button variant="outline" onClick={loadSample}>Load sample NJTA project</Button>
+              <Button variant="outline" onClick={loadSample}>Load sample NJTA baseline</Button>
             </div>
             <input ref={fileInput} type="file" accept=".xer,text/plain" hidden
               onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])} />
@@ -132,34 +148,51 @@ const XerDemo = () => {
         </div>
       </section>
 
+      {/* Portfolio rollup strip */}
+      {tables && (
+        <PortfolioStrip activeName={filename || tables.PROJECT[0]?.proj_short_name || 'Active project'} tables={tables} />
+      )}
+
       {/* Modules */}
       {tables && (
         <section className="py-10">
           <div className="container mx-auto px-4">
-            <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)}>
-              <TabsList className="grid grid-cols-2 lg:grid-cols-4 w-full h-auto" data-tour="tabs">
+            <Tabs value={tab} onValueChange={(v) => setTab(v as TabKey)}>
+              <TabsList className="grid grid-cols-2 lg:grid-cols-6 w-full h-auto" data-tour="tabs">
                 <TabsTrigger value="dcma" className="py-3 flex-col gap-1" data-tour="tab-dcma">
-                  <span className="flex items-center gap-2"><Activity className="h-4 w-4" /> A · DCMA 14</span>
-                  <span className="text-[10px] text-muted-foreground tracking-widest">SCHEDULE HEALTH</span>
+                  <span className="flex items-center gap-2"><Activity className="h-4 w-4" /> A · Audit</span>
+                  <span className="text-[10px] text-muted-foreground tracking-widest">DCMA-14</span>
+                </TabsTrigger>
+                <TabsTrigger value="progress" className="py-3 flex-col gap-1" data-tour="tab-progress">
+                  <span className="flex items-center gap-2"><TrendingUp className="h-4 w-4" /> B · Update</span>
+                  <span className="text-[10px] text-muted-foreground tracking-widest">SPI / CPI</span>
                 </TabsTrigger>
                 <TabsTrigger value="tia" className="py-3 flex-col gap-1" data-tour="tab-tia">
-                  <span className="flex items-center gap-2"><AlertTriangle className="h-4 w-4" /> B · TIA</span>
-                  <span className="text-[10px] text-muted-foreground tracking-widest">DELAY DRAFT</span>
-                </TabsTrigger>
-                <TabsTrigger value="files" className="py-3 flex-col gap-1" data-tour="tab-files">
-                  <span className="flex items-center gap-2"><FileSearch className="h-4 w-4" /> C · File Explorer</span>
-                  <span className="text-[10px] text-muted-foreground tracking-widest">ISO 19650 TAGS</span>
+                  <span className="flex items-center gap-2"><AlertTriangle className="h-4 w-4" /> C · Defend</span>
+                  <span className="text-[10px] text-muted-foreground tracking-widest">TIA · 108-03</span>
                 </TabsTrigger>
                 <TabsTrigger value="wbs" className="py-3 flex-col gap-1" data-tour="tab-wbs">
-                  <span className="flex items-center gap-2"><FolderTree className="h-4 w-4" /> D · WBS / Compliance</span>
-                  <span className="text-[10px] text-muted-foreground tracking-widest">NJDOT MILESTONES</span>
+                  <span className="flex items-center gap-2"><FolderTree className="h-4 w-4" /> D · Comply</span>
+                  <span className="text-[10px] text-muted-foreground tracking-widest">NJDOT WBS</span>
+                </TabsTrigger>
+                <TabsTrigger value="aace" className="py-3 flex-col gap-1" data-tour="tab-aace">
+                  <span className="flex items-center gap-2"><DollarSign className="h-4 w-4" /> E · Estimate</span>
+                  <span className="text-[10px] text-muted-foreground tracking-widest">AACE 5→1</span>
+                </TabsTrigger>
+                <TabsTrigger value="files" className="py-3 flex-col gap-1" data-tour="tab-files">
+                  <span className="flex items-center gap-2"><FileSearch className="h-4 w-4" /> F · File</span>
+                  <span className="text-[10px] text-muted-foreground tracking-widest">ISO 19650</span>
                 </TabsTrigger>
               </TabsList>
 
               <TabsContent value="dcma" className="mt-6" data-tour="panel-dcma"><DcmaPanel tables={tables} /></TabsContent>
+              <TabsContent value="progress" className="mt-6" data-tour="panel-progress">
+                <ProgressPanel baseline={tables} update={updateTables} onLoadUpdate={loadUpdate} />
+              </TabsContent>
               <TabsContent value="tia" className="mt-6" data-tour="panel-tia"><TiaPanel tables={tables} /></TabsContent>
-              <TabsContent value="files" className="mt-6" data-tour="panel-files"><FileExplorerPanel /></TabsContent>
               <TabsContent value="wbs" className="mt-6" data-tour="panel-wbs"><WbsPanel tables={tables} /></TabsContent>
+              <TabsContent value="aace" className="mt-6" data-tour="panel-aace"><AacePanel /></TabsContent>
+              <TabsContent value="files" className="mt-6" data-tour="panel-files"><FileExplorerPanel /></TabsContent>
             </Tabs>
           </div>
         </section>
@@ -167,12 +200,14 @@ const XerDemo = () => {
 
       {!tables && (
         <section className="py-16 border-t border-border/60 bg-card/20">
-          <div className="container mx-auto px-4 max-w-4xl grid md:grid-cols-2 gap-6">
+          <div className="container mx-auto px-4 max-w-5xl grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
-              { title: 'A · DCMA 14-Point Auditor', body: 'Logic, Leads, Lags, FS%, Hard Constraints, High Float, Negative Float, High Duration, Invalid Dates, Resources, Missed Tasks, Critical Path Test, CPLI, BEI.' },
-              { title: 'B · Automated TIA Workflow', body: 'Type a delay note. Get a fragnet (FS, zero lag — NJDOT compliant) plus a draft narrative ready to paste into the EOT request letter.' },
-              { title: 'C · Intelligent File Explorer', body: 'Drag any RFI / IDR / .xer in. Auto-tag with ISO 19650 metadata. Search by discipline, status, type — no nested folders.' },
-              { title: 'D · WBS / Compliance Verification', body: 'Cross-reference the parsed WBS against required NJDOT milestones (M100, M500, M950 …). Negative-lag and open-ended counts surfaced instantly.' },
+              { title: 'A · Audit (DCMA-14)', body: 'Run the 14-point industry health check on every contractor submission. One-click "Generate RE feedback memo" produces the artifact you actually send.' },
+              { title: 'B · Update (Progress vs Baseline)', body: 'SPI, CPI, % complete, top-10 slipping activities — calculated from a baseline + monthly update XER pair.' },
+              { title: 'C · Defend (TIA · NJDOT 108-03)', body: 'Type a delay note. Get a fragnet (FS, zero lag) plus a draft 108-03 narrative ready for the EOT letter.' },
+              { title: 'D · Comply (NJDOT WBS)', body: 'Cross-reference WBS against required NJDOT milestones (M100, M500, M950). Flag negative lags + open ends.' },
+              { title: 'E · Estimate (AACE 98R-18)', body: 'Progress the project estimate from Class 5 → Class 1, narrowing the accuracy band as design matures.' },
+              { title: 'F · File (ISO 19650 explorer)', body: 'Drop any RFI, IDR, drawing, or schedule. Auto-tag with discipline, status, and ISO 19650 code.' },
             ].map(c => (
               <Card key={c.title} className="p-5 bg-card/40 border-border/60">
                 <div className="font-semibold mb-2 text-foreground">{c.title}</div>
@@ -186,7 +221,7 @@ const XerDemo = () => {
       <XerLensTour
         open={tourOpen}
         onClose={() => setTourOpen(false)}
-        onTabChange={(t) => setTab(t)}
+        onTabChange={(t) => setTab(t as TabKey)}
         steps={tourSteps}
       />
     </div>
@@ -196,37 +231,49 @@ const XerDemo = () => {
 const tourSteps: TourStep[] = [
   {
     target: '[data-tour="dropzone"]',
-    title: 'Welcome to XerLens',
-    body: 'This is the auth-agnostic P6 auditor. Drop any .xer file here — parsing happens entirely in your browser. We loaded a sample NJTA project so you can see every module in action.',
+    title: 'Welcome — start with a contractor submission',
+    body: 'Every Monday a contractor sends an .xer. Drop it here. Parsing runs entirely in your browser. We loaded a sample NJTA bridge project so you can walk every module.',
   },
   {
     target: '[data-tour="tabs"]',
-    title: 'Four modules, one workflow',
-    body: 'XerLens runs the same four checks a CPM Scheduler/Estimator runs on every contractor submission: schedule health, delay analysis, document tagging, and WBS compliance.',
+    title: 'Six modules, one weekly workflow',
+    body: 'Audit → Update → Defend → Comply → Estimate → File. This is the recurring deliverable cadence of the CPM Scheduler/Estimator role per NJDOT 108-03 and AACE 98R-18.',
   },
   {
     tab: 'dcma',
     target: '[data-tour="panel-dcma"]',
-    title: 'Module A · DCMA 14-Point Audit',
-    body: 'All 14 checks (Logic, Leads, Lags, Hard Constraints, High Float, CPLI, BEI…) run instantly. Click any failed row to see the offending activities. Use "Copy summary" to paste straight into a review email.',
+    title: 'A · Audit — DCMA 14-Point Health Check',
+    body: 'All 14 industry checks (Logic, Leads, Lags, Hard Constraints, CPLI, BEI…) run instantly. The "Generate RE feedback memo" button turns the failures into a plain-English review letter — the artifact you actually send to the Resident Engineer.',
+  },
+  {
+    tab: 'progress',
+    target: '[data-tour="panel-progress"]',
+    title: 'B · Update — Progress vs Baseline (SPI / CPI)',
+    body: 'Click "Load 60-day update" to compare a monthly status XER against the baseline. SPI, CPI, top-10 slipping activities, forecast finish variance — the recurring deliverable for every monthly progress payment.',
   },
   {
     tab: 'tia',
     target: '[data-tour="panel-tia"]',
-    title: 'Module B · Time Impact Analysis',
-    body: 'Pick the affected activity, enter delay days and cause. XerLens generates a NJDOT-compliant fragnet (FS, zero lag) plus a draft 108-03 narrative — ready to paste into your EOT request letter.',
-  },
-  {
-    tab: 'files',
-    target: '[data-tour="panel-files"]',
-    title: 'Module C · ISO 19650 File Explorer',
-    body: 'Drop any RFI, IDR, drawing, or schedule. XerLens auto-tags each file with discipline, status, and an ISO 19650 code — then lets you search across all of them. No nested folders required.',
+    title: 'C · Defend — Time Impact Analysis',
+    body: 'Pick the affected activity, enter delay days and cause. XerLens generates a NJDOT-compliant fragnet (FS, zero lag) plus a draft 108-03 narrative — ready to paste into the EOT request letter.',
   },
   {
     tab: 'wbs',
     target: '[data-tour="panel-wbs"]',
-    title: 'Module D · WBS & NJDOT Compliance',
-    body: 'See negative lags and open-ended activities at a glance. The right panel cross-references the WBS against required NJDOT milestones (M100, M500, M950…) and flags missing inserts.',
+    title: 'D · Comply — NJDOT WBS & Milestones',
+    body: 'See negative lags and open-ended activities at a glance. The right panel cross-references the WBS against the required NJDOT milestones (M100 Advertise, M500 Construction Start, M950 Completion) and flags missing inserts.',
+  },
+  {
+    tab: 'aace',
+    target: '[data-tour="panel-aace"]',
+    title: 'E · Estimate — AACE Class 5 → 1 Progression',
+    body: 'The estimating side of the role. Progress the project estimate from Concept (Class 5, ±100%) down to Bid Check (Class 1, ±15%) as design matures. Ties the cost and schedule deliverables together.',
+  },
+  {
+    tab: 'files',
+    target: '[data-tour="panel-files"]',
+    title: 'F · File — ISO 19650 Explorer',
+    body: 'Drop any RFI, IDR, drawing, or schedule. XerLens auto-tags each file with discipline, status, and an ISO 19650 code, then lets you search across all of them. No nested folders required.',
   },
   {
     target: '[data-tour="tour-button"]',
@@ -235,16 +282,87 @@ const tourSteps: TourStep[] = [
   },
 ];
 
+/* ─────────────────────  PORTFOLIO ROLLUP STRIP  ───────────────────── */
+const PortfolioStrip = ({ activeName, tables }: { activeName: string; tables: XerTables }) => {
+  const dcmaScore = useMemo(() => {
+    const r = runDcma(tables);
+    return Math.round((r.filter(x => x.pass).length / r.length) * 100);
+  }, [tables]);
+  const totalTasks = tables.TASK.length;
+  const complete = tables.TASK.filter(t => t.status_code === 'TK_Complete').length;
+  const pct = totalTasks ? Math.round((complete / totalTasks) * 100) : 0;
+
+  const portfolio = [
+    { name: activeName, agency: 'NJTA · Active', dcma: dcmaScore, pct, spi: 1.00, float: 0, active: true },
+    { name: 'EWR Terminal A · Apron Rehab', agency: 'PANYNJ', dcma: 92, pct: 47, spi: 0.96, float: -3, active: false },
+    { name: 'GSP MP 145 · Bridge Deck', agency: 'NJTA',  dcma: 88, pct: 22, spi: 1.02, float: 12, active: false },
+    { name: 'Pulaski Skyway · Section C', agency: 'NJDOT', dcma: 79, pct: 71, spi: 0.91, float: -8, active: false },
+  ];
+
+  return (
+    <section className="border-b border-border/60 bg-card/30 py-5">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center gap-2 mb-3">
+          <Layers className="h-3.5 w-3.5 text-cyan-400" />
+          <div className="text-[11px] tracking-[0.25em] text-cyan-400">PORTFOLIO ROLLUP · NEWARK / PANYNJ STUB</div>
+          <div className="text-[10px] text-muted-foreground ml-auto">Sample data — wire to your projects table to make this live.</div>
+        </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          {portfolio.map(p => (
+            <div key={p.name} className={`rounded-md border p-3 ${p.active ? 'border-cyan-500/50 bg-cyan-500/5' : 'border-border bg-background/40'}`}>
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <div className="text-xs text-foreground truncate font-semibold">{p.name}</div>
+                  <div className="text-[10px] text-muted-foreground tracking-widest mt-0.5">{p.agency}</div>
+                </div>
+                {p.active && <span className="text-[9px] text-cyan-400 tracking-widest">ACTIVE</span>}
+              </div>
+              <div className="grid grid-cols-4 gap-1 mt-3 text-center">
+                <Mini2 label="DCMA" value={`${p.dcma}%`} good={p.dcma >= 90} />
+                <Mini2 label="DONE" value={`${p.pct}%`} />
+                <Mini2 label="SPI"  value={p.spi.toFixed(2)} good={p.spi >= 0.95} />
+                <Mini2 label="FLT"  value={`${p.float}d`} good={p.float >= 0} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const Mini2 = ({ label, value, good }: { label: string; value: string; good?: boolean }) => (
+  <div>
+    <div className={`text-sm font-mono ${good === undefined ? 'text-foreground' : good ? 'text-emerald-400' : 'text-amber-400'}`}>{value}</div>
+    <div className="text-[9px] tracking-widest text-muted-foreground">{label}</div>
+  </div>
+);
+
 /* ─────────────────────────  MODULE A: DCMA  ───────────────────────── */
 const DcmaPanel = ({ tables }: { tables: XerTables }) => {
   const results = useMemo(() => runDcma(tables), [tables]);
   const [openCheck, setOpenCheck] = useState<string | null>(null);
+  const [memoOpen, setMemoOpen] = useState(false);
+  const memo = useMemo(() => buildReMemo(tables, results), [tables, results]);
   const passed = results.filter(r => r.pass).length;
   const score = Math.round((passed / results.length) * 100);
 
   const copySummary = () => {
     navigator.clipboard.writeText(dcmaSummary(results));
     toast({ title: 'Summary copied', description: 'Paste into your schedule review email.' });
+  };
+  const copyMemo = () => {
+    navigator.clipboard.writeText(memo);
+    toast({ title: 'RE feedback memo copied', description: 'Paste into your email to the Resident Engineer.' });
+  };
+  const downloadMemo = () => {
+    const blob = new Blob([memo], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `RE-feedback-${tables.PROJECT[0]?.proj_short_name || 'project'}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -257,8 +375,26 @@ const DcmaPanel = ({ tables }: { tables: XerTables }) => {
             <span className="text-muted-foreground text-base font-normal ml-2">{passed}/{results.length} checks pass</span>
           </div>
         </div>
-        <Button variant="outline" onClick={copySummary}><Copy className="h-4 w-4" /> Copy summary for email</Button>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" onClick={copySummary}><Copy className="h-4 w-4" /> Copy summary</Button>
+          <Button onClick={() => setMemoOpen(o => !o)}>
+            <Mail className="h-4 w-4" /> {memoOpen ? 'Hide' : 'Generate'} RE feedback memo
+          </Button>
+        </div>
       </div>
+
+      {memoOpen && (
+        <Card className="p-5 bg-card/40 border-cyan-500/40">
+          <div className="flex items-center justify-between mb-3">
+            <div className="text-[11px] tracking-widest text-cyan-400">DRAFT MEMO TO RESIDENT ENGINEER · READY TO PASTE</div>
+            <div className="flex gap-2">
+              <Button size="sm" variant="outline" onClick={copyMemo}><Copy className="h-3.5 w-3.5" /> Copy</Button>
+              <Button size="sm" variant="outline" onClick={downloadMemo}><Download className="h-3.5 w-3.5" /> Download .txt</Button>
+            </div>
+          </div>
+          <pre className="text-xs leading-relaxed text-muted-foreground whitespace-pre-wrap max-h-96 overflow-y-auto">{memo}</pre>
+        </Card>
+      )}
 
       <div className="border border-border rounded-md overflow-hidden">
         <table className="w-full text-sm">
@@ -320,7 +456,177 @@ const DcmaPanel = ({ tables }: { tables: XerTables }) => {
   );
 };
 
-/* ─────────────────────────  MODULE B: TIA  ───────────────────────── */
+/* ──────────────  MODULE B: PROGRESS vs BASELINE  ────────────── */
+const ProgressPanel = ({ baseline, update, onLoadUpdate }: {
+  baseline: XerTables; update: XerTables | null; onLoadUpdate: () => void;
+}) => {
+  if (!update) {
+    return (
+      <Card className="p-8 bg-card/40 border-border/60 text-center">
+        <Gauge className="h-8 w-8 mx-auto text-cyan-400 mb-3" />
+        <div className="text-lg font-semibold mb-2">Compare a monthly update against the baseline</div>
+        <p className="text-sm text-muted-foreground max-w-xl mx-auto mb-5">
+          Drop a second .xer (next month's status submission) to compute SPI, CPI, top-10 slipping activities, and the
+          forecast-finish variance — the recurring deliverable for every monthly progress payment per NJDOT 108-03.
+        </p>
+        <Button onClick={onLoadUpdate}>Load sample 60-day update</Button>
+      </Card>
+    );
+  }
+  const report = compareProgress(baseline, update);
+  const fmt = (d?: string) => d ? d.slice(0, 10) : '—';
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <KPI label="SPI · Schedule Performance" value={report.spi.toFixed(2)} good={report.spi >= 0.95} />
+        <KPI label="CPI · Cost Performance (proxy)" value={report.cpi.toFixed(2)} good={report.cpi >= 0.95} />
+        <KPI label="% Complete (by hours)" value={`${report.pctComplete.toFixed(0)}%`} />
+        <KPI
+          label="Forecast Finish Variance"
+          value={`${report.forecastVarianceDays >= 0 ? '+' : ''}${report.forecastVarianceDays}d`}
+          good={report.forecastVarianceDays <= 0}
+        />
+      </div>
+
+      <Card className="p-4 bg-card/40 border-border/60">
+        <div className="grid sm:grid-cols-2 gap-3 text-sm">
+          <div>
+            <div className="text-[10px] tracking-widest text-muted-foreground">BASELINE FINISH</div>
+            <div className="font-mono text-foreground">{fmt(report.baselineFinish)}</div>
+          </div>
+          <div>
+            <div className="text-[10px] tracking-widest text-muted-foreground">FORECAST FINISH</div>
+            <div className={`font-mono ${report.forecastVarianceDays > 0 ? 'text-amber-400' : 'text-emerald-400'}`}>
+              {fmt(report.forecastFinish)}
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      <Card className="p-5 bg-card/40 border-border/60">
+        <div className="text-[11px] tracking-widest text-cyan-400 mb-3">TOP 10 SLIPPING ACTIVITIES</div>
+        {report.topSlipping.length === 0 ? (
+          <div className="text-sm text-muted-foreground">No slipping activities — schedule is on or ahead of baseline.</div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="text-left text-[10px] tracking-widest text-muted-foreground">
+                <tr>
+                  <th className="py-2">Activity</th>
+                  <th className="py-2">Baseline finish</th>
+                  <th className="py-2">Forecast finish</th>
+                  <th className="py-2 text-right">Slip (days)</th>
+                  <th className="py-2 text-right">% Complete</th>
+                </tr>
+              </thead>
+              <tbody>
+                {report.topSlipping.map(v => (
+                  <tr key={v.task_id} className="border-t border-border">
+                    <td className="py-2"><span className="font-mono text-cyan-400 mr-2">{v.task_code}</span>{v.task_name}</td>
+                    <td className="py-2 font-mono text-xs text-muted-foreground">{fmt(v.baselineFinish)}</td>
+                    <td className="py-2 font-mono text-xs text-muted-foreground">{fmt(v.updateFinish)}</td>
+                    <td className="py-2 text-right font-mono text-amber-400">+{v.finishVarianceDays}</td>
+                    <td className="py-2 text-right font-mono">{v.pctComplete.toFixed(0)}%</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Card>
+
+      <p className="text-[11px] text-muted-foreground italic">
+        Note: CPI is duration-proxied because XER files do not consistently carry cost loadings; in production this
+        module would consume the BCWP / BCWS / ACWP feed from P6 cost accounts.
+      </p>
+    </div>
+  );
+};
+
+const KPI = ({ label, value, good }: { label: string; value: string; good?: boolean }) => (
+  <Card className={`p-4 border ${good === undefined ? 'border-border/60 bg-card/40' : good ? 'border-emerald-500/40 bg-emerald-500/5' : 'border-amber-500/40 bg-amber-500/5'}`}>
+    <div className="text-[10px] tracking-widest text-muted-foreground">{label}</div>
+    <div className={`text-3xl font-bold mt-1 ${good === undefined ? '' : good ? 'text-emerald-400' : 'text-amber-400'}`}>{value}</div>
+  </Card>
+);
+
+/* ──────────────────  MODULE E: AACE PROGRESSION  ────────────────── */
+const AacePanel = () => {
+  const [activeCls, setActiveCls] = useState<5 | 4 | 3 | 2 | 1>(3);
+  const active = AACE_CLASSES.find(c => c.cls === activeCls)!;
+  return (
+    <div className="space-y-5">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <div className="text-[11px] tracking-widest text-muted-foreground">CURRENT ESTIMATE CLASS</div>
+          <div className="text-3xl font-bold text-foreground mt-1">Class {active.cls} · {accuracyBand(active)}</div>
+          <div className="text-xs text-muted-foreground mt-1">Design maturity {active.designMaturity} · {active.njdotStage}</div>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline" disabled={activeCls === 5} onClick={() => setActiveCls((activeCls + 1) as 5 | 4 | 3 | 2 | 1)}>
+            ← Roll back
+          </Button>
+          <Button disabled={activeCls === 1} onClick={() => setActiveCls((activeCls - 1) as 5 | 4 | 3 | 2 | 1)}>
+            Advance to Class {activeCls - 1} →
+          </Button>
+        </div>
+      </div>
+
+      <div className="grid lg:grid-cols-5 gap-3">
+        {AACE_CLASSES.map(c => {
+          const isActive = c.cls === activeCls;
+          const passed = c.cls > activeCls;
+          return (
+            <button
+              key={c.cls}
+              onClick={() => setActiveCls(c.cls)}
+              className={`text-left rounded-md border p-4 transition-all ${
+                isActive
+                  ? 'border-cyan-500 bg-cyan-500/10'
+                  : passed
+                    ? 'border-emerald-500/30 bg-emerald-500/5'
+                    : 'border-border bg-card/40 hover:border-border/80'
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-bold">{c.cls}</div>
+                {passed && <CheckCircle2 className="h-4 w-4 text-emerald-400" />}
+              </div>
+              <div className="text-xs font-semibold mt-2">{c.name.split(' · ')[1]}</div>
+              <div className="text-[10px] text-muted-foreground mt-1">{c.designMaturity}</div>
+              <div className="text-[10px] font-mono mt-2 text-cyan-400">{accuracyBand(c)}</div>
+            </button>
+          );
+        })}
+      </div>
+
+      <Card className="p-5 bg-card/40 border-border/60">
+        <div className="text-[11px] tracking-widest text-cyan-400 mb-3">CLASS {active.cls} · METHODOLOGY</div>
+        <div className="grid sm:grid-cols-2 gap-4 text-sm">
+          <DefRow label="Purpose" value={active.purpose} />
+          <DefRow label="Methodology" value={active.methodology} />
+          <DefRow label="Typical effort" value={active.effort} />
+          <DefRow label="NJDOT capital stage" value={active.njdotStage} />
+        </div>
+      </Card>
+
+      <p className="text-[11px] text-muted-foreground italic">
+        Per AACE International Recommended Practice 98R-18. The CPM Scheduler/Estimator role is responsible for
+        progressing each project's estimate from Class 5 down to Class 1 as design milestones are reached.
+      </p>
+    </div>
+  );
+};
+
+const DefRow = ({ label, value }: { label: string; value: string }) => (
+  <div>
+    <div className="text-[10px] tracking-widest text-muted-foreground">{label.toUpperCase()}</div>
+    <div className="text-foreground mt-1">{value}</div>
+  </div>
+);
+
+/* ─────────────────────────  MODULE C: TIA  ───────────────────────── */
 const TiaPanel = ({ tables }: { tables: XerTables }) => {
   const [taskId, setTaskId] = useState<string>(tables.TASK.find(t => t.task_type !== 'TT_Mile')?.task_id || tables.TASK[0]?.task_id || '');
   const [delayDays, setDelayDays] = useState(5);
@@ -343,7 +649,6 @@ const TiaPanel = ({ tables }: { tables: XerTables }) => {
     <div className="grid lg:grid-cols-2 gap-6">
       <Card className="p-5 bg-card/40 border-border/60 space-y-4">
         <div className="text-[11px] tracking-widest text-cyan-400">DELAY EVENT</div>
-
         <div className="space-y-2">
           <Label className="text-xs">Affected activity</Label>
           <Select value={taskId} onValueChange={setTaskId}>
@@ -357,7 +662,6 @@ const TiaPanel = ({ tables }: { tables: XerTables }) => {
             </SelectContent>
           </Select>
         </div>
-
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-2">
             <Label className="text-xs">Delay start</Label>
@@ -368,7 +672,6 @@ const TiaPanel = ({ tables }: { tables: XerTables }) => {
             <Input type="number" min={1} max={120} value={delayDays} onChange={e => setDelayDays(Number(e.target.value))} />
           </div>
         </div>
-
         <div className="space-y-2">
           <Label className="text-xs">Delay type</Label>
           <Select value={type} onValueChange={v => setType(v as DelayType)}>
@@ -380,7 +683,6 @@ const TiaPanel = ({ tables }: { tables: XerTables }) => {
             </SelectContent>
           </Select>
         </div>
-
         <div className="space-y-2">
           <Label className="text-xs">Cause (plain text)</Label>
           <Textarea rows={3} value={cause} onChange={e => setCause(e.target.value)} />
@@ -397,7 +699,6 @@ const TiaPanel = ({ tables }: { tables: XerTables }) => {
           </div>
           <pre className="text-xs leading-relaxed text-muted-foreground whitespace-pre">{result.fragnetAscii}</pre>
         </Card>
-
         <Card className="p-5 bg-card/40 border-border/60">
           <div className="flex items-center justify-between mb-3">
             <div className="text-[11px] tracking-widest text-cyan-400">DRAFT TIA NARRATIVE · NJDOT / NYSDOT 108-03</div>
@@ -412,15 +713,10 @@ const TiaPanel = ({ tables }: { tables: XerTables }) => {
   );
 };
 
-/* ─────────────────  MODULE C: FILE EXPLORER  ───────────────── */
+/* ─────────────────  MODULE F: FILE EXPLORER  ───────────────── */
 type TaggedFile = {
-  id: string;
-  name: string;
-  size: number;
-  type: string;
-  discipline: string;
-  status: string;
-  iso19650: string;
+  id: string; name: string; size: number; type: string;
+  discipline: string; status: string; iso19650: string;
 };
 
 const inferTags = (file: File): TaggedFile => {
@@ -433,18 +729,14 @@ const inferTags = (file: File): TaggedFile => {
   else if (['jpg', 'jpeg', 'png', 'heic'].includes(ext)) type = 'Photo';
   else if (lower.includes('rfi')) type = 'RFI';
   else if (lower.includes('idr') || lower.includes('daily')) type = 'Daily Report';
-
   let discipline = 'GEN';
   if (/struct|steel|girder|concrete|pier|deck/.test(lower)) discipline = 'ST';
   else if (/road|paving|hma/.test(lower)) discipline = 'CV';
   else if (/elec/.test(lower)) discipline = 'EL';
   else if (/mech|hvac/.test(lower)) discipline = 'ME';
-
   let status = 'WIP';
   if (/_a[._-]/.test(lower) || /approved/.test(lower)) status = 'A';
   else if (/_s[._-]/.test(lower) || /shared/.test(lower)) status = 'S';
-
-  // ISO 19650: {Project}-{Originator}-{Volume}-{Level}-{Type}-{Role}-{Number}
   const iso = `MCFA-XX-XX-XX-${type.slice(0, 2).toUpperCase()}-${discipline}-${String(Math.floor(Math.random() * 9999)).padStart(4, '0')}`;
   return { id: crypto.randomUUID(), name: file.name, size: file.size, type, discipline, status, iso19650: iso };
 };
@@ -473,12 +765,8 @@ const FileExplorerPanel = () => {
 
   return (
     <div className="space-y-4">
-      <div
-        ref={drop}
-        onDragOver={e => e.preventDefault()}
-        onDrop={onDrop}
-        className="border-2 border-dashed border-border hover:border-cyan-500/60 rounded-md p-6 text-center bg-card/30"
-      >
+      <div ref={drop} onDragOver={e => e.preventDefault()} onDrop={onDrop}
+        className="border-2 border-dashed border-border hover:border-cyan-500/60 rounded-md p-6 text-center bg-card/30">
         <Upload className="h-6 w-6 mx-auto text-cyan-400 mb-2" />
         <div className="text-xs text-muted-foreground mb-3">Drop any project files (xer · pdf · xlsx · jpg). They stay in this browser tab only.</div>
         <label className="inline-block">
@@ -486,7 +774,6 @@ const FileExplorerPanel = () => {
           <span className="text-xs text-cyan-400 cursor-pointer hover:underline">or browse…</span>
         </label>
       </div>
-
       {files.length > 0 && (
         <>
           <div className="flex flex-wrap gap-3 items-center">
@@ -507,7 +794,6 @@ const FileExplorerPanel = () => {
               ))}
             </div>
           </div>
-
           <div className="border border-border rounded-md divide-y divide-border">
             {filtered.map(f => (
               <div key={f.id} className="flex items-center gap-3 p-3 hover:bg-card/40 text-sm">
@@ -557,7 +843,6 @@ const WbsPanel = ({ tables }: { tables: XerTables }) => {
           <div className="text-[11px] text-muted-foreground mt-1">Includes WBS-level summaries.</div>
         </Card>
       </div>
-
       <div className="grid lg:grid-cols-2 gap-6">
         <Card className="p-5 bg-card/40 border-border/60">
           <div className="text-[11px] tracking-widest text-cyan-400 mb-3">WORK BREAKDOWN STRUCTURE</div>
@@ -565,7 +850,6 @@ const WbsPanel = ({ tables }: { tables: XerTables }) => {
             {tree.map(n => <WbsRow key={n.wbs_id} node={n} depth={0} />)}
           </div>
         </Card>
-
         <Card className="p-5 bg-card/40 border-border/60">
           <div className="text-[11px] tracking-widest text-cyan-400 mb-3">NJDOT REQUIRED MILESTONES</div>
           <div className="space-y-1.5">
@@ -593,11 +877,9 @@ const WbsRow = ({ node, depth }: { node: WbsNode; depth: number }) => {
   const has = node.children.length > 0;
   return (
     <div>
-      <div
-        onClick={() => has && setOpen(!open)}
+      <div onClick={() => has && setOpen(!open)}
         className="flex items-center gap-2 py-1.5 hover:bg-card/40 cursor-pointer rounded-sm"
-        style={{ paddingLeft: depth * 16 }}
-      >
+        style={{ paddingLeft: depth * 16 }}>
         {has
           ? (open ? <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" /> : <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />)
           : <span className="w-3.5" />}

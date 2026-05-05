@@ -170,24 +170,33 @@ const roiScenarios = {
 } as const;
 type ScenarioKey = keyof typeof roiScenarios;
 
-// EOS Scorecard — leading indicators reviewed in weekly L10 meetings
+// EOS Scorecard — leading indicators reviewed in weekly L10 meetings (PDF §3, short-term KPIs)
 const scorecard = [
-  { metric: 'DCMA-14 Logic Score',       target: '≥ 95%',   why: 'Mathematically defensible network · prevents DOT rejection.' },
-  { metric: 'Schedule Update Latency',   target: '≤ 72 hr', why: 'Time from contractual data date to distributed variance report.' },
-  { metric: 'XER Processing Time',       target: '−50%',    why: 'vs. manual formatting/validation baseline. Entrepreneurial.' },
-  { metric: 'AACE Class 3 Estimate SLA', target: '≤ 10 d',  why: 'From 10–40% design package to deterministic budget estimate.' },
+  { metric: 'Schedule Health (DCMA-14 logic)', target: '≥ 95%',   why: 'PDF §3 · mathematically defensible network · prevents DOT rejection.' },
+  { metric: 'Reporting Velocity',              target: '≤ 72 hr', why: 'PDF §3 · time from contractual data date to distributed monthly update.' },
+  { metric: 'L10 Schedule Integration',        target: '100%',    why: 'PDF §3 · schedule health metric on the weekly L10 scorecard for every assigned project.' },
+  { metric: 'XER Processing Time',             target: '−50%',    why: 'Entrepreneurial Rock · vs manual formatting/validation baseline.' },
 ];
-// Lagging indicators reviewed quarterly / annually
+// Lagging indicators reviewed quarterly / annually (PDF §3, long-term KPIs)
 const laggingKpis = [
-  { metric: 'Baseline Approval Velocity', target: '≤ 2 cycles', why: 'Avg DOT submissions to first-pass acceptance.' },
-  { metric: 'Claim Mitigation Rate',      target: '≥ 70%',       why: 'TIA-defended time-extension requests reduced or rejected.' },
-  { metric: 'Variance at Completion',     target: '< 5%',        why: 'AACE Class 1 estimate vs. awarded bid / final cost.' },
+  { metric: 'DOT Baseline Approval Velocity', target: '≤ 2 cycles', why: 'PDF §3 · average DOT submissions to first-pass acceptance.' },
+  { metric: 'AACE Estimating Accuracy',       target: '± 5%',        why: 'PDF §3 · final Class 1 estimate vs awarded construction bid.' },
+  { metric: 'Administrative Time Savings',    target: '≥ 30%',       why: 'PDF §3 · documented reduction in manual reporting hours via automation.' },
 ];
-// Quarterly Rocks (90-day execution priorities)
+// Quarterly Rocks (90-day execution priorities) — PDF §5 manager-led model
 const rocks = [
-  { quarter: 'Q1', text: 'XerLens DCMA-14 auditor — GA across all active T&I projects.' },
+  { quarter: 'Q1', text: 'XerLens DCMA-14 auditor — GA across all active T&I projects (PM-approved Rock).' },
   { quarter: 'Q2', text: 'Automated TIA fragnet workflow — reduce delay-letter turnaround from 5 days to 1.' },
   { quarter: 'Q3', text: 'Portfolio EVM telemetry — live SPI/CPI feed into the L10 scorecard.' },
+];
+
+// PDF §2 weekly cadence — what the role actually does day-to-day
+const weeklyCadence = [
+  { day: 'MON', focus: 'Audit',   title: 'Contractor schedule submission review',  body: 'Run DCMA-14 + NJDOT logic check on every contractor XER. Generate plain-English memo to the Resident Engineer with accept / reject recommendation.' },
+  { day: 'TUE', focus: 'Update',  title: 'Progress vs baseline',                   body: 'Apply field actuals to P6, recompute SPI / CPI, surface the top-10 slipping activities. Distribute monthly update within 72 hours of data date.' },
+  { day: 'WED', focus: 'Report',  title: 'L10 scorecard contribution',             body: 'Two numbers on the weekly L10 (PDF §5): Schedule Health Score and Reporting Latency. Variance items drop straight to the Issues List.' },
+  { day: 'THU', focus: 'Estimate',title: 'AACE Class 5 → Class 1 progression',     body: 'Advance assigned projects through AACE 98R-18 classes as design matures, narrowing the accuracy band toward the ±5% lagging-KPI target.' },
+  { day: 'FRI', focus: 'Roll up', title: 'Portfolio view + BD support',            body: 'Consolidate active project schedules into a Newark/PANYNJ program view. Pull rapid quantity takeoffs for Business Development bid pursuits.' },
 ];
 
 const compensation = [
@@ -203,8 +212,8 @@ const compensation = [
   },
   {
     icon: Award,
-    title: 'EOS Value-Add Bonus',
-    body: 'Up to 10% bonus tied to high-value efficiency, cost avoidance, and proposal support — reviewed during Quarterly Conversations on EOS cycles. Directed work outside scope and standard hours follows standard overtime compensation.',
+    title: '10 Growth Units · Profit-Share',
+    body: 'Full participation in the quarterly profit-share program plus the 10 Growth Units described in the JD (PDF §6). Standard MCFA benefits: 15 days vacation, 5 sick, 11 federal holidays.',
   },
 ];
 
@@ -217,52 +226,52 @@ const proofBullets = [
   'NJDOT / NJTA-compliant CSV, PDF & Excel exports',
 ];
 
-/* Recruiter Q&A — short spoken answers, ~30 sec each */
+/* Recruiter Q&A — short spoken answers, ~30 sec each. Reframed for a Project Controls Director hiring a Scheduler. */
 const recruiterQA: { q: string; a: string; tag?: string }[] = [
   {
-    q: 'Why are you asking below the market for a Senior Scheduler?',
-    a: "I'm not. The $130K–$155K base is below the combined market for the two roles being absorbed — Scheduler and NICET Inspector total $185K–$235K. Against the consolidated scope, the ask is competitive; against either single role in isolation, it's premium. I've priced the consolidation, not just one seat.",
+    q: 'Why $130K–$140K — is that within band for an Evergreen Senior Scheduler at MCFA?',
+    a: "Yes. The PDF anchors the ask to the JD's Experienced level: $130K–$140K base, the 10 Growth Units, and standard quarterly profit-share. The PMP plus the systems-integration work that would otherwise need a separate developer hire is what justifies the upper half of that band, not a markup above it.",
     tag: 'ANCHOR',
   },
   {
-    q: "What if the ROI projections slip — what's MCFA actually exposed to?",
-    a: "The downside is bounded at one mid-senior salary, and even that's covered by the 1,600 billable hours alone. The Conservative ROI scenario in Section 7 — $180K — is the floor cited verbatim from the proposal. Realistic and Stretch are upside, not commitments. MCFA never pays for ROI it doesn't see.",
-    tag: 'DOWNSIDE BOUNDED',
+    q: 'How will you handle Resident Engineer communication on contractor schedule reviews?',
+    a: "Plain-English memos, not screenshots of P6. The /mcfa/demo Module A turns every DCMA-14 audit into a one-page memo addressed to the RE — recommendation (accept / accept-with-conditions / reject), hard blockers, advisory flags, and next steps. The RE never has to interpret a Gantt to act on the review.",
+    tag: 'RE COMMS',
   },
   {
-    q: "What's the guardrail on the bonus? How do you prevent runaway payouts?",
-    a: "Capped at 10% of base, tied directly to the EOS Quarterly Conversation. Every dollar is gated on Rocks: Q1 platform launch, Q2 AI photo-tagging, Q3 IDR-to-P6 beta. No Rock delivered, no bonus paid. The scoreboard is the gate.",
-    tag: 'EOS-GATED',
+    q: 'How does this scale across the Newark / PANYNJ portfolio?',
+    a: "Module B in the demo computes SPI/CPI and slip from a baseline + monthly update XER pair. Roll that across every active project, plug the scores into the L10 scorecard, and the Project Controls Director sees the entire portfolio's health on one strip. That's the Section 3 'Integrated Reporting' deliverable, productized.",
+    tag: 'PORTFOLIO',
   },
   {
-    q: 'How do we know you can deliver the platform alongside billable work?',
-    a: "Phase 1 is already live at /demo — built on personal time. The 600 flexible hours are non-supervision time inspectors already have on most projects; I'm just allocating that time to the platform instead of letting it idle. Worst case, MCFA gets a competent NICET inspector and a Senior Scheduler. Best case, the platform too.",
-    tag: 'PROOF SHIPPED',
+    q: "What's your AACE Class 5 → Class 1 estimate progression cadence?",
+    a: "Tied to design milestones, not the calendar. Concept Development → Class 5. Preliminary Engineering → Class 4. Final Design submission → Class 3 for budget authorization. PS&E package → Class 2 control estimate. Award → Class 1 for bid check and change-order pricing. Module E in the demo walks the bands explicitly.",
+    tag: 'AACE 98R-18',
   },
   {
-    q: 'Why not just hire a developer separately and keep the inspector role pure?',
-    a: "A standalone NJ developer with this stack costs $120K–$160K and has zero domain context — they'll spend a year learning what an IDR is. The hybrid model removes that translation layer. Field signals come from someone who's actually written the IDR they're now automating.",
-    tag: 'DOMAIN MOAT',
-  },
-  {
-    q: 'Who owns TakeoffPro? Is MCFA buying it or licensing it?',
-    a: "MCFA gets full internal use across its project portfolio under the employment agreement — no per-seat fees, no SaaS contract. I retain ownership of the core IP so it stays improvable. MCFA pays only the external footprint: hosting, storage, and AI API calls. Standard 'Shop Tool' arrangement.",
-    tag: 'IP CLEAN',
-  },
-  {
-    q: 'Why CPM scheduling now and not field inspection?',
-    a: "Field inspection generates the data; CPM scheduling is where that data either prevents or causes million-dollar claims. The proposal repositions me where the leverage is highest — and where my software background actually compounds. The TakeoffPro field tool keeps shipping; it just feeds the scheduler instead of being the destination.",
-    tag: 'LEVERAGE',
-  },
-  {
-    q: 'How does this satisfy NJDOT\'s no-negative-lag rule?',
-    a: "The XerLens demo flags every negative lag and open-ended activity in the contractor's submission before MCFA accepts it. Section 5.1 of the NJDOT Scheduling Manual prohibits both. Catching them at submission instead of at month-end is the difference between one email and a re-baseline.",
+    q: "How do you satisfy NJDOT's no-negative-lag rule on contractor submissions?",
+    a: "The XerLens demo flags every negative lag and open-ended activity before MCFA accepts the submission. Section 5.1 of the NJDOT Scheduling Manual prohibits both. Catching them at submission instead of at month-end is the difference between one email and a re-baseline.",
     tag: 'NJDOT COMPLIANT',
   },
   {
     q: "What if MCFA already licenses Acumen Fuse or a similar analytics tool?",
-    a: "Then we use it. XerLens isn't a Fuse replacement — it's the auth-agnostic, in-browser layer that PMs run themselves without bothering the scheduler. Fuse stays for deep forensic work; XerLens covers the daily 'is this submission acceptable?' question that today consumes an hour per project per week.",
+    a: "Then we use it. XerLens isn't a Fuse replacement — it's the auth-agnostic, in-browser layer that PMs and REs run themselves without bothering the scheduler. Fuse stays for deep forensic work; XerLens covers the daily 'is this submission acceptable?' question that today consumes an hour per project per week.",
     tag: 'COEXISTS',
+  },
+  {
+    q: "How will the Project Controls Director see your performance every week?",
+    a: "Two numbers on the L10 Scorecard, per PDF Section 5: Schedule Health Score (DCMA-14 logic ≥ 95%) and Reporting Latency (≤ 72 hours from data date). Quarterly Rocks are PM-approved before the quarter starts, so every Rock solves a real problem the team has flagged — not a side project.",
+    tag: 'EOS L10',
+  },
+  {
+    q: "Who owns the TakeoffPro / XerLens tooling?",
+    a: "MCFA gets full internal use across its project portfolio under the employment agreement — no per-seat fees, no SaaS contract. MCFA covers the basic cloud hosting (estimated <$100/mo per the PDF) to keep the tools running for the team. Standard 'Shop Tool' arrangement.",
+    tag: 'IP CLEAN',
+  },
+  {
+    q: "How will you reduce administrative time by 30% (PDF long-term KPI)?",
+    a: "By collapsing the four manual passes — XER review, monthly update report, IDR collation, executive snapshot — into one ingest pipeline. Phase 1 of TakeoffPro already eliminates the field-to-spreadsheet re-keying. XerLens collapses the contractor-review pass. The 30% target is a documented before/after, not a promise.",
+    tag: 'EFFICIENCY',
   },
 ];
 
@@ -275,7 +284,7 @@ const McfaPitch = () => {
   useEffect(() => {
     document.title = 'BYOR Proposal · Hybrid Construction Inspector & Systems Integrator — Asif Muhammad, PMP';
     const meta = document.querySelector('meta[name="description"]');
-    const desc = 'Build Your Own Role proposal for MCFA Transportation & Infrastructure: a 2,200-hour hybrid asset combining NICET inspection / P6 scheduling with internal AI + P6 systems development.';
+    const desc = 'Build Your Own Role proposal for the MCFA Evergreen CPM Scheduler/Estimator role: PMP-certified, NJDOT/NYSDOT compliant, AACE 98R-18 estimating, with auth-agnostic in-browser P6 XER tooling.';
     if (meta) meta.setAttribute('content', desc);
     else {
       const m = document.createElement('meta');
@@ -334,42 +343,44 @@ const McfaPitch = () => {
             >
               <motion.div variants={fadeUp} className="inline-flex items-center gap-2 text-[11px] tracking-[0.25em] text-cyan-400 border border-cyan-500/30 bg-cyan-500/5 px-3 py-1.5 rounded-sm">
                 <span className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
-                BUILD YOUR OWN ROLE · PROPOSAL
+                BUILD YOUR OWN ROLE · EVERGREEN POSTING · REFERRED BY SAQEEB MUHAMMAD
               </motion.div>
 
               <motion.h1 variants={fadeUp} className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.05] tracking-tight">
                 Systems-Enabled{' '}
                 <span className="text-cyan-400">CPM Scheduler / Estimator</span>{' '}
                 <span className="block text-muted-foreground/80 text-2xl md:text-3xl mt-3 font-normal">
-                  for MCFA Transportation &amp; Infrastructure
+                  for MCFA Transportation &amp; Infrastructure · Newark Airport / PANYNJ portfolio
                 </span>
               </motion.h1>
 
               <motion.p variants={fadeUp} className="text-lg text-muted-foreground max-w-2xl leading-relaxed">
-                <span className="text-foreground font-semibold">PMP-certified</span> · DO-178B-grade rigor ·
-                auth-agnostic <span className="text-cyan-400 font-semibold">XER tooling</span> for NJDOT &amp; NYSDOT.
-                Schedule integrity, AACE-compliant estimates, and a live drag-and-drop P6 audit — built into one project-controls function.
+                <span className="text-foreground font-semibold">PMP-certified</span> · disciplined Primavera P6 + AACE
+                estimating · auth-agnostic <span className="text-cyan-400 font-semibold">XER tooling</span> for NJDOT
+                &amp; NYSDOT compliance. Reliable, audit-ready data so PMs can lead their projects successfully —
+                MCFA's mission of <em className="text-foreground/80">Inspiring People and Places</em>, applied to
+                project controls.
               </motion.p>
 
               <motion.div variants={fadeUp} className="grid grid-cols-3 gap-4 pt-4 border-t border-border/60">
                 <div>
-                  <div className="text-3xl font-bold text-cyan-400">1,600</div>
-                  <div className="text-[10px] tracking-widest text-muted-foreground mt-1">CORE BILLABLE HRS</div>
+                  <div className="text-3xl font-bold text-cyan-400">≥ 95%</div>
+                  <div className="text-[10px] tracking-widest text-muted-foreground mt-1">DCMA-14 LOGIC TARGET</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold text-emerald-400">600</div>
-                  <div className="text-[10px] tracking-widest text-muted-foreground mt-1">FLEXIBLE OE / DEV</div>
+                  <div className="text-3xl font-bold text-emerald-400">≤ 72 h</div>
+                  <div className="text-[10px] tracking-widest text-muted-foreground mt-1">UPDATE DISTRIBUTION SLA</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold text-amber-400">~50%</div>
-                  <div className="text-[10px] tracking-widest text-muted-foreground mt-1">PROVEN AUTOMATION GAIN</div>
+                  <div className="text-3xl font-bold text-amber-400">± 5%</div>
+                  <div className="text-[10px] tracking-widest text-muted-foreground mt-1">AACE CLASS 1 ACCURACY</div>
                 </div>
               </motion.div>
 
               <motion.div variants={fadeUp} className="flex flex-wrap gap-3 pt-2">
                 <Button asChild size="lg" className="font-mono">
                   <Link to="/mcfa/demo">
-                    Open XER Live Demo <ArrowRight className="h-4 w-4" />
+                    Open the weekly scheduler demo <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
                 <Button asChild size="lg" variant="outline" className="font-mono">
@@ -382,7 +393,7 @@ const McfaPitch = () => {
 
               <motion.div variants={fadeUp} className="text-xs text-muted-foreground pt-2">
                 <span className="text-foreground font-semibold">Asif Muhammad, PMP</span> · NICET HCI Level I (exams complete) ·
-                BSET, NJIT · Currently supporting certified inspectors on Garden State Parkway repairs (Colonia)
+                BSET, NJIT · Reports to the Project Controls Director · Garden State Parkway repairs (Colonia, Churchill / Trilon)
               </motion.div>
             </motion.div>
 
@@ -496,6 +507,33 @@ const McfaPitch = () => {
         </div>
       </section>
 
+      {/* ============================================================ */}
+      {/* SECTION 2.5 · A WEEK IN THE ROLE                             */}
+      {/* ============================================================ */}
+      <section className="border-b border-border/60 py-20">
+        <div className="container mx-auto px-4">
+          <SectionHeader number="02·5" eyebrow="WEEKLY CADENCE" title="A Week in the Role" />
+          <p className="text-muted-foreground max-w-3xl mt-4">
+            The 10 activities above collapse into a five-day rhythm. Each day produces a deliverable the
+            Project Controls Director and Resident Engineers can act on — and the live demo at <Link to="/mcfa/demo" className="text-cyan-400 underline underline-offset-4">/mcfa/demo</Link> walks every step.
+          </p>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}
+            className="grid md:grid-cols-2 lg:grid-cols-5 gap-3 mt-10">
+            {weeklyCadence.map((d) => (
+              <motion.div key={d.day} variants={fadeUp}>
+                <Card className="p-5 h-full bg-card/40 border-border/60 hover:border-cyan-500/40 transition-colors">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-2xl font-bold text-cyan-400 tracking-widest">{d.day}</span>
+                    <span className="text-[10px] tracking-widest text-muted-foreground border border-border/60 px-2 py-0.5 rounded-sm">{d.focus.toUpperCase()}</span>
+                  </div>
+                  <div className="text-sm font-semibold mb-2 leading-tight">{d.title}</div>
+                  <div className="text-xs text-muted-foreground leading-relaxed">{d.body}</div>
+                </Card>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
 
       {/* ============================================================ */}
       <section className="border-b border-border/60 py-20">
@@ -505,19 +543,22 @@ const McfaPitch = () => {
           <div className="grid lg:grid-cols-2 gap-10 mt-10">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="space-y-4 text-muted-foreground leading-relaxed">
               <p>
-                MCFA's current hiring initiatives suggest a <span className="text-foreground">dual requirement</span> for high-level
-                Project Controls / Scheduling expertise <em>and</em> dedicated NICET field inspection. Recruiting these roles
-                independently risks operational silos and increased overhead.
+                MCFA's Evergreen CPM Scheduler/Estimator posting calls for disciplined Primavera P6 work, AACE-compliant
+                estimating, and DOT-grade compliance — with a clear opening for an "Entrepreneurial" team member who
+                automates the grunt work of project controls. Referred by <span className="text-foreground">Saqeeb Muhammad</span>,
+                this proposal answers that call directly.
               </p>
               <p>
-                This proposal eliminates that silo. <span className="text-cyan-400 font-semibold">~1,600 hours</span> deliver core
-                billable capacity; <span className="text-emerald-400 font-semibold">~600 hours</span> of flexible capacity service
-                Office Engineer support, BD proposal coordination, and the development of proprietary "Shop Tools" — anchored by
-                the TakeoffPro quantity-tracking application already shipping at <Link to="/demo" className="text-foreground underline underline-offset-4">/demo</Link>.
+                The role reports to the <span className="text-foreground">Project Controls Director</span>, supports
+                Resident Engineers on contractor schedule reviews, and feeds the L10 Scorecard with two predictive numbers
+                every week. The Entrepreneurial value-add is the in-browser <span className="text-cyan-400 font-semibold">XerLens</span> tooling
+                shown at <Link to="/mcfa/demo" className="text-foreground underline underline-offset-4">/mcfa/demo</Link> —
+                accelerators that make the scheduler faster, not a separate role.
               </p>
               <p>
-                The end-state vision: a <span className="text-foreground">full Primavera P6 integration</span> creating a digital
-                ecosystem where field data dynamically updates executive schedules — turning static baselines into live telemetry.
+                The end-state vision aligns to MCFA's mission of <em className="text-foreground">Inspiring People and Places</em>:
+                give every PM the most reliable, up-to-date schedule data on the program, so they can lead their projects
+                successfully across the Newark Airport / PANYNJ portfolio.
               </p>
             </motion.div>
 
@@ -982,12 +1023,12 @@ const McfaPitch = () => {
                     </tr>
                     <tr className="bg-emerald-500/10 border-t border-emerald-500/30">
                       <td className="p-3">
-                        <div className="font-bold text-foreground">BYOR Hybrid Ask</div>
-                        <div className="text-[11px] text-emerald-400/90 mt-0.5">One asset · two billable lanes · platform delivered</div>
+                        <div className="font-bold text-foreground">BYOR Ask · Experienced Senior Scheduler</div>
+                        <div className="text-[11px] text-emerald-400/90 mt-0.5">PMP · NJDOT/AACE · XerLens tooling included</div>
                       </td>
                       <td className="p-3 text-right">
-                        <div className="font-mono font-bold text-emerald-400 text-base">$130K – $155K</div>
-                        <div className="text-[10px] text-muted-foreground mt-0.5">+ up to 10% EOS Value-Add bonus</div>
+                        <div className="font-mono font-bold text-emerald-400 text-base">$130K – $140K</div>
+                        <div className="text-[10px] text-muted-foreground mt-0.5">+ 10 Growth Units · quarterly profit-share (PDF §6)</div>
                       </td>
                     </tr>
                   </tbody>
@@ -1071,8 +1112,7 @@ const McfaPitch = () => {
               <span className="text-cyan-400">at MCFA.</span>
             </h2>
             <p className="text-muted-foreground mt-6 leading-relaxed max-w-2xl mx-auto">
-              A working prototype already exists. The next step is a 30-minute conversation about how the 2,200-hour hybrid
-              model maps onto MCFA's immediate NICET and Scheduling priorities.
+              A working prototype of the weekly scheduler workflow already exists at /mcfa/demo. The next step is a 30-minute conversation about how this maps to the Project Controls Director's immediate Newark / PANYNJ priorities.
             </p>
             <div className="flex flex-wrap gap-3 justify-center mt-10">
               <Button asChild size="lg" className="font-mono">

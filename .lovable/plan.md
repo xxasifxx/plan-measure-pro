@@ -1,113 +1,73 @@
 
-# Strategic Realignment: CPM Scheduler/Estimator Pitch + XER Live Demo
+## Goal
 
-The proposal demands two coordinated deliverables: (1) a re-narrated `/mcfa` pitch that repositions the candidate from "Hybrid Inspector + Systems Integrator" to **systems-enabled CPM Scheduler/Estimator**, and (2) a live, drag-and-drop **XER parser PWA demo** at `/mcfa/demo` that proves the four modules described in Section "Technical Specifications for the Live Demonstration."
+Make `/mcfa` and `/mcfa/demo` cleanly demonstrate that the candidate understands and can execute the **CPM Scheduler/Estimator (Evergreen)** role described in the BYOR PDF — referred by Saqeeb Muhammad, anchored at Newark Airport / PANYNJ, primary tools Primavera P6 + NJDOT/NYSDOT compliance + AACE estimating.
 
-Existing TakeoffPro features stay — they become the *Phase 1 / field-data ingest* half of the story. The scheduler/estimator capability is layered on top.
+## Gaps found
 
----
+**On `/mcfa` (McfaPitch.tsx):**
 
-## 1. `/mcfa` pitch rewrite (`src/pages/McfaPitch.tsx`)
+1. Hero headline is correct ("Systems-Enabled CPM Scheduler / Estimator") but the surrounding copy and stats still lean "hybrid inspector / dev" — the PDF deliberately moves the pitch off inspection and onto scheduling.
+2. The 1,600 + 600 hour split and "NICET inspector + scheduler + dev" framing in §01 contradicts the PDF's positioning. PDF treats inspection as past credential, not current scope.
+3. Compensation block says $130K–$155K and "10% EOS Value-Add Bonus." PDF says **$130K–$140K base** and "**10 Growth Units**" + standard quarterly profit-share. Numbers must match the PDF the recruiter has in hand.
+4. Page never mentions the **Saqeeb Muhammad referral**, **Evergreen** posting status, or **MCFA's "Inspiring People and Places" mission tie-in** — all explicit in the PDF intro and worth surfacing.
+5. KPIs on the page are close but not 1:1 with the PDF's Section 3:
+   - PDF short-term: ≥95% logic, ≤72-hr update distribution, L10 integration.
+   - PDF long-term: ≤2 DOT submission cycles, ±5% estimate accuracy, 30% admin time reduction.
+   - Page has most of these but mixes in custom metrics; align labels and numbers.
+6. Recruiter Q&A still anchors on "Why CPM and not inspection?" / "Why not hire a developer separately?" — useful, but several entries defend the dual-role framing the PDF explicitly retired. Trim to the questions a Project Controls Director would actually ask about a Scheduler hire.
+7. Missing a clear **"Day in the life of this role"** narrative tying the 10 activities to a weekly cadence (Mon = contractor submission review, Tue = baseline update, Wed = L10 scorecard, Thu = AACE estimate progression, Fri = portfolio rollup). Recruiters skim; this is the single most concrete proof of role understanding.
+8. No explicit mention of **Newark Airport / PANYNJ portfolio** anywhere prominent, and no mention of **Resident Engineer** as the primary internal customer (PDF calls this out for contractor-schedule feedback).
 
-Keep the existing section scaffold; rewrite copy and reorder so scheduling leads.
+**On `/mcfa/demo` (XerDemo.tsx + 4 modules):**
 
-| # | Section | Change |
-|---|---|---|
-| Hero | "TakeoffPro proof-of-concept" | New title: **"Systems-Enabled CPM Scheduler / Estimator."** Sub: "PMP · DO-178B-grade rigor · auth-agnostic XER tooling for NJDOT & NYSDOT." Add a second CTA → **"Open XER Live Demo"** → `/mcfa/demo`. |
-| 00 Workflow Replacement | Manual vs TakeoffPro | Reframe as **"Field → P6 latency, eliminated"**: paper DC → Excel → email → re-key into P6 becomes one record that exports to NJDOT Daily, pay estimate, and **P6 schedule update CSV**. |
-| 01 Introduction | Strategic Vision | Replace narrative with the four-beat from Section 2 of the proposal: (a) firm mission, (b) PMP + aerospace/DO-178B → DOT compliance, (c) BYOR + EOS Entrepreneurial spirit, (d) thesis = data latency & logic flaws kill projects. |
-| 02 Role Description | "2,200-Hour Hybrid Model" | Rename **"The Systems-Enabled Scheduler — 10 Core Activities."** Render the 10 bullets verbatim (P6 baselines & NJDOT WBS · contractor schedule assessment · DCMA-14 QA · AACE 98R-18 estimating · EVM telemetry · L10 integration · TIA automation · drag-drop XER tools · portfolio integration · bid scheduling). |
-| 03 Internal Shop Tool | "TakeoffPro 3-Phase AI" | Rename **"Internal Platform: TakeoffPro + XerLens."** Phase 1 field capture (today) · Phase 2 XER parser PWA (demo today) · Phase 3 portfolio telemetry. |
-| 04 KPIs · EOS Rocks | First 90 Days | Replace tiles with the EOS Scorecard table from Section 4: DCMA-14 ≥95%, Schedule Update Latency ≤72h, XER processing −50%, AACE Class 3 SLA. Add long-term lagging row: Baseline Approval Velocity, Claim Mitigation %, VAC <5%. |
-| 05 Archetype Matrix | Capability comparison | Update columns to **Trad. Scheduler · Trad. Estimator · Systems-Enabled CPM (you)**. Rows: P6 mastery, AACE estimating, DCMA-14 automation, XER scripting, EOS fluency, DOT compliance fluency. |
-| 06 Architecture | Project Controls Systems | Diagram now centers on **XER ingest → parser → DCMA/TIA/WBS modules → EVM dashboard → L10 scorecard feed**. Field inputs (TakeoffPro) feed the same store. |
-| 07 ROI Waterfall | Annual | Re-anchor on proposal's **200–400% first-year ROI** and "60% of scheduler hours are low-value" stats. Three scenarios: Conservative (overhead avoidance only), Realistic (+ one mitigated TIA claim), Stretch (+ SaaS license avoidance for Acumen Fuse-class tools). |
-| 08 EOS Performance | GWC · L10 · Quarterly | Map weekly L10 Issues feed directly to DCMA-14 / latency scorecard misses. Quarterly Rocks: Q1 XER parser GA, Q2 TIA fragnet automation, Q3 portfolio EVM. |
-| 09 Compensation | Transparent | Add the **IP & Tooling clause** from Section 7: scripts/PWAs developed on flex hours remain MCFA IP; MCFA covers raw cloud/API costs in exchange for SaaS avoidance. Keep absorbed-roles ranges + recruiter Q&A panel as-is. |
-| Final CTA | — | Two buttons: "Book the live walkthrough" + "Open XER Demo." |
+The 4 modules (DCMA-14, TIA, ISO 19650 file explorer, WBS/NJDOT) are good but show **schedule audit** more than **the scheduler's actual job**. The JD describes a recurring weekly workflow: receive contractor XER → audit → write feedback memo to RE → update progress vs. baseline → roll into portfolio → estimate progression. The demo currently stops at "audit." Specifically:
 
-Recruiter Q&A panel: add three new entries — *"Why CPM and not inspection?"*, *"How does this satisfy NJDOT's no-negative-lag rule?"*, *"What if we already license Acumen Fuse?"*
+1. **Module A (DCMA)** ends at a score table. The JD's deliverable is "clear non-technical feedback to Resident Engineers." Add a one-click **"Generate RE feedback memo"** action that turns the failed checks into a plain-English review letter (the artifact the role actually produces).
+2. **No baseline-vs-update / progress monitoring view.** This is half the JD ("regularly update project progress against the baseline, identifying deviations early"). Add a small **Module E · Progress vs Baseline** tab that, when a second XER is dropped (or using a second sample), computes activity-level variance, SPI, CPI, and lists the top 10 slipping activities. Even a synthetic delta against the sample is enough to demonstrate the workflow.
+3. **No portfolio rollup.** JD calls out "Consolidate multiple project schedules into a holistic program view to help leadership manage resources across the Newark/PANYNJ portfolio." Add a small **Portfolio strip** above the modules that, after one XER is loaded, shows that file plus 2–3 stub PANYNJ projects (EWR Terminal A, GSP MP123, Pulaski Skyway) with their DCMA score, % complete, SPI, and float — making the rollup concrete.
+4. **No AACE estimating module.** JD lists "AACE-compliant cost estimates at various project stages (Class 5 to Class 1)." Add a lightweight **Module F · AACE Class Progression** that shows the 5 AACE classes with the current sample project's estimate accuracy band and a CTA "advance to next class" that narrows the band — proves understanding without needing real estimating data.
+5. **Tour script** currently says "Four modules, one workflow." Update once new modules land, and reframe each tour step around the JD verb (Audit → Communicate → Update → Roll up → Estimate → Defend) rather than the module letter.
+6. **Header copy** on the demo says "MODULE OF THE PROPOSED CPM SCHEDULER ROLE" — strengthen to "what this role does every Monday morning when a contractor submits."
 
----
+## Plan
 
-## 2. New live demo: `/mcfa/demo` — XerLens PWA
+### 1. Realign `/mcfa` to the PDF
 
-A **standalone, auth-agnostic** route (no login, no Supabase writes) so the recruiter can drag a real `.xer` file in during the call. All parsing happens **in-browser**.
+- Update hero supporting copy and the 3 stat tiles. Replace "1,600 / 600 / ~50%" with stats that map to the PDF KPIs: e.g., **≥95%** DCMA logic, **≤72 hr** update distribution, **±5%** AACE accuracy. Keep the "PMP-certified" line.
+- Add a small **"Referred by Saqeeb Muhammad · Evergreen Posting · Newark Airport / PANYNJ portfolio"** sub-ribbon under the hero badge.
+- §01 Strategic Vision: rewrite the dual-role / 1,600+600 paragraph to match the PDF intro — anchor on the MCFA mission ("Inspiring People and Places"), the Project Controls Director as manager, and the Entrepreneurial value-add (TakeoffPro/XerLens as accelerators, *not* a separate role).
+- Add a new section **"A Week in the Role"** (between current §02 and §03) — 5-day cadence card (Mon contractor submission audit → Tue baseline update + variance → Wed L10 scorecard contribution → Thu AACE estimate progression → Fri portfolio rollup + BD takeoff support). This is the recruiter-skim section.
+- §04 KPIs: re-key the leading/lagging tables to exactly match PDF Section 3 wording and numbers (95%, 72-hr, ≤2 cycles, ±5%, 30% admin reduction, plus Manager-led Rocks per PDF Section 5).
+- §06 Compensation: change band to **$130K–$140K**, replace "10% EOS Value-Add Bonus" with "**10 Growth Units** + quarterly profit-share participation" (PDF wording), keep the Tooling Agreement language but cap hosting per PDF (<$100/mo).
+- Recruiter Q&A: keep the Anchor / Downside / EOS-gated / NJDOT / Acumen Fuse questions; remove or rewrite the "Why CPM and not field inspection?" and "Why not hire a developer separately?" entries — replace with: (a) "How will you handle Resident Engineer communication?", (b) "How does this scale across the PANYNJ portfolio?", (c) "What's your AACE Class 5 → Class 1 progression cadence?".
+- Add a one-line MCFA mission tie-in in the closing CTA strip ("Inspiring People and Places — by giving every PM the most reliable schedule data on the program.").
 
-### Route & files
-- New route in `src/App.tsx`: `/mcfa/demo` → `<XerDemo />` (public, like `/mcfa`).
-- New page `src/pages/XerDemo.tsx`.
-- New lib `src/lib/xer/` with:
-  - `parser.ts` — tokenizes the tab-delimited XER (header rows `%T TASK`, `%F …`, `%R …`) into typed tables `{ TASK, PROJWBS, TASKPRED, CALENDAR, RSRC, PROJECT }`.
-  - `dcma.ts` — runs the 14 checks against parsed tables; returns `{ check, score, failingTaskIds[], target, pass }[]`.
-  - `tia.ts` — given a delay note + impacted activity ID, builds a fragnet (insert delay activity + FS link) and drafts an NJDOT-flavored TIA narrative string.
-  - `wbs.ts` — flattens PROJWBS to a tree; cross-references milestones against required NJDOT codes (`M100`, `M500`, `M950`, plus the standard set from the Scheduling Manual).
-  - `sample.ts` — embeds a small valid sample `.xer` string so the demo works even with no upload.
+### 2. Extend `/mcfa/demo` to demonstrate the scheduler workflow
 
-### UI (single page, four tabs)
+- **Module A enhancement**: add a **"Generate RE feedback memo"** button beside "Copy summary." It produces a plain-English memo addressed to the Resident Engineer summarizing the failed DCMA checks, the offending activities (top 5), and a recommended action ("Reject and request resubmission" / "Accept with conditions"). This is a `lib/xer/feedback.ts` helper.
+- **New Module E · Progress vs Baseline**: a 5th tab. When the user drops a second XER (or clicks "Load updated sample"), compute per-activity start/finish variance, project-level SPI and CPI (using duration as a proxy for cost since XER cost data is sparse), and a top-10 slipping-activities table. Helper: `lib/xer/progress.ts` + a second sample file `lib/xer/sample-update.ts`.
+- **New Module F · AACE Class Progression**: card-based view of Classes 5 → 1 with accuracy bands (-50%/+100% down to -3%/+3%), highlighting the current "active" class with a slider/button to advance the project. Pure UI, no XER data required. Helper: `lib/xer/aace.ts`.
+- **Portfolio rollup strip**: a small horizontal-scroll card row above the Tabs showing the loaded project + 3 stub PANYNJ projects with mini metrics (DCMA score, % complete, SPI, float days). Hardcoded stub data is fine for demo; clearly labeled "Sample portfolio."
+- **Tour update**: extend `tourSteps` to cover the two new modules and the portfolio strip, and rewrite step bodies around JD verbs (Audit · Communicate · Update · Roll up · Estimate · Defend).
+- **Header copy**: change "MODULE OF THE PROPOSED CPM SCHEDULER ROLE" to "WHAT THIS ROLE DOES EVERY MONDAY MORNING."
 
+### 3. Files to touch
+
+```text
+src/pages/McfaPitch.tsx                — hero/§01/§04/§06 copy, new "Week in role" section, Q&A trim
+src/pages/XerDemo.tsx                  — add Modules E + F, portfolio strip, RE memo button, update tour
+src/components/XerLensTour.tsx         — no structural change, just consume new steps
+src/lib/xer/feedback.ts                — NEW · RE memo generator from DCMA results
+src/lib/xer/progress.ts                — NEW · variance / SPI / CPI between two XERs
+src/lib/xer/aace.ts                    — NEW · Class 5→1 metadata + accuracy bands
+src/lib/xer/sample-update.ts           — NEW · second sample for progress demo
 ```
-[ Drag .xer here · or "Load sample NJDOT project" ]
-─────────────────────────────────────────────
-[ A. DCMA 14 ] [ B. TIA ] [ C. File Explorer ] [ D. WBS / Compliance ]
-```
 
-**Module A — DCMA 14-Point Auditor**
-- Table: each of the 14 checks with target (e.g. Logic <5%, Leads 0%, Lags <5%, FS ≥90%, Hard Constraints <5%, High Float <5%, Negative Float 0%, High Duration <5%, Invalid Dates 0%, Resources, Missed Tasks <5%, Critical Path Test, CPLI ≥0.95, BEI ≥0.95).
-- Pass/fail chip, count of failing activities, "Show offenders" expands to list of `task_code · name`.
-- Headline score (overall % passing) and a copy-to-clipboard summary block ready to paste into an email.
+No DB migrations, no edge function changes, no new dependencies.
 
-**Module B — Automated TIA**
-- Form: "Activity affected" (autocomplete from parsed TASKs), "Delay start", "Delay days", "Cause" (free text), "Type" (Weather / Owner-directed / Differing site / Supply chain).
-- Output panel: (1) fragnet preview as ASCII (`A1020 ─FS→ DELAY-001 (5d) ─FS→ A1030`), (2) draft narrative paragraph referencing NJDOT/NYSDOT TIA conventions, (3) "Copy narrative" + "Download fragnet CSV" (importable to P6).
+### 4. Out of scope (call out, don't build)
 
-**Module C — Intelligent File Explorer**
-- Drop zone for arbitrary files (xer, pdf, xlsx, jpg). Files stay in memory only.
-- On drop, regex/heuristic tagger assigns ISO 19650-style metadata (`{Project}-{Originator}-{Volume}-{Level}-{Type}-{Role}-{Number}`) inferred from filename + extension.
-- Search-driven list (cmdk) with chips for Type, Discipline, Status. Demonstrates the "no more nested folders" promise.
-
-**Module D — WBS / Compliance Verification**
-- Collapsible tree from PROJWBS.
-- Side panel: checklist of mandatory NJDOT milestones (M100 Advertise, M500 Construction Start, M950 Completion, plus the full M-code set). Each row: green check if a TASK with that `task_code` prefix exists, red X with "Insert milestone" hint if missing.
-- Banner: "Negative lags found: N" / "Open-ended activities: N" so the auditor sees instant DOT compliance posture.
-
-### Hero/landing strip on `/mcfa/demo`
-Short pitch above the dropzone: "Drop any Primavera P6 `.xer` file. Nothing leaves your browser. In ten seconds you'll see the same DCMA-14 audit, TIA draft, and NJDOT WBS check we'd run on every MCFA project."
-
----
-
-## 3. McfaPitch CTA wiring
-- Replace existing "Open Live Demo" button (currently → `/demo`, the field-app demo) with **two** buttons: "Open Field Demo" → `/demo` (existing) and **"Open XER Demo" → `/mcfa/demo`** (new).
-- Final-CTA section gets the same pair.
-
----
-
-## 4. Out of scope (this round)
-- Real Primavera P6 API sync, EVM curve fitting, AACE Class 5→1 estimating workflows beyond display, Acumen Fuse-style report PDFs, and persisting XER uploads to Supabase. The proposal explicitly frames the demo as auth-agnostic and in-browser, so we keep it that way.
-
----
-
-## Technical Section
-
-**Files added**
-- `src/pages/XerDemo.tsx` (page, ~400 LOC, four tabs via `Tabs`)
-- `src/lib/xer/parser.ts` — pure TS, no deps; handles `%T`/`%F`/`%R` blocks and quoted fields
-- `src/lib/xer/dcma.ts` — 14 check functions, each `(tables) => CheckResult`
-- `src/lib/xer/tia.ts` — fragnet + narrative builder
-- `src/lib/xer/wbs.ts` — tree + NJDOT milestone matcher (constants: `NJDOT_REQUIRED_MILESTONES`)
-- `src/lib/xer/sample.ts` — embedded sample XER string (small NJTA-flavored project)
-- `src/lib/xer/types.ts` — `Task`, `ProjWbs`, `TaskPred`, `Calendar`, `Resource`
-
-**Files edited**
-- `src/App.tsx` — add `<Route path="/mcfa/demo" element={<XerDemo />} />`
-- `src/pages/McfaPitch.tsx` — rewrite per Section 1 above; add second CTA, expand Q&A, swap KPI tiles, update archetype matrix, ROI re-anchor, IP clause in Comp section
-
-**No DB / edge function / migration changes.** Everything runs client-side, matching the proposal's "auth-agnostic" requirement.
-
-**Risks**
-- Real-world `.xer` files vary in field order between Primavera versions. Parser keys columns by header row (`%F`) per block, so it adapts; we'll handle missing optional columns defensively and surface a "Couldn't parse N rows" warning rather than crashing.
-- DCMA-14 has multiple published variants (DCMA vs DCMA+); we'll cite the canonical 14 and note targets in tooltips.
-
----
-
-Approve to proceed and I'll build it.
+- Real multi-project XER ingestion + persisted portfolio (would require Supabase tables — already exist for the field tool but not wired here; stub data is enough to prove the concept).
+- Real AACE cost data linkage (no XER cost rollup; UI-only progression is sufficient).
+- Edits to the existing `/demo` field tool — separate product, the PDF already credits it as "shipping today."
