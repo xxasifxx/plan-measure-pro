@@ -61,6 +61,8 @@ const XerDemo = () => {
 
   const startTour = () => {
     if (!tables) ingest(SAMPLE_XER, 'NJTA-MP123-BASELINE.xer');
+    setUpdateTables(null);
+    setTab('dcma');
     setTourOpen(true);
   };
 
@@ -93,6 +95,181 @@ const XerDemo = () => {
     setUpdateTables(t);
     toast({ title: '60-day update loaded', description: 'Compare against the baseline in Module B · Progress.' });
   };
+
+  // Helpers used by the live demo tour
+  const wait = (ms: number) => new Promise<void>(r => setTimeout(r, ms));
+  const click = (sel: string) =>
+    (document.querySelector(sel) as HTMLElement | null)?.click();
+
+  const tourSteps: TourStep[] = useMemo(() => [
+    {
+      target: '[data-tour="dropzone"]',
+      title: 'Mon 8:02 AM — contractor submission lands',
+      body: 'A contractor just emailed an .xer for NJTA MP 123 Bridge Replacement. We loaded it for you. Watch the next 90 seconds — XerLens will run the entire weekly scheduler workflow on this dummy project.',
+      dwellMs: 7000,
+      beforeShow: async () => {
+        if (!tables) ingest(SAMPLE_XER, 'NJTA-MP123-BASELINE.xer');
+        setUpdateTables(null);
+        setTab('dcma');
+        await wait(200);
+      },
+    },
+    {
+      target: '[data-tour="tabs"]',
+      title: 'Six modules · one weekly cadence',
+      body: 'Mon Audit (A) → Tue Update (B) → Wed Defend (C) → Thu Comply (D) → Fri Estimate (E) & File (F). Same loop every week of the project.',
+      dwellMs: 6500,
+    },
+    {
+      tab: 'dcma',
+      target: '[data-tour="dcma-score"]',
+      title: 'Mon · Module A — DCMA-14 just ran',
+      body: 'All 14 industry checks executed against the contractor\'s schedule. The score card on the left tells you the overall health at a glance — anything below 90% needs a memo back.',
+      dwellMs: 6500,
+      beforeShow: async () => { setTab('dcma'); await wait(150); },
+    },
+    {
+      tab: 'dcma',
+      target: '[data-tour="dcma-row-hard"]',
+      title: 'Click a failed check to see the offenders',
+      body: 'We auto-expanded "Hard Constraints". The contractor used a CS_MFO Mandatory-Finish on Project Completion — that locks the network and breaks NJDOT 108-03. Every offending activity is listed inline.',
+      dwellMs: 7500,
+      beforeShow: async () => {
+        await wait(250);
+        click('[data-tour="dcma-row-hard"]');
+        await wait(300);
+      },
+    },
+    {
+      tab: 'dcma',
+      target: '[data-tour="dcma-memo"]',
+      title: 'One click → ready-to-send RE memo',
+      body: 'Generate RE feedback memo turns the failures into a plain-English review letter — DCMA findings, NJDOT spec citations, the actual offending activity codes. Copy, PDF, or DOCX. This is the artifact you email the Resident Engineer.',
+      dwellMs: 8500,
+      beforeShow: async () => {
+        await wait(200);
+        // open the memo card if it isn't already
+        const btn = document.querySelector('[data-tour="dcma-memo-toggle"]') as HTMLButtonElement | null;
+        if (btn && !document.querySelector('[data-tour="dcma-memo"]')) btn.click();
+        await wait(350);
+        document.querySelector('[data-tour="dcma-memo"]')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      },
+    },
+    {
+      tab: 'progress',
+      target: '[data-tour="progress-empty"]',
+      title: 'Tue · Module B — monthly status update arrives',
+      body: 'Same project, 60 days later. The contractor\'s progress XER lands in your inbox. Drop it here to compare against the baseline.',
+      dwellMs: 6000,
+      beforeShow: async () => { setUpdateTables(null); setTab('progress'); await wait(200); },
+    },
+    {
+      tab: 'progress',
+      target: '[data-tour="progress-kpis"]',
+      title: 'SPI / CPI / % complete · computed instantly',
+      body: 'We loaded the update for you. SPI and CPI are red because A2020 (substructure removal) lost 20 days. % complete is by hours. Forecast finish has slipped — see how much next.',
+      dwellMs: 7500,
+      beforeShow: async () => {
+        if (!updateTables) loadUpdate();
+        await wait: 350;
+      },
+    },
+    {
+      tab: 'progress',
+      target: '[data-tour="progress-chart"]',
+      title: 'Baseline vs forecast · activity-level slip',
+      body: 'Cyan = baseline finish offset, amber = forecast finish (late), green = on/early. Dashed line = update data date. Pier driving and pier pour both pushed right by ~20 days — that\'s the chain that drives the EOT we\'ll defend on Wednesday.',
+      dwellMs: 8500,
+      beforeShow: async () => { await wait(250); },
+    },
+    {
+      tab: 'progress',
+      target: '[data-tour="progress-exports"]',
+      title: 'Export the chart · Summary PDF · Lag chips',
+      body: 'PNG drops the chart into your status email. Summary PDF assembles a one-pager (KPIs + chart + top slipping table) for the monthly progress meeting. The amber chips below jump straight to the offending row.',
+      dwellMs: 7500,
+    },
+    {
+      tab: 'tia',
+      target: '[data-tour="tia-output"]',
+      title: 'Wed · Module C — defend the EOT with a TIA',
+      body: 'We pre-filled the form with the actual delay (A2020 · Differing Site Condition · 14 days). XerLens generated a fragnet (FS, zero lag — NJDOT 108-03 compliant) and a draft narrative. Copy and paste into the EOT request letter.',
+      dwellMs: 8500,
+      beforeShow: async () => {
+        setTab('tia');
+        await wait(300);
+        // Pre-fill TIA inputs via DOM (uncontrolled set + dispatch)
+        const setVal = (sel: string, value: string) => {
+          const el = document.querySelector(sel) as HTMLInputElement | HTMLTextAreaElement | null;
+          if (!el) return;
+          const proto = el instanceof HTMLTextAreaElement
+            ? window.HTMLTextAreaElement.prototype
+            : window.HTMLInputElement.prototype;
+          const setter = Object.getOwnPropertyDescriptor(proto, 'value')?.set;
+          setter?.call(el, value);
+          el.dispatchEvent(new Event('input', { bubbles: true }));
+        };
+        setVal('input[type="number"]', '14');
+        setVal('textarea', 'Differing site condition — solid rock encountered at Pier 1 elevation 412.5, halting pile driving operations. Geotech consultant on site; revised pile schedule pending.');
+        await wait(300);
+        document.querySelector('[data-tour="tia-output"]')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      },
+    },
+    {
+      tab: 'wbs',
+      target: '[data-tour="wbs-milestones"]',
+      title: 'Thu · Module D — NJDOT WBS & milestone audit',
+      body: 'M100 (Advertise), M500 (Construction Start), M950 (Completion) all present and accounted for. Negative-lag and open-end counters at the top flag any non-conformance the moment a contractor edit breaks the network.',
+      dwellMs: 7500,
+      beforeShow: async () => { setTab('wbs'); await wait(250); },
+    },
+    {
+      tab: 'aace',
+      target: '[data-tour="aace-band"]',
+      title: 'Fri · Module E — progress the AACE estimate',
+      body: 'Cost side of the role. Watch the accuracy band tighten as we walk Class 5 → 3 → 1.',
+      dwellMs: 4000,
+      beforeShow: async () => { setTab('aace'); await wait(250); },
+    },
+    {
+      tab: 'aace',
+      target: '[data-tour="aace-band"]',
+      title: 'Class 5 · ±100% · Concept',
+      body: 'Earliest screening estimate — order-of-magnitude. Used for capital programming.',
+      dwellMs: 3500,
+      beforeShow: async () => { click('[data-aace-cls="5"]'); await wait(200); },
+    },
+    {
+      tab: 'aace',
+      target: '[data-tour="aace-band"]',
+      title: 'Class 3 · ±30% · Preliminary Design',
+      body: 'Halfway through design. Quantities partially developed — typical NJDOT 30% submission.',
+      dwellMs: 3500,
+      beforeShow: async () => { click('[data-aace-cls="3"]'); await wait(200); },
+    },
+    {
+      tab: 'aace',
+      target: '[data-tour="aace-band"]',
+      title: 'Class 1 · ±15% · Bid Check',
+      body: 'Final detailed estimate. The Scheduler/Estimator owns this progression every project, every milestone.',
+      dwellMs: 4500,
+      beforeShow: async () => { click('[data-aace-cls="1"]'); await wait(200); },
+    },
+    {
+      tab: 'files',
+      target: '[data-tour="panel-files"]',
+      title: 'Fri · Module F — file the week\'s artifacts',
+      body: 'Drop the memo, the TIA, the IDR, the photos. XerLens auto-tags each with discipline, status, and ISO 19650 code so the audit trail builds itself.',
+      dwellMs: 6500,
+      beforeShow: async () => { setTab('files'); await wait(200); },
+    },
+    {
+      target: '[data-tour="tour-button"]',
+      title: 'That\'s the week. Now drop your own .xer.',
+      body: 'Replay this tour anytime. Everything you just saw runs entirely in this browser tab — no upload, no server, no waiting.',
+      dwellMs: 8000,
+    },
+  ], [tables, updateTables]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="min-h-screen bg-background text-foreground font-mono antialiased">
