@@ -155,12 +155,24 @@ export const XerLensTour = ({
       const isField = tag === 'input' || tag === 'textarea' || tag === 'select' ||
         (document.activeElement as HTMLElement | null)?.isContentEditable;
       if (isField) return;
-      if (e.key === 'ArrowRight' || e.key === 'Enter') { e.preventDefault(); next(); }
-      else if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+      if (e.key === 'ArrowRight' || e.key === 'Enter') { e.preventDefault(); setPlaying(false); next(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); setPlaying(false); prev(); }
+      else if (e.key === ' ') { e.preventDefault(); setPlaying(p => !p); }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   });
+
+  // Auto-advance when playing
+  useEffect(() => {
+    if (!open || !step || !playing) return;
+    const dwell = step.dwellMs ?? 6500;
+    const t = setTimeout(() => {
+      if (idx >= steps.length - 1) { setPlaying(false); onClose(); }
+      else setIdx(i => i + 1);
+    }, dwell);
+    return () => clearTimeout(t);
+  }, [idx, open, step, playing, steps.length, onClose]);
 
   if (!open || !step) return null;
 
