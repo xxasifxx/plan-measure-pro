@@ -1025,11 +1025,16 @@ const DefRow = ({ label, value }: { label: string; value: string }) => (
 
 /* ─────────────────────────  MODULE C: TIA  ───────────────────────── */
 const TiaPanel = ({ tables }: { tables: XerTables }) => {
-  const [taskId, setTaskId] = useState<string>(tables.TASK.find(t => t.task_type !== 'TT_Mile')?.task_id || tables.TASK[0]?.task_id || '');
-  const [delayDays, setDelayDays] = useState(5);
+  // Default to A2020 Remove Substructure if present (the activity the tour narrates)
+  const defaultTask = tables.TASK.find(t => t.task_code === 'A2020')
+    ?? tables.TASK.find(t => t.task_type !== 'TT_Mile')
+    ?? tables.TASK[0];
+  const [taskId, setTaskId] = useState<string>(defaultTask?.task_id || '');
+  const [delayDays, setDelayDays] = useState(14);
   const [delayStart, setDelayStart] = useState(new Date().toISOString().slice(0, 10));
-  const [type, setType] = useState<DelayType>('Weather');
-  const [cause, setCause] = useState('Sustained heavy precipitation prevented safe deck pour operations and rebar placement.');
+  const [type, setType] = useState<DelayType>('Differing site condition');
+  const [cause, setCause] = useState('Differing site condition — solid rock encountered at Pier 1 elevation 412.5, halting pile driving operations. Geotech consultant on site; revised pile schedule pending.');
+
 
   const result = useMemo(() => buildTia(tables, { affectedTaskId: taskId, delayDays, delayStart, type, cause }),
     [tables, taskId, delayDays, delayStart, type, cause]);
