@@ -440,10 +440,39 @@ function PayItemList({ payItems, activePayItemId, onActivePayItemChange, onEdit,
   annotations: Annotation[];
   onViewSpec?: (itemCode: string) => void;
 }) {
+  const [query, setQuery] = useState('');
+  const [showAll, setShowAll] = useState(false);
+
+  // "Today" set: items the user has annotated in the last 7 days.
+  const recentIds = useMemo(() => {
+    const sevenAgo = Date.now() - 7 * 86400000;
+    const ids = new Set<string>();
+    for (const a of annotations) {
+      const t = a.createdAt ? new Date(a.createdAt).getTime() : Date.now();
+      if (t > sevenAgo && a.payItemId) ids.add(a.payItemId);
+    }
+    return ids;
+  }, [annotations]);
+
+  const filtered = useMemo(() => {
+    let list = payItems;
+    if (!showAll && !query && recentIds.size > 0) {
+      list = list.filter(p => recentIds.has(p.id));
+    }
+    if (query) {
+      const q = query.toLowerCase();
+      list = list.filter(p =>
+        p.itemCode.toLowerCase().includes(q) ||
+        p.name.toLowerCase().includes(q),
+      );
+    }
+    return list;
+  }, [payItems, query, showAll, recentIds]);
+
   // Group by section (first digit of itemCode × 100)
   const sections = useMemo(() => {
     const grouped = new Map<number, PayItem[]>();
-    for (const item of payItems) {
+    for (const item of filtered) {
       const section = getPayItemSection(item.itemCode);
       if (!grouped.has(section)) grouped.set(section, []);
       grouped.get(section)!.push(item);
@@ -455,7 +484,9 @@ function PayItemList({ payItems, activePayItemId, onActivePayItemChange, onEdit,
         label: `Section ${section}`,
         items: items.sort((a, b) => a.itemNumber - b.itemNumber),
       }));
-  }, [payItems]);
+  }, [filtered]);
+
+  const showingTodayMode = !showAll && !query && recentIds.size > 0;
 
   return (
     <>
