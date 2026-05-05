@@ -92,16 +92,16 @@ const phases = [
   },
 ];
 
-/* Archetype matrix — Capability × {Traditional Scheduler, PC Analyst, PC Systems Integrator} */
+/* Archetype matrix — Capability × {Trad. Scheduler, Trad. Estimator, Systems-Enabled CPM} */
 const archetypeRows: Array<[string, 'no' | 'partial' | 'yes', 'no' | 'partial' | 'yes', 'no' | 'partial' | 'yes']> = [
-  ['P6 Scheduling',              'yes',     'yes',     'yes'],
-  ['Stakeholder Reporting',      'partial', 'yes',     'yes'],
-  ['Data Pipelines / APIs',      'no',      'partial', 'yes'],
-  ['Scalability Across Projects','no',      'partial', 'yes'],
-  ['Power BI Modeling',          'no',      'yes',     'yes'],
-  ['BIM 360 Context',            'no',      'partial', 'yes'],
-  ['Traceability / Audit Ready', 'partial', 'yes',     'yes'],
-  ['Schedule Health QA',         'partial', 'yes',     'yes'],
+  ['Primavera P6 Mastery',                'yes',     'partial', 'yes'],
+  ['AACE 98R-18 Estimating',              'no',      'yes',     'yes'],
+  ['DCMA-14 Audit Automation',            'partial', 'no',      'yes'],
+  ['XER Parsing / Custom Tooling',        'no',      'no',      'yes'],
+  ['NJDOT / NYSDOT Compliance Fluency',   'partial', 'partial', 'yes'],
+  ['EVM Telemetry (SPI / CPI)',           'partial', 'partial', 'yes'],
+  ['Time Impact Analysis (TIA) Drafting', 'partial', 'no',      'yes'],
+  ['EOS / L10 Integration Fluency',       'no',      'no',      'yes'],
 ];
 
 const cellGlyph = (v: 'no' | 'partial' | 'yes') => {
