@@ -499,7 +499,7 @@ const DcmaPanel = ({ tables }: { tables: XerTables }) => {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-4 justify-between">
+      <div className="flex flex-wrap items-center gap-4 justify-between" data-tour="dcma-score">
         <div>
           <div className="text-[11px] tracking-widest text-muted-foreground">OVERALL DCMA-14 SCORE</div>
           <div className="text-4xl font-bold mt-1">
@@ -509,7 +509,7 @@ const DcmaPanel = ({ tables }: { tables: XerTables }) => {
         </div>
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" onClick={copySummary}><Copy className="h-4 w-4" /> Copy summary</Button>
-          <Button onClick={() => setMemoOpen(o => !o)}>
+          <Button onClick={() => setMemoOpen(o => !o)} data-tour="dcma-memo-toggle">
             <Mail className="h-4 w-4" /> {memoOpen ? 'Hide' : 'Generate'} RE feedback memo
           </Button>
         </div>
