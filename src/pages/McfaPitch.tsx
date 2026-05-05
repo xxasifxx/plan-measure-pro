@@ -5,8 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
 import heroScreenshot from '@/assets/hero-screenshot.jpg';
-import inspectorTablet from '@/assets/inspector-tablet.jpg';
-import gpsFieldMeasurement from '@/assets/gps-field-measurement.jpg';
 import {
   ArrowRight, Mail, ExternalLink, Cpu, Code2, ClipboardCheck, HardHat,
   CheckCircle2, Workflow, Database, Network, Bot, Target, Camera,
