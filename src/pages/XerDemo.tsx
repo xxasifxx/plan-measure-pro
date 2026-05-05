@@ -976,6 +976,7 @@ const AacePanel = () => {
           return (
             <button
               key={c.cls}
+              data-aace-cls={c.cls}
               onClick={() => setActiveCls(c.cls)}
               className={`text-left rounded-md border p-4 transition-all ${
                 isActive
