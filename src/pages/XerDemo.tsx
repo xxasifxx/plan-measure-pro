@@ -20,11 +20,16 @@ import { runDcma, dcmaSummary, type DcmaResult } from '@/lib/xer/dcma';
 import { buildTia, type DelayType } from '@/lib/xer/tia';
 import { buildWbsTree, checkNjdotMilestones, complianceSnapshot, type WbsNode } from '@/lib/xer/wbs';
 import { buildReMemo } from '@/lib/xer/feedback';
-import { compareProgress } from '@/lib/xer/progress';
+import { downloadMemoPdf, downloadMemoDoc } from '@/lib/xer/memo-export';
+import { compareProgress, chartRows } from '@/lib/xer/progress';
 import { AACE_CLASSES, accuracyBand, type AaceClass } from '@/lib/xer/aace';
 import { SAMPLE_XER } from '@/lib/xer/sample';
 import { SAMPLE_XER_UPDATE } from '@/lib/xer/sample-update';
 import type { XerTables } from '@/lib/xer/types';
+import {
+  ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RTooltip,
+  ResponsiveContainer, ReferenceLine, Cell,
+} from 'recharts';
 
 type TabKey = 'dcma' | 'progress' | 'tia' | 'wbs' | 'aace' | 'files';
 
@@ -237,7 +242,12 @@ const tourSteps: TourStep[] = [
   {
     target: '[data-tour="tabs"]',
     title: 'Six modules, one weekly workflow',
-    body: 'Audit → Update → Defend → Comply → Estimate → File. This is the recurring deliverable cadence of the CPM Scheduler/Estimator role per NJDOT 108-03 and AACE 98R-18.',
+    body: 'Audit → Update → Defend → Comply → Estimate → File. Six recurring deliverables of the CPM Scheduler/Estimator role per NJDOT 108-03 and AACE 98R-18.',
+  },
+  {
+    target: '[data-tour="tabs"]',
+    title: 'Weekly cadence — Mon → Fri',
+    body: 'Mon: audit the contractor submission (A). Tue: update progress vs baseline (B). Wed: defend the EOT with a TIA (C). Thu: verify NJDOT WBS compliance (D). Fri: progress the AACE estimate (E) and file the week\'s artifacts (F). The same loop runs every week of the project.',
   },
   {
     tab: 'dcma',
@@ -355,14 +365,14 @@ const DcmaPanel = ({ tables }: { tables: XerTables }) => {
     navigator.clipboard.writeText(memo);
     toast({ title: 'RE feedback memo copied', description: 'Paste into your email to the Resident Engineer.' });
   };
-  const downloadMemo = () => {
-    const blob = new Blob([memo], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `RE-feedback-${tables.PROJECT[0]?.proj_short_name || 'project'}.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
+  const baseFn = `RE-feedback-${tables.PROJECT[0]?.proj_short_name || 'project'}`;
+  const onPdf = () => {
+    downloadMemoPdf(memo, `${baseFn}.pdf`);
+    toast({ title: 'Memo downloaded', description: `${baseFn}.pdf` });
+  };
+  const onDoc = () => {
+    downloadMemoDoc(memo, `${baseFn}.doc`);
+    toast({ title: 'Memo downloaded', description: `${baseFn}.doc — opens in Word & Google Docs` });
   };
 
   return (
@@ -385,11 +395,12 @@ const DcmaPanel = ({ tables }: { tables: XerTables }) => {
 
       {memoOpen && (
         <Card className="p-5 bg-card/40 border-cyan-500/40">
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between mb-3 gap-2 flex-wrap">
             <div className="text-[11px] tracking-widest text-cyan-400">DRAFT MEMO TO RESIDENT ENGINEER · READY TO PASTE</div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
               <Button size="sm" variant="outline" onClick={copyMemo}><Copy className="h-3.5 w-3.5" /> Copy</Button>
-              <Button size="sm" variant="outline" onClick={downloadMemo}><Download className="h-3.5 w-3.5" /> Download .txt</Button>
+              <Button size="sm" variant="outline" onClick={onPdf}><Download className="h-3.5 w-3.5" /> PDF</Button>
+              <Button size="sm" onClick={onDoc}><Download className="h-3.5 w-3.5" /> DOCX</Button>
             </div>
           </div>
           <pre className="text-xs leading-relaxed text-muted-foreground whitespace-pre-wrap max-h-96 overflow-y-auto">{memo}</pre>
