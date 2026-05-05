@@ -953,7 +953,7 @@ const AacePanel = () => {
   const active = AACE_CLASSES.find(c => c.cls === activeCls)!;
   return (
     <div className="space-y-5">
-      <div className="flex flex-wrap items-end justify-between gap-3">
+      <div data-tour="aace-band" className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <div className="text-[11px] tracking-widest text-muted-foreground">CURRENT ESTIMATE CLASS</div>
           <div className="text-3xl font-bold text-foreground mt-1">Class {active.cls} · {accuracyBand(active)}</div>
