@@ -314,10 +314,10 @@ export const XerLensTour = ({
             Skip tour
           </button>
           <div className="flex gap-2">
-            <Button size="sm" variant="outline" disabled={idx === 0} onClick={prev} aria-label="Previous step">
+            <Button size="sm" variant="outline" disabled={idx === 0} onClick={() => { setPlaying(false); prev(); }} aria-label="Previous step">
               <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" /> Back
             </Button>
-            <Button size="sm" onClick={next} aria-label={idx === steps.length - 1 ? 'Finish tour' : 'Next step'}>
+            <Button size="sm" onClick={() => { setPlaying(false); next(); }} aria-label={idx === steps.length - 1 ? 'Finish tour' : 'Next step'}>
               {idx === steps.length - 1 ? 'Finish' : (<>Next <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" /></>)}
             </Button>
           </div>
