@@ -614,21 +614,49 @@ const McfaPitch = () => {
       {/* ============================================================ */}
       <section className="border-b border-border/60 py-20 bg-card/20">
         <div className="container mx-auto px-4">
-          <SectionHeader number="04" eyebrow="KPIs · EOS ROCKS" title="First 90 Days &amp; Beyond" />
+          <SectionHeader number="04" eyebrow="KPIs · EOS SCORECARD" title="Leading Indicators · Lagging Indicators · Quarterly Rocks" />
+          <p className="text-muted-foreground max-w-3xl mt-4">
+            Traditional scheduling KPIs are lagging. The weekly L10 scorecard below tracks <em>predictive</em> measurables —
+            problems surface early enough for IDS resolution before they become claims.
+          </p>
 
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger} className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mt-10">
-            {kpis.map((k) => (
-              <motion.div key={k.quarter} variants={fadeUp}>
-                <Card className="p-5 h-full border-border/60 bg-card/40">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-[10px] tracking-widest text-cyan-400 border border-cyan-500/30 px-2 py-0.5 rounded-sm">{k.quarter}</span>
-                    <k.icon className="h-4 w-4 text-muted-foreground ml-auto" />
-                  </div>
-                  <div className="text-sm text-muted-foreground leading-relaxed">{k.text}</div>
-                </Card>
-              </motion.div>
-            ))}
-          </motion.div>
+          <div className="grid lg:grid-cols-2 gap-6 mt-10">
+            <Card className="p-5 bg-card/40 border-border/60">
+              <div className="text-[11px] tracking-widest text-cyan-400 mb-4">WEEKLY L10 SCORECARD · LEADING INDICATORS</div>
+              <table className="w-full text-sm">
+                <tbody>
+                  {scorecard.map(s => (
+                    <tr key={s.metric} className="border-t border-border first:border-t-0">
+                      <td className="py-3 pr-2"><div className="font-semibold">{s.metric}</div><div className="text-[11px] text-muted-foreground">{s.why}</div></td>
+                      <td className="py-3 text-right font-mono text-cyan-400 align-top whitespace-nowrap">{s.target}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </Card>
+            <Card className="p-5 bg-card/40 border-border/60">
+              <div className="text-[11px] tracking-widest text-emerald-400 mb-4">QUARTERLY / ANNUAL · LAGGING INDICATORS</div>
+              <table className="w-full text-sm">
+                <tbody>
+                  {laggingKpis.map(s => (
+                    <tr key={s.metric} className="border-t border-border first:border-t-0">
+                      <td className="py-3 pr-2"><div className="font-semibold">{s.metric}</div><div className="text-[11px] text-muted-foreground">{s.why}</div></td>
+                      <td className="py-3 text-right font-mono text-emerald-400 align-top whitespace-nowrap">{s.target}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div className="mt-6 text-[11px] tracking-widest text-amber-400 mb-2">90-DAY ROCKS</div>
+              <ul className="space-y-2 text-sm">
+                {rocks.map(r => (
+                  <li key={r.quarter} className="flex gap-3">
+                    <span className="font-mono text-cyan-400 shrink-0">{r.quarter}</span>
+                    <span className="text-muted-foreground">{r.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          </div>
         </div>
       </section>
 
