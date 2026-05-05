@@ -969,7 +969,7 @@ const McfaPitch = () => {
           <div className="max-w-3xl mx-auto text-center">
             <div className="text-[11px] tracking-[0.3em] text-primary mb-6">CLOSING</div>
             <h2 className="text-3xl md:text-5xl font-bold leading-tight">
-              Bridge field execution with practical innovation —{' '}
+              Bring scheduler depth and practical workflow tooling —{' '}
               <span className="text-primary">at MCFA.</span>
             </h2>
             <p className="text-muted-foreground mt-6 leading-relaxed max-w-2xl mx-auto">
