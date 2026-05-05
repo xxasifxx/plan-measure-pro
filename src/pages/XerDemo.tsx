@@ -810,7 +810,7 @@ const ProgressPanel = ({ baseline, update, onLoadUpdate }: {
                 <span className="inline-block w-3 h-2 rounded-sm bg-emerald-400" /> FORECAST (EARLY/ON-TIME)
               </span>
             </div>
-            <div className="flex gap-2 ml-auto">
+            <div data-tour="progress-exports" className="flex gap-2 ml-auto">
               <Button size="sm" variant="outline" onClick={exportChartPng} disabled={rows.length === 0}>
                 <Download className="h-3.5 w-3.5" /> PNG
               </Button>
