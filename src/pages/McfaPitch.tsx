@@ -280,7 +280,7 @@ const McfaPitch = () => {
   const activeTotal = activeRows.reduce((s, r) => s + r.value, 0);
   const maxRow = Math.max(...activeRows.map(r => r.value));
   useEffect(() => {
-    document.title = 'BYOR Proposal · Hybrid Construction Inspector & Systems Integrator — Asif Muhammad, PMP';
+    document.title = 'BYOR Proposal · Senior CPM Scheduler / Estimator — Asif Muhammad, PMP';
     const meta = document.querySelector('meta[name="description"]');
     const desc = 'Build Your Own Role proposal for the MCFA Evergreen CPM Scheduler/Estimator role: PMP-certified, NJDOT/NYSDOT compliant, AACE 98R-18 estimating, with auth-agnostic in-browser P6 XER tooling.';
     if (meta) meta.setAttribute('content', desc);
