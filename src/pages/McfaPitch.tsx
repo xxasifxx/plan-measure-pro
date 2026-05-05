@@ -866,10 +866,9 @@ const McfaPitch = () => {
                   </thead>
                   <tbody className="text-muted-foreground">
                     {[
-                      ['NICET HCI Level I/II Inspector',           '$75K – $95K',   'Churchill / Trilon / WSP range'],
                       ['Senior P6 Scheduler (PMP)',                '$110K – $140K', 'NJTA / NJDOT consultant rate'],
-                      ['Office Engineer',                          '$70K – $90K',   'Usually a separate hire'],
-                      ['Mid Full-Stack + AI Developer',            '$120K – $160K', 'NJ/NYC metro · ~7 yrs exp'],
+                      ['Senior Cost Estimator (AACE)',             '$105K – $130K', 'NJ heavy-civil range'],
+                      ['Project Controls Analyst (P6 + EVM)',      '$95K – $120K',  'Portfolio reporting role'],
                     ].map(([role, range, sub]) => (
                       <tr key={role} className="border-b border-border last:border-0 hover:bg-card/40">
                         <td className="p-3">
@@ -880,8 +879,8 @@ const McfaPitch = () => {
                       </tr>
                     ))}
                     <tr className="bg-primary/5">
-                      <td className="p-3 font-semibold text-foreground">Cost of two siloed hires (Scheduler + Inspector)</td>
-                      <td className="p-3 text-right font-mono font-bold text-foreground">$185K – $235K</td>
+                      <td className="p-3 font-semibold text-foreground">Cost of three siloed seats (Scheduler + Estimator + Analyst)</td>
+                      <td className="p-3 text-right font-mono font-bold text-foreground">$310K – $390K</td>
                     </tr>
                     <tr className="bg-emerald-500/10 border-t border-emerald-500/30">
                       <td className="p-3">
