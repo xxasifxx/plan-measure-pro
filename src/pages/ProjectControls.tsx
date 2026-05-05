@@ -403,6 +403,7 @@ export default function ProjectControls() {
 
           {/* === ACTIVITIES === */}
           <TabsContent value="activities" className="space-y-4">
+            <GanttUploader projectId={projectId!} />
             <ActivityEditor
               payItems={payItemsQuery.data || []}
               onAdd={(a) => addActivity.mutate({ ...a, project_id: projectId! })}
