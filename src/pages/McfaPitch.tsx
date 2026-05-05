@@ -148,7 +148,7 @@ const roiScenarios = {
       { label: 'Reduced Rework & Claims', value: 95_000,  sub: 'Audit-grade evidence · claim defense' },
       { label: 'Earlier Risk Visibility', value: 75_000,  sub: 'Float-erosion caught weeks earlier' },
       { label: 'Proposal Win-Rate Lift',  value: 180_000, sub: '+2 wins/yr × ~$90k avg margin contribution' },
-      { label: 'SaaS Cost Avoidance',     value: 45_000,  sub: 'Bluebeam · PlanGrid · scheduling add-ons' },
+      { label: 'SaaS Cost Avoidance',     value: 45_000,  sub: 'Acumen Fuse seats · scheduling analytics add-ons' },
       { label: 'Senior Scheduler Hrs',    value: 120_000, sub: '~600 hrs reclaimed × $200/hr fully loaded' },
     ],
   },
