@@ -486,6 +486,32 @@ const ProgressPanel = ({ baseline, update, onLoadUpdate }: {
   }
   const report = compareProgress(baseline, update);
   const fmt = (d?: string) => d ? d.slice(0, 10) : '—';
+  const anchor = baseline.PROJECT[0]?.last_recalc_date || baseline.PROJECT[0]?.plan_start_date;
+  const rows = chartRows(report, anchor, 12);
+  const updateAnchorOffset = (() => {
+    if (!anchor || !update.PROJECT[0]?.last_recalc_date) return null;
+    return Math.round(
+      (new Date(update.PROJECT[0].last_recalc_date).getTime() - new Date(anchor).getTime()) /
+        (1000 * 60 * 60 * 24),
+    );
+  })();
+  const interpretation = report.spi >= 0.95
+    ? { tone: 'good', text: 'Performing to plan — no recovery action required.' }
+    : report.spi >= 0.85
+      ? { tone: 'warn', text: 'Slipping — corrective action plan due in next L10.' }
+      : { tone: 'bad',  text: 'Material slippage — recovery schedule and TIA required.' };
+  const toneCls = interpretation.tone === 'good'
+    ? 'text-emerald-400'
+    : interpretation.tone === 'warn' ? 'text-amber-400' : 'text-destructive';
+  const topLags = report.topSlipping.slice(0, 3);
+  const scrollToRow = (taskId: string) => {
+    const el = document.getElementById(`slip-row-${taskId}`);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.classList.add('ring-2', 'ring-cyan-400');
+      setTimeout(() => el.classList.remove('ring-2', 'ring-cyan-400'), 1600);
+    }
+  };
 
   return (
     <div className="space-y-4">
