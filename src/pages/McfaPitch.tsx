@@ -201,7 +201,7 @@ const compensation = [
   {
     icon: DollarSign,
     title: 'Base Salary',
-    body: 'Competitive base reflecting PMP, engineering background, and capacity to serve as inspector/scheduler + OE + developer simultaneously. Compensates the 1,600 billable hours and encompasses internal development time for the mobile, AI, and P6 integrations.',
+    body: 'Competitive base reflecting PMP, engineering background, and cross-discipline scheduler depth — CPM, AACE estimating, NJDOT controls — covered in one seat. Compensates 1,600 billable hours plus the in-role time spent maintaining the XerLens workflow tooling.',
   },
   {
     icon: Layers,
