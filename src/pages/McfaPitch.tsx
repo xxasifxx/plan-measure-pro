@@ -75,7 +75,7 @@ const phases = [
     icon: Bot,
     title: 'AI-Driven Image Processing',
     body: 'AI layer reviews imported untagged images. Cross-references image content, user descriptions, and temporal/spatial metadata against active project pay items — auto-defaults examples to the correct pay-item file. Visual audit trail organized instantaneously.',
-    accent: 'border-cyan-500/40 bg-cyan-500/5',
+    accent: 'border-primary/40 bg-primary/5',
     pill: 'Q2 ROCK',
   },
   {
@@ -339,14 +339,14 @@ const McfaPitch = () => {
               initial="hidden" animate="visible" variants={stagger}
               className="lg:col-span-7 space-y-6"
             >
-              <motion.div variants={fadeUp} className="inline-flex items-center gap-2 text-[11px] tracking-[0.25em] text-cyan-400 border border-cyan-500/30 bg-cyan-500/5 px-3 py-1.5 rounded-sm">
-                <span className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
+              <motion.div variants={fadeUp} className="inline-flex items-center gap-2 text-[11px] tracking-[0.25em] text-primary border border-primary/30 bg-primary/5 px-3 py-1.5 rounded-sm">
+                <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                 BUILD YOUR OWN ROLE · EVERGREEN POSTING · REFERRED BY SAQEEB MUHAMMAD
               </motion.div>
 
               <motion.h1 variants={fadeUp} className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.05] tracking-tight">
                 Systems-Enabled{' '}
-                <span className="text-cyan-400">CPM Scheduler / Estimator</span>{' '}
+                <span className="text-primary">CPM Scheduler / Estimator</span>{' '}
                 <span className="block text-muted-foreground/80 text-2xl md:text-3xl mt-3 font-normal">
                   for MCFA Transportation &amp; Infrastructure · Newark Airport / PANYNJ portfolio
                 </span>
@@ -354,7 +354,7 @@ const McfaPitch = () => {
 
               <motion.p variants={fadeUp} className="text-lg text-muted-foreground max-w-2xl leading-relaxed">
                 <span className="text-foreground font-semibold">PMP-certified</span> · disciplined Primavera P6 + AACE
-                estimating · auth-agnostic <span className="text-cyan-400 font-semibold">XER tooling</span> for NJDOT
+                estimating · auth-agnostic <span className="text-primary font-semibold">XER tooling</span> for NJDOT
                 &amp; NYSDOT compliance. Reliable, audit-ready data so PMs can lead their projects successfully —
                 MCFA's mission of <em className="text-foreground/80">Inspiring People and Places</em>, applied to
                 project controls.
@@ -362,7 +362,7 @@ const McfaPitch = () => {
 
               <motion.div variants={fadeUp} className="grid grid-cols-3 gap-4 pt-4 border-t border-border/60">
                 <div>
-                  <div className="text-3xl font-bold text-cyan-400">≥ 95%</div>
+                  <div className="text-3xl font-bold text-primary">≥ 95%</div>
                   <div className="text-[10px] tracking-widest text-muted-foreground mt-1">DCMA-14 LOGIC TARGET</div>
                 </div>
                 <div>
@@ -399,7 +399,7 @@ const McfaPitch = () => {
               className="lg:col-span-5"
             >
               <div className="relative">
-                <div className="absolute -inset-4 bg-cyan-500/10 blur-3xl rounded-full pointer-events-none" />
+                <div className="absolute -inset-4 bg-primary/10 blur-3xl rounded-full pointer-events-none" />
                 <div className="relative border border-border bg-card/60 backdrop-blur rounded-md overflow-hidden shadow-2xl">
                   <div className="border-b border-border/60 px-3 py-2 flex items-center gap-1.5 bg-card/80">
                     <span className="h-2.5 w-2.5 rounded-full bg-red-500/60" />
@@ -409,7 +409,7 @@ const McfaPitch = () => {
                   </div>
                   <img src={heroScreenshot} alt="XerLens weekly scheduler workflow" className="w-full h-auto" />
                 </div>
-                <div className="absolute -bottom-4 -right-4 hidden md:block bg-cyan-500 text-cyan-950 text-xs font-bold px-3 py-2 rounded-sm shadow-xl">
+                <div className="absolute -bottom-4 -right-4 hidden md:block bg-primary text-primary-foreground text-xs font-bold px-3 py-2 rounded-sm shadow-xl">
                   WORKING DEMO · /mcfa/demo
                 </div>
               </div>
@@ -436,7 +436,7 @@ const McfaPitch = () => {
               <p>
                 The role reports to the <span className="text-foreground">Project Controls Director</span>, supports
                 Resident Engineers on contractor schedule reviews, and feeds the L10 Scorecard with two predictive numbers
-                every week. The Entrepreneurial value-add is the in-browser <span className="text-cyan-400 font-semibold">XerLens</span> tooling
+                every week. The Entrepreneurial value-add is the in-browser <span className="text-primary font-semibold">XerLens</span> tooling
                 shown at <Link to="/mcfa/demo" className="text-foreground underline underline-offset-4">/mcfa/demo</Link> —
                 accelerators that make the scheduler faster, not a separate role.
               </p>
@@ -451,7 +451,7 @@ const McfaPitch = () => {
               {credentials.map((c) => (
                 <motion.div key={c.label} variants={fadeUp}>
                   <Card className="bg-card/40 border-border/60 p-4 h-full">
-                    <c.icon className="h-5 w-5 text-cyan-400 mb-2" />
+                    <c.icon className="h-5 w-5 text-primary mb-2" />
                     <div className="text-sm font-semibold">{c.label}</div>
                     <div className="text-[11px] text-muted-foreground mt-1">{c.sub}</div>
                   </Card>
@@ -470,15 +470,15 @@ const McfaPitch = () => {
           <SectionHeader number="02" eyebrow="WEEKLY CADENCE" title="A Week in the Role" />
           <p className="text-muted-foreground max-w-3xl mt-4">
             The role collapses into a five-day rhythm. Each day produces a deliverable the Project Controls Director and
-            Resident Engineers can act on — and the live demo at <Link to="/mcfa/demo" className="text-cyan-400 underline underline-offset-4">/mcfa/demo</Link> walks every step on a dummy NJTA project.
+            Resident Engineers can act on — and the live demo at <Link to="/mcfa/demo" className="text-primary underline underline-offset-4">/mcfa/demo</Link> walks every step on a dummy NJTA project.
           </p>
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}
             className="grid md:grid-cols-2 lg:grid-cols-5 gap-3 mt-10">
             {weeklyCadence.map((d) => (
               <motion.div key={d.day} variants={fadeUp}>
-                <Card className="p-5 h-full bg-card/40 border-border/60 hover:border-cyan-500/40 transition-colors">
+                <Card className="p-5 h-full bg-card/40 border-border/60 hover:border-primary/40 transition-colors">
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-2xl font-bold text-cyan-400 tracking-widest">{d.day}</span>
+                    <span className="text-2xl font-bold text-primary tracking-widest">{d.day}</span>
                     <span className="text-[10px] tracking-widest text-muted-foreground border border-border/60 px-2 py-0.5 rounded-sm">{d.focus.toUpperCase()}</span>
                   </div>
                   <div className="text-sm font-semibold mb-2 leading-tight">{d.title}</div>
@@ -510,9 +510,9 @@ const McfaPitch = () => {
             className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-10">
             {tenCoreActivities.map((a) => (
               <motion.div key={a.n} variants={fadeUp}>
-                <Card className="p-5 h-full bg-card/40 border-border/60 hover:border-cyan-500/40 transition-colors">
+                <Card className="p-5 h-full bg-card/40 border-border/60 hover:border-primary/40 transition-colors">
                   <div className="flex items-start justify-between mb-3">
-                    <a.icon className="h-5 w-5 text-cyan-400" />
+                    <a.icon className="h-5 w-5 text-primary" />
                     <span className="text-[10px] tracking-widest text-muted-foreground border border-border/60 px-2 py-0.5 rounded-sm">{a.n}</span>
                   </div>
                   <div className="text-sm font-semibold mb-2 leading-tight">{a.title}</div>
@@ -538,13 +538,13 @@ const McfaPitch = () => {
 
           <div className="grid lg:grid-cols-2 gap-6 mt-10">
             <Card className="p-5 bg-card/40 border-border/60">
-              <div className="text-[11px] tracking-widest text-cyan-400 mb-4">WEEKLY L10 SCORECARD · LEADING INDICATORS</div>
+              <div className="text-[11px] tracking-widest text-primary mb-4">WEEKLY L10 SCORECARD · LEADING INDICATORS</div>
               <table className="w-full text-sm">
                 <tbody>
                   {scorecard.map(s => (
                     <tr key={s.metric} className="border-t border-border first:border-t-0">
                       <td className="py-3 pr-2"><div className="font-semibold">{s.metric}</div><div className="text-[11px] text-muted-foreground">{s.why}</div></td>
-                      <td className="py-3 text-right font-mono text-cyan-400 align-top whitespace-nowrap">{s.target}</td>
+                      <td className="py-3 text-right font-mono text-primary align-top whitespace-nowrap">{s.target}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -566,7 +566,7 @@ const McfaPitch = () => {
               <ul className="space-y-2 text-sm">
                 {rocks.map(r => (
                   <li key={r.quarter} className="flex gap-3">
-                    <span className="font-mono text-cyan-400 shrink-0">{r.quarter}</span>
+                    <span className="font-mono text-primary shrink-0">{r.quarter}</span>
                     <span className="text-muted-foreground">{r.text}</span>
                   </li>
                 ))}
@@ -600,8 +600,8 @@ const McfaPitch = () => {
                     <div className="text-muted-foreground text-xs tracking-widest">TRADITIONAL</div>
                     <div className="font-semibold mt-0.5">Estimator</div>
                   </th>
-                  <th className="p-3 border-b border-border text-center bg-cyan-500/10">
-                    <div className="text-cyan-300 text-xs tracking-widest">SYSTEMS-ENABLED</div>
+                  <th className="p-3 border-b border-border text-center bg-primary/10">
+                    <div className="text-primary text-xs tracking-widest">SYSTEMS-ENABLED</div>
                     <div className="font-semibold mt-0.5">CPM (you)</div>
                   </th>
                 </tr>
@@ -612,7 +612,7 @@ const McfaPitch = () => {
                     <td className="p-3 border-b border-r border-border">{cap}</td>
                     <td className="p-3 border-b border-r border-border text-center">{cellGlyph(a)}</td>
                     <td className="p-3 border-b border-r border-border text-center">{cellGlyph(b)}</td>
-                    <td className="p-3 border-b border-border text-center bg-cyan-500/5">{cellGlyph(c)}</td>
+                    <td className="p-3 border-b border-border text-center bg-primary/5">{cellGlyph(c)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -641,21 +641,21 @@ const McfaPitch = () => {
               <div key={layer.title} className="relative">
                 <Card className="p-5 h-full bg-card/40 border-border/60">
                   <div className="flex items-center gap-2 mb-4">
-                    <layer.icon className="h-5 w-5 text-cyan-400" />
+                    <layer.icon className="h-5 w-5 text-primary" />
                     <div className="text-xs tracking-widest text-muted-foreground">LAYER {i + 1}</div>
                   </div>
                   <div className="text-lg font-semibold mb-1">{layer.title}</div>
-                  {layer.note && <div className="text-[11px] text-cyan-400/80 mb-3">{layer.note}</div>}
+                  {layer.note && <div className="text-[11px] text-primary/80 mb-3">{layer.note}</div>}
                   <ul className="space-y-1.5 mt-3">
                     {layer.items.map((it) => (
                       <li key={it} className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <span className="h-1 w-1 rounded-full bg-cyan-400/60" /> {it}
+                        <span className="h-1 w-1 rounded-full bg-primary/60" /> {it}
                       </li>
                     ))}
                   </ul>
                 </Card>
                 {i < integrationLayers.length - 1 && (
-                  <ArrowRight className="hidden md:block absolute top-1/2 -right-3 -translate-y-1/2 h-5 w-5 text-cyan-400 z-10" />
+                  <ArrowRight className="hidden md:block absolute top-1/2 -right-3 -translate-y-1/2 h-5 w-5 text-primary z-10" />
                 )}
               </div>
             ))}
@@ -683,7 +683,7 @@ const McfaPitch = () => {
                 onClick={() => setScenario(k)}
                 className={`px-4 py-2 text-xs tracking-widest rounded-sm transition-colors ${
                   scenario === k
-                    ? 'bg-cyan-500 text-cyan-950 font-bold'
+                    ? 'bg-primary text-primary-foreground font-bold'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
@@ -699,7 +699,7 @@ const McfaPitch = () => {
             {activeRows.map((r, i) => {
               const pct = (r.value / maxRow) * 100;
               const palette = [
-                'bg-emerald-500/70', 'bg-cyan-500/70', 'bg-amber-500/70',
+                'bg-emerald-500/70', 'bg-primary/70', 'bg-amber-500/70',
                 'bg-purple-500/70', 'bg-pink-500/70', 'bg-blue-500/70', 'bg-orange-500/70',
               ];
               return (
@@ -724,11 +724,11 @@ const McfaPitch = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.5 }}
-              className="relative border-l-2 border-dashed border-cyan-500/60 pl-4"
+              className="relative border-l-2 border-dashed border-primary/60 pl-4"
             >
-              <div className="text-xs tracking-widest text-cyan-400 mb-1">NET VALUE</div>
+              <div className="text-xs tracking-widest text-primary mb-1">NET VALUE</div>
               <div
-                className="bg-gradient-to-t from-cyan-600 to-cyan-400 text-cyan-950 border border-cyan-300 rounded-sm flex flex-col items-center justify-center font-bold shadow-lg shadow-cyan-500/20"
+                className="bg-gradient-to-t from-primary to-primary text-primary-foreground border border-primary/70 rounded-sm flex flex-col items-center justify-center font-bold shadow-lg shadow-primary/20"
                 style={{ height: '270px' }}
               >
                 <div className="text-2xl">${(activeTotal / 1000).toFixed(0)}K</div>
@@ -749,7 +749,7 @@ const McfaPitch = () => {
                   key={k}
                   onClick={() => setScenario(k)}
                   className={`text-left p-4 border rounded-md transition-all ${
-                    isActive ? 'border-cyan-500/60 bg-cyan-500/10' : 'border-border/60 bg-card/30 hover:border-cyan-500/30'
+                    isActive ? 'border-primary/60 bg-primary/10' : 'border-border/60 bg-card/30 hover:border-primary/30'
                   }`}
                 >
                   <div className="text-[10px] tracking-widest text-muted-foreground mb-1">{roiScenarios[k].label.toUpperCase()}</div>
@@ -770,7 +770,7 @@ const McfaPitch = () => {
               </div>
             </Card>
             <Card className="p-5 bg-card/40 border-border/60">
-              <Layers className="h-5 w-5 text-cyan-400 mb-2" />
+              <Layers className="h-5 w-5 text-primary mb-2" />
               <div className="font-semibold mb-1">Software Cost Avoidance</div>
               <div className="text-xs text-muted-foreground leading-relaxed">
                 Internally operated TakeoffPro bypasses traditional SaaS. MCFA pays only the raw external footprint — hosting,
@@ -798,7 +798,7 @@ const McfaPitch = () => {
 
           <div className="grid md:grid-cols-3 gap-4 mt-10">
             <Card className="p-6 bg-card/40 border-border/60">
-              <Activity className="h-6 w-6 text-cyan-400 mb-3" />
+              <Activity className="h-6 w-6 text-primary mb-3" />
               <div className="font-semibold mb-2">L10 Meeting Integration</div>
               <div className="text-sm text-muted-foreground leading-relaxed">
                 Weekly Level 10 meetings with scorecard reporting on Billable Hours Completed, TakeoffPro Adoption, and
@@ -834,7 +834,7 @@ const McfaPitch = () => {
           <div className="grid md:grid-cols-3 gap-5 mt-10">
             {compensation.map((c) => (
               <Card key={c.title} className="p-6 bg-card/40 border-border/60">
-                <c.icon className="h-6 w-6 text-cyan-400 mb-3" />
+                <c.icon className="h-6 w-6 text-primary mb-3" />
                 <div className="font-semibold mb-3">{c.title}</div>
                 <div className="text-sm text-muted-foreground leading-relaxed">{c.body}</div>
               </Card>
@@ -846,8 +846,8 @@ const McfaPitch = () => {
             {/* Anchor table */}
             <div className="lg:col-span-7">
               <div className="flex items-center gap-2 mb-4">
-                <Anchor className="h-4 w-4 text-cyan-400" />
-                <div className="text-[11px] tracking-[0.25em] text-cyan-400">ANCHOR · NJ MARKET BENCHMARKS (2025)</div>
+                <Anchor className="h-4 w-4 text-primary" />
+                <div className="text-[11px] tracking-[0.25em] text-primary">ANCHOR · NJ MARKET BENCHMARKS (2025)</div>
               </div>
               <h3 className="text-2xl font-bold mb-4">The roles being absorbed.</h3>
               <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
@@ -875,10 +875,10 @@ const McfaPitch = () => {
                           <div className="text-foreground">{role}</div>
                           <div className="text-[11px] text-muted-foreground/80 mt-0.5">{sub}</div>
                         </td>
-                        <td className="p-3 text-right font-mono text-cyan-400">{range}</td>
+                        <td className="p-3 text-right font-mono text-primary">{range}</td>
                       </tr>
                     ))}
-                    <tr className="bg-cyan-500/5">
+                    <tr className="bg-primary/5">
                       <td className="p-3 font-semibold text-foreground">Cost of two siloed hires (Scheduler + Inspector)</td>
                       <td className="p-3 text-right font-mono font-bold text-foreground">$185K – $235K</td>
                     </tr>
@@ -908,8 +908,8 @@ const McfaPitch = () => {
             {/* Recruiter Q&A panel */}
             <div className="lg:col-span-5">
               <div className="flex items-center gap-2 mb-4">
-                <MessageSquare className="h-4 w-4 text-cyan-400" />
-                <div className="text-[11px] tracking-[0.25em] text-cyan-400">RECRUITER Q&amp;A · READY-TO-READ</div>
+                <MessageSquare className="h-4 w-4 text-primary" />
+                <div className="text-[11px] tracking-[0.25em] text-primary">RECRUITER Q&amp;A · READY-TO-READ</div>
               </div>
               <h3 className="text-2xl font-bold mb-4">Likely objections, answered.</h3>
               <p className="text-sm text-muted-foreground mb-5 leading-relaxed">
@@ -922,7 +922,7 @@ const McfaPitch = () => {
                   <AccordionItem key={qa.q} value={`q${i}`} className="border-0 px-4">
                     <AccordionTrigger className="text-left text-sm font-semibold hover:no-underline py-4">
                       <div className="flex items-start gap-3 pr-2">
-                        <span className="text-[10px] tracking-widest text-cyan-400 font-bold mt-0.5 shrink-0">
+                        <span className="text-[10px] tracking-widest text-primary font-bold mt-0.5 shrink-0">
                           Q{String(i + 1).padStart(2, '0')}
                         </span>
                         <span>{qa.q}</span>
@@ -931,7 +931,7 @@ const McfaPitch = () => {
                     <AccordionContent className="pb-4 pl-9 pr-2">
                       <p className="text-xs text-muted-foreground leading-relaxed italic">"{qa.a}"</p>
                       {qa.tag && (
-                        <div className="mt-2 inline-block text-[10px] tracking-widest text-cyan-400 border border-cyan-500/30 bg-cyan-500/5 px-2 py-0.5 rounded-sm">
+                        <div className="mt-2 inline-block text-[10px] tracking-widest text-primary border border-primary/30 bg-primary/5 px-2 py-0.5 rounded-sm">
                           {qa.tag}
                         </div>
                       )}
@@ -956,7 +956,7 @@ const McfaPitch = () => {
       {/* ============================================================ */}
       {/* CLOSING CTA                                                  */}
       {/* ============================================================ */}
-      <section className="py-24 bg-gradient-to-br from-cyan-950/40 via-background to-background relative overflow-hidden">
+      <section className="py-24 bg-gradient-to-br from-primary/10 via-background to-background relative overflow-hidden">
         <div
           className="absolute inset-0 opacity-[0.05] pointer-events-none"
           style={{
@@ -967,10 +967,10 @@ const McfaPitch = () => {
         />
         <div className="container mx-auto px-4 relative">
           <div className="max-w-3xl mx-auto text-center">
-            <div className="text-[11px] tracking-[0.3em] text-cyan-400 mb-6">CLOSING</div>
+            <div className="text-[11px] tracking-[0.3em] text-primary mb-6">CLOSING</div>
             <h2 className="text-3xl md:text-5xl font-bold leading-tight">
               Bridge field execution with practical innovation —{' '}
-              <span className="text-cyan-400">at MCFA.</span>
+              <span className="text-primary">at MCFA.</span>
             </h2>
             <p className="text-muted-foreground mt-6 leading-relaxed max-w-2xl mx-auto">
               A working prototype of the weekly scheduler workflow already exists at /mcfa/demo. The next step is a 30-minute conversation about how this maps to the Project Controls Director's immediate Newark / PANYNJ priorities.
@@ -987,9 +987,9 @@ const McfaPitch = () => {
               <div className="font-semibold text-foreground">Asif Muhammad, PMP</div>
               <div className="italic mt-1">Bridging Field Execution with Practical Innovation.</div>
               <div className="flex justify-center gap-4 mt-4">
-                <a href="https://linkedin.com" className="hover:text-cyan-400 inline-flex items-center gap-1.5"><Linkedin className="h-3.5 w-3.5" /> LinkedIn</a>
-                <a href="https://github.com" className="hover:text-cyan-400 inline-flex items-center gap-1.5"><Github className="h-3.5 w-3.5" /> GitHub</a>
-                <Link to="/demo" className="hover:text-cyan-400 inline-flex items-center gap-1.5"><ExternalLink className="h-3.5 w-3.5" /> Live App</Link>
+                <a href="https://linkedin.com" className="hover:text-primary inline-flex items-center gap-1.5"><Linkedin className="h-3.5 w-3.5" /> LinkedIn</a>
+                <a href="https://github.com" className="hover:text-primary inline-flex items-center gap-1.5"><Github className="h-3.5 w-3.5" /> GitHub</a>
+                <Link to="/demo" className="hover:text-primary inline-flex items-center gap-1.5"><ExternalLink className="h-3.5 w-3.5" /> Live App</Link>
               </div>
               <div className="mt-6 text-[10px] tracking-widest text-muted-foreground/60">
                 BUILT WITH THE SAME STACK PROPOSED FOR MCFA · REACT · TYPESCRIPT · SUPABASE · AI
@@ -1008,9 +1008,9 @@ const McfaPitch = () => {
 const SectionHeader = ({ number, eyebrow, title }: { number: string; eyebrow: string; title: string }) => (
   <div className="flex items-end justify-between gap-6 flex-wrap">
     <div>
-      <div className="flex items-center gap-3 text-[11px] tracking-[0.3em] text-cyan-400">
+      <div className="flex items-center gap-3 text-[11px] tracking-[0.3em] text-primary">
         <span className="font-bold">§ {number}</span>
-        <span className="h-px w-8 bg-cyan-500/40" />
+        <span className="h-px w-8 bg-primary/40" />
         <span>{eyebrow}</span>
       </div>
       <h2 className="text-3xl md:text-4xl font-bold mt-3 tracking-tight" dangerouslySetInnerHTML={{ __html: title }} />
@@ -1020,7 +1020,7 @@ const SectionHeader = ({ number, eyebrow, title }: { number: string; eyebrow: st
 
 const Mini = ({ icon: Icon, label }: { icon: React.ComponentType<{ className?: string }>; label: string }) => (
   <div className="flex flex-col items-center gap-1.5 py-1">
-    <Icon className="h-4 w-4 text-cyan-400" />
+    <Icon className="h-4 w-4 text-primary" />
     <div className="text-[10px] tracking-widest text-muted-foreground">{label}</div>
   </div>
 );
