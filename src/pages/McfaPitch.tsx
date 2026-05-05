@@ -985,7 +985,7 @@ const McfaPitch = () => {
             </div>
             <div className="mt-12 pt-8 border-t border-border/60 text-xs text-muted-foreground">
               <div className="font-semibold text-foreground">Asif Muhammad, PMP</div>
-              <div className="italic mt-1">Bridging Field Execution with Practical Innovation.</div>
+              <div className="italic mt-1">Senior CPM Scheduler / Estimator · PMP · NJDOT / AACE.</div>
               <div className="flex justify-center gap-4 mt-4">
                 <a href="https://linkedin.com" className="hover:text-primary inline-flex items-center gap-1.5"><Linkedin className="h-3.5 w-3.5" /> LinkedIn</a>
                 <a href="https://github.com" className="hover:text-primary inline-flex items-center gap-1.5"><Github className="h-3.5 w-3.5" /> GitHub</a>
