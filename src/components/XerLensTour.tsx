@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Button } from '@/components/ui/button';
-import { X, ArrowRight, ArrowLeft, Sparkles } from 'lucide-react';
+import { X, ArrowRight, ArrowLeft, Sparkles, Play, Pause } from 'lucide-react';
 
 export type TourStep = {
   target?: string; // primary CSS selector (gets the spotlight cutout)
@@ -11,6 +11,7 @@ export type TourStep = {
   tab?: 'dcma' | 'progress' | 'tia' | 'wbs' | 'aace' | 'files';
   beforeShow?: () => void | Promise<void>;
   placement?: 'top' | 'bottom' | 'auto';
+  dwellMs?: number; // auto-advance after this many ms when playing
 };
 
 type Rect = { top: number; left: number; width: number; height: number };
@@ -41,6 +42,7 @@ export const XerLensTour = ({
   const [extraRects, setExtraRects] = useState<Rect[]>([]);
   const [tabRect, setTabRect] = useState<Rect | null>(null);
   const [tick, setTick] = useState(0);
+  const [playing, setPlaying] = useState(true);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const titleId = useRef(`xerlens-tour-title-${Math.random().toString(36).slice(2, 8)}`).current;
   const bodyId = useRef(`xerlens-tour-body-${Math.random().toString(36).slice(2, 8)}`).current;
@@ -49,7 +51,7 @@ export const XerLensTour = ({
   const step = steps[idx];
 
   useEffect(() => {
-    if (!open) setIdx(0);
+    if (open) { setIdx(0); setPlaying(true); }
   }, [open]);
 
   // Run beforeShow + tab change when step changes
@@ -153,12 +155,24 @@ export const XerLensTour = ({
       const isField = tag === 'input' || tag === 'textarea' || tag === 'select' ||
         (document.activeElement as HTMLElement | null)?.isContentEditable;
       if (isField) return;
-      if (e.key === 'ArrowRight' || e.key === 'Enter') { e.preventDefault(); next(); }
-      else if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+      if (e.key === 'ArrowRight' || e.key === 'Enter') { e.preventDefault(); setPlaying(false); next(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); setPlaying(false); prev(); }
+      else if (e.key === ' ') { e.preventDefault(); setPlaying(p => !p); }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   });
+
+  // Auto-advance when playing
+  useEffect(() => {
+    if (!open || !step || !playing) return;
+    const dwell = step.dwellMs ?? 6500;
+    const t = setTimeout(() => {
+      if (idx >= steps.length - 1) { setPlaying(false); onClose(); }
+      else setIdx(i => i + 1);
+    }, dwell);
+    return () => clearTimeout(t);
+  }, [idx, open, step, playing, steps.length, onClose]);
 
   if (!open || !step) return null;
 
@@ -269,14 +283,25 @@ export const XerLensTour = ({
               </span>
             )}
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close tour"
-            className="text-muted-foreground hover:text-foreground rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
-          >
-            <X className="h-4 w-4" aria-hidden="true" />
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={() => setPlaying(p => !p)}
+              aria-label={playing ? 'Pause autoplay' : 'Play autoplay'}
+              title={playing ? 'Pause (Space)' : 'Play (Space)'}
+              className="p-1 rounded text-cyan-300 hover:text-cyan-100 hover:bg-cyan-400/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+            >
+              {playing ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close tour"
+              className="p-1 text-muted-foreground hover:text-foreground rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+            >
+              <X className="h-4 w-4" aria-hidden="true" />
+            </button>
+          </div>
         </div>
         <h2 id={titleId} className="text-base font-semibold text-foreground mb-1.5">{step.title}</h2>
         <p id={bodyId} className="text-xs text-muted-foreground leading-relaxed mb-4">{step.body}</p>
@@ -289,10 +314,10 @@ export const XerLensTour = ({
             Skip tour
           </button>
           <div className="flex gap-2">
-            <Button size="sm" variant="outline" disabled={idx === 0} onClick={prev} aria-label="Previous step">
+            <Button size="sm" variant="outline" disabled={idx === 0} onClick={() => { setPlaying(false); prev(); }} aria-label="Previous step">
               <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" /> Back
             </Button>
-            <Button size="sm" onClick={next} aria-label={idx === steps.length - 1 ? 'Finish tour' : 'Next step'}>
+            <Button size="sm" onClick={() => { setPlaying(false); next(); }} aria-label={idx === steps.length - 1 ? 'Finish tour' : 'Next step'}>
               {idx === steps.length - 1 ? 'Finish' : (<>Next <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" /></>)}
             </Button>
           </div>

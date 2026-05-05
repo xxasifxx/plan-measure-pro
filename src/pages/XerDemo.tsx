@@ -61,6 +61,8 @@ const XerDemo = () => {
 
   const startTour = () => {
     if (!tables) ingest(SAMPLE_XER, 'NJTA-MP123-BASELINE.xer');
+    setUpdateTables(null);
+    setTab('dcma');
     setTourOpen(true);
   };
 
@@ -93,6 +95,181 @@ const XerDemo = () => {
     setUpdateTables(t);
     toast({ title: '60-day update loaded', description: 'Compare against the baseline in Module B · Progress.' });
   };
+
+  // Helpers used by the live demo tour
+  const wait = (ms: number) => new Promise<void>(r => setTimeout(r, ms));
+  const click = (sel: string) =>
+    (document.querySelector(sel) as HTMLElement | null)?.click();
+
+  const tourSteps: TourStep[] = useMemo(() => [
+    {
+      target: '[data-tour="dropzone"]',
+      title: 'Mon 8:02 AM — contractor submission lands',
+      body: 'A contractor just emailed an .xer for NJTA MP 123 Bridge Replacement. We loaded it for you. Watch the next 90 seconds — XerLens will run the entire weekly scheduler workflow on this dummy project.',
+      dwellMs: 7000,
+      beforeShow: async () => {
+        if (!tables) ingest(SAMPLE_XER, 'NJTA-MP123-BASELINE.xer');
+        setUpdateTables(null);
+        setTab('dcma');
+        await wait(200);
+      },
+    },
+    {
+      target: '[data-tour="tabs"]',
+      title: 'Six modules · one weekly cadence',
+      body: 'Mon Audit (A) → Tue Update (B) → Wed Defend (C) → Thu Comply (D) → Fri Estimate (E) & File (F). Same loop every week of the project.',
+      dwellMs: 6500,
+    },
+    {
+      tab: 'dcma',
+      target: '[data-tour="dcma-score"]',
+      title: 'Mon · Module A — DCMA-14 just ran',
+      body: 'All 14 industry checks executed against the contractor\'s schedule. The score card on the left tells you the overall health at a glance — anything below 90% needs a memo back.',
+      dwellMs: 6500,
+      beforeShow: async () => { setTab('dcma'); await wait(150); },
+    },
+    {
+      tab: 'dcma',
+      target: '[data-tour="dcma-row-hard"]',
+      title: 'Click a failed check to see the offenders',
+      body: 'We auto-expanded "Hard Constraints". The contractor used a CS_MFO Mandatory-Finish on Project Completion — that locks the network and breaks NJDOT 108-03. Every offending activity is listed inline.',
+      dwellMs: 7500,
+      beforeShow: async () => {
+        await wait(250);
+        click('[data-tour="dcma-row-hard"]');
+        await wait(300);
+      },
+    },
+    {
+      tab: 'dcma',
+      target: '[data-tour="dcma-memo"]',
+      title: 'One click → ready-to-send RE memo',
+      body: 'Generate RE feedback memo turns the failures into a plain-English review letter — DCMA findings, NJDOT spec citations, the actual offending activity codes. Copy, PDF, or DOCX. This is the artifact you email the Resident Engineer.',
+      dwellMs: 8500,
+      beforeShow: async () => {
+        await wait(200);
+        // open the memo card if it isn't already
+        const btn = document.querySelector('[data-tour="dcma-memo-toggle"]') as HTMLButtonElement | null;
+        if (btn && !document.querySelector('[data-tour="dcma-memo"]')) btn.click();
+        await wait(350);
+        document.querySelector('[data-tour="dcma-memo"]')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      },
+    },
+    {
+      tab: 'progress',
+      target: '[data-tour="progress-empty"]',
+      title: 'Tue · Module B — monthly status update arrives',
+      body: 'Same project, 60 days later. The contractor\'s progress XER lands in your inbox. Drop it here to compare against the baseline.',
+      dwellMs: 6000,
+      beforeShow: async () => { setUpdateTables(null); setTab('progress'); await wait(200); },
+    },
+    {
+      tab: 'progress',
+      target: '[data-tour="progress-kpis"]',
+      title: 'SPI / CPI / % complete · computed instantly',
+      body: 'We loaded the update for you. SPI and CPI are red because A2020 (substructure removal) lost 20 days. % complete is by hours. Forecast finish has slipped — see how much next.',
+      dwellMs: 7500,
+      beforeShow: async () => {
+        if (!updateTables) loadUpdate();
+        await wait(350);
+      },
+    },
+    {
+      tab: 'progress',
+      target: '[data-tour="progress-chart"]',
+      title: 'Baseline vs forecast · activity-level slip',
+      body: 'Cyan = baseline finish offset, amber = forecast finish (late), green = on/early. Dashed line = update data date. Pier driving and pier pour both pushed right by ~20 days — that\'s the chain that drives the EOT we\'ll defend on Wednesday.',
+      dwellMs: 8500,
+      beforeShow: async () => { await wait(250); },
+    },
+    {
+      tab: 'progress',
+      target: '[data-tour="progress-exports"]',
+      title: 'Export the chart · Summary PDF · Lag chips',
+      body: 'PNG drops the chart into your status email. Summary PDF assembles a one-pager (KPIs + chart + top slipping table) for the monthly progress meeting. The amber chips below jump straight to the offending row.',
+      dwellMs: 7500,
+    },
+    {
+      tab: 'tia',
+      target: '[data-tour="tia-output"]',
+      title: 'Wed · Module C — defend the EOT with a TIA',
+      body: 'We pre-filled the form with a real differing-site-condition narrative (rock at Pier 1 · 14 working days). XerLens generated a fragnet (FS, zero lag — NJDOT 108-03 compliant) and a draft narrative on the right. Copy and paste into the EOT request letter.',
+      dwellMs: 8500,
+      beforeShow: async () => {
+        setTab('tia');
+        await wait(300);
+        // Pre-fill TIA inputs via DOM (uncontrolled set + dispatch)
+        const setVal = (sel: string, value: string) => {
+          const el = document.querySelector(sel) as HTMLInputElement | HTMLTextAreaElement | null;
+          if (!el) return;
+          const proto = el instanceof HTMLTextAreaElement
+            ? window.HTMLTextAreaElement.prototype
+            : window.HTMLInputElement.prototype;
+          const setter = Object.getOwnPropertyDescriptor(proto, 'value')?.set;
+          setter?.call(el, value);
+          el.dispatchEvent(new Event('input', { bubbles: true }));
+        };
+        setVal('input[type="number"]', '14');
+        setVal('textarea', 'Differing site condition — solid rock encountered at Pier 1 elevation 412.5, halting pile driving operations. Geotech consultant on site; revised pile schedule pending.');
+        await wait(300);
+        document.querySelector('[data-tour="tia-output"]')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      },
+    },
+    {
+      tab: 'wbs',
+      target: '[data-tour="wbs-milestones"]',
+      title: 'Thu · Module D — NJDOT WBS & milestone audit',
+      body: 'M100 (Advertise), M500 (Construction Start), M950 (Completion) all present and accounted for. Negative-lag and open-end counters at the top flag any non-conformance the moment a contractor edit breaks the network.',
+      dwellMs: 7500,
+      beforeShow: async () => { setTab('wbs'); await wait(250); },
+    },
+    {
+      tab: 'aace',
+      target: '[data-tour="aace-band"]',
+      title: 'Fri · Module E — progress the AACE estimate',
+      body: 'Cost side of the role. Watch the accuracy band tighten as we walk Class 5 → 3 → 1.',
+      dwellMs: 4000,
+      beforeShow: async () => { setTab('aace'); await wait(250); },
+    },
+    {
+      tab: 'aace',
+      target: '[data-tour="aace-band"]',
+      title: 'Class 5 · ±100% · Concept',
+      body: 'Earliest screening estimate — order-of-magnitude. Used for capital programming.',
+      dwellMs: 3500,
+      beforeShow: async () => { click('[data-aace-cls="5"]'); await wait(200); },
+    },
+    {
+      tab: 'aace',
+      target: '[data-tour="aace-band"]',
+      title: 'Class 3 · ±30% · Preliminary Design',
+      body: 'Halfway through design. Quantities partially developed — typical NJDOT 30% submission.',
+      dwellMs: 3500,
+      beforeShow: async () => { click('[data-aace-cls="3"]'); await wait(200); },
+    },
+    {
+      tab: 'aace',
+      target: '[data-tour="aace-band"]',
+      title: 'Class 1 · ±15% · Bid Check',
+      body: 'Final detailed estimate. The Scheduler/Estimator owns this progression every project, every milestone.',
+      dwellMs: 4500,
+      beforeShow: async () => { click('[data-aace-cls="1"]'); await wait(200); },
+    },
+    {
+      tab: 'files',
+      target: '[data-tour="panel-files"]',
+      title: 'Fri · Module F — file the week\'s artifacts',
+      body: 'Drop the memo, the TIA, the IDR, the photos. XerLens auto-tags each with discipline, status, and ISO 19650 code so the audit trail builds itself.',
+      dwellMs: 6500,
+      beforeShow: async () => { setTab('files'); await wait(200); },
+    },
+    {
+      target: '[data-tour="tour-button"]',
+      title: 'That\'s the week. Now drop your own .xer.',
+      body: 'Replay this tour anytime. Everything you just saw runs entirely in this browser tab — no upload, no server, no waiting.',
+      dwellMs: 8000,
+    },
+  ], [tables, updateTables]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="min-h-screen bg-background text-foreground font-mono antialiased">
@@ -235,64 +412,7 @@ const XerDemo = () => {
   );
 };
 
-const tourSteps: TourStep[] = [
-  {
-    target: '[data-tour="dropzone"]',
-    title: 'Welcome — start with a contractor submission',
-    body: 'Every Monday a contractor sends an .xer. Drop it here. Parsing runs entirely in your browser. We loaded a sample NJTA bridge project so you can walk every module.',
-  },
-  {
-    target: '[data-tour="tabs"]',
-    title: 'Six modules, one weekly workflow',
-    body: 'Audit → Update → Defend → Comply → Estimate → File. Six recurring deliverables of the CPM Scheduler/Estimator role per NJDOT 108-03 and AACE 98R-18.',
-  },
-  {
-    target: '[data-tour="tabs"]',
-    title: 'Weekly cadence — Mon → Fri',
-    body: 'Mon: audit the contractor submission (A). Tue: update progress vs baseline (B). Wed: defend the EOT with a TIA (C). Thu: verify NJDOT WBS compliance (D). Fri: progress the AACE estimate (E) and file the week\'s artifacts (F). The same loop runs every week of the project.',
-  },
-  {
-    tab: 'dcma',
-    target: '[data-tour="panel-dcma"]',
-    title: 'A · Audit — DCMA 14-Point Health Check',
-    body: 'All 14 industry checks (Logic, Leads, Lags, Hard Constraints, CPLI, BEI…) run instantly. The "Generate RE feedback memo" button turns the failures into a plain-English review letter — the artifact you actually send to the Resident Engineer.',
-  },
-  {
-    tab: 'progress',
-    target: '[data-tour="panel-progress"]',
-    title: 'B · Update — Progress vs Baseline (SPI / CPI)',
-    body: 'Click "Load 60-day update" to compare a monthly status XER against the baseline. SPI, CPI, top-10 slipping activities, forecast finish variance — the recurring deliverable for every monthly progress payment.',
-  },
-  {
-    tab: 'tia',
-    target: '[data-tour="panel-tia"]',
-    title: 'C · Defend — Time Impact Analysis',
-    body: 'Pick the affected activity, enter delay days and cause. XerLens generates a NJDOT-compliant fragnet (FS, zero lag) plus a draft 108-03 narrative — ready to paste into the EOT request letter.',
-  },
-  {
-    tab: 'wbs',
-    target: '[data-tour="panel-wbs"]',
-    title: 'D · Comply — NJDOT WBS & Milestones',
-    body: 'See negative lags and open-ended activities at a glance. The right panel cross-references the WBS against the required NJDOT milestones (M100 Advertise, M500 Construction Start, M950 Completion) and flags missing inserts.',
-  },
-  {
-    tab: 'aace',
-    target: '[data-tour="panel-aace"]',
-    title: 'E · Estimate — AACE Class 5 → 1 Progression',
-    body: 'The estimating side of the role. Progress the project estimate from Concept (Class 5, ±100%) down to Bid Check (Class 1, ±15%) as design matures. Ties the cost and schedule deliverables together.',
-  },
-  {
-    tab: 'files',
-    target: '[data-tour="panel-files"]',
-    title: 'F · File — ISO 19650 Explorer',
-    body: 'Drop any RFI, IDR, drawing, or schedule. XerLens auto-tags each file with discipline, status, and an ISO 19650 code, then lets you search across all of them. No nested folders required.',
-  },
-  {
-    target: '[data-tour="tour-button"]',
-    title: 'You are ready',
-    body: 'Re-run this tour anytime from the "Take the tour" button. Drop your own .xer next — nothing leaves the page.',
-  },
-];
+/* tourSteps moved inside the component below — they need access to ingest/loadUpdate/setTab */
 
 /* ─────────────────────  PORTFOLIO ROLLUP STRIP  ───────────────────── */
 const PortfolioStrip = ({ activeName, tables }: { activeName: string; tables: XerTables }) => {
@@ -379,7 +499,7 @@ const DcmaPanel = ({ tables }: { tables: XerTables }) => {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-4 justify-between">
+      <div className="flex flex-wrap items-center gap-4 justify-between" data-tour="dcma-score">
         <div>
           <div className="text-[11px] tracking-widest text-muted-foreground">OVERALL DCMA-14 SCORE</div>
           <div className="text-4xl font-bold mt-1">
@@ -389,14 +509,14 @@ const DcmaPanel = ({ tables }: { tables: XerTables }) => {
         </div>
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" onClick={copySummary}><Copy className="h-4 w-4" /> Copy summary</Button>
-          <Button onClick={() => setMemoOpen(o => !o)}>
+          <Button onClick={() => setMemoOpen(o => !o)} data-tour="dcma-memo-toggle">
             <Mail className="h-4 w-4" /> {memoOpen ? 'Hide' : 'Generate'} RE feedback memo
           </Button>
         </div>
       </div>
 
       {memoOpen && (
-        <Card className="p-5 bg-card/40 border-cyan-500/40">
+        <Card data-tour="dcma-memo" className="p-5 bg-card/40 border-cyan-500/40">
           <div className="flex items-center justify-between mb-3 gap-2 flex-wrap">
             <div className="text-[11px] tracking-widest text-cyan-400">DRAFT MEMO TO RESIDENT ENGINEER · READY TO PASTE</div>
             <div className="flex gap-2 flex-wrap">
@@ -428,7 +548,7 @@ const DcmaPanel = ({ tables }: { tables: XerTables }) => {
                 .filter(Boolean);
               return (
                 <>
-                  <tr key={r.id} className="border-b border-border hover:bg-card/40 cursor-pointer"
+                  <tr key={r.id} data-tour={`dcma-row-${r.id}`} className="border-b border-border hover:bg-card/40 cursor-pointer"
                       onClick={() => setOpenCheck(open ? null : r.id)}>
                     <td className="p-3 text-muted-foreground">{String(i + 1).padStart(2, '0')}</td>
                     <td className="p-3">
@@ -580,7 +700,7 @@ const ProgressPanel = ({ baseline, update, onLoadUpdate }: {
 }) => {
   if (!update) {
     return (
-      <Card className="p-8 bg-card/40 border-border/60 text-center">
+      <Card data-tour="progress-empty" className="p-8 bg-card/40 border-border/60 text-center">
         <Gauge className="h-8 w-8 mx-auto text-cyan-400 mb-3" />
         <div className="text-lg font-semibold mb-2">Compare a monthly update against the baseline</div>
         <p className="text-sm text-muted-foreground max-w-xl mx-auto mb-5">
@@ -645,7 +765,7 @@ const ProgressPanel = ({ baseline, update, onLoadUpdate }: {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div data-tour="progress-kpis" className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <KPI label="SPI · Schedule Performance" value={report.spi.toFixed(2)} good={report.spi >= 0.95} />
         <KPI label="CPI · Cost Performance (proxy)" value={report.cpi.toFixed(2)} good={report.cpi >= 0.95} />
         <KPI label="% Complete (by hours)" value={`${report.pctComplete.toFixed(0)}%`} />
@@ -672,7 +792,7 @@ const ProgressPanel = ({ baseline, update, onLoadUpdate }: {
       </Card>
 
       {/* Baseline vs 60-day update comparison chart */}
-      <Card className="p-5 bg-card/40 border-border/60">
+      <Card data-tour="progress-chart" className="p-5 bg-card/40 border-border/60">
         <div className="flex items-start justify-between gap-3 mb-4 flex-wrap">
           <div>
             <div className="text-[11px] tracking-widest text-cyan-400">BASELINE vs 60-DAY UPDATE · FINISH-DATE VARIANCE</div>
@@ -690,7 +810,7 @@ const ProgressPanel = ({ baseline, update, onLoadUpdate }: {
                 <span className="inline-block w-3 h-2 rounded-sm bg-emerald-400" /> FORECAST (EARLY/ON-TIME)
               </span>
             </div>
-            <div className="flex gap-2 ml-auto">
+            <div data-tour="progress-exports" className="flex gap-2 ml-auto">
               <Button size="sm" variant="outline" onClick={exportChartPng} disabled={rows.length === 0}>
                 <Download className="h-3.5 w-3.5" /> PNG
               </Button>
@@ -833,7 +953,7 @@ const AacePanel = () => {
   const active = AACE_CLASSES.find(c => c.cls === activeCls)!;
   return (
     <div className="space-y-5">
-      <div className="flex flex-wrap items-end justify-between gap-3">
+      <div data-tour="aace-band" className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <div className="text-[11px] tracking-widest text-muted-foreground">CURRENT ESTIMATE CLASS</div>
           <div className="text-3xl font-bold text-foreground mt-1">Class {active.cls} · {accuracyBand(active)}</div>
@@ -856,6 +976,7 @@ const AacePanel = () => {
           return (
             <button
               key={c.cls}
+              data-aace-cls={c.cls}
               onClick={() => setActiveCls(c.cls)}
               className={`text-left rounded-md border p-4 transition-all ${
                 isActive
@@ -965,7 +1086,7 @@ const TiaPanel = ({ tables }: { tables: XerTables }) => {
         </div>
       </Card>
 
-      <div className="space-y-4">
+      <div data-tour="tia-output" className="space-y-4">
         <Card className="p-5 bg-card/40 border-border/60">
           <div className="flex items-center justify-between mb-3">
             <div className="text-[11px] tracking-widest text-cyan-400">FRAGNET PREVIEW</div>
@@ -1126,7 +1247,7 @@ const WbsPanel = ({ tables }: { tables: XerTables }) => {
             {tree.map(n => <WbsRow key={n.wbs_id} node={n} depth={0} />)}
           </div>
         </Card>
-        <Card className="p-5 bg-card/40 border-border/60">
+        <Card data-tour="wbs-milestones" className="p-5 bg-card/40 border-border/60">
           <div className="text-[11px] tracking-widest text-cyan-400 mb-3">NJDOT REQUIRED MILESTONES</div>
           <div className="space-y-1.5">
             {milestones.map(m => (
