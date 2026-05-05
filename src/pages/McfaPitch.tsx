@@ -172,11 +172,24 @@ const roiScenarios = {
 } as const;
 type ScenarioKey = keyof typeof roiScenarios;
 
-const kpis = [
-  { quarter: 'Q1', icon: Zap,         text: 'Customized MCFA TakeoffPro launched in 90 days — cloud infra + offline mobile interface live.' },
-  { quarter: 'Q2', icon: Bot,         text: 'AI photo-tagging logic deployed; automated IDR-to-P6 comparison framework operational.' },
-  { quarter: 'Q3', icon: Activity,    text: 'Beta IDR-to-P6 activity comparison; division pivots from reactive to proactive scheduling.' },
-  { quarter: 'KPI',icon: Clock,       text: 'Targeted 30% reduction in inspector time spent calculating & verifying field quantities.' },
+// EOS Scorecard — leading indicators reviewed in weekly L10 meetings
+const scorecard = [
+  { metric: 'DCMA-14 Logic Score',       target: '≥ 95%',   why: 'Mathematically defensible network · prevents DOT rejection.' },
+  { metric: 'Schedule Update Latency',   target: '≤ 72 hr', why: 'Time from contractual data date to distributed variance report.' },
+  { metric: 'XER Processing Time',       target: '−50%',    why: 'vs. manual formatting/validation baseline. Entrepreneurial.' },
+  { metric: 'AACE Class 3 Estimate SLA', target: '≤ 10 d',  why: 'From 10–40% design package to deterministic budget estimate.' },
+];
+// Lagging indicators reviewed quarterly / annually
+const laggingKpis = [
+  { metric: 'Baseline Approval Velocity', target: '≤ 2 cycles', why: 'Avg DOT submissions to first-pass acceptance.' },
+  { metric: 'Claim Mitigation Rate',      target: '≥ 70%',       why: 'TIA-defended time-extension requests reduced or rejected.' },
+  { metric: 'Variance at Completion',     target: '< 5%',        why: 'AACE Class 1 estimate vs. awarded bid / final cost.' },
+];
+// Quarterly Rocks (90-day execution priorities)
+const rocks = [
+  { quarter: 'Q1', text: 'XerLens DCMA-14 auditor — GA across all active T&I projects.' },
+  { quarter: 'Q2', text: 'Automated TIA fragnet workflow — reduce delay-letter turnaround from 5 days to 1.' },
+  { quarter: 'Q3', text: 'Portfolio EVM telemetry — live SPI/CPI feed into the L10 scorecard.' },
 ];
 
 const compensation = [
