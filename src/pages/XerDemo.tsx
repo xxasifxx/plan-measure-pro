@@ -765,7 +765,7 @@ const ProgressPanel = ({ baseline, update, onLoadUpdate }: {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div data-tour="progress-kpis" className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <KPI label="SPI · Schedule Performance" value={report.spi.toFixed(2)} good={report.spi >= 0.95} />
         <KPI label="CPI · Cost Performance (proxy)" value={report.cpi.toFixed(2)} good={report.cpi >= 0.95} />
         <KPI label="% Complete (by hours)" value={`${report.pctComplete.toFixed(0)}%`} />
