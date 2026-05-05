@@ -384,9 +384,6 @@ const McfaPitch = () => {
                   </Link>
                 </Button>
                 <Button asChild size="lg" variant="outline" className="font-mono">
-                  <Link to="/demo">Open Field Demo</Link>
-                </Button>
-                <Button asChild size="lg" variant="ghost" className="font-mono">
                   <a href={mailto}><Mail className="h-4 w-4" /> 30-min walkthrough</a>
                 </Button>
               </motion.div>
