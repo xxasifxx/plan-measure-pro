@@ -283,14 +283,25 @@ export const XerLensTour = ({
               </span>
             )}
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close tour"
-            className="text-muted-foreground hover:text-foreground rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
-          >
-            <X className="h-4 w-4" aria-hidden="true" />
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={() => setPlaying(p => !p)}
+              aria-label={playing ? 'Pause autoplay' : 'Play autoplay'}
+              title={playing ? 'Pause (Space)' : 'Play (Space)'}
+              className="p-1 rounded text-cyan-300 hover:text-cyan-100 hover:bg-cyan-400/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+            >
+              {playing ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close tour"
+              className="p-1 text-muted-foreground hover:text-foreground rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+            >
+              <X className="h-4 w-4" aria-hidden="true" />
+            </button>
+          </div>
         </div>
         <h2 id={titleId} className="text-base font-semibold text-foreground mb-1.5">{step.title}</h2>
         <p id={bodyId} className="text-xs text-muted-foreground leading-relaxed mb-4">{step.body}</p>
