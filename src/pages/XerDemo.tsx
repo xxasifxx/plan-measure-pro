@@ -20,11 +20,16 @@ import { runDcma, dcmaSummary, type DcmaResult } from '@/lib/xer/dcma';
 import { buildTia, type DelayType } from '@/lib/xer/tia';
 import { buildWbsTree, checkNjdotMilestones, complianceSnapshot, type WbsNode } from '@/lib/xer/wbs';
 import { buildReMemo } from '@/lib/xer/feedback';
-import { compareProgress } from '@/lib/xer/progress';
+import { downloadMemoPdf, downloadMemoDoc } from '@/lib/xer/memo-export';
+import { compareProgress, chartRows } from '@/lib/xer/progress';
 import { AACE_CLASSES, accuracyBand, type AaceClass } from '@/lib/xer/aace';
 import { SAMPLE_XER } from '@/lib/xer/sample';
 import { SAMPLE_XER_UPDATE } from '@/lib/xer/sample-update';
 import type { XerTables } from '@/lib/xer/types';
+import {
+  ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RTooltip,
+  ResponsiveContainer, ReferenceLine, Cell,
+} from 'recharts';
 
 type TabKey = 'dcma' | 'progress' | 'tia' | 'wbs' | 'aace' | 'files';
 
@@ -237,7 +242,12 @@ const tourSteps: TourStep[] = [
   {
     target: '[data-tour="tabs"]',
     title: 'Six modules, one weekly workflow',
-    body: 'Audit → Update → Defend → Comply → Estimate → File. This is the recurring deliverable cadence of the CPM Scheduler/Estimator role per NJDOT 108-03 and AACE 98R-18.',
+    body: 'Audit → Update → Defend → Comply → Estimate → File. Six recurring deliverables of the CPM Scheduler/Estimator role per NJDOT 108-03 and AACE 98R-18.',
+  },
+  {
+    target: '[data-tour="tabs"]',
+    title: 'Weekly cadence — Mon → Fri',
+    body: 'Mon: audit the contractor submission (A). Tue: update progress vs baseline (B). Wed: defend the EOT with a TIA (C). Thu: verify NJDOT WBS compliance (D). Fri: progress the AACE estimate (E) and file the week\'s artifacts (F). The same loop runs every week of the project.',
   },
   {
     tab: 'dcma',
@@ -355,14 +365,14 @@ const DcmaPanel = ({ tables }: { tables: XerTables }) => {
     navigator.clipboard.writeText(memo);
     toast({ title: 'RE feedback memo copied', description: 'Paste into your email to the Resident Engineer.' });
   };
-  const downloadMemo = () => {
-    const blob = new Blob([memo], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `RE-feedback-${tables.PROJECT[0]?.proj_short_name || 'project'}.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
+  const baseFn = `RE-feedback-${tables.PROJECT[0]?.proj_short_name || 'project'}`;
+  const onPdf = () => {
+    downloadMemoPdf(memo, `${baseFn}.pdf`);
+    toast({ title: 'Memo downloaded', description: `${baseFn}.pdf` });
+  };
+  const onDoc = () => {
+    downloadMemoDoc(memo, `${baseFn}.doc`);
+    toast({ title: 'Memo downloaded', description: `${baseFn}.doc — opens in Word & Google Docs` });
   };
 
   return (
@@ -385,11 +395,12 @@ const DcmaPanel = ({ tables }: { tables: XerTables }) => {
 
       {memoOpen && (
         <Card className="p-5 bg-card/40 border-cyan-500/40">
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between mb-3 gap-2 flex-wrap">
             <div className="text-[11px] tracking-widest text-cyan-400">DRAFT MEMO TO RESIDENT ENGINEER · READY TO PASTE</div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
               <Button size="sm" variant="outline" onClick={copyMemo}><Copy className="h-3.5 w-3.5" /> Copy</Button>
-              <Button size="sm" variant="outline" onClick={downloadMemo}><Download className="h-3.5 w-3.5" /> Download .txt</Button>
+              <Button size="sm" variant="outline" onClick={onPdf}><Download className="h-3.5 w-3.5" /> PDF</Button>
+              <Button size="sm" onClick={onDoc}><Download className="h-3.5 w-3.5" /> DOCX</Button>
             </div>
           </div>
           <pre className="text-xs leading-relaxed text-muted-foreground whitespace-pre-wrap max-h-96 overflow-y-auto">{memo}</pre>
@@ -475,6 +486,32 @@ const ProgressPanel = ({ baseline, update, onLoadUpdate }: {
   }
   const report = compareProgress(baseline, update);
   const fmt = (d?: string) => d ? d.slice(0, 10) : '—';
+  const anchor = baseline.PROJECT[0]?.last_recalc_date || baseline.PROJECT[0]?.plan_start_date;
+  const rows = chartRows(report, anchor, 12);
+  const updateAnchorOffset = (() => {
+    if (!anchor || !update.PROJECT[0]?.last_recalc_date) return null;
+    return Math.round(
+      (new Date(update.PROJECT[0].last_recalc_date).getTime() - new Date(anchor).getTime()) /
+        (1000 * 60 * 60 * 24),
+    );
+  })();
+  const interpretation = report.spi >= 0.95
+    ? { tone: 'good', text: 'Performing to plan — no recovery action required.' }
+    : report.spi >= 0.85
+      ? { tone: 'warn', text: 'Slipping — corrective action plan due in next L10.' }
+      : { tone: 'bad',  text: 'Material slippage — recovery schedule and TIA required.' };
+  const toneCls = interpretation.tone === 'good'
+    ? 'text-emerald-400'
+    : interpretation.tone === 'warn' ? 'text-amber-400' : 'text-destructive';
+  const topLags = report.topSlipping.slice(0, 3);
+  const scrollToRow = (taskId: string) => {
+    const el = document.getElementById(`slip-row-${taskId}`);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.classList.add('ring-2', 'ring-cyan-400');
+      setTimeout(() => el.classList.remove('ring-2', 'ring-cyan-400'), 1600);
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -504,6 +541,105 @@ const ProgressPanel = ({ baseline, update, onLoadUpdate }: {
         </div>
       </Card>
 
+      {/* Baseline vs 60-day update comparison chart */}
+      <Card className="p-5 bg-card/40 border-border/60">
+        <div className="flex items-start justify-between gap-3 mb-4 flex-wrap">
+          <div>
+            <div className="text-[11px] tracking-widest text-cyan-400">BASELINE vs 60-DAY UPDATE · FINISH-DATE VARIANCE</div>
+            <div className={`text-xs mt-1 ${toneCls}`}>{interpretation.text}</div>
+          </div>
+          <div className="flex gap-3 text-[10px] tracking-widest">
+            <span className="flex items-center gap-1.5 text-muted-foreground">
+              <span className="inline-block w-3 h-2 rounded-sm bg-cyan-400" /> BASELINE
+            </span>
+            <span className="flex items-center gap-1.5 text-muted-foreground">
+              <span className="inline-block w-3 h-2 rounded-sm bg-amber-400" /> FORECAST (LATE)
+            </span>
+            <span className="flex items-center gap-1.5 text-muted-foreground">
+              <span className="inline-block w-3 h-2 rounded-sm bg-emerald-400" /> FORECAST (EARLY/ON-TIME)
+            </span>
+          </div>
+        </div>
+
+        {rows.length === 0 ? (
+          <div className="text-sm text-muted-foreground">No comparable activities between the baseline and update.</div>
+        ) : (
+          <div style={{ width: '100%', height: Math.max(280, rows.length * 28) }}>
+            <ResponsiveContainer>
+              <ComposedChart
+                data={rows}
+                layout="vertical"
+                margin={{ top: 8, right: 24, left: 8, bottom: 8 }}
+                barCategoryGap={6}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" horizontal={false} />
+                <XAxis
+                  type="number"
+                  tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }}
+                  label={{
+                    value: 'Days from baseline data date',
+                    position: 'insideBottom',
+                    offset: -2,
+                    fill: 'hsl(var(--muted-foreground))',
+                    fontSize: 10,
+                  }}
+                />
+                <YAxis
+                  type="category"
+                  dataKey="task_code"
+                  width={90}
+                  tick={{ fill: 'hsl(var(--cyan-400, 190 95% 55%))', fontSize: 10, fontFamily: 'monospace' }}
+                />
+                <RTooltip
+                  cursor={{ fill: 'hsl(var(--muted) / 0.2)' }}
+                  contentStyle={{
+                    background: 'hsl(var(--card))',
+                    border: '1px solid hsl(var(--border))',
+                    fontSize: 11,
+                  }}
+                  formatter={(value: number, name: string) => [`${value} d`, name]}
+                  labelFormatter={(label, payload) => {
+                    const r = payload?.[0]?.payload as typeof rows[number] | undefined;
+                    if (!r) return label;
+                    return `${r.task_code} · ${r.task_name}  (slip ${r.slip >= 0 ? '+' : ''}${r.slip}d)`;
+                  }}
+                />
+                {updateAnchorOffset !== null && (
+                  <ReferenceLine
+                    x={updateAnchorOffset}
+                    stroke="hsl(var(--cyan-400, 190 95% 55%))"
+                    strokeDasharray="4 4"
+                    label={{ value: 'Update data date', position: 'top', fill: 'hsl(var(--muted-foreground))', fontSize: 10 }}
+                  />
+                )}
+                <Bar dataKey="baselineOffset" name="Baseline finish" fill="hsl(190 95% 55%)" radius={[2, 2, 2, 2]} />
+                <Bar dataKey="forecastOffset" name="Forecast finish" radius={[2, 2, 2, 2]}>
+                  {rows.map((r, i) => (
+                    <Cell key={i} fill={r.slip > 0 ? 'hsl(38 92% 55%)' : 'hsl(152 76% 45%)'} />
+                  ))}
+                </Bar>
+              </ComposedChart>
+            </ResponsiveContainer>
+          </div>
+        )}
+
+        {topLags.length > 0 && (
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <span className="text-[10px] tracking-widest text-muted-foreground mr-1">LAG HIGHLIGHTS:</span>
+            {topLags.map(v => (
+              <button
+                key={v.task_id}
+                onClick={() => scrollToRow(v.task_id)}
+                className="text-[11px] font-mono px-2 py-1 rounded-sm border border-amber-500/40 bg-amber-500/5 text-amber-300 hover:bg-amber-500/10 transition-colors"
+                title={`Jump to ${v.task_code}`}
+              >
+                +{v.finishVarianceDays}d · {v.task_code}
+              </button>
+            ))}
+          </div>
+        )}
+      </Card>
+
       <Card className="p-5 bg-card/40 border-border/60">
         <div className="text-[11px] tracking-widest text-cyan-400 mb-3">TOP 10 SLIPPING ACTIVITIES</div>
         {report.topSlipping.length === 0 ? (
@@ -522,7 +658,7 @@ const ProgressPanel = ({ baseline, update, onLoadUpdate }: {
               </thead>
               <tbody>
                 {report.topSlipping.map(v => (
-                  <tr key={v.task_id} className="border-t border-border">
+                  <tr key={v.task_id} id={`slip-row-${v.task_id}`} className="border-t border-border transition-shadow rounded-sm">
                     <td className="py-2"><span className="font-mono text-cyan-400 mr-2">{v.task_code}</span>{v.task_name}</td>
                     <td className="py-2 font-mono text-xs text-muted-foreground">{fmt(v.baselineFinish)}</td>
                     <td className="py-2 font-mono text-xs text-muted-foreground">{fmt(v.updateFinish)}</td>

@@ -110,3 +110,32 @@ export function compareProgress(baseline: XerTables, update: XerTables): Progres
     variances, topSlipping,
   };
 }
+
+export interface ChartRow {
+  task_code: string;
+  task_name: string;
+  baselineOffset: number; // days from anchor date to baseline finish
+  forecastOffset: number; // days from anchor date to forecast finish
+  slip: number;           // forecastOffset - baselineOffset
+}
+
+/** Top N rows by absolute slip (late or early), expressed as day offsets
+ * from an anchor date (typically the baseline data date / project start). */
+export function chartRows(report: ProgressReport, anchor: string | undefined, n = 12): ChartRow[] {
+  const anchorDate = anchor ? new Date(anchor) : null;
+  const offset = (d?: string) => {
+    if (!d || !anchorDate) return 0;
+    return Math.round((new Date(d).getTime() - anchorDate.getTime()) / (1000 * 60 * 60 * 24));
+  };
+  return [...report.variances]
+    .filter(v => v.baselineFinish && v.updateFinish)
+    .sort((a, b) => Math.abs(b.finishVarianceDays) - Math.abs(a.finishVarianceDays))
+    .slice(0, n)
+    .map(v => ({
+      task_code: v.task_code,
+      task_name: v.task_name,
+      baselineOffset: offset(v.baselineFinish),
+      forecastOffset: offset(v.updateFinish),
+      slip: v.finishVarianceDays,
+    }));
+}
