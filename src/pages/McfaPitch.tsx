@@ -996,12 +996,12 @@ const McfaPitch = () => {
                     </tr>
                     <tr className="bg-emerald-500/10 border-t border-emerald-500/30">
                       <td className="p-3">
-                        <div className="font-bold text-foreground">BYOR Hybrid Ask</div>
-                        <div className="text-[11px] text-emerald-400/90 mt-0.5">One asset · two billable lanes · platform delivered</div>
+                        <div className="font-bold text-foreground">BYOR Ask · Experienced Senior Scheduler</div>
+                        <div className="text-[11px] text-emerald-400/90 mt-0.5">PMP · NJDOT/AACE · XerLens tooling included</div>
                       </td>
                       <td className="p-3 text-right">
-                        <div className="font-mono font-bold text-emerald-400 text-base">$130K – $155K</div>
-                        <div className="text-[10px] text-muted-foreground mt-0.5">+ up to 10% EOS Value-Add bonus</div>
+                        <div className="font-mono font-bold text-emerald-400 text-base">$130K – $140K</div>
+                        <div className="text-[10px] text-muted-foreground mt-0.5">+ 10 Growth Units · quarterly profit-share (PDF §6)</div>
                       </td>
                     </tr>
                   </tbody>
@@ -1085,8 +1085,7 @@ const McfaPitch = () => {
               <span className="text-cyan-400">at MCFA.</span>
             </h2>
             <p className="text-muted-foreground mt-6 leading-relaxed max-w-2xl mx-auto">
-              A working prototype already exists. The next step is a 30-minute conversation about how the 2,200-hour hybrid
-              model maps onto MCFA's immediate NICET and Scheduling priorities.
+              A working prototype of the weekly scheduler workflow already exists at /mcfa/demo. The next step is a 30-minute conversation about how this maps to the Project Controls Director's immediate Newark / PANYNJ priorities.
             </p>
             <div className="flex flex-wrap gap-3 justify-center mt-10">
               <Button asChild size="lg" className="font-mono">
