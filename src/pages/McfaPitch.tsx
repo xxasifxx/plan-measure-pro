@@ -412,7 +412,7 @@ const McfaPitch = () => {
                   <img src={heroScreenshot} alt="XerLens weekly scheduler workflow" className="w-full h-auto" />
                 </div>
                 <div className="absolute -bottom-4 -right-4 hidden md:block bg-cyan-500 text-cyan-950 text-xs font-bold px-3 py-2 rounded-sm shadow-xl">
-                  WORKING PROTOTYPE
+                  WORKING DEMO · /mcfa/demo
                 </div>
               </div>
             </motion.div>
