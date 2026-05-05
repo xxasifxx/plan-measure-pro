@@ -206,7 +206,7 @@ const compensation = [
   {
     icon: Layers,
     title: 'Internal Tool Agreement',
-    body: 'MCFA granted full internal use of TakeoffPro across its project portfolio. To preserve the cost-avoidance model, MCFA assumes responsibility for the external digital footprint costs (hosting, storage, API usage).',
+    body: 'MCFA granted full internal use of XerLens across its project portfolio. To preserve the cost-avoidance model, MCFA assumes responsibility for the external digital footprint costs (hosting, storage, API usage).',
   },
   {
     icon: Award,
