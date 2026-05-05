@@ -343,42 +343,44 @@ const McfaPitch = () => {
             >
               <motion.div variants={fadeUp} className="inline-flex items-center gap-2 text-[11px] tracking-[0.25em] text-cyan-400 border border-cyan-500/30 bg-cyan-500/5 px-3 py-1.5 rounded-sm">
                 <span className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
-                BUILD YOUR OWN ROLE · PROPOSAL
+                BUILD YOUR OWN ROLE · EVERGREEN POSTING · REFERRED BY SAQEEB MUHAMMAD
               </motion.div>
 
               <motion.h1 variants={fadeUp} className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.05] tracking-tight">
                 Systems-Enabled{' '}
                 <span className="text-cyan-400">CPM Scheduler / Estimator</span>{' '}
                 <span className="block text-muted-foreground/80 text-2xl md:text-3xl mt-3 font-normal">
-                  for MCFA Transportation &amp; Infrastructure
+                  for MCFA Transportation &amp; Infrastructure · Newark Airport / PANYNJ portfolio
                 </span>
               </motion.h1>
 
               <motion.p variants={fadeUp} className="text-lg text-muted-foreground max-w-2xl leading-relaxed">
-                <span className="text-foreground font-semibold">PMP-certified</span> · DO-178B-grade rigor ·
-                auth-agnostic <span className="text-cyan-400 font-semibold">XER tooling</span> for NJDOT &amp; NYSDOT.
-                Schedule integrity, AACE-compliant estimates, and a live drag-and-drop P6 audit — built into one project-controls function.
+                <span className="text-foreground font-semibold">PMP-certified</span> · disciplined Primavera P6 + AACE
+                estimating · auth-agnostic <span className="text-cyan-400 font-semibold">XER tooling</span> for NJDOT
+                &amp; NYSDOT compliance. Reliable, audit-ready data so PMs can lead their projects successfully —
+                MCFA's mission of <em className="text-foreground/80">Inspiring People and Places</em>, applied to
+                project controls.
               </motion.p>
 
               <motion.div variants={fadeUp} className="grid grid-cols-3 gap-4 pt-4 border-t border-border/60">
                 <div>
-                  <div className="text-3xl font-bold text-cyan-400">1,600</div>
-                  <div className="text-[10px] tracking-widest text-muted-foreground mt-1">CORE BILLABLE HRS</div>
+                  <div className="text-3xl font-bold text-cyan-400">≥ 95%</div>
+                  <div className="text-[10px] tracking-widest text-muted-foreground mt-1">DCMA-14 LOGIC TARGET</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold text-emerald-400">600</div>
-                  <div className="text-[10px] tracking-widest text-muted-foreground mt-1">FLEXIBLE OE / DEV</div>
+                  <div className="text-3xl font-bold text-emerald-400">≤ 72 h</div>
+                  <div className="text-[10px] tracking-widest text-muted-foreground mt-1">UPDATE DISTRIBUTION SLA</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold text-amber-400">~50%</div>
-                  <div className="text-[10px] tracking-widest text-muted-foreground mt-1">PROVEN AUTOMATION GAIN</div>
+                  <div className="text-3xl font-bold text-amber-400">± 5%</div>
+                  <div className="text-[10px] tracking-widest text-muted-foreground mt-1">AACE CLASS 1 ACCURACY</div>
                 </div>
               </motion.div>
 
               <motion.div variants={fadeUp} className="flex flex-wrap gap-3 pt-2">
                 <Button asChild size="lg" className="font-mono">
                   <Link to="/mcfa/demo">
-                    Open XER Live Demo <ArrowRight className="h-4 w-4" />
+                    Open the weekly scheduler demo <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
                 <Button asChild size="lg" variant="outline" className="font-mono">
@@ -391,7 +393,7 @@ const McfaPitch = () => {
 
               <motion.div variants={fadeUp} className="text-xs text-muted-foreground pt-2">
                 <span className="text-foreground font-semibold">Asif Muhammad, PMP</span> · NICET HCI Level I (exams complete) ·
-                BSET, NJIT · Currently supporting certified inspectors on Garden State Parkway repairs (Colonia)
+                BSET, NJIT · Reports to the Project Controls Director · Garden State Parkway repairs (Colonia, Churchill / Trilon)
               </motion.div>
             </motion.div>
 
