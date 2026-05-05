@@ -182,9 +182,58 @@ const XerDemo = () => {
           </div>
         </section>
       )}
+
+      <XerLensTour
+        open={tourOpen}
+        onClose={() => setTourOpen(false)}
+        onTabChange={(t) => setTab(t)}
+        steps={tourSteps}
+      />
     </div>
   );
 };
+
+const tourSteps: TourStep[] = [
+  {
+    target: '[data-tour="dropzone"]',
+    title: 'Welcome to XerLens',
+    body: 'This is the auth-agnostic P6 auditor. Drop any .xer file here — parsing happens entirely in your browser. We loaded a sample NJTA project so you can see every module in action.',
+  },
+  {
+    target: '[data-tour="tabs"]',
+    title: 'Four modules, one workflow',
+    body: 'XerLens runs the same four checks a CPM Scheduler/Estimator runs on every contractor submission: schedule health, delay analysis, document tagging, and WBS compliance.',
+  },
+  {
+    tab: 'dcma',
+    target: '[data-tour="panel-dcma"]',
+    title: 'Module A · DCMA 14-Point Audit',
+    body: 'All 14 checks (Logic, Leads, Lags, Hard Constraints, High Float, CPLI, BEI…) run instantly. Click any failed row to see the offending activities. Use "Copy summary" to paste straight into a review email.',
+  },
+  {
+    tab: 'tia',
+    target: '[data-tour="panel-tia"]',
+    title: 'Module B · Time Impact Analysis',
+    body: 'Pick the affected activity, enter delay days and cause. XerLens generates a NJDOT-compliant fragnet (FS, zero lag) plus a draft 108-03 narrative — ready to paste into your EOT request letter.',
+  },
+  {
+    tab: 'files',
+    target: '[data-tour="panel-files"]',
+    title: 'Module C · ISO 19650 File Explorer',
+    body: 'Drop any RFI, IDR, drawing, or schedule. XerLens auto-tags each file with discipline, status, and an ISO 19650 code — then lets you search across all of them. No nested folders required.',
+  },
+  {
+    tab: 'wbs',
+    target: '[data-tour="panel-wbs"]',
+    title: 'Module D · WBS & NJDOT Compliance',
+    body: 'See negative lags and open-ended activities at a glance. The right panel cross-references the WBS against required NJDOT milestones (M100, M500, M950…) and flags missing inserts.',
+  },
+  {
+    target: '[data-tour="tour-button"]',
+    title: 'You are ready',
+    body: 'Re-run this tour anytime from the "Take the tour" button. Drop your own .xer next — nothing leaves the page.',
+  },
+];
 
 /* ─────────────────────────  MODULE A: DCMA  ───────────────────────── */
 const DcmaPanel = ({ tables }: { tables: XerTables }) => {
