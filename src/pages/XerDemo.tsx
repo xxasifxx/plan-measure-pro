@@ -51,19 +51,15 @@ const XerDemo = () => {
       const m = document.createElement('meta'); m.name = 'description'; m.content = desc;
       document.head.appendChild(m);
     }
-    try {
-      if (!localStorage.getItem('xerlens.tour.seen.v2')) {
-        setTimeout(() => setTourOpen(true), 600);
-        localStorage.setItem('xerlens.tour.seen.v2', '1');
-      }
-    } catch {}
   }, []);
 
   const startTour = () => {
     if (!tables) ingest(SAMPLE_XER, 'NJTA-MP123-BASELINE.xer');
     setUpdateTables(null);
     setTab('dcma');
-    setTourOpen(true);
+    // Defer so React commits `tables` and the modules section mounts before
+    // the first tour step tries to measure its target.
+    requestAnimationFrame(() => requestAnimationFrame(() => setTourOpen(true)));
   };
 
   const ingest = (text: string, name: string) => {
