@@ -345,7 +345,7 @@ const McfaPitch = () => {
               <motion.div variants={fadeUp} className="flex flex-wrap gap-3 pt-2">
                 <Button asChild size="lg" className="font-mono">
                   <Link to="/demo">
-                    View Live Proof-of-Concept <ArrowRight className="h-4 w-4" />
+                    Open Live Demo <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
                 <Button asChild size="lg" variant="outline" className="font-mono">
