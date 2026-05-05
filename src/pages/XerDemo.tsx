@@ -8,7 +8,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ChevronRight, ChevronDown, Upload, FileCode2, CheckCircle2, XCircle, Copy, Download, AlertTriangle, FolderTree, FileSearch, Activity, Search, ArrowLeft } from 'lucide-react';
+import { ChevronRight, ChevronDown, Upload, FileCode2, CheckCircle2, XCircle, Copy, Download, AlertTriangle, FolderTree, FileSearch, Activity, Search, ArrowLeft, Sparkles } from 'lucide-react';
+import { XerLensTour, type TourStep } from '@/components/XerLensTour';
 import { toast } from '@/hooks/use-toast';
 import { parseXer } from '@/lib/xer/parser';
 import { runDcma, dcmaSummary, type DcmaResult } from '@/lib/xer/dcma';
@@ -20,6 +21,8 @@ import type { XerTables } from '@/lib/xer/types';
 const XerDemo = () => {
   const [tables, setTables] = useState<XerTables | null>(null);
   const [filename, setFilename] = useState<string>('');
+  const [tab, setTab] = useState<'dcma' | 'tia' | 'files' | 'wbs'>('dcma');
+  const [tourOpen, setTourOpen] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -30,7 +33,19 @@ const XerDemo = () => {
       const m = document.createElement('meta'); m.name = 'description'; m.content = desc;
       document.head.appendChild(m);
     }
+    // Auto-open tour on first visit
+    try {
+      if (!localStorage.getItem('xerlens.tour.seen')) {
+        setTimeout(() => setTourOpen(true), 600);
+        localStorage.setItem('xerlens.tour.seen', '1');
+      }
+    } catch {}
   }, []);
+
+  const startTour = () => {
+    if (!tables) ingest(SAMPLE_XER, 'NJTA-MP123-SAMPLE.xer');
+    setTourOpen(true);
+  };
 
   const ingest = (text: string, name: string) => {
     try {
@@ -66,9 +81,14 @@ const XerDemo = () => {
             <div className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse" />
             <span className="text-muted-foreground tracking-widest">XERLENS · AUTH-AGNOSTIC · IN-BROWSER PARSER · v0.1</span>
           </div>
-          <Button asChild variant="ghost" size="sm" className="text-xs">
-            <Link to="/mcfa"><ArrowLeft className="h-3.5 w-3.5" /> Back to pitch</Link>
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button size="sm" variant="outline" className="text-xs" onClick={startTour} data-tour="tour-button">
+              <Sparkles className="h-3.5 w-3.5" /> Take the tour
+            </Button>
+            <Button asChild variant="ghost" size="sm" className="text-xs">
+              <Link to="/mcfa"><ArrowLeft className="h-3.5 w-3.5" /> Back to pitch</Link>
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -90,6 +110,7 @@ const XerDemo = () => {
           </div>
 
           <div
+            data-tour="dropzone"
             onDragOver={(e) => e.preventDefault()}
             onDrop={onDrop}
             className="mt-10 border-2 border-dashed border-border hover:border-cyan-500/60 transition-colors rounded-md p-10 text-center bg-card/30"
@@ -115,30 +136,30 @@ const XerDemo = () => {
       {tables && (
         <section className="py-10">
           <div className="container mx-auto px-4">
-            <Tabs defaultValue="dcma">
-              <TabsList className="grid grid-cols-2 lg:grid-cols-4 w-full h-auto">
-                <TabsTrigger value="dcma" className="py-3 flex-col gap-1">
+            <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)}>
+              <TabsList className="grid grid-cols-2 lg:grid-cols-4 w-full h-auto" data-tour="tabs">
+                <TabsTrigger value="dcma" className="py-3 flex-col gap-1" data-tour="tab-dcma">
                   <span className="flex items-center gap-2"><Activity className="h-4 w-4" /> A · DCMA 14</span>
                   <span className="text-[10px] text-muted-foreground tracking-widest">SCHEDULE HEALTH</span>
                 </TabsTrigger>
-                <TabsTrigger value="tia" className="py-3 flex-col gap-1">
+                <TabsTrigger value="tia" className="py-3 flex-col gap-1" data-tour="tab-tia">
                   <span className="flex items-center gap-2"><AlertTriangle className="h-4 w-4" /> B · TIA</span>
                   <span className="text-[10px] text-muted-foreground tracking-widest">DELAY DRAFT</span>
                 </TabsTrigger>
-                <TabsTrigger value="files" className="py-3 flex-col gap-1">
+                <TabsTrigger value="files" className="py-3 flex-col gap-1" data-tour="tab-files">
                   <span className="flex items-center gap-2"><FileSearch className="h-4 w-4" /> C · File Explorer</span>
                   <span className="text-[10px] text-muted-foreground tracking-widest">ISO 19650 TAGS</span>
                 </TabsTrigger>
-                <TabsTrigger value="wbs" className="py-3 flex-col gap-1">
+                <TabsTrigger value="wbs" className="py-3 flex-col gap-1" data-tour="tab-wbs">
                   <span className="flex items-center gap-2"><FolderTree className="h-4 w-4" /> D · WBS / Compliance</span>
                   <span className="text-[10px] text-muted-foreground tracking-widest">NJDOT MILESTONES</span>
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="dcma" className="mt-6"><DcmaPanel tables={tables} /></TabsContent>
-              <TabsContent value="tia" className="mt-6"><TiaPanel tables={tables} /></TabsContent>
-              <TabsContent value="files" className="mt-6"><FileExplorerPanel /></TabsContent>
-              <TabsContent value="wbs" className="mt-6"><WbsPanel tables={tables} /></TabsContent>
+              <TabsContent value="dcma" className="mt-6" data-tour="panel-dcma"><DcmaPanel tables={tables} /></TabsContent>
+              <TabsContent value="tia" className="mt-6" data-tour="panel-tia"><TiaPanel tables={tables} /></TabsContent>
+              <TabsContent value="files" className="mt-6" data-tour="panel-files"><FileExplorerPanel /></TabsContent>
+              <TabsContent value="wbs" className="mt-6" data-tour="panel-wbs"><WbsPanel tables={tables} /></TabsContent>
             </Tabs>
           </div>
         </section>
@@ -161,9 +182,58 @@ const XerDemo = () => {
           </div>
         </section>
       )}
+
+      <XerLensTour
+        open={tourOpen}
+        onClose={() => setTourOpen(false)}
+        onTabChange={(t) => setTab(t)}
+        steps={tourSteps}
+      />
     </div>
   );
 };
+
+const tourSteps: TourStep[] = [
+  {
+    target: '[data-tour="dropzone"]',
+    title: 'Welcome to XerLens',
+    body: 'This is the auth-agnostic P6 auditor. Drop any .xer file here — parsing happens entirely in your browser. We loaded a sample NJTA project so you can see every module in action.',
+  },
+  {
+    target: '[data-tour="tabs"]',
+    title: 'Four modules, one workflow',
+    body: 'XerLens runs the same four checks a CPM Scheduler/Estimator runs on every contractor submission: schedule health, delay analysis, document tagging, and WBS compliance.',
+  },
+  {
+    tab: 'dcma',
+    target: '[data-tour="panel-dcma"]',
+    title: 'Module A · DCMA 14-Point Audit',
+    body: 'All 14 checks (Logic, Leads, Lags, Hard Constraints, High Float, CPLI, BEI…) run instantly. Click any failed row to see the offending activities. Use "Copy summary" to paste straight into a review email.',
+  },
+  {
+    tab: 'tia',
+    target: '[data-tour="panel-tia"]',
+    title: 'Module B · Time Impact Analysis',
+    body: 'Pick the affected activity, enter delay days and cause. XerLens generates a NJDOT-compliant fragnet (FS, zero lag) plus a draft 108-03 narrative — ready to paste into your EOT request letter.',
+  },
+  {
+    tab: 'files',
+    target: '[data-tour="panel-files"]',
+    title: 'Module C · ISO 19650 File Explorer',
+    body: 'Drop any RFI, IDR, drawing, or schedule. XerLens auto-tags each file with discipline, status, and an ISO 19650 code — then lets you search across all of them. No nested folders required.',
+  },
+  {
+    tab: 'wbs',
+    target: '[data-tour="panel-wbs"]',
+    title: 'Module D · WBS & NJDOT Compliance',
+    body: 'See negative lags and open-ended activities at a glance. The right panel cross-references the WBS against required NJDOT milestones (M100, M500, M950…) and flags missing inserts.',
+  },
+  {
+    target: '[data-tour="tour-button"]',
+    title: 'You are ready',
+    body: 'Re-run this tour anytime from the "Take the tour" button. Drop your own .xer next — nothing leaves the page.',
+  },
+];
 
 /* ─────────────────────────  MODULE A: DCMA  ───────────────────────── */
 const DcmaPanel = ({ tables }: { tables: XerTables }) => {
