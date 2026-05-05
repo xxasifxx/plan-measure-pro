@@ -347,7 +347,7 @@ const McfaPitch = () => {
               <motion.h1 variants={fadeUp} className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.05] tracking-tight">
                 Systems-Enabled{' '}
                 <span className="text-primary">CPM Scheduler / Estimator</span>{' '}
-                <span className="block text-muted-foreground/80 text-2xl md:text-3xl mt-3 font-normal">
+                <span className="block text-muted-foreground text-2xl md:text-3xl mt-3 font-normal">
                   for MCFA Transportation &amp; Infrastructure · Newark Airport / PANYNJ portfolio
                 </span>
               </motion.h1>
@@ -645,7 +645,7 @@ const McfaPitch = () => {
                     <div className="text-xs tracking-widest text-muted-foreground">LAYER {i + 1}</div>
                   </div>
                   <div className="text-lg font-semibold mb-1">{layer.title}</div>
-                  {layer.note && <div className="text-[11px] text-primary/80 mb-3">{layer.note}</div>}
+                  {layer.note && <div className="text-[11px] text-primary mb-3">{layer.note}</div>}
                   <ul className="space-y-1.5 mt-3">
                     {layer.items.map((it) => (
                       <li key={it} className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -873,7 +873,7 @@ const McfaPitch = () => {
                       <tr key={role} className="border-b border-border last:border-0 hover:bg-card/40">
                         <td className="p-3">
                           <div className="text-foreground">{role}</div>
-                          <div className="text-[11px] text-muted-foreground/80 mt-0.5">{sub}</div>
+                          <div className="text-[11px] text-muted-foreground mt-0.5">{sub}</div>
                         </td>
                         <td className="p-3 text-right font-mono text-primary">{range}</td>
                       </tr>
@@ -991,7 +991,7 @@ const McfaPitch = () => {
                 <a href="https://github.com" className="hover:text-primary inline-flex items-center gap-1.5"><Github className="h-3.5 w-3.5" /> GitHub</a>
                 <Link to="/demo" className="hover:text-primary inline-flex items-center gap-1.5"><ExternalLink className="h-3.5 w-3.5" /> Live App</Link>
               </div>
-              <div className="mt-6 text-[10px] tracking-widest text-muted-foreground/60">
+              <div className="mt-6 text-[10px] tracking-widest text-muted-foreground">
                 BUILT WITH THE SAME STACK PROPOSED FOR MCFA · REACT · TYPESCRIPT · SUPABASE · AI
               </div>
             </div>
