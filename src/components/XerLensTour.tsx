@@ -191,12 +191,19 @@ export const XerLensTour = ({
   const showTabRing = tabRect && !sameRect(tabRect, rect) && !extraRects.some(r => sameRect(r, tabRect));
 
   return createPortal(
-    <div className="fixed inset-0 z-[100]" aria-modal role="dialog">
+    <div
+      className="fixed inset-0 z-[100]"
+      aria-modal="true"
+      role="dialog"
+      aria-labelledby={titleId}
+      aria-describedby={bodyId}
+    >
       {/* Dim layer */}
       {rect ? (
         <>
           {/* Spotlight cutout */}
           <div
+            aria-hidden="true"
             className="fixed pointer-events-none rounded-md ring-2 ring-cyan-400 transition-all duration-300"
             style={{
               ...padBox(rect),
@@ -205,17 +212,23 @@ export const XerLensTour = ({
           />
           {/* Animated dashed outer ring for extra emphasis */}
           <div
+            aria-hidden="true"
             className="fixed pointer-events-none rounded-md border-2 border-dashed border-cyan-300/70 animate-pulse transition-all duration-300"
             style={padBox(rect, PAD + 6)}
           />
         </>
       ) : (
-        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm" onClick={onClose} />
+        <div
+          aria-hidden="true"
+          className="fixed inset-0 bg-background/80 backdrop-blur-sm"
+          onClick={onClose}
+        />
       )}
 
       {/* Active tab highlight */}
       {showTabRing && (
         <div
+          aria-hidden="true"
           className="fixed pointer-events-none rounded-md ring-2 ring-cyan-400 animate-pulse transition-all duration-300"
           style={{
             ...padBox(tabRect!, 4),
@@ -228,6 +241,7 @@ export const XerLensTour = ({
       {extraRects.map((r, i) => (
         <div
           key={i}
+          aria-hidden="true"
           className="fixed pointer-events-none rounded-md ring-2 ring-cyan-300/80 animate-pulse transition-all duration-300"
           style={{
             ...padBox(r, 4),
@@ -239,42 +253,51 @@ export const XerLensTour = ({
       {/* Tooltip */}
       <div
         ref={tooltipRef}
-        className="fixed bg-card border border-cyan-500/40 rounded-md shadow-2xl p-5 font-mono"
+        tabIndex={-1}
+        className="fixed bg-card border border-cyan-500/40 rounded-md shadow-2xl p-5 font-mono outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
         style={tipStyle}
       >
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2 text-[10px] tracking-[0.25em] text-cyan-400">
-            <Sparkles className="h-3 w-3" />
-            STEP {idx + 1} / {steps.length}
+            <Sparkles className="h-3 w-3" aria-hidden="true" />
+            <span aria-live="polite" aria-atomic="true">
+              STEP {idx + 1} / {steps.length}
+            </span>
             {step.tab && (
               <span className="ml-2 px-1.5 py-0.5 rounded bg-cyan-400/10 border border-cyan-400/30 text-cyan-300">
                 MODULE {step.tab.toUpperCase()}
               </span>
             )}
           </div>
-          <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
-            <X className="h-4 w-4" />
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close tour"
+            className="text-muted-foreground hover:text-foreground rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+          >
+            <X className="h-4 w-4" aria-hidden="true" />
           </button>
         </div>
-        <div className="text-base font-semibold text-foreground mb-1.5">{step.title}</div>
-        <p className="text-xs text-muted-foreground leading-relaxed mb-4">{step.body}</p>
+        <h2 id={titleId} className="text-base font-semibold text-foreground mb-1.5">{step.title}</h2>
+        <p id={bodyId} className="text-xs text-muted-foreground leading-relaxed mb-4">{step.body}</p>
         <div className="flex items-center justify-between gap-2">
           <button
+            type="button"
             onClick={onClose}
-            className="text-[11px] text-muted-foreground hover:text-foreground tracking-wider"
+            className="text-[11px] text-muted-foreground hover:text-foreground tracking-wider rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
           >
             Skip tour
           </button>
           <div className="flex gap-2">
-            <Button size="sm" variant="outline" disabled={idx === 0} onClick={prev}>
-              <ArrowLeft className="h-3.5 w-3.5" /> Back
+            <Button size="sm" variant="outline" disabled={idx === 0} onClick={prev} aria-label="Previous step">
+              <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" /> Back
             </Button>
-            <Button size="sm" onClick={next}>
-              {idx === steps.length - 1 ? 'Finish' : (<>Next <ArrowRight className="h-3.5 w-3.5" /></>)}
+            <Button size="sm" onClick={next} aria-label={idx === steps.length - 1 ? 'Finish tour' : 'Next step'}>
+              {idx === steps.length - 1 ? 'Finish' : (<>Next <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" /></>)}
             </Button>
           </div>
         </div>
-        <div className="flex gap-1 mt-3">
+        <div className="flex gap-1 mt-3" aria-hidden="true">
           {steps.map((_, i) => (
             <div
               key={i}
