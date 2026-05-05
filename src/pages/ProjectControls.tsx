@@ -17,6 +17,7 @@ import {
   Sparkles, Upload,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { GanttUploader } from '@/components/GanttUploader';
 
 type Activity = {
   id: string; project_id: string; wbs_code: string; name: string;
@@ -402,6 +403,7 @@ export default function ProjectControls() {
 
           {/* === ACTIVITIES === */}
           <TabsContent value="activities" className="space-y-4">
+            <GanttUploader projectId={projectId!} />
             <ActivityEditor
               payItems={payItemsQuery.data || []}
               onAdd={(a) => addActivity.mutate({ ...a, project_id: projectId! })}

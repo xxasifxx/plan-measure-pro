@@ -345,7 +345,7 @@ const McfaPitch = () => {
               <motion.div variants={fadeUp} className="flex flex-wrap gap-3 pt-2">
                 <Button asChild size="lg" className="font-mono">
                   <Link to="/demo">
-                    View Live Proof-of-Concept <ArrowRight className="h-4 w-4" />
+                    Open Live Demo <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
                 <Button asChild size="lg" variant="outline" className="font-mono">
@@ -388,7 +388,90 @@ const McfaPitch = () => {
       </section>
 
       {/* ============================================================ */}
-      {/* SECTION 1 · INTRODUCTION & STRATEGIC VISION                  */}
+      {/* MANUAL WORKFLOW REPLACED                                     */}
+      {/* ============================================================ */}
+      <section className="border-b border-border/60 py-20 bg-card/20">
+        <div className="container mx-auto px-4">
+          <SectionHeader number="00" eyebrow="WORKFLOW REPLACEMENT" title="What we replace on day one" />
+          <p className="text-muted-foreground max-w-3xl mt-4 mb-10">
+            One field tap on an iPad replaces a chain of manual handoffs that today consumes inspector and PM hours daily.
+            Every quantity, photo, and timestamp is captured once — then projected into the formats MCFA already submits.
+          </p>
+
+          <div className="grid lg:grid-cols-2 gap-6">
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
+              className="border border-destructive/30 bg-destructive/5 rounded-md p-6">
+              <div className="flex items-center gap-2 text-destructive font-mono text-xs tracking-widest mb-4">
+                <X className="h-4 w-4" /> TODAY · MANUAL CHAIN
+              </div>
+              <ol className="space-y-3 text-sm text-muted-foreground">
+                {[
+                  'Inspector writes pay-item quantities on a paper Daily Construction form in the field.',
+                  'Photos sit in iPhone camera roll, untagged.',
+                  'Back at the truck or office, the form is keyed into Excel.',
+                  'Excel is emailed to the PM, who re-keys progress into Primavera P6.',
+                  'Pay estimate spreadsheet is rebuilt by hand each pay period.',
+                  'Bid takeoffs are restarted from scratch in a separate workbook.',
+                ].map((s, i) => (
+                  <li key={i} className="flex gap-3">
+                    <span className="font-mono text-destructive/70 shrink-0">{String(i + 1).padStart(2, '0')}</span>
+                    <span>{s}</span>
+                  </li>
+                ))}
+              </ol>
+            </motion.div>
+
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
+              className="border border-emerald-500/40 bg-emerald-500/5 rounded-md p-6">
+              <div className="flex items-center gap-2 text-emerald-400 font-mono text-xs tracking-widest mb-4">
+                <Check className="h-4 w-4" /> WITH TAKEOFFPRO · ONE TAP, MANY EXPORTS
+              </div>
+              <ol className="space-y-3 text-sm text-muted-foreground">
+                {[
+                  'Inspector taps the plan sheet on iPad — quantity, GPS, page, and timestamp captured.',
+                  'Field photo uploaded; AI suggests the matching pay item for PM review.',
+                  'PM uploads a Gantt screenshot — AI extracts WBS rows into the schedule.',
+                  'Same record exports to NJDOT Daily Report (Excel), pay estimate (CSV/PDF), and P6 update (CSV).',
+                  'Bid mode reuses the same takeoff engine for proposal pricing.',
+                  'Audit trail is automatic — every measurement traces back to the inspector and the page.',
+                ].map((s, i) => (
+                  <li key={i} className="flex gap-3">
+                    <span className="font-mono text-emerald-400/70 shrink-0">{String(i + 1).padStart(2, '0')}</span>
+                    <span>{s}</span>
+                  </li>
+                ))}
+              </ol>
+            </motion.div>
+          </div>
+
+          <div className="mt-10 grid sm:grid-cols-3 gap-4">
+            {[
+              { label: 'Hours saved per inspector / week', value: '6–10', icon: Clock },
+              { label: 'Re-keying steps eliminated', value: '4', icon: GitBranch },
+              { label: 'Export formats from one capture', value: '6+', icon: FileSpreadsheet },
+            ].map((m) => (
+              <div key={m.label} className="border border-border bg-card/60 rounded-md p-4 flex items-center gap-3">
+                <m.icon className="h-5 w-5 text-cyan-400 shrink-0" />
+                <div>
+                  <div className="text-2xl font-mono text-foreground">{m.value}</div>
+                  <div className="text-[11px] tracking-widest text-muted-foreground uppercase">{m.label}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-10 flex flex-wrap gap-3 justify-center">
+            <Button asChild size="lg" className="font-mono">
+              <Link to="/demo">Walk through the live demo <ArrowRight className="h-4 w-4" /></Link>
+            </Button>
+            <Button asChild size="lg" variant="outline" className="font-mono">
+              <a href={mailto}><Mail className="h-4 w-4" /> Book a 30-min walkthrough</a>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+
       {/* ============================================================ */}
       <section className="border-b border-border/60 py-20">
         <div className="container mx-auto px-4">

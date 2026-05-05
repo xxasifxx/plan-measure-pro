@@ -14,6 +14,77 @@ export type Database = {
   }
   public: {
     Tables: {
+      activity_assignments: {
+        Row: {
+          activity_id: string
+          created_at: string
+          id: string
+          project_id: string
+          user_id: string
+        }
+        Insert: {
+          activity_id: string
+          created_at?: string
+          id?: string
+          project_id: string
+          user_id: string
+        }
+        Update: {
+          activity_id?: string
+          created_at?: string
+          id?: string
+          project_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activity_assignments_activity_id_fkey"
+            columns: ["activity_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_activities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      activity_pay_items: {
+        Row: {
+          activity_id: string
+          created_at: string
+          id: string
+          pay_item_id: string
+          project_id: string
+        }
+        Insert: {
+          activity_id: string
+          created_at?: string
+          id?: string
+          pay_item_id: string
+          project_id: string
+        }
+        Update: {
+          activity_id?: string
+          created_at?: string
+          id?: string
+          pay_item_id?: string
+          project_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activity_pay_items_activity_id_fkey"
+            columns: ["activity_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_activities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "activity_pay_items_pay_item_id_fkey"
+            columns: ["pay_item_id"]
+            isOneToOne: false
+            referencedRelation: "pay_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       annotation_photos: {
         Row: {
           ai_confidence: number | null
@@ -159,6 +230,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      daily_reports: {
+        Row: {
+          created_at: string
+          id: string
+          payload: Json
+          project_id: string
+          report_date: string
+          submitted_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          payload?: Json
+          project_id: string
+          report_date: string
+          submitted_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          payload?: Json
+          project_id?: string
+          report_date?: string
+          submitted_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       demo_requests: {
         Row: {
