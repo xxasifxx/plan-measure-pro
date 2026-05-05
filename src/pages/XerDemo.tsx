@@ -21,7 +21,8 @@ import { buildTia, type DelayType } from '@/lib/xer/tia';
 import { buildWbsTree, checkNjdotMilestones, complianceSnapshot, type WbsNode } from '@/lib/xer/wbs';
 import { buildReMemo } from '@/lib/xer/feedback';
 import { downloadMemoPdf, downloadMemoDoc } from '@/lib/xer/memo-export';
-import { compareProgress, chartRows } from '@/lib/xer/progress';
+import { compareProgress, chartRows, type ProgressReport } from '@/lib/xer/progress';
+import { svgContainerToPng, downloadDataUrl } from '@/lib/xer/chart-export';
 import { AACE_CLASSES, accuracyBand, type AaceClass } from '@/lib/xer/aace';
 import { SAMPLE_XER } from '@/lib/xer/sample';
 import { SAMPLE_XER_UPDATE } from '@/lib/xer/sample-update';
@@ -30,6 +31,7 @@ import {
   ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RTooltip,
   ResponsiveContainer, ReferenceLine, Cell,
 } from 'recharts';
+import { jsPDF } from 'jspdf';
 
 type TabKey = 'dcma' | 'progress' | 'tia' | 'wbs' | 'aace' | 'files';
 
@@ -468,6 +470,111 @@ const DcmaPanel = ({ tables }: { tables: XerTables }) => {
 };
 
 /* ──────────────  MODULE B: PROGRESS vs BASELINE  ────────────── */
+function buildProgressSummaryPdf(opts: {
+  projName: string;
+  report: ProgressReport;
+  fmt: (d?: string) => string;
+  chartPng: string | null;
+  interpretation: string;
+}) {
+  const { projName, report, fmt, chartPng, interpretation } = opts;
+  const doc = new jsPDF({ unit: 'pt', format: 'letter' });
+  const pageW = doc.internal.pageSize.getWidth();
+  const pageH = doc.internal.pageSize.getHeight();
+  const M = 54;
+  let y = M;
+
+  // Header
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(16);
+  doc.text('Progress vs Baseline — Summary Report', M, y); y += 22;
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
+  doc.setTextColor(110);
+  doc.text(`Project: ${projName}`, M, y); y += 14;
+  doc.text(`Generated: ${new Date().toISOString().slice(0, 10)}`, M, y); y += 18;
+  doc.setTextColor(0);
+
+  // KPI strip
+  const kpis: Array<[string, string]> = [
+    ['SPI', report.spi.toFixed(2)],
+    ['CPI (proxy)', report.cpi.toFixed(2)],
+    ['% Complete', `${report.pctComplete.toFixed(0)}%`],
+    ['Forecast Variance', `${report.forecastVarianceDays >= 0 ? '+' : ''}${report.forecastVarianceDays}d`],
+  ];
+  const kpiW = (pageW - M * 2) / kpis.length;
+  doc.setDrawColor(200);
+  kpis.forEach(([label, value], i) => {
+    const x = M + i * kpiW;
+    doc.rect(x, y, kpiW - 6, 50);
+    doc.setFontSize(8); doc.setTextColor(110);
+    doc.text(label.toUpperCase(), x + 8, y + 14);
+    doc.setFontSize(16); doc.setTextColor(0); doc.setFont('helvetica', 'bold');
+    doc.text(value, x + 8, y + 36);
+    doc.setFont('helvetica', 'normal');
+  });
+  y += 64;
+
+  doc.setFontSize(10); doc.setTextColor(0);
+  doc.text(`Interpretation: ${interpretation}`, M, y); y += 16;
+  doc.setTextColor(110); doc.setFontSize(9);
+  doc.text(`Baseline finish: ${fmt(report.baselineFinish)}    Forecast finish: ${fmt(report.forecastFinish)}`, M, y);
+  y += 18; doc.setTextColor(0);
+
+  // Chart image
+  if (chartPng) {
+    const props = doc.getImageProperties(chartPng);
+    const imgW = pageW - M * 2;
+    const imgH = (props.height / props.width) * imgW;
+    if (y + imgH > pageH - M) { doc.addPage(); y = M; }
+    doc.setFontSize(10); doc.setFont('helvetica', 'bold');
+    doc.text('Baseline vs 60-day update — finish-date variance', M, y); y += 14;
+    doc.setFont('helvetica', 'normal');
+    doc.addImage(chartPng, 'PNG', M, y, imgW, imgH);
+    y += imgH + 16;
+  }
+
+  // Top slipping table
+  if (y + 40 > pageH - M) { doc.addPage(); y = M; }
+  doc.setFontSize(10); doc.setFont('helvetica', 'bold');
+  doc.text('Top slipping activities', M, y); y += 14;
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(8);
+  const headers = ['Code', 'Activity', 'Baseline', 'Forecast', 'Slip', '% Done'];
+  const widths = [60, pageW - M * 2 - 60 - 70 - 70 - 40 - 40, 70, 70, 40, 40];
+  const drawRow = (cells: string[], bold = false) => {
+    if (y > pageH - M) { doc.addPage(); y = M; }
+    doc.setFont('helvetica', bold ? 'bold' : 'normal');
+    let x = M;
+    cells.forEach((c, i) => {
+      const w = widths[i];
+      const text = doc.splitTextToSize(c, w - 4)[0];
+      doc.text(text, x + 2, y);
+      x += w;
+    });
+    y += 12;
+  };
+  drawRow(headers, true);
+  doc.setDrawColor(220); doc.line(M, y - 8, pageW - M, y - 8);
+  report.topSlipping.slice(0, 15).forEach(v => {
+    drawRow([
+      v.task_code,
+      v.task_name,
+      fmt(v.baselineFinish),
+      fmt(v.updateFinish),
+      `+${v.finishVarianceDays}d`,
+      `${v.pctComplete.toFixed(0)}%`,
+    ]);
+  });
+
+  // Footer
+  const pageCount = doc.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.setFontSize(8); doc.setTextColor(140);
+    doc.text(`XerLens · Progress vs Baseline · Page ${i} / ${pageCount}`, M, pageH - 24);
+  }
+
+  doc.save(`progress-summary-${projName}.pdf`);
+}
+
 const ProgressPanel = ({ baseline, update, onLoadUpdate }: {
   baseline: XerTables; update: XerTables | null; onLoadUpdate: () => void;
 }) => {
@@ -513,6 +620,29 @@ const ProgressPanel = ({ baseline, update, onLoadUpdate }: {
     }
   };
 
+  const chartRef = useRef<HTMLDivElement>(null);
+  const projName = baseline.PROJECT[0]?.proj_short_name || 'project';
+
+  const exportChartPng = async () => {
+    if (!chartRef.current) return;
+    try {
+      const png = await svgContainerToPng(chartRef.current, 2);
+      downloadDataUrl(png, `progress-chart-${projName}.png`);
+      toast({ title: 'Chart exported', description: `progress-chart-${projName}.png` });
+    } catch (e) {
+      toast({ title: 'Export failed', description: e instanceof Error ? e.message : 'Unknown error', variant: 'destructive' });
+    }
+  };
+
+  const exportSummaryPdf = async () => {
+    let chartPng: string | null = null;
+    try {
+      if (chartRef.current) chartPng = await svgContainerToPng(chartRef.current, 2);
+    } catch { /* continue without chart */ }
+    buildProgressSummaryPdf({ projName, report, fmt, chartPng, interpretation: interpretation.text });
+    toast({ title: 'Summary PDF downloaded', description: `progress-summary-${projName}.pdf` });
+  };
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -548,23 +678,33 @@ const ProgressPanel = ({ baseline, update, onLoadUpdate }: {
             <div className="text-[11px] tracking-widest text-cyan-400">BASELINE vs 60-DAY UPDATE · FINISH-DATE VARIANCE</div>
             <div className={`text-xs mt-1 ${toneCls}`}>{interpretation.text}</div>
           </div>
-          <div className="flex gap-3 text-[10px] tracking-widest">
-            <span className="flex items-center gap-1.5 text-muted-foreground">
-              <span className="inline-block w-3 h-2 rounded-sm bg-cyan-400" /> BASELINE
-            </span>
-            <span className="flex items-center gap-1.5 text-muted-foreground">
-              <span className="inline-block w-3 h-2 rounded-sm bg-amber-400" /> FORECAST (LATE)
-            </span>
-            <span className="flex items-center gap-1.5 text-muted-foreground">
-              <span className="inline-block w-3 h-2 rounded-sm bg-emerald-400" /> FORECAST (EARLY/ON-TIME)
-            </span>
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="flex gap-3 text-[10px] tracking-widest">
+              <span className="flex items-center gap-1.5 text-muted-foreground">
+                <span className="inline-block w-3 h-2 rounded-sm bg-cyan-400" /> BASELINE
+              </span>
+              <span className="flex items-center gap-1.5 text-muted-foreground">
+                <span className="inline-block w-3 h-2 rounded-sm bg-amber-400" /> FORECAST (LATE)
+              </span>
+              <span className="flex items-center gap-1.5 text-muted-foreground">
+                <span className="inline-block w-3 h-2 rounded-sm bg-emerald-400" /> FORECAST (EARLY/ON-TIME)
+              </span>
+            </div>
+            <div className="flex gap-2 ml-auto">
+              <Button size="sm" variant="outline" onClick={exportChartPng} disabled={rows.length === 0}>
+                <Download className="h-3.5 w-3.5" /> PNG
+              </Button>
+              <Button size="sm" onClick={exportSummaryPdf}>
+                <Download className="h-3.5 w-3.5" /> Summary PDF
+              </Button>
+            </div>
           </div>
         </div>
 
         {rows.length === 0 ? (
           <div className="text-sm text-muted-foreground">No comparable activities between the baseline and update.</div>
         ) : (
-          <div style={{ width: '100%', height: Math.max(280, rows.length * 28) }}>
+          <div ref={chartRef} style={{ width: '100%', height: Math.max(280, rows.length * 28) }}>
             <ResponsiveContainer>
               <ComposedChart
                 data={rows}
