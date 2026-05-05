@@ -8,7 +8,7 @@ export type TourStep = {
   extraTargets?: string[]; // additional selectors to highlight with a pulse ring
   title: string;
   body: string;
-  tab?: 'dcma' | 'tia' | 'files' | 'wbs';
+  tab?: 'dcma' | 'progress' | 'tia' | 'wbs' | 'aace' | 'files';
   beforeShow?: () => void | Promise<void>;
   placement?: 'top' | 'bottom' | 'auto';
 };
