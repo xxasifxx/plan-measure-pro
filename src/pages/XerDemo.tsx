@@ -171,7 +171,7 @@ const XerDemo = () => {
       dwellMs: 7500,
       beforeShow: async () => {
         if (!updateTables) loadUpdate();
-        await wait: 350;
+        await wait(350);
       },
     },
     {
