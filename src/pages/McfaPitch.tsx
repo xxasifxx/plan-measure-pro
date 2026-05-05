@@ -695,12 +695,12 @@ const McfaPitch = () => {
                     <div className="font-semibold mt-0.5">Scheduler</div>
                   </th>
                   <th className="p-3 border-b border-r border-border text-center">
-                    <div className="text-cyan-400/80 text-xs tracking-widest">PROJECT CONTROLS</div>
-                    <div className="font-semibold mt-0.5">Analyst</div>
+                    <div className="text-muted-foreground text-xs tracking-widest">TRADITIONAL</div>
+                    <div className="font-semibold mt-0.5">Estimator</div>
                   </th>
                   <th className="p-3 border-b border-border text-center bg-cyan-500/10">
-                    <div className="text-cyan-300 text-xs tracking-widest">SYSTEMS</div>
-                    <div className="font-semibold mt-0.5">Integrator</div>
+                    <div className="text-cyan-300 text-xs tracking-widest">SYSTEMS-ENABLED</div>
+                    <div className="font-semibold mt-0.5">CPM (you)</div>
                   </th>
                 </tr>
               </thead>
@@ -1076,10 +1076,13 @@ const McfaPitch = () => {
             </p>
             <div className="flex flex-wrap gap-3 justify-center mt-10">
               <Button asChild size="lg" className="font-mono">
-                <a href={mailto}><Mail className="h-4 w-4" /> Schedule a 30-min Conversation</a>
+                <Link to="/mcfa/demo">Open XER Live Demo <ArrowRight className="h-4 w-4" /></Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="font-mono">
-                <Link to="/demo">Explore the working prototype <ArrowRight className="h-4 w-4" /></Link>
+                <a href={mailto}><Mail className="h-4 w-4" /> Book the live walkthrough</a>
+              </Button>
+              <Button asChild size="lg" variant="ghost" className="font-mono">
+                <Link to="/demo">Field Demo</Link>
               </Button>
             </div>
             <div className="mt-12 pt-8 border-t border-border/60 text-xs text-muted-foreground">
