@@ -13,7 +13,7 @@ import {
   TrendingUp, Award, Users, Zap, Linkedin, Github, WifiOff, Image as ImageIcon,
   GitBranch, Clock, DollarSign, FileSpreadsheet, Building2, Plane, MapPin,
   Gauge, Layers, Activity, FileCheck, Briefcase, X, Check, Minus,
-  MessageSquare, Anchor, TrendingDown,
+  MessageSquare, Anchor, TrendingDown, AlertTriangle,
 } from 'lucide-react';
 
 /* ------------------------------------------------------------------ */
