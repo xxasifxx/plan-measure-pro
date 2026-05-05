@@ -21,7 +21,8 @@ import { buildTia, type DelayType } from '@/lib/xer/tia';
 import { buildWbsTree, checkNjdotMilestones, complianceSnapshot, type WbsNode } from '@/lib/xer/wbs';
 import { buildReMemo } from '@/lib/xer/feedback';
 import { downloadMemoPdf, downloadMemoDoc } from '@/lib/xer/memo-export';
-import { compareProgress, chartRows } from '@/lib/xer/progress';
+import { compareProgress, chartRows, type ProgressReport } from '@/lib/xer/progress';
+import { svgContainerToPng, downloadDataUrl } from '@/lib/xer/chart-export';
 import { AACE_CLASSES, accuracyBand, type AaceClass } from '@/lib/xer/aace';
 import { SAMPLE_XER } from '@/lib/xer/sample';
 import { SAMPLE_XER_UPDATE } from '@/lib/xer/sample-update';
@@ -30,6 +31,7 @@ import {
   ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RTooltip,
   ResponsiveContainer, ReferenceLine, Cell,
 } from 'recharts';
+import { jsPDF } from 'jspdf';
 
 type TabKey = 'dcma' | 'progress' | 'tia' | 'wbs' | 'aace' | 'files';
 
@@ -513,7 +515,29 @@ const ProgressPanel = ({ baseline, update, onLoadUpdate }: {
     }
   };
 
-  return (
+  const chartRef = useRef<HTMLDivElement>(null);
+  const projName = baseline.PROJECT[0]?.proj_short_name || 'project';
+
+  const exportChartPng = async () => {
+    if (!chartRef.current) return;
+    try {
+      const png = await svgContainerToPng(chartRef.current, 2);
+      downloadDataUrl(png, `progress-chart-${projName}.png`);
+      toast({ title: 'Chart exported', description: `progress-chart-${projName}.png` });
+    } catch (e) {
+      toast({ title: 'Export failed', description: e instanceof Error ? e.message : 'Unknown error', variant: 'destructive' });
+    }
+  };
+
+  const exportSummaryPdf = async () => {
+    let chartPng: string | null = null;
+    try {
+      if (chartRef.current) chartPng = await svgContainerToPng(chartRef.current, 2);
+    } catch { /* continue without chart */ }
+    buildProgressSummaryPdf({ projName, report, fmt, chartPng, interpretation: interpretation.text });
+    toast({ title: 'Summary PDF downloaded', description: `progress-summary-${projName}.pdf` });
+  };
+
     <div className="space-y-4">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <KPI label="SPI · Schedule Performance" value={report.spi.toFixed(2)} good={report.spi >= 0.95} />
