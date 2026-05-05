@@ -573,23 +573,33 @@ const ProgressPanel = ({ baseline, update, onLoadUpdate }: {
             <div className="text-[11px] tracking-widest text-cyan-400">BASELINE vs 60-DAY UPDATE · FINISH-DATE VARIANCE</div>
             <div className={`text-xs mt-1 ${toneCls}`}>{interpretation.text}</div>
           </div>
-          <div className="flex gap-3 text-[10px] tracking-widest">
-            <span className="flex items-center gap-1.5 text-muted-foreground">
-              <span className="inline-block w-3 h-2 rounded-sm bg-cyan-400" /> BASELINE
-            </span>
-            <span className="flex items-center gap-1.5 text-muted-foreground">
-              <span className="inline-block w-3 h-2 rounded-sm bg-amber-400" /> FORECAST (LATE)
-            </span>
-            <span className="flex items-center gap-1.5 text-muted-foreground">
-              <span className="inline-block w-3 h-2 rounded-sm bg-emerald-400" /> FORECAST (EARLY/ON-TIME)
-            </span>
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="flex gap-3 text-[10px] tracking-widest">
+              <span className="flex items-center gap-1.5 text-muted-foreground">
+                <span className="inline-block w-3 h-2 rounded-sm bg-cyan-400" /> BASELINE
+              </span>
+              <span className="flex items-center gap-1.5 text-muted-foreground">
+                <span className="inline-block w-3 h-2 rounded-sm bg-amber-400" /> FORECAST (LATE)
+              </span>
+              <span className="flex items-center gap-1.5 text-muted-foreground">
+                <span className="inline-block w-3 h-2 rounded-sm bg-emerald-400" /> FORECAST (EARLY/ON-TIME)
+              </span>
+            </div>
+            <div className="flex gap-2 ml-auto">
+              <Button size="sm" variant="outline" onClick={exportChartPng} disabled={rows.length === 0}>
+                <Download className="h-3.5 w-3.5" /> PNG
+              </Button>
+              <Button size="sm" onClick={exportSummaryPdf}>
+                <Download className="h-3.5 w-3.5" /> Summary PDF
+              </Button>
+            </div>
           </div>
         </div>
 
         {rows.length === 0 ? (
           <div className="text-sm text-muted-foreground">No comparable activities between the baseline and update.</div>
         ) : (
-          <div style={{ width: '100%', height: Math.max(280, rows.length * 28) }}>
+          <div ref={chartRef} style={{ width: '100%', height: Math.max(280, rows.length * 28) }}>
             <ResponsiveContainer>
               <ComposedChart
                 data={rows}
