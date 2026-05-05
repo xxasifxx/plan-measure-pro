@@ -110,7 +110,7 @@ const integrationLayers = [
   {
     title: 'Data Sources',
     icon: Database,
-    items: ['Primavera P6 — Schedule', 'BIM 360 — Design + Docs', 'Field Inputs — Progress, Quantities'],
+    items: ['Primavera P6 — Schedule', 'BIM 360 — Design + Docs', 'Contractor XER Submissions — Baseline + Monthly Updates'],
   },
   {
     title: 'Integration Layer',
