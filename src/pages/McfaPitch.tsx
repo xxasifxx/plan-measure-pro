@@ -13,7 +13,7 @@ import {
   TrendingUp, Award, Users, Zap, Linkedin, Github, WifiOff, Image as ImageIcon,
   GitBranch, Clock, DollarSign, FileSpreadsheet, Building2, Plane, MapPin,
   Gauge, Layers, Activity, FileCheck, Briefcase, X, Check, Minus,
-  MessageSquare, Anchor, TrendingDown,
+  MessageSquare, Anchor, TrendingDown, AlertTriangle,
 } from 'lucide-react';
 
 /* ------------------------------------------------------------------ */
@@ -29,31 +29,29 @@ const stagger = { hidden: {}, visible: { transition: { staggerChildren: 0.08 } }
 /* data — sourced verbatim from MCFA_BYOR_Proposal.pdf                */
 /* ------------------------------------------------------------------ */
 
-const capacityModel = [
-  {
-    hours: '1,600',
-    label: 'Core Billable',
-    desc: 'NICET Inspector OR Senior Scheduler — base salary fully covered by traditional contract billing.',
-    color: 'from-emerald-500/20 to-emerald-500/5 border-emerald-500/40',
-    iconColor: 'text-emerald-400',
-    icon: HardHat,
-  },
-  {
-    hours: '600',
-    label: 'Flexible Capacity',
-    desc: 'Office Engineer support · RFI / IDR processing · BD proposal takeoffs · internal "Shop Tool" development.',
-    color: 'from-cyan-500/20 to-cyan-500/5 border-cyan-500/40',
-    iconColor: 'text-cyan-400',
-    icon: Code2,
-  },
-  {
-    hours: '2,200',
-    label: 'Total Annual Capacity',
-    desc: 'Single hybrid asset replacing two siloed hires while delivering an internal AI/P6 platform.',
-    color: 'from-amber-500/20 to-amber-500/5 border-amber-500/40',
-    iconColor: 'text-amber-400',
-    icon: Gauge,
-  },
+/* The 10 core activities of the systems-enabled CPM Scheduler/Estimator role.
+ * Sourced from the Strategic Realignment proposal, Section 3. */
+const tenCoreActivities = [
+  { n: '01', icon: GitBranch,      title: 'Baseline Schedule Engineering & Compliance',
+    body: 'Develop and maintain resource-loaded P6 baselines for transportation projects in strict accordance with NJDOT\'s Construction Scheduling Standard Coding & Procedures Manual — required WBS hierarchies and milestone codes (M100 Advertise, M500 Construction Start, M950 Completion).' },
+  { n: '02', icon: FileCheck,      title: 'Algorithmic Contractor Schedule Assessment',
+    body: 'Move beyond visual review. Automated parsing flags negative lags, open-ended activities, and out-of-sequence progress before formal acceptance — aligning with Trauner methodologies enforced by NYSDOT.' },
+  { n: '03', icon: ClipboardCheck, title: 'DCMA 14-Point QA & Mathematical Stability',
+    body: 'Continuous auditing against the DCMA 14 — logic ≥ 95%, hard constraints < 5%, high duration > 44d flagged, negative float instantly mitigated. The schedule network stays defensible.' },
+  { n: '04', icon: DollarSign,     title: 'AACE-Compliant Cost Estimating',
+    body: 'Deterministic and probabilistic estimates structured per AACE International 98R-18, evolving Class 5 (Concept) → Class 1 (Bid Check) as design matures.' },
+  { n: '05', icon: TrendingUp,     title: 'Dynamic Progress Telemetry & EVM',
+    body: 'Replace static PDF Gantts with live dashboards. SPI / CPI computed weekly so deviations surface in the L10 — not in the post-mortem.' },
+  { n: '06', icon: Users,          title: 'Cross-Disciplinary Coordination & L10 Integration',
+    body: 'Translate P6 network logic into weekly operational targets. Schedule deviations drop straight to the L10 Issues List for IDS resolution.' },
+  { n: '07', icon: AlertTriangle,  title: 'Automated Time Impact Analysis (TIA)',
+    body: 'PMs type a plain-text delay note → the system drafts the fragnet and TIA narrative. No tedious manual reconstruction of CPM logic.' },
+  { n: '08', icon: WifiOff,        title: 'Drag-and-Drop XER Tools',
+    body: 'Auth-agnostic, in-browser PWAs that translate proprietary .xer files into clear progress dashboards — bridging legacy P6 and modern reporting without IT integration.' },
+  { n: '09', icon: Layers,         title: 'Multi-Project Portfolio Integration',
+    body: 'Independent project schedules rolled into a master program view, resolving cross-project resource constraints and giving executives a holistic Mid-Atlantic snapshot.' },
+  { n: '10', icon: Briefcase,      title: 'Bid Scheduling & Proposal Support',
+    body: 'Rapid quantity extraction and high-level CPM logic for prospective bids — a competitive differentiator in public-sector procurement, with no added estimating headcount.' },
 ];
 
 const credentials = [
@@ -92,16 +90,16 @@ const phases = [
   },
 ];
 
-/* Archetype matrix — Capability × {Traditional Scheduler, PC Analyst, PC Systems Integrator} */
+/* Archetype matrix — Capability × {Trad. Scheduler, Trad. Estimator, Systems-Enabled CPM} */
 const archetypeRows: Array<[string, 'no' | 'partial' | 'yes', 'no' | 'partial' | 'yes', 'no' | 'partial' | 'yes']> = [
-  ['P6 Scheduling',              'yes',     'yes',     'yes'],
-  ['Stakeholder Reporting',      'partial', 'yes',     'yes'],
-  ['Data Pipelines / APIs',      'no',      'partial', 'yes'],
-  ['Scalability Across Projects','no',      'partial', 'yes'],
-  ['Power BI Modeling',          'no',      'yes',     'yes'],
-  ['BIM 360 Context',            'no',      'partial', 'yes'],
-  ['Traceability / Audit Ready', 'partial', 'yes',     'yes'],
-  ['Schedule Health QA',         'partial', 'yes',     'yes'],
+  ['Primavera P6 Mastery',                'yes',     'partial', 'yes'],
+  ['AACE 98R-18 Estimating',              'no',      'yes',     'yes'],
+  ['DCMA-14 Audit Automation',            'partial', 'no',      'yes'],
+  ['XER Parsing / Custom Tooling',        'no',      'no',      'yes'],
+  ['NJDOT / NYSDOT Compliance Fluency',   'partial', 'partial', 'yes'],
+  ['EVM Telemetry (SPI / CPI)',           'partial', 'partial', 'yes'],
+  ['Time Impact Analysis (TIA) Drafting', 'partial', 'no',      'yes'],
+  ['EOS / L10 Integration Fluency',       'no',      'no',      'yes'],
 ];
 
 const cellGlyph = (v: 'no' | 'partial' | 'yes') => {
@@ -172,11 +170,24 @@ const roiScenarios = {
 } as const;
 type ScenarioKey = keyof typeof roiScenarios;
 
-const kpis = [
-  { quarter: 'Q1', icon: Zap,         text: 'Customized MCFA TakeoffPro launched in 90 days — cloud infra + offline mobile interface live.' },
-  { quarter: 'Q2', icon: Bot,         text: 'AI photo-tagging logic deployed; automated IDR-to-P6 comparison framework operational.' },
-  { quarter: 'Q3', icon: Activity,    text: 'Beta IDR-to-P6 activity comparison; division pivots from reactive to proactive scheduling.' },
-  { quarter: 'KPI',icon: Clock,       text: 'Targeted 30% reduction in inspector time spent calculating & verifying field quantities.' },
+// EOS Scorecard — leading indicators reviewed in weekly L10 meetings
+const scorecard = [
+  { metric: 'DCMA-14 Logic Score',       target: '≥ 95%',   why: 'Mathematically defensible network · prevents DOT rejection.' },
+  { metric: 'Schedule Update Latency',   target: '≤ 72 hr', why: 'Time from contractual data date to distributed variance report.' },
+  { metric: 'XER Processing Time',       target: '−50%',    why: 'vs. manual formatting/validation baseline. Entrepreneurial.' },
+  { metric: 'AACE Class 3 Estimate SLA', target: '≤ 10 d',  why: 'From 10–40% design package to deterministic budget estimate.' },
+];
+// Lagging indicators reviewed quarterly / annually
+const laggingKpis = [
+  { metric: 'Baseline Approval Velocity', target: '≤ 2 cycles', why: 'Avg DOT submissions to first-pass acceptance.' },
+  { metric: 'Claim Mitigation Rate',      target: '≥ 70%',       why: 'TIA-defended time-extension requests reduced or rejected.' },
+  { metric: 'Variance at Completion',     target: '< 5%',        why: 'AACE Class 1 estimate vs. awarded bid / final cost.' },
+];
+// Quarterly Rocks (90-day execution priorities)
+const rocks = [
+  { quarter: 'Q1', text: 'XerLens DCMA-14 auditor — GA across all active T&I projects.' },
+  { quarter: 'Q2', text: 'Automated TIA fragnet workflow — reduce delay-letter turnaround from 5 days to 1.' },
+  { quarter: 'Q3', text: 'Portfolio EVM telemetry — live SPI/CPI feed into the L10 scorecard.' },
 ];
 
 const compensation = [
@@ -238,10 +249,23 @@ const recruiterQA: { q: string; a: string; tag?: string }[] = [
     a: "MCFA gets full internal use across its project portfolio under the employment agreement — no per-seat fees, no SaaS contract. I retain ownership of the core IP so it stays improvable. MCFA pays only the external footprint: hosting, storage, and AI API calls. Standard 'Shop Tool' arrangement.",
     tag: 'IP CLEAN',
   },
+  {
+    q: 'Why CPM scheduling now and not field inspection?',
+    a: "Field inspection generates the data; CPM scheduling is where that data either prevents or causes million-dollar claims. The proposal repositions me where the leverage is highest — and where my software background actually compounds. The TakeoffPro field tool keeps shipping; it just feeds the scheduler instead of being the destination.",
+    tag: 'LEVERAGE',
+  },
+  {
+    q: 'How does this satisfy NJDOT\'s no-negative-lag rule?',
+    a: "The XerLens demo flags every negative lag and open-ended activity in the contractor's submission before MCFA accepts it. Section 5.1 of the NJDOT Scheduling Manual prohibits both. Catching them at submission instead of at month-end is the difference between one email and a re-baseline.",
+    tag: 'NJDOT COMPLIANT',
+  },
+  {
+    q: "What if MCFA already licenses Acumen Fuse or a similar analytics tool?",
+    a: "Then we use it. XerLens isn't a Fuse replacement — it's the auth-agnostic, in-browser layer that PMs run themselves without bothering the scheduler. Fuse stays for deep forensic work; XerLens covers the daily 'is this submission acceptable?' question that today consumes an hour per project per week.",
+    tag: 'COEXISTS',
+  },
 ];
 
-/* ------------------------------------------------------------------ */
-/* component                                                          */
 /* ------------------------------------------------------------------ */
 const McfaPitch = () => {
   const [scenario, setScenario] = useState<ScenarioKey>('realistic');
@@ -314,17 +338,17 @@ const McfaPitch = () => {
               </motion.div>
 
               <motion.h1 variants={fadeUp} className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.05] tracking-tight">
-                Hybrid Construction Inspector{' '}
-                <span className="text-cyan-400">&amp; Systems Integrator</span>{' '}
+                Systems-Enabled{' '}
+                <span className="text-cyan-400">CPM Scheduler / Estimator</span>{' '}
                 <span className="block text-muted-foreground/80 text-2xl md:text-3xl mt-3 font-normal">
                   for MCFA Transportation &amp; Infrastructure
                 </span>
               </motion.h1>
 
               <motion.p variants={fadeUp} className="text-lg text-muted-foreground max-w-2xl leading-relaxed">
-                A single, high-utilization asset consolidating <span className="text-foreground font-semibold">three functions</span> —
-                primary billable resource (NICET Inspector or P6 Scheduler), responsive Office Engineer, and internal Systems
-                Developer — across <span className="text-cyan-400 font-semibold">2,200 annual hours</span>.
+                <span className="text-foreground font-semibold">PMP-certified</span> · DO-178B-grade rigor ·
+                auth-agnostic <span className="text-cyan-400 font-semibold">XER tooling</span> for NJDOT &amp; NYSDOT.
+                Schedule integrity, AACE-compliant estimates, and a live drag-and-drop P6 audit — built into one project-controls function.
               </motion.p>
 
               <motion.div variants={fadeUp} className="grid grid-cols-3 gap-4 pt-4 border-t border-border/60">
@@ -344,14 +368,15 @@ const McfaPitch = () => {
 
               <motion.div variants={fadeUp} className="flex flex-wrap gap-3 pt-2">
                 <Button asChild size="lg" className="font-mono">
-                  <Link to="/demo">
-                    Open Live Demo <ArrowRight className="h-4 w-4" />
+                  <Link to="/mcfa/demo">
+                    Open XER Live Demo <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
                 <Button asChild size="lg" variant="outline" className="font-mono">
-                  <a href={mailto}>
-                    <Mail className="h-4 w-4" /> Schedule a 30-min Conversation
-                  </a>
+                  <Link to="/demo">Open Field Demo</Link>
+                </Button>
+                <Button asChild size="lg" variant="ghost" className="font-mono">
+                  <a href={mailto}><Mail className="h-4 w-4" /> 30-min walkthrough</a>
                 </Button>
               </motion.div>
 
@@ -516,38 +541,27 @@ const McfaPitch = () => {
       {/* ============================================================ */}
       <section className="border-b border-border/60 py-20 bg-card/20">
         <div className="container mx-auto px-4">
-          <SectionHeader number="02" eyebrow="ROLE DESCRIPTION" title="The 2,200-Hour Hybrid Model" />
+          <SectionHeader number="02" eyebrow="ROLE DESCRIPTION" title="The Systems-Enabled Scheduler · 10 Core Activities" />
+          <p className="text-muted-foreground max-w-3xl mt-4">
+            The role consolidates traditional CPM scheduling, AACE-compliant estimating, and bespoke software tooling into a single
+            project-controls function. Every activity below maps to a measurable scorecard line in Section 04.
+          </p>
 
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger} className="grid md:grid-cols-3 gap-5 mt-10">
-            {capacityModel.map((c) => (
-              <motion.div key={c.label} variants={fadeUp}>
-                <Card className={`p-6 h-full bg-gradient-to-br ${c.color} border`}>
-                  <div className="flex items-start justify-between mb-4">
-                    <c.icon className={`h-6 w-6 ${c.iconColor}`} />
-                    <div className="text-xs tracking-widest text-muted-foreground">HOURS / YR</div>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}
+            className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-10">
+            {tenCoreActivities.map((a) => (
+              <motion.div key={a.n} variants={fadeUp}>
+                <Card className="p-5 h-full bg-card/40 border-border/60 hover:border-cyan-500/40 transition-colors">
+                  <div className="flex items-start justify-between mb-3">
+                    <a.icon className="h-5 w-5 text-cyan-400" />
+                    <span className="text-[10px] tracking-widest text-muted-foreground border border-border/60 px-2 py-0.5 rounded-sm">{a.n}</span>
                   </div>
-                  <div className="text-5xl font-bold mb-1">{c.hours}</div>
-                  <div className="text-sm font-semibold text-foreground/90 mb-3 tracking-wide">{c.label}</div>
-                  <div className="text-xs text-muted-foreground leading-relaxed">{c.desc}</div>
+                  <div className="text-sm font-semibold mb-2 leading-tight">{a.title}</div>
+                  <div className="text-xs text-muted-foreground leading-relaxed">{a.body}</div>
                 </Card>
               </motion.div>
             ))}
           </motion.div>
-
-          {/* allocation bar */}
-          <div className="mt-10 max-w-4xl mx-auto">
-            <div className="text-[11px] tracking-widest text-muted-foreground mb-2 flex justify-between">
-              <span>ANNUAL CAPACITY ALLOCATION</span><span>2,200 HRS</span>
-            </div>
-            <div className="flex h-10 rounded-sm overflow-hidden border border-border">
-              <div className="bg-emerald-500/70 flex items-center justify-center text-xs font-semibold text-emerald-950" style={{ flex: 1600 }}>
-                1,600 · BILLABLE (73%)
-              </div>
-              <div className="bg-cyan-500/70 flex items-center justify-center text-xs font-semibold text-cyan-950" style={{ flex: 600 }}>
-                600 · FLEX (27%)
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -614,21 +628,49 @@ const McfaPitch = () => {
       {/* ============================================================ */}
       <section className="border-b border-border/60 py-20 bg-card/20">
         <div className="container mx-auto px-4">
-          <SectionHeader number="04" eyebrow="KPIs · EOS ROCKS" title="First 90 Days &amp; Beyond" />
+          <SectionHeader number="04" eyebrow="KPIs · EOS SCORECARD" title="Leading Indicators · Lagging Indicators · Quarterly Rocks" />
+          <p className="text-muted-foreground max-w-3xl mt-4">
+            Traditional scheduling KPIs are lagging. The weekly L10 scorecard below tracks <em>predictive</em> measurables —
+            problems surface early enough for IDS resolution before they become claims.
+          </p>
 
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger} className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mt-10">
-            {kpis.map((k) => (
-              <motion.div key={k.quarter} variants={fadeUp}>
-                <Card className="p-5 h-full border-border/60 bg-card/40">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-[10px] tracking-widest text-cyan-400 border border-cyan-500/30 px-2 py-0.5 rounded-sm">{k.quarter}</span>
-                    <k.icon className="h-4 w-4 text-muted-foreground ml-auto" />
-                  </div>
-                  <div className="text-sm text-muted-foreground leading-relaxed">{k.text}</div>
-                </Card>
-              </motion.div>
-            ))}
-          </motion.div>
+          <div className="grid lg:grid-cols-2 gap-6 mt-10">
+            <Card className="p-5 bg-card/40 border-border/60">
+              <div className="text-[11px] tracking-widest text-cyan-400 mb-4">WEEKLY L10 SCORECARD · LEADING INDICATORS</div>
+              <table className="w-full text-sm">
+                <tbody>
+                  {scorecard.map(s => (
+                    <tr key={s.metric} className="border-t border-border first:border-t-0">
+                      <td className="py-3 pr-2"><div className="font-semibold">{s.metric}</div><div className="text-[11px] text-muted-foreground">{s.why}</div></td>
+                      <td className="py-3 text-right font-mono text-cyan-400 align-top whitespace-nowrap">{s.target}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </Card>
+            <Card className="p-5 bg-card/40 border-border/60">
+              <div className="text-[11px] tracking-widest text-emerald-400 mb-4">QUARTERLY / ANNUAL · LAGGING INDICATORS</div>
+              <table className="w-full text-sm">
+                <tbody>
+                  {laggingKpis.map(s => (
+                    <tr key={s.metric} className="border-t border-border first:border-t-0">
+                      <td className="py-3 pr-2"><div className="font-semibold">{s.metric}</div><div className="text-[11px] text-muted-foreground">{s.why}</div></td>
+                      <td className="py-3 text-right font-mono text-emerald-400 align-top whitespace-nowrap">{s.target}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div className="mt-6 text-[11px] tracking-widest text-amber-400 mb-2">90-DAY ROCKS</div>
+              <ul className="space-y-2 text-sm">
+                {rocks.map(r => (
+                  <li key={r.quarter} className="flex gap-3">
+                    <span className="font-mono text-cyan-400 shrink-0">{r.quarter}</span>
+                    <span className="text-muted-foreground">{r.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          </div>
         </div>
       </section>
 
@@ -653,12 +695,12 @@ const McfaPitch = () => {
                     <div className="font-semibold mt-0.5">Scheduler</div>
                   </th>
                   <th className="p-3 border-b border-r border-border text-center">
-                    <div className="text-cyan-400/80 text-xs tracking-widest">PROJECT CONTROLS</div>
-                    <div className="font-semibold mt-0.5">Analyst</div>
+                    <div className="text-muted-foreground text-xs tracking-widest">TRADITIONAL</div>
+                    <div className="font-semibold mt-0.5">Estimator</div>
                   </th>
                   <th className="p-3 border-b border-border text-center bg-cyan-500/10">
-                    <div className="text-cyan-300 text-xs tracking-widest">SYSTEMS</div>
-                    <div className="font-semibold mt-0.5">Integrator</div>
+                    <div className="text-cyan-300 text-xs tracking-widest">SYSTEMS-ENABLED</div>
+                    <div className="font-semibold mt-0.5">CPM (you)</div>
                   </th>
                 </tr>
               </thead>
@@ -1034,10 +1076,13 @@ const McfaPitch = () => {
             </p>
             <div className="flex flex-wrap gap-3 justify-center mt-10">
               <Button asChild size="lg" className="font-mono">
-                <a href={mailto}><Mail className="h-4 w-4" /> Schedule a 30-min Conversation</a>
+                <Link to="/mcfa/demo">Open XER Live Demo <ArrowRight className="h-4 w-4" /></Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="font-mono">
-                <Link to="/demo">Explore the working prototype <ArrowRight className="h-4 w-4" /></Link>
+                <a href={mailto}><Mail className="h-4 w-4" /> Book the live walkthrough</a>
+              </Button>
+              <Button asChild size="lg" variant="ghost" className="font-mono">
+                <Link to="/demo">Field Demo</Link>
               </Button>
             </div>
             <div className="mt-12 pt-8 border-t border-border/60 text-xs text-muted-foreground">
