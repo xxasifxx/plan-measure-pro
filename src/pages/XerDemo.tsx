@@ -541,6 +541,105 @@ const ProgressPanel = ({ baseline, update, onLoadUpdate }: {
         </div>
       </Card>
 
+      {/* Baseline vs 60-day update comparison chart */}
+      <Card className="p-5 bg-card/40 border-border/60">
+        <div className="flex items-start justify-between gap-3 mb-4 flex-wrap">
+          <div>
+            <div className="text-[11px] tracking-widest text-cyan-400">BASELINE vs 60-DAY UPDATE · FINISH-DATE VARIANCE</div>
+            <div className={`text-xs mt-1 ${toneCls}`}>{interpretation.text}</div>
+          </div>
+          <div className="flex gap-3 text-[10px] tracking-widest">
+            <span className="flex items-center gap-1.5 text-muted-foreground">
+              <span className="inline-block w-3 h-2 rounded-sm bg-cyan-400" /> BASELINE
+            </span>
+            <span className="flex items-center gap-1.5 text-muted-foreground">
+              <span className="inline-block w-3 h-2 rounded-sm bg-amber-400" /> FORECAST (LATE)
+            </span>
+            <span className="flex items-center gap-1.5 text-muted-foreground">
+              <span className="inline-block w-3 h-2 rounded-sm bg-emerald-400" /> FORECAST (EARLY/ON-TIME)
+            </span>
+          </div>
+        </div>
+
+        {rows.length === 0 ? (
+          <div className="text-sm text-muted-foreground">No comparable activities between the baseline and update.</div>
+        ) : (
+          <div style={{ width: '100%', height: Math.max(280, rows.length * 28) }}>
+            <ResponsiveContainer>
+              <ComposedChart
+                data={rows}
+                layout="vertical"
+                margin={{ top: 8, right: 24, left: 8, bottom: 8 }}
+                barCategoryGap={6}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" horizontal={false} />
+                <XAxis
+                  type="number"
+                  tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }}
+                  label={{
+                    value: 'Days from baseline data date',
+                    position: 'insideBottom',
+                    offset: -2,
+                    fill: 'hsl(var(--muted-foreground))',
+                    fontSize: 10,
+                  }}
+                />
+                <YAxis
+                  type="category"
+                  dataKey="task_code"
+                  width={90}
+                  tick={{ fill: 'hsl(var(--cyan-400, 190 95% 55%))', fontSize: 10, fontFamily: 'monospace' }}
+                />
+                <RTooltip
+                  cursor={{ fill: 'hsl(var(--muted) / 0.2)' }}
+                  contentStyle={{
+                    background: 'hsl(var(--card))',
+                    border: '1px solid hsl(var(--border))',
+                    fontSize: 11,
+                  }}
+                  formatter={(value: number, name: string) => [`${value} d`, name]}
+                  labelFormatter={(label, payload) => {
+                    const r = payload?.[0]?.payload as typeof rows[number] | undefined;
+                    if (!r) return label;
+                    return `${r.task_code} · ${r.task_name}  (slip ${r.slip >= 0 ? '+' : ''}${r.slip}d)`;
+                  }}
+                />
+                {updateAnchorOffset !== null && (
+                  <ReferenceLine
+                    x={updateAnchorOffset}
+                    stroke="hsl(var(--cyan-400, 190 95% 55%))"
+                    strokeDasharray="4 4"
+                    label={{ value: 'Update data date', position: 'top', fill: 'hsl(var(--muted-foreground))', fontSize: 10 }}
+                  />
+                )}
+                <Bar dataKey="baselineOffset" name="Baseline finish" fill="hsl(190 95% 55%)" radius={[2, 2, 2, 2]} />
+                <Bar dataKey="forecastOffset" name="Forecast finish" radius={[2, 2, 2, 2]}>
+                  {rows.map((r, i) => (
+                    <Cell key={i} fill={r.slip > 0 ? 'hsl(38 92% 55%)' : 'hsl(152 76% 45%)'} />
+                  ))}
+                </Bar>
+              </ComposedChart>
+            </ResponsiveContainer>
+          </div>
+        )}
+
+        {topLags.length > 0 && (
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <span className="text-[10px] tracking-widest text-muted-foreground mr-1">LAG HIGHLIGHTS:</span>
+            {topLags.map(v => (
+              <button
+                key={v.task_id}
+                onClick={() => scrollToRow(v.task_id)}
+                className="text-[11px] font-mono px-2 py-1 rounded-sm border border-amber-500/40 bg-amber-500/5 text-amber-300 hover:bg-amber-500/10 transition-colors"
+                title={`Jump to ${v.task_code}`}
+              >
+                +{v.finishVarianceDays}d · {v.task_code}
+              </button>
+            ))}
+          </div>
+        )}
+      </Card>
+
       <Card className="p-5 bg-card/40 border-border/60">
         <div className="text-[11px] tracking-widest text-cyan-400 mb-3">TOP 10 SLIPPING ACTIVITIES</div>
         {report.topSlipping.length === 0 ? (
