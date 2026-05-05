@@ -982,9 +982,6 @@ const McfaPitch = () => {
               <Button asChild size="lg" variant="outline" className="font-mono">
                 <a href={mailto}><Mail className="h-4 w-4" /> Book the live walkthrough</a>
               </Button>
-              <Button asChild size="lg" variant="ghost" className="font-mono">
-                <Link to="/demo">Field Demo</Link>
-              </Button>
             </div>
             <div className="mt-12 pt-8 border-t border-border/60 text-xs text-muted-foreground">
               <div className="font-semibold text-foreground">Asif Muhammad, PMP</div>
