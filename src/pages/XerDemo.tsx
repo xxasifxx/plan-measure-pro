@@ -50,6 +50,7 @@ const XerDemo = () => {
     if (meta) meta.setAttribute('content', desc); else {
       const m = document.createElement('meta'); m.name = 'description'; m.content = desc;
       document.head.appendChild(m);
+    }
     try {
       if (!localStorage.getItem('xerlens.tour.seen.v3')) {
         setTimeout(() => startTour(), 700);
