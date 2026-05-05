@@ -700,7 +700,7 @@ const ProgressPanel = ({ baseline, update, onLoadUpdate }: {
 }) => {
   if (!update) {
     return (
-      <Card className="p-8 bg-card/40 border-border/60 text-center">
+      <Card data-tour="progress-empty" className="p-8 bg-card/40 border-border/60 text-center">
         <Gauge className="h-8 w-8 mx-auto text-cyan-400 mb-3" />
         <div className="text-lg font-semibold mb-2">Compare a monthly update against the baseline</div>
         <p className="text-sm text-muted-foreground max-w-xl mx-auto mb-5">
