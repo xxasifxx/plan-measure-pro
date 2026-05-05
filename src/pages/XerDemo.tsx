@@ -136,30 +136,30 @@ const XerDemo = () => {
       {tables && (
         <section className="py-10">
           <div className="container mx-auto px-4">
-            <Tabs defaultValue="dcma">
-              <TabsList className="grid grid-cols-2 lg:grid-cols-4 w-full h-auto">
-                <TabsTrigger value="dcma" className="py-3 flex-col gap-1">
+            <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)}>
+              <TabsList className="grid grid-cols-2 lg:grid-cols-4 w-full h-auto" data-tour="tabs">
+                <TabsTrigger value="dcma" className="py-3 flex-col gap-1" data-tour="tab-dcma">
                   <span className="flex items-center gap-2"><Activity className="h-4 w-4" /> A · DCMA 14</span>
                   <span className="text-[10px] text-muted-foreground tracking-widest">SCHEDULE HEALTH</span>
                 </TabsTrigger>
-                <TabsTrigger value="tia" className="py-3 flex-col gap-1">
+                <TabsTrigger value="tia" className="py-3 flex-col gap-1" data-tour="tab-tia">
                   <span className="flex items-center gap-2"><AlertTriangle className="h-4 w-4" /> B · TIA</span>
                   <span className="text-[10px] text-muted-foreground tracking-widest">DELAY DRAFT</span>
                 </TabsTrigger>
-                <TabsTrigger value="files" className="py-3 flex-col gap-1">
+                <TabsTrigger value="files" className="py-3 flex-col gap-1" data-tour="tab-files">
                   <span className="flex items-center gap-2"><FileSearch className="h-4 w-4" /> C · File Explorer</span>
                   <span className="text-[10px] text-muted-foreground tracking-widest">ISO 19650 TAGS</span>
                 </TabsTrigger>
-                <TabsTrigger value="wbs" className="py-3 flex-col gap-1">
+                <TabsTrigger value="wbs" className="py-3 flex-col gap-1" data-tour="tab-wbs">
                   <span className="flex items-center gap-2"><FolderTree className="h-4 w-4" /> D · WBS / Compliance</span>
                   <span className="text-[10px] text-muted-foreground tracking-widest">NJDOT MILESTONES</span>
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="dcma" className="mt-6"><DcmaPanel tables={tables} /></TabsContent>
-              <TabsContent value="tia" className="mt-6"><TiaPanel tables={tables} /></TabsContent>
-              <TabsContent value="files" className="mt-6"><FileExplorerPanel /></TabsContent>
-              <TabsContent value="wbs" className="mt-6"><WbsPanel tables={tables} /></TabsContent>
+              <TabsContent value="dcma" className="mt-6" data-tour="panel-dcma"><DcmaPanel tables={tables} /></TabsContent>
+              <TabsContent value="tia" className="mt-6" data-tour="panel-tia"><TiaPanel tables={tables} /></TabsContent>
+              <TabsContent value="files" className="mt-6" data-tour="panel-files"><FileExplorerPanel /></TabsContent>
+              <TabsContent value="wbs" className="mt-6" data-tour="panel-wbs"><WbsPanel tables={tables} /></TabsContent>
             </Tabs>
           </div>
         </section>
