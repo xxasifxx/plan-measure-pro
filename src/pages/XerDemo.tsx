@@ -516,7 +516,7 @@ const DcmaPanel = ({ tables }: { tables: XerTables }) => {
       </div>
 
       {memoOpen && (
-        <Card className="p-5 bg-card/40 border-cyan-500/40">
+        <Card data-tour="dcma-memo" className="p-5 bg-card/40 border-cyan-500/40">
           <div className="flex items-center justify-between mb-3 gap-2 flex-wrap">
             <div className="text-[11px] tracking-widest text-cyan-400">DRAFT MEMO TO RESIDENT ENGINEER · READY TO PASTE</div>
             <div className="flex gap-2 flex-wrap">
