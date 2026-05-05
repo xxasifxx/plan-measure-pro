@@ -490,6 +490,38 @@ function PayItemList({ payItems, activePayItemId, onActivePayItemChange, onEdit,
 
   return (
     <>
+      {payItems.length > 6 && (
+        <div className="px-1 pb-2 space-y-1.5">
+          <div className="relative">
+            <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-sidebar-foreground/40" />
+            <Input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search all pay items…"
+              className="h-7 pl-7 text-[11px] bg-sidebar-accent/30 border-sidebar-border"
+            />
+          </div>
+          {recentIds.size > 0 && !query && (
+            <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider px-1">
+              <span className={showingTodayMode ? 'text-sidebar-primary flex items-center gap-1' : 'text-sidebar-foreground/40'}>
+                {showingTodayMode && <Sparkles className="h-2.5 w-2.5" />}
+                {showingTodayMode ? `Today · ${recentIds.size} relevant` : `${payItems.length} all items`}
+              </span>
+              <button
+                className="text-sidebar-foreground/60 hover:text-sidebar-primary"
+                onClick={() => setShowAll(s => !s)}
+              >
+                {showAll ? 'Show today' : 'Show all'}
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+      {sections.length === 0 && (
+        <div className="text-[11px] text-sidebar-foreground/50 px-2 py-3 text-center">
+          {query ? 'No matches.' : 'No items active today — search above.'}
+        </div>
+      )}
       {sections.map(({ section, label, items }) => (
         <div key={section} className="space-y-0.5">
           <div className="text-[10px] uppercase tracking-widest text-sidebar-foreground/50 px-2 pt-2 pb-1 font-bold border-b border-sidebar-border/50 mb-0.5">
