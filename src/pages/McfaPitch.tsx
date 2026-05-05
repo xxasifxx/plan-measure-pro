@@ -507,6 +507,33 @@ const McfaPitch = () => {
         </div>
       </section>
 
+      {/* ============================================================ */}
+      {/* SECTION 2.5 · A WEEK IN THE ROLE                             */}
+      {/* ============================================================ */}
+      <section className="border-b border-border/60 py-20">
+        <div className="container mx-auto px-4">
+          <SectionHeader number="02·5" eyebrow="WEEKLY CADENCE" title="A Week in the Role" />
+          <p className="text-muted-foreground max-w-3xl mt-4">
+            The 10 activities above collapse into a five-day rhythm. Each day produces a deliverable the
+            Project Controls Director and Resident Engineers can act on — and the live demo at <Link to="/mcfa/demo" className="text-cyan-400 underline underline-offset-4">/mcfa/demo</Link> walks every step.
+          </p>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}
+            className="grid md:grid-cols-2 lg:grid-cols-5 gap-3 mt-10">
+            {weeklyCadence.map((d) => (
+              <motion.div key={d.day} variants={fadeUp}>
+                <Card className="p-5 h-full bg-card/40 border-border/60 hover:border-cyan-500/40 transition-colors">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-2xl font-bold text-cyan-400 tracking-widest">{d.day}</span>
+                    <span className="text-[10px] tracking-widest text-muted-foreground border border-border/60 px-2 py-0.5 rounded-sm">{d.focus.toUpperCase()}</span>
+                  </div>
+                  <div className="text-sm font-semibold mb-2 leading-tight">{d.title}</div>
+                  <div className="text-xs text-muted-foreground leading-relaxed">{d.body}</div>
+                </Card>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
 
       {/* ============================================================ */}
       <section className="border-b border-border/60 py-20">
