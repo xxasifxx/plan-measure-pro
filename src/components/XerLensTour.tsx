@@ -93,13 +93,68 @@ export const XerLensTour = ({
     };
   }, [idx, open, step, tick]);
 
-  // Keyboard
+  // Save/restore focus + move initial focus into the tooltip when opened
   useEffect(() => {
     if (!open) return;
+    previouslyFocused.current = document.activeElement as HTMLElement | null;
+    // Move focus to the tooltip after it mounts
+    requestAnimationFrame(() => {
+      tooltipRef.current?.focus();
+    });
+    return () => {
+      previouslyFocused.current?.focus?.();
+    };
+  }, [open]);
+
+  // Keyboard: Escape closes; arrows/Enter navigate (when focus is not in a text field);
+  // Tab is trapped within the tooltip
+  useEffect(() => {
+    if (!open) return;
+    const getFocusable = (): HTMLElement[] => {
+      const root = tooltipRef.current;
+      if (!root) return [];
+      return Array.from(
+        root.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter(el => !el.hasAttribute('aria-hidden'));
+    };
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-      else if (e.key === 'ArrowRight' || e.key === 'Enter') next();
-      else if (e.key === 'ArrowLeft') prev();
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+        return;
+      }
+      if (e.key === 'Tab') {
+        const focusables = getFocusable();
+        if (focusables.length === 0) {
+          e.preventDefault();
+          tooltipRef.current?.focus();
+          return;
+        }
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        const active = document.activeElement as HTMLElement | null;
+        const inside = tooltipRef.current?.contains(active ?? null);
+        if (!inside) {
+          e.preventDefault();
+          (e.shiftKey ? last : first).focus();
+        } else if (!e.shiftKey && active === last) {
+          e.preventDefault();
+          first.focus();
+        } else if (e.shiftKey && active === first) {
+          e.preventDefault();
+          last.focus();
+        }
+        return;
+      }
+      // Avoid hijacking arrows/Enter while user is typing in a field
+      const tag = (document.activeElement?.tagName || '').toLowerCase();
+      const isField = tag === 'input' || tag === 'textarea' || tag === 'select' ||
+        (document.activeElement as HTMLElement | null)?.isContentEditable;
+      if (isField) return;
+      if (e.key === 'ArrowRight' || e.key === 'Enter') { e.preventDefault(); next(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
