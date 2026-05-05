@@ -137,7 +137,7 @@ const roiScenarios = {
       { label: 'Reporting Time Saved',    value: 90_000,  sub: '600 hrs × $150/hr · 3 proj × 4 hrs/wk × 50 wks' },
       { label: 'Reduced Rework',          value: 24_000,  sub: 'Quantity & documentation accuracy' },
       { label: 'Earlier Risk Visibility', value: 16_000,  sub: 'Live IDR ↔ P6 variance flagging' },
-      { label: 'Proposal Differentiator', value: 50_000,  sub: 'Faster takeoffs · higher BD throughput' },
+      { label: 'Proposal Differentiator', value: 50_000,  sub: 'Faster bid-pursuit schedule narratives · higher BD throughput' },
     ],
   },
   realistic: {
