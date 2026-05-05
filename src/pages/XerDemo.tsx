@@ -84,6 +84,9 @@ const XerDemo = () => {
           <Button asChild variant="ghost" size="sm" className="text-xs">
             <Link to="/mcfa"><ArrowLeft className="h-3.5 w-3.5" /> Back to pitch</Link>
           </Button>
+          <Button size="sm" variant="outline" className="text-xs" onClick={startTour} data-tour="tour-button">
+            <Sparkles className="h-3.5 w-3.5" /> Take the tour
+          </Button>
         </div>
       </div>
 
