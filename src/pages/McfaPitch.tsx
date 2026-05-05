@@ -262,13 +262,13 @@ const recruiterQA: { q: string; a: string; tag?: string }[] = [
     tag: 'EOS L10',
   },
   {
-    q: "Who owns the TakeoffPro / XerLens tooling?",
+    q: "Who owns the XerLens tooling?",
     a: "MCFA gets full internal use across its project portfolio under the employment agreement — no per-seat fees, no SaaS contract. MCFA covers the basic cloud hosting (estimated <$100/mo per the PDF) to keep the tools running for the team. Standard 'Shop Tool' arrangement.",
     tag: 'IP CLEAN',
   },
   {
     q: "How will you reduce administrative time by 30% (PDF long-term KPI)?",
-    a: "By collapsing the four manual passes — XER review, monthly update report, IDR collation, executive snapshot — into one ingest pipeline. Phase 1 of TakeoffPro already eliminates the field-to-spreadsheet re-keying. XerLens collapses the contractor-review pass. The 30% target is a documented before/after, not a promise.",
+    a: "By collapsing the four manual scheduler passes — XER review, monthly update report, variance roll-up, executive snapshot — into one in-browser pipeline. XerLens Module A collapses the contractor-review pass; Module B collapses the monthly update pass. The 30% target is a documented before/after, not a promise.",
     tag: 'EFFICIENCY',
   },
 ];
