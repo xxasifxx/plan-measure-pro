@@ -548,7 +548,7 @@ const DcmaPanel = ({ tables }: { tables: XerTables }) => {
                 .filter(Boolean);
               return (
                 <>
-                  <tr key={r.id} className="border-b border-border hover:bg-card/40 cursor-pointer"
+                  <tr key={r.id} data-tour={`dcma-row-${r.id}`} className="border-b border-border hover:bg-card/40 cursor-pointer"
                       onClick={() => setOpenCheck(open ? null : r.id)}>
                     <td className="p-3 text-muted-foreground">{String(i + 1).padStart(2, '0')}</td>
                     <td className="p-3">
