@@ -21,6 +21,8 @@ import type { XerTables } from '@/lib/xer/types';
 const XerDemo = () => {
   const [tables, setTables] = useState<XerTables | null>(null);
   const [filename, setFilename] = useState<string>('');
+  const [tab, setTab] = useState<'dcma' | 'tia' | 'files' | 'wbs'>('dcma');
+  const [tourOpen, setTourOpen] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -31,7 +33,19 @@ const XerDemo = () => {
       const m = document.createElement('meta'); m.name = 'description'; m.content = desc;
       document.head.appendChild(m);
     }
+    // Auto-open tour on first visit
+    try {
+      if (!localStorage.getItem('xerlens.tour.seen')) {
+        setTimeout(() => setTourOpen(true), 600);
+        localStorage.setItem('xerlens.tour.seen', '1');
+      }
+    } catch {}
   }, []);
+
+  const startTour = () => {
+    if (!tables) ingest(SAMPLE_XER, 'NJTA-MP123-SAMPLE.xer');
+    setTourOpen(true);
+  };
 
   const ingest = (text: string, name: string) => {
     try {
