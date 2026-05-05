@@ -527,37 +527,28 @@ const McfaPitch = () => {
       {/* ============================================================ */}
       <section className="border-b border-border/60 py-20 bg-card/20">
         <div className="container mx-auto px-4">
-          <SectionHeader number="02" eyebrow="ROLE DESCRIPTION" title="The 2,200-Hour Hybrid Model" />
+          <SectionHeader number="02" eyebrow="ROLE DESCRIPTION" title="The Systems-Enabled Scheduler · 10 Core Activities" />
+          <p className="text-muted-foreground max-w-3xl mt-4">
+            The role consolidates traditional CPM scheduling, AACE-compliant estimating, and bespoke software tooling into a single
+            project-controls function. Every activity below maps to a measurable scorecard line in Section 04.
+          </p>
 
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger} className="grid md:grid-cols-3 gap-5 mt-10">
-            {capacityModel.map((c) => (
-              <motion.div key={c.label} variants={fadeUp}>
-                <Card className={`p-6 h-full bg-gradient-to-br ${c.color} border`}>
-                  <div className="flex items-start justify-between mb-4">
-                    <c.icon className={`h-6 w-6 ${c.iconColor}`} />
-                    <div className="text-xs tracking-widest text-muted-foreground">HOURS / YR</div>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}
+            className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-10">
+            {tenCoreActivities.map((a) => (
+              <motion.div key={a.n} variants={fadeUp}>
+                <Card className="p-5 h-full bg-card/40 border-border/60 hover:border-cyan-500/40 transition-colors">
+                  <div className="flex items-start justify-between mb-3">
+                    <a.icon className="h-5 w-5 text-cyan-400" />
+                    <span className="text-[10px] tracking-widest text-muted-foreground border border-border/60 px-2 py-0.5 rounded-sm">{a.n}</span>
                   </div>
-                  <div className="text-5xl font-bold mb-1">{c.hours}</div>
-                  <div className="text-sm font-semibold text-foreground/90 mb-3 tracking-wide">{c.label}</div>
-                  <div className="text-xs text-muted-foreground leading-relaxed">{c.desc}</div>
+                  <div className="text-sm font-semibold mb-2 leading-tight">{a.title}</div>
+                  <div className="text-xs text-muted-foreground leading-relaxed">{a.body}</div>
                 </Card>
               </motion.div>
             ))}
           </motion.div>
-
-          {/* allocation bar */}
-          <div className="mt-10 max-w-4xl mx-auto">
-            <div className="text-[11px] tracking-widest text-muted-foreground mb-2 flex justify-between">
-              <span>ANNUAL CAPACITY ALLOCATION</span><span>2,200 HRS</span>
-            </div>
-            <div className="flex h-10 rounded-sm overflow-hidden border border-border">
-              <div className="bg-emerald-500/70 flex items-center justify-center text-xs font-semibold text-emerald-950" style={{ flex: 1600 }}>
-                1,600 · BILLABLE (73%)
-              </div>
-              <div className="bg-cyan-500/70 flex items-center justify-center text-xs font-semibold text-cyan-950" style={{ flex: 600 }}>
-                600 · FLEX (27%)
-              </div>
-            </div>
+        </div>
           </div>
         </div>
       </section>
