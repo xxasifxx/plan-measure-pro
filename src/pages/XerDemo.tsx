@@ -470,6 +470,111 @@ const DcmaPanel = ({ tables }: { tables: XerTables }) => {
 };
 
 /* ──────────────  MODULE B: PROGRESS vs BASELINE  ────────────── */
+function buildProgressSummaryPdf(opts: {
+  projName: string;
+  report: ProgressReport;
+  fmt: (d?: string) => string;
+  chartPng: string | null;
+  interpretation: string;
+}) {
+  const { projName, report, fmt, chartPng, interpretation } = opts;
+  const doc = new jsPDF({ unit: 'pt', format: 'letter' });
+  const pageW = doc.internal.pageSize.getWidth();
+  const pageH = doc.internal.pageSize.getHeight();
+  const M = 54;
+  let y = M;
+
+  // Header
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(16);
+  doc.text('Progress vs Baseline — Summary Report', M, y); y += 22;
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
+  doc.setTextColor(110);
+  doc.text(`Project: ${projName}`, M, y); y += 14;
+  doc.text(`Generated: ${new Date().toISOString().slice(0, 10)}`, M, y); y += 18;
+  doc.setTextColor(0);
+
+  // KPI strip
+  const kpis: Array<[string, string]> = [
+    ['SPI', report.spi.toFixed(2)],
+    ['CPI (proxy)', report.cpi.toFixed(2)],
+    ['% Complete', `${report.pctComplete.toFixed(0)}%`],
+    ['Forecast Variance', `${report.forecastVarianceDays >= 0 ? '+' : ''}${report.forecastVarianceDays}d`],
+  ];
+  const kpiW = (pageW - M * 2) / kpis.length;
+  doc.setDrawColor(200);
+  kpis.forEach(([label, value], i) => {
+    const x = M + i * kpiW;
+    doc.rect(x, y, kpiW - 6, 50);
+    doc.setFontSize(8); doc.setTextColor(110);
+    doc.text(label.toUpperCase(), x + 8, y + 14);
+    doc.setFontSize(16); doc.setTextColor(0); doc.setFont('helvetica', 'bold');
+    doc.text(value, x + 8, y + 36);
+    doc.setFont('helvetica', 'normal');
+  });
+  y += 64;
+
+  doc.setFontSize(10); doc.setTextColor(0);
+  doc.text(`Interpretation: ${interpretation}`, M, y); y += 16;
+  doc.setTextColor(110); doc.setFontSize(9);
+  doc.text(`Baseline finish: ${fmt(report.baselineFinish)}    Forecast finish: ${fmt(report.forecastFinish)}`, M, y);
+  y += 18; doc.setTextColor(0);
+
+  // Chart image
+  if (chartPng) {
+    const props = doc.getImageProperties(chartPng);
+    const imgW = pageW - M * 2;
+    const imgH = (props.height / props.width) * imgW;
+    if (y + imgH > pageH - M) { doc.addPage(); y = M; }
+    doc.setFontSize(10); doc.setFont('helvetica', 'bold');
+    doc.text('Baseline vs 60-day update — finish-date variance', M, y); y += 14;
+    doc.setFont('helvetica', 'normal');
+    doc.addImage(chartPng, 'PNG', M, y, imgW, imgH);
+    y += imgH + 16;
+  }
+
+  // Top slipping table
+  if (y + 40 > pageH - M) { doc.addPage(); y = M; }
+  doc.setFontSize(10); doc.setFont('helvetica', 'bold');
+  doc.text('Top slipping activities', M, y); y += 14;
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(8);
+  const headers = ['Code', 'Activity', 'Baseline', 'Forecast', 'Slip', '% Done'];
+  const widths = [60, pageW - M * 2 - 60 - 70 - 70 - 40 - 40, 70, 70, 40, 40];
+  const drawRow = (cells: string[], bold = false) => {
+    if (y > pageH - M) { doc.addPage(); y = M; }
+    doc.setFont('helvetica', bold ? 'bold' : 'normal');
+    let x = M;
+    cells.forEach((c, i) => {
+      const w = widths[i];
+      const text = doc.splitTextToSize(c, w - 4)[0];
+      doc.text(text, x + 2, y);
+      x += w;
+    });
+    y += 12;
+  };
+  drawRow(headers, true);
+  doc.setDrawColor(220); doc.line(M, y - 8, pageW - M, y - 8);
+  report.topSlipping.slice(0, 15).forEach(v => {
+    drawRow([
+      v.task_code,
+      v.task_name,
+      fmt(v.baselineFinish),
+      fmt(v.updateFinish),
+      `+${v.finishVarianceDays}d`,
+      `${v.pctComplete.toFixed(0)}%`,
+    ]);
+  });
+
+  // Footer
+  const pageCount = doc.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.setFontSize(8); doc.setTextColor(140);
+    doc.text(`XerLens · Progress vs Baseline · Page ${i} / ${pageCount}`, M, pageH - 24);
+  }
+
+  doc.save(`progress-summary-${projName}.pdf`);
+}
+
 const ProgressPanel = ({ baseline, update, onLoadUpdate }: {
   baseline: XerTables; update: XerTables | null; onLoadUpdate: () => void;
 }) => {
