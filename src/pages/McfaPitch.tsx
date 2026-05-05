@@ -421,117 +421,7 @@ const McfaPitch = () => {
       </section>
 
       {/* ============================================================ */}
-      {/* MANUAL WORKFLOW REPLACED                                     */}
-      {/* ============================================================ */}
-      <section className="border-b border-border/60 py-20 bg-card/20">
-        <div className="container mx-auto px-4">
-          <SectionHeader number="00" eyebrow="WORKFLOW REPLACEMENT" title="What we replace on day one" />
-          <p className="text-muted-foreground max-w-3xl mt-4 mb-10">
-            One field tap on an iPad replaces a chain of manual handoffs that today consumes inspector and PM hours daily.
-            Every quantity, photo, and timestamp is captured once — then projected into the formats MCFA already submits.
-          </p>
-
-          <div className="grid lg:grid-cols-2 gap-6">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
-              className="border border-destructive/30 bg-destructive/5 rounded-md p-6">
-              <div className="flex items-center gap-2 text-destructive font-mono text-xs tracking-widest mb-4">
-                <X className="h-4 w-4" /> TODAY · MANUAL CHAIN
-              </div>
-              <ol className="space-y-3 text-sm text-muted-foreground">
-                {[
-                  'Inspector writes pay-item quantities on a paper Daily Construction form in the field.',
-                  'Photos sit in iPhone camera roll, untagged.',
-                  'Back at the truck or office, the form is keyed into Excel.',
-                  'Excel is emailed to the PM, who re-keys progress into Primavera P6.',
-                  'Pay estimate spreadsheet is rebuilt by hand each pay period.',
-                  'Bid takeoffs are restarted from scratch in a separate workbook.',
-                ].map((s, i) => (
-                  <li key={i} className="flex gap-3">
-                    <span className="font-mono text-destructive/70 shrink-0">{String(i + 1).padStart(2, '0')}</span>
-                    <span>{s}</span>
-                  </li>
-                ))}
-              </ol>
-            </motion.div>
-
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
-              className="border border-emerald-500/40 bg-emerald-500/5 rounded-md p-6">
-              <div className="flex items-center gap-2 text-emerald-400 font-mono text-xs tracking-widest mb-4">
-                <Check className="h-4 w-4" /> WITH TAKEOFFPRO · ONE TAP, MANY EXPORTS
-              </div>
-              <ol className="space-y-3 text-sm text-muted-foreground">
-                {[
-                  'Inspector taps the plan sheet on iPad — quantity, GPS, page, and timestamp captured.',
-                  'Field photo uploaded; AI suggests the matching pay item for PM review.',
-                  'PM uploads a Gantt screenshot — AI extracts WBS rows into the schedule.',
-                  'Same record exports to NJDOT Daily Report (Excel), pay estimate (CSV/PDF), and P6 update (CSV).',
-                  'Bid mode reuses the same takeoff engine for proposal pricing.',
-                  'Audit trail is automatic — every measurement traces back to the inspector and the page.',
-                ].map((s, i) => (
-                  <li key={i} className="flex gap-3">
-                    <span className="font-mono text-emerald-400/70 shrink-0">{String(i + 1).padStart(2, '0')}</span>
-                    <span>{s}</span>
-                  </li>
-                ))}
-              </ol>
-            </motion.div>
-          </div>
-
-          <div className="mt-10 grid sm:grid-cols-3 gap-4">
-            {[
-              { label: 'Hours saved per inspector / week', value: '6–10', icon: Clock },
-              { label: 'Re-keying steps eliminated', value: '4', icon: GitBranch },
-              { label: 'Export formats from one capture', value: '6+', icon: FileSpreadsheet },
-            ].map((m) => (
-              <div key={m.label} className="border border-border bg-card/60 rounded-md p-4 flex items-center gap-3">
-                <m.icon className="h-5 w-5 text-cyan-400 shrink-0" />
-                <div>
-                  <div className="text-2xl font-mono text-foreground">{m.value}</div>
-                  <div className="text-[11px] tracking-widest text-muted-foreground uppercase">{m.label}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-10 flex flex-wrap gap-3 justify-center">
-            <Button asChild size="lg" className="font-mono">
-              <Link to="/demo">Walk through the live demo <ArrowRight className="h-4 w-4" /></Link>
-            </Button>
-            <Button asChild size="lg" variant="outline" className="font-mono">
-              <a href={mailto}><Mail className="h-4 w-4" /> Book a 30-min walkthrough</a>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================================ */}
-      {/* SECTION 2.5 · A WEEK IN THE ROLE                             */}
-      {/* ============================================================ */}
-      <section className="border-b border-border/60 py-20">
-        <div className="container mx-auto px-4">
-          <SectionHeader number="02·5" eyebrow="WEEKLY CADENCE" title="A Week in the Role" />
-          <p className="text-muted-foreground max-w-3xl mt-4">
-            The 10 activities above collapse into a five-day rhythm. Each day produces a deliverable the
-            Project Controls Director and Resident Engineers can act on — and the live demo at <Link to="/mcfa/demo" className="text-cyan-400 underline underline-offset-4">/mcfa/demo</Link> walks every step.
-          </p>
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}
-            className="grid md:grid-cols-2 lg:grid-cols-5 gap-3 mt-10">
-            {weeklyCadence.map((d) => (
-              <motion.div key={d.day} variants={fadeUp}>
-                <Card className="p-5 h-full bg-card/40 border-border/60 hover:border-cyan-500/40 transition-colors">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-2xl font-bold text-cyan-400 tracking-widest">{d.day}</span>
-                    <span className="text-[10px] tracking-widest text-muted-foreground border border-border/60 px-2 py-0.5 rounded-sm">{d.focus.toUpperCase()}</span>
-                  </div>
-                  <div className="text-sm font-semibold mb-2 leading-tight">{d.title}</div>
-                  <div className="text-xs text-muted-foreground leading-relaxed">{d.body}</div>
-                </Card>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
+      {/* SECTION 1 · INTRODUCTION                                     */}
       {/* ============================================================ */}
       <section className="border-b border-border/60 py-20">
         <div className="container mx-auto px-4">
@@ -575,11 +465,44 @@ const McfaPitch = () => {
       </section>
 
       {/* ============================================================ */}
-      {/* SECTION 2 · ROLE DESCRIPTION (2200-HR MODEL)                 */}
+      {/* SECTION 2 · A WEEK IN THE ROLE                               */}
       {/* ============================================================ */}
       <section className="border-b border-border/60 py-20 bg-card/20">
         <div className="container mx-auto px-4">
-          <SectionHeader number="02" eyebrow="ROLE DESCRIPTION" title="The Systems-Enabled Scheduler · 10 Core Activities" />
+          <SectionHeader number="02" eyebrow="WEEKLY CADENCE" title="A Week in the Role" />
+          <p className="text-muted-foreground max-w-3xl mt-4">
+            The role collapses into a five-day rhythm. Each day produces a deliverable the Project Controls Director and
+            Resident Engineers can act on — and the live demo at <Link to="/mcfa/demo" className="text-cyan-400 underline underline-offset-4">/mcfa/demo</Link> walks every step on a dummy NJTA project.
+          </p>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}
+            className="grid md:grid-cols-2 lg:grid-cols-5 gap-3 mt-10">
+            {weeklyCadence.map((d) => (
+              <motion.div key={d.day} variants={fadeUp}>
+                <Card className="p-5 h-full bg-card/40 border-border/60 hover:border-cyan-500/40 transition-colors">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-2xl font-bold text-cyan-400 tracking-widest">{d.day}</span>
+                    <span className="text-[10px] tracking-widest text-muted-foreground border border-border/60 px-2 py-0.5 rounded-sm">{d.focus.toUpperCase()}</span>
+                  </div>
+                  <div className="text-sm font-semibold mb-2 leading-tight">{d.title}</div>
+                  <div className="text-xs text-muted-foreground leading-relaxed">{d.body}</div>
+                </Card>
+              </motion.div>
+            ))}
+          </motion.div>
+          <div className="mt-10 flex flex-wrap gap-3 justify-center">
+            <Button asChild size="lg" className="font-mono">
+              <Link to="/mcfa/demo">Walk through the live weekly demo <ArrowRight className="h-4 w-4" /></Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/* SECTION 3 · 10 CORE ACTIVITIES                               */}
+      {/* ============================================================ */}
+      <section className="border-b border-border/60 py-20">
+        <div className="container mx-auto px-4">
+          <SectionHeader number="03" eyebrow="ROLE DESCRIPTION" title="The Systems-Enabled Scheduler · 10 Core Activities" />
           <p className="text-muted-foreground max-w-3xl mt-4">
             The role consolidates traditional CPM scheduling, AACE-compliant estimating, and bespoke software tooling into a single
             project-controls function. Every activity below maps to a measurable scorecard line in Section 04.
@@ -603,63 +526,6 @@ const McfaPitch = () => {
         </div>
       </section>
 
-      {/* ============================================================ */}
-      {/* SECTION 3 · TAKEOFFPRO 3-PHASE ROADMAP                       */}
-      {/* ============================================================ */}
-      <section className="border-b border-border/60 py-20">
-        <div className="container mx-auto px-4">
-          <SectionHeader number="03" eyebrow="INTERNAL SHOP TOOL" title="TakeoffPro · 3-Phase AI Roadmap" />
-          <p className="text-muted-foreground max-w-3xl mt-4">
-            An MCFA-specific iteration of the proprietary TakeoffPro application. Internalizing the tool eliminates the SaaS
-            friction that conventionally impedes field reporting.
-          </p>
-
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger} className="grid lg:grid-cols-3 gap-5 mt-10">
-            {phases.map((p) => (
-              <motion.div key={p.n} variants={fadeUp}>
-                <Card className={`p-6 h-full border ${p.accent} relative overflow-hidden`}>
-                  <div className="absolute top-3 right-3 text-[10px] tracking-widest text-muted-foreground border border-border/60 px-2 py-0.5 rounded-sm">
-                    {p.pill}
-                  </div>
-                  <div className="text-6xl font-bold text-foreground/10 leading-none">{p.n}</div>
-                  <p.icon className="h-7 w-7 text-cyan-400 mt-2 mb-3" />
-                  <div className="text-base font-semibold mb-3 leading-tight">{p.title}</div>
-                  <div className="text-xs text-muted-foreground leading-relaxed">{p.body}</div>
-                </Card>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          {/* live POC bullets */}
-          <div className="grid lg:grid-cols-2 gap-8 mt-14 items-center">
-            <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
-              <div className="text-[11px] tracking-widest text-cyan-400 mb-3">SHIPPING TODAY · /demo</div>
-              <h3 className="text-2xl font-bold mb-5">Phase 1 is already live.</h3>
-              <ul className="space-y-2">
-                {proofBullets.map((b) => (
-                  <li key={b} className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-400 mt-0.5 shrink-0" />
-                    <span>{b}</span>
-                  </li>
-                ))}
-              </ul>
-              <Button asChild size="sm" className="mt-6 font-mono">
-                <Link to="/demo">Open the working app <ExternalLink className="h-3.5 w-3.5" /></Link>
-              </Button>
-            </motion.div>
-
-            <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="grid grid-cols-2 gap-3">
-              <img src={inspectorTablet} alt="Field inspector tablet" className="rounded-md border border-border w-full h-48 object-cover" />
-              <img src={gpsFieldMeasurement} alt="GPS field measurement" className="rounded-md border border-border w-full h-48 object-cover" />
-              <div className="col-span-2 border border-border bg-card/40 rounded-md p-4 grid grid-cols-3 gap-3 text-center">
-                <Mini icon={WifiOff}    label="OFFLINE PWA" />
-                <Mini icon={Camera}     label="GPS-TAGGED" />
-                <Mini icon={ImageIcon}  label="AI-INDEXED" />
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
 
       {/* ============================================================ */}
       {/* SECTION 4 · KPIs / ROCKS                                     */}
