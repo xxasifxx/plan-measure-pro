@@ -407,9 +407,9 @@ const McfaPitch = () => {
                     <span className="h-2.5 w-2.5 rounded-full bg-red-500/60" />
                     <span className="h-2.5 w-2.5 rounded-full bg-amber-500/60" />
                     <span className="h-2.5 w-2.5 rounded-full bg-emerald-500/60" />
-                    <span className="ml-auto text-[10px] tracking-widest text-muted-foreground">TAKEOFFPRO · LIVE</span>
+                    <span className="ml-auto text-[10px] tracking-widest text-muted-foreground">XERLENS · LIVE — /mcfa/demo</span>
                   </div>
-                  <img src={heroScreenshot} alt="TakeoffPro proof-of-concept" className="w-full h-auto" />
+                  <img src={heroScreenshot} alt="XerLens weekly scheduler workflow" className="w-full h-auto" />
                 </div>
                 <div className="absolute -bottom-4 -right-4 hidden md:block bg-cyan-500 text-cyan-950 text-xs font-bold px-3 py-2 rounded-sm shadow-xl">
                   WORKING PROTOTYPE
