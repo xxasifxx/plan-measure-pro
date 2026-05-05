@@ -216,12 +216,12 @@ const compensation = [
 ];
 
 const proofBullets = [
-  'TOC auto-detection from full plan sets',
-  'Automatic pay-item extraction (current page + next 4)',
-  'One-time scale calibration → document-wide default',
-  'Offline-capable PWA · GPS-tagged field annotations',
-  'Real-time multi-user sync · role-based access',
-  'NJDOT / NJTA-compliant CSV, PDF & Excel exports',
+  'In-browser DCMA-14 audit on contractor XERs (no upload, no SaaS)',
+  'Plain-English RE memo generation from audit findings',
+  'SPI / CPI / slip from baseline + update XER pair',
+  'Auto-drafted TIA fragnet (FS, zero lag — NJDOT 108-03)',
+  'AACE Class 5→1 estimate progression with ±band display',
+  'Portfolio rollup of schedule health across active projects',
 ];
 
 /* Recruiter Q&A — short spoken answers, ~30 sec each. Reframed for a Project Controls Director hiring a Scheduler. */
