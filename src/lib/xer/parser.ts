@@ -20,7 +20,10 @@ export function parseXer(text: string): XerTables {
 
   for (const line of lines) {
     if (!line) continue;
-    const cols = line.split('\t');
+    // Tolerate space OR tab after the tag (%T/%F/%R/%E). Some authoring
+    // tools and our embedded samples emit a space.
+    const normalized = line.replace(/^(%[TFRE])[ \t]+/, '$1\t');
+    const cols = normalized.split('\t');
     const tag = cols[0];
     if (tag === '%T') {
       currentTable = (cols[1] || '').trim();

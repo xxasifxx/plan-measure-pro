@@ -52,18 +52,21 @@ const XerDemo = () => {
       document.head.appendChild(m);
     }
     try {
-      if (!localStorage.getItem('xerlens.tour.seen.v2')) {
-        setTimeout(() => setTourOpen(true), 600);
-        localStorage.setItem('xerlens.tour.seen.v2', '1');
+      if (!localStorage.getItem('xerlens.tour.seen.v3')) {
+        setTimeout(() => startTour(), 700);
+        localStorage.setItem('xerlens.tour.seen.v3', '1');
       }
     } catch {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const startTour = () => {
     if (!tables) ingest(SAMPLE_XER, 'NJTA-MP123-BASELINE.xer');
     setUpdateTables(null);
     setTab('dcma');
-    setTourOpen(true);
+    // Defer so React commits `tables` and the modules section mounts before
+    // the first tour step tries to measure its target.
+    requestAnimationFrame(() => requestAnimationFrame(() => setTourOpen(true)));
   };
 
   const ingest = (text: string, name: string) => {
