@@ -826,7 +826,7 @@ const ProgressPanel = ({ baseline, update, onLoadUpdate }: {
         {rows.length === 0 ? (
           <div className="text-sm text-muted-foreground">No comparable activities between the baseline and update.</div>
         ) : (
-          <div ref={chartRef} style={{ width: '100%', height: Math.max(280, rows.length * 28) }}>
+          <div ref={chartRef} data-tour="progress-chart-svg" style={{ width: '100%', height: Math.max(280, rows.length * 28) }}>
             <ResponsiveContainer>
               <ComposedChart
                 data={rows}
