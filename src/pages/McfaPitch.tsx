@@ -64,25 +64,25 @@ const credentials = [
 const phases = [
   {
     n: '01',
-    icon: WifiOff,
-    title: 'Offline Field Application & Manual Ingestion',
-    body: 'Browser-based, offline-capable PWA for mobile. Native camera + GPS, custom descriptions, pay-item selection, geo-tagged evidence — no internet required. On reconnect, ingests records alongside Excel IDRs and bulk untagged photos.',
+    icon: Activity,
+    title: 'XerLens DCMA-14 + RE Memo Auto-Generation',
+    body: 'In-browser auditor runs all 14 DCMA checks against contractor XER submissions and emits a plain-English memo to the Resident Engineer with accept / accept-with-conditions / reject recommendation, NJDOT spec citations, and offending activity codes. Already shipped — see Module A on /mcfa/demo.',
     accent: 'border-emerald-500/40 bg-emerald-500/5',
     pill: 'Q1 ROCK · 90 DAYS',
   },
   {
     n: '02',
-    icon: Bot,
-    title: 'AI-Driven Image Processing',
-    body: 'AI layer reviews imported untagged images. Cross-references image content, user descriptions, and temporal/spatial metadata against active project pay items — auto-defaults examples to the correct pay-item file. Visual audit trail organized instantaneously.',
+    icon: TrendingUp,
+    title: 'Progress Telemetry · SPI / CPI from XER pairs',
+    body: 'Baseline + monthly update XER pair → instant SPI, CPI, % complete, and activity-level slip. Drops the chart into status emails and assembles a one-page monthly progress PDF. Replaces the manual "compare two Gantts" pass that today consumes ~4 hours per project per month.',
     accent: 'border-primary/40 bg-primary/5',
     pill: 'Q2 ROCK',
   },
   {
     n: '03',
-    icon: GitBranch,
-    title: 'Automated P6 Schedule Integration & Live Telemetry',
-    body: 'AI parses ingested IDRs and dynamically compares reported pay items + quantities against P6 baseline activities. Static schedules become live telemetry dashboards — a mathematically defensible, up-to-the-minute schedule status for senior stakeholders.',
+    icon: Network,
+    title: 'Portfolio Roll-Up + TIA Fragnet Workflow',
+    body: 'Active-project schedule health on a single Newark/PANYNJ portfolio strip. TIA module drafts FS-zero-lag fragnets and a narrative letter compliant with NJDOT 108-03 — turning a 5-day delay-letter cycle into a 1-day turnaround.',
     accent: 'border-amber-500/40 bg-amber-500/5',
     pill: 'Q3 ROCK',
   },
@@ -110,7 +110,7 @@ const integrationLayers = [
   {
     title: 'Data Sources',
     icon: Database,
-    items: ['Primavera P6 — Schedule', 'BIM 360 — Design + Docs', 'Field Inputs — Progress, Quantities'],
+    items: ['Primavera P6 — Schedule', 'BIM 360 — Design + Docs', 'Contractor XER Submissions — Baseline + Monthly Updates'],
   },
   {
     title: 'Integration Layer',
@@ -137,7 +137,7 @@ const roiScenarios = {
       { label: 'Reporting Time Saved',    value: 90_000,  sub: '600 hrs × $150/hr · 3 proj × 4 hrs/wk × 50 wks' },
       { label: 'Reduced Rework',          value: 24_000,  sub: 'Quantity & documentation accuracy' },
       { label: 'Earlier Risk Visibility', value: 16_000,  sub: 'Live IDR ↔ P6 variance flagging' },
-      { label: 'Proposal Differentiator', value: 50_000,  sub: 'Faster takeoffs · higher BD throughput' },
+      { label: 'Proposal Differentiator', value: 50_000,  sub: 'Faster bid-pursuit schedule narratives · higher BD throughput' },
     ],
   },
   realistic: {
@@ -148,7 +148,7 @@ const roiScenarios = {
       { label: 'Reduced Rework & Claims', value: 95_000,  sub: 'Audit-grade evidence · claim defense' },
       { label: 'Earlier Risk Visibility', value: 75_000,  sub: 'Float-erosion caught weeks earlier' },
       { label: 'Proposal Win-Rate Lift',  value: 180_000, sub: '+2 wins/yr × ~$90k avg margin contribution' },
-      { label: 'SaaS Cost Avoidance',     value: 45_000,  sub: 'Bluebeam · PlanGrid · scheduling add-ons' },
+      { label: 'SaaS Cost Avoidance',     value: 45_000,  sub: 'Acumen Fuse seats · scheduling analytics add-ons' },
       { label: 'Senior Scheduler Hrs',    value: 120_000, sub: '~600 hrs reclaimed × $200/hr fully loaded' },
     ],
   },
@@ -160,7 +160,7 @@ const roiScenarios = {
       { label: 'Reduced Rework & Claims',  value: 180_000, sub: 'Defensible audit trail across portfolio' },
       { label: 'Earlier Risk Visibility',  value: 200_000, sub: 'Live telemetry · proactive mitigation' },
       { label: 'Proposal Win-Rate Lift',   value: 360_000, sub: '+4 wins/yr · differentiated digital pitch' },
-      { label: 'SaaS Cost Avoidance',      value: 90_000,  sub: 'Full takeoff + field reporting stack replaced' },
+      { label: 'SaaS Cost Avoidance',      value: 90_000,  sub: 'Acumen + ad-hoc scheduling analytics replaced' },
       { label: 'Senior Scheduler Hrs',     value: 240_000, sub: '~1,200 hrs reclaimed firm-wide' },
       { label: 'New Service Line Revenue', value: 350_000, sub: 'Productized digital-controls offering to clients' },
     ],
@@ -201,12 +201,12 @@ const compensation = [
   {
     icon: DollarSign,
     title: 'Base Salary',
-    body: 'Competitive base reflecting PMP, engineering background, and capacity to serve as inspector/scheduler + OE + developer simultaneously. Compensates the 1,600 billable hours and encompasses internal development time for the mobile, AI, and P6 integrations.',
+    body: 'Competitive base reflecting PMP, engineering background, and cross-discipline scheduler depth — CPM, AACE estimating, NJDOT controls — covered in one seat. Compensates 1,600 billable hours plus the in-role time spent maintaining the XerLens workflow tooling.',
   },
   {
     icon: Layers,
     title: 'Internal Tool Agreement',
-    body: 'MCFA granted full internal use of TakeoffPro across its project portfolio. To preserve the cost-avoidance model, MCFA assumes responsibility for the external digital footprint costs (hosting, storage, API usage).',
+    body: 'MCFA granted full internal use of XerLens across its project portfolio. To preserve the cost-avoidance model, MCFA assumes responsibility for the external digital footprint costs (hosting, storage, API usage).',
   },
   {
     icon: Award,
@@ -216,19 +216,19 @@ const compensation = [
 ];
 
 const proofBullets = [
-  'TOC auto-detection from full plan sets',
-  'Automatic pay-item extraction (current page + next 4)',
-  'One-time scale calibration → document-wide default',
-  'Offline-capable PWA · GPS-tagged field annotations',
-  'Real-time multi-user sync · role-based access',
-  'NJDOT / NJTA-compliant CSV, PDF & Excel exports',
+  'In-browser DCMA-14 audit on contractor XERs (no upload, no SaaS)',
+  'Plain-English RE memo generation from audit findings',
+  'SPI / CPI / slip from baseline + update XER pair',
+  'Auto-drafted TIA fragnet (FS, zero lag — NJDOT 108-03)',
+  'AACE Class 5→1 estimate progression with ±band display',
+  'Portfolio rollup of schedule health across active projects',
 ];
 
 /* Recruiter Q&A — short spoken answers, ~30 sec each. Reframed for a Project Controls Director hiring a Scheduler. */
 const recruiterQA: { q: string; a: string; tag?: string }[] = [
   {
     q: 'Why $130K–$140K — is that within band for an Evergreen Senior Scheduler at MCFA?',
-    a: "Yes. The PDF anchors the ask to the JD's Experienced level: $130K–$140K base, the 10 Growth Units, and standard quarterly profit-share. The PMP plus the systems-integration work that would otherwise need a separate developer hire is what justifies the upper half of that band, not a markup above it.",
+    a: "Yes. The PDF anchors the ask to the JD's Experienced level: $130K–$140K base, the 10 Growth Units, and standard quarterly profit-share. The PMP plus the cross-discipline depth — CPM + AACE estimating + NJDOT controls fluency in one seat — is what justifies the upper half of that band, not a markup above it.",
     tag: 'ANCHOR',
   },
   {
@@ -262,13 +262,13 @@ const recruiterQA: { q: string; a: string; tag?: string }[] = [
     tag: 'EOS L10',
   },
   {
-    q: "Who owns the TakeoffPro / XerLens tooling?",
+    q: "Who owns the XerLens tooling?",
     a: "MCFA gets full internal use across its project portfolio under the employment agreement — no per-seat fees, no SaaS contract. MCFA covers the basic cloud hosting (estimated <$100/mo per the PDF) to keep the tools running for the team. Standard 'Shop Tool' arrangement.",
     tag: 'IP CLEAN',
   },
   {
     q: "How will you reduce administrative time by 30% (PDF long-term KPI)?",
-    a: "By collapsing the four manual passes — XER review, monthly update report, IDR collation, executive snapshot — into one ingest pipeline. Phase 1 of TakeoffPro already eliminates the field-to-spreadsheet re-keying. XerLens collapses the contractor-review pass. The 30% target is a documented before/after, not a promise.",
+    a: "By collapsing the four manual scheduler passes — XER review, monthly update report, variance roll-up, executive snapshot — into one in-browser pipeline. XerLens Module A collapses the contractor-review pass; Module B collapses the monthly update pass. The 30% target is a documented before/after, not a promise.",
     tag: 'EFFICIENCY',
   },
 ];
@@ -280,7 +280,7 @@ const McfaPitch = () => {
   const activeTotal = activeRows.reduce((s, r) => s + r.value, 0);
   const maxRow = Math.max(...activeRows.map(r => r.value));
   useEffect(() => {
-    document.title = 'BYOR Proposal · Hybrid Construction Inspector & Systems Integrator — Asif Muhammad, PMP';
+    document.title = 'BYOR Proposal · Senior CPM Scheduler / Estimator — Asif Muhammad, PMP';
     const meta = document.querySelector('meta[name="description"]');
     const desc = 'Build Your Own Role proposal for the MCFA Evergreen CPM Scheduler/Estimator role: PMP-certified, NJDOT/NYSDOT compliant, AACE 98R-18 estimating, with auth-agnostic in-browser P6 XER tooling.';
     if (meta) meta.setAttribute('content', desc);
@@ -300,7 +300,7 @@ const McfaPitch = () => {
   }, []);
 
   const mailto =
-    'mailto:asif@example.com?subject=MCFA%20BYOR%20%E2%80%94%20Hybrid%20Construction%20Inspector%20%26%20Systems%20Integrator&body=Hi%20Asif%2C%0A%0AI%27d%20like%20to%20schedule%20a%2030-minute%20conversation%20about%20the%20BYOR%20proposal.';
+    'mailto:asif@example.com?subject=MCFA%20BYOR%20%E2%80%94%20Senior%20CPM%20Scheduler%20%2F%20Estimator&body=Hi%20Asif%2C%0A%0AI%27d%20like%20to%20schedule%20a%2030-minute%20conversation%20about%20the%20BYOR%20proposal.';
 
   return (
     <div className="min-h-screen bg-background text-foreground font-mono antialiased">
@@ -316,7 +316,7 @@ const McfaPitch = () => {
           <div className="hidden sm:flex items-center gap-4 text-muted-foreground">
             <span>v1.0</span>
             <span className="text-border">|</span>
-            <span>Newark Airport · North Jersey · Hybrid</span>
+            <span>Newark Airport · North Jersey · On-site / Remote</span>
           </div>
         </div>
       </div>
@@ -773,8 +773,8 @@ const McfaPitch = () => {
               <Layers className="h-5 w-5 text-primary mb-2" />
               <div className="font-semibold mb-1">Software Cost Avoidance</div>
               <div className="text-xs text-muted-foreground leading-relaxed">
-                Internally operated TakeoffPro bypasses traditional SaaS. MCFA pays only the raw external footprint — hosting,
-                DB transit, AI API calls. Internal dev budget scales fluidly.
+                Internally operated XerLens bypasses traditional SaaS. MCFA pays only the raw external footprint — hosting,
+                DB transit, AI API calls. Internal tooling budget scales fluidly.
               </div>
             </Card>
             <Card className="p-5 bg-card/40 border-border/60">
@@ -801,23 +801,24 @@ const McfaPitch = () => {
               <Activity className="h-6 w-6 text-primary mb-3" />
               <div className="font-semibold mb-2">L10 Meeting Integration</div>
               <div className="text-sm text-muted-foreground leading-relaxed">
-                Weekly Level 10 meetings with scorecard reporting on Billable Hours Completed, TakeoffPro Adoption, and
-                AI/P6 integration milestones.
+                Weekly Level 10 meetings with scorecard reporting on Schedule Health (DCMA-14), Reporting Latency
+                (≤ 72 hr), and L10 Scorecard contribution.
               </div>
             </Card>
             <Card className="p-6 bg-card/40 border-border/60">
               <Target className="h-6 w-6 text-emerald-400 mb-3" />
               <div className="font-semibold mb-2">"The Rock" Ownership</div>
               <div className="text-sm text-muted-foreground leading-relaxed">
-                Every 90 days, ownership of one measurable Rock: Q1 offline mobile · Q2 AI photo-tagging · Q3 IDR-to-P6 beta.
+                Every 90 days, ownership of one measurable Rock: Q1 XerLens DCMA-14 GA · Q2 Automated TIA fragnet ·
+                Q3 Portfolio EVM telemetry on the L10 scorecard.
               </div>
             </Card>
             <Card className="p-6 bg-card/40 border-border/60">
               <FileCheck className="h-6 w-6 text-amber-400 mb-3" />
-              <div className="font-semibold mb-2">Hybrid Evaluation</div>
+              <div className="font-semibold mb-2">Scheduler Evaluation</div>
               <div className="text-sm text-muted-foreground leading-relaxed">
-                Equitable assessment of field/scheduling competency alongside operational efficiency contributions — tool
-                development, proposal expediency, overhead reduction.
+                Schedule-health and reporting-velocity metrics alongside efficiency contributions — fewer rejected
+                baselines, faster RE response, lower per-project controls overhead.
               </div>
             </Card>
           </div>
@@ -865,10 +866,9 @@ const McfaPitch = () => {
                   </thead>
                   <tbody className="text-muted-foreground">
                     {[
-                      ['NICET HCI Level I/II Inspector',           '$75K – $95K',   'Churchill / Trilon / WSP range'],
                       ['Senior P6 Scheduler (PMP)',                '$110K – $140K', 'NJTA / NJDOT consultant rate'],
-                      ['Office Engineer',                          '$70K – $90K',   'Usually a separate hire'],
-                      ['Mid Full-Stack + AI Developer',            '$120K – $160K', 'NJ/NYC metro · ~7 yrs exp'],
+                      ['Senior Cost Estimator (AACE)',             '$105K – $130K', 'NJ heavy-civil range'],
+                      ['Project Controls Analyst (P6 + EVM)',      '$95K – $120K',  'Portfolio reporting role'],
                     ].map(([role, range, sub]) => (
                       <tr key={role} className="border-b border-border last:border-0 hover:bg-card/40">
                         <td className="p-3">
@@ -879,8 +879,8 @@ const McfaPitch = () => {
                       </tr>
                     ))}
                     <tr className="bg-primary/5">
-                      <td className="p-3 font-semibold text-foreground">Cost of two siloed hires (Scheduler + Inspector)</td>
-                      <td className="p-3 text-right font-mono font-bold text-foreground">$185K – $235K</td>
+                      <td className="p-3 font-semibold text-foreground">Cost of three siloed seats (Scheduler + Estimator + Analyst)</td>
+                      <td className="p-3 text-right font-mono font-bold text-foreground">$310K – $390K</td>
                     </tr>
                     <tr className="bg-emerald-500/10 border-t border-emerald-500/30">
                       <td className="p-3">
@@ -969,7 +969,7 @@ const McfaPitch = () => {
           <div className="max-w-3xl mx-auto text-center">
             <div className="text-[11px] tracking-[0.3em] text-primary mb-6">CLOSING</div>
             <h2 className="text-3xl md:text-5xl font-bold leading-tight">
-              Bridge field execution with practical innovation —{' '}
+              Bring scheduler depth and practical workflow tooling —{' '}
               <span className="text-primary">at MCFA.</span>
             </h2>
             <p className="text-muted-foreground mt-6 leading-relaxed max-w-2xl mx-auto">
@@ -985,7 +985,7 @@ const McfaPitch = () => {
             </div>
             <div className="mt-12 pt-8 border-t border-border/60 text-xs text-muted-foreground">
               <div className="font-semibold text-foreground">Asif Muhammad, PMP</div>
-              <div className="italic mt-1">Bridging Field Execution with Practical Innovation.</div>
+              <div className="italic mt-1">Senior CPM Scheduler / Estimator · PMP · NJDOT / AACE.</div>
               <div className="flex justify-center gap-4 mt-4">
                 <a href="https://linkedin.com" className="hover:text-primary inline-flex items-center gap-1.5"><Linkedin className="h-3.5 w-3.5" /> LinkedIn</a>
                 <a href="https://github.com" className="hover:text-primary inline-flex items-center gap-1.5"><Github className="h-3.5 w-3.5" /> GitHub</a>
