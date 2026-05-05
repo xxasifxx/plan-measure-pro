@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Button } from '@/components/ui/button';
-import { X, ArrowRight, ArrowLeft, Sparkles } from 'lucide-react';
+import { X, ArrowRight, ArrowLeft, Sparkles, Play, Pause } from 'lucide-react';
 
 export type TourStep = {
   target?: string; // primary CSS selector (gets the spotlight cutout)
@@ -11,6 +11,7 @@ export type TourStep = {
   tab?: 'dcma' | 'progress' | 'tia' | 'wbs' | 'aace' | 'files';
   beforeShow?: () => void | Promise<void>;
   placement?: 'top' | 'bottom' | 'auto';
+  dwellMs?: number; // auto-advance after this many ms when playing
 };
 
 type Rect = { top: number; left: number; width: number; height: number };
