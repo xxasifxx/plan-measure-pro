@@ -170,24 +170,33 @@ const roiScenarios = {
 } as const;
 type ScenarioKey = keyof typeof roiScenarios;
 
-// EOS Scorecard — leading indicators reviewed in weekly L10 meetings
+// EOS Scorecard — leading indicators reviewed in weekly L10 meetings (PDF §3, short-term KPIs)
 const scorecard = [
-  { metric: 'DCMA-14 Logic Score',       target: '≥ 95%',   why: 'Mathematically defensible network · prevents DOT rejection.' },
-  { metric: 'Schedule Update Latency',   target: '≤ 72 hr', why: 'Time from contractual data date to distributed variance report.' },
-  { metric: 'XER Processing Time',       target: '−50%',    why: 'vs. manual formatting/validation baseline. Entrepreneurial.' },
-  { metric: 'AACE Class 3 Estimate SLA', target: '≤ 10 d',  why: 'From 10–40% design package to deterministic budget estimate.' },
+  { metric: 'Schedule Health (DCMA-14 logic)', target: '≥ 95%',   why: 'PDF §3 · mathematically defensible network · prevents DOT rejection.' },
+  { metric: 'Reporting Velocity',              target: '≤ 72 hr', why: 'PDF §3 · time from contractual data date to distributed monthly update.' },
+  { metric: 'L10 Schedule Integration',        target: '100%',    why: 'PDF §3 · schedule health metric on the weekly L10 scorecard for every assigned project.' },
+  { metric: 'XER Processing Time',             target: '−50%',    why: 'Entrepreneurial Rock · vs manual formatting/validation baseline.' },
 ];
-// Lagging indicators reviewed quarterly / annually
+// Lagging indicators reviewed quarterly / annually (PDF §3, long-term KPIs)
 const laggingKpis = [
-  { metric: 'Baseline Approval Velocity', target: '≤ 2 cycles', why: 'Avg DOT submissions to first-pass acceptance.' },
-  { metric: 'Claim Mitigation Rate',      target: '≥ 70%',       why: 'TIA-defended time-extension requests reduced or rejected.' },
-  { metric: 'Variance at Completion',     target: '< 5%',        why: 'AACE Class 1 estimate vs. awarded bid / final cost.' },
+  { metric: 'DOT Baseline Approval Velocity', target: '≤ 2 cycles', why: 'PDF §3 · average DOT submissions to first-pass acceptance.' },
+  { metric: 'AACE Estimating Accuracy',       target: '± 5%',        why: 'PDF §3 · final Class 1 estimate vs awarded construction bid.' },
+  { metric: 'Administrative Time Savings',    target: '≥ 30%',       why: 'PDF §3 · documented reduction in manual reporting hours via automation.' },
 ];
-// Quarterly Rocks (90-day execution priorities)
+// Quarterly Rocks (90-day execution priorities) — PDF §5 manager-led model
 const rocks = [
-  { quarter: 'Q1', text: 'XerLens DCMA-14 auditor — GA across all active T&I projects.' },
+  { quarter: 'Q1', text: 'XerLens DCMA-14 auditor — GA across all active T&I projects (PM-approved Rock).' },
   { quarter: 'Q2', text: 'Automated TIA fragnet workflow — reduce delay-letter turnaround from 5 days to 1.' },
   { quarter: 'Q3', text: 'Portfolio EVM telemetry — live SPI/CPI feed into the L10 scorecard.' },
+];
+
+// PDF §2 weekly cadence — what the role actually does day-to-day
+const weeklyCadence = [
+  { day: 'MON', focus: 'Audit',   title: 'Contractor schedule submission review',  body: 'Run DCMA-14 + NJDOT logic check on every contractor XER. Generate plain-English memo to the Resident Engineer with accept / reject recommendation.' },
+  { day: 'TUE', focus: 'Update',  title: 'Progress vs baseline',                   body: 'Apply field actuals to P6, recompute SPI / CPI, surface the top-10 slipping activities. Distribute monthly update within 72 hours of data date.' },
+  { day: 'WED', focus: 'Report',  title: 'L10 scorecard contribution',             body: 'Two numbers on the weekly L10 (PDF §5): Schedule Health Score and Reporting Latency. Variance items drop straight to the Issues List.' },
+  { day: 'THU', focus: 'Estimate',title: 'AACE Class 5 → Class 1 progression',     body: 'Advance assigned projects through AACE 98R-18 classes as design matures, narrowing the accuracy band toward the ±5% lagging-KPI target.' },
+  { day: 'FRI', focus: 'Roll up', title: 'Portfolio view + BD support',            body: 'Consolidate active project schedules into a Newark/PANYNJ program view. Pull rapid quantity takeoffs for Business Development bid pursuits.' },
 ];
 
 const compensation = [
