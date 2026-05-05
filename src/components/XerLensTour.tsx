@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button';
 import { X, ArrowRight, ArrowLeft, Sparkles } from 'lucide-react';
 
 export type TourStep = {
-  target?: string; // CSS selector via data-tour="..."
+  target?: string; // primary CSS selector (gets the spotlight cutout)
+  extraTargets?: string[]; // additional selectors to highlight with a pulse ring
   title: string;
   body: string;
   tab?: 'dcma' | 'tia' | 'files' | 'wbs';
@@ -15,6 +16,14 @@ export type TourStep = {
 type Rect = { top: number; left: number; width: number; height: number };
 
 const PAD = 8;
+
+const measure = (sel: string): Rect | null => {
+  const el = document.querySelector(sel) as HTMLElement | null;
+  if (!el) return null;
+  const r = el.getBoundingClientRect();
+  if (r.width === 0 && r.height === 0) return null;
+  return { top: r.top, left: r.left, width: r.width, height: r.height };
+};
 
 export const XerLensTour = ({
   open,
@@ -29,6 +38,8 @@ export const XerLensTour = ({
 }) => {
   const [idx, setIdx] = useState(0);
   const [rect, setRect] = useState<Rect | null>(null);
+  const [extraRects, setExtraRects] = useState<Rect[]>([]);
+  const [tabRect, setTabRect] = useState<Rect | null>(null);
   const [tick, setTick] = useState(0);
   const tooltipRef = useRef<HTMLDivElement>(null);
 
@@ -45,28 +56,32 @@ export const XerLensTour = ({
     (async () => {
       if (step.tab) onTabChange?.(step.tab);
       if (step.beforeShow) await step.beforeShow();
-      // wait a frame for DOM to settle
       requestAnimationFrame(() => !cancelled && setTick(t => t + 1));
     })();
     return () => { cancelled = true; };
   }, [idx, open, step, onTabChange]);
 
-  // Recompute target rect
+  // Recompute rects
   useLayoutEffect(() => {
     if (!open || !step) return;
     const compute = () => {
-      if (!step.target) { setRect(null); return; }
-      const el = document.querySelector(step.target) as HTMLElement | null;
-      if (!el) { setRect(null); return; }
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      // measure after slight delay for scroll
+      // Primary target
+      if (step.target) {
+        const el = document.querySelector(step.target) as HTMLElement | null;
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
       setTimeout(() => {
-        const r = el.getBoundingClientRect();
-        setRect({ top: r.top, left: r.left, width: r.width, height: r.height });
-      }, 220);
+        setRect(step.target ? measure(step.target) : null);
+        setExtraRects((step.extraTargets || []).map(measure).filter((r): r is Rect => r !== null));
+        setTabRect(step.tab ? measure(`[data-tour="tab-${step.tab}"]`) : null);
+      }, 240);
     };
     compute();
-    const onR = () => compute();
+    const onR = () => {
+      setRect(step.target ? measure(step.target) : null);
+      setExtraRects((step.extraTargets || []).map(measure).filter((r): r is Rect => r !== null));
+      setTabRect(step.tab ? measure(`[data-tour="tab-${step.tab}"]`) : null);
+    };
     window.addEventListener('resize', onR);
     window.addEventListener('scroll', onR, true);
     return () => {
@@ -92,7 +107,6 @@ export const XerLensTour = ({
   const next = () => (idx >= steps.length - 1 ? onClose() : setIdx(i => i + 1));
   const prev = () => setIdx(i => Math.max(0, i - 1));
 
-  // Tooltip position
   const vh = window.innerHeight;
   const vw = window.innerWidth;
   let tipStyle: React.CSSProperties;
@@ -106,29 +120,63 @@ export const XerLensTour = ({
     tipStyle = { top: vh / 2 - 110, left: vw / 2 - 190, width: 380 };
   }
 
-  const spotlightStyle: React.CSSProperties | undefined = rect
-    ? {
-        top: rect.top - PAD,
-        left: rect.left - PAD,
-        width: rect.width + PAD * 2,
-        height: rect.height + PAD * 2,
-      }
-    : undefined;
+  const padBox = (r: Rect, p = PAD): React.CSSProperties => ({
+    top: r.top - p,
+    left: r.left - p,
+    width: r.width + p * 2,
+    height: r.height + p * 2,
+  });
+
+  // Avoid double-highlighting: skip tabRect if it equals primary or extras
+  const sameRect = (a: Rect | null, b: Rect | null) =>
+    !!a && !!b && a.top === b.top && a.left === b.left && a.width === b.width && a.height === b.height;
+  const showTabRing = tabRect && !sameRect(tabRect, rect) && !extraRects.some(r => sameRect(r, tabRect));
 
   return createPortal(
     <div className="fixed inset-0 z-[100]" aria-modal role="dialog">
-      {/* Dim layer with spotlight cutout via box-shadow trick */}
+      {/* Dim layer */}
       {rect ? (
-        <div
-          className="fixed pointer-events-none rounded-md ring-2 ring-cyan-400/80 transition-all duration-200"
-          style={{
-            ...spotlightStyle,
-            boxShadow: '0 0 0 9999px hsl(var(--background) / 0.78)',
-          }}
-        />
+        <>
+          {/* Spotlight cutout */}
+          <div
+            className="fixed pointer-events-none rounded-md ring-2 ring-cyan-400 transition-all duration-300"
+            style={{
+              ...padBox(rect),
+              boxShadow: '0 0 0 9999px hsl(var(--background) / 0.82), 0 0 32px 4px hsl(190 95% 55% / 0.55)',
+            }}
+          />
+          {/* Animated dashed outer ring for extra emphasis */}
+          <div
+            className="fixed pointer-events-none rounded-md border-2 border-dashed border-cyan-300/70 animate-pulse transition-all duration-300"
+            style={padBox(rect, PAD + 6)}
+          />
+        </>
       ) : (
         <div className="fixed inset-0 bg-background/80 backdrop-blur-sm" onClick={onClose} />
       )}
+
+      {/* Active tab highlight */}
+      {showTabRing && (
+        <div
+          className="fixed pointer-events-none rounded-md ring-2 ring-cyan-400 animate-pulse transition-all duration-300"
+          style={{
+            ...padBox(tabRect!, 4),
+            boxShadow: '0 0 24px 2px hsl(190 95% 55% / 0.6)',
+          }}
+        />
+      )}
+
+      {/* Extra highlighted elements */}
+      {extraRects.map((r, i) => (
+        <div
+          key={i}
+          className="fixed pointer-events-none rounded-md ring-2 ring-cyan-300/80 animate-pulse transition-all duration-300"
+          style={{
+            ...padBox(r, 4),
+            boxShadow: '0 0 18px 2px hsl(190 95% 55% / 0.45)',
+          }}
+        />
+      ))}
 
       {/* Tooltip */}
       <div
@@ -140,6 +188,11 @@ export const XerLensTour = ({
           <div className="flex items-center gap-2 text-[10px] tracking-[0.25em] text-cyan-400">
             <Sparkles className="h-3 w-3" />
             STEP {idx + 1} / {steps.length}
+            {step.tab && (
+              <span className="ml-2 px-1.5 py-0.5 rounded bg-cyan-400/10 border border-cyan-400/30 text-cyan-300">
+                MODULE {step.tab.toUpperCase()}
+              </span>
+            )}
           </div>
           <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
             <X className="h-4 w-4" />
@@ -163,7 +216,6 @@ export const XerLensTour = ({
             </Button>
           </div>
         </div>
-        {/* progress dots */}
         <div className="flex gap-1 mt-3">
           {steps.map((_, i) => (
             <div
