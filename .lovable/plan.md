@@ -1,75 +1,75 @@
 ## Goal
 
-Strip every "inspector / OE / developer / hybrid" framing from `/mcfa`. The role is a **CPM Scheduler / Estimator with cross-discipline expertise** — period. The XerLens tooling is in-role workflow automation, not a "developer hire."
+Build a new standalone landing page at `/fajar` pitching custom website + booking-management software to **Fajar Al Mustaqbal Equipment Rental (UAE)**. The page sells three things, in this order:
 
-## Edits — all in `src/pages/McfaPitch.tsx`
+1. **Live machinery availability** (real-time fleet calendar — the current fajaralmustaqbal.ae site has none)
+2. **WhatsApp-driven operations** (group-chat agent that auto-flips machines to maintenance and auto-creates reservations)
+3. **Strong UAE/GCC SEO** for high-intent equipment-rental keywords
 
-### 1. Hero / page metadata (lines 283, 303, 314)
-- `document.title`: `BYOR Proposal · Hybrid Construction Inspector & Systems Integrator — Asif Muhammad, PMP`
-  → `BYOR Proposal · Senior CPM Scheduler / Estimator — Asif Muhammad, PMP`
-- `mailto` subject: `MCFA BYOR — Hybrid Construction Inspector & Systems Integrator`
-  → `MCFA BYOR — Senior CPM Scheduler / Estimator`
-- Top-ribbon `Newark Airport · North Jersey · Hybrid` → `Newark Airport · North Jersey · On-site / Remote` (the word "Hybrid" here is location-mode, not role-mode, but it reads as role-coded next to everything else — swap it).
+This is a **sales pitch page only** — no real booking backend, no real WhatsApp wiring. All visuals are mocked/animated to demonstrate the proposed product.
 
-### 2. Phase roadmap (lines 64–89)
-Phase 01 "Offline Field Application & Manual Ingestion" is pure inspector pitch. Replace the three "TakeoffPro" phases with three **scheduler-tooling** phases that match what `/mcfa/demo` actually shows:
-- **Q1 ROCK** — *XerLens DCMA-14 + RE Memo Auto-Generation* (already in demo Module A)
-- **Q2 ROCK** — *Progress Telemetry · SPI / CPI from XER pairs* (Module B)
-- **Q3 ROCK** — *Portfolio Roll-Up + TIA Fragnet Workflow* (Modules C + portfolio strip)
+## Route & file
 
-Drop Phase 01's offline-PWA / GPS / camera language entirely.
+- New route: `/fajar` → new file `src/pages/FajarPitch.tsx`
+- Add `<Route path="/fajar" element={<FajarPitch />} />` in `src/App.tsx`
+- Update `document.title` and `<meta description>` from inside the page (same pattern as `McfaPitch.tsx`)
 
-### 3. Integration layer "Data Sources" (line 113)
-- `'Field Inputs — Progress, Quantities'` → `'Contractor XER Submissions — Baseline + Monthly Updates'`
+## Visual identity (project-consistent, but warmer)
 
-### 4. ROI scenarios (lines 132–168)
-- conservative `'Faster takeoffs · higher BD throughput'` → `'Faster bid-pursuit schedule narratives · higher BD throughput'`
-- realistic `'Bluebeam · PlanGrid · scheduling add-ons'` → `'Acumen Fuse seats · scheduling analytics add-ons'`
-- stretch `'Full takeoff + field reporting stack replaced'` → `'Acumen + ad-hoc scheduling analytics replaced'`
+- Reuse the project's dark-navy / slate / JetBrains Mono engineering aesthetic established in `McfaPitch.tsx` — keeps it on-brand for the studio
+- Add a desert-amber accent (`hsl(38 92% 55%)`) used sparingly for CTAs and the WhatsApp green (`hsl(142 70% 45%)`) for chat-mock elements
+- Bilingual touch: small Arabic tagline under the hero H1 (RTL inline span), e.g. "حلول حجز المعدات الذكية" — signals UAE market fit, not a full RTL page
+- All copy in English, UAE/GCC framing (AED pricing, Dubai/Abu Dhabi/Sharjah mentions)
 
-### 5. Compensation card (lines 200–204)
-Drop "inspector/scheduler + OE + developer simultaneously":
-> "Competitive base reflecting PMP, engineering background, and cross-discipline scheduler depth — CPM, AACE estimating, NJDOT controls — covered in one seat. Compensates 1,600 billable hours plus the in-role time spent maintaining the XerLens workflow tooling."
+## Sections (top → bottom)
 
-### 6. Recruiter Q&A (line 231)
-Strip "separate developer hire":
-> "Yes. The PDF anchors the ask to the JD's Experienced level: $130K–$140K base, the 10 Growth Units, and standard quarterly profit-share. The PMP plus the cross-discipline depth (CPM + AACE + NJDOT controls fluency in one seat) is what justifies the upper half of that band, not a markup above it."
+1. **Sticky top ribbon** — "Proposal for Fajar Al Mustaqbal General Trading & Cont. LLC · UAE" + "Book intro call" CTA (mailto)
+2. **Hero**
+   - H1: *"Stop losing rentals to phone tag."*
+   - Sub: real-time fleet availability + WhatsApp agent + UAE-tuned SEO, in one platform
+   - Two CTAs: "See live demo below" (smooth-scroll) + "WhatsApp us" (`https://wa.me/...` placeholder)
+   - Right side: animated **fleet-availability grid** mock (5 categories × 7 days, cells flip green/amber/red on a loop)
+3. **The problem** — 3 cards built from observations of the current site:
+   - No availability shown → customers must call/WhatsApp to ask
+   - Manual maintenance tracking → double-bookings on broken machines
+   - Static WordPress site → ranks poorly for "excavator rental Dubai" etc.
+4. **Live availability calendar (mock)**
+   - Interactive React component: category tabs (Earthmoving, Compaction, Cranes, Loading & Lifting, Power), each shows a 14-day grid per machine unit with status pills (Available / Reserved / Maintenance)
+   - Clicking a green cell pops a fake "Reserve" sheet — proves the UX, no backend
+   - Caption: "What your customers will see — synced with your WhatsApp agent in real time"
+5. **WhatsApp agent — animated demo** *(the centerpiece)*
+   - Two side-by-side phone-frame mocks that animate on scroll-into-view:
+     - **Mock A — Maintenance flow**: Operator types in group chat: *"CAT 320 hydraulic leak, down for repair"* → agent reply: *"Acknowledged. CAT 320 (Unit #E-04) marked maintenance through 14 Jun. Will auto-restore on your 'back online' message or after 7 days."* → calendar cell on the right flips amber
+     - **Mock B — Booking flow**: Customer DMs sales WhatsApp: *"Need a 10t roller next Monday for 3 days, Jebel Ali"* → agent: *"BOMAG BW 213 available 16–18 Jun, AED 4,500. Reply YES to hold for 2 hours."* → customer "YES" → calendar cell flips red, confirmation card appears
+   - Below: "How it works" 4-step strip (Listen → Parse → Update fleet → Confirm)
+   - Trust line: 7-day max maintenance lock with auto-revert + manual override (addresses "what if they forget to mark it back online")
+6. **SEO engine**
+   - Targeted keyword cluster cards: "excavator rental Dubai", "crane hire Abu Dhabi", "compaction roller Sharjah", "plant hire UAE", Arabic equivalents (تأجير معدات ثقيلة دبي)
+   - Bullets: per-machine landing pages auto-generated from the fleet DB, schema.org `Product` + `Offer` markup, Arabic/English hreflang, Core Web Vitals budget, Google Business Profile sync
+   - Visual: a fake SERP card mock showing their result with rich snippets (price range, availability badge, rating)
+7. **What we deliver** — 3-column scope:
+   - **Platform**: Next.js site + headless fleet/booking DB + admin dashboard
+   - **WhatsApp layer**: WhatsApp Business Cloud API integration, group-listener agent, customer-DM agent, fallback to human handoff
+   - **SEO + content**: keyword research, per-machine pages, Arabic translations, GBP optimization, monthly content (3 posts)
+8. **Phased roadmap** (mirrors the McfaPitch phase-card pattern)
+   - **Phase 1 (Weeks 1–4)**: Fleet DB, public availability calendar, basic site + SEO foundation
+   - **Phase 2 (Weeks 5–8)**: WhatsApp maintenance agent + admin dashboard
+   - **Phase 3 (Weeks 9–12)**: WhatsApp customer booking agent, payment hold, Arabic site, GBP integration
+9. **Investment** — AED-denominated indicative ranges (one-time build + monthly retainer for hosting/agent/SEO). Clear note: final scope after discovery call
+10. **FAQ** — accordion: WhatsApp Business API approval timeline, what happens if agent misreads a message, data residency (UAE), handoff to human, ownership of code/data
+11. **CTA footer** — "Book a 30-minute discovery call" mailto + WhatsApp button + small print with company legal name
 
-### 7. Section 8 cards (lines 800–822)
-- L10 card: drop "TakeoffPro Adoption, and AI/P6 integration milestones" → `Schedule Health (DCMA-14), Reporting Latency (≤ 72 hr), and L10 Scorecard contribution.`
-- "The Rock" card: replace inspector rocks → `Q1 XerLens DCMA-14 GA · Q2 Automated TIA fragnet · Q3 Portfolio EVM telemetry on the L10 scorecard.`
-- "Hybrid Evaluation" → rename to **"Scheduler Evaluation"**, body: `Schedule-health and reporting-velocity metrics alongside efficiency contributions — fewer rejected baselines, faster RE response, lower per-project controls overhead.`
+## Technical details
 
-### 8. Anchor table (lines 867–888) — the big one
-Currently lists *Inspector + Scheduler + OE + Developer* as roles being "consolidated" — that is exactly the hybrid pitch we retired. Reframe as **what one cross-discipline scheduler replaces vs. siloed scheduler + estimator + analyst stack**:
-- `'NICET HCI Level I/II Inspector', '$75K – $95K'` → **remove**
-- `'Senior P6 Scheduler (PMP)', '$110K – $140K', 'NJTA / NJDOT consultant rate'` → keep
-- `'Office Engineer', '$70K – $90K'` → replace with `'Senior Cost Estimator (AACE)', '$105K – $130K', 'NJ heavy-civil range'`
-- `'Mid Full-Stack + AI Developer', '$120K – $160K'` → replace with `'Project Controls Analyst (P6 + EVM)', '$95K – $120K', 'Portfolio reporting role'`
-- Sum row label: `'Cost of two siloed hires (Scheduler + Inspector)'` → `'Cost of three siloed seats (Scheduler + Estimator + Analyst)'`, value `$310K – $390K`
-- BYOR row sub: `'PMP · NJDOT/AACE · XerLens tooling included'` (already correct, keep)
+- Pure presentational page, no Supabase calls, no auth, no DB writes
+- All "live" elements (calendar flips, phone-mock typing, SERP highlight) driven by `useEffect` + `setInterval` / `IntersectionObserver` for scroll-triggered animations
+- Use existing `@/components/ui/*` (Card, Button, Badge, Tabs, Accordion) — no new shadcn installs
+- Icons from `lucide-react` only (Wrench, MessageCircle, Calendar, Search, MapPin, Globe, etc.)
+- Fully responsive; phone mocks stack on `<md`, calendar grid horizontally scrolls on mobile
+- No new dependencies, no migrations, no edge functions
+- Out of scope: actual WhatsApp API wiring, real booking persistence, payments, i18n framework (single inline Arabic phrase only), changes to any other route or to `index.html` global meta
 
-### 9. Closing tagline (lines 972, 988)
-- `Bridge field execution with practical innovation` → `Bring scheduler depth and practical workflow tooling`
-- Footer italic `Bridging Field Execution with Practical Innovation.` → `Senior CPM Scheduler / Estimator · PMP · NJDOT / AACE.`
+## Files touched
 
-### 10. Proof bullets (lines 218–225)
-Drop the field-app bullets that describe TakeoffPro, replace with scheduler-tool bullets:
-- Remove `'Offline-capable PWA · GPS-tagged field annotations'`
-- Remove `'Real-time multi-user sync · role-based access'`
-- Remove `'TOC auto-detection from full plan sets'`
-- Remove `'Automatic pay-item extraction (current page + next 4)'`
-- Remove `'One-time scale calibration → document-wide default'`
-- Remove `'NJDOT / NJTA-compliant CSV, PDF & Excel exports'`
-- Add: `'In-browser DCMA-14 audit on contractor XERs (no upload, no SaaS)'`
-- Add: `'Plain-English RE memo generation from audit findings'`
-- Add: `'SPI / CPI / slip from baseline + update XER pair'`
-- Add: `'Auto-drafted TIA fragnet (FS, zero lag — NJDOT 108-03)'`
-- Add: `'AACE Class 5→1 estimate progression with ±band display'`
-- Add: `'Portfolio rollup of schedule health across active projects'`
-
-## Out of scope
-- No structural section reorder (sections renumbered already in prior pass).
-- No design token / color changes.
-- Demo page (`/mcfa/demo`) untouched — already scheduler-only.
-- TakeoffPro live app at `/demo` untouched (different audience).
+- **Create**: `src/pages/FajarPitch.tsx`
+- **Edit**: `src/App.tsx` (one import + one `<Route>`)
