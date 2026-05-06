@@ -300,18 +300,19 @@ export default function FajarPitch() {
   ];
 
   const problems = [
-    { icon: Calendar, title: 'No live availability', body: 'Today the site shows machine categories but never says what is free this week. Every enquiry becomes a phone call or a WhatsApp ping to your office.' },
-    { icon: Wrench, title: 'Maintenance lives in heads', body: 'When a machine breaks down on site, that knowledge sits with one operator. Sales can — and does — book a unit that is already down.' },
-    { icon: Search, title: 'Invisible in search', body: 'Static WordPress pages, no schema, no per-machine landing pages. Competitors with thinner fleets outrank you for "excavator rental Dubai".' },
+    { icon: Calendar, title: "Customers can't see what's free", body: 'Your site shows categories but never says what is available this week. 76% of UAE B2B buyers research online before contacting a vendor — if your competitor shows availability and you don\'t, you lose the call before it happens.' },
+    { icon: Wrench, title: 'Group-chat updates get buried', body: 'A machine breaks down on site, the operator messages the group, the message scrolls away. Sales books that broken unit anyway. The customer cancels. The slot stays vacant.' },
+    { icon: Search, title: "You don't rank for 'excavator rental Dubai'", body: 'Static WordPress, no per-machine pages, no schema. Thinner fleets with better SEO take the bookings that should be yours — every search you lose is a vacant machine-day.' },
   ];
 
   const phases = [
-    { tag: 'PHASE 1', weeks: 'Weeks 1–4', title: 'Live availability + new site', items: ['Fleet & booking database', 'Public availability calendar', 'Per-machine landing pages', 'Schema.org + GBP foundation'] },
-    { tag: 'PHASE 2', weeks: 'Weeks 5–8', title: 'WhatsApp maintenance agent', items: ['WhatsApp Business API onboarding', 'Group-chat listener + parser', 'Auto maintenance lock (max 7 days)', 'Admin dashboard + audit log'] },
-    { tag: 'PHASE 3', weeks: 'Weeks 9–12', title: 'WhatsApp booking + Arabic + payments', items: ['Customer DM agent + soft holds', 'Payment link generation', 'Full Arabic site (hreflang)', 'Stripe / Tap / Network International'] },
+    { tag: 'PHASE 1', weeks: 'Weeks 1–4', title: 'Get found.', items: ['Fast new site + fleet DB', 'Live availability calendar', 'Per-machine landing pages', 'Schema.org + Google Business Profile'] },
+    { tag: 'PHASE 2', weeks: 'Weeks 5–8', title: 'Stop double-bookings.', items: ['WhatsApp Business API setup', 'Group-chat agent reads maintenance', 'Auto-lock with 7-day safety expiry', 'Admin dashboard you check on your phone'] },
+    { tag: 'PHASE 3', weeks: 'Weeks 9–12', title: 'Book in your sleep.', items: ['Customer-DM booking agent', 'Soft holds + payment link', 'Full Arabic site (hreflang)', 'Monthly SEO content for sustained ranking'] },
   ];
 
   const faqs = [
+    { q: "We're a small business — isn't this overkill?", a: "No. The Starter tier (AED 14,500 + AED 1,200/mo) is sized for an SMB rental shop on margin. At an average AED 1,800/day rental, the Growth plan pays for itself with roughly 1.5 extra rental-days per month. Anything above that is pure margin you're capturing today by phone tag." },
     { q: 'How long does WhatsApp Business API approval take?', a: 'Typically 5–10 business days through Meta\'s Business Solution Provider. We handle the application, template approvals, and number migration end-to-end.' },
     { q: 'What if the agent misreads a message?', a: 'Every action is reversible from the admin dashboard. Maintenance locks expire automatically after 7 days unless confirmed. Bookings stay as 2-hour soft holds until payment, never auto-charged. Low-confidence parses are routed to a human queue instead of acted on.' },
     { q: 'Where does the data live?', a: 'UAE-region hosting (AWS me-central-1 or equivalent). Database backups daily. You own all data and can export anytime in standard CSV / SQL formats.' },
@@ -327,7 +328,7 @@ export default function FajarPitch() {
           <div className="flex items-center gap-2 min-w-0">
             <div className="h-6 w-6 rounded flex items-center justify-center font-mono text-[10px] font-bold text-black shrink-0" style={{ background: AMBER }}>FA</div>
             <span className={`font-mono text-[10px] md:text-xs ${MUTED} truncate`}>
-              Proposal · Fajar Al Mustaqbal General Trading & Cont. LLC · UAE
+              Prepared for Fajar Al Mustaqbal Equipment Rental · UAE
             </span>
           </div>
           <a href="mailto:hello@example.com?subject=Fajar%20rental%20platform%20discovery%20call" className="shrink-0">
@@ -347,16 +348,16 @@ export default function FajarPitch() {
               EQUIPMENT RENTAL · UAE
             </div>
             <h1 className={`text-4xl md:text-6xl font-bold ${INK} leading-[1.05] mb-4`}>
-              Stop losing rentals to <span style={{ color: AMBER }}>phone tag</span>.
+              Cut fleet vacancy. Win the <span style={{ color: AMBER }}>Google search</span> before the phone rings.
             </h1>
             <div dir="rtl" lang="ar" className={`text-base md:text-lg ${MUTED} mb-6 font-medium`}>
-              حلول حجز المعدات الذكية لشركة فجر المستقبل
+              موقع إلكتروني ذكي لتأجير المعدات
             </div>
             <p className={`${MUTED} text-base md:text-lg leading-relaxed mb-8 max-w-xl`}>
-              A new website for Fajar Al Mustaqbal that shows <span className={INK}>real-time fleet availability</span>,
-              a <span style={{ color: WA }}>WhatsApp agent</span> that auto-flips machines to maintenance and books
-              customers from a single message, and <span className={INK}>UAE-tuned SEO</span> built for
-              "excavator rental Dubai" — not generic plant-hire fluff.
+              UAE rental customers <span className={INK}>Google → tap WhatsApp → decide in under 5 minutes</span>.
+              Most equipment rental sites lose them at step one — no live availability, no daily rate, no way to reserve.
+              We build the site, the <span style={{ color: WA }}>WhatsApp agent</span>, and the SEO that turn vacant
+              machine-days into bookings. Priced for an SMB on margin, not a SaaS budget.
             </p>
             <div className="flex flex-wrap gap-3">
               <a href="#demo">
@@ -372,9 +373,9 @@ export default function FajarPitch() {
             </div>
             <div className="mt-10 grid grid-cols-3 gap-6 max-w-md">
               {[
-                { v: '24/7', l: 'Bookings open' },
-                { v: '< 30s', l: 'Maintenance lock' },
-                { v: 'AR + EN', l: 'Bilingual SEO' },
+                { v: 'AED 14.5K', l: 'Starter build' },
+                { v: '1.5 days', l: 'Monthly payback' },
+                { v: '24/7', l: 'WhatsApp open' },
               ].map(s => (
                 <div key={s.l}>
                   <div className={`text-xl md:text-2xl font-bold`} style={{ color: AMBER }}>{s.v}</div>
@@ -409,10 +410,41 @@ export default function FajarPitch() {
         </div>
       </section>
 
+      {/* RESEARCH FLOW */}
+      <section className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
+        <SectionHeader
+          kicker="02 · HOW UAE CUSTOMERS RESEARCH"
+          title="Four steps. Lose them at any one and the machine sits idle."
+          sub="Every UAE rental enquiry follows this path. Most rental sites haemorrhage customers between step 2 and step 3. We engineer the page that converts the click."
+        />
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+          {[
+            { i: Search, t: 'Google search', d: '"crane hire abu dhabi"', sub: '76% start here' },
+            { i: TrendingUp, t: 'SERP click', d: 'Rich snippet with price + availability', sub: 'You vs competitor' },
+            { i: Calendar, t: 'Site: price + free now?', d: 'Decide in under 60 seconds', sub: 'Drop-off point' },
+            { i: MessageCircle, t: 'WhatsApp booking', d: 'One tap → soft hold', sub: 'Auto-reserved' },
+          ].map((s, i) => (
+            <div key={s.t} className={`${PANEL} ${BORDER} border rounded-lg p-5 relative`}>
+              <div className="font-mono text-[10px] mb-3" style={{ color: AMBER }}>STEP {i + 1}</div>
+              <s.i className="h-5 w-5 mb-3" style={{ color: AMBER }} />
+              <div className={`${INK} font-semibold mb-1`}>{s.t}</div>
+              <div className={`${MUTED} text-xs leading-relaxed mb-2`}>{s.d}</div>
+              <div className="font-mono text-[10px]" style={{ color: WA }}>{s.sub}</div>
+              {i < 3 && (
+                <ArrowRight className={`hidden md:block absolute -right-3 top-1/2 -translate-y-1/2 h-5 w-5 ${MUTED}`} />
+              )}
+            </div>
+          ))}
+        </div>
+        <p className={`${MUTED} text-xs mt-6 italic`}>
+          Every step you lose a customer is a vacant machine-day. Our job is zero drop-off between Google and your fleet calendar.
+        </p>
+      </section>
+
       {/* DEMO — calendar */}
       <section id="demo" className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
         <SectionHeader
-          kicker="02 · LIVE FLEET AVAILABILITY"
+          kicker="03 · LIVE FLEET AVAILABILITY"
           title="Customers see what's free — before they call."
           sub="Per-unit calendar across all five categories, updated in real time by the booking engine and your WhatsApp agent. Click any green cell to preview the reservation sheet."
         />
@@ -423,7 +455,7 @@ export default function FajarPitch() {
       <section className={`${PANEL} border-y ${BORDER}`}>
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
           <SectionHeader
-            kicker="03 · WHATSAPP AGENT"
+            kicker="04 · WHATSAPP AGENT"
             title="Your operations group chat becomes the control panel."
             sub="The agent reads your existing operations group and your sales DMs, parses intent, and updates the fleet database. No new app for your team to learn — just WhatsApp, the way they already use it."
           />
@@ -482,10 +514,96 @@ export default function FajarPitch() {
         </div>
       </section>
 
+      {/* PRODUCT SCREENSHOTS */}
+      <section className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
+        <SectionHeader
+          kicker="05 · WHAT YOU SHIP"
+          title="This is what your customers will see."
+          sub="Realistic mockups of the proposed site and admin tools — not abstract diagrams. Built around your actual fleet, in AED, with WhatsApp as the booking primitive."
+        />
+        <div className="grid lg:grid-cols-2 gap-6 md:gap-8">
+          {/* Desktop listing */}
+          <figure className="lg:col-span-2">
+            <div className={`${PANEL} ${BORDER} border rounded-lg overflow-hidden shadow-2xl`}>
+              <div className={`flex items-center gap-1.5 px-3 py-2 ${PANEL2} border-b ${BORDER}`}>
+                <span className="h-2.5 w-2.5 rounded-full" style={{ background: 'hsl(0 65% 55%)' }} />
+                <span className="h-2.5 w-2.5 rounded-full" style={{ background: AMBER }} />
+                <span className="h-2.5 w-2.5 rounded-full" style={{ background: WA }} />
+                <span className={`ml-3 font-mono text-[10px] ${MUTED}`}>fajaralmustaqbal.ae / equipment</span>
+              </div>
+              <img src="/fajar/listing.png" alt="Fleet listing page mockup" loading="lazy" width={1536} height={1024} className="w-full block" />
+            </div>
+            <figcaption className={`${MUTED} text-sm mt-3 italic`}>
+              <span style={{ color: AMBER }}>01 ·</span> Customers see exactly what is free, with daily AED rates and a one-tap WhatsApp reservation. No phone tag.
+            </figcaption>
+          </figure>
+
+          {/* Detail page */}
+          <figure>
+            <div className={`${PANEL} ${BORDER} border rounded-lg overflow-hidden shadow-2xl`}>
+              <div className={`flex items-center gap-1.5 px-3 py-2 ${PANEL2} border-b ${BORDER}`}>
+                <span className="h-2.5 w-2.5 rounded-full" style={{ background: 'hsl(0 65% 55%)' }} />
+                <span className="h-2.5 w-2.5 rounded-full" style={{ background: AMBER }} />
+                <span className="h-2.5 w-2.5 rounded-full" style={{ background: WA }} />
+                <span className={`ml-3 font-mono text-[10px] ${MUTED}`}>… / earthmoving / cat-320</span>
+              </div>
+              <img src="/fajar/machine-detail.png" alt="Machine detail page mockup" loading="lazy" width={1536} height={1024} className="w-full block" />
+            </div>
+            <figcaption className={`${MUTED} text-sm mt-3 italic`}>
+              <span style={{ color: AMBER }}>02 ·</span> One landing page per machine — exactly the kind of page Google rewards for "CAT 320 rental Dubai".
+            </figcaption>
+          </figure>
+
+          {/* Mobile */}
+          <figure>
+            <div className="flex items-center justify-center">
+              <div className="bg-black rounded-[2rem] p-2 shadow-2xl max-w-[280px] w-full">
+                <img src="/fajar/mobile-booking.png" alt="Mobile booking flow mockup" loading="lazy" width={1024} height={1536} className="w-full block rounded-[1.6rem]" />
+              </div>
+            </div>
+            <figcaption className={`${MUTED} text-sm mt-3 italic text-center lg:text-left`}>
+              <span style={{ color: AMBER }}>03 ·</span> Most UAE rental searches happen on mobile. Date picker, AED total, WhatsApp button — that's the whole flow.
+            </figcaption>
+          </figure>
+
+          {/* Admin */}
+          <figure className="lg:col-span-2">
+            <div className={`${PANEL} ${BORDER} border rounded-lg overflow-hidden shadow-2xl`}>
+              <div className={`flex items-center gap-1.5 px-3 py-2 ${PANEL2} border-b ${BORDER}`}>
+                <span className="h-2.5 w-2.5 rounded-full" style={{ background: 'hsl(0 65% 55%)' }} />
+                <span className="h-2.5 w-2.5 rounded-full" style={{ background: AMBER }} />
+                <span className="h-2.5 w-2.5 rounded-full" style={{ background: WA }} />
+                <span className={`ml-3 font-mono text-[10px] ${MUTED}`}>admin.fajaralmustaqbal.ae</span>
+              </div>
+              <img src="/fajar/admin.png" alt="Admin dashboard mockup" loading="lazy" width={1536} height={1024} className="w-full block" />
+            </div>
+            <figcaption className={`${MUTED} text-sm mt-3 italic`}>
+              <span style={{ color: AMBER }}>04 ·</span> Vacancy, today's bookings, and the maintenance queue at a glance — same view on phone or laptop.
+            </figcaption>
+          </figure>
+
+          {/* SERP */}
+          <figure className="lg:col-span-2">
+            <div className={`${PANEL} ${BORDER} border rounded-lg overflow-hidden shadow-2xl`}>
+              <div className={`flex items-center gap-1.5 px-3 py-2 ${PANEL2} border-b ${BORDER}`}>
+                <span className="h-2.5 w-2.5 rounded-full" style={{ background: 'hsl(0 65% 55%)' }} />
+                <span className="h-2.5 w-2.5 rounded-full" style={{ background: AMBER }} />
+                <span className="h-2.5 w-2.5 rounded-full" style={{ background: WA }} />
+                <span className={`ml-3 font-mono text-[10px] ${MUTED}`}>google.ae / search?q=excavator+rental+dubai</span>
+              </div>
+              <img src="/fajar/serp.png" alt="Google search result mockup" loading="lazy" width={1536} height={1024} className="w-full block" />
+            </div>
+            <figcaption className={`${MUTED} text-sm mt-3 italic`}>
+              <span style={{ color: AMBER }}>05 ·</span> Rich snippet with price, availability, rating, and your Google Business Profile — tuned to how UAE renters actually search.
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
       {/* SEO */}
       <section className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
         <SectionHeader
-          kicker="04 · SEO ENGINE"
+          kicker="06 · SEO ENGINE"
           title="Rank for what UAE contractors actually type."
           sub="Per-machine landing pages, bilingual hreflang, and structured data so Google shows your availability and price right in the results."
         />
@@ -532,7 +650,7 @@ export default function FajarPitch() {
       {/* DELIVER */}
       <section className={`${PANEL} border-y ${BORDER}`}>
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
-          <SectionHeader kicker="05 · WHAT WE DELIVER" title="Three layers, one platform." />
+          <SectionHeader kicker="07 · WHAT WE DELIVER" title="Three layers, one platform." />
           <div className="grid md:grid-cols-3 gap-4">
             {[
               { i: Globe, t: 'Platform', items: ['React + Next.js public site', 'Headless fleet & booking DB', 'Admin dashboard with audit log', 'UAE-region hosting'] },
@@ -557,7 +675,7 @@ export default function FajarPitch() {
 
       {/* ROADMAP */}
       <section className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
-        <SectionHeader kicker="06 · ROADMAP" title="Twelve weeks to launch." sub="Phased so you see real value at week 4, not just at handover." />
+        <SectionHeader kicker="08 · ROADMAP" title="Twelve weeks to launch." sub="Phased so you see real value at week 4, not just at handover." />
         <div className="grid md:grid-cols-3 gap-4">
           {phases.map(p => (
             <Card key={p.tag} className={`${PANEL2} ${BORDER} p-6 relative overflow-hidden`}>
@@ -579,25 +697,76 @@ export default function FajarPitch() {
       {/* INVESTMENT */}
       <section className={`${PANEL} border-y ${BORDER}`}>
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
-          <SectionHeader kicker="07 · INVESTMENT" title="Indicative ranges." sub="Final scope and AED figures locked after a 30-minute discovery call. No surprises." />
-          <div className="grid md:grid-cols-2 gap-4 max-w-4xl">
-            <Card className={`${PANEL2} ${BORDER} p-6`}>
-              <div className="font-mono text-[10px] tracking-wider mb-2" style={{ color: AMBER }}>ONE-TIME BUILD</div>
-              <div className={`${INK} text-3xl md:text-4xl font-bold mb-2`}>AED 95K – 145K</div>
-              <div className={`${MUTED} text-sm`}>12-week build · platform + WhatsApp agent + bilingual SEO foundation · source code delivered to your Git</div>
-            </Card>
-            <Card className={`${PANEL2} ${BORDER} p-6`}>
-              <div className="font-mono text-[10px] tracking-wider mb-2" style={{ color: AMBER }}>MONTHLY RETAINER</div>
-              <div className={`${INK} text-3xl md:text-4xl font-bold mb-2`}>AED 6K – 9K</div>
-              <div className={`${MUTED} text-sm`}>Hosting, WhatsApp API costs, agent monitoring, 3 SEO content pieces, priority support</div>
-            </Card>
+          <SectionHeader
+            kicker="09 · INVESTMENT"
+            title="Priced for an SMB on margin."
+            sub="Small upfront, low monthly. Pick the tier that matches where you are. Upgrade any time — we never charge again for what you've already paid for."
+          />
+          <div className="grid md:grid-cols-3 gap-4">
+            {[
+              {
+                name: 'Starter', tag: 'GET FOUND', once: 'AED 14,500', mo: 'AED 1,200',
+                who: 'Show up on Google. Show what is available. Stop losing customers at step one.',
+                items: ['Fast new site (EN)', 'Live availability calendar', 'Per-machine landing pages', 'Schema + Google Business Profile'],
+                highlight: false,
+              },
+              {
+                name: 'Growth', tag: 'RECOMMENDED', once: 'AED 24,000', mo: 'AED 1,900',
+                who: 'Everything in Starter, plus the WhatsApp agent that ends double-bookings.',
+                items: ['Everything in Starter', 'WhatsApp maintenance agent', 'Admin dashboard + audit log', 'Priority support'],
+                highlight: true,
+              },
+              {
+                name: 'Full', tag: 'BOOK IN YOUR SLEEP', once: 'AED 38,000', mo: 'AED 2,800',
+                who: 'For when WhatsApp is already your #1 sales channel — turn every DM into a booking.',
+                items: ['Everything in Growth', 'Customer-DM booking agent + payment link', 'Full Arabic site (hreflang)', '3 SEO content pieces / month'],
+                highlight: false,
+              },
+            ].map(t => (
+              <Card key={t.name} className={`${PANEL2} ${BORDER} p-6 relative ${t.highlight ? 'ring-2' : ''}`}
+                style={t.highlight ? { boxShadow: `0 0 0 2px ${AMBER}` } : undefined}>
+                {t.highlight && (
+                  <div className="absolute -top-3 left-6 px-2 py-0.5 rounded text-[10px] font-mono font-bold text-black" style={{ background: AMBER }}>
+                    {t.tag}
+                  </div>
+                )}
+                {!t.highlight && (
+                  <div className="font-mono text-[10px] tracking-wider mb-2" style={{ color: AMBER }}>{t.tag}</div>
+                )}
+                <div className={`${INK} text-xl font-bold mb-3`}>{t.name}</div>
+                <div className="flex items-baseline gap-2 mb-1">
+                  <span className={`${INK} text-3xl font-bold`}>{t.once}</span>
+                  <span className={`${MUTED} text-xs`}>one-time</span>
+                </div>
+                <div className="flex items-baseline gap-2 mb-4">
+                  <span className={`${INK} text-lg font-semibold`}>{t.mo}</span>
+                  <span className={`${MUTED} text-xs`}>/ month</span>
+                </div>
+                <div className={`${MUTED} text-xs leading-relaxed mb-4`}>{t.who}</div>
+                <ul className="space-y-1.5">
+                  {t.items.map(x => (
+                    <li key={x} className={`flex items-start gap-2 ${INK} text-sm`}>
+                      <CheckCircle2 className="h-3.5 w-3.5 mt-1 shrink-0" style={{ color: WA }} /> {x}
+                    </li>
+                  ))}
+                </ul>
+              </Card>
+            ))}
           </div>
+          <Card className={`${PANEL2} ${BORDER} p-5 mt-6 flex items-start gap-3`}>
+            <TrendingUp className="h-5 w-5 mt-0.5 shrink-0" style={{ color: AMBER }} />
+            <div className={`${MUTED} text-sm leading-relaxed`}>
+              <span className={INK}>Pays for itself fast.</span> At an average AED 1,800/day rental, the Growth plan
+              breaks even at <span className={INK}>~1.5 extra rental-days per month</span>. Pay monthly, cancel any
+              time after month 6. Source code and data are yours from day one.
+            </div>
+          </Card>
         </div>
       </section>
 
       {/* FAQ */}
       <section className="max-w-4xl mx-auto px-4 md:px-6 py-16 md:py-24">
-        <SectionHeader kicker="08 · FAQ" title="The questions everyone asks." />
+        <SectionHeader kicker="10 · FAQ" title="The questions everyone asks." />
         <Accordion type="single" collapsible className="w-full">
           {faqs.map((f, i) => (
             <AccordionItem key={i} value={`f-${i}`} className={BORDER}>
