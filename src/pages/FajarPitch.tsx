@@ -300,18 +300,19 @@ export default function FajarPitch() {
   ];
 
   const problems = [
-    { icon: Calendar, title: 'No live availability', body: 'Today the site shows machine categories but never says what is free this week. Every enquiry becomes a phone call or a WhatsApp ping to your office.' },
-    { icon: Wrench, title: 'Maintenance lives in heads', body: 'When a machine breaks down on site, that knowledge sits with one operator. Sales can — and does — book a unit that is already down.' },
-    { icon: Search, title: 'Invisible in search', body: 'Static WordPress pages, no schema, no per-machine landing pages. Competitors with thinner fleets outrank you for "excavator rental Dubai".' },
+    { icon: Calendar, title: "Customers can't see what's free", body: 'Your site shows categories but never says what is available this week. 76% of UAE B2B buyers research online before contacting a vendor — if your competitor shows availability and you don\'t, you lose the call before it happens.' },
+    { icon: Wrench, title: 'Group-chat updates get buried', body: 'A machine breaks down on site, the operator messages the group, the message scrolls away. Sales books that broken unit anyway. The customer cancels. The slot stays vacant.' },
+    { icon: Search, title: "You don't rank for 'excavator rental Dubai'", body: 'Static WordPress, no per-machine pages, no schema. Thinner fleets with better SEO take the bookings that should be yours — every search you lose is a vacant machine-day.' },
   ];
 
   const phases = [
-    { tag: 'PHASE 1', weeks: 'Weeks 1–4', title: 'Live availability + new site', items: ['Fleet & booking database', 'Public availability calendar', 'Per-machine landing pages', 'Schema.org + GBP foundation'] },
-    { tag: 'PHASE 2', weeks: 'Weeks 5–8', title: 'WhatsApp maintenance agent', items: ['WhatsApp Business API onboarding', 'Group-chat listener + parser', 'Auto maintenance lock (max 7 days)', 'Admin dashboard + audit log'] },
-    { tag: 'PHASE 3', weeks: 'Weeks 9–12', title: 'WhatsApp booking + Arabic + payments', items: ['Customer DM agent + soft holds', 'Payment link generation', 'Full Arabic site (hreflang)', 'Stripe / Tap / Network International'] },
+    { tag: 'PHASE 1', weeks: 'Weeks 1–4', title: 'Get found.', items: ['Fast new site + fleet DB', 'Live availability calendar', 'Per-machine landing pages', 'Schema.org + Google Business Profile'] },
+    { tag: 'PHASE 2', weeks: 'Weeks 5–8', title: 'Stop double-bookings.', items: ['WhatsApp Business API setup', 'Group-chat agent reads maintenance', 'Auto-lock with 7-day safety expiry', 'Admin dashboard you check on your phone'] },
+    { tag: 'PHASE 3', weeks: 'Weeks 9–12', title: 'Book in your sleep.', items: ['Customer-DM booking agent', 'Soft holds + payment link', 'Full Arabic site (hreflang)', 'Monthly SEO content for sustained ranking'] },
   ];
 
   const faqs = [
+    { q: "We're a small business — isn't this overkill?", a: "No. The Starter tier (AED 14,500 + AED 1,200/mo) is sized for an SMB rental shop on margin. At an average AED 1,800/day rental, the Growth plan pays for itself with roughly 1.5 extra rental-days per month. Anything above that is pure margin you're capturing today by phone tag." },
     { q: 'How long does WhatsApp Business API approval take?', a: 'Typically 5–10 business days through Meta\'s Business Solution Provider. We handle the application, template approvals, and number migration end-to-end.' },
     { q: 'What if the agent misreads a message?', a: 'Every action is reversible from the admin dashboard. Maintenance locks expire automatically after 7 days unless confirmed. Bookings stay as 2-hour soft holds until payment, never auto-charged. Low-confidence parses are routed to a human queue instead of acted on.' },
     { q: 'Where does the data live?', a: 'UAE-region hosting (AWS me-central-1 or equivalent). Database backups daily. You own all data and can export anytime in standard CSV / SQL formats.' },
