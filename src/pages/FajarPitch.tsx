@@ -410,6 +410,37 @@ export default function FajarPitch() {
         </div>
       </section>
 
+      {/* RESEARCH FLOW */}
+      <section className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
+        <SectionHeader
+          kicker="02 · HOW UAE CUSTOMERS RESEARCH"
+          title="Four steps. Lose them at any one and the machine sits idle."
+          sub="Every UAE rental enquiry follows this path. Most rental sites haemorrhage customers between step 2 and step 3. We engineer the page that converts the click."
+        />
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+          {[
+            { i: Search, t: 'Google search', d: '"crane hire abu dhabi"', sub: '76% start here' },
+            { i: TrendingUp, t: 'SERP click', d: 'Rich snippet with price + availability', sub: 'You vs competitor' },
+            { i: Calendar, t: 'Site: price + free now?', d: 'Decide in under 60 seconds', sub: 'Drop-off point' },
+            { i: MessageCircle, t: 'WhatsApp booking', d: 'One tap → soft hold', sub: 'Auto-reserved' },
+          ].map((s, i) => (
+            <div key={s.t} className={`${PANEL} ${BORDER} border rounded-lg p-5 relative`}>
+              <div className="font-mono text-[10px] mb-3" style={{ color: AMBER }}>STEP {i + 1}</div>
+              <s.i className="h-5 w-5 mb-3" style={{ color: AMBER }} />
+              <div className={`${INK} font-semibold mb-1`}>{s.t}</div>
+              <div className={`${MUTED} text-xs leading-relaxed mb-2`}>{s.d}</div>
+              <div className="font-mono text-[10px]" style={{ color: WA }}>{s.sub}</div>
+              {i < 3 && (
+                <ArrowRight className={`hidden md:block absolute -right-3 top-1/2 -translate-y-1/2 h-5 w-5 ${MUTED}`} />
+              )}
+            </div>
+          ))}
+        </div>
+        <p className={`${MUTED} text-xs mt-6 italic`}>
+          Every step you lose a customer is a vacant machine-day. Our job is zero drop-off between Google and your fleet calendar.
+        </p>
+      </section>
+
       {/* DEMO — calendar */}
       <section id="demo" className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
         <SectionHeader
