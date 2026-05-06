@@ -483,6 +483,92 @@ export default function FajarPitch() {
         </div>
       </section>
 
+      {/* PRODUCT SCREENSHOTS */}
+      <section className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
+        <SectionHeader
+          kicker="04 · WHAT YOU SHIP"
+          title="This is what your customers will see."
+          sub="Realistic mockups of the proposed site and admin tools — not abstract diagrams. Built around your actual fleet, in AED, with WhatsApp as the booking primitive."
+        />
+        <div className="grid lg:grid-cols-2 gap-6 md:gap-8">
+          {/* Desktop listing */}
+          <figure className="lg:col-span-2">
+            <div className={`${PANEL} ${BORDER} border rounded-lg overflow-hidden shadow-2xl`}>
+              <div className={`flex items-center gap-1.5 px-3 py-2 ${PANEL2} border-b ${BORDER}`}>
+                <span className="h-2.5 w-2.5 rounded-full" style={{ background: 'hsl(0 65% 55%)' }} />
+                <span className="h-2.5 w-2.5 rounded-full" style={{ background: AMBER }} />
+                <span className="h-2.5 w-2.5 rounded-full" style={{ background: WA }} />
+                <span className={`ml-3 font-mono text-[10px] ${MUTED}`}>fajaralmustaqbal.ae / equipment</span>
+              </div>
+              <img src="/fajar/listing.png" alt="Fleet listing page mockup" loading="lazy" width={1536} height={1024} className="w-full block" />
+            </div>
+            <figcaption className={`${MUTED} text-sm mt-3 italic`}>
+              <span style={{ color: AMBER }}>01 ·</span> Customers see exactly what is free, with daily AED rates and a one-tap WhatsApp reservation. No phone tag.
+            </figcaption>
+          </figure>
+
+          {/* Detail page */}
+          <figure>
+            <div className={`${PANEL} ${BORDER} border rounded-lg overflow-hidden shadow-2xl`}>
+              <div className={`flex items-center gap-1.5 px-3 py-2 ${PANEL2} border-b ${BORDER}`}>
+                <span className="h-2.5 w-2.5 rounded-full" style={{ background: 'hsl(0 65% 55%)' }} />
+                <span className="h-2.5 w-2.5 rounded-full" style={{ background: AMBER }} />
+                <span className="h-2.5 w-2.5 rounded-full" style={{ background: WA }} />
+                <span className={`ml-3 font-mono text-[10px] ${MUTED}`}>… / earthmoving / cat-320</span>
+              </div>
+              <img src="/fajar/machine-detail.png" alt="Machine detail page mockup" loading="lazy" width={1536} height={1024} className="w-full block" />
+            </div>
+            <figcaption className={`${MUTED} text-sm mt-3 italic`}>
+              <span style={{ color: AMBER }}>02 ·</span> One landing page per machine — exactly the kind of page Google rewards for "CAT 320 rental Dubai".
+            </figcaption>
+          </figure>
+
+          {/* Mobile */}
+          <figure>
+            <div className="flex items-center justify-center">
+              <div className="bg-black rounded-[2rem] p-2 shadow-2xl max-w-[280px] w-full">
+                <img src="/fajar/mobile-booking.png" alt="Mobile booking flow mockup" loading="lazy" width={1024} height={1536} className="w-full block rounded-[1.6rem]" />
+              </div>
+            </div>
+            <figcaption className={`${MUTED} text-sm mt-3 italic text-center lg:text-left`}>
+              <span style={{ color: AMBER }}>03 ·</span> Most UAE rental searches happen on mobile. Date picker, AED total, WhatsApp button — that's the whole flow.
+            </figcaption>
+          </figure>
+
+          {/* Admin */}
+          <figure className="lg:col-span-2">
+            <div className={`${PANEL} ${BORDER} border rounded-lg overflow-hidden shadow-2xl`}>
+              <div className={`flex items-center gap-1.5 px-3 py-2 ${PANEL2} border-b ${BORDER}`}>
+                <span className="h-2.5 w-2.5 rounded-full" style={{ background: 'hsl(0 65% 55%)' }} />
+                <span className="h-2.5 w-2.5 rounded-full" style={{ background: AMBER }} />
+                <span className="h-2.5 w-2.5 rounded-full" style={{ background: WA }} />
+                <span className={`ml-3 font-mono text-[10px] ${MUTED}`}>admin.fajaralmustaqbal.ae</span>
+              </div>
+              <img src="/fajar/admin.png" alt="Admin dashboard mockup" loading="lazy" width={1536} height={1024} className="w-full block" />
+            </div>
+            <figcaption className={`${MUTED} text-sm mt-3 italic`}>
+              <span style={{ color: AMBER }}>04 ·</span> Vacancy, today's bookings, and the maintenance queue at a glance — same view on phone or laptop.
+            </figcaption>
+          </figure>
+
+          {/* SERP */}
+          <figure className="lg:col-span-2">
+            <div className={`${PANEL} ${BORDER} border rounded-lg overflow-hidden shadow-2xl`}>
+              <div className={`flex items-center gap-1.5 px-3 py-2 ${PANEL2} border-b ${BORDER}`}>
+                <span className="h-2.5 w-2.5 rounded-full" style={{ background: 'hsl(0 65% 55%)' }} />
+                <span className="h-2.5 w-2.5 rounded-full" style={{ background: AMBER }} />
+                <span className="h-2.5 w-2.5 rounded-full" style={{ background: WA }} />
+                <span className={`ml-3 font-mono text-[10px] ${MUTED}`}>google.ae / search?q=excavator+rental+dubai</span>
+              </div>
+              <img src="/fajar/serp.png" alt="Google search result mockup" loading="lazy" width={1536} height={1024} className="w-full block" />
+            </div>
+            <figcaption className={`${MUTED} text-sm mt-3 italic`}>
+              <span style={{ color: AMBER }}>05 ·</span> Rich snippet with price, availability, rating, and your Google Business Profile — tuned to how UAE renters actually search.
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
       {/* SEO */}
       <section className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
         <SectionHeader
