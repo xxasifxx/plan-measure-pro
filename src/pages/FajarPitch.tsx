@@ -328,7 +328,7 @@ export default function FajarPitch() {
           <div className="flex items-center gap-2 min-w-0">
             <div className="h-6 w-6 rounded flex items-center justify-center font-mono text-[10px] font-bold text-black shrink-0" style={{ background: AMBER }}>FA</div>
             <span className={`font-mono text-[10px] md:text-xs ${MUTED} truncate`}>
-              Proposal · Fajar Al Mustaqbal General Trading & Cont. LLC · UAE
+              Prepared for Fajar Al Mustaqbal Equipment Rental · UAE
             </span>
           </div>
           <a href="mailto:hello@example.com?subject=Fajar%20rental%20platform%20discovery%20call" className="shrink-0">
