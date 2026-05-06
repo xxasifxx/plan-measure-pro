@@ -373,9 +373,9 @@ export default function FajarPitch() {
             </div>
             <div className="mt-10 grid grid-cols-3 gap-6 max-w-md">
               {[
-                { v: '24/7', l: 'Bookings open' },
-                { v: '< 30s', l: 'Maintenance lock' },
-                { v: 'AR + EN', l: 'Bilingual SEO' },
+                { v: 'AED 14.5K', l: 'Starter build' },
+                { v: '1.5 days', l: 'Monthly payback' },
+                { v: '24/7', l: 'WhatsApp open' },
               ].map(s => (
                 <div key={s.l}>
                   <div className={`text-xl md:text-2xl font-bold`} style={{ color: AMBER }}>{s.v}</div>
