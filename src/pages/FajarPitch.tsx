@@ -348,16 +348,16 @@ export default function FajarPitch() {
               EQUIPMENT RENTAL · UAE
             </div>
             <h1 className={`text-4xl md:text-6xl font-bold ${INK} leading-[1.05] mb-4`}>
-              Stop losing rentals to <span style={{ color: AMBER }}>phone tag</span>.
+              Cut fleet vacancy. Win the <span style={{ color: AMBER }}>Google search</span> before the phone rings.
             </h1>
             <div dir="rtl" lang="ar" className={`text-base md:text-lg ${MUTED} mb-6 font-medium`}>
-              حلول حجز المعدات الذكية لشركة فجر المستقبل
+              موقع إلكتروني ذكي لتأجير المعدات
             </div>
             <p className={`${MUTED} text-base md:text-lg leading-relaxed mb-8 max-w-xl`}>
-              A new website for Fajar Al Mustaqbal that shows <span className={INK}>real-time fleet availability</span>,
-              a <span style={{ color: WA }}>WhatsApp agent</span> that auto-flips machines to maintenance and books
-              customers from a single message, and <span className={INK}>UAE-tuned SEO</span> built for
-              "excavator rental Dubai" — not generic plant-hire fluff.
+              UAE rental customers <span className={INK}>Google → tap WhatsApp → decide in under 5 minutes</span>.
+              Most equipment rental sites lose them at step one — no live availability, no daily rate, no way to reserve.
+              We build the site, the <span style={{ color: WA }}>WhatsApp agent</span>, and the SEO that turn vacant
+              machine-days into bookings. Priced for an SMB on margin, not a SaaS budget.
             </p>
             <div className="flex flex-wrap gap-3">
               <a href="#demo">
