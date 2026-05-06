@@ -580,19 +580,70 @@ export default function FajarPitch() {
       {/* INVESTMENT */}
       <section className={`${PANEL} border-y ${BORDER}`}>
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
-          <SectionHeader kicker="07 · INVESTMENT" title="Indicative ranges." sub="Final scope and AED figures locked after a 30-minute discovery call. No surprises." />
-          <div className="grid md:grid-cols-2 gap-4 max-w-4xl">
-            <Card className={`${PANEL2} ${BORDER} p-6`}>
-              <div className="font-mono text-[10px] tracking-wider mb-2" style={{ color: AMBER }}>ONE-TIME BUILD</div>
-              <div className={`${INK} text-3xl md:text-4xl font-bold mb-2`}>AED 95K – 145K</div>
-              <div className={`${MUTED} text-sm`}>12-week build · platform + WhatsApp agent + bilingual SEO foundation · source code delivered to your Git</div>
-            </Card>
-            <Card className={`${PANEL2} ${BORDER} p-6`}>
-              <div className="font-mono text-[10px] tracking-wider mb-2" style={{ color: AMBER }}>MONTHLY RETAINER</div>
-              <div className={`${INK} text-3xl md:text-4xl font-bold mb-2`}>AED 6K – 9K</div>
-              <div className={`${MUTED} text-sm`}>Hosting, WhatsApp API costs, agent monitoring, 3 SEO content pieces, priority support</div>
-            </Card>
+          <SectionHeader
+            kicker="07 · INVESTMENT"
+            title="Priced for an SMB on margin."
+            sub="Small upfront, low monthly. Pick the tier that matches where you are. Upgrade any time — we never charge again for what you've already paid for."
+          />
+          <div className="grid md:grid-cols-3 gap-4">
+            {[
+              {
+                name: 'Starter', tag: 'GET FOUND', once: 'AED 14,500', mo: 'AED 1,200',
+                who: 'Show up on Google. Show what is available. Stop losing customers at step one.',
+                items: ['Fast new site (EN)', 'Live availability calendar', 'Per-machine landing pages', 'Schema + Google Business Profile'],
+                highlight: false,
+              },
+              {
+                name: 'Growth', tag: 'RECOMMENDED', once: 'AED 24,000', mo: 'AED 1,900',
+                who: 'Everything in Starter, plus the WhatsApp agent that ends double-bookings.',
+                items: ['Everything in Starter', 'WhatsApp maintenance agent', 'Admin dashboard + audit log', 'Priority support'],
+                highlight: true,
+              },
+              {
+                name: 'Full', tag: 'BOOK IN YOUR SLEEP', once: 'AED 38,000', mo: 'AED 2,800',
+                who: 'For when WhatsApp is already your #1 sales channel — turn every DM into a booking.',
+                items: ['Everything in Growth', 'Customer-DM booking agent + payment link', 'Full Arabic site (hreflang)', '3 SEO content pieces / month'],
+                highlight: false,
+              },
+            ].map(t => (
+              <Card key={t.name} className={`${PANEL2} ${BORDER} p-6 relative ${t.highlight ? 'ring-2' : ''}`}
+                style={t.highlight ? { boxShadow: `0 0 0 2px ${AMBER}` } : undefined}>
+                {t.highlight && (
+                  <div className="absolute -top-3 left-6 px-2 py-0.5 rounded text-[10px] font-mono font-bold text-black" style={{ background: AMBER }}>
+                    {t.tag}
+                  </div>
+                )}
+                {!t.highlight && (
+                  <div className="font-mono text-[10px] tracking-wider mb-2" style={{ color: AMBER }}>{t.tag}</div>
+                )}
+                <div className={`${INK} text-xl font-bold mb-3`}>{t.name}</div>
+                <div className="flex items-baseline gap-2 mb-1">
+                  <span className={`${INK} text-3xl font-bold`}>{t.once}</span>
+                  <span className={`${MUTED} text-xs`}>one-time</span>
+                </div>
+                <div className="flex items-baseline gap-2 mb-4">
+                  <span className={`${INK} text-lg font-semibold`}>{t.mo}</span>
+                  <span className={`${MUTED} text-xs`}>/ month</span>
+                </div>
+                <div className={`${MUTED} text-xs leading-relaxed mb-4`}>{t.who}</div>
+                <ul className="space-y-1.5">
+                  {t.items.map(x => (
+                    <li key={x} className={`flex items-start gap-2 ${INK} text-sm`}>
+                      <CheckCircle2 className="h-3.5 w-3.5 mt-1 shrink-0" style={{ color: WA }} /> {x}
+                    </li>
+                  ))}
+                </ul>
+              </Card>
+            ))}
           </div>
+          <Card className={`${PANEL2} ${BORDER} p-5 mt-6 flex items-start gap-3`}>
+            <TrendingUp className="h-5 w-5 mt-0.5 shrink-0" style={{ color: AMBER }} />
+            <div className={`${MUTED} text-sm leading-relaxed`}>
+              <span className={INK}>Pays for itself fast.</span> At an average AED 1,800/day rental, the Growth plan
+              breaks even at <span className={INK}>~1.5 extra rental-days per month</span>. Pay monthly, cancel any
+              time after month 6. Source code and data are yours from day one.
+            </div>
+          </Card>
         </div>
       </section>
 
