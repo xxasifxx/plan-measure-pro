@@ -444,7 +444,7 @@ export default function FajarPitch() {
       {/* DEMO — calendar */}
       <section id="demo" className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
         <SectionHeader
-          kicker="02 · LIVE FLEET AVAILABILITY"
+          kicker="03 · LIVE FLEET AVAILABILITY"
           title="Customers see what's free — before they call."
           sub="Per-unit calendar across all five categories, updated in real time by the booking engine and your WhatsApp agent. Click any green cell to preview the reservation sheet."
         />
@@ -455,7 +455,7 @@ export default function FajarPitch() {
       <section className={`${PANEL} border-y ${BORDER}`}>
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
           <SectionHeader
-            kicker="03 · WHATSAPP AGENT"
+            kicker="04 · WHATSAPP AGENT"
             title="Your operations group chat becomes the control panel."
             sub="The agent reads your existing operations group and your sales DMs, parses intent, and updates the fleet database. No new app for your team to learn — just WhatsApp, the way they already use it."
           />
@@ -517,7 +517,7 @@ export default function FajarPitch() {
       {/* PRODUCT SCREENSHOTS */}
       <section className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
         <SectionHeader
-          kicker="04 · WHAT YOU SHIP"
+          kicker="05 · WHAT YOU SHIP"
           title="This is what your customers will see."
           sub="Realistic mockups of the proposed site and admin tools — not abstract diagrams. Built around your actual fleet, in AED, with WhatsApp as the booking primitive."
         />
@@ -603,7 +603,7 @@ export default function FajarPitch() {
       {/* SEO */}
       <section className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
         <SectionHeader
-          kicker="04 · SEO ENGINE"
+          kicker="06 · SEO ENGINE"
           title="Rank for what UAE contractors actually type."
           sub="Per-machine landing pages, bilingual hreflang, and structured data so Google shows your availability and price right in the results."
         />
@@ -650,7 +650,7 @@ export default function FajarPitch() {
       {/* DELIVER */}
       <section className={`${PANEL} border-y ${BORDER}`}>
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
-          <SectionHeader kicker="05 · WHAT WE DELIVER" title="Three layers, one platform." />
+          <SectionHeader kicker="07 · WHAT WE DELIVER" title="Three layers, one platform." />
           <div className="grid md:grid-cols-3 gap-4">
             {[
               { i: Globe, t: 'Platform', items: ['React + Next.js public site', 'Headless fleet & booking DB', 'Admin dashboard with audit log', 'UAE-region hosting'] },
@@ -675,7 +675,7 @@ export default function FajarPitch() {
 
       {/* ROADMAP */}
       <section className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
-        <SectionHeader kicker="06 · ROADMAP" title="Twelve weeks to launch." sub="Phased so you see real value at week 4, not just at handover." />
+        <SectionHeader kicker="08 · ROADMAP" title="Twelve weeks to launch." sub="Phased so you see real value at week 4, not just at handover." />
         <div className="grid md:grid-cols-3 gap-4">
           {phases.map(p => (
             <Card key={p.tag} className={`${PANEL2} ${BORDER} p-6 relative overflow-hidden`}>
@@ -698,7 +698,7 @@ export default function FajarPitch() {
       <section className={`${PANEL} border-y ${BORDER}`}>
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
           <SectionHeader
-            kicker="07 · INVESTMENT"
+            kicker="09 · INVESTMENT"
             title="Priced for an SMB on margin."
             sub="Small upfront, low monthly. Pick the tier that matches where you are. Upgrade any time — we never charge again for what you've already paid for."
           />
@@ -766,7 +766,7 @@ export default function FajarPitch() {
 
       {/* FAQ */}
       <section className="max-w-4xl mx-auto px-4 md:px-6 py-16 md:py-24">
-        <SectionHeader kicker="08 · FAQ" title="The questions everyone asks." />
+        <SectionHeader kicker="10 · FAQ" title="The questions everyone asks." />
         <Accordion type="single" collapsible className="w-full">
           {faqs.map((f, i) => (
             <AccordionItem key={i} value={`f-${i}`} className={BORDER}>
