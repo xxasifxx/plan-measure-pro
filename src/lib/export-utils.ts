@@ -310,3 +310,76 @@ export function exportInspectorDaily(
 
   XLSX.writeFile(wb, `${projectName || 'takeoff'}_daily_${dateStr}.xlsx`);
 }
+
+/**
+ * Export an inspector's RE-approved daily-report snapshot for a single date.
+ * Pulls the frozen snapshot from `daily_reports` where status='approved'.
+ * If no approved report exists for that inspector/date, the workbook contains
+ * a single notice row instead of unapproved data.
+ */
+export async function exportApprovedInspectorDaily(
+  projectId: string,
+  payItems: PayItem[],
+  projectName: string,
+  contractNumber: string,
+  inspectorName: string,
+  userId: string,
+  date?: Date,
+): Promise<void> {
+  const targetDate = date || new Date();
+  const dateStr = targetDate.toISOString().slice(0, 10);
+
+  const { data, error } = await supabase
+    .from('daily_reports')
+    .select('snapshot, approved_at, status')
+    .eq('project_id', projectId)
+    .eq('user_id', userId)
+    .eq('report_date', dateStr)
+    .eq('status', 'approved')
+    .maybeSingle();
+  if (error) throw error;
+
+  const snapshot: Array<{
+    pay_item_id: string; item_code: string; name: string; unit: string;
+    delta_quantity: number; new_cumulative: number; notes?: string;
+  }> = Array.isArray((data as any)?.snapshot) ? (data as any).snapshot : [];
+
+  const itemById = new Map(payItems.map(p => [p.id, p]));
+
+  const wb = XLSX.utils.book_new();
+  const headerRows: any[][] = [
+    ['RE-Approved Daily Inspector Report'],
+    [`Project: ${projectName}`, '', `Contract: ${contractNumber || 'N/A'}`],
+    [`Inspector: ${inspectorName || 'Unknown'}`, '', `Date: ${targetDate.toLocaleDateString()}`],
+    [
+      `Status: ${data ? 'Approved' : 'No approved report for this date'}`,
+      '',
+      data?.approved_at ? `Approved: ${new Date(data.approved_at).toLocaleString()}` : '',
+    ],
+    [],
+    ['Pay Item Code', 'Pay Item Name', 'Approved Qty (Day)', 'Cumulative Qty', 'Unit', 'Notes'],
+  ];
+
+  const dataRows = snapshot.length === 0
+    ? [['—', 'No RE-approved snapshot exists for this date.', '', '', '', '']]
+    : snapshot.map(s => {
+        const item = itemById.get(s.pay_item_id);
+        return [
+          s.item_code || item?.itemCode || '',
+          s.name || item?.name || '',
+          Number((s.delta_quantity ?? 0).toFixed(2)),
+          Number((s.new_cumulative ?? 0).toFixed(2)),
+          s.unit || item?.unit || '',
+          s.notes || '',
+        ];
+      });
+
+  const ws = XLSX.utils.aoa_to_sheet([...headerRows, ...dataRows]);
+  ws['!cols'] = [
+    { wch: 16 }, { wch: 36 }, { wch: 16 }, { wch: 16 }, { wch: 8 }, { wch: 40 },
+  ];
+  ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 5 } }];
+  XLSX.utils.book_append_sheet(wb, ws, 'Approved Daily');
+
+  XLSX.writeFile(wb, `${projectName || 'takeoff'}_approved_daily_${dateStr}.xlsx`);
+}
