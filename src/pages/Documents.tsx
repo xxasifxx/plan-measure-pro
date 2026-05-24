@@ -519,18 +519,29 @@ export default function Documents() {
       const Icon = isSel || isOpen ? FolderOpen : Folder;
       const inspectorWritable = f.system_kind === 'photos' || f.system_kind === 'daily_reports';
       const locked = !canManageThis && !inspectorWritable;
+      const droppable = canDropOnFolder(f);
+      const dragOverThis = dragOverFolderId === f.id && droppable;
       const row = (
         <div
           key={f.id}
           onClick={() => setSelectedFolderId(f.id)}
+          onDragOver={(e) => {
+            if (!draggedIds) return;
+            if (droppable) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; setDragOverFolderId(f.id); }
+            else { e.dataTransfer.dropEffect = 'none'; }
+          }}
+          onDragLeave={() => { if (dragOverFolderId === f.id) setDragOverFolderId(null); }}
+          onDrop={(e) => { e.preventDefault(); e.stopPropagation(); handleFolderDrop(f); }}
           className={cn(
             'group flex items-center gap-1 px-2 py-1.5 rounded cursor-pointer text-sm select-none transition-colors',
             isSel ? 'bg-primary/20 ring-1 ring-primary/40 text-foreground'
+                  : dragOverThis ? 'bg-primary/30 ring-2 ring-primary/60 text-foreground'
                   : locked ? 'opacity-60 hover:bg-muted/30 hover:opacity-80'
                            : 'hover:bg-muted/40',
+            draggedIds && !droppable && 'opacity-50',
           )}
           style={{ paddingLeft: 8 + depth * 14 }}
-          title={locked ? 'Read-only for your role' : undefined}
+          title={locked ? 'Read-only for your role' : (droppable ? `Drop here to move into ${f.name}` : undefined)}
         >
           <button
             type="button"
