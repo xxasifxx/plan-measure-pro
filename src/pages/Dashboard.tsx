@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useProjects } from '@/hooks/useProjects';
@@ -22,6 +22,8 @@ import { cn } from '@/lib/utils';
 import { WelcomeCarousel } from '@/components/WelcomeCarousel';
 import { GuidedTour } from '@/components/GuidedTour';
 import { NotificationBell } from '@/components/NotificationBell';
+import { useQuery } from '@tanstack/react-query';
+import { loadPendingReviewCounts } from '@/lib/approved-quantities';
 import type { TourStep } from '@/hooks/useTour';
 
 const ROLE_STYLES: Record<string, string> = {
@@ -80,6 +82,15 @@ export default function Dashboard() {
 
   const roleBadge = roles[0] ? roles[0].replace('_', ' ') : 'user';
   const roleKey = roles[0] || 'user';
+
+  // Pending RE review counts for projects the user can decide on
+  const projectIds = useMemo(() => projects.map(p => p.id), [projects]);
+  const pendingCounts = useQuery({
+    queryKey: ['pending-review-counts', projectIds.join(',')],
+    enabled: projectIds.length > 0,
+    queryFn: () => loadPendingReviewCounts(projectIds),
+    staleTime: 30_000,
+  });
 
   // PM progress detail
   const [expandedProject, setExpandedProject] = useState<string | null>(null);
@@ -343,6 +354,21 @@ export default function Dashboard() {
                       {project.member_count}
                     </span>
                   )}
+                  {(() => {
+                    const pending = pendingCounts.data?.get(project.id) ?? 0;
+                    if (pending === 0) return null;
+                    return (
+                      <span
+                        role="button"
+                        onClick={e => { e.stopPropagation(); navigate('/re-review'); }}
+                        className="flex items-center gap-1 px-1.5 py-0.5 rounded border border-amber-500/40 bg-amber-500/10 text-amber-400 font-mono text-[10px] tracking-wider hover:bg-amber-500/20"
+                        title="Open RE review queue"
+                      >
+                        <ShieldCheck className="h-3 w-3" />
+                        {pending} pending
+                      </span>
+                    );
+                  })()}
                 </div>
 
                 {/* Footer: role badge + details */}
