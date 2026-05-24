@@ -131,9 +131,10 @@ export function useDocuments(projectId: string | undefined, folderId: string | u
       // Most-recent version per name chain: filter out rows that are replaced by another.
       const { data, error } = await supabase
         .from('documents')
-        .select('id, project_id, folder_id, name, storage_path, mime_type, size_bytes, uploaded_by, version, replaces_document_id, source_kind, created_at, updated_at')
+        .select('id, project_id, folder_id, name, storage_path, mime_type, size_bytes, uploaded_by, version, replaces_document_id, source_kind, created_at, updated_at, deleted_at, deleted_by')
         .eq('project_id', projectId!)
         .eq('folder_id', folderId!)
+        .is('deleted_at', null)
         .order('created_at', { ascending: false });
       if (error) throw error;
       const rows = ((data as any) ?? []) as DocumentRow[];
