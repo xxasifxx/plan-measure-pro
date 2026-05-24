@@ -763,6 +763,12 @@ const Index = () => {
                 </span>
               )}
               {projectId && (
+                <Button variant="ghost" size="sm" className="h-8 gap-1.5" onClick={() => navigate(`/project/${projectId}/documents`)} title="Documents">
+                  <FolderTree className="h-4 w-4" />
+                  <span className="hidden sm:inline text-xs">Documents</span>
+                </Button>
+              )}
+              {projectId && (
                 <Button variant="ghost" size="sm" className="h-8 gap-1.5" onClick={() => navigate(`/project/${projectId}/daily-report`)} title="Daily Report">
                   <FileSignature className="h-4 w-4" />
                   <span className="hidden sm:inline text-xs">Daily Report</span>
