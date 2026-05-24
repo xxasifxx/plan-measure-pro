@@ -13,6 +13,7 @@ import McfaPitch from "./pages/McfaPitch";
 import FajarPitch from "./pages/FajarPitch";
 import XerDemo from "./pages/XerDemo";
 import P6XmlDemo from "./pages/P6XmlDemo";
+import ReReview from "./pages/ReReview";
 import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
 import Landing from "./pages/Landing";
@@ -59,6 +60,7 @@ const App = () => (
             <Route path="/project/:projectId" element={<ProtectedRoute><Index /></ProtectedRoute>} />
             <Route path="/project/:projectId/controls" element={<ProtectedRoute><ProjectControls /></ProtectedRoute>} />
             <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+            <Route path="/re-review" element={<ProtectedRoute><ReReview /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

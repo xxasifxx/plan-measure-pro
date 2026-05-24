@@ -1,0 +1,1 @@
+ALTER VIEW public.v_approved_pay_item_quantities SET (security_invoker = on);

@@ -231,33 +231,89 @@ export type Database = {
           },
         ]
       }
+      daily_report_comments: {
+        Row: {
+          body: string
+          created_at: string
+          daily_report_id: string
+          id: string
+          project_id: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          daily_report_id: string
+          id?: string
+          project_id: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          daily_report_id?: string
+          id?: string
+          project_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "daily_report_comments_daily_report_id_fkey"
+            columns: ["daily_report_id"]
+            isOneToOne: false
+            referencedRelation: "daily_reports"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       daily_reports: {
         Row: {
+          approved_at: string | null
+          approved_by: string | null
           created_at: string
           id: string
           payload: Json
           project_id: string
+          reject_reason: string | null
+          rejected_at: string | null
+          rejected_by: string | null
           report_date: string
+          snapshot: Json
+          status: string
           submitted_at: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
           created_at?: string
           id?: string
           payload?: Json
           project_id: string
+          reject_reason?: string | null
+          rejected_at?: string | null
+          rejected_by?: string | null
           report_date: string
+          snapshot?: Json
+          status?: string
           submitted_at?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          approved_at?: string | null
+          approved_by?: string | null
           created_at?: string
           id?: string
           payload?: Json
           project_id?: string
+          reject_reason?: string | null
+          rejected_at?: string | null
+          rejected_by?: string | null
           report_date?: string
+          snapshot?: Json
+          status?: string
           submitted_at?: string | null
           updated_at?: string
           user_id?: string
@@ -641,7 +697,23 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      v_approved_pay_item_quantities: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          delta_quantity: number | null
+          inspector_id: string | null
+          item_code: string | null
+          new_cumulative: number | null
+          notes: string | null
+          pay_item_id: string | null
+          pay_item_name: string | null
+          project_id: string | null
+          report_date: string | null
+          unit: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       accept_invitation: { Args: { _token: string }; Returns: string }
@@ -659,7 +731,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "project_manager" | "inspector"
+      app_role: "admin" | "project_manager" | "inspector" | "resident_engineer"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -787,7 +859,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "project_manager", "inspector"],
+      app_role: ["admin", "project_manager", "inspector", "resident_engineer"],
     },
   },
 } as const
