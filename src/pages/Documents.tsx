@@ -712,49 +712,59 @@ export default function Documents() {
             </div>
             {/* Actions (desktop) */}
             <div className="hidden sm:flex items-center gap-1">
-              {canUploadHere && (
-                <>
-                  <input ref={fileInputRef} type="file" multiple className="hidden"
-                    onChange={(e) => { if (e.target.files) handleUpload(e.target.files); e.target.value = ''; }} />
-                  <input
-                    ref={folderInputRef}
-                    type="file"
-                    multiple
-                    /* @ts-expect-error non-standard but widely supported */
-                    webkitdirectory=""
-                    directory=""
-                    className="hidden"
-                    onChange={(e) => { if (e.target.files) handleUpload(e.target.files); e.target.value = ''; }}
-                  />
-                  <Button size="sm" className="h-8 gap-1.5" onClick={() => fileInputRef.current?.click()} disabled={!selectedFolderId}>
-                    <Upload className="h-3.5 w-3.5" /><span className="text-xs">Upload</span>
+              {viewingTrash ? (
+                canManageThis && trash.length > 0 && (
+                  <Button size="sm" variant="destructive" className="h-8 gap-1.5" onClick={() => setEmptyTrashOpen(true)}>
+                    <Trash2 className="h-3.5 w-3.5" /><span className="text-xs">Empty Trash</span>
                   </Button>
+                )
+              ) : (
+                <>
+                  {canUploadHere && (
+                    <>
+                      <input ref={fileInputRef} type="file" multiple className="hidden"
+                        onChange={(e) => { if (e.target.files) handleUpload(e.target.files); e.target.value = ''; }} />
+                      <input
+                        ref={folderInputRef}
+                        type="file"
+                        multiple
+                        /* @ts-expect-error non-standard but widely supported */
+                        webkitdirectory=""
+                        directory=""
+                        className="hidden"
+                        onChange={(e) => { if (e.target.files) handleUpload(e.target.files); e.target.value = ''; }}
+                      />
+                      <Button size="sm" className="h-8 gap-1.5" onClick={() => fileInputRef.current?.click()} disabled={!selectedFolderId}>
+                        <Upload className="h-3.5 w-3.5" /><span className="text-xs">Upload</span>
+                      </Button>
+                      {canManageThis && (
+                        <Button size="sm" variant="outline" className="h-8 gap-1.5" onClick={() => folderInputRef.current?.click()} disabled={!selectedFolderId} title="Upload folder">
+                          <FolderUp className="h-3.5 w-3.5" /><span className="text-xs hidden lg:inline">Folder</span>
+                        </Button>
+                      )}
+                    </>
+                  )}
                   {canManageThis && (
-                    <Button size="sm" variant="outline" className="h-8 gap-1.5" onClick={() => folderInputRef.current?.click()} disabled={!selectedFolderId} title="Upload folder">
-                      <FolderUp className="h-3.5 w-3.5" /><span className="text-xs hidden lg:inline">Folder</span>
+                    <Button size="sm" variant="outline" className="h-8 gap-1.5" onClick={() => { setNewFolderName(''); setNewFolderOpen(true); }}>
+                      <FolderPlus className="h-3.5 w-3.5" /><span className="text-xs hidden md:inline">New folder</span>
                     </Button>
                   )}
+                  {canManageThis && selectedFolder && !selectedFolder.is_system && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button size="icon" variant="ghost" className="h-8 w-8" title="Folder actions"><MoreVertical className="h-4 w-4" /></Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => { setRenameTarget({ kind: 'folder', id: selectedFolder.id, name: selectedFolder.name }); setRenameValue(selectedFolder.name); }}>
+                          <Pencil className="h-3.5 w-3.5 mr-2" />Rename folder
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="text-destructive" onClick={() => setDeleteTarget({ kind: 'folder', id: selectedFolder.id, name: selectedFolder.name })}>
+                          <Trash2 className="h-3.5 w-3.5 mr-2" />Delete folder
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
                 </>
-              )}
-              {canManageThis && (
-                <Button size="sm" variant="outline" className="h-8 gap-1.5" onClick={() => { setNewFolderName(''); setNewFolderOpen(true); }}>
-                  <FolderPlus className="h-3.5 w-3.5" /><span className="text-xs hidden md:inline">New folder</span>
-                </Button>
-              )}
-              {canManageThis && selectedFolder && !selectedFolder.is_system && (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button size="icon" variant="ghost" className="h-8 w-8" title="Folder actions"><MoreVertical className="h-4 w-4" /></Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => { setRenameTarget({ kind: 'folder', id: selectedFolder.id, name: selectedFolder.name }); setRenameValue(selectedFolder.name); }}>
-                      <Pencil className="h-3.5 w-3.5 mr-2" />Rename folder
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="text-destructive" onClick={() => setDeleteTarget({ kind: 'folder', id: selectedFolder.id, name: selectedFolder.name })}>
-                      <Trash2 className="h-3.5 w-3.5 mr-2" />Delete folder
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
               )}
             </div>
           </div>
