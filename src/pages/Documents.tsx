@@ -467,6 +467,40 @@ export default function Documents() {
   const [deleteTarget, setDeleteTarget] = useState<{ kind: 'folder' | 'doc'; id: string; name: string; doc?: DocumentRow } | null>(null);
   const [dragOver, setDragOver] = useState(false);
 
+  // ---- Drag-to-move (file rows → folder tree) ----
+  const [draggedIds, setDraggedIds] = useState<string[] | null>(null);
+  const [dragOverFolderId, setDragOverFolderId] = useState<string | null>(null);
+
+  const startRowDrag = (e: React.DragEvent, doc: DocumentRow) => {
+    if (!canManageThis || viewingTrash) return;
+    const ids = selectedIds.has(doc.id) ? Array.from(selectedIds) : [doc.id];
+    setDraggedIds(ids);
+    e.dataTransfer.effectAllowed = 'move';
+    try { e.dataTransfer.setData('text/plain', ids.join(',')); } catch { /* noop */ }
+  };
+  const endRowDrag = () => { setDraggedIds(null); setDragOverFolderId(null); };
+
+  const canDropOnFolder = (f: FolderRow): boolean => {
+    if (!draggedIds || draggedIds.length === 0) return false;
+    if (!canManageThis) return false;
+    // Don't allow dropping on the current folder (no-op)
+    if (f.id === selectedFolderId) return false;
+    return true;
+  };
+
+  const handleFolderDrop = async (f: FolderRow) => {
+    if (!draggedIds || !canDropOnFolder(f)) { endRowDrag(); return; }
+    const ids = draggedIds;
+    setDragOverFolderId(null);
+    setDraggedIds(null);
+    const { error } = await supabase.from('documents').update({ folder_id: f.id } as any).in('id', ids);
+    if (error) { toast({ title: 'Move failed', description: error.message, variant: 'destructive' }); return; }
+    setSelectedIds(new Set());
+    qc.invalidateQueries({ queryKey: ['documents', projectId] });
+    qc.invalidateQueries({ queryKey: ['folder-counts', projectId] });
+    toast({ title: `Moved ${ids.length} file${ids.length === 1 ? '' : 's'} to ${f.name}` });
+  };
+
   const openVersions = async (doc: DocumentRow) => {
     if (!projectId) return;
     setVersionsFor(doc);
