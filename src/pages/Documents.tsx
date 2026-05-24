@@ -5,12 +5,17 @@ import {
   ArrowLeft, FolderTree, Folder, FolderOpen, FilePlus, FolderPlus, Upload, Download,
   Pencil, Trash2, MoreVertical, ChevronRight, ChevronDown, History, Lock, FileText, Image as ImageIcon,
   Move, Loader2, Search, Eye, X, CheckCircle2, AlertCircle, Plus, FileUp, Star,
-  ArrowUpDown, ArrowUp, ArrowDown, RotateCcw, FolderUp, Hammer, ClipboardList,
+  ArrowUpDown, ArrowUp, ArrowDown, RotateCcw, FolderUp, Hammer, ClipboardList, Undo2,
 } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { ToastAction } from '@/components/ui/toast';
 
 import { useAuth } from '@/hooks/useAuth';
-import { useFolders, useDocuments, fetchDocumentVersions, type FolderRow, type DocumentRow } from '@/hooks/useDocuments';
+import {
+  useFolders, useDocuments, fetchDocumentVersions, useTrash, useUploaderProfiles,
+  type FolderRow, type DocumentRow,
+} from '@/hooks/useDocuments';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
