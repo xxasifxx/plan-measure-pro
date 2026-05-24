@@ -1,38 +1,69 @@
-## Documents UI — what's inadequate
+## Plan — finish the Documents workspace, in order
 
-Walked the page top-to-bottom against the project memory (mobile-first, contextual toolbar, FAB pattern, blueprint aesthetic) and the actual user flows for a construction PM/inspector. Grouping findings by severity. **Nothing below is implemented yet** — pick what to build.
+Three remaining items from the prior assessment. I'll build them in this sequence so each one stands alone and can be reviewed before the next.
 
-### Tier 1 — broken or missing for the core workflow
+---
 
-1. **No file preview.** Clicking a file just downloads it. PMs and inspectors expect to click a PDF/photo and view it inline (lightbox for images, embedded pdf.js for PDFs). Without this, every glance at an RFI or photo is a download round-trip.
-2. **No "Upload new version" action on a file row.** The schema supports `replaces_document_id` and the badge shows `v2`, but the UI has no way to actually push a new version of an existing file. Versioning is dead weight.
-3. **Mobile is half-built.** Tree is `hidden md:flex`, so on 390px wide you only get the Select dropdown. There's no "New folder" button on mobile, no breadcrumb, no drop zone (drag-drop is desktop-only), and the page doesn't use the project's bottom-tab + FAB pattern that every other field surface uses. Inspectors live on tablets/phones — this is the wrong surface for them right now.
-4. **Locked folders are still clickable and look identical to writable ones.** Inspector taps "Plans", sees a toolbar with no Upload, no explanation in the empty state. The lock icon is 12px and easy to miss. Needs a clearer disabled state and the inline "Read-only for your role" notice should appear in the empty state too, not just below the toolbar.
-5. **No multi-select / bulk actions.** Can't select 12 photos and download/move/delete them. PMs cleaning up will hate this.
+### 1. Drag-to-move (file rows → folder tree)
 
-### Tier 2 — friction that compounds
+**Goal:** PMs can grab a file row (or several selected rows) and drop it on any folder in the left tree to move it. Inspectors don't get this — read-only on non-uploadable folders stays enforced.
 
-6. **No search inside Documents.** No filename search, no filter by uploader, type, or date. Folders with 200 daily-report PDFs become unusable.
-7. **No sort.** Table headers aren't sortable. Default order isn't even documented in the UI.
-8. **No upload progress per file.** Single spinner on the Upload button. Drop 8 files of 40 MB each and the user has no idea what's happening or what failed.
-9. **Drag-to-move is missing.** Move is dialog-only (`Select` → pick folder). Folder tree on the left is a natural drop target — should accept dragged file rows.
-10. **No "Set as active plan" from Documents.** Legacy plan PDF is surfaced with the "Active plan" badge, but a PM who uploads a revised plan into Plans/ can't promote it to be the takeoff source from here. They have to go back to project setup. That breaks the whole point of putting Plans in the new workspace.
-11. **Folder tree shows no counts or sizes.** "Photos (148)" is a basic affordance and it's missing.
-12. **Uploaded-by shows only timestamp.** No avatar, no name. Audit trail is invisible at a glance.
+**Behavior**
+- Each file row becomes `draggable`. If the row is part of the current multi-select, dragging moves the whole selection; otherwise just that row.
+- Folder tree nodes become drop targets. On `dragover` the hovered folder gets a highlighted ring + background tint; the current folder and any folder the user lacks write access to reject the drop (cursor = `not-allowed`, no highlight).
+- On drop: call existing `moveDocument` mutation per file (already in `useDocuments`), then invalidate. Toast: "Moved N file(s) to {folder}".
+- Mobile: skipped — touch drag is unreliable; the existing Move dialog stays the mobile path.
 
-### Tier 3 — polish
+**Files**
+- `src/pages/Documents.tsx` — add `onDragStart` on rows, `onDragOver`/`onDrop` on tree nodes, a `dragOverFolderId` state for the highlight.
 
-13. **Header is sparse.** Just Back + title + access badge. No quick-jump to Takeoff / Daily Report / Pay Items for this project (those are one click away on Index — Documents should mirror).
-14. **Empty state is generic.** Could show the `KIND_HINTS` copy as guidance + a primary "Upload first file" CTA instead of two greyed lines.
-15. **System folders only differ by icon color.** A subtle "SYSTEM" pill or tooltip would clarify why some have no Delete.
-16. **Toolbar wraps awkwardly at ~700px.** Breadcrumb, Upload, New folder, kebab all compete for one row. Needs an overflow menu at smaller widths.
-17. **No folder-upload support.** `webkitdirectory` would let PMs drop a whole "Submittals/2026-05" folder in one shot — common in real workflows.
-18. **No drag indicator / drop highlight on the folder tree** when dragging files toward it.
-19. **Versions dialog is read-only.** Can view chain, can't download an older version or restore it as current.
-20. **Deletes are permanent, no undo, no trash folder.** Risky for a system that's now the source of truth for an audit trail.
+---
 
-### Recommended first build cut
+### 2. Uploader metadata (avatar + name on every row)
 
-If you want the biggest unlock in one pass, I'd do **1, 2, 3, 4, 6, 8, 10** — preview, new-version upload, real mobile layout with bottom-tab + FAB, clearer locked state, search, per-file progress, and "Set as active plan." That converts Documents from "file dump" into the actual document hub the construction-data-transformation flow needs.
+**Goal:** Replace the bare timestamp in the "Uploaded" column with `<avatar> Name · relative time`, so the audit trail is legible at a glance. Versions dialog gets the same treatment.
 
-Tell me which tiers (or which specific numbers) to take into the next build, and I'll write the implementation plan.
+**Approach**
+- Add a `useProjectMembers(projectId)` helper (or extend `useDocuments`) that pulls `profiles` (id, full_name, email) for every distinct `uploaded_by` in the current folder + version chains. RLS already lets project creators read profiles; for inspectors we'll fall back to "Team member" if a name isn't visible.
+- Build initials from `full_name` (or email local-part) for the `AvatarFallback`. No avatar image field exists today, so initials only — clean and consistent.
+- Row layout: small (24px) avatar, name in `text-sm`, timestamp in `text-xs text-muted-foreground` underneath, stacked. Keeps column compact.
+
+**Files**
+- `src/hooks/useDocuments.ts` — export a small `useUploaderProfiles(ids)` hook, or inline the query in the page.
+- `src/pages/Documents.tsx` — swap the timestamp cell; reuse in the Versions dialog list.
+
+---
+
+### 3. Trash / undo (soft delete with restore)
+
+**Goal:** Deletes go to a Trash bin instead of being permanent. PMs can restore or empty. Inspectors can't see Trash.
+
+**Schema change (migration)**
+- Add `deleted_at timestamptz null` and `deleted_by uuid null` to `documents`.
+- Add `deleted_at timestamptz null`, `deleted_by uuid null` to `document_folders` (optional — keeps folder deletes recoverable too).
+- Update RLS for `documents`:
+  - SELECT policy unchanged (members still see rows), but the page query filters `deleted_at IS NULL` by default.
+  - Add UPDATE policy so PMs/admins can set/clear `deleted_at` (already covered by existing "PMs manage documents" ALL policy).
+- No destructive DROP; the existing hard-delete code path is replaced with an UPDATE setting `deleted_at = now()`.
+
+**UI**
+- Tree gains a virtual "Trash" node at the bottom (PM/admin only) with a count badge. Selecting it shows all soft-deleted docs for the project across folders, with the original folder shown in a column.
+- Each trashed row gets **Restore** (clears `deleted_at`, returns to original folder) and **Delete forever** (the current hard delete: storage `remove` + row `delete`).
+- Header action: **Empty Trash** (confirm dialog).
+- Replace the current single-delete and bulk-delete with soft delete. Toast: "Moved to Trash" with an **Undo** action that calls restore inline (5s).
+- Storage blobs stay in place while in Trash; only "Delete forever" / "Empty Trash" remove them.
+
+**Files**
+- New migration: add columns, no policy churn beyond what's listed.
+- `src/hooks/useDocuments.ts` — `softDeleteDocument`, `restoreDocument`, `hardDeleteDocument`, `useTrash(projectId)` query, filter main query by `deleted_at IS NULL`.
+- `src/pages/Documents.tsx` — Trash node in tree, Trash view, undo toast wiring.
+
+---
+
+### Order of execution
+
+1. **Drag-to-move** — frontend only, no schema. Ship first.
+2. **Uploader metadata** — frontend + one small profiles query.
+3. **Trash/undo** — migration + hook + UI; biggest change, lands last so the earlier two are already in users' hands.
+
+Approve and I'll build #1, then pause for the OK before moving to #2 and #3 — or say "all three" and I'll chain them.
