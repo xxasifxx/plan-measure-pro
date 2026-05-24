@@ -354,6 +354,21 @@ export default function Dashboard() {
                       {project.member_count}
                     </span>
                   )}
+                  {(() => {
+                    const pending = pendingCounts.data?.get(project.id) ?? 0;
+                    if (pending === 0) return null;
+                    return (
+                      <span
+                        role="button"
+                        onClick={e => { e.stopPropagation(); navigate('/re-review'); }}
+                        className="flex items-center gap-1 px-1.5 py-0.5 rounded border border-amber-500/40 bg-amber-500/10 text-amber-400 font-mono text-[10px] tracking-wider hover:bg-amber-500/20"
+                        title="Open RE review queue"
+                      >
+                        <ShieldCheck className="h-3 w-3" />
+                        {pending} pending
+                      </span>
+                    );
+                  })()}
                 </div>
 
                 {/* Footer: role badge + details */}
