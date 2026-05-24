@@ -15,7 +15,7 @@ import {
 import {
   HardHat, Plus, LogOut, Sun, Moon, FileText, Clock, PenTool,
   Trash2, FolderOpen, Loader2, AlertCircle, Shield, HelpCircle, Users,
-  ChevronDown, ChevronUp, Ruler, LayoutDashboard,
+  ChevronDown, ChevronUp, Ruler, LayoutDashboard, ShieldCheck,
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
@@ -31,7 +31,7 @@ const ROLE_STYLES: Record<string, string> = {
 };
 
 export default function Dashboard() {
-  const { user, profile, isManager, isAdmin, signOut, roles } = useAuth();
+  const { user, profile, isManager, isAdmin, isResidentEngineer, signOut, roles } = useAuth();
   const { projects, isLoading, createProject, deleteProject } = useProjects();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -201,6 +201,11 @@ export default function Dashboard() {
           <Button variant="ghost" size="icon" className="h-9 w-9" onClick={toggleTheme}>
             {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
+          {(isResidentEngineer || isAdmin || isManager) && (
+            <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => navigate('/re-review')} title="RE Review Queue">
+              <ShieldCheck className="h-4 w-4" />
+            </Button>
+          )}
           {isAdmin && (
             <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => navigate('/admin')} title="Admin Panel">
               <Shield className="h-4 w-4" />
