@@ -1,119 +1,159 @@
+# End-to-end pipeline: Inspector takeoff → RE approval → P6 XML export
 
-# Full RE-approved daily report workflow
+What follows is a reconciliation of the **stated design** and **what the code actually does today**. The codebase is patchwork; where the code is silent or contradictory, I describe the logical user activity and flag the gap.
 
-Stop shipping one slice at a time. This plan closes the entire loop: inspector drafts → submits → RE reviews → approves/rejects → downstream consumers (PM dashboard, exports, P6) only ever see approved numbers. Plus the audit trail, notifications, resubmission, and the role/seeding gaps that make the existing RE screen unreachable for most users.
+---
 
-## 1. Inspector submission flow (the missing half)
+## Stage 1 — Inspector does the takeoff
 
-Build a real "Daily Report" experience instead of relying on whatever silently exists today.
+**Pages/files:** `src/pages/Index.tsx`, `src/components/PdfCanvas.tsx`, `src/components/MobileToolbar.tsx`, table `public.annotations`.
 
-- **`src/pages/DailyReport.tsx`** (new, route `/project/:projectId/daily-report`): inspector picks a `report_date` (defaults to today), sees a live preview of the snapshot that *would* be submitted — grouped by pay item, with delta, prior approved cumulative, new cumulative, % of contract. Notes field. Status badge: Draft / Submitted / Approved / Rejected (with RE's reject reason inline if rejected).
-- **`src/lib/daily-report-snapshot.ts`** (new): `buildDailyReportSnapshot(projectId, inspectorId, date)` — pulls inspector's `annotations` whose `created_at::date = report_date`, groups by `pay_item_id`, sums `measurement` + `manual_quantity`, reads prior approved cumulative from `v_approved_pay_item_quantities`, returns the `SnapshotItem[]` shape `useReReviewQueue` already consumes.
-- **Submit action**: upsert `daily_reports` row (`status='draft'`), then UPDATE → `status='submitted'`, `snapshot=<built>`, `submitted_at=now()`. The status trigger handles timestamps.
-- **Resubmit after reject**: button "Reopen & Edit" sets `status='draft'`, clears reject fields (RLS already allows owner to update from `rejected`). Then user re-edits annotations, hits Submit again — new snapshot overwrites old.
-- **Lock UI on submitted/approved**: annotations for that date are still editable in the takeoff tool, but the daily-report page shows a banner "Submitted — edits won't change the submitted snapshot" so inspector isn't confused.
-- **Entry points**: add a "Daily Report" button on `Index.tsx` (project takeoff page) header and on `Dashboard.tsx` project card, visible to inspectors and PMs.
+**Logical user activity**
+1. Inspector opens a project, the contract PDF loads, scale or GPS is already calibrated by the PM.
+2. They pick the active pay item from the sidebar (or mobile sheet), draw a polygon/line/count/point, optionally enter depth or a manual quantity override, add notes/location/station.
+3. Each shape inserts one row into `annotations` with `user_id = auth.uid()`, normalized coordinates (scale: 1), and a server `created_at`.
 
-## 2. RE Review screen — finish what's there
+**What the code actually does**
+- `annotations` has no per-row status, no `report_date`, and no link to a daily report. The only thing that "becomes part of a day" is the row's `created_at` UTC timestamp.
+- RLS lets the author do everything to their own rows forever; other project members can only read.
 
-- **Audit history**: load `daily_report_comments` for each card; render a collapsible "History" section showing RE reject reasons + inspector replies, oldest first.
-- **Inspector reply box** on rejected reports (inspector-only): writes to `daily_report_comments` so the RE can see context before the resubmit.
-- **Diff vs prior submission**: when a report was rejected and resubmitted, show `Δ from previous submission` per pay item (compare current `snapshot` to the most recent `daily_report_comments` JSON archive — see §3).
-- **Bulk actions**: "Approve all visible" with confirm dialog for REs with multiple same-day inspector reports.
-- **Filters**: inspector dropdown, date range, search by pay item code.
-- **Empty/loading/error states**: already present, but add skeleton rows and a "No RE role assigned to anyone on this project — assign one in Team" CTA when the queue is empty *and* no project member has the role.
-- **Sidebar link**: add "RE Review" entry in `ProjectSidebar.tsx`, gated on `isResidentEngineer || isAdmin || isProjectCreator`.
+**Gap vs narrative**
+- "Submitted" only ever exists at the daily-report level. An inspector can edit yesterday's annotation tonight and it will silently change yesterday's preview if yesterday's report is still draft (and silently do nothing if it's already submitted).
 
-## 3. Snapshot archive on resubmit
+---
 
-When inspector reopens a rejected report, before flipping to `draft`, archive the existing snapshot:
+## Stage 2 — Inspector compiles a Daily Report
 
-- Insert a row into `daily_report_comments` with `body = '__snapshot_archive__' || jsonb` (or add a dedicated `daily_report_snapshots` table — see Technical Notes for the call). This preserves "what the RE rejected" for the diff view and for audit/legal.
+**Pages/files:** `src/pages/DailyReport.tsx`, `src/hooks/useDailyReport.ts`, `src/lib/daily-report-snapshot.ts`, table `public.daily_reports`.
 
-## 4. Downstream consumers — actually use the approved-only view
+**Logical user activity**
+1. At the end of shift, inspector opens `/project/:projectId/daily-report`. The date picker defaults to today (local).
+2. The page shows a "live preview" rolling up everything they drew today into pay-item lines: today's delta, prior approved cumulative, new cumulative, % of contract.
+3. They review, then hit **Submit for RE Review**. The snapshot is frozen and the row flips `draft → submitted`.
+4. If the RE later rejects it, they fix annotations and resubmit; the prior frozen snapshot is archived for audit.
 
-Right now `v_approved_pay_item_quantities` exists but nothing reads from it. Wire it up:
+**What the code actually does**
+- One `daily_reports` row per `(project_id, user_id, report_date)`.
+- `buildDailyReportSnapshot` fetches `pay_items`, that inspector's `annotations` where `created_at` falls in the UTC day window of `dateISO`, plus the approved view for prior dates. `annotationQty` applies unit conversion (manual override > count=1 > SF×depth → CY > SF→SY > raw).
+- `submit` calls `buildDailyReportSnapshot` again, writes it to `snapshot`, then flips status to `submitted`. For a rejected row it first flips `rejected → draft` (which fires the snapshot-archive trigger on the rejected payload) and then `draft → submitted`.
+- Trigger `daily_reports_status_transition` enforces the state machine and stamps `submitted_at` / `approved_at` / `rejected_at` / clears prior review fields. `daily_reports_status_side_effects` archives prior snapshots on reopen and writes notifications.
 
-- **`src/lib/export-utils.ts`**: cumulative quantities and progress % must come from `v_approved_pay_item_quantities`, not raw `annotations`. Inspector-only export keeps raw annotations (their working tally), but the "Owner Report" / contract progress export is approved-only with a clear footer note.
-- **`src/pages/Dashboard.tsx` PM metrics**: project completion %, pay-item burn-down, inspector activity — switch to the view. Add a small "Pending RE review: N reports" chip per project card.
-- **`src/lib/p6xml/apply-progress.ts`**: replace the TODO comment with a real `loadApprovedQuantities(projectId)` helper that queries the view and feeds `applyProgress`. Add a unit test that an unapproved annotation does *not* move a P6 activity's `PercentComplete`.
-- **`src/pages/ProjectControls.tsx`** (if it shows cumulative): same swap.
+**Gaps vs narrative**
+- **UTC day bucketing.** `dateISO` comes from a local `<input type="date">` but the annotations query uses `created_at` between `dateISO T00:00:00Z` and `T23:59:59Z`. An East‑Coast inspector working past 7–8 pm sees today on the picker, but those annotations have already rolled into tomorrow UTC. Common-sense fix later: filter on a project-local day, or stamp a deliberate `work_date` on each annotation.
+- **Snapshot staleness signal is missing.** After submit, editing the underlying annotations does not invalidate the submitted snapshot and the inspector gets no visual cue.
+- **Same-day cross-inspector blind spot.** `prior_cumulative` filters `report_date < dateISO`. If two inspectors work the same pay item on the same day, neither sees the other in their preview; after both are approved, the approved view sums them correctly.
+- **Empty-day submit is blocked.** `submit` throws when the snapshot has zero lines, so an inspector cannot file a "nothing happened today" record.
 
-## 5. Roles, seeding, and access
+---
 
-The RE screen is currently unreachable for almost everyone:
+## Stage 3 — Notifications fan out to REs
 
-- **`src/components/TeamManager.tsx`**: add `resident_engineer` to the role dropdown when adding/editing project members, and surface it in the member list with a badge.
-- **`src/pages/Admin.tsx`**: allow admins to grant/revoke the `resident_engineer` app role on any user.
-- **`assign_owner_role` RPC**: no change — first user stays admin. But add a one-time backfill insert (via migration) that gives the current admin the `resident_engineer` role too, so the queue is testable out of the box.
-- **`useAuth`**: already exposes `isResidentEngineer` — confirm `ReReview` and the new sidebar link use it consistently.
+**Pages/files:** trigger `daily_reports_status_side_effects`, `src/hooks/useNotifications.ts`, `src/components/NotificationBell.tsx`.
 
-## 6. Notifications (lightweight, in-app only)
+**Logical user activity**
+- The moment a report is submitted, every project member with the `resident_engineer` role gets a bell notification linking to the report.
+- On approve/reject, the inspector gets a notification linking back to their daily report page.
 
-No email infra yet — keep it in-app:
+**What the code actually does**
+- Trigger inserts into `notifications` for each RE member on submit, and one notification to the inspector on approve/reject. `notifications` has no INSERT policy by design — only the SECURITY DEFINER trigger writes.
+- `NotificationBell` polls/subscribes and routes both `report_submitted` and `report_approved/rejected` to `/project/:id/daily-report` (not `/re-review`).
 
-- New `notifications` table (`user_id`, `kind`, `payload jsonb`, `read_at`, `created_at`) with RLS scoped to `auth.uid() = user_id`.
-- Triggers on `daily_reports` status changes:
-  - `submitted` → insert one row per project member with `resident_engineer` role.
-  - `approved` / `rejected` → insert one row for the report's `user_id` (inspector).
-- Bell icon in the Dashboard header with unread count + a popover list; clicking an item routes to `/re-review` or `/project/:id/daily-report`.
+**Gap vs narrative**
+- An RE clicking a "report submitted" notification lands on their *own* daily-report page for that project, not on the queue card for the submitting inspector. Logical user expectation: deep-link to `/re-review?report=<id>`. Today it doesn't.
 
-## 7. Tests
+---
 
-- **`src/test/daily-report-snapshot.test.ts`** — snapshot building handles: no annotations, mixed `measurement` + `manual_quantity`, multiple pay items, prior approved cumulative present/absent.
-- **`src/test/re-review.test.ts`** — state machine transitions (draft→submitted→approved, submitted→rejected→draft), reject requires reason, RE-only update rights.
-- **`src/test/approved-quantities-view.test.ts`** — pending and rejected snapshots excluded; approved sums correctly across multiple days/inspectors.
-- **`src/test/p6xml-approved-only.test.ts`** — `applyProgress` driven by the view ignores pending work.
+## Stage 4 — RE reviews and decides
 
-## 8. UX polish (small but worth doing in one pass)
+**Pages/files:** `src/pages/ReReview.tsx`, `src/hooks/useReReviewQueue.ts`, `src/components/ReReviewCard.tsx`, `src/components/ReRejectDialog.tsx`, tables `daily_reports`, `daily_report_comments`, `daily_report_snapshots`.
 
-- Toast on successful submit with link "View in RE queue" (visible only if the user can see it).
-- Color-code status everywhere consistently: draft=muted, submitted=warning, approved=success, rejected=destructive — define tokens in `index.css` if missing.
-- Mobile pass on `/re-review` cards (currently desktop-first; REs review in the field too).
-- Empty-state CTA on `DailyReport.tsx` when inspector has no annotations for the date: "Open takeoff tool to add measurements."
+**Logical user activity**
+1. RE opens `/re-review`, picks a project, filters by status / inspector / date range.
+2. Each card shows the frozen snapshot (item, delta, prior, new cumulative, % of contract), comment thread, and any archived prior snapshots from earlier reject cycles for diffing.
+3. RE either approves (singly or bulk over the visible queue) or rejects with a written reason. Reject auto-posts a "Rejected: …" comment.
 
-## Out of scope (explicit)
+**What the code actually does**
+- `useApproveReport` / `useBulkApproveReports` simply `update daily_reports set status='approved'`. The trigger handles `approved_at`/`approved_by` stamping.
+- `useRejectReport` requires a reason, updates status + `reject_reason`, then inserts the audit comment.
 
-- Per-pay-item approve/reject (already decided against).
-- PDF generation of signed DCR.
-- Email notifications.
-- Realtime push (Supabase realtime channel) — can add later; polling on focus is fine for v1.
-- Multi-RE co-sign workflow.
+**Gaps vs narrative**
+- **PM (project creator) can silently approve via DB.** The Approve/Reject buttons in the UI are gated on `isResidentEngineer || isAdmin`, but the RLS policy *"Project creator updates report"* allows any update — including `status='approved'` — by `projects.created_by`. The "RE-only" gate is therefore UI-only. Pick one: either tighten RLS so only `resident_engineer` (+project member) can transition to `approved`, or accept that the PM is a valid approver and relax the UI.
+- **No "request changes without rejecting"** path. Comments exist but adding a comment does not change status; an inspector won't see a notification for a plain comment, only for reject. Common-sense user activity (RE wants to ping the inspector to clarify station numbers without rejecting the whole day) is unsupported today.
+- **Approval re-derivation is intentionally absent.** Once approved, the snapshot is what it was at submit time — even if annotations have changed since. That's the right audit behavior; stating it because the rest of the app would mislead you into expecting recomputation.
 
-## Technical notes
+---
 
-- **Archive table vs comments hack**: prefer a dedicated `daily_report_snapshots` table (`daily_report_id`, `snapshot jsonb`, `archived_at`, `archived_reason`) over stuffing JSON into `daily_report_comments.body`. Cleaner queries, no string-prefix sniffing. New migration adds it with RLS mirroring `daily_reports`.
-- **Notification trigger**: `SECURITY DEFINER` + `SET search_path = public`, fan-out via `INSERT … SELECT user_id FROM user_roles WHERE role='resident_engineer'` — keep it bounded; if the project later has many REs we revisit.
-- **View performance**: `v_approved_pay_item_quantities` is fine as a plain view at current volumes. If it shows up in slow queries, swap to a materialized view refreshed on `daily_reports` status change via trigger.
-- **RLS for `daily_report_snapshots`**: project members SELECT; INSERT only by the report's owner during the reopen flow (or via the trigger that fires on status leaving `rejected`).
-- **No edits to `src/integrations/supabase/types.ts`** — regenerated after migration.
+## Stage 5 — Approved view becomes the single source of truth
 
-## File map
+**Pages/files:** view `public.v_approved_pay_item_quantities`, `src/lib/approved-quantities.ts`, `src/lib/export-utils.ts`.
 
-Create:
-- `src/pages/DailyReport.tsx`
-- `src/lib/daily-report-snapshot.ts`
-- `src/components/DailyReportPreview.tsx`
-- `src/components/NotificationBell.tsx`
-- `src/hooks/useNotifications.ts`
-- `src/hooks/useDailyReport.ts`
-- `src/test/daily-report-snapshot.test.ts`
-- `src/test/re-review.test.ts`
-- `src/test/approved-quantities-view.test.ts`
-- `src/test/p6xml-approved-only.test.ts`
-- Migrations: `daily_report_snapshots` table + RLS, `notifications` table + RLS + triggers, admin backfill of RE role.
+**Logical user activity**
+- Anything "official" — PM dashboard totals, CSV/PDF exports, P6 round‑trip — must read only RE‑approved quantities so unreviewed inspector work cannot leak into contract reporting.
 
-Edit:
-- `src/App.tsx` — add `/project/:projectId/daily-report` route.
-- `src/pages/Index.tsx` — "Daily Report" button.
-- `src/pages/Dashboard.tsx` — pending-review chip, notification bell, switch metrics to approved view.
-- `src/pages/ReReview.tsx` — history, diff, bulk approve, filters, mobile polish.
-- `src/components/ReReviewCard.tsx` — comments thread, diff badges.
-- `src/components/ProjectSidebar.tsx` — RE Review nav link.
-- `src/components/TeamManager.tsx` — `resident_engineer` role option.
-- `src/pages/Admin.tsx` — RE role grant.
-- `src/lib/export-utils.ts` — approved-only cumulative.
-- `src/lib/p6xml/apply-progress.ts` — real `loadApprovedQuantities`.
-- `src/hooks/useReReviewQueue.ts` — comments fetch, archive on reopen.
-- `src/index.css` — status color tokens if missing.
+**What the code actually does**
+- The view `CROSS JOIN LATERAL`s `daily_reports.snapshot` filtered to `status='approved'`, exposing per-pay-item delta and new_cumulative per date.
+- `loadApprovedTotalsByPayItem` powers dashboard badges and the approved CSV/PDF helpers.
+- `exportApprovedCsv`, `exportApprovedPdfReport`, `exportApprovedInspectorDaily` are wired into `Index.tsx` so the main toolbar's official exports never touch raw `annotations`.
 
+**Gaps vs narrative**
+- `exportApprovedInspectorDaily` writes a "no approved report" notice if the day isn't approved yet — meaning an inspector can't export their own pending day for personal records.
+- The approved CSV/PDF's "Count" column is meaningless (synthetic `1` per pay item); only delta/cumulative are trustworthy in approved exports.
+
+---
+
+## Stage 6 — Push approved work back into Primavera P6
+
+**Pages/files:** `src/lib/p6xml/{parser,apply-progress,serializer,load-approved,types}.ts`, `src/pages/P6XmlDemo.tsx`.
+
+**Logical user activity (the intent)**
+1. PM downloads the contractor's PMXML from P6 ("Update existing project" baseline).
+2. PM opens a "Generate P6 XML" page for their project, uploads the PMXML.
+3. The app loads all RE‑approved daily reports through `asOfDate` (or all-time), groups them by P6 Activity Id, and mutates each `<Activity>` node to set Status / PhysicalPercentComplete / RemainingDuration, plus ActualStart on first activity, ActualFinish on completion, and the project DataDate to the latest report date.
+4. PM downloads the mutated XML and imports it back into P6.
+
+**What the code actually does**
+- `applyDailyReportsToP6(tables, approvedReports)` does exactly the DOM mutations above. Math: per activity, `ratio = lastCumulative / contractQty`; if `>= 1` → Completed, else In Progress with `pct = round(min(99, max(1, ratio*100)),1)` and `remain = planned*(1-pct/100)`. ActualStart = first report's date, DataDate = latest report's date (all stamped at `T07:00:00`, no timezone).
+- `loadApprovedDailyReports(projectId)` strictly queries the approved view, so the helper is "approved‑only" by construction.
+
+**Gaps vs narrative**
+1. **The P6 page is still a demo.** `P6XmlDemo` is initialized with `SAMPLE_DAILY_REPORTS` and `SAMPLE_P6_XML`. It has no `projectId` binding and never calls `loadApprovedDailyReports`. So in production today the P6 export is decorative — no real approved data reaches it.
+2. **No pay-item → P6 activity mapping is persisted.** `loadApprovedDailyReports` defaults `activityIdForItemCode = identity`, i.e. it assumes the P6 Activity Id literally equals the NJTA item code like `201-0006`. Real PMXMLs use schedule activity IDs (e.g. `A1010`), so the join `activitiesById.get(activityId)` will silently return undefined and the loop `continue`s — yielding an XML where nothing changed and an empty change log. The schema has `activity_pay_items` and `schedule_activities` tables that would carry this mapping, but no UI populates them and `load-approved.ts` ignores them.
+3. **One activity ↔ one pay item assumption.** `applyDailyReportsToP6` keys by `activityId` only. An activity backed by several pay items, or a pay item that feeds several activities, isn't representable.
+4. **Completion is inferred, not asserted.** `isComplete` is always set to `false` and the apply step infers completion from `ratio >= 1`. A small over-quantity on the last day flips the activity to Completed and zeros remaining duration. There is no explicit "inspector/RE marks activity complete" channel.
+5. **Date semantics.** `T07:00:00` is hard-coded with no timezone suffix — fine for round-tripping in the same client locale, brittle for cross-tz contractors.
+
+---
+
+## End-to-end reality, in one diagram
+
+```text
+annotations (mutable, no status)
+   │   filter: same inspector, created_at within UTC day of dateISO
+   ▼
+daily_reports.snapshot   ── frozen JSON on submit, archived on reopen-after-reject
+   │   state machine: draft → submitted → approved | rejected; rejected → draft
+   │   RLS lets RE-role members AND project creators flip status (UI gates only REs/Admins)
+   ▼
+v_approved_pay_item_quantities (status='approved' only)
+   ├─► dashboards & pending-review badges            ✅ wired
+   ├─► approved CSV / PDF / inspector-daily exports  ✅ wired (Index.tsx)
+   └─► loadApprovedDailyReports → applyDailyReportsToP6 → P6 PMXML
+       ⚠ helper is correct & approved-only
+       ⚠ but the only caller is the SAMPLE demo page; no production UI binds it
+         to a real projectId, and identity item_code→ActivityId mapping will
+         match nothing in a real contractor schedule
+```
+
+---
+
+## Issues you'll likely want to fix in priority order
+
+1. **Wire P6 export to real data.** Replace the sample-only `/p6-xml` route with a per-project page that calls `loadApprovedDailyReports(projectId, { asOfDate, activityIdForItemCode })`, accepts a PMXML upload, shows the change log, downloads the mutated XML.
+2. **Persist the pay-item → activity crosswalk.** Use `activity_pay_items` + `schedule_activities` (already in the schema) with a small mapping UI, and pass that mapper into `loadApprovedDailyReports`.
+3. **Decide who can approve.** Tighten RLS so only `resident_engineer` project members can set `status='approved'`, OR show Approve/Reject to PMs in the UI. Today the two layers disagree.
+4. **Honest day boundaries.** Either bucket annotations by a project-local date or add an explicit `work_date` column on `annotations`. Same fix removes the East‑Coast-evening data loss.
+5. **Surface snapshot drift.** When the inspector edits annotations after submit, show a "preview no longer matches submitted snapshot — reopen to refresh" banner.
+6. **Deep-link RE notifications** to the relevant `/re-review` card, not the inspector's own daily-report page.
+7. **Allow zero-activity submissions** and **let inspectors export their own pending day** for personal records.
+
+These are the gaps; once you confirm priorities I'll plan the actual fixes.
