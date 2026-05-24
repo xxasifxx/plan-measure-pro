@@ -577,9 +577,24 @@ export default function Documents() {
                 <>
                   <input ref={fileInputRef} type="file" multiple className="hidden"
                     onChange={(e) => { if (e.target.files) handleUpload(e.target.files); e.target.value = ''; }} />
+                  <input
+                    ref={folderInputRef}
+                    type="file"
+                    multiple
+                    /* @ts-expect-error non-standard but widely supported */
+                    webkitdirectory=""
+                    directory=""
+                    className="hidden"
+                    onChange={(e) => { if (e.target.files) handleUpload(e.target.files); e.target.value = ''; }}
+                  />
                   <Button size="sm" className="h-8 gap-1.5" onClick={() => fileInputRef.current?.click()} disabled={!selectedFolderId}>
                     <Upload className="h-3.5 w-3.5" /><span className="text-xs">Upload</span>
                   </Button>
+                  {canManageThis && (
+                    <Button size="sm" variant="outline" className="h-8 gap-1.5" onClick={() => folderInputRef.current?.click()} disabled={!selectedFolderId} title="Upload folder">
+                      <FolderUp className="h-3.5 w-3.5" /><span className="text-xs hidden lg:inline">Folder</span>
+                    </Button>
+                  )}
                 </>
               )}
               {canManageThis && (
@@ -604,6 +619,26 @@ export default function Documents() {
               )}
             </div>
           </div>
+
+          {/* Bulk action bar */}
+          {selectedIds.size > 0 && (
+            <div className="flex items-center gap-2 px-3 py-2 border-b border-border bg-primary/10">
+              <span className="text-xs font-mono">{selectedIds.size} selected</span>
+              <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={() => setSelectedIds(new Set())}>
+                <X className="h-3.5 w-3.5 mr-1" />Clear
+              </Button>
+              <div className="flex-1" />
+              <Button size="sm" variant="outline" className="h-7 gap-1.5" onClick={bulkDownload}>
+                <Download className="h-3.5 w-3.5" /><span className="text-xs">Download</span>
+              </Button>
+              {canManageThis && (
+                <Button size="sm" variant="destructive" className="h-7 gap-1.5" onClick={() => setBulkDeleteOpen(true)}>
+                  <Trash2 className="h-3.5 w-3.5" /><span className="text-xs">Delete</span>
+                </Button>
+              )}
+            </div>
+          )}
+
 
           {/* Folder hint / locked banner */}
           {selectedFolder?.system_kind && KIND_HINTS[selectedFolder.system_kind] && (
