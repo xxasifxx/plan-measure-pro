@@ -1177,16 +1177,24 @@ export default function Documents() {
           <div className="space-y-2 max-h-80 overflow-y-auto">
             {versions.length === 0 ? <p className="text-xs text-muted-foreground">Loading…</p> : versions.map((v, i) => {
               const head = versions[0];
+              const prof = uploaderProfiles[v.uploaded_by];
+              const initials = initialsOf(prof?.full_name, prof?.email);
+              const name = displayName(prof);
               return (
                 <div key={v.id} className="flex items-center gap-2 text-xs border border-border rounded p-2">
-                  <Badge variant={i === 0 ? 'default' : 'outline'} className="text-[10px]">v{v.version}{i === 0 && ' · current'}</Badge>
-                  <span className="font-mono truncate flex-1">{v.name}</span>
-                  <span className="text-muted-foreground font-mono hidden sm:inline">{new Date(v.created_at).toLocaleString()}</span>
-                  <Button size="icon" variant="ghost" className="h-6 w-6" title="Download" onClick={() => handleDownload(v)}>
+                  <Badge variant={i === 0 ? 'default' : 'outline'} className="text-[10px] shrink-0">v{v.version}{i === 0 && ' · current'}</Badge>
+                  <Avatar className="h-6 w-6 shrink-0">
+                    <AvatarFallback className="text-[9px] font-mono bg-muted text-muted-foreground">{initials}</AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-mono truncate">{name}</div>
+                    <div className="text-[10px] text-muted-foreground font-mono truncate">{relativeTime(v.created_at)} · {new Date(v.created_at).toLocaleString()}</div>
+                  </div>
+                  <Button size="icon" variant="ghost" className="h-6 w-6 shrink-0" title="Download" onClick={() => handleDownload(v)}>
                     <Download className="h-3.5 w-3.5" />
                   </Button>
                   {canManageThis && i > 0 && head && (
-                    <Button size="icon" variant="ghost" className="h-6 w-6" title="Restore as current" onClick={() => restoreVersion(v, head)}>
+                    <Button size="icon" variant="ghost" className="h-6 w-6 shrink-0" title="Restore as current" onClick={() => restoreVersion(v, head)}>
                       <RotateCcw className="h-3.5 w-3.5" />
                     </Button>
                   )}
