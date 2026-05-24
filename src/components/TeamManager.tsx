@@ -11,6 +11,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
 import { Users, Trash2, UserPlus, Loader2, Search } from 'lucide-react';
+import { useConfirm } from '@/components/ConfirmDialog';
 
 interface TeamManagerProps {
   open: boolean;
