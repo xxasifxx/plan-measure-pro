@@ -952,16 +952,24 @@ export default function Documents() {
             <DialogTitle>Versions of {versionsFor?.name}</DialogTitle>
           </DialogHeader>
           <div className="space-y-2 max-h-80 overflow-y-auto">
-            {versions.length === 0 ? <p className="text-xs text-muted-foreground">Loading…</p> : versions.map((v, i) => (
-              <div key={v.id} className="flex items-center gap-2 text-xs border border-border rounded p-2">
-                <Badge variant={i === 0 ? 'default' : 'outline'} className="text-[10px]">v{v.version}{i === 0 && ' · current'}</Badge>
-                <span className="font-mono truncate flex-1">{v.name}</span>
-                <span className="text-muted-foreground font-mono">{new Date(v.created_at).toLocaleString()}</span>
-                <Button size="icon" variant="ghost" className="h-6 w-6" onClick={() => handleDownload(v)}>
-                  <Download className="h-3.5 w-3.5" />
-                </Button>
-              </div>
-            ))}
+            {versions.length === 0 ? <p className="text-xs text-muted-foreground">Loading…</p> : versions.map((v, i) => {
+              const head = versions[0];
+              return (
+                <div key={v.id} className="flex items-center gap-2 text-xs border border-border rounded p-2">
+                  <Badge variant={i === 0 ? 'default' : 'outline'} className="text-[10px]">v{v.version}{i === 0 && ' · current'}</Badge>
+                  <span className="font-mono truncate flex-1">{v.name}</span>
+                  <span className="text-muted-foreground font-mono hidden sm:inline">{new Date(v.created_at).toLocaleString()}</span>
+                  <Button size="icon" variant="ghost" className="h-6 w-6" title="Download" onClick={() => handleDownload(v)}>
+                    <Download className="h-3.5 w-3.5" />
+                  </Button>
+                  {canManageThis && i > 0 && head && (
+                    <Button size="icon" variant="ghost" className="h-6 w-6" title="Restore as current" onClick={() => restoreVersion(v, head)}>
+                      <RotateCcw className="h-3.5 w-3.5" />
+                    </Button>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </DialogContent>
       </Dialog>
