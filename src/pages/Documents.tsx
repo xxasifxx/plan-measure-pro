@@ -1195,11 +1195,13 @@ export default function Documents() {
       <Dialog open={!!deleteTarget} onOpenChange={(o) => !o && setDeleteTarget(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete {deleteTarget?.kind === 'folder' ? 'folder' : 'file'}?</DialogTitle>
+            <DialogTitle>
+              {deleteTarget?.kind === 'folder' ? 'Delete folder?' : 'Move file to Trash?'}
+            </DialogTitle>
             <DialogDescription>
               {deleteTarget?.kind === 'folder'
-                ? `This cannot be undone. The folder must be empty.`
-                : `This cannot be undone. "${deleteTarget?.name}" will be permanently removed.`}
+                ? `This cannot be undone. The folder must be empty before it can be deleted.`
+                : `"${deleteTarget?.name}" will be moved to Trash. You can restore it from the Trash folder until it is permanently removed.`}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -1219,7 +1221,7 @@ export default function Documents() {
                   deleteDocument.mutate(deleteTarget.doc, { onSuccess: () => setDeleteTarget(null) });
                 }
               }}
-            >Delete</Button>
+            >{deleteTarget?.kind === 'folder' ? 'Delete' : 'Move to Trash'}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -1228,12 +1230,30 @@ export default function Documents() {
       <Dialog open={bulkDeleteOpen} onOpenChange={setBulkDeleteOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete {selectedIds.size} file{selectedIds.size === 1 ? '' : 's'}?</DialogTitle>
-            <DialogDescription>This cannot be undone.</DialogDescription>
+            <DialogTitle>Move {selectedIds.size} file{selectedIds.size === 1 ? '' : 's'} to Trash?</DialogTitle>
+            <DialogDescription>
+              These files will be moved to Trash and can be restored from the Trash folder until permanently removed.
+            </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="ghost" onClick={() => setBulkDeleteOpen(false)}>Cancel</Button>
-            <Button variant="destructive" onClick={runBulkDelete}>Delete {selectedIds.size}</Button>
+            <Button variant="destructive" onClick={runBulkDelete}>Move {selectedIds.size} to Trash</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Empty Trash confirm */}
+      <Dialog open={emptyTrashOpen} onOpenChange={setEmptyTrashOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Empty Trash?</DialogTitle>
+            <DialogDescription>
+              {trash.length} file{trash.length === 1 ? '' : 's'} will be permanently deleted. This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setEmptyTrashOpen(false)}>Cancel</Button>
+            <Button variant="destructive" onClick={runEmptyTrash}>Delete forever</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
