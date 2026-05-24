@@ -137,13 +137,59 @@ export default function Documents() {
     !!selectedFolder && (selectedFolder.system_kind === 'photos' || selectedFolder.system_kind === 'daily_reports');
   const canUploadHere = canManageThis || inspectorCanUploadHere;
 
-  // ---- Search ----
+  // ---- Folder file counts (one query for the project) ----
+  const folderCountsQuery = useQuery({
+    queryKey: ['folder-counts', projectId],
+    enabled: !!projectId,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('documents')
+        .select('folder_id, replaces_document_id, id')
+        .eq('project_id', projectId!);
+      if (error) throw error;
+      const rows = (data as any[]) ?? [];
+      const replaced = new Set(rows.map(r => r.replaces_document_id).filter(Boolean));
+      const counts: Record<string, number> = {};
+      for (const r of rows) {
+        if (replaced.has(r.id)) continue;
+        counts[r.folder_id] = (counts[r.folder_id] ?? 0) + 1;
+      }
+      return counts;
+    },
+  });
+  const folderCounts = folderCountsQuery.data ?? {};
+
+  // ---- Search + Sort ----
   const [search, setSearch] = useState('');
+  const [sortBy, setSortBy] = useState<'name' | 'size' | 'date'>('date');
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
+  const toggleSort = (key: 'name' | 'size' | 'date') => {
+    if (sortBy === key) setSortDir(d => d === 'asc' ? 'desc' : 'asc');
+    else { setSortBy(key); setSortDir(key === 'name' ? 'asc' : 'desc'); }
+  };
   const filteredDocs = useMemo(() => {
-    if (!search.trim()) return documents;
-    const q = search.toLowerCase();
-    return documents.filter(d => d.name.toLowerCase().includes(q));
-  }, [documents, search]);
+    const q = search.trim().toLowerCase();
+    const base = q ? documents.filter(d => d.name.toLowerCase().includes(q)) : documents.slice();
+    base.sort((a, b) => {
+      let c = 0;
+      if (sortBy === 'name') c = a.name.localeCompare(b.name);
+      else if (sortBy === 'size') c = (a.size_bytes ?? 0) - (b.size_bytes ?? 0);
+      else c = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+      return sortDir === 'asc' ? c : -c;
+    });
+    return base;
+  }, [documents, search, sortBy, sortDir]);
+
+  // ---- Multi-select ----
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  useEffect(() => { setSelectedIds(new Set()); }, [selectedFolderId]);
+  const toggleSel = (id: string) => setSelectedIds(prev => {
+    const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n;
+  });
+  const allSelected = filteredDocs.length > 0 && filteredDocs.every(d => selectedIds.has(d.id));
+  const toggleAll = () => setSelectedIds(allSelected ? new Set() : new Set(filteredDocs.map(d => d.id)));
+  const selectedDocs = useMemo(() => filteredDocs.filter(d => selectedIds.has(d.id)), [filteredDocs, selectedIds]);
+
 
   // ---- Upload queue with per-file progress ----
   const [uploadQueue, setUploadQueue] = useState<UploadItem[]>([]);
