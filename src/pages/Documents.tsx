@@ -198,9 +198,10 @@ export default function Documents() {
     if (sortBy === key) setSortDir(d => d === 'asc' ? 'desc' : 'asc');
     else { setSortBy(key); setSortDir(key === 'name' ? 'asc' : 'desc'); }
   };
+  const sourceDocs = viewingTrash ? trash : documents;
   const filteredDocs = useMemo(() => {
     const q = search.trim().toLowerCase();
-    const base = q ? documents.filter(d => d.name.toLowerCase().includes(q)) : documents.slice();
+    const base = q ? sourceDocs.filter(d => d.name.toLowerCase().includes(q)) : sourceDocs.slice();
     base.sort((a, b) => {
       let c = 0;
       if (sortBy === 'name') c = a.name.localeCompare(b.name);
@@ -209,7 +210,13 @@ export default function Documents() {
       return sortDir === 'asc' ? c : -c;
     });
     return base;
-  }, [documents, search, sortBy, sortDir]);
+  }, [sourceDocs, search, sortBy, sortDir]);
+
+  // ---- Uploader profile lookup ----
+  const uploaderIds = useMemo(() => Array.from(new Set(filteredDocs.map(d => d.uploaded_by))), [filteredDocs]);
+  const uploaderProfilesQuery = useUploaderProfiles(uploaderIds);
+  const uploaderProfiles = uploaderProfilesQuery.data ?? {};
+  const folderById = useMemo(() => new Map(folders.map(f => [f.id, f])), [folders]);
 
   // ---- Multi-select ----
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
