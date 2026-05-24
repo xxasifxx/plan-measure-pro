@@ -1,26 +1,50 @@
-# Finish Documents polish + UI/UX pass
+# Apply Documents UI/UX fixes + broader functionality review
 
-## 1. Single-file delete confirmation copy
-Update the per-row delete confirm dialog in `src/pages/Documents.tsx` to clearly say the file is moving to Trash (recoverable for now), not permanently deleted. Mirror wording for the bulk delete confirm so they're consistent. No logic change.
+## Part A — Apply the UI/UX fixes (Documents page)
 
-## 2. Empty Trash confirmation dialog
-Currently "Empty Trash" hard-deletes immediately. Add an AlertDialog before `hardDeleteDocument` loops, naming the file count and warning the action is permanent and irreversible. Same component pattern as existing bulk delete dialog. Frontend only.
+All changes in `src/pages/Documents.tsx` unless noted. No schema, no new deps.
 
-## 3. Uploader avatars in Versions dialog
-The Versions dialog lists historical rows with timestamp + version number only. Add the uploader avatar + display name beside each version row, reusing `useUploaderProfiles`, `initialsOf`, `displayName`, and `relativeTime` helpers already added in `Documents.tsx`. No new query — the profiles map already covers these user IDs.
+1. **Folder tree polish**
+   - Trash node: amber accent on icon + count badge when `trash.length > 0`; muted when empty.
+   - Drop target highlight: brighten ring to `ring-2 ring-primary` and add `bg-primary/10` while `dragOverFolderId === node.id`.
 
-## 4. UI/UX review pass
-After 1-3 ship, walk the Documents page at desktop (1440) and mobile (390) viewports:
-- Folder tree: spacing, counts alignment, Trash node styling vs regular folders, drop-target highlight contrast.
-- File table: sort header affordance, checkbox column width, uploader column truncation, action button density.
-- Bulk action bar: sticky offset, contrast on dark/light surfaces, mobile wrap behavior.
-- Trash view: clear visual distinction from normal folder view, restore/delete-forever button hierarchy.
-- Mobile FAB: doesn't overlap bulk bar; folder selector readable.
-- Empty states for: no folders, empty folder, empty trash.
+2. **File table polish**
+   - Sortable headers: always render a faint chevron (up/down/neutral) beside Name / Size / Uploaded; add `title` tooltip.
+   - Checkbox column: fixed `w-8 shrink-0`.
+   - Uploader column: collapse to single line `Name · 3m ago` below `md`; full two-line stack at `md+`.
 
-Capture screenshots, list concrete issues, and propose fixes in a follow-up (no code in this step).
+3. **Bulk action bar**
+   - Bump background to `bg-primary/15` with `border-b border-primary/30` for contrast on dark navy.
+   - Below `lg`, hide button label spans, keep icons only; keep "X selected" + Clear text visible.
+
+4. **Trash view distinction**
+   - Persistent amber strip above the table when `viewingTrash`: "Viewing Trash — items can be restored or permanently deleted." with Trash2 icon.
+   - Table wrapper gets a subtle dashed `border-amber-500/30` while in Trash.
+
+5. **Distinct empty states**
+   - No folders at all: "No folders yet — create one to start organizing project documents."
+   - Empty regular folder: existing copy.
+   - Empty Trash: "Trash is empty. Deleted files will appear here for recovery."
+
+6. **Versions dialog uploader resolution**
+   - Extend `useUploaderProfiles` call to also include uploader IDs from the currently-open `versions` list (merge into the `uploaderIds` memo when `versionsFor` is set), so historical version rows show real names instead of "Unknown".
+
+## Part B — Functionality review pass (read-only)
+
+After fixes ship, walk through the live app end-to-end as Admin / PM / Inspector and report a single consolidated findings list (no code in this step). Areas to inspect:
+
+- **Auth & onboarding**: signup → role assignment → invitation acceptance → first-project landing.
+- **Project setup**: PDF upload, calibration, TOC parsing, pay items import, standard specs link-up.
+- **Takeoff workflow**: tool auto-activation by unit, annotation creation/edit/reassign, geometric vertex editing, undo/redo, real-time sync.
+- **Documents (just polished)**: upload, folder ops, versions, trash/restore, drag-to-move, mobile FAB.
+- **Daily reports**: draft → submit → RE approve/reject → withdraw; quantity overrides; Excel export.
+- **Field mode**: GPS calibration, mobile annotation bottom sheet, status chip shortcuts.
+- **Admin Panel**: user/role/project assignment, demo requests inbox.
+- **Cross-cutting**: 404s, broken links, console errors, network failures, slow queries, role-gated empty states.
+
+Deliverable: a categorized findings list (Critical / High / Medium / Low) with file/route references and a recommended next-step list. The user decides what to fix.
 
 ## Technical notes
-- All changes in `src/pages/Documents.tsx`; helpers/hooks already exist in `src/hooks/useDocuments.ts`.
-- No schema, no new dependencies.
-- AlertDialog component already imported.
+
+- Part A edits are isolated to `src/pages/Documents.tsx`; uploader merge needs the `versionsFor` state already in scope.
+- Part B uses code reading + browser navigation; no migrations or writes.
