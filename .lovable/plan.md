@@ -1,86 +1,98 @@
-## Problem with current /fajar page
 
-- Pricing reads as enterprise: **AED 95K–145K build + AED 6K–9K/month**. For an SMB equipment rental shop competing on margin, this kills the pitch on first read.
-- Page is heavy on abstract animated mocks (status grids, phone bubbles) but light on **what the actual delivered product looks like** — no realistic site screenshots, no proof of the customer-facing experience.
-- Marketing narrative is thin on the real value driver: **low fleet vacancy via SEO tuned to how UAE rental customers actually search** (Google → "excavator rental Jebel Ali", WhatsApp click, price visible).
+# P6 XML round-trip for inspector-driven progress updates
 
-## Goals of this revision
+Extend the MCFA pitch and the existing XER toolkit so the scheduler can ingest a Primavera **P6 XML (PMXML)** baseline, auto-apply progress derived from RE-approved daily reports, and export a PMXML update Oracle P6 can re-import — eliminating the manual "type each Activity %, Actual Start, Actual Finish into P6" pass.
 
-1. **Reprice for an SMB on margin** — frame as a small upfront + low monthly, paid back by 1–2 extra rental days/month.
-2. **Add realistic product screenshots** — generate AI images of the proposed customer-facing site (fleet listing page, machine detail page with live availability, mobile booking flow, admin dashboard, WhatsApp agent thread) and showcase them in proper device frames.
-3. **Lead with vacancy reduction**, not "enterprise platform." Reframe copy around how rental customers in the UAE research → decide → book.
-4. Tighten the pitch so it reads like a proposal to an owner-operator, not a CIO.
+## How P6 XML actually works (research summary)
 
-## Changes to `src/pages/FajarPitch.tsx`
+Oracle ships two interchange formats; we already handle XER, this adds the XML one:
 
-### 1. Pricing section (rewrite)
+- **File**: `PMXML` (a.k.a. *Primavera XML* / *P6 XML*). Single `<APIBusinessObjects>` root, schema versioned per P6 release (e.g. `Business_Objects_22_12.xsd`). Same format P6 Professional, EPPM, and Primavera Cloud use for project import/export.
+- **Relevant elements** (subset we need):
+  - `<Project>` — `Id`, `Name`, `DataDate`, `PlannedStartDate`, `MustFinishByDate`
+  - `<WBS>` — `Id`, `Name`, `ParentObjectId`
+  - `<Activity>` — `Id` (=task_code), `ObjectId`, `Name`, `Type` (`Task Dependent`, `Resource Dependent`, `Milestone`...), `Status` (`Not Started` / `In Progress` / `Completed`), `PercentCompleteType` (`Physical` | `Duration` | `Units`), `PhysicalPercentComplete`, `DurationPercentComplete`, `ActualStartDate`, `ActualFinishDate`, `RemainingDuration`, `AtCompletionDuration`, `PlannedDuration`, `PrimaryConstraintType`, `PrimaryConstraintDate`
+  - `<Relationship>` — `PredecessorActivityObjectId`, `SuccessorActivityObjectId`, `Type` (`Finish to Start`...), `Lag`
+  - `<ResourceAssignment>` — `ActualRegularUnits`, `RemainingUnits`, `ActualStartDate`, `ActualFinishDate` (optional; lets quantities flow into earned-value)
+- **Update semantics**: re-importing into P6 with "Update existing project" matches activities by `Id` (Activity ID) within the target Project Id. P6 then recalculates dates on the next schedule run; we don't need to recompute CPM ourselves.
+- **Day vs hour**: XML uses **hours** for durations (consistent with XER `*_hr_cnt`). Dates are ISO `YYYY-MM-DDTHH:mm:ss`.
 
-Replace the two AED 95K–145K / 6K–9K cards with a three-tier SMB-friendly structure:
+We do **not** need Oracle SDKs, the EPPM REST API, or web services — pure browser-side XML read/write is sufficient and matches our existing "no IT integration" positioning.
 
-| Tier | One-time | Monthly | Who it's for |
-|------|----------|---------|--------------|
-| **Starter** — site + live availability + SEO foundation | AED 14,500 | AED 1,200 | Get found on Google, show what's available |
-| **Growth** *(recommended)* — Starter + WhatsApp maintenance agent + admin dashboard | AED 24,000 | AED 1,900 | Stop double-bookings, automate the group chat |
-| **Full** — Growth + WhatsApp customer-booking agent + Arabic site + GBP + monthly SEO content | AED 38,000 | AED 2,800 | Convert WhatsApp DMs into bookings 24/7 |
+## Scope
 
-Add an ROI line under the table: *"At an average AED 1,800/day rental, the Growth plan pays for itself with 1.5 extra rental-days per month."*
+This is a **pitch-page deliverable plus a working in-browser prototype** of the XML round-trip, mirroring the existing XER demo pattern. No backend, no auth changes, no Oracle credentials.
 
-Remove the "indicative — final scope after discovery" hedging language; replace with a clean "Pay monthly, cancel any time after month 6. Code and data are yours."
+### 1. Parsing & serialization library (`src/lib/p6xml/`)
 
-### 2. New section: "What your site will actually look like"
-
-Insert a new section between the WhatsApp demo (section 5) and the SEO section (current 6). Title: **"This is what your customers will see."**
-
-Five realistic screenshots in a horizontally-scrolling gallery on mobile, 2-column grid on desktop, each in a device frame (browser chrome for desktop shots, phone frame for mobile shots) with a one-line caption:
-
-1. **Desktop fleet listing page** — grid of machine cards with photo, daily rate, "Available now / Available 16 Jun" status pill, category filters in sidebar. Caption: *"Customers see exactly what's free, with prices."*
-2. **Desktop machine detail page** — large hero photo of CAT 320, specs table, 14-day availability calendar, "Reserve via WhatsApp" CTA, related machines. Caption: *"One page per machine — Google's favorite kind of content."*
-3. **Mobile booking flow** — phone-frame screenshot of the same detail page on mobile, then the WhatsApp handoff. Caption: *"60% of UAE rental searches are mobile. We design for that."*
-4. **Admin dashboard** — fleet status overview, today's bookings, maintenance queue, revenue/utilization tile. Caption: *"You see vacancy at a glance, on phone or laptop."*
-5. **Google search result mock** — SERP showing their listing with rich snippet (price, availability, 4.8★). Caption: *"Tuned to how UAE customers actually search."*
-
-**How the screenshots are produced:** generate them with the `google/gemini-3.1-flash-image-preview` model via a one-off script writing PNGs to `public/fajar/`, then `<img>` them in the page. Prompts include realistic UAE construction equipment branding, AED pricing, dark/light theme matching the proposal, real machine model names (CAT 320, BOMAG BW 213, Tadano GR-300). No screenshots saved to `/mnt/documents/` — they live in the project's `public/` folder so they ship with the page.
-
-### 3. Reframe hero + problem section around vacancy
-
-- Hero H1 changes from *"Stop losing rentals to phone tag."* → **"Cut fleet vacancy. Win the Google search before the phone rings."**
-- Hero sub: rewrite to lead with *"Rental customers in the UAE Google → tap WhatsApp → decide in under 5 minutes. Most equipment rental sites lose them at step one because they don't show what's available or what it costs."*
-- Problem cards (currently 3): keep structure but rewrite to:
-  1. *"Customers can't see availability — so they call your competitor too."* (with a small stat: "76% of UAE B2B buyers research online before contacting a vendor — Google/Bain GCC SME study")
-  2. *"Group-chat maintenance updates get buried — and you double-book broken machines."*
-  3. *"Your site doesn't rank for 'excavator rental Dubai' — your competitors' do."*
-
-### 4. New section: "How rental customers actually research" (between problem and live calendar)
-
-A 4-step horizontal flow with small illustrative thumbnails:
-
-```text
-Google search → SERP click → Site (price+availability) → WhatsApp booking
-"crane hire        Your listing      One-tap            Auto-reserved
- Abu Dhabi"        with rich          "Reserve via       in your fleet
-                   snippet            WhatsApp"          DB
+```
+src/lib/p6xml/
+  types.ts         # P6Project, P6Activity, P6Relationship, P6Wbs, P6ResourceAssignment
+  parser.ts        # parseP6Xml(xmlText): P6Tables — DOMParser, namespace-aware
+  serializer.ts    # serializeP6Xml(tables, opts): string — round-trips through XMLSerializer
+  apply-progress.ts# applyDailyReportsToP6(tables, reports, dataDate): {tables, changeLog}
+  sample.ts        # tiny embedded PMXML for the demo (no external file needed)
 ```
 
-Caption: *"Every step you lose a customer is a vacant machine-day. We engineer for zero drop-off."*
+Parser/serializer goals:
+- Preserve unknown elements/attributes on round-trip (read once into a generic node tree, mutate only the fields we touch). This is how we guarantee P6 still accepts the file.
+- Whitelist the editable fields above; everything else is passed through verbatim.
+- Detect schema version from the root attribute and write it back unchanged.
 
-### 5. Tighten copy throughout
+### 2. Daily-report → activity mapping
 
-- Replace "platform", "engine", "operations" framing with concrete owner-operator language: *"your fleet"*, *"your group chat"*, *"your Friday bookings"*.
-- Drop "Proposal for Fajar Al Mustaqbal General Trading & Cont. LLC · UAE" → soften to *"Prepared for Fajar Al Mustaqbal Equipment Rental"*.
-- Roadmap: keep 12-week structure but rename phases to outcome-led: *Phase 1: Get found*, *Phase 2: Stop double-bookings*, *Phase 3: Book in your sleep*.
-- FAQ: add one entry — *"We're a small business. Is this overkill?"* with answer about the Starter tier and 1.5-day payback.
+`DailyReport` (reusing the inspector record shape already implied by the takeoff side) carries:
+`{ date, activityIdOrTag, quantityInstalled, unitOfMeasure, isComplete, notes, approvedByRE: true }`.
 
-### 6. Out of scope
+`applyDailyReportsToP6` rules:
+1. Match by `Activity.Id`. If the inspector tags by pay item, fall back to an activity-code map the PM configures once per project.
+2. If `ActualStartDate` is empty and any approved report exists → set `ActualStartDate` = earliest approved report date, set `Status` = `In Progress`.
+3. If `isComplete` (or cumulative quantity ≥ contract quantity) → set `ActualFinishDate` = report date, `Status` = `Completed`, `RemainingDuration` = 0, `PhysicalPercentComplete` = 100.
+4. Otherwise → update `PhysicalPercentComplete` = `cumulativeQty / contractQty`, recompute `RemainingDuration` = `PlannedDuration * (1 - pct)`, leave `AtCompletionDuration` unchanged unless the inspector reports an overrun.
+5. Bump project `DataDate` to the latest approved report date.
+6. Emit a `changeLog` (one row per touched activity) for the PM's review screen.
 
-- No backend changes, no auth, no DB.
-- No new dependencies.
-- No edits to other routes.
-- WhatsApp Business API is not actually wired — still a pitch.
+### 3. UI: XML round-trip demo on the MCFA pitch
+
+Add a new section to `src/pages/McfaPitch.tsx` between the existing "Progress vs Baseline" and the next module:
+
+- **Kicker**: `0X · P6 XML ROUND-TRIP` (insert and renumber subsequent kickers, following the same pattern used previously).
+- **Three-pane flow** (animated, similar to existing XerLensTour visuals):
+  1. *Drop baseline PMXML* — file input or "Use sample" button (uses `sample.ts`).
+  2. *Approved daily reports* — a mock table of 6–8 RE-approved rows the PM would otherwise type into P6.
+  3. *Updated PMXML out* — preview of the changeLog (activity, old %, new %, ΔRemainingDuration, new Actual dates) plus a "Download `<ProjectId>_update.xml`" button.
+- **Copy** emphasising the click-savings: "Today a PM hand-keys ~40 activity updates per project per month into P6. With approved daily reports as the source of truth, one upload reproduces the same edits and re-imports cleanly."
+- A small "Compatible with" badge row: *P6 Professional 22.x · EPPM · Primavera Cloud* (all consume PMXML).
+
+### 4. Standalone demo route
+
+Add `src/pages/P6XmlDemo.tsx` and a `/p6-xml` route in `src/App.tsx`, parallel to `/xer`. This is the page the MCFA pitch CTA links into so the prospect can actually try it without a sales call.
+
+### 5. Tests
+
+`src/test/p6xml.test.ts`:
+- Round-trip: parse → serialize → parse equals original semantically.
+- `applyDailyReportsToP6` cases: not-started → in-progress, in-progress → percent bump, completion, idempotency on re-apply.
+
+## Out of scope
+
+- No EPPM REST / web-service integration (file-based only, per existing positioning).
+- No CPM recalculation — we rely on P6's scheduler after re-import.
+- No XER ↔ XML conversion utility (separate ask).
+- No DB schema changes; daily reports are mocked on the pitch page from existing inspector data shape.
+- No changes to the takeoff product's auth, RLS, or roles.
 
 ## Files
 
-- **Create**: `scripts/generate-fajar-screenshots.ts` (one-off Node script that calls Lovable AI Gateway image model, writes 5 PNGs to `public/fajar/`). Run once with `bun run scripts/generate-fajar-screenshots.ts`. After generation, the script is kept for re-runs but is not part of the build.
-- **Create**: `public/fajar/listing.png`, `public/fajar/machine-detail.png`, `public/fajar/mobile-booking.png`, `public/fajar/admin.png`, `public/fajar/serp.png` (outputs of the script).
-- **Edit**: `src/pages/FajarPitch.tsx` — rewrite hero, problem, add research-flow section, add screenshots gallery section, replace investment section, tighten copy across the page.
+- **Create**: `src/lib/p6xml/{types,parser,serializer,apply-progress,sample}.ts`
+- **Create**: `src/pages/P6XmlDemo.tsx`
+- **Create**: `src/test/p6xml.test.ts`
+- **Edit**: `src/pages/McfaPitch.tsx` (insert new section, renumber following kickers)
+- **Edit**: `src/App.tsx` (add `/p6-xml` route)
 
-No changes to `src/App.tsx`, no DB migrations, no edge functions, no new shadcn components.
+## Technical notes
+
+- Use built-in `DOMParser` / `XMLSerializer` — no new deps. PMXML files in MCFA's range (~few MB) parse comfortably client-side.
+- Namespace: PMXML uses `http://xmlns.oracle.com/Primavera/P6/V<ver>/API/BusinessObjects`; preserve it on the root element when serializing.
+- Date helpers: emit `YYYY-MM-DDTHH:mm:ss` (no timezone suffix — matches P6 export style).
+- Keep the parser tolerant of element order — P6 exports are not strictly ordered between releases.

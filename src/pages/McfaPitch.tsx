@@ -526,6 +526,67 @@ const McfaPitch = () => {
 
 
       {/* ============================================================ */}
+      {/* SECTION 3B · P6 XML ROUND-TRIP                               */}
+      {/* ============================================================ */}
+      <section className="border-b border-border/60 py-20">
+        <div className="container mx-auto px-4">
+          <SectionHeader number="03B" eyebrow="PM CLICK-REDUCTION" title="RE-Approved Daily Reports → P6 Update File" />
+          <p className="text-muted-foreground max-w-3xl mt-4">
+            Today, an inspector's daily report ends in Excel; the PM still hand-keys ~40 activity
+            actuals into Primavera P6 each month. With <span className="text-foreground">PMXML round-trip</span>,
+            once the Resident Engineer approves the day's quantities the schedule update writes itself
+            — one upload in, one P6-ready file out, and the scheduler reviews a diff before anything
+            touches the live program. Works against the same <span className="text-foreground">P6 XML</span> format
+            Oracle ships across P6 Professional 22.x, EPPM, and Primavera Cloud.
+          </p>
+
+          <div className="grid md:grid-cols-3 gap-4 mt-10">
+            <Card className="p-5 bg-card/40 border-border/60">
+              <div className="text-[11px] tracking-widest text-primary mb-3">01 · IN</div>
+              <div className="text-sm font-semibold mb-2">Contractor PMXML baseline</div>
+              <div className="text-xs text-muted-foreground leading-relaxed">
+                Single-file drop. Namespace + schema version detected (e.g.
+                Business_Objects_22_12). Every element we don't touch is preserved verbatim so
+                Oracle accepts the re-import.
+              </div>
+            </Card>
+            <Card className="p-5 bg-card/40 border-border/60">
+              <div className="text-[11px] tracking-widest text-primary mb-3">02 · APPLY</div>
+              <div className="text-sm font-semibold mb-2">Auto-translate field data → P6 fields</div>
+              <ul className="text-xs text-muted-foreground leading-relaxed space-y-1.5">
+                <li>· First approved report → <span className="text-foreground">ActualStartDate</span> + status <span className="text-foreground">In Progress</span></li>
+                <li>· Cumulative qty ÷ contract qty → <span className="text-foreground">PhysicalPercentComplete</span></li>
+                <li>· Inspector marks complete → <span className="text-foreground">ActualFinishDate</span> + 0 remaining</li>
+                <li>· Project <span className="text-foreground">DataDate</span> bumps to latest approved date</li>
+              </ul>
+            </Card>
+            <Card className="p-5 bg-card/40 border-border/60">
+              <div className="text-[11px] tracking-widest text-primary mb-3">03 · OUT</div>
+              <div className="text-sm font-semibold mb-2">P6-ready update file + diff</div>
+              <div className="text-xs text-muted-foreground leading-relaxed">
+                Download <code className="text-foreground">{'{projectId}'}_update.xml</code>, import
+                with <em>Update existing project</em>, and let P6's scheduler recalc. We don't
+                fight the CPM engine — we just stop asking the PM to retype actuals.
+              </div>
+            </Card>
+          </div>
+
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Button asChild size="lg" className="font-mono">
+              <Link to="/mcfa/p6-xml">Try the live PMXML round-trip <ArrowRight className="h-4 w-4" /></Link>
+            </Button>
+            <Button asChild size="lg" variant="outline" className="font-mono">
+              <Link to="/mcfa/demo">XerLens DCMA-14 demo <ArrowRight className="h-4 w-4" /></Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+
+
+
+
+      {/* ============================================================ */}
       {/* SECTION 4 · KPIs / ROCKS                                     */}
       {/* ============================================================ */}
       <section className="border-b border-border/60 py-20 bg-card/20">
