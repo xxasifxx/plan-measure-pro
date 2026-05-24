@@ -140,6 +140,7 @@ export type Database = {
           project_id: string
           type: string
           user_id: string
+          work_date: string
         }
         Insert: {
           created_at?: string
@@ -156,6 +157,7 @@ export type Database = {
           project_id: string
           type: string
           user_id: string
+          work_date?: string
         }
         Update: {
           created_at?: string
@@ -172,6 +174,7 @@ export type Database = {
           project_id?: string
           type?: string
           user_id?: string
+          work_date?: string
         }
         Relationships: [
           {
