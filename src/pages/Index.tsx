@@ -27,7 +27,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import type { TocEntry, PointXY } from '@/types/project';
 import type { GeoCalibration } from '@/lib/geo-transform';
-import { Sun, Moon, ArrowLeft, Loader2, HelpCircle, FileSpreadsheet, Users, MousePointer2, Navigation, FileSignature } from 'lucide-react';
+import { Sun, Moon, ArrowLeft, Loader2, HelpCircle, FileSpreadsheet, Users, MousePointer2, Navigation, FileSignature, FileCode } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { TeamManager } from '@/components/TeamManager';
@@ -766,6 +766,12 @@ const Index = () => {
                 <Button variant="ghost" size="sm" className="h-8 gap-1.5" onClick={() => navigate(`/project/${projectId}/daily-report`)} title="Daily Report">
                   <FileSignature className="h-4 w-4" />
                   <span className="hidden sm:inline text-xs">Daily Report</span>
+                </Button>
+              )}
+              {(isManager || isAdmin) && projectId && (
+                <Button variant="ghost" size="sm" className="h-8 gap-1.5" onClick={() => navigate(`/project/${projectId}/p6-export`)} title="P6 XML Export">
+                  <FileCode className="h-4 w-4" />
+                  <span className="hidden sm:inline text-xs">P6 Export</span>
                 </Button>
               )}
               {(isManager || isAdmin) && projectId && (
