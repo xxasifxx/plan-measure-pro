@@ -22,6 +22,8 @@ import { cn } from '@/lib/utils';
 import { WelcomeCarousel } from '@/components/WelcomeCarousel';
 import { GuidedTour } from '@/components/GuidedTour';
 import { NotificationBell } from '@/components/NotificationBell';
+import { useQuery } from '@tanstack/react-query';
+import { loadPendingReviewCounts } from '@/lib/approved-quantities';
 import type { TourStep } from '@/hooks/useTour';
 
 const ROLE_STYLES: Record<string, string> = {
