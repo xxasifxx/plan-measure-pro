@@ -36,6 +36,7 @@ interface SearchResult {
 
 export function TeamManager({ open, onOpenChange, projectId, projectName }: TeamManagerProps) {
   const { toast } = useToast();
+  const { confirm, dialog: confirmDialog } = useConfirm();
   const [members, setMembers] = useState<MemberInfo[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -136,7 +137,12 @@ export function TeamManager({ open, onOpenChange, projectId, projectName }: Team
   };
 
   const handleRemoveMember = async (memberId: string, name: string) => {
-    if (!confirm(`Remove ${name} from this project?`)) return;
+    const ok = await confirm({
+      title: `Remove ${name} from this project?`,
+      description: 'They will lose access to this project immediately.',
+      confirmLabel: 'Remove member',
+    });
+    if (!ok) return;
     try {
       const { error } = await supabase.from('project_members').delete().eq('id', memberId);
       if (error) throw error;
@@ -243,6 +249,7 @@ export function TeamManager({ open, onOpenChange, projectId, projectName }: Team
           </div>
         </div>
       </SheetContent>
+      {confirmDialog}
     </Sheet>
   );
 }
