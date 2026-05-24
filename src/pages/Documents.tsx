@@ -684,7 +684,9 @@ export default function Documents() {
             </div>
             {/* Breadcrumbs (desktop) */}
             <div className="hidden md:flex items-center gap-1 text-xs font-mono text-muted-foreground flex-1 min-w-0 truncate">
-              {breadcrumb.length === 0 ? <span>Select a folder</span> : breadcrumb.map((b, i) => (
+              {viewingTrash ? (
+                <span className="flex items-center gap-1.5 text-foreground font-semibold"><Trash2 className="h-3.5 w-3.5" />Trash</span>
+              ) : breadcrumb.length === 0 ? <span>Select a folder</span> : breadcrumb.map((b, i) => (
                 <span key={b.id} className="flex items-center gap-1">
                   {i > 0 && <ChevronRight className="h-3 w-3" />}
                   <button onClick={() => setSelectedFolderId(b.id)} className={cn(i === breadcrumb.length - 1 ? 'text-foreground font-semibold' : 'hover:text-foreground')}>
