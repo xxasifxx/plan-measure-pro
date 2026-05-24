@@ -469,8 +469,19 @@ export default function Documents() {
           <Badge variant="outline" className="font-mono text-[10px] tracking-wider">
             {canManageThis ? 'FULL ACCESS' : 'READ + LIMITED UPLOAD'}
           </Badge>
+          {projectId && (
+            <div className="ml-auto flex items-center gap-1">
+              <Button asChild variant="ghost" size="sm" className="h-8 gap-1.5" title="Takeoff">
+                <Link to={`/project/${projectId}`}><Hammer className="h-3.5 w-3.5" /><span className="hidden sm:inline text-xs">Takeoff</span></Link>
+              </Button>
+              <Button asChild variant="ghost" size="sm" className="h-8 gap-1.5" title="Daily Report">
+                <Link to={`/project/${projectId}/daily-report`}><ClipboardList className="h-3.5 w-3.5" /><span className="hidden sm:inline text-xs">Daily Report</span></Link>
+              </Button>
+            </div>
+          )}
         </div>
       </header>
+
 
       <main className="flex-1 max-w-[1600px] w-full mx-auto px-2 sm:px-4 py-3 sm:py-4 flex gap-4 min-h-0">
         {/* Folder tree (desktop) */}
