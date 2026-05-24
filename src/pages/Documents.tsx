@@ -248,22 +248,53 @@ export default function Documents() {
       } catch (e) { /* ignore */ }
     }
   };
-  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
-  const runBulkDelete = async () => {
-    let ok = 0, fail = 0;
-    for (const d of selectedDocs) {
-      try {
-        const { error } = await supabase.from('documents').delete().eq('id', d.id);
-        if (error) throw error;
-        await supabase.storage.from(BUCKET).remove([d.storage_path]).catch(() => {});
-        ok++;
-      } catch { fail++; }
-    }
+
+  // Soft delete (single or bulk) → toast with Undo
+  const softDeleteWithUndo = async (docs: DocumentRow[]) => {
+    if (docs.length === 0) return;
+    const stamp = new Date().toISOString();
+    const ids = docs.map(d => d.id);
+    const { error } = await supabase.from('documents')
+      .update({ deleted_at: stamp, deleted_by: user?.id ?? null } as any)
+      .in('id', ids);
+    if (error) { toast({ title: 'Move to Trash failed', description: error.message, variant: 'destructive' }); return; }
     setSelectedIds(new Set());
-    setBulkDeleteOpen(false);
     qc.invalidateQueries({ queryKey: ['documents', projectId] });
     qc.invalidateQueries({ queryKey: ['folder-counts', projectId] });
-    toast({ title: `Deleted ${ok} file${ok === 1 ? '' : 's'}`, description: fail ? `${fail} failed` : undefined, variant: fail ? 'destructive' : 'default' });
+    qc.invalidateQueries({ queryKey: ['trash', projectId] });
+    toast({
+      title: docs.length === 1 ? `Moved "${docs[0].name}" to Trash` : `Moved ${docs.length} files to Trash`,
+      action: (
+        <ToastAction altText="Undo" onClick={async () => {
+          await supabase.from('documents')
+            .update({ deleted_at: null, deleted_by: null } as any)
+            .in('id', ids);
+          qc.invalidateQueries({ queryKey: ['documents', projectId] });
+          qc.invalidateQueries({ queryKey: ['folder-counts', projectId] });
+          qc.invalidateQueries({ queryKey: ['trash', projectId] });
+        }}>Undo</ToastAction>
+      ),
+    });
+  };
+
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
+  const runBulkDelete = async () => {
+    await softDeleteWithUndo(selectedDocs);
+    setBulkDeleteOpen(false);
+  };
+
+  // Empty Trash — permanent deletion of all currently-trashed docs
+  const [emptyTrashOpen, setEmptyTrashOpen] = useState(false);
+  const runEmptyTrash = async () => {
+    if (!projectId) return;
+    const paths = trash.map(t => t.storage_path);
+    const ids = trash.map(t => t.id);
+    const { error } = await supabase.from('documents').delete().in('id', ids);
+    if (error) { toast({ title: 'Empty Trash failed', description: error.message, variant: 'destructive' }); return; }
+    if (paths.length) await supabase.storage.from(BUCKET).remove(paths).catch(() => {});
+    setEmptyTrashOpen(false);
+    qc.invalidateQueries({ queryKey: ['trash', projectId] });
+    toast({ title: `Emptied Trash · ${ids.length} file${ids.length === 1 ? '' : 's'}` });
   };
 
   // Version restore: insert a new row pointing at the older blob, replacing the current head.
