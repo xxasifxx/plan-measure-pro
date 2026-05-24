@@ -5,7 +5,10 @@ import {
   ArrowLeft, FolderTree, Folder, FolderOpen, FilePlus, FolderPlus, Upload, Download,
   Pencil, Trash2, MoreVertical, ChevronRight, ChevronDown, History, Lock, FileText, Image as ImageIcon,
   Move, Loader2, Search, Eye, X, CheckCircle2, AlertCircle, Plus, FileUp, Star,
+  ArrowUpDown, ArrowUp, ArrowDown, RotateCcw, FolderUp, Hammer, ClipboardList,
 } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
+
 import { useAuth } from '@/hooks/useAuth';
 import { useFolders, useDocuments, fetchDocumentVersions, type FolderRow, type DocumentRow } from '@/hooks/useDocuments';
 import { Button } from '@/components/ui/button';
@@ -134,19 +137,119 @@ export default function Documents() {
     !!selectedFolder && (selectedFolder.system_kind === 'photos' || selectedFolder.system_kind === 'daily_reports');
   const canUploadHere = canManageThis || inspectorCanUploadHere;
 
-  // ---- Search ----
+  // ---- Folder file counts (one query for the project) ----
+  const folderCountsQuery = useQuery({
+    queryKey: ['folder-counts', projectId],
+    enabled: !!projectId,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('documents')
+        .select('folder_id, replaces_document_id, id')
+        .eq('project_id', projectId!);
+      if (error) throw error;
+      const rows = (data as any[]) ?? [];
+      const replaced = new Set(rows.map(r => r.replaces_document_id).filter(Boolean));
+      const counts: Record<string, number> = {};
+      for (const r of rows) {
+        if (replaced.has(r.id)) continue;
+        counts[r.folder_id] = (counts[r.folder_id] ?? 0) + 1;
+      }
+      return counts;
+    },
+  });
+  const folderCounts = folderCountsQuery.data ?? {};
+
+  // ---- Search + Sort ----
   const [search, setSearch] = useState('');
+  const [sortBy, setSortBy] = useState<'name' | 'size' | 'date'>('date');
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
+  const toggleSort = (key: 'name' | 'size' | 'date') => {
+    if (sortBy === key) setSortDir(d => d === 'asc' ? 'desc' : 'asc');
+    else { setSortBy(key); setSortDir(key === 'name' ? 'asc' : 'desc'); }
+  };
   const filteredDocs = useMemo(() => {
-    if (!search.trim()) return documents;
-    const q = search.toLowerCase();
-    return documents.filter(d => d.name.toLowerCase().includes(q));
-  }, [documents, search]);
+    const q = search.trim().toLowerCase();
+    const base = q ? documents.filter(d => d.name.toLowerCase().includes(q)) : documents.slice();
+    base.sort((a, b) => {
+      let c = 0;
+      if (sortBy === 'name') c = a.name.localeCompare(b.name);
+      else if (sortBy === 'size') c = (a.size_bytes ?? 0) - (b.size_bytes ?? 0);
+      else c = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+      return sortDir === 'asc' ? c : -c;
+    });
+    return base;
+  }, [documents, search, sortBy, sortDir]);
+
+  // ---- Multi-select ----
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  useEffect(() => { setSelectedIds(new Set()); }, [selectedFolderId]);
+  const toggleSel = (id: string) => setSelectedIds(prev => {
+    const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n;
+  });
+  const allSelected = filteredDocs.length > 0 && filteredDocs.every(d => selectedIds.has(d.id));
+  const toggleAll = () => setSelectedIds(allSelected ? new Set() : new Set(filteredDocs.map(d => d.id)));
+  const selectedDocs = useMemo(() => filteredDocs.filter(d => selectedIds.has(d.id)), [filteredDocs, selectedIds]);
+
 
   // ---- Upload queue with per-file progress ----
   const [uploadQueue, setUploadQueue] = useState<UploadItem[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const mobileFileInputRef = useRef<HTMLInputElement>(null);
+  const folderInputRef = useRef<HTMLInputElement>(null);
   const newVersionInputRef = useRef<HTMLInputElement>(null);
   const [newVersionTarget, setNewVersionTarget] = useState<DocumentRow | null>(null);
+
+  // Bulk actions
+  const bulkDownload = async () => {
+    for (const d of selectedDocs) {
+      try {
+        const url = await getDownloadUrl(d);
+        // Stagger window.opens to avoid popup blocker
+        window.open(url, '_blank', 'noopener');
+        await new Promise(r => setTimeout(r, 250));
+      } catch (e) { /* ignore */ }
+    }
+  };
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
+  const runBulkDelete = async () => {
+    let ok = 0, fail = 0;
+    for (const d of selectedDocs) {
+      try {
+        const { error } = await supabase.from('documents').delete().eq('id', d.id);
+        if (error) throw error;
+        await supabase.storage.from(BUCKET).remove([d.storage_path]).catch(() => {});
+        ok++;
+      } catch { fail++; }
+    }
+    setSelectedIds(new Set());
+    setBulkDeleteOpen(false);
+    qc.invalidateQueries({ queryKey: ['documents', projectId] });
+    qc.invalidateQueries({ queryKey: ['folder-counts', projectId] });
+    toast({ title: `Deleted ${ok} file${ok === 1 ? '' : 's'}`, description: fail ? `${fail} failed` : undefined, variant: fail ? 'destructive' : 'default' });
+  };
+
+  // Version restore: insert a new row pointing at the older blob, replacing the current head.
+  const restoreVersion = async (older: DocumentRow, head: DocumentRow) => {
+    if (!projectId || !user) return;
+    const { error } = await supabase.from('documents').insert({
+      id: crypto.randomUUID(),
+      project_id: projectId,
+      folder_id: head.folder_id,
+      name: head.name,
+      storage_path: older.storage_path,
+      mime_type: older.mime_type,
+      size_bytes: older.size_bytes,
+      uploaded_by: user.id,
+      version: head.version + 1,
+      replaces_document_id: head.id,
+      source_kind: 'restore',
+    } as any);
+    if (error) { toast({ title: 'Restore failed', description: error.message, variant: 'destructive' }); return; }
+    toast({ title: `Restored v${older.version} as v${head.version + 1}` });
+    setVersionsFor(null);
+    qc.invalidateQueries({ queryKey: ['documents', projectId] });
+  };
+
 
   const runUploads = async (files: File[]) => {
     if (!projectId || !selectedFolderId || !user) return;
@@ -211,6 +314,7 @@ export default function Documents() {
       }
     }
     qc.invalidateQueries({ queryKey: ['documents', projectId] });
+    qc.invalidateQueries({ queryKey: ['folder-counts', projectId] });
     // Auto-clear completed (keep failures sticky until dismissed).
     setTimeout(() => setUploadQueue(q => q.filter(p => p.status !== 'done')), 5000);
   };
@@ -335,6 +439,9 @@ export default function Documents() {
           </button>
           <Icon className={cn('h-4 w-4 shrink-0', f.is_system && !locked ? 'text-primary' : 'text-muted-foreground')} />
           <span className="truncate flex-1 font-mono text-xs">{f.name}</span>
+          {folderCounts[f.id] > 0 && (
+            <span className="text-[10px] font-mono text-muted-foreground tabular-nums shrink-0">{folderCounts[f.id]}</span>
+          )}
           {locked && <Lock className="h-3.5 w-3.5 text-muted-foreground shrink-0" />}
         </div>
       );
@@ -363,8 +470,19 @@ export default function Documents() {
           <Badge variant="outline" className="font-mono text-[10px] tracking-wider">
             {canManageThis ? 'FULL ACCESS' : 'READ + LIMITED UPLOAD'}
           </Badge>
+          {projectId && (
+            <div className="ml-auto flex items-center gap-1">
+              <Button asChild variant="ghost" size="sm" className="h-8 gap-1.5" title="Takeoff">
+                <Link to={`/project/${projectId}`}><Hammer className="h-3.5 w-3.5" /><span className="hidden sm:inline text-xs">Takeoff</span></Link>
+              </Button>
+              <Button asChild variant="ghost" size="sm" className="h-8 gap-1.5" title="Daily Report">
+                <Link to={`/project/${projectId}/daily-report`}><ClipboardList className="h-3.5 w-3.5" /><span className="hidden sm:inline text-xs">Daily Report</span></Link>
+              </Button>
+            </div>
+          )}
         </div>
       </header>
+
 
       <main className="flex-1 max-w-[1600px] w-full mx-auto px-2 sm:px-4 py-3 sm:py-4 flex gap-4 min-h-0">
         {/* Folder tree (desktop) */}
@@ -460,9 +578,24 @@ export default function Documents() {
                 <>
                   <input ref={fileInputRef} type="file" multiple className="hidden"
                     onChange={(e) => { if (e.target.files) handleUpload(e.target.files); e.target.value = ''; }} />
+                  <input
+                    ref={folderInputRef}
+                    type="file"
+                    multiple
+                    /* @ts-expect-error non-standard but widely supported */
+                    webkitdirectory=""
+                    directory=""
+                    className="hidden"
+                    onChange={(e) => { if (e.target.files) handleUpload(e.target.files); e.target.value = ''; }}
+                  />
                   <Button size="sm" className="h-8 gap-1.5" onClick={() => fileInputRef.current?.click()} disabled={!selectedFolderId}>
                     <Upload className="h-3.5 w-3.5" /><span className="text-xs">Upload</span>
                   </Button>
+                  {canManageThis && (
+                    <Button size="sm" variant="outline" className="h-8 gap-1.5" onClick={() => folderInputRef.current?.click()} disabled={!selectedFolderId} title="Upload folder">
+                      <FolderUp className="h-3.5 w-3.5" /><span className="text-xs hidden lg:inline">Folder</span>
+                    </Button>
+                  )}
                 </>
               )}
               {canManageThis && (
@@ -487,6 +620,26 @@ export default function Documents() {
               )}
             </div>
           </div>
+
+          {/* Bulk action bar */}
+          {selectedIds.size > 0 && (
+            <div className="flex items-center gap-2 px-3 py-2 border-b border-border bg-primary/10">
+              <span className="text-xs font-mono">{selectedIds.size} selected</span>
+              <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={() => setSelectedIds(new Set())}>
+                <X className="h-3.5 w-3.5 mr-1" />Clear
+              </Button>
+              <div className="flex-1" />
+              <Button size="sm" variant="outline" className="h-7 gap-1.5" onClick={bulkDownload}>
+                <Download className="h-3.5 w-3.5" /><span className="text-xs">Download</span>
+              </Button>
+              {canManageThis && (
+                <Button size="sm" variant="destructive" className="h-7 gap-1.5" onClick={() => setBulkDeleteOpen(true)}>
+                  <Trash2 className="h-3.5 w-3.5" /><span className="text-xs">Delete</span>
+                </Button>
+              )}
+            </div>
+          )}
+
 
           {/* Folder hint / locked banner */}
           {selectedFolder?.system_kind && KIND_HINTS[selectedFolder.system_kind] && (
@@ -548,9 +701,24 @@ export default function Documents() {
               <table className="w-full text-xs">
                 <thead>
                   <tr className="text-[10px] uppercase tracking-wider text-muted-foreground border-b border-border">
-                    <th className="text-left font-medium px-4 py-2">Name</th>
-                    <th className="text-right font-medium px-3 py-2 hidden sm:table-cell">Size</th>
-                    <th className="text-left font-medium px-3 py-2 hidden md:table-cell">Uploaded</th>
+                    <th className="px-3 py-2 w-8">
+                      <Checkbox checked={allSelected} onCheckedChange={toggleAll} aria-label="Select all" />
+                    </th>
+                    <th className="text-left font-medium px-2 py-2">
+                      <button onClick={() => toggleSort('name')} className="inline-flex items-center gap-1 hover:text-foreground uppercase tracking-wider">
+                        Name {sortBy === 'name' ? (sortDir === 'asc' ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />) : <ArrowUpDown className="h-3 w-3 opacity-40" />}
+                      </button>
+                    </th>
+                    <th className="text-right font-medium px-3 py-2 hidden sm:table-cell">
+                      <button onClick={() => toggleSort('size')} className="inline-flex items-center gap-1 hover:text-foreground uppercase tracking-wider">
+                        Size {sortBy === 'size' ? (sortDir === 'asc' ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />) : <ArrowUpDown className="h-3 w-3 opacity-40" />}
+                      </button>
+                    </th>
+                    <th className="text-left font-medium px-3 py-2 hidden md:table-cell">
+                      <button onClick={() => toggleSort('date')} className="inline-flex items-center gap-1 hover:text-foreground uppercase tracking-wider">
+                        Uploaded {sortBy === 'date' ? (sortDir === 'asc' ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />) : <ArrowUpDown className="h-3 w-3 opacity-40" />}
+                      </button>
+                    </th>
                     <th className="text-right font-medium px-4 py-2 w-12"></th>
                   </tr>
                 </thead>
@@ -561,9 +729,13 @@ export default function Documents() {
                     const activeAs = canSetActive(d);
                     const activePlan = isActivePlan(d);
                     const activeSpecs = isActiveSpecs(d);
+                    const checked = selectedIds.has(d.id);
                     return (
-                      <tr key={d.id} className="border-b border-border/40 last:border-0 hover:bg-muted/20">
-                        <td className="px-4 py-2 min-w-0">
+                      <tr key={d.id} className={cn('border-b border-border/40 last:border-0 hover:bg-muted/20', checked && 'bg-primary/10')}>
+                        <td className="px-3 py-2 align-middle">
+                          <Checkbox checked={checked} onCheckedChange={() => toggleSel(d.id)} aria-label={`Select ${d.name}`} />
+                        </td>
+                        <td className="px-2 py-2 min-w-0">
                           <button onClick={() => handleOpen(d)} className="flex items-center gap-2 text-left group max-w-full">
                             <Icon className="h-4 w-4 text-muted-foreground group-hover:text-primary shrink-0" />
                             <span className="font-mono truncate group-hover:text-primary">{d.name}</span>
@@ -634,10 +806,10 @@ export default function Documents() {
       {/* Mobile FAB */}
       {showFab && (
         <>
-          <input ref={fileInputRef} type="file" multiple className="hidden sm:hidden"
+          <input ref={mobileFileInputRef} type="file" multiple className="hidden"
             onChange={(e) => { if (e.target.files) handleUpload(e.target.files); e.target.value = ''; }} />
           <button
-            onClick={() => fileInputRef.current?.click()}
+            onClick={() => mobileFileInputRef.current?.click()}
             className="sm:hidden fixed bottom-5 right-5 z-20 h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-xl flex items-center justify-center active:scale-95 transition"
             aria-label="Upload to this folder"
           >
@@ -780,16 +952,24 @@ export default function Documents() {
             <DialogTitle>Versions of {versionsFor?.name}</DialogTitle>
           </DialogHeader>
           <div className="space-y-2 max-h-80 overflow-y-auto">
-            {versions.length === 0 ? <p className="text-xs text-muted-foreground">Loading…</p> : versions.map((v, i) => (
-              <div key={v.id} className="flex items-center gap-2 text-xs border border-border rounded p-2">
-                <Badge variant={i === 0 ? 'default' : 'outline'} className="text-[10px]">v{v.version}{i === 0 && ' · current'}</Badge>
-                <span className="font-mono truncate flex-1">{v.name}</span>
-                <span className="text-muted-foreground font-mono">{new Date(v.created_at).toLocaleString()}</span>
-                <Button size="icon" variant="ghost" className="h-6 w-6" onClick={() => handleDownload(v)}>
-                  <Download className="h-3.5 w-3.5" />
-                </Button>
-              </div>
-            ))}
+            {versions.length === 0 ? <p className="text-xs text-muted-foreground">Loading…</p> : versions.map((v, i) => {
+              const head = versions[0];
+              return (
+                <div key={v.id} className="flex items-center gap-2 text-xs border border-border rounded p-2">
+                  <Badge variant={i === 0 ? 'default' : 'outline'} className="text-[10px]">v{v.version}{i === 0 && ' · current'}</Badge>
+                  <span className="font-mono truncate flex-1">{v.name}</span>
+                  <span className="text-muted-foreground font-mono hidden sm:inline">{new Date(v.created_at).toLocaleString()}</span>
+                  <Button size="icon" variant="ghost" className="h-6 w-6" title="Download" onClick={() => handleDownload(v)}>
+                    <Download className="h-3.5 w-3.5" />
+                  </Button>
+                  {canManageThis && i > 0 && head && (
+                    <Button size="icon" variant="ghost" className="h-6 w-6" title="Restore as current" onClick={() => restoreVersion(v, head)}>
+                      <RotateCcw className="h-3.5 w-3.5" />
+                    </Button>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </DialogContent>
       </Dialog>
@@ -826,6 +1006,21 @@ export default function Documents() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Bulk delete confirm */}
+      <Dialog open={bulkDeleteOpen} onOpenChange={setBulkDeleteOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete {selectedIds.size} file{selectedIds.size === 1 ? '' : 's'}?</DialogTitle>
+            <DialogDescription>This cannot be undone.</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setBulkDeleteOpen(false)}>Cancel</Button>
+            <Button variant="destructive" onClick={runBulkDelete}>Delete {selectedIds.size}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
+
