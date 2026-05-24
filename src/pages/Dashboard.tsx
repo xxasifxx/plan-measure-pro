@@ -26,6 +26,7 @@ import type { TourStep } from '@/hooks/useTour';
 const ROLE_STYLES: Record<string, string> = {
   admin: 'bg-info/15 text-info border-info/30',
   project_manager: 'bg-success/15 text-success border-success/30',
+  resident_engineer: 'bg-amber-500/15 text-amber-400 border-amber-500/30',
   inspector: 'bg-primary/15 text-primary border-primary/30',
   user: 'bg-muted text-muted-foreground border-border',
 };
