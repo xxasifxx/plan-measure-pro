@@ -438,6 +438,9 @@ export default function Documents() {
           </button>
           <Icon className={cn('h-4 w-4 shrink-0', f.is_system && !locked ? 'text-primary' : 'text-muted-foreground')} />
           <span className="truncate flex-1 font-mono text-xs">{f.name}</span>
+          {folderCounts[f.id] > 0 && (
+            <span className="text-[10px] font-mono text-muted-foreground tabular-nums shrink-0">{folderCounts[f.id]}</span>
+          )}
           {locked && <Lock className="h-3.5 w-3.5 text-muted-foreground shrink-0" />}
         </div>
       );
