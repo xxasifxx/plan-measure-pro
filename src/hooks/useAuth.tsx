@@ -81,6 +81,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isManager: hasRole('project_manager') || hasRole('admin'),
     isInspector: hasRole('inspector'),
     isAdmin: hasRole('admin'),
+    isResidentEngineer: hasRole('resident_engineer'),
     signOut,
     profile,
   };
