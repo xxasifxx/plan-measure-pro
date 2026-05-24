@@ -8,7 +8,7 @@ import {
   ArrowUpDown, ArrowUp, ArrowDown, RotateCcw, FolderUp, Hammer, ClipboardList,
 } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+
 import { useAuth } from '@/hooks/useAuth';
 import { useFolders, useDocuments, fetchDocumentVersions, type FolderRow, type DocumentRow } from '@/hooks/useDocuments';
 import { Button } from '@/components/ui/button';
