@@ -669,9 +669,14 @@ export default function Documents() {
                       </SelectItem>
                     );
                   })}
+                  {canManageThis && (
+                    <SelectItem value={TRASH_ID} className="text-xs font-mono">
+                      <span className="flex items-center gap-1.5"><Trash2 className="h-3 w-3 text-muted-foreground" />Trash{trash.length > 0 ? ` (${trash.length})` : ''}</span>
+                    </SelectItem>
+                  )}
                 </SelectContent>
               </Select>
-              {canManageThis && (
+              {canManageThis && !viewingTrash && (
                 <Button size="icon" variant="outline" className="h-8 w-8 shrink-0" onClick={() => { setNewFolderName(''); setNewFolderOpen(true); }} title="New folder">
                   <FolderPlus className="h-3.5 w-3.5" />
                 </Button>
