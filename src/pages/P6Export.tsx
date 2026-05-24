@@ -13,16 +13,25 @@ import { parseP6Xml } from '@/lib/p6xml/parser';
 import { applyDailyReportsToP6, loadApprovedDailyReports } from '@/lib/p6xml/apply-progress';
 import { downloadP6Xml } from '@/lib/p6xml/serializer';
 import type { ActivityChange, P6Tables } from '@/lib/p6xml/types';
-import { useProject } from '@/hooks/useProject';
 import { useAuth } from '@/hooks/useAuth';
 import { usePayItemActivityMap, useUpdatePayItemMapping, useBulkAutoMap } from '@/hooks/usePayItemActivityMap';
 import { toast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
 
 export default function P6Export() {
   const { projectId } = useParams<{ projectId: string }>();
   const { user } = useAuth();
-  const { project } = useProject(projectId);
+  const { data: project } = useQuery({
+    queryKey: ['project-meta', projectId],
+    enabled: !!projectId,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('projects').select('id, name, contract_number').eq('id', projectId!).maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+  });
   const { data: payItems = [], isLoading: piLoading } = usePayItemActivityMap(projectId);
   const updateMap = useUpdatePayItemMapping(projectId);
   const bulkMap = useBulkAutoMap(projectId);
