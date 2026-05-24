@@ -780,9 +780,25 @@ export default function Documents() {
               <Button size="sm" variant="outline" className="h-7 gap-1.5" onClick={bulkDownload}>
                 <Download className="h-3.5 w-3.5" /><span className="text-xs">Download</span>
               </Button>
-              {canManageThis && (
+              {canManageThis && viewingTrash && (
+                <>
+                  <Button size="sm" variant="outline" className="h-7 gap-1.5" onClick={async () => {
+                    for (const d of selectedDocs) await restoreDocument.mutateAsync(d).catch(() => {});
+                    setSelectedIds(new Set());
+                  }}>
+                    <Undo2 className="h-3.5 w-3.5" /><span className="text-xs">Restore</span>
+                  </Button>
+                  <Button size="sm" variant="destructive" className="h-7 gap-1.5" onClick={async () => {
+                    for (const d of selectedDocs) await hardDeleteDocument.mutateAsync(d).catch(() => {});
+                    setSelectedIds(new Set());
+                  }}>
+                    <Trash2 className="h-3.5 w-3.5" /><span className="text-xs">Delete forever</span>
+                  </Button>
+                </>
+              )}
+              {canManageThis && !viewingTrash && (
                 <Button size="sm" variant="destructive" className="h-7 gap-1.5" onClick={() => setBulkDeleteOpen(true)}>
-                  <Trash2 className="h-3.5 w-3.5" /><span className="text-xs">Delete</span>
+                  <Trash2 className="h-3.5 w-3.5" /><span className="text-xs">Move to Trash</span>
                 </Button>
               )}
             </div>
