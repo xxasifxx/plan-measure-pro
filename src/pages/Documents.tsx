@@ -5,12 +5,17 @@ import {
   ArrowLeft, FolderTree, Folder, FolderOpen, FilePlus, FolderPlus, Upload, Download,
   Pencil, Trash2, MoreVertical, ChevronRight, ChevronDown, History, Lock, FileText, Image as ImageIcon,
   Move, Loader2, Search, Eye, X, CheckCircle2, AlertCircle, Plus, FileUp, Star,
-  ArrowUpDown, ArrowUp, ArrowDown, RotateCcw, FolderUp, Hammer, ClipboardList,
+  ArrowUpDown, ArrowUp, ArrowDown, RotateCcw, FolderUp, Hammer, ClipboardList, Undo2,
 } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { ToastAction } from '@/components/ui/toast';
 
 import { useAuth } from '@/hooks/useAuth';
-import { useFolders, useDocuments, fetchDocumentVersions, type FolderRow, type DocumentRow } from '@/hooks/useDocuments';
+import {
+  useFolders, useDocuments, fetchDocumentVersions, useTrash, useUploaderProfiles,
+  type FolderRow, type DocumentRow,
+} from '@/hooks/useDocuments';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -26,6 +31,25 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 
 const BUCKET = 'project-documents';
+const TRASH_ID = '__trash__';
+
+const initialsOf = (name?: string | null, email?: string | null) => {
+  const src = (name && name.trim()) || (email && email.split('@')[0]) || '?';
+  const parts = src.split(/[\s._-]+/).filter(Boolean).slice(0, 2);
+  return (parts.map(p => p[0]).join('') || src[0]).toUpperCase();
+};
+const displayName = (p?: { full_name?: string | null; email?: string | null } | null) =>
+  (p?.full_name && p.full_name.trim()) || p?.email || 'Team member';
+const relativeTime = (iso: string) => {
+  const d = new Date(iso).getTime();
+  const diff = Date.now() - d;
+  const s = Math.round(diff / 1000);
+  if (s < 60) return 'just now';
+  const m = Math.round(s / 60); if (m < 60) return `${m}m ago`;
+  const h = Math.round(m / 60); if (h < 24) return `${h}h ago`;
+  const days = Math.round(h / 24); if (days < 7) return `${days}d ago`;
+  return new Date(iso).toLocaleDateString();
+};
 
 const KIND_HINTS: Record<string, string> = {
   plans: 'Drawing sets and plan PDFs used for takeoff.',
@@ -127,15 +151,21 @@ export default function Documents() {
     }
   }, [folders, selectedFolderId]);
 
-  const selectedFolder = folders.find(f => f.id === selectedFolderId);
+  const viewingTrash = selectedFolderId === TRASH_ID;
+  const selectedFolder = viewingTrash ? undefined : folders.find(f => f.id === selectedFolderId);
   const breadcrumb = pathOf(selectedFolder, folders);
 
-  const { documents, isLoading: docsLoading, renameDocument, moveDocument, deleteDocument, uploadNewVersion, getDownloadUrl } =
-    useDocuments(projectId, selectedFolderId ?? undefined);
+  const {
+    documents, isLoading: docsLoading,
+    renameDocument, moveDocument, deleteDocument, restoreDocument, hardDeleteDocument,
+    uploadNewVersion, getDownloadUrl,
+  } = useDocuments(projectId, viewingTrash ? undefined : (selectedFolderId ?? undefined));
+
+  const { trash, isLoading: trashLoading } = useTrash(canManageThis ? projectId : undefined);
 
   const inspectorCanUploadHere =
     !!selectedFolder && (selectedFolder.system_kind === 'photos' || selectedFolder.system_kind === 'daily_reports');
-  const canUploadHere = canManageThis || inspectorCanUploadHere;
+  const canUploadHere = !viewingTrash && (canManageThis || inspectorCanUploadHere);
 
   // ---- Folder file counts (one query for the project) ----
   const folderCountsQuery = useQuery({
@@ -145,7 +175,8 @@ export default function Documents() {
       const { data, error } = await supabase
         .from('documents')
         .select('folder_id, replaces_document_id, id')
-        .eq('project_id', projectId!);
+        .eq('project_id', projectId!)
+        .is('deleted_at', null);
       if (error) throw error;
       const rows = (data as any[]) ?? [];
       const replaced = new Set(rows.map(r => r.replaces_document_id).filter(Boolean));
@@ -167,9 +198,10 @@ export default function Documents() {
     if (sortBy === key) setSortDir(d => d === 'asc' ? 'desc' : 'asc');
     else { setSortBy(key); setSortDir(key === 'name' ? 'asc' : 'desc'); }
   };
+  const sourceDocs = viewingTrash ? trash : documents;
   const filteredDocs = useMemo(() => {
     const q = search.trim().toLowerCase();
-    const base = q ? documents.filter(d => d.name.toLowerCase().includes(q)) : documents.slice();
+    const base = q ? sourceDocs.filter(d => d.name.toLowerCase().includes(q)) : sourceDocs.slice();
     base.sort((a, b) => {
       let c = 0;
       if (sortBy === 'name') c = a.name.localeCompare(b.name);
@@ -178,7 +210,13 @@ export default function Documents() {
       return sortDir === 'asc' ? c : -c;
     });
     return base;
-  }, [documents, search, sortBy, sortDir]);
+  }, [sourceDocs, search, sortBy, sortDir]);
+
+  // ---- Uploader profile lookup ----
+  const uploaderIds = useMemo(() => Array.from(new Set(filteredDocs.map(d => d.uploaded_by))), [filteredDocs]);
+  const uploaderProfilesQuery = useUploaderProfiles(uploaderIds);
+  const uploaderProfiles = uploaderProfilesQuery.data ?? {};
+  const folderById = useMemo(() => new Map(folders.map(f => [f.id, f])), [folders]);
 
   // ---- Multi-select ----
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -210,22 +248,53 @@ export default function Documents() {
       } catch (e) { /* ignore */ }
     }
   };
-  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
-  const runBulkDelete = async () => {
-    let ok = 0, fail = 0;
-    for (const d of selectedDocs) {
-      try {
-        const { error } = await supabase.from('documents').delete().eq('id', d.id);
-        if (error) throw error;
-        await supabase.storage.from(BUCKET).remove([d.storage_path]).catch(() => {});
-        ok++;
-      } catch { fail++; }
-    }
+
+  // Soft delete (single or bulk) → toast with Undo
+  const softDeleteWithUndo = async (docs: DocumentRow[]) => {
+    if (docs.length === 0) return;
+    const stamp = new Date().toISOString();
+    const ids = docs.map(d => d.id);
+    const { error } = await supabase.from('documents')
+      .update({ deleted_at: stamp, deleted_by: user?.id ?? null } as any)
+      .in('id', ids);
+    if (error) { toast({ title: 'Move to Trash failed', description: error.message, variant: 'destructive' }); return; }
     setSelectedIds(new Set());
-    setBulkDeleteOpen(false);
     qc.invalidateQueries({ queryKey: ['documents', projectId] });
     qc.invalidateQueries({ queryKey: ['folder-counts', projectId] });
-    toast({ title: `Deleted ${ok} file${ok === 1 ? '' : 's'}`, description: fail ? `${fail} failed` : undefined, variant: fail ? 'destructive' : 'default' });
+    qc.invalidateQueries({ queryKey: ['trash', projectId] });
+    toast({
+      title: docs.length === 1 ? `Moved "${docs[0].name}" to Trash` : `Moved ${docs.length} files to Trash`,
+      action: (
+        <ToastAction altText="Undo" onClick={async () => {
+          await supabase.from('documents')
+            .update({ deleted_at: null, deleted_by: null } as any)
+            .in('id', ids);
+          qc.invalidateQueries({ queryKey: ['documents', projectId] });
+          qc.invalidateQueries({ queryKey: ['folder-counts', projectId] });
+          qc.invalidateQueries({ queryKey: ['trash', projectId] });
+        }}>Undo</ToastAction>
+      ),
+    });
+  };
+
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
+  const runBulkDelete = async () => {
+    await softDeleteWithUndo(selectedDocs);
+    setBulkDeleteOpen(false);
+  };
+
+  // Empty Trash — permanent deletion of all currently-trashed docs
+  const [emptyTrashOpen, setEmptyTrashOpen] = useState(false);
+  const runEmptyTrash = async () => {
+    if (!projectId) return;
+    const paths = trash.map(t => t.storage_path);
+    const ids = trash.map(t => t.id);
+    const { error } = await supabase.from('documents').delete().in('id', ids);
+    if (error) { toast({ title: 'Empty Trash failed', description: error.message, variant: 'destructive' }); return; }
+    if (paths.length) await supabase.storage.from(BUCKET).remove(paths).catch(() => {});
+    setEmptyTrashOpen(false);
+    qc.invalidateQueries({ queryKey: ['trash', projectId] });
+    toast({ title: `Emptied Trash · ${ids.length} file${ids.length === 1 ? '' : 's'}` });
   };
 
   // Version restore: insert a new row pointing at the older blob, replacing the current head.
@@ -398,6 +467,40 @@ export default function Documents() {
   const [deleteTarget, setDeleteTarget] = useState<{ kind: 'folder' | 'doc'; id: string; name: string; doc?: DocumentRow } | null>(null);
   const [dragOver, setDragOver] = useState(false);
 
+  // ---- Drag-to-move (file rows → folder tree) ----
+  const [draggedIds, setDraggedIds] = useState<string[] | null>(null);
+  const [dragOverFolderId, setDragOverFolderId] = useState<string | null>(null);
+
+  const startRowDrag = (e: React.DragEvent, doc: DocumentRow) => {
+    if (!canManageThis || viewingTrash) return;
+    const ids = selectedIds.has(doc.id) ? Array.from(selectedIds) : [doc.id];
+    setDraggedIds(ids);
+    e.dataTransfer.effectAllowed = 'move';
+    try { e.dataTransfer.setData('text/plain', ids.join(',')); } catch { /* noop */ }
+  };
+  const endRowDrag = () => { setDraggedIds(null); setDragOverFolderId(null); };
+
+  const canDropOnFolder = (f: FolderRow): boolean => {
+    if (!draggedIds || draggedIds.length === 0) return false;
+    if (!canManageThis) return false;
+    // Don't allow dropping on the current folder (no-op)
+    if (f.id === selectedFolderId) return false;
+    return true;
+  };
+
+  const handleFolderDrop = async (f: FolderRow) => {
+    if (!draggedIds || !canDropOnFolder(f)) { endRowDrag(); return; }
+    const ids = draggedIds;
+    setDragOverFolderId(null);
+    setDraggedIds(null);
+    const { error } = await supabase.from('documents').update({ folder_id: f.id } as any).in('id', ids);
+    if (error) { toast({ title: 'Move failed', description: error.message, variant: 'destructive' }); return; }
+    setSelectedIds(new Set());
+    qc.invalidateQueries({ queryKey: ['documents', projectId] });
+    qc.invalidateQueries({ queryKey: ['folder-counts', projectId] });
+    toast({ title: `Moved ${ids.length} file${ids.length === 1 ? '' : 's'} to ${f.name}` });
+  };
+
   const openVersions = async (doc: DocumentRow) => {
     if (!projectId) return;
     setVersionsFor(doc);
@@ -416,18 +519,29 @@ export default function Documents() {
       const Icon = isSel || isOpen ? FolderOpen : Folder;
       const inspectorWritable = f.system_kind === 'photos' || f.system_kind === 'daily_reports';
       const locked = !canManageThis && !inspectorWritable;
+      const droppable = canDropOnFolder(f);
+      const dragOverThis = dragOverFolderId === f.id && droppable;
       const row = (
         <div
           key={f.id}
           onClick={() => setSelectedFolderId(f.id)}
+          onDragOver={(e) => {
+            if (!draggedIds) return;
+            if (droppable) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; setDragOverFolderId(f.id); }
+            else { e.dataTransfer.dropEffect = 'none'; }
+          }}
+          onDragLeave={() => { if (dragOverFolderId === f.id) setDragOverFolderId(null); }}
+          onDrop={(e) => { e.preventDefault(); e.stopPropagation(); handleFolderDrop(f); }}
           className={cn(
             'group flex items-center gap-1 px-2 py-1.5 rounded cursor-pointer text-sm select-none transition-colors',
             isSel ? 'bg-primary/20 ring-1 ring-primary/40 text-foreground'
+                  : dragOverThis ? 'bg-primary/30 ring-2 ring-primary/60 text-foreground'
                   : locked ? 'opacity-60 hover:bg-muted/30 hover:opacity-80'
                            : 'hover:bg-muted/40',
+            draggedIds && !droppable && 'opacity-50',
           )}
           style={{ paddingLeft: 8 + depth * 14 }}
-          title={locked ? 'Read-only for your role' : undefined}
+          title={locked ? 'Read-only for your role' : (droppable ? `Drop here to move into ${f.name}` : undefined)}
         >
           <button
             type="button"
@@ -503,6 +617,23 @@ export default function Documents() {
             ) : (
               renderTree(null)
             )}
+            {canManageThis && (
+              <div className="mt-2 pt-2 border-t border-border/60">
+                <div
+                  onClick={() => setSelectedFolderId(TRASH_ID)}
+                  className={cn(
+                    'group flex items-center gap-1.5 px-2 py-1.5 mx-1 rounded cursor-pointer text-sm select-none transition-colors',
+                    viewingTrash ? 'bg-primary/20 ring-1 ring-primary/40 text-foreground' : 'hover:bg-muted/40 text-muted-foreground',
+                  )}
+                >
+                  <Trash2 className="h-4 w-4 shrink-0" />
+                  <span className="truncate flex-1 font-mono text-xs uppercase tracking-wider">Trash</span>
+                  {trash.length > 0 && (
+                    <span className="text-[10px] font-mono text-muted-foreground tabular-nums shrink-0">{trash.length}</span>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </aside>
 
@@ -538,9 +669,14 @@ export default function Documents() {
                       </SelectItem>
                     );
                   })}
+                  {canManageThis && (
+                    <SelectItem value={TRASH_ID} className="text-xs font-mono">
+                      <span className="flex items-center gap-1.5"><Trash2 className="h-3 w-3 text-muted-foreground" />Trash{trash.length > 0 ? ` (${trash.length})` : ''}</span>
+                    </SelectItem>
+                  )}
                 </SelectContent>
               </Select>
-              {canManageThis && (
+              {canManageThis && !viewingTrash && (
                 <Button size="icon" variant="outline" className="h-8 w-8 shrink-0" onClick={() => { setNewFolderName(''); setNewFolderOpen(true); }} title="New folder">
                   <FolderPlus className="h-3.5 w-3.5" />
                 </Button>
@@ -548,7 +684,9 @@ export default function Documents() {
             </div>
             {/* Breadcrumbs (desktop) */}
             <div className="hidden md:flex items-center gap-1 text-xs font-mono text-muted-foreground flex-1 min-w-0 truncate">
-              {breadcrumb.length === 0 ? <span>Select a folder</span> : breadcrumb.map((b, i) => (
+              {viewingTrash ? (
+                <span className="flex items-center gap-1.5 text-foreground font-semibold"><Trash2 className="h-3.5 w-3.5" />Trash</span>
+              ) : breadcrumb.length === 0 ? <span>Select a folder</span> : breadcrumb.map((b, i) => (
                 <span key={b.id} className="flex items-center gap-1">
                   {i > 0 && <ChevronRight className="h-3 w-3" />}
                   <button onClick={() => setSelectedFolderId(b.id)} className={cn(i === breadcrumb.length - 1 ? 'text-foreground font-semibold' : 'hover:text-foreground')}>
@@ -574,49 +712,59 @@ export default function Documents() {
             </div>
             {/* Actions (desktop) */}
             <div className="hidden sm:flex items-center gap-1">
-              {canUploadHere && (
-                <>
-                  <input ref={fileInputRef} type="file" multiple className="hidden"
-                    onChange={(e) => { if (e.target.files) handleUpload(e.target.files); e.target.value = ''; }} />
-                  <input
-                    ref={folderInputRef}
-                    type="file"
-                    multiple
-                    /* @ts-expect-error non-standard but widely supported */
-                    webkitdirectory=""
-                    directory=""
-                    className="hidden"
-                    onChange={(e) => { if (e.target.files) handleUpload(e.target.files); e.target.value = ''; }}
-                  />
-                  <Button size="sm" className="h-8 gap-1.5" onClick={() => fileInputRef.current?.click()} disabled={!selectedFolderId}>
-                    <Upload className="h-3.5 w-3.5" /><span className="text-xs">Upload</span>
+              {viewingTrash ? (
+                canManageThis && trash.length > 0 && (
+                  <Button size="sm" variant="destructive" className="h-8 gap-1.5" onClick={() => setEmptyTrashOpen(true)}>
+                    <Trash2 className="h-3.5 w-3.5" /><span className="text-xs">Empty Trash</span>
                   </Button>
+                )
+              ) : (
+                <>
+                  {canUploadHere && (
+                    <>
+                      <input ref={fileInputRef} type="file" multiple className="hidden"
+                        onChange={(e) => { if (e.target.files) handleUpload(e.target.files); e.target.value = ''; }} />
+                      <input
+                        ref={folderInputRef}
+                        type="file"
+                        multiple
+                        /* @ts-expect-error non-standard but widely supported */
+                        webkitdirectory=""
+                        directory=""
+                        className="hidden"
+                        onChange={(e) => { if (e.target.files) handleUpload(e.target.files); e.target.value = ''; }}
+                      />
+                      <Button size="sm" className="h-8 gap-1.5" onClick={() => fileInputRef.current?.click()} disabled={!selectedFolderId}>
+                        <Upload className="h-3.5 w-3.5" /><span className="text-xs">Upload</span>
+                      </Button>
+                      {canManageThis && (
+                        <Button size="sm" variant="outline" className="h-8 gap-1.5" onClick={() => folderInputRef.current?.click()} disabled={!selectedFolderId} title="Upload folder">
+                          <FolderUp className="h-3.5 w-3.5" /><span className="text-xs hidden lg:inline">Folder</span>
+                        </Button>
+                      )}
+                    </>
+                  )}
                   {canManageThis && (
-                    <Button size="sm" variant="outline" className="h-8 gap-1.5" onClick={() => folderInputRef.current?.click()} disabled={!selectedFolderId} title="Upload folder">
-                      <FolderUp className="h-3.5 w-3.5" /><span className="text-xs hidden lg:inline">Folder</span>
+                    <Button size="sm" variant="outline" className="h-8 gap-1.5" onClick={() => { setNewFolderName(''); setNewFolderOpen(true); }}>
+                      <FolderPlus className="h-3.5 w-3.5" /><span className="text-xs hidden md:inline">New folder</span>
                     </Button>
                   )}
+                  {canManageThis && selectedFolder && !selectedFolder.is_system && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button size="icon" variant="ghost" className="h-8 w-8" title="Folder actions"><MoreVertical className="h-4 w-4" /></Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => { setRenameTarget({ kind: 'folder', id: selectedFolder.id, name: selectedFolder.name }); setRenameValue(selectedFolder.name); }}>
+                          <Pencil className="h-3.5 w-3.5 mr-2" />Rename folder
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="text-destructive" onClick={() => setDeleteTarget({ kind: 'folder', id: selectedFolder.id, name: selectedFolder.name })}>
+                          <Trash2 className="h-3.5 w-3.5 mr-2" />Delete folder
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
                 </>
-              )}
-              {canManageThis && (
-                <Button size="sm" variant="outline" className="h-8 gap-1.5" onClick={() => { setNewFolderName(''); setNewFolderOpen(true); }}>
-                  <FolderPlus className="h-3.5 w-3.5" /><span className="text-xs hidden md:inline">New folder</span>
-                </Button>
-              )}
-              {canManageThis && selectedFolder && !selectedFolder.is_system && (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button size="icon" variant="ghost" className="h-8 w-8" title="Folder actions"><MoreVertical className="h-4 w-4" /></Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => { setRenameTarget({ kind: 'folder', id: selectedFolder.id, name: selectedFolder.name }); setRenameValue(selectedFolder.name); }}>
-                      <Pencil className="h-3.5 w-3.5 mr-2" />Rename folder
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="text-destructive" onClick={() => setDeleteTarget({ kind: 'folder', id: selectedFolder.id, name: selectedFolder.name })}>
-                      <Trash2 className="h-3.5 w-3.5 mr-2" />Delete folder
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
               )}
             </div>
           </div>
@@ -632,9 +780,25 @@ export default function Documents() {
               <Button size="sm" variant="outline" className="h-7 gap-1.5" onClick={bulkDownload}>
                 <Download className="h-3.5 w-3.5" /><span className="text-xs">Download</span>
               </Button>
-              {canManageThis && (
+              {canManageThis && viewingTrash && (
+                <>
+                  <Button size="sm" variant="outline" className="h-7 gap-1.5" onClick={async () => {
+                    for (const d of selectedDocs) await restoreDocument.mutateAsync(d).catch(() => {});
+                    setSelectedIds(new Set());
+                  }}>
+                    <Undo2 className="h-3.5 w-3.5" /><span className="text-xs">Restore</span>
+                  </Button>
+                  <Button size="sm" variant="destructive" className="h-7 gap-1.5" onClick={async () => {
+                    for (const d of selectedDocs) await hardDeleteDocument.mutateAsync(d).catch(() => {});
+                    setSelectedIds(new Set());
+                  }}>
+                    <Trash2 className="h-3.5 w-3.5" /><span className="text-xs">Delete forever</span>
+                  </Button>
+                </>
+              )}
+              {canManageThis && !viewingTrash && (
                 <Button size="sm" variant="destructive" className="h-7 gap-1.5" onClick={() => setBulkDeleteOpen(true)}>
-                  <Trash2 className="h-3.5 w-3.5" /><span className="text-xs">Delete</span>
+                  <Trash2 className="h-3.5 w-3.5" /><span className="text-xs">Move to Trash</span>
                 </Button>
               )}
             </div>
@@ -673,7 +837,7 @@ export default function Documents() {
           <div className="flex-1 overflow-auto">
             {!selectedFolderId ? (
               <div className="p-10 text-center text-sm text-muted-foreground">Select a folder to see its contents.</div>
-            ) : docsLoading ? (
+            ) : (viewingTrash ? trashLoading : docsLoading) ? (
               <div className="p-10 flex items-center justify-center"><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></div>
             ) : filteredDocs.length === 0 ? (
               <div className="p-10 text-center">
@@ -682,6 +846,12 @@ export default function Documents() {
                     <Search className="h-8 w-8 text-muted-foreground/50 mx-auto mb-2" />
                     <p className="text-sm text-muted-foreground">No files match "{search}".</p>
                     <Button variant="ghost" size="sm" className="mt-2" onClick={() => setSearch('')}>Clear search</Button>
+                  </>
+                ) : viewingTrash ? (
+                  <>
+                    <Trash2 className="h-8 w-8 text-muted-foreground/50 mx-auto mb-2" />
+                    <p className="text-sm text-muted-foreground">Trash is empty.</p>
+                    <p className="text-[11px] text-muted-foreground mt-1">Deleted files appear here until restored or permanently removed.</p>
                   </>
                 ) : !canUploadHere ? (
                   <>
@@ -730,8 +900,24 @@ export default function Documents() {
                     const activePlan = isActivePlan(d);
                     const activeSpecs = isActiveSpecs(d);
                     const checked = selectedIds.has(d.id);
+                    const rowDraggable = canManageThis && !viewingTrash;
+                    const prof = uploaderProfiles[d.uploaded_by];
+                    const initials = initialsOf(prof?.full_name, prof?.email);
+                    const uploaderName = displayName(prof);
+                    const origFolder = viewingTrash ? folderById.get(d.folder_id) : undefined;
                     return (
-                      <tr key={d.id} className={cn('border-b border-border/40 last:border-0 hover:bg-muted/20', checked && 'bg-primary/10')}>
+                      <tr
+                        key={d.id}
+                        className={cn(
+                          'border-b border-border/40 last:border-0 hover:bg-muted/20',
+                          checked && 'bg-primary/10',
+                          rowDraggable && 'cursor-grab active:cursor-grabbing',
+                          draggedIds?.includes(d.id) && 'opacity-50',
+                        )}
+                        draggable={rowDraggable}
+                        onDragStart={(e) => startRowDrag(e, d)}
+                        onDragEnd={endRowDrag}
+                      >
                         <td className="px-3 py-2 align-middle">
                           <Checkbox checked={checked} onCheckedChange={() => toggleSel(d.id)} aria-label={`Select ${d.name}`} />
                         </td>
@@ -743,9 +929,24 @@ export default function Documents() {
                             {activePlan && <Badge className="text-[9px] h-4 px-1 shrink-0 gap-0.5"><Star className="h-2.5 w-2.5" />Active plan</Badge>}
                             {activeSpecs && <Badge className="text-[9px] h-4 px-1 shrink-0 gap-0.5"><Star className="h-2.5 w-2.5" />Active specs</Badge>}
                           </button>
+                          {viewingTrash && origFolder && (
+                            <div className="text-[10px] text-muted-foreground font-mono mt-0.5 pl-6 truncate">from {origFolder.name}</div>
+                          )}
                         </td>
                         <td className="text-right px-3 py-2 hidden sm:table-cell text-muted-foreground font-mono">{fmtBytes(d.size_bytes)}</td>
-                        <td className="px-3 py-2 hidden md:table-cell text-muted-foreground font-mono">{new Date(d.created_at).toLocaleDateString()}</td>
+                        <td className="px-3 py-2 hidden md:table-cell">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <Avatar className="h-6 w-6 shrink-0">
+                              <AvatarFallback className="text-[9px] font-mono bg-muted text-muted-foreground">{initials}</AvatarFallback>
+                            </Avatar>
+                            <div className="min-w-0 leading-tight">
+                              <div className="font-mono text-xs truncate" title={uploaderName}>{uploaderName}</div>
+                              <div className="text-[10px] text-muted-foreground font-mono" title={new Date(viewingTrash && d.deleted_at ? d.deleted_at : d.created_at).toLocaleString()}>
+                                {viewingTrash && d.deleted_at ? `deleted ${relativeTime(d.deleted_at)}` : relativeTime(d.created_at)}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
                         <td className="text-right px-2 py-2">
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
@@ -760,34 +961,50 @@ export default function Documents() {
                               <DropdownMenuItem onClick={() => handleDownload(d)}>
                                 <Download className="h-3.5 w-3.5 mr-2" />Download
                               </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => openVersions(d)}>
-                                <History className="h-3.5 w-3.5 mr-2" />Versions
-                              </DropdownMenuItem>
-                              {canManageThis && (
+                              {viewingTrash ? (
+                                canManageThis && (
+                                  <>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem onClick={() => restoreDocument.mutate(d)}>
+                                      <Undo2 className="h-3.5 w-3.5 mr-2" />Restore
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem className="text-destructive" onClick={() => hardDeleteDocument.mutate(d)}>
+                                      <Trash2 className="h-3.5 w-3.5 mr-2" />Delete forever
+                                    </DropdownMenuItem>
+                                  </>
+                                )
+                              ) : (
                                 <>
-                                  <DropdownMenuSeparator />
-                                  <DropdownMenuItem onClick={() => { setNewVersionTarget(d); newVersionInputRef.current?.click(); }}>
-                                    <FileUp className="h-3.5 w-3.5 mr-2" />Upload new version
+                                  <DropdownMenuItem onClick={() => openVersions(d)}>
+                                    <History className="h-3.5 w-3.5 mr-2" />Versions
                                   </DropdownMenuItem>
-                                  {activeAs === 'plan' && !activePlan && (
-                                    <DropdownMenuItem onClick={() => setAsActive(d, 'plan')}>
-                                      <Star className="h-3.5 w-3.5 mr-2" />Set as active plan
-                                    </DropdownMenuItem>
+                                  {canManageThis && (
+                                    <>
+                                      <DropdownMenuSeparator />
+                                      <DropdownMenuItem onClick={() => { setNewVersionTarget(d); newVersionInputRef.current?.click(); }}>
+                                        <FileUp className="h-3.5 w-3.5 mr-2" />Upload new version
+                                      </DropdownMenuItem>
+                                      {activeAs === 'plan' && !activePlan && (
+                                        <DropdownMenuItem onClick={() => setAsActive(d, 'plan')}>
+                                          <Star className="h-3.5 w-3.5 mr-2" />Set as active plan
+                                        </DropdownMenuItem>
+                                      )}
+                                      {activeAs === 'specs' && !activeSpecs && (
+                                        <DropdownMenuItem onClick={() => setAsActive(d, 'specs')}>
+                                          <Star className="h-3.5 w-3.5 mr-2" />Set as active specs
+                                        </DropdownMenuItem>
+                                      )}
+                                      <DropdownMenuItem onClick={() => { setRenameTarget({ kind: 'doc', id: d.id, name: d.name }); setRenameValue(d.name); }}>
+                                        <Pencil className="h-3.5 w-3.5 mr-2" />Rename
+                                      </DropdownMenuItem>
+                                      <DropdownMenuItem onClick={() => { setMoveTarget(d); setMoveTargetFolder(d.folder_id); }}>
+                                        <Move className="h-3.5 w-3.5 mr-2" />Move
+                                      </DropdownMenuItem>
+                                      <DropdownMenuItem className="text-destructive" onClick={() => softDeleteWithUndo([d])}>
+                                        <Trash2 className="h-3.5 w-3.5 mr-2" />Move to Trash
+                                      </DropdownMenuItem>
+                                    </>
                                   )}
-                                  {activeAs === 'specs' && !activeSpecs && (
-                                    <DropdownMenuItem onClick={() => setAsActive(d, 'specs')}>
-                                      <Star className="h-3.5 w-3.5 mr-2" />Set as active specs
-                                    </DropdownMenuItem>
-                                  )}
-                                  <DropdownMenuItem onClick={() => { setRenameTarget({ kind: 'doc', id: d.id, name: d.name }); setRenameValue(d.name); }}>
-                                    <Pencil className="h-3.5 w-3.5 mr-2" />Rename
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem onClick={() => { setMoveTarget(d); setMoveTargetFolder(d.folder_id); }}>
-                                    <Move className="h-3.5 w-3.5 mr-2" />Move
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem className="text-destructive" onClick={() => setDeleteTarget({ kind: 'doc', id: d.id, name: d.name, doc: d })}>
-                                    <Trash2 className="h-3.5 w-3.5 mr-2" />Delete
-                                  </DropdownMenuItem>
                                 </>
                               )}
                             </DropdownMenuContent>

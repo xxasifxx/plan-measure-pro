@@ -33,6 +33,14 @@ export interface DocumentRow {
   source_kind: string | null;
   created_at: string;
   updated_at: string;
+  deleted_at: string | null;
+  deleted_by: string | null;
+}
+
+export interface UploaderProfile {
+  id: string;
+  full_name: string | null;
+  email: string | null;
 }
 
 const extOf = (filename: string) => {
@@ -123,9 +131,10 @@ export function useDocuments(projectId: string | undefined, folderId: string | u
       // Most-recent version per name chain: filter out rows that are replaced by another.
       const { data, error } = await supabase
         .from('documents')
-        .select('id, project_id, folder_id, name, storage_path, mime_type, size_bytes, uploaded_by, version, replaces_document_id, source_kind, created_at, updated_at')
+        .select('id, project_id, folder_id, name, storage_path, mime_type, size_bytes, uploaded_by, version, replaces_document_id, source_kind, created_at, updated_at, deleted_at, deleted_by')
         .eq('project_id', projectId!)
         .eq('folder_id', folderId!)
+        .is('deleted_at', null)
         .order('created_at', { ascending: false });
       if (error) throw error;
       const rows = ((data as any) ?? []) as DocumentRow[];
@@ -213,12 +222,45 @@ export function useDocuments(projectId: string | undefined, folderId: string | u
 
   const deleteDocument = useMutation({
     mutationFn: async (doc: DocumentRow) => {
-      // Delete row first; storage cleanup is best-effort and may fail silently for inspectors.
+      // Soft delete: move to Trash. Storage blob is kept until hard-delete or empty-trash.
+      const { error } = await supabase.from('documents')
+        .update({ deleted_at: new Date().toISOString(), deleted_by: user?.id ?? null } as any)
+        .eq('id', doc.id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['documents', projectId] });
+      qc.invalidateQueries({ queryKey: ['folder-counts', projectId] });
+      qc.invalidateQueries({ queryKey: ['trash', projectId] });
+    },
+    onError: (e: Error) => toast({ title: 'Move to Trash failed', description: e.message, variant: 'destructive' }),
+  });
+
+  const restoreDocument = useMutation({
+    mutationFn: async (doc: DocumentRow) => {
+      const { error } = await supabase.from('documents')
+        .update({ deleted_at: null, deleted_by: null } as any)
+        .eq('id', doc.id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['documents', projectId] });
+      qc.invalidateQueries({ queryKey: ['folder-counts', projectId] });
+      qc.invalidateQueries({ queryKey: ['trash', projectId] });
+    },
+    onError: (e: Error) => toast({ title: 'Restore failed', description: e.message, variant: 'destructive' }),
+  });
+
+  const hardDeleteDocument = useMutation({
+    mutationFn: async (doc: DocumentRow) => {
       const { error } = await supabase.from('documents').delete().eq('id', doc.id);
       if (error) throw error;
       await supabase.storage.from(BUCKET).remove([doc.storage_path]).catch(() => {});
     },
-    onSuccess: () => { invalidate(); toast({ title: 'Deleted' }); },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['documents', projectId] });
+      qc.invalidateQueries({ queryKey: ['trash', projectId] });
+    },
     onError: (e: Error) => toast({ title: 'Delete failed', description: e.message, variant: 'destructive' }),
   });
 
@@ -264,16 +306,61 @@ export function useDocuments(projectId: string | undefined, folderId: string | u
   return {
     documents: query.data ?? [],
     isLoading: query.isLoading,
-    uploadFiles, renameDocument, moveDocument, deleteDocument, uploadNewVersion,
+    uploadFiles, renameDocument, moveDocument, deleteDocument, restoreDocument, hardDeleteDocument, uploadNewVersion,
     getDownloadUrl,
   };
+}
+
+/** All soft-deleted documents in a project (Trash). */
+export function useTrash(projectId: string | undefined) {
+  const qc = useQueryClient();
+  const key = ['trash', projectId];
+  const query = useQuery({
+    queryKey: key,
+    enabled: !!projectId,
+    queryFn: async (): Promise<DocumentRow[]> => {
+      const { data, error } = await supabase
+        .from('documents')
+        .select('id, project_id, folder_id, name, storage_path, mime_type, size_bytes, uploaded_by, version, replaces_document_id, source_kind, created_at, updated_at, deleted_at, deleted_by')
+        .eq('project_id', projectId!)
+        .not('deleted_at', 'is', null)
+        .order('deleted_at', { ascending: false });
+      if (error) throw error;
+      return ((data as any) ?? []) as DocumentRow[];
+    },
+  });
+  return {
+    trash: query.data ?? [],
+    isLoading: query.isLoading,
+    refetch: () => qc.invalidateQueries({ queryKey: key }),
+  };
+}
+
+/** Fetch profiles for the given uploader IDs (best-effort; falls back silently). */
+export function useUploaderProfiles(userIds: string[]) {
+  const ids = Array.from(new Set(userIds)).filter(Boolean).sort();
+  return useQuery({
+    queryKey: ['uploader-profiles', ids.join(',')],
+    enabled: ids.length > 0,
+    queryFn: async (): Promise<Record<string, UploaderProfile>> => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id, full_name, email')
+        .in('id', ids);
+      if (error) return {};
+      const map: Record<string, UploaderProfile> = {};
+      for (const p of (data as any[]) ?? []) map[p.id] = p as UploaderProfile;
+      return map;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
 }
 
 /** Fetch the full version chain for a given current document. */
 export async function fetchDocumentVersions(projectId: string, currentDocId: string): Promise<DocumentRow[]> {
   const { data, error } = await supabase
     .from('documents')
-    .select('id, project_id, folder_id, name, storage_path, mime_type, size_bytes, uploaded_by, version, replaces_document_id, source_kind, created_at, updated_at')
+    .select('id, project_id, folder_id, name, storage_path, mime_type, size_bytes, uploaded_by, version, replaces_document_id, source_kind, created_at, updated_at, deleted_at, deleted_by')
     .eq('project_id', projectId);
   if (error) throw error;
   const rows = ((data as any) ?? []) as DocumentRow[];
