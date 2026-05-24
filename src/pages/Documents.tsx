@@ -788,9 +788,13 @@ export default function Documents() {
                   }}>
                     <Undo2 className="h-3.5 w-3.5" /><span className="text-xs">Restore</span>
                   </Button>
-                  <Button size="sm" variant="destructive" className="h-7 gap-1.5" onClick={async () => {
-                    for (const d of selectedDocs) await hardDeleteDocument.mutateAsync(d).catch(() => {});
-                    setSelectedIds(new Set());
+                  <Button size="sm" variant="destructive" className="h-7 gap-1.5" onClick={() => {
+                    if (selectedDocs.length === 0) return;
+                    if (!confirm(`Permanently delete ${selectedDocs.length} file${selectedDocs.length === 1 ? '' : 's'}? This cannot be undone.`)) return;
+                    (async () => {
+                      for (const d of selectedDocs) await hardDeleteDocument.mutateAsync(d).catch(() => {});
+                      setSelectedIds(new Set());
+                    })();
                   }}>
                     <Trash2 className="h-3.5 w-3.5" /><span className="text-xs">Delete forever</span>
                   </Button>
