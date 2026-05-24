@@ -837,7 +837,7 @@ export default function Documents() {
           <div className="flex-1 overflow-auto">
             {!selectedFolderId ? (
               <div className="p-10 text-center text-sm text-muted-foreground">Select a folder to see its contents.</div>
-            ) : docsLoading ? (
+            ) : (viewingTrash ? trashLoading : docsLoading) ? (
               <div className="p-10 flex items-center justify-center"><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></div>
             ) : filteredDocs.length === 0 ? (
               <div className="p-10 text-center">
@@ -846,6 +846,12 @@ export default function Documents() {
                     <Search className="h-8 w-8 text-muted-foreground/50 mx-auto mb-2" />
                     <p className="text-sm text-muted-foreground">No files match "{search}".</p>
                     <Button variant="ghost" size="sm" className="mt-2" onClick={() => setSearch('')}>Clear search</Button>
+                  </>
+                ) : viewingTrash ? (
+                  <>
+                    <Trash2 className="h-8 w-8 text-muted-foreground/50 mx-auto mb-2" />
+                    <p className="text-sm text-muted-foreground">Trash is empty.</p>
+                    <p className="text-[11px] text-muted-foreground mt-1">Deleted files appear here until restored or permanently removed.</p>
                   </>
                 ) : !canUploadHere ? (
                   <>
@@ -894,8 +900,24 @@ export default function Documents() {
                     const activePlan = isActivePlan(d);
                     const activeSpecs = isActiveSpecs(d);
                     const checked = selectedIds.has(d.id);
+                    const rowDraggable = canManageThis && !viewingTrash;
+                    const prof = uploaderProfiles[d.uploaded_by];
+                    const initials = initialsOf(prof?.full_name, prof?.email);
+                    const uploaderName = displayName(prof);
+                    const origFolder = viewingTrash ? folderById.get(d.folder_id) : undefined;
                     return (
-                      <tr key={d.id} className={cn('border-b border-border/40 last:border-0 hover:bg-muted/20', checked && 'bg-primary/10')}>
+                      <tr
+                        key={d.id}
+                        className={cn(
+                          'border-b border-border/40 last:border-0 hover:bg-muted/20',
+                          checked && 'bg-primary/10',
+                          rowDraggable && 'cursor-grab active:cursor-grabbing',
+                          draggedIds?.includes(d.id) && 'opacity-50',
+                        )}
+                        draggable={rowDraggable}
+                        onDragStart={(e) => startRowDrag(e, d)}
+                        onDragEnd={endRowDrag}
+                      >
                         <td className="px-3 py-2 align-middle">
                           <Checkbox checked={checked} onCheckedChange={() => toggleSel(d.id)} aria-label={`Select ${d.name}`} />
                         </td>
@@ -907,9 +929,24 @@ export default function Documents() {
                             {activePlan && <Badge className="text-[9px] h-4 px-1 shrink-0 gap-0.5"><Star className="h-2.5 w-2.5" />Active plan</Badge>}
                             {activeSpecs && <Badge className="text-[9px] h-4 px-1 shrink-0 gap-0.5"><Star className="h-2.5 w-2.5" />Active specs</Badge>}
                           </button>
+                          {viewingTrash && origFolder && (
+                            <div className="text-[10px] text-muted-foreground font-mono mt-0.5 pl-6 truncate">from {origFolder.name}</div>
+                          )}
                         </td>
                         <td className="text-right px-3 py-2 hidden sm:table-cell text-muted-foreground font-mono">{fmtBytes(d.size_bytes)}</td>
-                        <td className="px-3 py-2 hidden md:table-cell text-muted-foreground font-mono">{new Date(d.created_at).toLocaleDateString()}</td>
+                        <td className="px-3 py-2 hidden md:table-cell">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <Avatar className="h-6 w-6 shrink-0">
+                              <AvatarFallback className="text-[9px] font-mono bg-muted text-muted-foreground">{initials}</AvatarFallback>
+                            </Avatar>
+                            <div className="min-w-0 leading-tight">
+                              <div className="font-mono text-xs truncate" title={uploaderName}>{uploaderName}</div>
+                              <div className="text-[10px] text-muted-foreground font-mono" title={new Date(viewingTrash && d.deleted_at ? d.deleted_at : d.created_at).toLocaleString()}>
+                                {viewingTrash && d.deleted_at ? `deleted ${relativeTime(d.deleted_at)}` : relativeTime(d.created_at)}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
                         <td className="text-right px-2 py-2">
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
@@ -924,34 +961,50 @@ export default function Documents() {
                               <DropdownMenuItem onClick={() => handleDownload(d)}>
                                 <Download className="h-3.5 w-3.5 mr-2" />Download
                               </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => openVersions(d)}>
-                                <History className="h-3.5 w-3.5 mr-2" />Versions
-                              </DropdownMenuItem>
-                              {canManageThis && (
+                              {viewingTrash ? (
+                                canManageThis && (
+                                  <>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem onClick={() => restoreDocument.mutate(d)}>
+                                      <Undo2 className="h-3.5 w-3.5 mr-2" />Restore
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem className="text-destructive" onClick={() => hardDeleteDocument.mutate(d)}>
+                                      <Trash2 className="h-3.5 w-3.5 mr-2" />Delete forever
+                                    </DropdownMenuItem>
+                                  </>
+                                )
+                              ) : (
                                 <>
-                                  <DropdownMenuSeparator />
-                                  <DropdownMenuItem onClick={() => { setNewVersionTarget(d); newVersionInputRef.current?.click(); }}>
-                                    <FileUp className="h-3.5 w-3.5 mr-2" />Upload new version
+                                  <DropdownMenuItem onClick={() => openVersions(d)}>
+                                    <History className="h-3.5 w-3.5 mr-2" />Versions
                                   </DropdownMenuItem>
-                                  {activeAs === 'plan' && !activePlan && (
-                                    <DropdownMenuItem onClick={() => setAsActive(d, 'plan')}>
-                                      <Star className="h-3.5 w-3.5 mr-2" />Set as active plan
-                                    </DropdownMenuItem>
+                                  {canManageThis && (
+                                    <>
+                                      <DropdownMenuSeparator />
+                                      <DropdownMenuItem onClick={() => { setNewVersionTarget(d); newVersionInputRef.current?.click(); }}>
+                                        <FileUp className="h-3.5 w-3.5 mr-2" />Upload new version
+                                      </DropdownMenuItem>
+                                      {activeAs === 'plan' && !activePlan && (
+                                        <DropdownMenuItem onClick={() => setAsActive(d, 'plan')}>
+                                          <Star className="h-3.5 w-3.5 mr-2" />Set as active plan
+                                        </DropdownMenuItem>
+                                      )}
+                                      {activeAs === 'specs' && !activeSpecs && (
+                                        <DropdownMenuItem onClick={() => setAsActive(d, 'specs')}>
+                                          <Star className="h-3.5 w-3.5 mr-2" />Set as active specs
+                                        </DropdownMenuItem>
+                                      )}
+                                      <DropdownMenuItem onClick={() => { setRenameTarget({ kind: 'doc', id: d.id, name: d.name }); setRenameValue(d.name); }}>
+                                        <Pencil className="h-3.5 w-3.5 mr-2" />Rename
+                                      </DropdownMenuItem>
+                                      <DropdownMenuItem onClick={() => { setMoveTarget(d); setMoveTargetFolder(d.folder_id); }}>
+                                        <Move className="h-3.5 w-3.5 mr-2" />Move
+                                      </DropdownMenuItem>
+                                      <DropdownMenuItem className="text-destructive" onClick={() => softDeleteWithUndo([d])}>
+                                        <Trash2 className="h-3.5 w-3.5 mr-2" />Move to Trash
+                                      </DropdownMenuItem>
+                                    </>
                                   )}
-                                  {activeAs === 'specs' && !activeSpecs && (
-                                    <DropdownMenuItem onClick={() => setAsActive(d, 'specs')}>
-                                      <Star className="h-3.5 w-3.5 mr-2" />Set as active specs
-                                    </DropdownMenuItem>
-                                  )}
-                                  <DropdownMenuItem onClick={() => { setRenameTarget({ kind: 'doc', id: d.id, name: d.name }); setRenameValue(d.name); }}>
-                                    <Pencil className="h-3.5 w-3.5 mr-2" />Rename
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem onClick={() => { setMoveTarget(d); setMoveTargetFolder(d.folder_id); }}>
-                                    <Move className="h-3.5 w-3.5 mr-2" />Move
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem className="text-destructive" onClick={() => setDeleteTarget({ kind: 'doc', id: d.id, name: d.name, doc: d })}>
-                                    <Trash2 className="h-3.5 w-3.5 mr-2" />Delete
-                                  </DropdownMenuItem>
                                 </>
                               )}
                             </DropdownMenuContent>
