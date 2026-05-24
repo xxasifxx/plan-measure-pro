@@ -899,17 +899,17 @@ export default function Documents() {
                       <Checkbox checked={allSelected} onCheckedChange={toggleAll} aria-label="Select all" />
                     </th>
                     <th className="text-left font-medium px-2 py-2">
-                      <button onClick={() => toggleSort('name')} className="inline-flex items-center gap-1 hover:text-foreground uppercase tracking-wider">
+                      <button onClick={() => toggleSort('name')} title="Sort by name" className="inline-flex items-center gap-1 hover:text-foreground uppercase tracking-wider">
                         Name {sortBy === 'name' ? (sortDir === 'asc' ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />) : <ArrowUpDown className="h-3 w-3 opacity-40" />}
                       </button>
                     </th>
                     <th className="text-right font-medium px-3 py-2 hidden sm:table-cell">
-                      <button onClick={() => toggleSort('size')} className="inline-flex items-center gap-1 hover:text-foreground uppercase tracking-wider">
+                      <button onClick={() => toggleSort('size')} title="Sort by size" className="inline-flex items-center gap-1 hover:text-foreground uppercase tracking-wider">
                         Size {sortBy === 'size' ? (sortDir === 'asc' ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />) : <ArrowUpDown className="h-3 w-3 opacity-40" />}
                       </button>
                     </th>
                     <th className="text-left font-medium px-3 py-2 hidden md:table-cell">
-                      <button onClick={() => toggleSort('date')} className="inline-flex items-center gap-1 hover:text-foreground uppercase tracking-wider">
+                      <button onClick={() => toggleSort('date')} title="Sort by date" className="inline-flex items-center gap-1 hover:text-foreground uppercase tracking-wider">
                         Uploaded {sortBy === 'date' ? (sortDir === 'asc' ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />) : <ArrowUpDown className="h-3 w-3 opacity-40" />}
                       </button>
                     </th>
