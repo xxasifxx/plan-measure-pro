@@ -1,95 +1,119 @@
 
-# RE review screen — whole-report approval
+# Full RE-approved daily report workflow
 
-The Resident Engineer (RE) approves or rejects an inspector's entire daily report as a single unit, matching how paper DCRs actually work. Inspector quantities are invisible to the rest of the project (PM dashboards, exports, P6 round-trip) until the RE signs the report. Rejected reports go back to the inspector with comments for resubmission.
+Stop shipping one slice at a time. This plan closes the entire loop: inspector drafts → submits → RE reviews → approves/rejects → downstream consumers (PM dashboard, exports, P6) only ever see approved numbers. Plus the audit trail, notifications, resubmission, and the role/seeding gaps that make the existing RE screen unreachable for most users.
 
-## Data model
+## 1. Inspector submission flow (the missing half)
 
-Inspector quantities live on `annotations` today, but those are continuously edited as the inspector works. We need a **point-in-time snapshot** that the RE reviews — not a live view of whatever the inspector is currently drawing.
+Build a real "Daily Report" experience instead of relying on whatever silently exists today.
 
-### Schema (migration)
+- **`src/pages/DailyReport.tsx`** (new, route `/project/:projectId/daily-report`): inspector picks a `report_date` (defaults to today), sees a live preview of the snapshot that *would* be submitted — grouped by pay item, with delta, prior approved cumulative, new cumulative, % of contract. Notes field. Status badge: Draft / Submitted / Approved / Rejected (with RE's reject reason inline if rejected).
+- **`src/lib/daily-report-snapshot.ts`** (new): `buildDailyReportSnapshot(projectId, inspectorId, date)` — pulls inspector's `annotations` whose `created_at::date = report_date`, groups by `pay_item_id`, sums `measurement` + `manual_quantity`, reads prior approved cumulative from `v_approved_pay_item_quantities`, returns the `SnapshotItem[]` shape `useReReviewQueue` already consumes.
+- **Submit action**: upsert `daily_reports` row (`status='draft'`), then UPDATE → `status='submitted'`, `snapshot=<built>`, `submitted_at=now()`. The status trigger handles timestamps.
+- **Resubmit after reject**: button "Reopen & Edit" sets `status='draft'`, clears reject fields (RLS already allows owner to update from `rejected`). Then user re-edits annotations, hits Submit again — new snapshot overwrites old.
+- **Lock UI on submitted/approved**: annotations for that date are still editable in the takeoff tool, but the daily-report page shows a banner "Submitted — edits won't change the submitted snapshot" so inspector isn't confused.
+- **Entry points**: add a "Daily Report" button on `Index.tsx` (project takeoff page) header and on `Dashboard.tsx` project card, visible to inspectors and PMs.
 
-1. Add to `daily_reports`:
-   - `status` text default `'draft'` — one of `draft | submitted | approved | rejected`
-   - `submitted_at` timestamptz (already exists, will be set on inspector submit)
-   - `approved_at` timestamptz, `approved_by` uuid
-   - `rejected_at` timestamptz, `rejected_by` uuid, `reject_reason` text
-   - `snapshot` jsonb — frozen at submit time: array of `{ pay_item_id, item_code, name, unit, delta_quantity, prior_cumulative, new_cumulative, notes, annotation_ids[] }`
-2. New table `daily_report_comments`:
-   - `daily_report_id`, `user_id`, `body` text, `created_at`
-   - Used for RE's reject-reason history and inspector's reply when resubmitting
-3. Add `resident_engineer` to the `app_role` enum (additive).
-4. RLS:
-   - `daily_reports` SELECT: project members may see their own drafts; only `submitted`, `approved`, or `rejected` rows are visible to the RE and PM. PM/exports filter to `status = 'approved'`.
-   - `daily_reports` UPDATE of `snapshot` and `submitted_at`: only the owner inspector, only while `status = 'draft'`.
-   - `daily_reports` UPDATE of `status`/`approved_*`/`rejected_*`/`reject_reason`: only users with `resident_engineer` role on the project. Transitions allowed: `submitted → approved`, `submitted → rejected`, `rejected → draft` (inspector reopens to fix).
-5. Trigger on `daily_reports` UPDATE: stamp `approved_at`/`approved_by` or `rejected_at`/`rejected_by` automatically based on `status` change, with `set search_path = public`.
-6. Helper view `v_approved_pay_item_quantities` that flattens `snapshot` rows from `status = 'approved'` reports — exports, PM dashboard, and the P6 progress logic read from here. Nothing reads pending snapshots except the RE review screen.
+## 2. RE Review screen — finish what's there
 
-## Inspector submit flow (small additions to existing field UI)
+- **Audit history**: load `daily_report_comments` for each card; render a collapsible "History" section showing RE reject reasons + inspector replies, oldest first.
+- **Inspector reply box** on rejected reports (inspector-only): writes to `daily_report_comments` so the RE can see context before the resubmit.
+- **Diff vs prior submission**: when a report was rejected and resubmitted, show `Δ from previous submission` per pay item (compare current `snapshot` to the most recent `daily_report_comments` JSON archive — see §3).
+- **Bulk actions**: "Approve all visible" with confirm dialog for REs with multiple same-day inspector reports.
+- **Filters**: inspector dropdown, date range, search by pay item code.
+- **Empty/loading/error states**: already present, but add skeleton rows and a "No RE role assigned to anyone on this project — assign one in Team" CTA when the queue is empty *and* no project member has the role.
+- **Sidebar link**: add "RE Review" entry in `ProjectSidebar.tsx`, gated on `isResidentEngineer || isAdmin || isProjectCreator`.
 
-Once the inspector taps "Submit for RE Review" on a day:
-- Build the `snapshot` from that inspector's annotations dated on `report_date` (group by `pay_item_id`, sum `measurement`/`manual_quantity`, compute `new_cumulative` from `v_approved_pay_item_quantities` + this day's delta).
-- Write snapshot + set `status = 'submitted'`, `submitted_at = now()`.
-- Lock the report on the UI: subsequent annotation edits do not change a submitted report's snapshot.
+## 3. Snapshot archive on resubmit
 
-This plan does **not** ship the inspector-side submit button UI yet — it ships the schema and the RE review screen. A small "Submit for RE Review" affordance and the snapshot-builder utility (`buildDailyReportSnapshot`) are included so the RE screen has real data to review.
+When inspector reopens a rejected report, before flipping to `draft`, archive the existing snapshot:
 
-## UI: `/re-review` (new page)
+- Insert a row into `daily_report_comments` with `body = '__snapshot_archive__' || jsonb` (or add a dedicated `daily_report_snapshots` table — see Technical Notes for the call). This preserves "what the RE rejected" for the diff view and for audit/legal.
 
-Visible to anyone with `resident_engineer` role; PM/project creator gets a read-only version.
+## 4. Downstream consumers — actually use the approved-only view
 
-```text
-┌──────────────────────────────────────────────────────────────────┐
-│ RE REVIEW · NJTA-104-0001              [Submitted ▾] [Date ▾]    │
-├──────────────────────────────────────────────────────────────────┤
-│ 2026-05-18 · R. Patel · submitted 16:42      SUBMITTED           │
-│  ┌────────────────────────────────────────────────────────────┐  │
-│  │ Pay item               Today    New cumul.   vs Contract   │  │
-│  │ 201-0006 Excavation    +120 CY  1,840 CY     61%           │  │
-│  │ 502-0210 Class B Conc  +18 CY   96 CY        12%           │  │
-│  │ 605-0001 RCP 18"       +220 LF  840 LF       42%           │  │
-│  │ Notes: South abutment, Sta 412+00 to 414+50                │  │
-│  └────────────────────────────────────────────────────────────┘  │
-│  [ ✓ Approve Report ]   [ ✗ Reject with Comments ]               │
-├──────────────────────────────────────────────────────────────────┤
-│ 2026-05-17 · T. Nguyen   APPROVED  by J. Liu · 18:04 (audit)     │
-└──────────────────────────────────────────────────────────────────┘
-```
+Right now `v_approved_pay_item_quantities` exists but nothing reads from it. Wire it up:
 
-- One card per `daily_reports` row in `submitted` status, newest first.
-- Approve and Reject act on the whole card. Reject opens a dialog requiring a comment; the comment is stored in `daily_report_comments` and `daily_reports.reject_reason`.
-- Approved and rejected reports collapse into a compact audit row (filterable from the status dropdown).
-- All actions toast on success and on RLS/transition errors.
+- **`src/lib/export-utils.ts`**: cumulative quantities and progress % must come from `v_approved_pay_item_quantities`, not raw `annotations`. Inspector-only export keeps raw annotations (their working tally), but the "Owner Report" / contract progress export is approved-only with a clear footer note.
+- **`src/pages/Dashboard.tsx` PM metrics**: project completion %, pay-item burn-down, inspector activity — switch to the view. Add a small "Pending RE review: N reports" chip per project card.
+- **`src/lib/p6xml/apply-progress.ts`**: replace the TODO comment with a real `loadApprovedQuantities(projectId)` helper that queries the view and feeds `applyProgress`. Add a unit test that an unapproved annotation does *not* move a P6 activity's `PercentComplete`.
+- **`src/pages/ProjectControls.tsx`** (if it shows cumulative): same swap.
 
-## Files
+## 5. Roles, seeding, and access
 
-- **Create**: `src/pages/ReReview.tsx`
-- **Create**: `src/components/ReReviewCard.tsx`
-- **Create**: `src/components/ReRejectDialog.tsx`
-- **Create**: `src/hooks/useReReviewQueue.ts` (queue fetch + approve/reject mutations, optimistic updates)
-- **Create**: `src/lib/daily-report-snapshot.ts` (`buildDailyReportSnapshot(projectId, inspectorId, date)`)
-- **Edit**: `src/App.tsx` — add `/re-review` route, auth-guarded
-- **Edit**: `src/components/ProjectSidebar.tsx` — add "RE Review" nav link, visible only to `resident_engineer` or project creator
-- **Edit**: `src/lib/p6xml/apply-progress.ts` — add a comment noting it must source from `v_approved_pay_item_quantities` when wired to live data (no code change yet)
+The RE screen is currently unreachable for almost everyone:
 
-## Tests
+- **`src/components/TeamManager.tsx`**: add `resident_engineer` to the role dropdown when adding/editing project members, and surface it in the member list with a badge.
+- **`src/pages/Admin.tsx`**: allow admins to grant/revoke the `resident_engineer` app role on any user.
+- **`assign_owner_role` RPC**: no change — first user stays admin. But add a one-time backfill insert (via migration) that gives the current admin the `resident_engineer` role too, so the queue is testable out of the box.
+- **`useAuth`**: already exposes `isResidentEngineer` — confirm `ReReview` and the new sidebar link use it consistently.
 
-- `src/test/re-review.test.ts`:
-  - Submit transition writes a frozen `snapshot` and flips status to `submitted`.
-  - Approving stamps `approved_at`/`approved_by` via trigger.
-  - Rejecting without a comment is blocked; with a comment moves to `rejected` and records the comment.
-  - PM-facing queries on `v_approved_pay_item_quantities` exclude `submitted` and `rejected` reports.
+## 6. Notifications (lightweight, in-app only)
 
-## Out of scope
+No email infra yet — keep it in-app:
 
-- No per-pay-item approve/reject (explicit user decision in this iteration).
-- No PDF of the signed DCR.
-- No notifications/emails on submit/decision.
-- No retroactive snapshot rebuild on annotation edits after submit — that is the point of the snapshot.
+- New `notifications` table (`user_id`, `kind`, `payload jsonb`, `read_at`, `created_at`) with RLS scoped to `auth.uid() = user_id`.
+- Triggers on `daily_reports` status changes:
+  - `submitted` → insert one row per project member with `resident_engineer` role.
+  - `approved` / `rejected` → insert one row for the report's `user_id` (inspector).
+- Bell icon in the Dashboard header with unread count + a popover list; clicking an item routes to `/re-review` or `/project/:id/daily-report`.
+
+## 7. Tests
+
+- **`src/test/daily-report-snapshot.test.ts`** — snapshot building handles: no annotations, mixed `measurement` + `manual_quantity`, multiple pay items, prior approved cumulative present/absent.
+- **`src/test/re-review.test.ts`** — state machine transitions (draft→submitted→approved, submitted→rejected→draft), reject requires reason, RE-only update rights.
+- **`src/test/approved-quantities-view.test.ts`** — pending and rejected snapshots excluded; approved sums correctly across multiple days/inspectors.
+- **`src/test/p6xml-approved-only.test.ts`** — `applyProgress` driven by the view ignores pending work.
+
+## 8. UX polish (small but worth doing in one pass)
+
+- Toast on successful submit with link "View in RE queue" (visible only if the user can see it).
+- Color-code status everywhere consistently: draft=muted, submitted=warning, approved=success, rejected=destructive — define tokens in `index.css` if missing.
+- Mobile pass on `/re-review` cards (currently desktop-first; REs review in the field too).
+- Empty-state CTA on `DailyReport.tsx` when inspector has no annotations for the date: "Open takeoff tool to add measurements."
+
+## Out of scope (explicit)
+
+- Per-pay-item approve/reject (already decided against).
+- PDF generation of signed DCR.
+- Email notifications.
+- Realtime push (Supabase realtime channel) — can add later; polling on focus is fine for v1.
+- Multi-RE co-sign workflow.
 
 ## Technical notes
 
-- Snapshot is jsonb (not a child table) because it is immutable once written and never queried for joins — it represents what the RE was shown at decision time, even if pay item codes or annotation geometry later change.
-- Trigger uses `SECURITY DEFINER` + `SET search_path = public`, matching existing helpers.
-- `v_approved_pay_item_quantities` is a plain view (not materialized) — daily-report volume is low enough that recomputation cost is negligible.
+- **Archive table vs comments hack**: prefer a dedicated `daily_report_snapshots` table (`daily_report_id`, `snapshot jsonb`, `archived_at`, `archived_reason`) over stuffing JSON into `daily_report_comments.body`. Cleaner queries, no string-prefix sniffing. New migration adds it with RLS mirroring `daily_reports`.
+- **Notification trigger**: `SECURITY DEFINER` + `SET search_path = public`, fan-out via `INSERT … SELECT user_id FROM user_roles WHERE role='resident_engineer'` — keep it bounded; if the project later has many REs we revisit.
+- **View performance**: `v_approved_pay_item_quantities` is fine as a plain view at current volumes. If it shows up in slow queries, swap to a materialized view refreshed on `daily_reports` status change via trigger.
+- **RLS for `daily_report_snapshots`**: project members SELECT; INSERT only by the report's owner during the reopen flow (or via the trigger that fires on status leaving `rejected`).
+- **No edits to `src/integrations/supabase/types.ts`** — regenerated after migration.
+
+## File map
+
+Create:
+- `src/pages/DailyReport.tsx`
+- `src/lib/daily-report-snapshot.ts`
+- `src/components/DailyReportPreview.tsx`
+- `src/components/NotificationBell.tsx`
+- `src/hooks/useNotifications.ts`
+- `src/hooks/useDailyReport.ts`
+- `src/test/daily-report-snapshot.test.ts`
+- `src/test/re-review.test.ts`
+- `src/test/approved-quantities-view.test.ts`
+- `src/test/p6xml-approved-only.test.ts`
+- Migrations: `daily_report_snapshots` table + RLS, `notifications` table + RLS + triggers, admin backfill of RE role.
+
+Edit:
+- `src/App.tsx` — add `/project/:projectId/daily-report` route.
+- `src/pages/Index.tsx` — "Daily Report" button.
+- `src/pages/Dashboard.tsx` — pending-review chip, notification bell, switch metrics to approved view.
+- `src/pages/ReReview.tsx` — history, diff, bulk approve, filters, mobile polish.
+- `src/components/ReReviewCard.tsx` — comments thread, diff badges.
+- `src/components/ProjectSidebar.tsx` — RE Review nav link.
+- `src/components/TeamManager.tsx` — `resident_engineer` role option.
+- `src/pages/Admin.tsx` — RE role grant.
+- `src/lib/export-utils.ts` — approved-only cumulative.
+- `src/lib/p6xml/apply-progress.ts` — real `loadApprovedQuantities`.
+- `src/hooks/useReReviewQueue.ts` — comments fetch, archive on reopen.
+- `src/index.css` — status color tokens if missing.
+
