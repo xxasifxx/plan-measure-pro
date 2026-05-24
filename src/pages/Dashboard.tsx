@@ -25,6 +25,7 @@ import { NotificationBell } from '@/components/NotificationBell';
 import { useQuery } from '@tanstack/react-query';
 import { loadPendingReviewCounts } from '@/lib/approved-quantities';
 import type { TourStep } from '@/hooks/useTour';
+import { useConfirm } from '@/components/ConfirmDialog';
 
 const ROLE_STYLES: Record<string, string> = {
   admin: 'bg-info/15 text-info border-info/30',
@@ -40,6 +41,8 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { isDark, toggle: toggleTheme } = useTheme();
+  const { confirm, dialog: confirmDialog } = useConfirm();
+
 
   // Create project dialog
   const [showCreate, setShowCreate] = useState(false);
