@@ -111,19 +111,20 @@ export async function exportApprovedCsv(
 }
 
 
-export async function exportPdfReport(
-  annotations: Annotation[],
-  payItems: PayItem[],
+async function writePdfFromRows(
+  rows: ExportRow[],
   projectName: string,
-  contractNumber: string
+  contractNumber: string,
+  opts: { title?: string; fileSuffix?: string } = {},
 ): Promise<void> {
   const { jsPDF } = await import('jspdf');
   const doc = new jsPDF();
-  const rows = buildRows(annotations, payItems);
   const total = rows.reduce((s, r) => s + r.extended, 0);
+  const title = opts.title ?? 'Quantity Takeoff Summary';
+  const fileSuffix = opts.fileSuffix ?? 'report';
 
   doc.setFontSize(16);
-  doc.text('Quantity Takeoff Summary', 14, 20);
+  doc.text(title, 14, 20);
   doc.setFontSize(10);
   doc.text(`Project: ${projectName}`, 14, 30);
   if (contractNumber) doc.text(`Contract: ${contractNumber}`, 14, 36);
@@ -190,8 +191,39 @@ export async function exportPdfReport(
   doc.text('GRAND TOTAL', 14, y);
   doc.text(`$${total.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, 185, y, { align: 'right' });
 
-  doc.save(`${projectName || 'takeoff'}_report.pdf`);
+  doc.save(`${projectName || 'takeoff'}_${fileSuffix}.pdf`);
 }
+
+export async function exportPdfReport(
+  annotations: Annotation[],
+  payItems: PayItem[],
+  projectName: string,
+  contractNumber: string,
+): Promise<void> {
+  await writePdfFromRows(buildRows(annotations, payItems), projectName, contractNumber);
+}
+
+/**
+ * Export only RE-approved quantities (from v_approved_pay_item_quantities).
+ * Use this for any "official" contract export.
+ */
+export async function exportApprovedPdfReport(
+  projectId: string,
+  payItems: PayItem[],
+  projectName: string,
+  contractNumber: string,
+): Promise<void> {
+  const approved = await loadApprovedTotalsByPayItem(projectId);
+  const overrides = new Map<string, number>();
+  for (const [k, v] of approved) overrides.set(k, v.approved_quantity);
+  await writePdfFromRows(
+    buildRows([], payItems, overrides),
+    projectName,
+    contractNumber,
+    { title: 'RE-Approved Quantity Report', fileSuffix: 'approved_report' },
+  );
+}
+
 
 /**
  * Export annotations by one inspector as an Excel workbook.
