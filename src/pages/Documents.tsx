@@ -1305,6 +1305,7 @@ export default function Documents() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      {confirmDialog}
     </div>
   );
 }
