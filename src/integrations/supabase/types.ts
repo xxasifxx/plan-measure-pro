@@ -491,6 +491,7 @@ export type Database = {
           item_code: string
           item_number: number
           name: string
+          p6_activity_id: string | null
           project_id: string
           unit: string
           unit_price: number
@@ -504,6 +505,7 @@ export type Database = {
           item_code: string
           item_number: number
           name: string
+          p6_activity_id?: string | null
           project_id: string
           unit: string
           unit_price?: number
@@ -517,6 +519,7 @@ export type Database = {
           item_code?: string
           item_number?: number
           name?: string
+          p6_activity_id?: string | null
           project_id?: string
           unit?: string
           unit_price?: number

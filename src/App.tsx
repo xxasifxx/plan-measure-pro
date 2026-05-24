@@ -13,6 +13,7 @@ import McfaPitch from "./pages/McfaPitch";
 import FajarPitch from "./pages/FajarPitch";
 import XerDemo from "./pages/XerDemo";
 import P6XmlDemo from "./pages/P6XmlDemo";
+import P6Export from "./pages/P6Export";
 import ReReview from "./pages/ReReview";
 import DailyReport from "./pages/DailyReport";
 import Auth from "./pages/Auth";
@@ -63,6 +64,7 @@ const App = () => (
             <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
             <Route path="/re-review" element={<ProtectedRoute><ReReview /></ProtectedRoute>} />
             <Route path="/project/:projectId/daily-report" element={<ProtectedRoute><DailyReport /></ProtectedRoute>} />
+            <Route path="/project/:projectId/p6-export" element={<ProtectedRoute><P6Export /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
