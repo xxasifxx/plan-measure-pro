@@ -779,24 +779,24 @@ export default function Documents() {
 
           {/* Bulk action bar */}
           {selectedIds.size > 0 && (
-            <div className="flex items-center gap-2 px-3 py-2 border-b border-border bg-primary/10">
+            <div className="flex items-center gap-2 px-3 py-2 border-b border-primary/30 bg-primary/15">
               <span className="text-xs font-mono">{selectedIds.size} selected</span>
               <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={() => setSelectedIds(new Set())}>
                 <X className="h-3.5 w-3.5 mr-1" />Clear
               </Button>
               <div className="flex-1" />
-              <Button size="sm" variant="outline" className="h-7 gap-1.5" onClick={bulkDownload}>
-                <Download className="h-3.5 w-3.5" /><span className="text-xs">Download</span>
+              <Button size="sm" variant="outline" className="h-7 gap-1.5" onClick={bulkDownload} title="Download selected">
+                <Download className="h-3.5 w-3.5" /><span className="text-xs hidden lg:inline">Download</span>
               </Button>
               {canManageThis && viewingTrash && (
                 <>
-                  <Button size="sm" variant="outline" className="h-7 gap-1.5" onClick={async () => {
+                  <Button size="sm" variant="outline" className="h-7 gap-1.5" title="Restore selected" onClick={async () => {
                     for (const d of selectedDocs) await restoreDocument.mutateAsync(d).catch(() => {});
                     setSelectedIds(new Set());
                   }}>
-                    <Undo2 className="h-3.5 w-3.5" /><span className="text-xs">Restore</span>
+                    <Undo2 className="h-3.5 w-3.5" /><span className="text-xs hidden lg:inline">Restore</span>
                   </Button>
-                  <Button size="sm" variant="destructive" className="h-7 gap-1.5" onClick={() => {
+                  <Button size="sm" variant="destructive" className="h-7 gap-1.5" title="Delete forever" onClick={() => {
                     if (selectedDocs.length === 0) return;
                     if (!confirm(`Permanently delete ${selectedDocs.length} file${selectedDocs.length === 1 ? '' : 's'}? This cannot be undone.`)) return;
                     (async () => {
@@ -804,18 +804,26 @@ export default function Documents() {
                       setSelectedIds(new Set());
                     })();
                   }}>
-                    <Trash2 className="h-3.5 w-3.5" /><span className="text-xs">Delete forever</span>
+                    <Trash2 className="h-3.5 w-3.5" /><span className="text-xs hidden lg:inline">Delete forever</span>
                   </Button>
                 </>
               )}
               {canManageThis && !viewingTrash && (
-                <Button size="sm" variant="destructive" className="h-7 gap-1.5" onClick={() => setBulkDeleteOpen(true)}>
-                  <Trash2 className="h-3.5 w-3.5" /><span className="text-xs">Move to Trash</span>
+                <Button size="sm" variant="destructive" className="h-7 gap-1.5" title="Move to Trash" onClick={() => setBulkDeleteOpen(true)}>
+                  <Trash2 className="h-3.5 w-3.5" /><span className="text-xs hidden lg:inline">Move to Trash</span>
                 </Button>
               )}
             </div>
           )}
 
+          {/* Trash banner */}
+          {viewingTrash && (
+            <div className="px-4 py-2 text-[11px] font-mono border-b border-amber-500/30 bg-amber-500/10 text-amber-300 flex items-center gap-2">
+              <Trash2 className="h-3.5 w-3.5 shrink-0" />
+              <span className="uppercase tracking-wider">Viewing Trash</span>
+              <span className="text-amber-400/70 normal-case tracking-normal">— items can be restored or permanently deleted.</span>
+            </div>
+          )}
 
           {/* Folder hint / locked banner */}
           {selectedFolder?.system_kind && KIND_HINTS[selectedFolder.system_kind] && (
