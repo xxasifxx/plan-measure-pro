@@ -33,6 +33,14 @@ export interface DocumentRow {
   source_kind: string | null;
   created_at: string;
   updated_at: string;
+  deleted_at: string | null;
+  deleted_by: string | null;
+}
+
+export interface UploaderProfile {
+  id: string;
+  full_name: string | null;
+  email: string | null;
 }
 
 const extOf = (filename: string) => {
