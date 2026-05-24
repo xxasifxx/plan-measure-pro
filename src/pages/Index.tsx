@@ -27,7 +27,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import type { TocEntry, PointXY } from '@/types/project';
 import type { GeoCalibration } from '@/lib/geo-transform';
-import { Sun, Moon, ArrowLeft, Loader2, HelpCircle, FileSpreadsheet, Users, MousePointer2, Navigation, FileSignature, FileCode } from 'lucide-react';
+import { Sun, Moon, ArrowLeft, Loader2, HelpCircle, FileSpreadsheet, Users, MousePointer2, Navigation, FileSignature, FileCode, FolderTree } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { TeamManager } from '@/components/TeamManager';
@@ -761,6 +761,12 @@ const Index = () => {
                 <span className="text-[10px] text-muted-foreground bg-success/15 text-success px-2.5 py-1 rounded-full mr-1 font-semibold">
                   {onlineUsers.length} online
                 </span>
+              )}
+              {projectId && (
+                <Button variant="ghost" size="sm" className="h-8 gap-1.5" onClick={() => navigate(`/project/${projectId}/documents`)} title="Documents">
+                  <FolderTree className="h-4 w-4" />
+                  <span className="hidden sm:inline text-xs">Documents</span>
+                </Button>
               )}
               {projectId && (
                 <Button variant="ghost" size="sm" className="h-8 gap-1.5" onClick={() => navigate(`/project/${projectId}/daily-report`)} title="Daily Report">

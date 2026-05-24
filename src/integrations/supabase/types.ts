@@ -383,6 +383,127 @@ export type Database = {
         }
         Relationships: []
       }
+      document_folders: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          is_system: boolean
+          name: string
+          parent_id: string | null
+          project_id: string
+          system_kind: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_system?: boolean
+          name: string
+          parent_id?: string | null
+          project_id: string
+          system_kind?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_system?: boolean
+          name?: string
+          parent_id?: string | null
+          project_id?: string
+          system_kind?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_folders_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "document_folders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "document_folders_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      documents: {
+        Row: {
+          created_at: string
+          folder_id: string
+          id: string
+          mime_type: string | null
+          name: string
+          project_id: string
+          replaces_document_id: string | null
+          size_bytes: number | null
+          source_kind: string | null
+          storage_path: string
+          updated_at: string
+          uploaded_by: string
+          version: number
+        }
+        Insert: {
+          created_at?: string
+          folder_id: string
+          id?: string
+          mime_type?: string | null
+          name: string
+          project_id: string
+          replaces_document_id?: string | null
+          size_bytes?: number | null
+          source_kind?: string | null
+          storage_path: string
+          updated_at?: string
+          uploaded_by: string
+          version?: number
+        }
+        Update: {
+          created_at?: string
+          folder_id?: string
+          id?: string
+          mime_type?: string | null
+          name?: string
+          project_id?: string
+          replaces_document_id?: string | null
+          size_bytes?: number | null
+          source_kind?: string | null
+          storage_path?: string
+          updated_at?: string
+          uploaded_by?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "documents_folder_id_fkey"
+            columns: ["folder_id"]
+            isOneToOne: false
+            referencedRelation: "document_folders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_replaces_document_id_fkey"
+            columns: ["replaces_document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       geo_calibrations: {
         Row: {
           control_points: Json
@@ -794,6 +915,10 @@ export type Database = {
       is_project_member: {
         Args: { _project_id: string; _user_id: string }
         Returns: boolean
+      }
+      seed_project_standard_folders: {
+        Args: { _project_id: string; _user: string }
+        Returns: undefined
       }
     }
     Enums: {
