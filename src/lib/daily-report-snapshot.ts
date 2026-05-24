@@ -101,23 +101,23 @@ export async function buildDailyReportSnapshot(
   reportDateISO: string,
   _excludeDailyReportId?: string,
 ): Promise<SnapshotItem[]> {
-  const dayStart = `${reportDateISO}T00:00:00.000Z`;
-  const dayEnd = `${reportDateISO}T23:59:59.999Z`;
-
   const { data: items, error: piErr } = await supabase
     .from('pay_items')
     .select('id, item_code, name, unit, contract_quantity')
     .eq('project_id', projectId);
   if (piErr) throw piErr;
 
+  // Bucket annotations by project-local work_date (America/New_York),
+  // populated by the DB default. This prevents evening edits leaking into
+  // the next UTC day.
   const { data: anns, error: annErr } = await supabase
     .from('annotations')
     .select('id, pay_item_id, measurement, manual_quantity, depth, type, notes')
     .eq('project_id', projectId)
     .eq('user_id', inspectorId)
-    .gte('created_at', dayStart)
-    .lte('created_at', dayEnd);
+    .eq('work_date', reportDateISO);
   if (annErr) throw annErr;
+
 
   const { data: approved, error: vErr } = await supabase
     .from('v_approved_pay_item_quantities' as any)

@@ -312,10 +312,10 @@ export function exportInspectorDaily(
 }
 
 /**
- * Export an inspector's RE-approved daily-report snapshot for a single date.
- * Pulls the frozen snapshot from `daily_reports` where status='approved'.
- * If no approved report exists for that inspector/date, the workbook contains
- * a single notice row instead of unapproved data.
+ * Export an inspector's daily-report snapshot for a single date.
+ * Prefers the RE-approved snapshot. If none exists, falls back to the
+ * inspector's own submitted/draft snapshot and clearly labels the export
+ * as PENDING — these quantities are not yet officially approved.
  */
 export async function exportApprovedInspectorDaily(
   projectId: string,
@@ -331,13 +331,19 @@ export async function exportApprovedInspectorDaily(
 
   const { data, error } = await supabase
     .from('daily_reports')
-    .select('snapshot, approved_at, status')
+    .select('snapshot, approved_at, status, submitted_at')
     .eq('project_id', projectId)
     .eq('user_id', userId)
     .eq('report_date', dateStr)
-    .eq('status', 'approved')
+    .in('status', ['approved', 'submitted', 'draft'])
+    // Approved first, then submitted, then draft.
+    .order('status', { ascending: true })
+    .limit(1)
     .maybeSingle();
   if (error) throw error;
+
+  const status = (data as any)?.status as 'approved' | 'submitted' | 'draft' | undefined;
+  const isApproved = status === 'approved';
 
   const snapshot: Array<{
     pay_item_id: string; item_code: string; name: string; unit: string;
@@ -346,22 +352,32 @@ export async function exportApprovedInspectorDaily(
 
   const itemById = new Map(payItems.map(p => [p.id, p]));
 
+  const statusLine = isApproved
+    ? `Status: Approved (Official)`
+    : status === 'submitted'
+      ? `Status: PENDING — Submitted, awaiting RE approval. NOT official.`
+      : status === 'draft'
+        ? `Status: PENDING — Draft, not yet submitted. NOT official.`
+        : `Status: No report for this date`;
+
+  const tsLine = isApproved
+    ? `Approved: ${(data as any)?.approved_at ? new Date((data as any).approved_at).toLocaleString() : ''}`
+    : status === 'submitted'
+      ? `Submitted: ${(data as any)?.submitted_at ? new Date((data as any).submitted_at).toLocaleString() : ''}`
+      : '';
+
   const wb = XLSX.utils.book_new();
   const headerRows: any[][] = [
-    ['RE-Approved Daily Inspector Report'],
+    [isApproved ? 'RE-Approved Daily Inspector Report' : 'PENDING Daily Inspector Report'],
     [`Project: ${projectName}`, '', `Contract: ${contractNumber || 'N/A'}`],
     [`Inspector: ${inspectorName || 'Unknown'}`, '', `Date: ${targetDate.toLocaleDateString()}`],
-    [
-      `Status: ${data ? 'Approved' : 'No approved report for this date'}`,
-      '',
-      data?.approved_at ? `Approved: ${new Date(data.approved_at).toLocaleString()}` : '',
-    ],
+    [statusLine, '', tsLine],
     [],
-    ['Pay Item Code', 'Pay Item Name', 'Approved Qty (Day)', 'Cumulative Qty', 'Unit', 'Notes'],
+    ['Pay Item Code', 'Pay Item Name', 'Day Qty', 'Cumulative Qty', 'Unit', 'Notes'],
   ];
 
   const dataRows = snapshot.length === 0
-    ? [['—', 'No RE-approved snapshot exists for this date.', '', '', '', '']]
+    ? [['—', data ? 'Snapshot is empty for this date.' : 'No report exists for this date.', '', '', '', '']]
     : snapshot.map(s => {
         const item = itemById.get(s.pay_item_id);
         return [
@@ -379,7 +395,9 @@ export async function exportApprovedInspectorDaily(
     { wch: 16 }, { wch: 36 }, { wch: 16 }, { wch: 16 }, { wch: 8 }, { wch: 40 },
   ];
   ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 5 } }];
-  XLSX.utils.book_append_sheet(wb, ws, 'Approved Daily');
+  XLSX.utils.book_append_sheet(wb, ws, isApproved ? 'Approved Daily' : 'PENDING Daily');
 
-  XLSX.writeFile(wb, `${projectName || 'takeoff'}_approved_daily_${dateStr}.xlsx`);
+  const suffix = isApproved ? 'approved_daily' : 'PENDING_daily';
+  XLSX.writeFile(wb, `${projectName || 'takeoff'}_${suffix}_${dateStr}.xlsx`);
 }
+

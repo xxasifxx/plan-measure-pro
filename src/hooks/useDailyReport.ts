@@ -38,9 +38,10 @@ export function useDailyReport(projectId: string | undefined, userId: string | u
     },
   });
 
+  // Keep preview running even after submit so we can detect snapshot drift.
   const previewQuery = useQuery({
-    queryKey: ['daily-report-preview', projectId, userId, dateISO, query.data?.id],
-    enabled: !!projectId && !!userId && !!dateISO && (query.data?.status === 'draft' || query.data == null || query.data?.status === 'rejected'),
+    queryKey: ['daily-report-preview', projectId, userId, dateISO, query.data?.id, query.data?.status],
+    enabled: !!projectId && !!userId && !!dateISO && query.data?.status !== 'approved',
     queryFn: () => buildDailyReportSnapshot(projectId!, userId!, dateISO, query.data?.id),
   });
 
@@ -54,7 +55,8 @@ export function useDailyReport(projectId: string | undefined, userId: string | u
     mutationFn: async () => {
       if (!projectId || !userId) throw new Error('Missing project/user');
       const snapshot = await buildDailyReportSnapshot(projectId, userId, dateISO, query.data?.id);
-      if (snapshot.length === 0) throw new Error('No annotations on this date to submit.');
+      // Empty submissions are allowed — REs can still review/reject a zero-day.
+
 
       // Ensure draft row exists
       let reportId = query.data?.id;
@@ -67,9 +69,8 @@ export function useDailyReport(projectId: string | undefined, userId: string | u
         if (insErr) throw insErr;
         reportId = created.id;
       } else {
-        // Update snapshot on existing draft/rejected row
-        if (query.data?.status === 'rejected') {
-          // Reopen → draft first (trigger archives prior snapshot)
+        // Bring the row back to draft so we can refresh the snapshot.
+        if (query.data?.status === 'rejected' || query.data?.status === 'submitted') {
           const { error: reopenErr } = await supabase
             .from('daily_reports')
             .update({ status: 'draft', snapshot: snapshot as any })
@@ -83,6 +84,7 @@ export function useDailyReport(projectId: string | undefined, userId: string | u
           if (upErr) throw upErr;
         }
       }
+
 
       // Flip to submitted
       const { error: subErr } = await supabase
@@ -114,12 +116,30 @@ export function useDailyReport(projectId: string | undefined, userId: string | u
     onError: (e: Error) => toast({ title: 'Reopen failed', description: e.message, variant: 'destructive' }),
   });
 
+  // Drift detection: when submitted, compare frozen snapshot quantities to
+  // live preview. Any line-count change or per-item delta change is "stale".
+  const isStale = (() => {
+    if (query.data?.status !== 'submitted') return false;
+    const frozen = query.data.snapshot ?? [];
+    const live = previewQuery.data ?? [];
+    if (frozen.length !== live.length) return true;
+    const liveBy = new Map(live.map(l => [l.pay_item_id, l.delta_quantity]));
+    for (const f of frozen) {
+      const lv = liveBy.get(f.pay_item_id);
+      if (lv == null) return true;
+      if (Math.abs(Number(lv) - Number(f.delta_quantity)) > 0.005) return true;
+    }
+    return false;
+  })();
+
   return {
     report: query.data ?? null,
     isLoading: query.isLoading,
     preview: previewQuery.data ?? [],
     previewLoading: previewQuery.isLoading,
+    isStale,
     submit,
     reopen,
   };
 }
+

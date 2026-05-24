@@ -17,7 +17,7 @@ export default function DailyReport() {
   const { projectId } = useParams<{ projectId: string }>();
   const { user, profile } = useAuth();
   const [dateISO, setDateISO] = useState(todayISO());
-  const { report, isLoading, preview, previewLoading, submit, reopen } = useDailyReport(projectId, user?.id, dateISO);
+  const { report, isLoading, preview, previewLoading, isStale, submit, reopen } = useDailyReport(projectId, user?.id, dateISO);
 
   const status = report?.status ?? 'draft';
   const isDraft = status === 'draft' || report == null;
@@ -95,7 +95,7 @@ export default function DailyReport() {
         {status === 'submitted' && (
           <div className="border border-amber-500/40 bg-amber-500/5 rounded-md p-3 flex items-start gap-3">
             <Clock className="h-4 w-4 text-amber-400 shrink-0 mt-0.5" />
-            <div className="text-xs">
+            <div className="text-xs flex-1">
               <p className="font-semibold text-amber-400">Awaiting RE approval</p>
               <p className="text-muted-foreground mt-0.5">
                 Submitted {fmtTime(report?.submitted_at)}. Edits to annotations after this point will not change the submitted snapshot.
@@ -103,6 +103,23 @@ export default function DailyReport() {
             </div>
           </div>
         )}
+
+        {status === 'submitted' && isStale && (
+          <div className="border border-amber-500/60 bg-amber-500/10 rounded-md p-3 flex items-start gap-3">
+            <AlertCircle className="h-4 w-4 text-amber-400 shrink-0 mt-0.5" />
+            <div className="text-xs flex-1">
+              <p className="font-semibold text-amber-400">Snapshot is out of date</p>
+              <p className="text-muted-foreground mt-0.5">
+                Your annotations for {dateISO} changed after you submitted. Resubmit to send the current quantities to the RE.
+              </p>
+            </div>
+            <Button size="sm" variant="outline" onClick={() => submit.mutate()} disabled={submit.isPending}>
+              <Send className="h-3.5 w-3.5 mr-1.5" />
+              {submit.isPending ? 'Resubmitting…' : 'Resubmit'}
+            </Button>
+          </div>
+        )}
+
 
         {status === 'approved' && (
           <div className="border border-emerald-500/40 bg-emerald-500/5 rounded-md p-3 flex items-start gap-3">
