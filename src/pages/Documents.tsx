@@ -84,7 +84,6 @@ type UploadItem = { id: string; name: string; size: number; status: 'pending' | 
 
 export default function Documents() {
   const { projectId } = useParams<{ projectId: string }>();
-  const navigate = useNavigate();
   const { user, isManager, isAdmin } = useAuth();
   const qc = useQueryClient();
   const canManage = isManager || isAdmin;
