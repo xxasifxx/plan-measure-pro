@@ -1,98 +1,95 @@
 
-# P6 XML round-trip for inspector-driven progress updates
+# RE review screen — whole-report approval
 
-Extend the MCFA pitch and the existing XER toolkit so the scheduler can ingest a Primavera **P6 XML (PMXML)** baseline, auto-apply progress derived from RE-approved daily reports, and export a PMXML update Oracle P6 can re-import — eliminating the manual "type each Activity %, Actual Start, Actual Finish into P6" pass.
+The Resident Engineer (RE) approves or rejects an inspector's entire daily report as a single unit, matching how paper DCRs actually work. Inspector quantities are invisible to the rest of the project (PM dashboards, exports, P6 round-trip) until the RE signs the report. Rejected reports go back to the inspector with comments for resubmission.
 
-## How P6 XML actually works (research summary)
+## Data model
 
-Oracle ships two interchange formats; we already handle XER, this adds the XML one:
+Inspector quantities live on `annotations` today, but those are continuously edited as the inspector works. We need a **point-in-time snapshot** that the RE reviews — not a live view of whatever the inspector is currently drawing.
 
-- **File**: `PMXML` (a.k.a. *Primavera XML* / *P6 XML*). Single `<APIBusinessObjects>` root, schema versioned per P6 release (e.g. `Business_Objects_22_12.xsd`). Same format P6 Professional, EPPM, and Primavera Cloud use for project import/export.
-- **Relevant elements** (subset we need):
-  - `<Project>` — `Id`, `Name`, `DataDate`, `PlannedStartDate`, `MustFinishByDate`
-  - `<WBS>` — `Id`, `Name`, `ParentObjectId`
-  - `<Activity>` — `Id` (=task_code), `ObjectId`, `Name`, `Type` (`Task Dependent`, `Resource Dependent`, `Milestone`...), `Status` (`Not Started` / `In Progress` / `Completed`), `PercentCompleteType` (`Physical` | `Duration` | `Units`), `PhysicalPercentComplete`, `DurationPercentComplete`, `ActualStartDate`, `ActualFinishDate`, `RemainingDuration`, `AtCompletionDuration`, `PlannedDuration`, `PrimaryConstraintType`, `PrimaryConstraintDate`
-  - `<Relationship>` — `PredecessorActivityObjectId`, `SuccessorActivityObjectId`, `Type` (`Finish to Start`...), `Lag`
-  - `<ResourceAssignment>` — `ActualRegularUnits`, `RemainingUnits`, `ActualStartDate`, `ActualFinishDate` (optional; lets quantities flow into earned-value)
-- **Update semantics**: re-importing into P6 with "Update existing project" matches activities by `Id` (Activity ID) within the target Project Id. P6 then recalculates dates on the next schedule run; we don't need to recompute CPM ourselves.
-- **Day vs hour**: XML uses **hours** for durations (consistent with XER `*_hr_cnt`). Dates are ISO `YYYY-MM-DDTHH:mm:ss`.
+### Schema (migration)
 
-We do **not** need Oracle SDKs, the EPPM REST API, or web services — pure browser-side XML read/write is sufficient and matches our existing "no IT integration" positioning.
+1. Add to `daily_reports`:
+   - `status` text default `'draft'` — one of `draft | submitted | approved | rejected`
+   - `submitted_at` timestamptz (already exists, will be set on inspector submit)
+   - `approved_at` timestamptz, `approved_by` uuid
+   - `rejected_at` timestamptz, `rejected_by` uuid, `reject_reason` text
+   - `snapshot` jsonb — frozen at submit time: array of `{ pay_item_id, item_code, name, unit, delta_quantity, prior_cumulative, new_cumulative, notes, annotation_ids[] }`
+2. New table `daily_report_comments`:
+   - `daily_report_id`, `user_id`, `body` text, `created_at`
+   - Used for RE's reject-reason history and inspector's reply when resubmitting
+3. Add `resident_engineer` to the `app_role` enum (additive).
+4. RLS:
+   - `daily_reports` SELECT: project members may see their own drafts; only `submitted`, `approved`, or `rejected` rows are visible to the RE and PM. PM/exports filter to `status = 'approved'`.
+   - `daily_reports` UPDATE of `snapshot` and `submitted_at`: only the owner inspector, only while `status = 'draft'`.
+   - `daily_reports` UPDATE of `status`/`approved_*`/`rejected_*`/`reject_reason`: only users with `resident_engineer` role on the project. Transitions allowed: `submitted → approved`, `submitted → rejected`, `rejected → draft` (inspector reopens to fix).
+5. Trigger on `daily_reports` UPDATE: stamp `approved_at`/`approved_by` or `rejected_at`/`rejected_by` automatically based on `status` change, with `set search_path = public`.
+6. Helper view `v_approved_pay_item_quantities` that flattens `snapshot` rows from `status = 'approved'` reports — exports, PM dashboard, and the P6 progress logic read from here. Nothing reads pending snapshots except the RE review screen.
 
-## Scope
+## Inspector submit flow (small additions to existing field UI)
 
-This is a **pitch-page deliverable plus a working in-browser prototype** of the XML round-trip, mirroring the existing XER demo pattern. No backend, no auth changes, no Oracle credentials.
+Once the inspector taps "Submit for RE Review" on a day:
+- Build the `snapshot` from that inspector's annotations dated on `report_date` (group by `pay_item_id`, sum `measurement`/`manual_quantity`, compute `new_cumulative` from `v_approved_pay_item_quantities` + this day's delta).
+- Write snapshot + set `status = 'submitted'`, `submitted_at = now()`.
+- Lock the report on the UI: subsequent annotation edits do not change a submitted report's snapshot.
 
-### 1. Parsing & serialization library (`src/lib/p6xml/`)
+This plan does **not** ship the inspector-side submit button UI yet — it ships the schema and the RE review screen. A small "Submit for RE Review" affordance and the snapshot-builder utility (`buildDailyReportSnapshot`) are included so the RE screen has real data to review.
 
+## UI: `/re-review` (new page)
+
+Visible to anyone with `resident_engineer` role; PM/project creator gets a read-only version.
+
+```text
+┌──────────────────────────────────────────────────────────────────┐
+│ RE REVIEW · NJTA-104-0001              [Submitted ▾] [Date ▾]    │
+├──────────────────────────────────────────────────────────────────┤
+│ 2026-05-18 · R. Patel · submitted 16:42      SUBMITTED           │
+│  ┌────────────────────────────────────────────────────────────┐  │
+│  │ Pay item               Today    New cumul.   vs Contract   │  │
+│  │ 201-0006 Excavation    +120 CY  1,840 CY     61%           │  │
+│  │ 502-0210 Class B Conc  +18 CY   96 CY        12%           │  │
+│  │ 605-0001 RCP 18"       +220 LF  840 LF       42%           │  │
+│  │ Notes: South abutment, Sta 412+00 to 414+50                │  │
+│  └────────────────────────────────────────────────────────────┘  │
+│  [ ✓ Approve Report ]   [ ✗ Reject with Comments ]               │
+├──────────────────────────────────────────────────────────────────┤
+│ 2026-05-17 · T. Nguyen   APPROVED  by J. Liu · 18:04 (audit)     │
+└──────────────────────────────────────────────────────────────────┘
 ```
-src/lib/p6xml/
-  types.ts         # P6Project, P6Activity, P6Relationship, P6Wbs, P6ResourceAssignment
-  parser.ts        # parseP6Xml(xmlText): P6Tables — DOMParser, namespace-aware
-  serializer.ts    # serializeP6Xml(tables, opts): string — round-trips through XMLSerializer
-  apply-progress.ts# applyDailyReportsToP6(tables, reports, dataDate): {tables, changeLog}
-  sample.ts        # tiny embedded PMXML for the demo (no external file needed)
-```
 
-Parser/serializer goals:
-- Preserve unknown elements/attributes on round-trip (read once into a generic node tree, mutate only the fields we touch). This is how we guarantee P6 still accepts the file.
-- Whitelist the editable fields above; everything else is passed through verbatim.
-- Detect schema version from the root attribute and write it back unchanged.
-
-### 2. Daily-report → activity mapping
-
-`DailyReport` (reusing the inspector record shape already implied by the takeoff side) carries:
-`{ date, activityIdOrTag, quantityInstalled, unitOfMeasure, isComplete, notes, approvedByRE: true }`.
-
-`applyDailyReportsToP6` rules:
-1. Match by `Activity.Id`. If the inspector tags by pay item, fall back to an activity-code map the PM configures once per project.
-2. If `ActualStartDate` is empty and any approved report exists → set `ActualStartDate` = earliest approved report date, set `Status` = `In Progress`.
-3. If `isComplete` (or cumulative quantity ≥ contract quantity) → set `ActualFinishDate` = report date, `Status` = `Completed`, `RemainingDuration` = 0, `PhysicalPercentComplete` = 100.
-4. Otherwise → update `PhysicalPercentComplete` = `cumulativeQty / contractQty`, recompute `RemainingDuration` = `PlannedDuration * (1 - pct)`, leave `AtCompletionDuration` unchanged unless the inspector reports an overrun.
-5. Bump project `DataDate` to the latest approved report date.
-6. Emit a `changeLog` (one row per touched activity) for the PM's review screen.
-
-### 3. UI: XML round-trip demo on the MCFA pitch
-
-Add a new section to `src/pages/McfaPitch.tsx` between the existing "Progress vs Baseline" and the next module:
-
-- **Kicker**: `0X · P6 XML ROUND-TRIP` (insert and renumber subsequent kickers, following the same pattern used previously).
-- **Three-pane flow** (animated, similar to existing XerLensTour visuals):
-  1. *Drop baseline PMXML* — file input or "Use sample" button (uses `sample.ts`).
-  2. *Approved daily reports* — a mock table of 6–8 RE-approved rows the PM would otherwise type into P6.
-  3. *Updated PMXML out* — preview of the changeLog (activity, old %, new %, ΔRemainingDuration, new Actual dates) plus a "Download `<ProjectId>_update.xml`" button.
-- **Copy** emphasising the click-savings: "Today a PM hand-keys ~40 activity updates per project per month into P6. With approved daily reports as the source of truth, one upload reproduces the same edits and re-imports cleanly."
-- A small "Compatible with" badge row: *P6 Professional 22.x · EPPM · Primavera Cloud* (all consume PMXML).
-
-### 4. Standalone demo route
-
-Add `src/pages/P6XmlDemo.tsx` and a `/p6-xml` route in `src/App.tsx`, parallel to `/xer`. This is the page the MCFA pitch CTA links into so the prospect can actually try it without a sales call.
-
-### 5. Tests
-
-`src/test/p6xml.test.ts`:
-- Round-trip: parse → serialize → parse equals original semantically.
-- `applyDailyReportsToP6` cases: not-started → in-progress, in-progress → percent bump, completion, idempotency on re-apply.
-
-## Out of scope
-
-- No EPPM REST / web-service integration (file-based only, per existing positioning).
-- No CPM recalculation — we rely on P6's scheduler after re-import.
-- No XER ↔ XML conversion utility (separate ask).
-- No DB schema changes; daily reports are mocked on the pitch page from existing inspector data shape.
-- No changes to the takeoff product's auth, RLS, or roles.
+- One card per `daily_reports` row in `submitted` status, newest first.
+- Approve and Reject act on the whole card. Reject opens a dialog requiring a comment; the comment is stored in `daily_report_comments` and `daily_reports.reject_reason`.
+- Approved and rejected reports collapse into a compact audit row (filterable from the status dropdown).
+- All actions toast on success and on RLS/transition errors.
 
 ## Files
 
-- **Create**: `src/lib/p6xml/{types,parser,serializer,apply-progress,sample}.ts`
-- **Create**: `src/pages/P6XmlDemo.tsx`
-- **Create**: `src/test/p6xml.test.ts`
-- **Edit**: `src/pages/McfaPitch.tsx` (insert new section, renumber following kickers)
-- **Edit**: `src/App.tsx` (add `/p6-xml` route)
+- **Create**: `src/pages/ReReview.tsx`
+- **Create**: `src/components/ReReviewCard.tsx`
+- **Create**: `src/components/ReRejectDialog.tsx`
+- **Create**: `src/hooks/useReReviewQueue.ts` (queue fetch + approve/reject mutations, optimistic updates)
+- **Create**: `src/lib/daily-report-snapshot.ts` (`buildDailyReportSnapshot(projectId, inspectorId, date)`)
+- **Edit**: `src/App.tsx` — add `/re-review` route, auth-guarded
+- **Edit**: `src/components/ProjectSidebar.tsx` — add "RE Review" nav link, visible only to `resident_engineer` or project creator
+- **Edit**: `src/lib/p6xml/apply-progress.ts` — add a comment noting it must source from `v_approved_pay_item_quantities` when wired to live data (no code change yet)
+
+## Tests
+
+- `src/test/re-review.test.ts`:
+  - Submit transition writes a frozen `snapshot` and flips status to `submitted`.
+  - Approving stamps `approved_at`/`approved_by` via trigger.
+  - Rejecting without a comment is blocked; with a comment moves to `rejected` and records the comment.
+  - PM-facing queries on `v_approved_pay_item_quantities` exclude `submitted` and `rejected` reports.
+
+## Out of scope
+
+- No per-pay-item approve/reject (explicit user decision in this iteration).
+- No PDF of the signed DCR.
+- No notifications/emails on submit/decision.
+- No retroactive snapshot rebuild on annotation edits after submit — that is the point of the snapshot.
 
 ## Technical notes
 
-- Use built-in `DOMParser` / `XMLSerializer` — no new deps. PMXML files in MCFA's range (~few MB) parse comfortably client-side.
-- Namespace: PMXML uses `http://xmlns.oracle.com/Primavera/P6/V<ver>/API/BusinessObjects`; preserve it on the root element when serializing.
-- Date helpers: emit `YYYY-MM-DDTHH:mm:ss` (no timezone suffix — matches P6 export style).
-- Keep the parser tolerant of element order — P6 exports are not strictly ordered between releases.
+- Snapshot is jsonb (not a child table) because it is immutable once written and never queried for joins — it represents what the RE was shown at decision time, even if pay item codes or annotation geometry later change.
+- Trigger uses `SECURITY DEFINER` + `SET search_path = public`, matching existing helpers.
+- `v_approved_pay_item_quantities` is a plain view (not materialized) — daily-report volume is low enough that recomputation cost is negligible.
