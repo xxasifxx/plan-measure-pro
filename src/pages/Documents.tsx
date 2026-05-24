@@ -972,7 +972,9 @@ export default function Documents() {
                                     <DropdownMenuItem onClick={() => restoreDocument.mutate(d)}>
                                       <Undo2 className="h-3.5 w-3.5 mr-2" />Restore
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-destructive" onClick={() => hardDeleteDocument.mutate(d)}>
+                                    <DropdownMenuItem className="text-destructive" onClick={() => {
+                                      if (confirm(`Permanently delete "${d.name}"? This cannot be undone.`)) hardDeleteDocument.mutate(d);
+                                    }}>
                                       <Trash2 className="h-3.5 w-3.5 mr-2" />Delete forever
                                     </DropdownMenuItem>
                                   </>
