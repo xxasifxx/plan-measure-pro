@@ -58,10 +58,8 @@ function buildRows(
 }
 
 
-export function exportCsv(annotations: Annotation[], payItems: PayItem[], projectName: string): void {
-  const rows = buildRows(annotations, payItems);
+function writeCsvFromRows(rows: ExportRow[], projectName: string, fileSuffix = 'summary'): void {
   const header = 'Section,Item #,Item Code,Pay Item,Count,Measured Qty,Unit,Unit Price,Contract Qty,Variance %,Extended Cost';
-  // Contract Qty and Variance % are already in the header and row output below
 
   const sections = new Map<number, ExportRow[]>();
   for (const r of rows) {
@@ -90,10 +88,28 @@ export function exportCsv(annotations: Annotation[], payItems: PayItem[], projec
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `${projectName || 'takeoff'}_summary.csv`;
+  a.download = `${projectName || 'takeoff'}_${fileSuffix}.csv`;
   a.click();
   URL.revokeObjectURL(url);
 }
+
+export function exportCsv(annotations: Annotation[], payItems: PayItem[], projectName: string): void {
+  writeCsvFromRows(buildRows(annotations, payItems), projectName);
+}
+
+/**
+ * Export only RE-approved quantities (from v_approved_pay_item_quantities).
+ * Use this for any "official" contract export.
+ */
+export async function exportApprovedCsv(
+  projectId: string, payItems: PayItem[], projectName: string,
+): Promise<void> {
+  const approved = await loadApprovedTotalsByPayItem(projectId);
+  const overrides = new Map<string, number>();
+  for (const [k, v] of approved) overrides.set(k, v.approved_quantity);
+  writeCsvFromRows(buildRows([], payItems, overrides), projectName, 'approved_summary');
+}
+
 
 export async function exportPdfReport(
   annotations: Annotation[],
