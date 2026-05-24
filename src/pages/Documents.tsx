@@ -700,9 +700,24 @@ export default function Documents() {
               <table className="w-full text-xs">
                 <thead>
                   <tr className="text-[10px] uppercase tracking-wider text-muted-foreground border-b border-border">
-                    <th className="text-left font-medium px-4 py-2">Name</th>
-                    <th className="text-right font-medium px-3 py-2 hidden sm:table-cell">Size</th>
-                    <th className="text-left font-medium px-3 py-2 hidden md:table-cell">Uploaded</th>
+                    <th className="px-3 py-2 w-8">
+                      <Checkbox checked={allSelected} onCheckedChange={toggleAll} aria-label="Select all" />
+                    </th>
+                    <th className="text-left font-medium px-2 py-2">
+                      <button onClick={() => toggleSort('name')} className="inline-flex items-center gap-1 hover:text-foreground uppercase tracking-wider">
+                        Name {sortBy === 'name' ? (sortDir === 'asc' ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />) : <ArrowUpDown className="h-3 w-3 opacity-40" />}
+                      </button>
+                    </th>
+                    <th className="text-right font-medium px-3 py-2 hidden sm:table-cell">
+                      <button onClick={() => toggleSort('size')} className="inline-flex items-center gap-1 hover:text-foreground uppercase tracking-wider">
+                        Size {sortBy === 'size' ? (sortDir === 'asc' ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />) : <ArrowUpDown className="h-3 w-3 opacity-40" />}
+                      </button>
+                    </th>
+                    <th className="text-left font-medium px-3 py-2 hidden md:table-cell">
+                      <button onClick={() => toggleSort('date')} className="inline-flex items-center gap-1 hover:text-foreground uppercase tracking-wider">
+                        Uploaded {sortBy === 'date' ? (sortDir === 'asc' ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />) : <ArrowUpDown className="h-3 w-3 opacity-40" />}
+                      </button>
+                    </th>
                     <th className="text-right font-medium px-4 py-2 w-12"></th>
                   </tr>
                 </thead>
@@ -713,9 +728,13 @@ export default function Documents() {
                     const activeAs = canSetActive(d);
                     const activePlan = isActivePlan(d);
                     const activeSpecs = isActiveSpecs(d);
+                    const checked = selectedIds.has(d.id);
                     return (
-                      <tr key={d.id} className="border-b border-border/40 last:border-0 hover:bg-muted/20">
-                        <td className="px-4 py-2 min-w-0">
+                      <tr key={d.id} className={cn('border-b border-border/40 last:border-0 hover:bg-muted/20', checked && 'bg-primary/10')}>
+                        <td className="px-3 py-2 align-middle">
+                          <Checkbox checked={checked} onCheckedChange={() => toggleSel(d.id)} aria-label={`Select ${d.name}`} />
+                        </td>
+                        <td className="px-2 py-2 min-w-0">
                           <button onClick={() => handleOpen(d)} className="flex items-center gap-2 text-left group max-w-full">
                             <Icon className="h-4 w-4 text-muted-foreground group-hover:text-primary shrink-0" />
                             <span className="font-mono truncate group-hover:text-primary">{d.name}</span>
