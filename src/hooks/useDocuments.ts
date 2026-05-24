@@ -360,7 +360,7 @@ export function useUploaderProfiles(userIds: string[]) {
 export async function fetchDocumentVersions(projectId: string, currentDocId: string): Promise<DocumentRow[]> {
   const { data, error } = await supabase
     .from('documents')
-    .select('id, project_id, folder_id, name, storage_path, mime_type, size_bytes, uploaded_by, version, replaces_document_id, source_kind, created_at, updated_at')
+    .select('id, project_id, folder_id, name, storage_path, mime_type, size_bytes, uploaded_by, version, replaces_document_id, source_kind, created_at, updated_at, deleted_at, deleted_by')
     .eq('project_id', projectId);
   if (error) throw error;
   const rows = ((data as any) ?? []) as DocumentRow[];
