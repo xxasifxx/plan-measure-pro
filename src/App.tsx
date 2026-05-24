@@ -20,6 +20,7 @@ import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
 import Landing from "./pages/Landing";
 import NotFound from "./pages/NotFound";
+import Documents from "./pages/Documents";
 
 const queryClient = new QueryClient();
 
