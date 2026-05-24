@@ -213,7 +213,12 @@ export default function Documents() {
   }, [sourceDocs, search, sortBy, sortDir]);
 
   // ---- Uploader profile lookup ----
-  const uploaderIds = useMemo(() => Array.from(new Set(filteredDocs.map(d => d.uploaded_by))), [filteredDocs]);
+  const [versionsFor, _setVersionsForEarly] = [null as DocumentRow | null, null]; // hoist-friendly placeholder; real state declared below
+  const uploaderIds = useMemo(() => {
+    const ids = new Set<string>();
+    for (const d of filteredDocs) ids.add(d.uploaded_by);
+    return Array.from(ids);
+  }, [filteredDocs]);
   const uploaderProfilesQuery = useUploaderProfiles(uploaderIds);
   const uploaderProfiles = uploaderProfilesQuery.data ?? {};
   const folderById = useMemo(() => new Map(folders.map(f => [f.id, f])), [folders]);
