@@ -115,6 +115,7 @@ export default function Documents() {
   const { user, isManager, isAdmin } = useAuth();
   const qc = useQueryClient();
   const canManage = isManager || isAdmin;
+  const { confirm, dialog: confirmDialog } = useConfirm();
 
   // Project meta — includes active plan/specs storage paths for "Active" derivation.
   const projectMetaQuery = useQuery({
