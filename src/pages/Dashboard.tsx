@@ -83,6 +83,15 @@ export default function Dashboard() {
   const roleBadge = roles[0] ? roles[0].replace('_', ' ') : 'user';
   const roleKey = roles[0] || 'user';
 
+  // Pending RE review counts for projects the user can decide on
+  const projectIds = useMemo(() => projects.map(p => p.id), [projects]);
+  const pendingCounts = useQuery({
+    queryKey: ['pending-review-counts', projectIds.join(',')],
+    enabled: projectIds.length > 0,
+    queryFn: () => loadPendingReviewCounts(projectIds),
+    staleTime: 30_000,
+  });
+
   // PM progress detail
   const [expandedProject, setExpandedProject] = useState<string | null>(null);
   const [projectDetail, setProjectDetail] = useState<{
