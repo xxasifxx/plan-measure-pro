@@ -19,6 +19,7 @@ import {
   UserPlus, Trash2, Plus, Mail, Send, Clock, CheckCircle,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useConfirm } from '@/components/ConfirmDialog';
 
 type AppRole = 'admin' | 'project_manager' | 'inspector' | 'resident_engineer';
 
@@ -55,6 +56,7 @@ export default function Admin() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { isDark, toggle: toggleTheme } = useTheme();
+  const { confirm, dialog: confirmDialog } = useConfirm();
 
   const [users, setUsers] = useState<UserWithRoles[]>([]);
   const [projects, setProjects] = useState<ProjectRow[]>([]);
@@ -290,7 +292,12 @@ export default function Admin() {
                         className="h-7 w-7 text-muted-foreground hover:text-destructive"
                         title="Delete invitation"
                         onClick={async () => {
-                          if (!confirm(`Delete invitation for ${inv.email}?`)) return;
+                          const ok = await confirm({
+                            title: `Delete invitation for ${inv.email}?`,
+                            description: 'They will no longer be able to accept this invitation.',
+                            confirmLabel: 'Delete invitation',
+                          });
+                          if (!ok) return;
                           const { error } = await supabase.from('invitations').delete().eq('id', inv.id);
                           if (error) {
                             toast({ title: 'Error', description: error.message, variant: 'destructive' });
@@ -335,10 +342,13 @@ export default function Admin() {
                       key={role}
                       variant={role === 'admin' ? 'default' : 'secondary'}
                       className="text-[10px] gap-1 cursor-pointer group"
-                      onClick={() => {
-                        if (confirm(`Remove "${role}" role from ${user.full_name || user.email}?`)) {
-                          handleRemoveRole(user.id, role);
-                        }
+                      onClick={async () => {
+                        const ok = await confirm({
+                          title: `Remove "${role.replace('_',' ')}" role?`,
+                          description: `${user.full_name || user.email} will lose this role immediately.`,
+                          confirmLabel: 'Remove role',
+                        });
+                        if (ok) handleRemoveRole(user.id, role);
                       }}
                     >
                       {role.replace('_', ' ')}
@@ -411,10 +421,13 @@ export default function Admin() {
                             key={m.id}
                             variant="secondary"
                             className="text-[10px] gap-1 cursor-pointer group"
-                            onClick={() => {
-                              if (confirm(`Remove ${getUserName(m.user_id)} from this project?`)) {
-                                handleRemoveMember(m.id);
-                              }
+                            onClick={async () => {
+                              const ok = await confirm({
+                                title: `Remove ${getUserName(m.user_id)} from this project?`,
+                                description: 'They will lose access to this project.',
+                                confirmLabel: 'Remove member',
+                              });
+                              if (ok) handleRemoveMember(m.id);
                             }}
                           >
                             {getUserName(m.user_id)} ({m.role})
