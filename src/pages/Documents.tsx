@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import {
   ArrowLeft, FolderTree, Folder, FolderOpen, FilePlus, FolderPlus, Upload, Download,
   Pencil, Trash2, MoreVertical, ChevronRight, ChevronDown, History, Lock, FileText, Image as ImageIcon,
-  Move, Loader2,
+  Move, Loader2, Search, Eye, X, CheckCircle2, AlertCircle, Plus, FileUp, Star,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useFolders, useDocuments, fetchDocumentVersions, type FolderRow, type DocumentRow } from '@/hooks/useDocuments';
@@ -19,6 +20,9 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/hooks/use-toast';
+
+const BUCKET = 'project-documents';
 
 const KIND_HINTS: Record<string, string> = {
   plans: 'Drawing sets and plan PDFs used for takeoff.',
@@ -41,10 +45,12 @@ const fmtBytes = (n?: number | null) => {
   return `${(n / 1024 / 1024 / 1024).toFixed(2)} GB`;
 };
 
-const fileIcon = (mime?: string | null) => {
-  if (mime?.startsWith('image/')) return ImageIcon;
-  return FileText;
-};
+const extOf = (s: string) => { const i = s.lastIndexOf('.'); return i > 0 ? s.slice(i + 1).toLowerCase() : 'bin'; };
+const isImage = (m?: string | null) => !!m && m.startsWith('image/');
+const isPdf = (m?: string | null, name?: string) => m === 'application/pdf' || (!!name && /\.pdf$/i.test(name));
+const isPreviewable = (d: DocumentRow) => isImage(d.mime_type) || isPdf(d.mime_type, d.name);
+
+const fileIcon = (mime?: string | null) => isImage(mime) ? ImageIcon : FileText;
 
 function buildTree(folders: FolderRow[]) {
   const byParent = new Map<string | null, FolderRow[]>();
@@ -74,35 +80,44 @@ function pathOf(folder: FolderRow | undefined, all: FolderRow[]): FolderRow[] {
   return out;
 }
 
+type UploadItem = { id: string; name: string; size: number; status: 'pending' | 'uploading' | 'done' | 'error'; error?: string };
+
 export default function Documents() {
   const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
   const { user, isManager, isAdmin } = useAuth();
+  const qc = useQueryClient();
   const canManage = isManager || isAdmin;
 
-  const [projectMeta, setProjectMeta] = useState<{ name: string; created_by: string } | null>(null);
-
-  useEffect(() => {
-    if (!projectId) return;
-    supabase.from('projects').select('name, created_by').eq('id', projectId).maybeSingle()
-      .then(({ data }) => data && setProjectMeta(data as any));
-  }, [projectId]);
+  // Project meta — includes active plan/specs storage paths for "Active" derivation.
+  const projectMetaQuery = useQuery({
+    queryKey: ['project-meta', projectId],
+    enabled: !!projectId,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('projects')
+        .select('name, created_by, pdf_storage_path, specs_storage_path')
+        .eq('id', projectId!)
+        .maybeSingle();
+      if (error) throw error;
+      return data as { name: string; created_by: string; pdf_storage_path: string | null; specs_storage_path: string | null } | null;
+    },
+  });
+  const projectMeta = projectMetaQuery.data;
 
   const isProjectCreator = !!user && !!projectMeta && projectMeta.created_by === user.id;
   const canManageThis = canManage || isProjectCreator;
 
-  const { folders, isLoading: foldersLoading, createFolder, renameFolder, moveFolder, deleteFolder } = useFolders(projectId);
+  const { folders, isLoading: foldersLoading, createFolder, renameFolder, deleteFolder } = useFolders(projectId);
   const tree = useMemo(() => buildTree(folders), [folders]);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
 
-  // Select Plans on first load (or first system folder available).
   useEffect(() => {
     if (selectedFolderId || folders.length === 0) return;
     const plans = folders.find(f => f.system_kind === 'plans') ?? folders.find(f => f.parent_id == null) ?? folders[0];
     setSelectedFolderId(plans?.id ?? null);
     if (plans?.parent_id) {
-      // expand ancestors
       const path = pathOf(plans, folders);
       const newExp: Record<string, boolean> = {};
       for (const a of path) newExp[a.id] = true;
@@ -113,15 +128,162 @@ export default function Documents() {
   const selectedFolder = folders.find(f => f.id === selectedFolderId);
   const breadcrumb = pathOf(selectedFolder, folders);
 
-  const { documents, isLoading: docsLoading, uploadFiles, renameDocument, moveDocument, deleteDocument, getDownloadUrl } =
+  const { documents, isLoading: docsLoading, renameDocument, moveDocument, deleteDocument, uploadNewVersion, getDownloadUrl } =
     useDocuments(projectId, selectedFolderId ?? undefined);
 
-  // Inspector upload gate: only photos/daily_reports.
   const inspectorCanUploadHere =
     !!selectedFolder && (selectedFolder.system_kind === 'photos' || selectedFolder.system_kind === 'daily_reports');
   const canUploadHere = canManageThis || inspectorCanUploadHere;
 
-  // Dialogs
+  // ---- Search ----
+  const [search, setSearch] = useState('');
+  const filteredDocs = useMemo(() => {
+    if (!search.trim()) return documents;
+    const q = search.toLowerCase();
+    return documents.filter(d => d.name.toLowerCase().includes(q));
+  }, [documents, search]);
+
+  // ---- Upload queue with per-file progress ----
+  const [uploadQueue, setUploadQueue] = useState<UploadItem[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const newVersionInputRef = useRef<HTMLInputElement>(null);
+  const [newVersionTarget, setNewVersionTarget] = useState<DocumentRow | null>(null);
+
+  const runUploads = async (files: File[]) => {
+    if (!projectId || !selectedFolderId || !user) return;
+    const folderId = selectedFolderId;
+    const items: UploadItem[] = files.map(f => ({
+      id: crypto.randomUUID(), name: f.name, size: f.size, status: 'pending',
+    }));
+    setUploadQueue(q => [...q, ...items]);
+
+    // Same-name versioning lookup
+    const { data: existing, error: exErr } = await supabase
+      .from('documents')
+      .select('id, name, version, replaces_document_id')
+      .eq('project_id', projectId)
+      .eq('folder_id', folderId);
+    if (exErr) {
+      setUploadQueue(q => q.map(p => items.find(i => i.id === p.id) ? { ...p, status: 'error', error: exErr.message } : p));
+      return;
+    }
+    const exRows = (existing as any[]) ?? [];
+    const replacedSet = new Set(exRows.map(r => r.replaces_document_id).filter(Boolean));
+    const latestByName = new Map<string, { id: string; version: number }>();
+    for (const r of exRows) {
+      if (replacedSet.has(r.id)) continue;
+      latestByName.set(r.name.toLowerCase(), { id: r.id, version: r.version });
+    }
+
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      const file = files[i];
+      setUploadQueue(q => q.map(p => p.id === item.id ? { ...p, status: 'uploading' } : p));
+      try {
+        const docId = crypto.randomUUID();
+        const path = `${projectId}/${docId}.${extOf(file.name)}`;
+        const { error: upErr } = await supabase.storage.from(BUCKET).upload(path, file, {
+          contentType: file.type || undefined, upsert: false,
+        });
+        if (upErr) throw upErr;
+        const prior = latestByName.get(file.name.toLowerCase());
+        const { error: insErr } = await supabase.from('documents').insert({
+          id: docId,
+          project_id: projectId,
+          folder_id: folderId,
+          name: file.name,
+          storage_path: path,
+          mime_type: file.type || null,
+          size_bytes: file.size,
+          uploaded_by: user.id,
+          version: prior ? prior.version + 1 : 1,
+          replaces_document_id: prior?.id ?? null,
+          source_kind: 'manual_upload',
+        } as any);
+        if (insErr) {
+          await supabase.storage.from(BUCKET).remove([path]).catch(() => {});
+          throw insErr;
+        }
+        if (prior) latestByName.set(file.name.toLowerCase(), { id: docId, version: prior.version + 1 });
+        else latestByName.set(file.name.toLowerCase(), { id: docId, version: 1 });
+        setUploadQueue(q => q.map(p => p.id === item.id ? { ...p, status: 'done' } : p));
+      } catch (e: any) {
+        setUploadQueue(q => q.map(p => p.id === item.id ? { ...p, status: 'error', error: e?.message ?? 'Failed' } : p));
+      }
+    }
+    qc.invalidateQueries({ queryKey: ['documents', projectId] });
+    // Auto-clear completed (keep failures sticky until dismissed).
+    setTimeout(() => setUploadQueue(q => q.filter(p => p.status !== 'done')), 5000);
+  };
+
+  const handleUpload = (files: FileList | File[]) => {
+    const arr = Array.from(files);
+    if (arr.length === 0) return;
+    runUploads(arr);
+  };
+
+  // ---- Preview ----
+  const [previewDoc, setPreviewDoc] = useState<DocumentRow | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
+
+  useEffect(() => {
+    if (!previewDoc) { setPreviewUrl(null); return; }
+    let cancelled = false;
+    setPreviewLoading(true);
+    getDownloadUrl(previewDoc).then(url => {
+      if (!cancelled) { setPreviewUrl(url); setPreviewLoading(false); }
+    }).catch(e => {
+      if (!cancelled) {
+        toast({ title: 'Preview failed', description: e.message, variant: 'destructive' });
+        setPreviewDoc(null); setPreviewLoading(false);
+      }
+    });
+    return () => { cancelled = true; };
+  }, [previewDoc]); // eslint-disable-line
+
+  const handleOpen = async (doc: DocumentRow) => {
+    if (isPreviewable(doc)) { setPreviewDoc(doc); return; }
+    try {
+      const url = await getDownloadUrl(doc);
+      window.open(url, '_blank', 'noopener');
+    } catch (e: any) {
+      toast({ title: 'Download failed', description: e.message, variant: 'destructive' });
+    }
+  };
+
+  const handleDownload = async (doc: DocumentRow) => {
+    try {
+      const url = await getDownloadUrl(doc);
+      window.open(url, '_blank', 'noopener');
+    } catch (e: any) {
+      toast({ title: 'Download failed', description: e.message, variant: 'destructive' });
+    }
+  };
+
+  // ---- Active plan / specs ----
+  const isActivePlan = (d: DocumentRow) => !!projectMeta?.pdf_storage_path && projectMeta.pdf_storage_path === d.storage_path;
+  const isActiveSpecs = (d: DocumentRow) => !!projectMeta?.specs_storage_path && projectMeta.specs_storage_path === d.storage_path;
+
+  const canSetActive = (d: DocumentRow): 'plan' | 'specs' | null => {
+    if (!canManageThis) return null;
+    if (!selectedFolder) return null;
+    if (!isPdf(d.mime_type, d.name)) return null;
+    if (selectedFolder.system_kind === 'plans') return 'plan';
+    if (selectedFolder.system_kind === 'specs') return 'specs';
+    return null;
+  };
+
+  const setAsActive = async (d: DocumentRow, kind: 'plan' | 'specs') => {
+    if (!projectId) return;
+    const column = kind === 'plan' ? 'pdf_storage_path' : 'specs_storage_path';
+    const { error } = await supabase.from('projects').update({ [column]: d.storage_path } as any).eq('id', projectId);
+    if (error) { toast({ title: 'Failed', description: error.message, variant: 'destructive' }); return; }
+    toast({ title: kind === 'plan' ? 'Set as active plan' : 'Set as active specs' });
+    qc.invalidateQueries({ queryKey: ['project-meta', projectId] });
+  };
+
+  // ---- Dialogs ----
   const [newFolderOpen, setNewFolderOpen] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
   const [renameTarget, setRenameTarget] = useState<{ kind: 'folder' | 'doc'; id: string; name: string } | null>(null);
@@ -131,25 +293,7 @@ export default function Documents() {
   const [versionsFor, setVersionsFor] = useState<DocumentRow | null>(null);
   const [versions, setVersions] = useState<DocumentRow[]>([]);
   const [deleteTarget, setDeleteTarget] = useState<{ kind: 'folder' | 'doc'; id: string; name: string; doc?: DocumentRow } | null>(null);
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
-
-  const handleUpload = (files: FileList | File[]) => {
-    const arr = Array.from(files);
-    if (arr.length === 0) return;
-    uploadFiles.mutate(arr);
-  };
-
-  const handleDownload = async (doc: DocumentRow) => {
-    try {
-      const url = await getDownloadUrl(doc);
-      window.open(url, '_blank', 'noopener');
-    } catch (e: any) {
-      // toast handled in hook layer? do it here
-      console.error(e);
-    }
-  };
 
   const openVersions = async (doc: DocumentRow) => {
     if (!projectId) return;
@@ -159,7 +303,7 @@ export default function Documents() {
     setVersions(chain);
   };
 
-  // Recursive tree rendering
+  // ---- Tree rendering ----
   const renderTree = (parentId: string | null, depth = 0): JSX.Element[] => {
     const children = tree.get(parentId) ?? [];
     return children.flatMap(f => {
@@ -174,10 +318,13 @@ export default function Documents() {
           key={f.id}
           onClick={() => setSelectedFolderId(f.id)}
           className={cn(
-            'group flex items-center gap-1 px-2 py-1.5 rounded cursor-pointer text-sm select-none',
-            isSel ? 'bg-primary/15 text-primary-foreground' : 'hover:bg-muted/40',
+            'group flex items-center gap-1 px-2 py-1.5 rounded cursor-pointer text-sm select-none transition-colors',
+            isSel ? 'bg-primary/20 ring-1 ring-primary/40 text-foreground'
+                  : locked ? 'opacity-60 hover:bg-muted/30 hover:opacity-80'
+                           : 'hover:bg-muted/40',
           )}
           style={{ paddingLeft: 8 + depth * 14 }}
+          title={locked ? 'Read-only for your role' : undefined}
         >
           <button
             type="button"
@@ -187,9 +334,9 @@ export default function Documents() {
           >
             {hasChildren ? (isOpen ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />) : null}
           </button>
-          <Icon className={cn('h-4 w-4 shrink-0', f.is_system ? 'text-primary' : 'text-muted-foreground')} />
+          <Icon className={cn('h-4 w-4 shrink-0', f.is_system && !locked ? 'text-primary' : 'text-muted-foreground')} />
           <span className="truncate flex-1 font-mono text-xs">{f.name}</span>
-          {locked && <Lock className="h-3 w-3 text-muted-foreground/60 shrink-0" />}
+          {locked && <Lock className="h-3.5 w-3.5 text-muted-foreground shrink-0" />}
         </div>
       );
       const childRows = hasChildren && isOpen ? renderTree(f.id, depth + 1) : [];
@@ -201,6 +348,8 @@ export default function Documents() {
     return <div className="min-h-screen flex items-center justify-center"><Button asChild><Link to="/auth">Sign in</Link></Button></div>;
   }
 
+  const showFab = canUploadHere && !!selectedFolderId;
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <header className="border-b border-border bg-card/60 backdrop-blur sticky top-0 z-10">
@@ -209,7 +358,7 @@ export default function Documents() {
             <Link to={projectId ? `/project/${projectId}` : '/'}><ArrowLeft className="h-4 w-4 mr-1" />Back</Link>
           </Button>
           <FolderTree className="h-5 w-5 text-primary" />
-          <h1 className="text-sm font-mono font-bold tracking-wider uppercase">
+          <h1 className="text-sm font-mono font-bold tracking-wider uppercase truncate">
             Documents{projectMeta ? ` · ${projectMeta.name}` : ''}
           </h1>
           <Badge variant="outline" className="font-mono text-[10px] tracking-wider">
@@ -218,8 +367,8 @@ export default function Documents() {
         </div>
       </header>
 
-      <main className="flex-1 max-w-[1600px] w-full mx-auto px-4 py-4 flex gap-4 min-h-0">
-        {/* Folder tree */}
+      <main className="flex-1 max-w-[1600px] w-full mx-auto px-2 sm:px-4 py-3 sm:py-4 flex gap-4 min-h-0">
+        {/* Folder tree (desktop) */}
         <aside className="w-64 shrink-0 hidden md:flex flex-col border border-border rounded-md bg-card overflow-hidden">
           <div className="flex items-center justify-between px-3 py-2 border-b border-border bg-muted/30">
             <span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Folders</span>
@@ -257,19 +406,30 @@ export default function Documents() {
         >
           {/* Toolbar */}
           <div className="flex items-center gap-2 px-3 py-2 border-b border-border bg-muted/30 flex-wrap">
-            {/* Mobile folder picker */}
-            <div className="md:hidden flex-1 min-w-0">
+            {/* Mobile folder picker + create */}
+            <div className="md:hidden flex items-center gap-1 flex-1 min-w-0">
               <Select value={selectedFolderId ?? ''} onValueChange={(v) => setSelectedFolderId(v)}>
                 <SelectTrigger className="h-8 text-xs"><SelectValue placeholder="Pick a folder" /></SelectTrigger>
                 <SelectContent>
                   {folders.map(f => {
                     const p = pathOf(f, folders).map(x => x.name).join(' / ');
-                    return <SelectItem key={f.id} value={f.id} className="text-xs font-mono">{p}</SelectItem>;
+                    const inspectorWritable = f.system_kind === 'photos' || f.system_kind === 'daily_reports';
+                    const locked = !canManageThis && !inspectorWritable;
+                    return (
+                      <SelectItem key={f.id} value={f.id} className="text-xs font-mono">
+                        <span className="flex items-center gap-1.5">{locked && <Lock className="h-3 w-3 text-muted-foreground" />}{p}</span>
+                      </SelectItem>
+                    );
                   })}
                 </SelectContent>
               </Select>
+              {canManageThis && (
+                <Button size="icon" variant="outline" className="h-8 w-8 shrink-0" onClick={() => { setNewFolderName(''); setNewFolderOpen(true); }} title="New folder">
+                  <FolderPlus className="h-3.5 w-3.5" />
+                </Button>
+              )}
             </div>
-            {/* Breadcrumbs */}
+            {/* Breadcrumbs (desktop) */}
             <div className="hidden md:flex items-center gap-1 text-xs font-mono text-muted-foreground flex-1 min-w-0 truncate">
               {breadcrumb.length === 0 ? <span>Select a folder</span> : breadcrumb.map((b, i) => (
                 <span key={b.id} className="flex items-center gap-1">
@@ -280,26 +440,35 @@ export default function Documents() {
                 </span>
               ))}
             </div>
-            {/* Actions */}
-            <div className="flex items-center gap-1">
+            {/* Search */}
+            <div className="relative flex-1 sm:flex-initial sm:w-56 min-w-0 order-3 sm:order-none basis-full sm:basis-auto">
+              <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+              <Input
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Search files…"
+                className="h-8 pl-7 pr-7 text-xs font-mono"
+              />
+              {search && (
+                <button onClick={() => setSearch('')} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground" aria-label="Clear search">
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              )}
+            </div>
+            {/* Actions (desktop) */}
+            <div className="hidden sm:flex items-center gap-1">
               {canUploadHere && (
                 <>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    multiple
-                    className="hidden"
-                    onChange={(e) => e.target.files && handleUpload(e.target.files)}
-                  />
-                  <Button size="sm" className="h-8 gap-1.5" onClick={() => fileInputRef.current?.click()} disabled={!selectedFolderId || uploadFiles.isPending}>
-                    {uploadFiles.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Upload className="h-3.5 w-3.5" />}
-                    <span className="text-xs">Upload</span>
+                  <input ref={fileInputRef} type="file" multiple className="hidden"
+                    onChange={(e) => { if (e.target.files) handleUpload(e.target.files); e.target.value = ''; }} />
+                  <Button size="sm" className="h-8 gap-1.5" onClick={() => fileInputRef.current?.click()} disabled={!selectedFolderId}>
+                    <Upload className="h-3.5 w-3.5" /><span className="text-xs">Upload</span>
                   </Button>
                 </>
               )}
               {canManageThis && (
                 <Button size="sm" variant="outline" className="h-8 gap-1.5" onClick={() => { setNewFolderName(''); setNewFolderOpen(true); }}>
-                  <FolderPlus className="h-3.5 w-3.5" /><span className="text-xs hidden sm:inline">New folder</span>
+                  <FolderPlus className="h-3.5 w-3.5" /><span className="text-xs hidden md:inline">New folder</span>
                 </Button>
               )}
               {canManageThis && selectedFolder && !selectedFolder.is_system && (
@@ -320,15 +489,33 @@ export default function Documents() {
             </div>
           </div>
 
-          {/* Folder kind hint */}
+          {/* Folder hint / locked banner */}
           {selectedFolder?.system_kind && KIND_HINTS[selectedFolder.system_kind] && (
-            <div className="px-4 py-2 text-[11px] text-muted-foreground border-b border-border/50 bg-muted/10">
-              {KIND_HINTS[selectedFolder.system_kind]}
+            <div className="px-4 py-2 text-[11px] text-muted-foreground border-b border-border/50 bg-muted/10 flex items-center gap-2 flex-wrap">
+              <span>{KIND_HINTS[selectedFolder.system_kind]}</span>
               {!canManageThis && !inspectorCanUploadHere && (
-                <span className="ml-2 inline-flex items-center gap-1 text-amber-400/80"><Lock className="h-3 w-3" /> Read-only for your role</span>
+                <span className="inline-flex items-center gap-1 text-amber-400 font-mono uppercase tracking-wider text-[10px]">
+                  <Lock className="h-3 w-3" /> Read-only for your role
+                </span>
               )}
             </div>
           )}
+
+          {/* Hidden input for new-version upload */}
+          <input
+            ref={newVersionInputRef}
+            type="file"
+            className="hidden"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f && newVersionTarget) {
+                uploadNewVersion.mutate({ prior: newVersionTarget, file: f }, {
+                  onSettled: () => setNewVersionTarget(null),
+                });
+              }
+              e.target.value = '';
+            }}
+          />
 
           {/* Files */}
           <div className="flex-1 overflow-auto">
@@ -336,12 +523,26 @@ export default function Documents() {
               <div className="p-10 text-center text-sm text-muted-foreground">Select a folder to see its contents.</div>
             ) : docsLoading ? (
               <div className="p-10 flex items-center justify-center"><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></div>
-            ) : documents.length === 0 ? (
+            ) : filteredDocs.length === 0 ? (
               <div className="p-10 text-center">
-                <FilePlus className="h-8 w-8 text-muted-foreground/50 mx-auto mb-2" />
-                <p className="text-sm text-muted-foreground">No files in this folder.</p>
-                {canUploadHere && (
-                  <p className="text-[11px] text-muted-foreground mt-1">Drag files here or click Upload.</p>
+                {search ? (
+                  <>
+                    <Search className="h-8 w-8 text-muted-foreground/50 mx-auto mb-2" />
+                    <p className="text-sm text-muted-foreground">No files match "{search}".</p>
+                    <Button variant="ghost" size="sm" className="mt-2" onClick={() => setSearch('')}>Clear search</Button>
+                  </>
+                ) : !canUploadHere ? (
+                  <>
+                    <Lock className="h-8 w-8 text-muted-foreground/50 mx-auto mb-2" />
+                    <p className="text-sm text-muted-foreground">This folder is read-only for your role.</p>
+                    <p className="text-[11px] text-muted-foreground mt-1">Inspectors can upload only to Photos and Daily Reports.</p>
+                  </>
+                ) : (
+                  <>
+                    <FilePlus className="h-8 w-8 text-muted-foreground/50 mx-auto mb-2" />
+                    <p className="text-sm text-muted-foreground">No files in this folder.</p>
+                    <p className="text-[11px] text-muted-foreground mt-1">Drag files here or tap Upload.</p>
+                  </>
                 )}
               </div>
             ) : (
@@ -355,17 +556,21 @@ export default function Documents() {
                   </tr>
                 </thead>
                 <tbody>
-                  {documents.map(d => {
+                  {filteredDocs.map(d => {
                     const Icon = fileIcon(d.mime_type);
+                    const previewable = isPreviewable(d);
+                    const activeAs = canSetActive(d);
+                    const activePlan = isActivePlan(d);
+                    const activeSpecs = isActiveSpecs(d);
                     return (
                       <tr key={d.id} className="border-b border-border/40 last:border-0 hover:bg-muted/20">
-                        <td className="px-4 py-2">
-                          <button onClick={() => handleDownload(d)} className="flex items-center gap-2 text-left group">
+                        <td className="px-4 py-2 min-w-0">
+                          <button onClick={() => handleOpen(d)} className="flex items-center gap-2 text-left group max-w-full">
                             <Icon className="h-4 w-4 text-muted-foreground group-hover:text-primary shrink-0" />
                             <span className="font-mono truncate group-hover:text-primary">{d.name}</span>
-                            {d.version > 1 && <Badge variant="outline" className="text-[9px] h-4 px-1">v{d.version}</Badge>}
-                            {d.source_kind === 'legacy_plan_pdf' && <Badge variant="outline" className="text-[9px] h-4 px-1 border-primary/40 text-primary">Active plan</Badge>}
-                            {d.source_kind === 'legacy_specs_pdf' && <Badge variant="outline" className="text-[9px] h-4 px-1 border-primary/40 text-primary">Active specs</Badge>}
+                            {d.version > 1 && <Badge variant="outline" className="text-[9px] h-4 px-1 shrink-0">v{d.version}</Badge>}
+                            {activePlan && <Badge className="text-[9px] h-4 px-1 shrink-0 gap-0.5"><Star className="h-2.5 w-2.5" />Active plan</Badge>}
+                            {activeSpecs && <Badge className="text-[9px] h-4 px-1 shrink-0 gap-0.5"><Star className="h-2.5 w-2.5" />Active specs</Badge>}
                           </button>
                         </td>
                         <td className="text-right px-3 py-2 hidden sm:table-cell text-muted-foreground font-mono">{fmtBytes(d.size_bytes)}</td>
@@ -376,6 +581,11 @@ export default function Documents() {
                               <Button size="icon" variant="ghost" className="h-7 w-7"><MoreVertical className="h-3.5 w-3.5" /></Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
+                              {previewable && (
+                                <DropdownMenuItem onClick={() => setPreviewDoc(d)}>
+                                  <Eye className="h-3.5 w-3.5 mr-2" />Preview
+                                </DropdownMenuItem>
+                              )}
                               <DropdownMenuItem onClick={() => handleDownload(d)}>
                                 <Download className="h-3.5 w-3.5 mr-2" />Download
                               </DropdownMenuItem>
@@ -385,6 +595,19 @@ export default function Documents() {
                               {canManageThis && (
                                 <>
                                   <DropdownMenuSeparator />
+                                  <DropdownMenuItem onClick={() => { setNewVersionTarget(d); newVersionInputRef.current?.click(); }}>
+                                    <FileUp className="h-3.5 w-3.5 mr-2" />Upload new version
+                                  </DropdownMenuItem>
+                                  {activeAs === 'plan' && !activePlan && (
+                                    <DropdownMenuItem onClick={() => setAsActive(d, 'plan')}>
+                                      <Star className="h-3.5 w-3.5 mr-2" />Set as active plan
+                                    </DropdownMenuItem>
+                                  )}
+                                  {activeAs === 'specs' && !activeSpecs && (
+                                    <DropdownMenuItem onClick={() => setAsActive(d, 'specs')}>
+                                      <Star className="h-3.5 w-3.5 mr-2" />Set as active specs
+                                    </DropdownMenuItem>
+                                  )}
                                   <DropdownMenuItem onClick={() => { setRenameTarget({ kind: 'doc', id: d.id, name: d.name }); setRenameValue(d.name); }}>
                                     <Pencil className="h-3.5 w-3.5 mr-2" />Rename
                                   </DropdownMenuItem>
@@ -408,6 +631,70 @@ export default function Documents() {
           </div>
         </section>
       </main>
+
+      {/* Mobile FAB */}
+      {showFab && (
+        <>
+          <input ref={fileInputRef} type="file" multiple className="hidden sm:hidden"
+            onChange={(e) => { if (e.target.files) handleUpload(e.target.files); e.target.value = ''; }} />
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            className="sm:hidden fixed bottom-5 right-5 z-20 h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-xl flex items-center justify-center active:scale-95 transition"
+            aria-label="Upload to this folder"
+          >
+            <Plus className="h-6 w-6" />
+          </button>
+        </>
+      )}
+
+      {/* Upload progress toaster (bottom-left) */}
+      {uploadQueue.length > 0 && (
+        <div className="fixed bottom-4 left-4 right-4 sm:right-auto sm:w-80 z-30 bg-card border border-border rounded-md shadow-xl overflow-hidden">
+          <div className="flex items-center justify-between px-3 py-2 border-b border-border bg-muted/40">
+            <span className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
+              Uploads · {uploadQueue.filter(u => u.status === 'done').length}/{uploadQueue.length}
+            </span>
+            <button onClick={() => setUploadQueue([])} className="text-muted-foreground hover:text-foreground" aria-label="Dismiss"><X className="h-3.5 w-3.5" /></button>
+          </div>
+          <div className="max-h-48 overflow-y-auto">
+            {uploadQueue.map(u => (
+              <div key={u.id} className="flex items-center gap-2 px-3 py-1.5 text-xs border-b border-border/40 last:border-0">
+                {u.status === 'uploading' && <Loader2 className="h-3.5 w-3.5 animate-spin text-primary shrink-0" />}
+                {u.status === 'pending' && <Loader2 className="h-3.5 w-3.5 text-muted-foreground/60 shrink-0" />}
+                {u.status === 'done' && <CheckCircle2 className="h-3.5 w-3.5 text-green-500 shrink-0" />}
+                {u.status === 'error' && <AlertCircle className="h-3.5 w-3.5 text-destructive shrink-0" />}
+                <span className="font-mono truncate flex-1" title={u.error || u.name}>{u.name}</span>
+                <span className="text-muted-foreground font-mono text-[10px] shrink-0">{fmtBytes(u.size)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Preview dialog */}
+      <Dialog open={!!previewDoc} onOpenChange={(o) => !o && setPreviewDoc(null)}>
+        <DialogContent className="max-w-5xl w-[95vw] h-[85vh] p-0 flex flex-col gap-0">
+          <DialogHeader className="px-4 py-2 border-b border-border flex-row items-center justify-between space-y-0">
+            <DialogTitle className="font-mono text-sm truncate pr-4">{previewDoc?.name}</DialogTitle>
+            <div className="flex items-center gap-1">
+              {previewDoc && (
+                <Button size="sm" variant="outline" className="h-7 gap-1.5" onClick={() => handleDownload(previewDoc)}>
+                  <Download className="h-3.5 w-3.5" /><span className="text-xs">Download</span>
+                </Button>
+              )}
+            </div>
+          </DialogHeader>
+          <div className="flex-1 min-h-0 bg-muted/30 flex items-center justify-center overflow-auto">
+            {previewLoading || !previewUrl ? (
+              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            ) : previewDoc && isImage(previewDoc.mime_type) ? (
+              <img src={previewUrl} alt={previewDoc.name} className="max-w-full max-h-full object-contain" />
+            ) : previewDoc && isPdf(previewDoc.mime_type, previewDoc.name) ? (
+              <iframe src={previewUrl} title={previewDoc.name} className="w-full h-full bg-background" />
+            ) : null}
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* New folder dialog */}
       <Dialog open={newFolderOpen} onOpenChange={setNewFolderOpen}>
