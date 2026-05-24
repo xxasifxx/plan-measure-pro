@@ -617,6 +617,23 @@ export default function Documents() {
             ) : (
               renderTree(null)
             )}
+            {canManageThis && (
+              <div className="mt-2 pt-2 border-t border-border/60">
+                <div
+                  onClick={() => setSelectedFolderId(TRASH_ID)}
+                  className={cn(
+                    'group flex items-center gap-1.5 px-2 py-1.5 mx-1 rounded cursor-pointer text-sm select-none transition-colors',
+                    viewingTrash ? 'bg-primary/20 ring-1 ring-primary/40 text-foreground' : 'hover:bg-muted/40 text-muted-foreground',
+                  )}
+                >
+                  <Trash2 className="h-4 w-4 shrink-0" />
+                  <span className="truncate flex-1 font-mono text-xs uppercase tracking-wider">Trash</span>
+                  {trash.length > 0 && (
+                    <span className="text-[10px] font-mono text-muted-foreground tabular-nums shrink-0">{trash.length}</span>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </aside>
 
