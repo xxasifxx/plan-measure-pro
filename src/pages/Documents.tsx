@@ -464,6 +464,9 @@ export default function Documents() {
   const [moveTargetFolder, setMoveTargetFolder] = useState<string>('');
   const [versionsFor, setVersionsFor] = useState<DocumentRow | null>(null);
   const [versions, setVersions] = useState<DocumentRow[]>([]);
+  const versionUploaderIds = useMemo(() => Array.from(new Set(versions.map(v => v.uploaded_by))), [versions]);
+  const versionUploaderProfilesQuery = useUploaderProfiles(versionUploaderIds);
+  const versionUploaderProfiles = versionUploaderProfilesQuery.data ?? {};
   const [deleteTarget, setDeleteTarget] = useState<{ kind: 'folder' | 'doc'; id: string; name: string; doc?: DocumentRow } | null>(null);
   const [dragOver, setDragOver] = useState(false);
 
