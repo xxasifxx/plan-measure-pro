@@ -69,9 +69,8 @@ export function useDailyReport(projectId: string | undefined, userId: string | u
         if (insErr) throw insErr;
         reportId = created.id;
       } else {
-        // Update snapshot on existing draft/rejected row
-        if (query.data?.status === 'rejected') {
-          // Reopen → draft first (trigger archives prior snapshot)
+        // Bring the row back to draft so we can refresh the snapshot.
+        if (query.data?.status === 'rejected' || query.data?.status === 'submitted') {
           const { error: reopenErr } = await supabase
             .from('daily_reports')
             .update({ status: 'draft', snapshot: snapshot as any })
@@ -85,6 +84,7 @@ export function useDailyReport(projectId: string | undefined, userId: string | u
           if (upErr) throw upErr;
         }
       }
+
 
       // Flip to submitted
       const { error: subErr } = await supabase
