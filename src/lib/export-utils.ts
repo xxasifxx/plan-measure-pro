@@ -20,23 +20,31 @@ interface ExportRow {
   section: number;
 }
 
-function buildRows(annotations: Annotation[], payItems: PayItem[]): ExportRow[] {
+function buildRows(
+  annotations: Annotation[],
+  payItems: PayItem[],
+  approvedOverrides?: Map<string, number>,
+): ExportRow[] {
   return payItems
     .map(item => {
       const anns = annotations.filter(a => a.payItemId === item.id);
       let qty = 0;
-      for (const a of anns) {
-        if (a.manualQuantity != null) { qty += a.manualQuantity; continue; }
-        if (a.type === 'count') { qty += 1; continue; }
-        if (a.depth && a.depth > 0) qty += sfToCY(a.measurement, a.depth);
-        else if (item.unit === 'SY') qty += sfToSY(a.measurement);
-        else qty += a.measurement;
+      if (approvedOverrides) {
+        qty = approvedOverrides.get(item.id) ?? 0;
+      } else {
+        for (const a of anns) {
+          if (a.manualQuantity != null) { qty += a.manualQuantity; continue; }
+          if (a.type === 'count') { qty += 1; continue; }
+          if (a.depth && a.depth > 0) qty += sfToCY(a.measurement, a.depth);
+          else if (item.unit === 'SY') qty += sfToSY(a.measurement);
+          else qty += a.measurement;
+        }
       }
       return {
         itemNumber: item.itemNumber,
         itemCode: item.itemCode,
         name: item.name,
-        count: anns.length,
+        count: approvedOverrides ? (qty > 0 ? 1 : 0) : anns.length,
         quantity: qty,
         unit: item.unit,
         unitLabel: UNIT_LABELS[item.unit],
@@ -46,8 +54,9 @@ function buildRows(annotations: Annotation[], payItems: PayItem[]): ExportRow[] 
         section: getPayItemSection(item.itemCode),
       };
     })
-    .filter(r => r.count > 0);
+    .filter(r => r.quantity > 0 || r.count > 0);
 }
+
 
 export function exportCsv(annotations: Annotation[], payItems: PayItem[], projectName: string): void {
   const rows = buildRows(annotations, payItems);
