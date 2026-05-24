@@ -264,7 +264,7 @@ export function useDocuments(projectId: string | undefined, folderId: string | u
   return {
     documents: query.data ?? [],
     isLoading: query.isLoading,
-    uploadFiles, renameDocument, moveDocument, deleteDocument,
+    uploadFiles, renameDocument, moveDocument, deleteDocument, uploadNewVersion,
     getDownloadUrl,
   };
 }
