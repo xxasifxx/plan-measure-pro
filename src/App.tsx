@@ -14,6 +14,7 @@ import FajarPitch from "./pages/FajarPitch";
 import XerDemo from "./pages/XerDemo";
 import P6XmlDemo from "./pages/P6XmlDemo";
 import ReReview from "./pages/ReReview";
+import DailyReport from "./pages/DailyReport";
 import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
 import Landing from "./pages/Landing";
@@ -61,6 +62,7 @@ const App = () => (
             <Route path="/project/:projectId/controls" element={<ProtectedRoute><ProjectControls /></ProtectedRoute>} />
             <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
             <Route path="/re-review" element={<ProtectedRoute><ReReview /></ProtectedRoute>} />
+            <Route path="/project/:projectId/daily-report" element={<ProtectedRoute><DailyReport /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-type AppRole = 'admin' | 'project_manager' | 'inspector';
+type AppRole = 'admin' | 'project_manager' | 'inspector' | 'resident_engineer';
 
 interface UserWithRoles {
   id: string;
@@ -356,7 +356,7 @@ export default function Admin() {
                     <SelectValue placeholder="Add role…" />
                   </SelectTrigger>
                   <SelectContent>
-                    {(['admin', 'project_manager', 'inspector'] as AppRole[])
+                    {(['admin', 'project_manager', 'inspector', 'resident_engineer'] as AppRole[])
                       .filter(r => !user.roles.includes(r))
                       .map(r => (
                         <SelectItem key={r} value={r} className="text-xs">
