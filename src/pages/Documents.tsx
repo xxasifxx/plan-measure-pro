@@ -314,6 +314,7 @@ export default function Documents() {
       }
     }
     qc.invalidateQueries({ queryKey: ['documents', projectId] });
+    qc.invalidateQueries({ queryKey: ['folder-counts', projectId] });
     // Auto-clear completed (keep failures sticky until dismissed).
     setTimeout(() => setUploadQueue(q => q.filter(p => p.status !== 'done')), 5000);
   };
