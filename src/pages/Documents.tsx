@@ -464,6 +464,9 @@ export default function Documents() {
   const [moveTargetFolder, setMoveTargetFolder] = useState<string>('');
   const [versionsFor, setVersionsFor] = useState<DocumentRow | null>(null);
   const [versions, setVersions] = useState<DocumentRow[]>([]);
+  const versionUploaderIds = useMemo(() => Array.from(new Set(versions.map(v => v.uploaded_by))), [versions]);
+  const versionUploaderProfilesQuery = useUploaderProfiles(versionUploaderIds);
+  const versionUploaderProfiles = versionUploaderProfilesQuery.data ?? {};
   const [deleteTarget, setDeleteTarget] = useState<{ kind: 'folder' | 'doc'; id: string; name: string; doc?: DocumentRow } | null>(null);
   const [dragOver, setDragOver] = useState(false);
 
@@ -613,7 +616,11 @@ export default function Documents() {
             {foldersLoading ? (
               <div className="p-6 flex items-center justify-center"><Loader2 className="h-4 w-4 animate-spin text-muted-foreground" /></div>
             ) : folders.length === 0 ? (
-              <p className="p-4 text-xs text-muted-foreground text-center">No folders yet.</p>
+              <div className="p-4 text-center">
+                <Folder className="h-6 w-6 text-muted-foreground/50 mx-auto mb-1.5" />
+                <p className="text-xs text-muted-foreground">No folders yet.</p>
+                <p className="text-[10px] text-muted-foreground/70 mt-1">Create one to start organizing project documents.</p>
+              </div>
             ) : (
               renderTree(null)
             )}
@@ -623,13 +630,21 @@ export default function Documents() {
                   onClick={() => setSelectedFolderId(TRASH_ID)}
                   className={cn(
                     'group flex items-center gap-1.5 px-2 py-1.5 mx-1 rounded cursor-pointer text-sm select-none transition-colors',
-                    viewingTrash ? 'bg-primary/20 ring-1 ring-primary/40 text-foreground' : 'hover:bg-muted/40 text-muted-foreground',
+                    viewingTrash
+                      ? 'bg-amber-500/15 ring-1 ring-amber-500/40 text-amber-300'
+                      : trash.length > 0
+                        ? 'hover:bg-muted/40 text-amber-400/90'
+                        : 'hover:bg-muted/40 text-muted-foreground',
                   )}
+                  title={trash.length > 0 ? `${trash.length} item${trash.length === 1 ? '' : 's'} in Trash` : 'Trash is empty'}
                 >
                   <Trash2 className="h-4 w-4 shrink-0" />
                   <span className="truncate flex-1 font-mono text-xs uppercase tracking-wider">Trash</span>
                   {trash.length > 0 && (
-                    <span className="text-[10px] font-mono text-muted-foreground tabular-nums shrink-0">{trash.length}</span>
+                    <span className={cn(
+                      'text-[10px] font-mono tabular-nums shrink-0 px-1.5 py-0.5 rounded',
+                      viewingTrash ? 'bg-amber-500/20 text-amber-200' : 'bg-amber-500/15 text-amber-300',
+                    )}>{trash.length}</span>
                   )}
                 </div>
               </div>
@@ -771,24 +786,24 @@ export default function Documents() {
 
           {/* Bulk action bar */}
           {selectedIds.size > 0 && (
-            <div className="flex items-center gap-2 px-3 py-2 border-b border-border bg-primary/10">
+            <div className="flex items-center gap-2 px-3 py-2 border-b border-primary/30 bg-primary/15">
               <span className="text-xs font-mono">{selectedIds.size} selected</span>
               <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={() => setSelectedIds(new Set())}>
                 <X className="h-3.5 w-3.5 mr-1" />Clear
               </Button>
               <div className="flex-1" />
-              <Button size="sm" variant="outline" className="h-7 gap-1.5" onClick={bulkDownload}>
-                <Download className="h-3.5 w-3.5" /><span className="text-xs">Download</span>
+              <Button size="sm" variant="outline" className="h-7 gap-1.5" onClick={bulkDownload} title="Download selected">
+                <Download className="h-3.5 w-3.5" /><span className="text-xs hidden lg:inline">Download</span>
               </Button>
               {canManageThis && viewingTrash && (
                 <>
-                  <Button size="sm" variant="outline" className="h-7 gap-1.5" onClick={async () => {
+                  <Button size="sm" variant="outline" className="h-7 gap-1.5" title="Restore selected" onClick={async () => {
                     for (const d of selectedDocs) await restoreDocument.mutateAsync(d).catch(() => {});
                     setSelectedIds(new Set());
                   }}>
-                    <Undo2 className="h-3.5 w-3.5" /><span className="text-xs">Restore</span>
+                    <Undo2 className="h-3.5 w-3.5" /><span className="text-xs hidden lg:inline">Restore</span>
                   </Button>
-                  <Button size="sm" variant="destructive" className="h-7 gap-1.5" onClick={() => {
+                  <Button size="sm" variant="destructive" className="h-7 gap-1.5" title="Delete forever" onClick={() => {
                     if (selectedDocs.length === 0) return;
                     if (!confirm(`Permanently delete ${selectedDocs.length} file${selectedDocs.length === 1 ? '' : 's'}? This cannot be undone.`)) return;
                     (async () => {
@@ -796,18 +811,26 @@ export default function Documents() {
                       setSelectedIds(new Set());
                     })();
                   }}>
-                    <Trash2 className="h-3.5 w-3.5" /><span className="text-xs">Delete forever</span>
+                    <Trash2 className="h-3.5 w-3.5" /><span className="text-xs hidden lg:inline">Delete forever</span>
                   </Button>
                 </>
               )}
               {canManageThis && !viewingTrash && (
-                <Button size="sm" variant="destructive" className="h-7 gap-1.5" onClick={() => setBulkDeleteOpen(true)}>
-                  <Trash2 className="h-3.5 w-3.5" /><span className="text-xs">Move to Trash</span>
+                <Button size="sm" variant="destructive" className="h-7 gap-1.5" title="Move to Trash" onClick={() => setBulkDeleteOpen(true)}>
+                  <Trash2 className="h-3.5 w-3.5" /><span className="text-xs hidden lg:inline">Move to Trash</span>
                 </Button>
               )}
             </div>
           )}
 
+          {/* Trash banner */}
+          {viewingTrash && (
+            <div className="px-4 py-2 text-[11px] font-mono border-b border-amber-500/30 bg-amber-500/10 text-amber-300 flex items-center gap-2">
+              <Trash2 className="h-3.5 w-3.5 shrink-0" />
+              <span className="uppercase tracking-wider">Viewing Trash</span>
+              <span className="text-amber-400/70 normal-case tracking-normal">— items can be restored or permanently deleted.</span>
+            </div>
+          )}
 
           {/* Folder hint / locked banner */}
           {selectedFolder?.system_kind && KIND_HINTS[selectedFolder.system_kind] && (
@@ -879,17 +902,17 @@ export default function Documents() {
                       <Checkbox checked={allSelected} onCheckedChange={toggleAll} aria-label="Select all" />
                     </th>
                     <th className="text-left font-medium px-2 py-2">
-                      <button onClick={() => toggleSort('name')} className="inline-flex items-center gap-1 hover:text-foreground uppercase tracking-wider">
+                      <button onClick={() => toggleSort('name')} title="Sort by name" className="inline-flex items-center gap-1 hover:text-foreground uppercase tracking-wider">
                         Name {sortBy === 'name' ? (sortDir === 'asc' ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />) : <ArrowUpDown className="h-3 w-3 opacity-40" />}
                       </button>
                     </th>
                     <th className="text-right font-medium px-3 py-2 hidden sm:table-cell">
-                      <button onClick={() => toggleSort('size')} className="inline-flex items-center gap-1 hover:text-foreground uppercase tracking-wider">
+                      <button onClick={() => toggleSort('size')} title="Sort by size" className="inline-flex items-center gap-1 hover:text-foreground uppercase tracking-wider">
                         Size {sortBy === 'size' ? (sortDir === 'asc' ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />) : <ArrowUpDown className="h-3 w-3 opacity-40" />}
                       </button>
                     </th>
                     <th className="text-left font-medium px-3 py-2 hidden md:table-cell">
-                      <button onClick={() => toggleSort('date')} className="inline-flex items-center gap-1 hover:text-foreground uppercase tracking-wider">
+                      <button onClick={() => toggleSort('date')} title="Sort by date" className="inline-flex items-center gap-1 hover:text-foreground uppercase tracking-wider">
                         Uploaded {sortBy === 'date' ? (sortDir === 'asc' ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />) : <ArrowUpDown className="h-3 w-3 opacity-40" />}
                       </button>
                     </th>
@@ -1177,7 +1200,7 @@ export default function Documents() {
           <div className="space-y-2 max-h-80 overflow-y-auto">
             {versions.length === 0 ? <p className="text-xs text-muted-foreground">Loading…</p> : versions.map((v, i) => {
               const head = versions[0];
-              const prof = uploaderProfiles[v.uploaded_by];
+              const prof = versionUploaderProfiles[v.uploaded_by] ?? uploaderProfiles[v.uploaded_by];
               const initials = initialsOf(prof?.full_name, prof?.email);
               const name = displayName(prof);
               return (
