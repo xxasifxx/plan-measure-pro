@@ -222,12 +222,45 @@ export function useDocuments(projectId: string | undefined, folderId: string | u
 
   const deleteDocument = useMutation({
     mutationFn: async (doc: DocumentRow) => {
-      // Delete row first; storage cleanup is best-effort and may fail silently for inspectors.
+      // Soft delete: move to Trash. Storage blob is kept until hard-delete or empty-trash.
+      const { error } = await supabase.from('documents')
+        .update({ deleted_at: new Date().toISOString(), deleted_by: user?.id ?? null } as any)
+        .eq('id', doc.id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['documents', projectId] });
+      qc.invalidateQueries({ queryKey: ['folder-counts', projectId] });
+      qc.invalidateQueries({ queryKey: ['trash', projectId] });
+    },
+    onError: (e: Error) => toast({ title: 'Move to Trash failed', description: e.message, variant: 'destructive' }),
+  });
+
+  const restoreDocument = useMutation({
+    mutationFn: async (doc: DocumentRow) => {
+      const { error } = await supabase.from('documents')
+        .update({ deleted_at: null, deleted_by: null } as any)
+        .eq('id', doc.id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['documents', projectId] });
+      qc.invalidateQueries({ queryKey: ['folder-counts', projectId] });
+      qc.invalidateQueries({ queryKey: ['trash', projectId] });
+    },
+    onError: (e: Error) => toast({ title: 'Restore failed', description: e.message, variant: 'destructive' }),
+  });
+
+  const hardDeleteDocument = useMutation({
+    mutationFn: async (doc: DocumentRow) => {
       const { error } = await supabase.from('documents').delete().eq('id', doc.id);
       if (error) throw error;
       await supabase.storage.from(BUCKET).remove([doc.storage_path]).catch(() => {});
     },
-    onSuccess: () => { invalidate(); toast({ title: 'Deleted' }); },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['documents', projectId] });
+      qc.invalidateQueries({ queryKey: ['trash', projectId] });
+    },
     onError: (e: Error) => toast({ title: 'Delete failed', description: e.message, variant: 'destructive' }),
   });
 
