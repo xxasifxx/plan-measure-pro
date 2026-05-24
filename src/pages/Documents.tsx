@@ -151,15 +151,21 @@ export default function Documents() {
     }
   }, [folders, selectedFolderId]);
 
-  const selectedFolder = folders.find(f => f.id === selectedFolderId);
+  const viewingTrash = selectedFolderId === TRASH_ID;
+  const selectedFolder = viewingTrash ? undefined : folders.find(f => f.id === selectedFolderId);
   const breadcrumb = pathOf(selectedFolder, folders);
 
-  const { documents, isLoading: docsLoading, renameDocument, moveDocument, deleteDocument, uploadNewVersion, getDownloadUrl } =
-    useDocuments(projectId, selectedFolderId ?? undefined);
+  const {
+    documents, isLoading: docsLoading,
+    renameDocument, moveDocument, deleteDocument, restoreDocument, hardDeleteDocument,
+    uploadNewVersion, getDownloadUrl,
+  } = useDocuments(projectId, viewingTrash ? undefined : (selectedFolderId ?? undefined));
+
+  const { trash, isLoading: trashLoading } = useTrash(canManageThis ? projectId : undefined);
 
   const inspectorCanUploadHere =
     !!selectedFolder && (selectedFolder.system_kind === 'photos' || selectedFolder.system_kind === 'daily_reports');
-  const canUploadHere = canManageThis || inspectorCanUploadHere;
+  const canUploadHere = !viewingTrash && (canManageThis || inspectorCanUploadHere);
 
   // ---- Folder file counts (one query for the project) ----
   const folderCountsQuery = useQuery({
@@ -169,7 +175,8 @@ export default function Documents() {
       const { data, error } = await supabase
         .from('documents')
         .select('folder_id, replaces_document_id, id')
-        .eq('project_id', projectId!);
+        .eq('project_id', projectId!)
+        .is('deleted_at', null);
       if (error) throw error;
       const rows = (data as any[]) ?? [];
       const replaced = new Set(rows.map(r => r.replaces_document_id).filter(Boolean));
