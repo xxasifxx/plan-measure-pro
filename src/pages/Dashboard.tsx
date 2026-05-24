@@ -21,6 +21,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
 import { WelcomeCarousel } from '@/components/WelcomeCarousel';
 import { GuidedTour } from '@/components/GuidedTour';
+import { NotificationBell } from '@/components/NotificationBell';
 import type { TourStep } from '@/hooks/useTour';
 
 const ROLE_STYLES: Record<string, string> = {
@@ -196,6 +197,7 @@ export default function Dashboard() {
           >
             {roleBadge}
           </span>
+          <NotificationBell />
           <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => dashboardTour.start()} title="Help">
             <HelpCircle className="h-4 w-4" />
           </Button>

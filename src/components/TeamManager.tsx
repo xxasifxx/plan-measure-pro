@@ -177,6 +177,7 @@ export function TeamManager({ open, onOpenChange, projectId, projectName }: Team
                 <SelectContent>
                   <SelectItem value="inspector" className="text-xs">Inspector</SelectItem>
                   <SelectItem value="project_manager" className="text-xs">Manager</SelectItem>
+                  <SelectItem value="resident_engineer" className="text-xs">Resident Engineer</SelectItem>
                 </SelectContent>
               </Select>
             </div>

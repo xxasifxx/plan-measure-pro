@@ -33,6 +33,24 @@ export interface ReReport {
   reviewer_name?: string;
 }
 
+export interface ReReportComment {
+  id: string;
+  daily_report_id: string;
+  user_id: string;
+  body: string;
+  created_at: string;
+  author_name?: string;
+}
+
+export interface ReReportArchive {
+  id: string;
+  daily_report_id: string;
+  snapshot: SnapshotItem[];
+  archived_at: string;
+  archived_reason: string | null;
+  reject_reason: string | null;
+}
+
 export function useReReviewQueue(projectId: string | undefined, statusFilter: ReReportStatus = 'submitted') {
   return useQuery({
     queryKey: ['re-review', projectId, statusFilter],
@@ -49,17 +67,12 @@ export function useReReviewQueue(projectId: string | undefined, statusFilter: Re
 
       const rows = (data ?? []) as unknown as ReReport[];
 
-      // Hydrate user names
       const ids = Array.from(new Set(rows.flatMap(r => [r.user_id, r.approved_by, r.rejected_by]).filter(Boolean))) as string[];
-      let names: Record<string, string> = {};
+      const names: Record<string, string> = {};
       if (ids.length) {
         const { data: profiles } = await supabase
-          .from('profiles')
-          .select('id, full_name, email')
-          .in('id', ids);
-        for (const p of profiles ?? []) {
-          names[p.id] = p.full_name || p.email || p.id.slice(0, 8);
-        }
+          .from('profiles').select('id, full_name, email').in('id', ids);
+        for (const p of profiles ?? []) names[p.id] = p.full_name || p.email || p.id.slice(0, 8);
       }
       return rows.map(r => ({
         ...r,
@@ -71,18 +84,82 @@ export function useReReviewQueue(projectId: string | undefined, statusFilter: Re
   });
 }
 
+export function useReportComments(reportId: string | undefined) {
+  return useQuery({
+    queryKey: ['re-report-comments', reportId],
+    enabled: !!reportId,
+    queryFn: async (): Promise<ReReportComment[]> => {
+      const { data, error } = await supabase
+        .from('daily_report_comments')
+        .select('id, daily_report_id, user_id, body, created_at')
+        .eq('daily_report_id', reportId!)
+        .order('created_at', { ascending: true });
+      if (error) throw error;
+      const rows = (data ?? []) as ReReportComment[];
+      const ids = Array.from(new Set(rows.map(r => r.user_id)));
+      if (ids.length) {
+        const { data: profs } = await supabase.from('profiles').select('id, full_name, email').in('id', ids);
+        const names: Record<string, string> = {};
+        for (const p of profs ?? []) names[p.id] = p.full_name || p.email || p.id.slice(0, 8);
+        return rows.map(r => ({ ...r, author_name: names[r.user_id] }));
+      }
+      return rows;
+    },
+  });
+}
+
+export function useReportArchives(reportId: string | undefined) {
+  return useQuery({
+    queryKey: ['re-report-archives', reportId],
+    enabled: !!reportId,
+    queryFn: async (): Promise<ReReportArchive[]> => {
+      const { data, error } = await supabase
+        .from('daily_report_snapshots' as any)
+        .select('id, daily_report_id, snapshot, archived_at, archived_reason, reject_reason')
+        .eq('daily_report_id', reportId!)
+        .order('archived_at', { ascending: false });
+      if (error) throw error;
+      return ((data ?? []) as any[]).map(r => ({
+        ...r,
+        snapshot: Array.isArray(r.snapshot) ? r.snapshot : [],
+      }));
+    },
+  });
+}
+
+export function useAddComment(reportId: string | undefined, projectId: string | undefined) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (body: string) => {
+      if (!body.trim()) throw new Error('Comment is required');
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+      const { error } = await supabase.from('daily_report_comments').insert({
+        daily_report_id: reportId!,
+        project_id: projectId!,
+        user_id: user.id,
+        body: body.trim(),
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast({ title: 'Comment posted' });
+      qc.invalidateQueries({ queryKey: ['re-report-comments', reportId] });
+    },
+    onError: (e: Error) => toast({ title: 'Failed', description: e.message, variant: 'destructive' }),
+  });
+}
+
 export function useApproveReport(projectId: string | undefined) {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (reportId: string) => {
       const { error } = await supabase
-        .from('daily_reports')
-        .update({ status: 'approved' })
-        .eq('id', reportId);
+        .from('daily_reports').update({ status: 'approved' }).eq('id', reportId);
       if (error) throw error;
     },
     onSuccess: () => {
-      toast({ title: 'Report approved', description: 'Quantities are now reflected in approved totals.' });
+      toast({ title: 'Report approved', description: 'Quantities are now in approved totals.' });
       qc.invalidateQueries({ queryKey: ['re-review', projectId] });
     },
     onError: (e: Error) => toast({ title: 'Approve failed', description: e.message, variant: 'destructive' }),
@@ -99,7 +176,6 @@ export function useRejectReport(projectId: string | undefined) {
         .update({ status: 'rejected', reject_reason: reason.trim() })
         .eq('id', reportId);
       if (error) throw error;
-      // Mirror to comments for full audit history
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         await supabase.from('daily_report_comments').insert({
