@@ -501,6 +501,7 @@ export default function Dashboard() {
         onPrev={dashboardTour.prev}
         onSkip={dashboardTour.skip}
       />
+      {confirmDialog}
     </div>
   );
 }
