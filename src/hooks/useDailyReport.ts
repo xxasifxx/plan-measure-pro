@@ -116,12 +116,30 @@ export function useDailyReport(projectId: string | undefined, userId: string | u
     onError: (e: Error) => toast({ title: 'Reopen failed', description: e.message, variant: 'destructive' }),
   });
 
+  // Drift detection: when submitted, compare frozen snapshot quantities to
+  // live preview. Any line-count change or per-item delta change is "stale".
+  const isStale = (() => {
+    if (query.data?.status !== 'submitted') return false;
+    const frozen = query.data.snapshot ?? [];
+    const live = previewQuery.data ?? [];
+    if (frozen.length !== live.length) return true;
+    const liveBy = new Map(live.map(l => [l.pay_item_id, l.delta_quantity]));
+    for (const f of frozen) {
+      const lv = liveBy.get(f.pay_item_id);
+      if (lv == null) return true;
+      if (Math.abs(Number(lv) - Number(f.delta_quantity)) > 0.005) return true;
+    }
+    return false;
+  })();
+
   return {
     report: query.data ?? null,
     isLoading: query.isLoading,
     preview: previewQuery.data ?? [],
     previewLoading: previewQuery.isLoading,
+    isStale,
     submit,
     reopen,
   };
 }
+
