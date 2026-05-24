@@ -638,9 +638,9 @@ const Index = () => {
                   projectName={project.name}
                   contractNumber={project.contractNumber}
                   onClose={() => setMobileTab('canvas')}
-                  onExportCsv={() => exportCsv(project.annotations, payItems, project.name)}
-                  onExportPdf={() => exportPdfReport(project.annotations, payItems, project.name, project.contractNumber)}
-                  onExportDaily={(date) => exportInspectorDaily(project.annotations, payItems, project.name, project.contractNumber, profile?.full_name || '', currentUserId || '', date)}
+                  onExportCsv={() => exportApprovedCsv(project.id, payItems, project.name)}
+                  onExportPdf={() => exportApprovedPdfReport(project.id, payItems, project.name, project.contractNumber)}
+                  onExportDaily={(date) => exportApprovedInspectorDaily(project.id, payItems, project.name, project.contractNumber, profile?.full_name || '', currentUserId || '', date)}
                   onAddManualAnnotation={addAnnotation}
                   onUpdateManualAnnotation={(id, changes) => updateAnnotation(id, changes)}
                   embedded
@@ -794,7 +794,7 @@ const Index = () => {
             calibration={currentCalibration}
             activePayItem={activePayItem}
             onShowSummary={() => setShowSummary(true)}
-            onExport={() => { if (project) exportCsv(project.annotations, payItems, project.name); }}
+            onExport={() => { if (project) exportApprovedCsv(project.id, payItems, project.name); }}
             onFitToScreen={handleFitToScreen}
             onUndo={undo}
             onRedo={redo}
@@ -898,9 +898,9 @@ const Index = () => {
           projectName={project.name}
           contractNumber={project.contractNumber}
           onClose={() => setShowSummary(false)}
-          onExportCsv={() => exportCsv(project.annotations, payItems, project.name)}
-          onExportPdf={() => exportPdfReport(project.annotations, payItems, project.name, project.contractNumber)}
-          onExportDaily={(date) => exportInspectorDaily(project.annotations, payItems, project.name, project.contractNumber, profile?.full_name || '', currentUserId || '', date)}
+          onExportCsv={() => exportApprovedCsv(project.id, payItems, project.name)}
+          onExportPdf={() => exportApprovedPdfReport(project.id, payItems, project.name, project.contractNumber)}
+          onExportDaily={(date) => exportApprovedInspectorDaily(project.id, payItems, project.name, project.contractNumber, profile?.full_name || '', currentUserId || '', date)}
           onAddManualAnnotation={addAnnotation}
           onUpdateManualAnnotation={(id, changes) => updateAnnotation(id, changes)}
         />
