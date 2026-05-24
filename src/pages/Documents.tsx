@@ -1200,7 +1200,7 @@ export default function Documents() {
           <div className="space-y-2 max-h-80 overflow-y-auto">
             {versions.length === 0 ? <p className="text-xs text-muted-foreground">Loading…</p> : versions.map((v, i) => {
               const head = versions[0];
-              const prof = uploaderProfiles[v.uploaded_by];
+              const prof = versionUploaderProfiles[v.uploaded_by] ?? uploaderProfiles[v.uploaded_by];
               const initials = initialsOf(prof?.full_name, prof?.email);
               const name = displayName(prof);
               return (
