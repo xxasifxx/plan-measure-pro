@@ -1,0 +1,2 @@
+CREATE POLICY "Authors update own comments" ON public.daily_report_comments FOR UPDATE USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Authors delete own comments" ON public.daily_report_comments FOR DELETE USING (auth.uid() = user_id);

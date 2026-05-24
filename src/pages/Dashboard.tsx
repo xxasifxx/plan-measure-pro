@@ -25,6 +25,7 @@ import { NotificationBell } from '@/components/NotificationBell';
 import { useQuery } from '@tanstack/react-query';
 import { loadPendingReviewCounts } from '@/lib/approved-quantities';
 import type { TourStep } from '@/hooks/useTour';
+import { useConfirm } from '@/components/ConfirmDialog';
 
 const ROLE_STYLES: Record<string, string> = {
   admin: 'bg-info/15 text-info border-info/30',
@@ -40,6 +41,8 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { isDark, toggle: toggleTheme } = useTheme();
+  const { confirm, dialog: confirmDialog } = useConfirm();
+
 
   // Create project dialog
   const [showCreate, setShowCreate] = useState(false);
@@ -71,7 +74,13 @@ export default function Dashboard() {
   };
 
   const handleDelete = async (id: string, name: string) => {
-    if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
+    const ok = await confirm({
+      title: `Delete "${name}"?`,
+      description: 'This permanently removes the project and all of its data. This cannot be undone.',
+      confirmLabel: 'Delete project',
+      destructive: true,
+    });
+    if (!ok) return;
     try {
       await deleteProject.mutateAsync(id);
       toast({ title: 'Project deleted' });
@@ -492,6 +501,7 @@ export default function Dashboard() {
         onPrev={dashboardTour.prev}
         onSkip={dashboardTour.skip}
       />
+      {confirmDialog}
     </div>
   );
 }

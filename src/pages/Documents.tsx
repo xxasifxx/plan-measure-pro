@@ -29,6 +29,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
+import { useConfirm } from '@/components/ConfirmDialog';
 
 const BUCKET = 'project-documents';
 const TRASH_ID = '__trash__';
@@ -114,6 +115,7 @@ export default function Documents() {
   const { user, isManager, isAdmin } = useAuth();
   const qc = useQueryClient();
   const canManage = isManager || isAdmin;
+  const { confirm, dialog: confirmDialog } = useConfirm();
 
   // Project meta — includes active plan/specs storage paths for "Active" derivation.
   const projectMetaQuery = useQuery({
@@ -803,13 +805,17 @@ export default function Documents() {
                   }}>
                     <Undo2 className="h-3.5 w-3.5" /><span className="text-xs hidden lg:inline">Restore</span>
                   </Button>
-                  <Button size="sm" variant="destructive" className="h-7 gap-1.5" title="Delete forever" onClick={() => {
+                  <Button size="sm" variant="destructive" className="h-7 gap-1.5" title="Delete forever" onClick={async () => {
                     if (selectedDocs.length === 0) return;
-                    if (!confirm(`Permanently delete ${selectedDocs.length} file${selectedDocs.length === 1 ? '' : 's'}? This cannot be undone.`)) return;
-                    (async () => {
-                      for (const d of selectedDocs) await hardDeleteDocument.mutateAsync(d).catch(() => {});
-                      setSelectedIds(new Set());
-                    })();
+                    const n = selectedDocs.length;
+                    const ok = await confirm({
+                      title: `Permanently delete ${n} file${n === 1 ? '' : 's'}?`,
+                      description: 'These files will be removed from storage. This cannot be undone.',
+                      confirmLabel: 'Delete forever',
+                    });
+                    if (!ok) return;
+                    for (const d of selectedDocs) await hardDeleteDocument.mutateAsync(d).catch(() => {});
+                    setSelectedIds(new Set());
                   }}>
                     <Trash2 className="h-3.5 w-3.5" /><span className="text-xs hidden lg:inline">Delete forever</span>
                   </Button>
@@ -995,8 +1001,13 @@ export default function Documents() {
                                     <DropdownMenuItem onClick={() => restoreDocument.mutate(d)}>
                                       <Undo2 className="h-3.5 w-3.5 mr-2" />Restore
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-destructive" onClick={() => {
-                                      if (confirm(`Permanently delete "${d.name}"? This cannot be undone.`)) hardDeleteDocument.mutate(d);
+                                    <DropdownMenuItem className="text-destructive" onClick={async () => {
+                                      const ok = await confirm({
+                                        title: `Permanently delete "${d.name}"?`,
+                                        description: 'The file will be removed from storage. This cannot be undone.',
+                                        confirmLabel: 'Delete forever',
+                                      });
+                                      if (ok) hardDeleteDocument.mutate(d);
                                     }}>
                                       <Trash2 className="h-3.5 w-3.5 mr-2" />Delete forever
                                     </DropdownMenuItem>
@@ -1294,6 +1305,7 @@ export default function Documents() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      {confirmDialog}
     </div>
   );
 }
