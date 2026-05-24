@@ -2,6 +2,9 @@ import type { Annotation, PayItem } from '@/types/project';
 import * as XLSX from 'xlsx';
 import { sfToCY, sfToSY } from '@/lib/geometry';
 import { UNIT_LABELS, getPayItemSection } from '@/types/project';
+import { supabase } from '@/integrations/supabase/client';
+import { loadApprovedTotalsByPayItem } from '@/lib/approved-quantities';
+
 
 interface ExportRow {
   itemNumber: number;
