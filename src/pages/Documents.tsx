@@ -806,10 +806,10 @@ export default function Documents() {
       {/* Mobile FAB */}
       {showFab && (
         <>
-          <input ref={fileInputRef} type="file" multiple className="hidden sm:hidden"
+          <input ref={mobileFileInputRef} type="file" multiple className="hidden"
             onChange={(e) => { if (e.target.files) handleUpload(e.target.files); e.target.value = ''; }} />
           <button
-            onClick={() => fileInputRef.current?.click()}
+            onClick={() => mobileFileInputRef.current?.click()}
             className="sm:hidden fixed bottom-5 right-5 z-20 h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-xl flex items-center justify-center active:scale-95 transition"
             aria-label="Upload to this folder"
           >
