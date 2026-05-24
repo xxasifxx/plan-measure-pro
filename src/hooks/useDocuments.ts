@@ -306,9 +306,54 @@ export function useDocuments(projectId: string | undefined, folderId: string | u
   return {
     documents: query.data ?? [],
     isLoading: query.isLoading,
-    uploadFiles, renameDocument, moveDocument, deleteDocument, uploadNewVersion,
+    uploadFiles, renameDocument, moveDocument, deleteDocument, restoreDocument, hardDeleteDocument, uploadNewVersion,
     getDownloadUrl,
   };
+}
+
+/** All soft-deleted documents in a project (Trash). */
+export function useTrash(projectId: string | undefined) {
+  const qc = useQueryClient();
+  const key = ['trash', projectId];
+  const query = useQuery({
+    queryKey: key,
+    enabled: !!projectId,
+    queryFn: async (): Promise<DocumentRow[]> => {
+      const { data, error } = await supabase
+        .from('documents')
+        .select('id, project_id, folder_id, name, storage_path, mime_type, size_bytes, uploaded_by, version, replaces_document_id, source_kind, created_at, updated_at, deleted_at, deleted_by')
+        .eq('project_id', projectId!)
+        .not('deleted_at', 'is', null)
+        .order('deleted_at', { ascending: false });
+      if (error) throw error;
+      return ((data as any) ?? []) as DocumentRow[];
+    },
+  });
+  return {
+    trash: query.data ?? [],
+    isLoading: query.isLoading,
+    refetch: () => qc.invalidateQueries({ queryKey: key }),
+  };
+}
+
+/** Fetch profiles for the given uploader IDs (best-effort; falls back silently). */
+export function useUploaderProfiles(userIds: string[]) {
+  const ids = Array.from(new Set(userIds)).filter(Boolean).sort();
+  return useQuery({
+    queryKey: ['uploader-profiles', ids.join(',')],
+    enabled: ids.length > 0,
+    queryFn: async (): Promise<Record<string, UploaderProfile>> => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id, full_name, email')
+        .in('id', ids);
+      if (error) return {};
+      const map: Record<string, UploaderProfile> = {};
+      for (const p of (data as any[]) ?? []) map[p.id] = p as UploaderProfile;
+      return map;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
 }
 
 /** Fetch the full version chain for a given current document. */
