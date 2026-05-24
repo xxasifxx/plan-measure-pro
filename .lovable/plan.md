@@ -1,58 +1,38 @@
-## Documents & Folder Management
+## Documents UI — what's inadequate
 
-Replace the two hard-coded PDF slots (`pdf_storage_path`, `specs_storage_path`) with a real per-project document workspace that holds the full diversity of construction artifacts: plans, specs, RFIs, submittals, shop drawings, change orders, daily reports, photos, as-builts, correspondence — plus any custom folders a PM wants.
+Walked the page top-to-bottom against the project memory (mobile-first, contextual toolbar, FAB pattern, blueprint aesthetic) and the actual user flows for a construction PM/inspector. Grouping findings by severity. **Nothing below is implemented yet** — pick what to build.
 
-### Data model
+### Tier 1 — broken or missing for the core workflow
 
-Two new tables, one new bucket. Everything scoped to a project; all access through project membership.
+1. **No file preview.** Clicking a file just downloads it. PMs and inspectors expect to click a PDF/photo and view it inline (lightbox for images, embedded pdf.js for PDFs). Without this, every glance at an RFI or photo is a download round-trip.
+2. **No "Upload new version" action on a file row.** The schema supports `replaces_document_id` and the badge shows `v2`, but the UI has no way to actually push a new version of an existing file. Versioning is dead weight.
+3. **Mobile is half-built.** Tree is `hidden md:flex`, so on 390px wide you only get the Select dropdown. There's no "New folder" button on mobile, no breadcrumb, no drop zone (drag-drop is desktop-only), and the page doesn't use the project's bottom-tab + FAB pattern that every other field surface uses. Inspectors live on tablets/phones — this is the wrong surface for them right now.
+4. **Locked folders are still clickable and look identical to writable ones.** Inspector taps "Plans", sees a toolbar with no Upload, no explanation in the empty state. The lock icon is 12px and easy to miss. Needs a clearer disabled state and the inline "Read-only for your role" notice should appear in the empty state too, not just below the toolbar.
+5. **No multi-select / bulk actions.** Can't select 12 photos and download/move/delete them. PMs cleaning up will hate this.
 
-- **`document_folders`**
-  - `id`, `project_id`, `parent_id` (nullable, self-FK), `name`, `slug`, `is_system` (bool — protects seeded folders from accidental deletion of the system key, but PMs can still rename/move), `system_kind` (nullable enum: `plans`, `specs`, `rfis`, `submittals`, `shop_drawings`, `change_orders`, `daily_reports`, `photos`, `as_builts`, `correspondence`), `created_by`, timestamps.
-  - Unique `(project_id, parent_id, lower(name))`.
+### Tier 2 — friction that compounds
 
-- **`documents`**
-  - `id`, `project_id`, `folder_id`, `name` (display), `storage_path` (key inside `project-documents` bucket), `mime_type`, `size_bytes`, `uploaded_by`, `version` (int, default 1), `replaces_document_id` (nullable, for version chains), `source_kind` (nullable: `legacy_plan_pdf`, `legacy_specs_pdf`, `daily_report_export`, `field_photo`, `manual_upload`), timestamps.
+6. **No search inside Documents.** No filename search, no filter by uploader, type, or date. Folders with 200 daily-report PDFs become unusable.
+7. **No sort.** Table headers aren't sortable. Default order isn't even documented in the UI.
+8. **No upload progress per file.** Single spinner on the Upload button. Drop 8 files of 40 MB each and the user has no idea what's happening or what failed.
+9. **Drag-to-move is missing.** Move is dialog-only (`Select` → pick folder). Folder tree on the left is a natural drop target — should accept dragged file rows.
+10. **No "Set as active plan" from Documents.** Legacy plan PDF is surfaced with the "Active plan" badge, but a PM who uploads a revised plan into Plans/ can't promote it to be the takeoff source from here. They have to go back to project setup. That breaks the whole point of putting Plans in the new workspace.
+11. **Folder tree shows no counts or sizes.** "Photos (148)" is a basic affordance and it's missing.
+12. **Uploaded-by shows only timestamp.** No avatar, no name. Audit trail is invisible at a glance.
 
-- **Storage bucket `project-documents`** (private). Path: `{project_id}/{document_id}.{ext}` — flat to avoid rename rewrites; folder is logical only.
+### Tier 3 — polish
 
-### Permissions (RLS)
+13. **Header is sparse.** Just Back + title + access badge. No quick-jump to Takeoff / Daily Report / Pay Items for this project (those are one click away on Index — Documents should mirror).
+14. **Empty state is generic.** Could show the `KIND_HINTS` copy as guidance + a primary "Upload first file" CTA instead of two greyed lines.
+15. **System folders only differ by icon color.** A subtle "SYSTEM" pill or tooltip would clarify why some have no Delete.
+16. **Toolbar wraps awkwardly at ~700px.** Breadcrumb, Upload, New folder, kebab all compete for one row. Needs an overflow menu at smaller widths.
+17. **No folder-upload support.** `webkitdirectory` would let PMs drop a whole "Submittals/2026-05" folder in one shot — common in real workflows.
+18. **No drag indicator / drop highlight on the folder tree** when dragging files toward it.
+19. **Versions dialog is read-only.** Can view chain, can't download an older version or restore it as current.
+20. **Deletes are permanent, no undo, no trash folder.** Risky for a system that's now the source of truth for an audit trail.
 
-- **PMs** (`projects.created_by`) — full CRUD on folders and documents in their projects.
-- **Admins** — full CRUD across all projects.
-- **Project members** — view all folders/documents.
-- **Inspectors** — can `INSERT` documents only into folders whose `system_kind IN ('photos','daily_reports')`. Cannot rename, move, or delete others' files. Cannot create or modify folders.
-- Storage policies on `project-documents` mirror this: read for any project member, write gated by the same folder-kind rule for inspectors.
+### Recommended first build cut
 
-### Seeding & legacy surfacing
+If you want the biggest unlock in one pass, I'd do **1, 2, 3, 4, 6, 8, 10** — preview, new-version upload, real mobile layout with bottom-tab + FAB, clearer locked state, search, per-file progress, and "Set as active plan." That converts Documents from "file dump" into the actual document hub the construction-data-transformation flow needs.
 
-- On project creation (trigger or app-side), seed the 10 standard top-level folders with `is_system=true`, `system_kind` set. PMs can rename, add subfolders, or delete them — `is_system` is informational, not a lock.
-- Backfill: for each existing project, create the seeded folders and insert one `documents` row per legacy `pdf_storage_path` → Plans folder, `specs_storage_path` → Specs folder, with `source_kind='legacy_plan_pdf' | 'legacy_specs_pdf'`. The takeoff/specs viewer keep reading `projects.pdf_storage_path` / `specs_storage_path` — the new rows are pointers to the same storage objects, so nothing breaks.
-- New uploads to the Plans folder do **not** automatically become the active plan PDF. Switching the active plan stays an explicit action in project setup (out of scope for this slice).
-
-### UI: Documents tab on the project page
-
-New route `/project/:projectId/documents` and a Documents tab on the existing project header.
-
-- **Two-pane layout**: folder tree (left, collapsible, with file counts) + file table (right, sortable by name/size/date/uploader).
-- **Breadcrumbs** above the table; clicking a crumb navigates.
-- **Toolbar** (right side): Upload (multi-file, drag-drop onto table), New Folder, Rename, Move (multi-select), Delete (multi-select with confirm), Download.
-- **Per-row actions**: Download (signed URL), Rename, Move, Delete, View versions.
-- **Inspector view**: tree is read-only; an Upload button is enabled only inside Photos or Daily Reports; non-permitted folders show a subtle lock icon and disabled Upload.
-- **Versions**: uploading a file with the same name into the same folder bumps `version` and chains via `replaces_document_id`. Previous versions are accessible in a "Versions" drawer; the most recent is the "current" file.
-- **Empty states** per folder kind with one-liner copy explaining what belongs there (e.g. Photos: "Field photos from inspectors. JPG/PNG/HEIC.").
-
-Mobile: collapse to a single pane with a top folder picker (drop-down breadcrumbs) and stacked list view. Upload FAB respects role permissions.
-
-### Out of scope for this slice
-
-- Document approval workflows (RFI responses, submittal review/stamp). Folders are containers only.
-- OCR/full-text search across uploads. Search is name + folder only.
-- Linking documents to pay items or annotations.
-- Changing the active plan PDF from the Documents UI.
-
-### Technical notes
-
-- Folder rename does not touch storage (paths are by document_id).
-- Deleting a folder requires it to be empty (or move children up); cascade deletes are blocked to prevent accidents.
-- Signed URLs (1h) for downloads; uploads via direct supabase-js to the bucket, then insert a `documents` row in a transaction-like sequence (insert row first to claim the id, upload to `{project_id}/{id}.{ext}`, then patch `size_bytes`/`mime_type`).
-- React Query keys: `['documents', projectId, folderId]`, `['folders', projectId]`.
+Tell me which tiers (or which specific numbers) to take into the next build, and I'll write the implementation plan.

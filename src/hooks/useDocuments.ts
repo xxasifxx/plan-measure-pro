@@ -222,6 +222,39 @@ export function useDocuments(projectId: string | undefined, folderId: string | u
     onError: (e: Error) => toast({ title: 'Delete failed', description: e.message, variant: 'destructive' }),
   });
 
+  const uploadNewVersion = useMutation({
+    mutationFn: async (vars: { prior: DocumentRow; file: File }) => {
+      if (!projectId) throw new Error('Missing project');
+      if (!user) throw new Error('Not signed in');
+      const { prior, file } = vars;
+      const id = crypto.randomUUID();
+      const path = `${projectId}/${id}.${extOf(file.name)}`;
+      const { error: upErr } = await supabase.storage.from(BUCKET).upload(path, file, {
+        contentType: file.type || undefined, upsert: false,
+      });
+      if (upErr) throw upErr;
+      const { error: insErr } = await supabase.from('documents').insert({
+        id,
+        project_id: projectId,
+        folder_id: prior.folder_id,
+        name: prior.name,
+        storage_path: path,
+        mime_type: file.type || null,
+        size_bytes: file.size,
+        uploaded_by: user.id,
+        version: prior.version + 1,
+        replaces_document_id: prior.id,
+        source_kind: 'manual_upload',
+      } as any);
+      if (insErr) {
+        await supabase.storage.from(BUCKET).remove([path]).catch(() => {});
+        throw insErr;
+      }
+    },
+    onSuccess: () => { invalidate(); toast({ title: 'New version uploaded' }); },
+    onError: (e: Error) => toast({ title: 'Upload failed', description: e.message, variant: 'destructive' }),
+  });
+
   const getDownloadUrl = async (doc: DocumentRow): Promise<string> => {
     const { data, error } = await supabase.storage.from(BUCKET).createSignedUrl(doc.storage_path, 3600);
     if (error) throw error;
@@ -231,7 +264,7 @@ export function useDocuments(projectId: string | undefined, folderId: string | u
   return {
     documents: query.data ?? [],
     isLoading: query.isLoading,
-    uploadFiles, renameDocument, moveDocument, deleteDocument,
+    uploadFiles, renameDocument, moveDocument, deleteDocument, uploadNewVersion,
     getDownloadUrl,
   };
 }
