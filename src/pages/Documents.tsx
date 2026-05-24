@@ -31,6 +31,25 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 
 const BUCKET = 'project-documents';
+const TRASH_ID = '__trash__';
+
+const initialsOf = (name?: string | null, email?: string | null) => {
+  const src = (name && name.trim()) || (email && email.split('@')[0]) || '?';
+  const parts = src.split(/[\s._-]+/).filter(Boolean).slice(0, 2);
+  return (parts.map(p => p[0]).join('') || src[0]).toUpperCase();
+};
+const displayName = (p?: { full_name?: string | null; email?: string | null } | null) =>
+  (p?.full_name && p.full_name.trim()) || p?.email || 'Team member';
+const relativeTime = (iso: string) => {
+  const d = new Date(iso).getTime();
+  const diff = Date.now() - d;
+  const s = Math.round(diff / 1000);
+  if (s < 60) return 'just now';
+  const m = Math.round(s / 60); if (m < 60) return `${m}m ago`;
+  const h = Math.round(m / 60); if (h < 24) return `${h}h ago`;
+  const days = Math.round(h / 24); if (days < 7) return `${days}d ago`;
+  return new Date(iso).toLocaleDateString();
+};
 
 const KIND_HINTS: Record<string, string> = {
   plans: 'Drawing sets and plan PDFs used for takeoff.',
