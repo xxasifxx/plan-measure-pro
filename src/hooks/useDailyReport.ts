@@ -38,9 +38,10 @@ export function useDailyReport(projectId: string | undefined, userId: string | u
     },
   });
 
+  // Keep preview running even after submit so we can detect snapshot drift.
   const previewQuery = useQuery({
-    queryKey: ['daily-report-preview', projectId, userId, dateISO, query.data?.id],
-    enabled: !!projectId && !!userId && !!dateISO && (query.data?.status === 'draft' || query.data == null || query.data?.status === 'rejected'),
+    queryKey: ['daily-report-preview', projectId, userId, dateISO, query.data?.id, query.data?.status],
+    enabled: !!projectId && !!userId && !!dateISO && query.data?.status !== 'approved',
     queryFn: () => buildDailyReportSnapshot(projectId!, userId!, dateISO, query.data?.id),
   });
 
@@ -54,7 +55,8 @@ export function useDailyReport(projectId: string | undefined, userId: string | u
     mutationFn: async () => {
       if (!projectId || !userId) throw new Error('Missing project/user');
       const snapshot = await buildDailyReportSnapshot(projectId, userId, dateISO, query.data?.id);
-      if (snapshot.length === 0) throw new Error('No annotations on this date to submit.');
+      // Empty submissions are allowed — REs can still review/reject a zero-day.
+
 
       // Ensure draft row exists
       let reportId = query.data?.id;
