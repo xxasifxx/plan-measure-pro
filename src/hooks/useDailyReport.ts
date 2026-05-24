@@ -61,7 +61,7 @@ export function useDailyReport(projectId: string | undefined, userId: string | u
       if (!reportId) {
         const { data: created, error: insErr } = await supabase
           .from('daily_reports')
-          .insert({ project_id: projectId, user_id: userId, report_date: dateISO, status: 'draft', snapshot })
+          .insert({ project_id: projectId, user_id: userId, report_date: dateISO, status: 'draft', snapshot: snapshot as any })
           .select('id')
           .single();
         if (insErr) throw insErr;
@@ -72,13 +72,13 @@ export function useDailyReport(projectId: string | undefined, userId: string | u
           // Reopen → draft first (trigger archives prior snapshot)
           const { error: reopenErr } = await supabase
             .from('daily_reports')
-            .update({ status: 'draft', snapshot })
+            .update({ status: 'draft', snapshot: snapshot as any })
             .eq('id', reportId);
           if (reopenErr) throw reopenErr;
         } else {
           const { error: upErr } = await supabase
             .from('daily_reports')
-            .update({ snapshot })
+            .update({ snapshot: snapshot as any })
             .eq('id', reportId);
           if (upErr) throw upErr;
         }

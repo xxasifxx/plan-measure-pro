@@ -42,5 +42,6 @@ export async function loadApprovedDailyReports(
     cumulativeQty: Number(row.new_cumulative),
     contractQty: contractByItem.get(row.pay_item_id) ?? 0,
     isComplete: false, // applyProgress derives completeness from ratio
+    approvedByRE: true as const,
   }));
 }
