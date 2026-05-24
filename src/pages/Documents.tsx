@@ -788,9 +788,13 @@ export default function Documents() {
                   }}>
                     <Undo2 className="h-3.5 w-3.5" /><span className="text-xs">Restore</span>
                   </Button>
-                  <Button size="sm" variant="destructive" className="h-7 gap-1.5" onClick={async () => {
-                    for (const d of selectedDocs) await hardDeleteDocument.mutateAsync(d).catch(() => {});
-                    setSelectedIds(new Set());
+                  <Button size="sm" variant="destructive" className="h-7 gap-1.5" onClick={() => {
+                    if (selectedDocs.length === 0) return;
+                    if (!confirm(`Permanently delete ${selectedDocs.length} file${selectedDocs.length === 1 ? '' : 's'}? This cannot be undone.`)) return;
+                    (async () => {
+                      for (const d of selectedDocs) await hardDeleteDocument.mutateAsync(d).catch(() => {});
+                      setSelectedIds(new Set());
+                    })();
                   }}>
                     <Trash2 className="h-3.5 w-3.5" /><span className="text-xs">Delete forever</span>
                   </Button>
@@ -968,7 +972,9 @@ export default function Documents() {
                                     <DropdownMenuItem onClick={() => restoreDocument.mutate(d)}>
                                       <Undo2 className="h-3.5 w-3.5 mr-2" />Restore
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-destructive" onClick={() => hardDeleteDocument.mutate(d)}>
+                                    <DropdownMenuItem className="text-destructive" onClick={() => {
+                                      if (confirm(`Permanently delete "${d.name}"? This cannot be undone.`)) hardDeleteDocument.mutate(d);
+                                    }}>
                                       <Trash2 className="h-3.5 w-3.5 mr-2" />Delete forever
                                     </DropdownMenuItem>
                                   </>
@@ -1171,16 +1177,24 @@ export default function Documents() {
           <div className="space-y-2 max-h-80 overflow-y-auto">
             {versions.length === 0 ? <p className="text-xs text-muted-foreground">Loading…</p> : versions.map((v, i) => {
               const head = versions[0];
+              const prof = uploaderProfiles[v.uploaded_by];
+              const initials = initialsOf(prof?.full_name, prof?.email);
+              const name = displayName(prof);
               return (
                 <div key={v.id} className="flex items-center gap-2 text-xs border border-border rounded p-2">
-                  <Badge variant={i === 0 ? 'default' : 'outline'} className="text-[10px]">v{v.version}{i === 0 && ' · current'}</Badge>
-                  <span className="font-mono truncate flex-1">{v.name}</span>
-                  <span className="text-muted-foreground font-mono hidden sm:inline">{new Date(v.created_at).toLocaleString()}</span>
-                  <Button size="icon" variant="ghost" className="h-6 w-6" title="Download" onClick={() => handleDownload(v)}>
+                  <Badge variant={i === 0 ? 'default' : 'outline'} className="text-[10px] shrink-0">v{v.version}{i === 0 && ' · current'}</Badge>
+                  <Avatar className="h-6 w-6 shrink-0">
+                    <AvatarFallback className="text-[9px] font-mono bg-muted text-muted-foreground">{initials}</AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-mono truncate">{name}</div>
+                    <div className="text-[10px] text-muted-foreground font-mono truncate">{relativeTime(v.created_at)} · {new Date(v.created_at).toLocaleString()}</div>
+                  </div>
+                  <Button size="icon" variant="ghost" className="h-6 w-6 shrink-0" title="Download" onClick={() => handleDownload(v)}>
                     <Download className="h-3.5 w-3.5" />
                   </Button>
                   {canManageThis && i > 0 && head && (
-                    <Button size="icon" variant="ghost" className="h-6 w-6" title="Restore as current" onClick={() => restoreVersion(v, head)}>
+                    <Button size="icon" variant="ghost" className="h-6 w-6 shrink-0" title="Restore as current" onClick={() => restoreVersion(v, head)}>
                       <RotateCcw className="h-3.5 w-3.5" />
                     </Button>
                   )}
@@ -1195,11 +1209,13 @@ export default function Documents() {
       <Dialog open={!!deleteTarget} onOpenChange={(o) => !o && setDeleteTarget(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete {deleteTarget?.kind === 'folder' ? 'folder' : 'file'}?</DialogTitle>
+            <DialogTitle>
+              {deleteTarget?.kind === 'folder' ? 'Delete folder?' : 'Move file to Trash?'}
+            </DialogTitle>
             <DialogDescription>
               {deleteTarget?.kind === 'folder'
-                ? `This cannot be undone. The folder must be empty.`
-                : `This cannot be undone. "${deleteTarget?.name}" will be permanently removed.`}
+                ? `This cannot be undone. The folder must be empty before it can be deleted.`
+                : `"${deleteTarget?.name}" will be moved to Trash. You can restore it from the Trash folder until it is permanently removed.`}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -1219,7 +1235,7 @@ export default function Documents() {
                   deleteDocument.mutate(deleteTarget.doc, { onSuccess: () => setDeleteTarget(null) });
                 }
               }}
-            >Delete</Button>
+            >{deleteTarget?.kind === 'folder' ? 'Delete' : 'Move to Trash'}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -1228,12 +1244,30 @@ export default function Documents() {
       <Dialog open={bulkDeleteOpen} onOpenChange={setBulkDeleteOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete {selectedIds.size} file{selectedIds.size === 1 ? '' : 's'}?</DialogTitle>
-            <DialogDescription>This cannot be undone.</DialogDescription>
+            <DialogTitle>Move {selectedIds.size} file{selectedIds.size === 1 ? '' : 's'} to Trash?</DialogTitle>
+            <DialogDescription>
+              These files will be moved to Trash and can be restored from the Trash folder until permanently removed.
+            </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="ghost" onClick={() => setBulkDeleteOpen(false)}>Cancel</Button>
-            <Button variant="destructive" onClick={runBulkDelete}>Delete {selectedIds.size}</Button>
+            <Button variant="destructive" onClick={runBulkDelete}>Move {selectedIds.size} to Trash</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Empty Trash confirm */}
+      <Dialog open={emptyTrashOpen} onOpenChange={setEmptyTrashOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Empty Trash?</DialogTitle>
+            <DialogDescription>
+              {trash.length} file{trash.length === 1 ? '' : 's'} will be permanently deleted. This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setEmptyTrashOpen(false)}>Cancel</Button>
+            <Button variant="destructive" onClick={runEmptyTrash}>Delete forever</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
