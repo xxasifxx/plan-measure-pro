@@ -71,7 +71,13 @@ export default function Dashboard() {
   };
 
   const handleDelete = async (id: string, name: string) => {
-    if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
+    const ok = await confirm({
+      title: `Delete "${name}"?`,
+      description: 'This permanently removes the project and all of its data. This cannot be undone.',
+      confirmLabel: 'Delete project',
+      destructive: true,
+    });
+    if (!ok) return;
     try {
       await deleteProject.mutateAsync(id);
       toast({ title: 'Project deleted' });
