@@ -623,13 +623,21 @@ export default function Documents() {
                   onClick={() => setSelectedFolderId(TRASH_ID)}
                   className={cn(
                     'group flex items-center gap-1.5 px-2 py-1.5 mx-1 rounded cursor-pointer text-sm select-none transition-colors',
-                    viewingTrash ? 'bg-primary/20 ring-1 ring-primary/40 text-foreground' : 'hover:bg-muted/40 text-muted-foreground',
+                    viewingTrash
+                      ? 'bg-amber-500/15 ring-1 ring-amber-500/40 text-amber-300'
+                      : trash.length > 0
+                        ? 'hover:bg-muted/40 text-amber-400/90'
+                        : 'hover:bg-muted/40 text-muted-foreground',
                   )}
+                  title={trash.length > 0 ? `${trash.length} item${trash.length === 1 ? '' : 's'} in Trash` : 'Trash is empty'}
                 >
                   <Trash2 className="h-4 w-4 shrink-0" />
                   <span className="truncate flex-1 font-mono text-xs uppercase tracking-wider">Trash</span>
                   {trash.length > 0 && (
-                    <span className="text-[10px] font-mono text-muted-foreground tabular-nums shrink-0">{trash.length}</span>
+                    <span className={cn(
+                      'text-[10px] font-mono tabular-nums shrink-0 px-1.5 py-0.5 rounded',
+                      viewingTrash ? 'bg-amber-500/20 text-amber-200' : 'bg-amber-500/15 text-amber-300',
+                    )}>{trash.length}</span>
                   )}
                 </div>
               </div>
