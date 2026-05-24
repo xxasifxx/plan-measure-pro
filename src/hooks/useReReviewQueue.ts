@@ -166,6 +166,24 @@ export function useApproveReport(projectId: string | undefined) {
   });
 }
 
+export function useBulkApproveReports(projectId: string | undefined) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (reportIds: string[]) => {
+      if (reportIds.length === 0) throw new Error('No reports selected');
+      const { error } = await supabase
+        .from('daily_reports').update({ status: 'approved' }).in('id', reportIds);
+      if (error) throw error;
+      return reportIds.length;
+    },
+    onSuccess: (count) => {
+      toast({ title: `${count} report${count === 1 ? '' : 's'} approved` });
+      qc.invalidateQueries({ queryKey: ['re-review', projectId] });
+    },
+    onError: (e: Error) => toast({ title: 'Bulk approve failed', description: e.message, variant: 'destructive' }),
+  });
+}
+
 export function useRejectReport(projectId: string | undefined) {
   const qc = useQueryClient();
   return useMutation({
