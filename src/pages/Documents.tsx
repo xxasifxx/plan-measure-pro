@@ -613,7 +613,11 @@ export default function Documents() {
             {foldersLoading ? (
               <div className="p-6 flex items-center justify-center"><Loader2 className="h-4 w-4 animate-spin text-muted-foreground" /></div>
             ) : folders.length === 0 ? (
-              <p className="p-4 text-xs text-muted-foreground text-center">No folders yet.</p>
+              <div className="p-4 text-center">
+                <Folder className="h-6 w-6 text-muted-foreground/50 mx-auto mb-1.5" />
+                <p className="text-xs text-muted-foreground">No folders yet.</p>
+                <p className="text-[10px] text-muted-foreground/70 mt-1">Create one to start organizing project documents.</p>
+              </div>
             ) : (
               renderTree(null)
             )}
