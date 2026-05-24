@@ -194,8 +194,62 @@ export default function Documents() {
   // ---- Upload queue with per-file progress ----
   const [uploadQueue, setUploadQueue] = useState<UploadItem[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const mobileFileInputRef = useRef<HTMLInputElement>(null);
+  const folderInputRef = useRef<HTMLInputElement>(null);
   const newVersionInputRef = useRef<HTMLInputElement>(null);
   const [newVersionTarget, setNewVersionTarget] = useState<DocumentRow | null>(null);
+
+  // Bulk actions
+  const bulkDownload = async () => {
+    for (const d of selectedDocs) {
+      try {
+        const url = await getDownloadUrl(d);
+        // Stagger window.opens to avoid popup blocker
+        window.open(url, '_blank', 'noopener');
+        await new Promise(r => setTimeout(r, 250));
+      } catch (e) { /* ignore */ }
+    }
+  };
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
+  const runBulkDelete = async () => {
+    let ok = 0, fail = 0;
+    for (const d of selectedDocs) {
+      try {
+        const { error } = await supabase.from('documents').delete().eq('id', d.id);
+        if (error) throw error;
+        await supabase.storage.from(BUCKET).remove([d.storage_path]).catch(() => {});
+        ok++;
+      } catch { fail++; }
+    }
+    setSelectedIds(new Set());
+    setBulkDeleteOpen(false);
+    qc.invalidateQueries({ queryKey: ['documents', projectId] });
+    qc.invalidateQueries({ queryKey: ['folder-counts', projectId] });
+    toast({ title: `Deleted ${ok} file${ok === 1 ? '' : 's'}`, description: fail ? `${fail} failed` : undefined, variant: fail ? 'destructive' : 'default' });
+  };
+
+  // Version restore: insert a new row pointing at the older blob, replacing the current head.
+  const restoreVersion = async (older: DocumentRow, head: DocumentRow) => {
+    if (!projectId || !user) return;
+    const { error } = await supabase.from('documents').insert({
+      id: crypto.randomUUID(),
+      project_id: projectId,
+      folder_id: head.folder_id,
+      name: head.name,
+      storage_path: older.storage_path,
+      mime_type: older.mime_type,
+      size_bytes: older.size_bytes,
+      uploaded_by: user.id,
+      version: head.version + 1,
+      replaces_document_id: head.id,
+      source_kind: 'restore',
+    } as any);
+    if (error) { toast({ title: 'Restore failed', description: error.message, variant: 'destructive' }); return; }
+    toast({ title: `Restored v${older.version} as v${head.version + 1}` });
+    setVersionsFor(null);
+    qc.invalidateQueries({ queryKey: ['documents', projectId] });
+  };
+
 
   const runUploads = async (files: File[]) => {
     if (!projectId || !selectedFolderId || !user) return;
