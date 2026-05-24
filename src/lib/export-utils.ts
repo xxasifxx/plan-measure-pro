@@ -2,6 +2,9 @@ import type { Annotation, PayItem } from '@/types/project';
 import * as XLSX from 'xlsx';
 import { sfToCY, sfToSY } from '@/lib/geometry';
 import { UNIT_LABELS, getPayItemSection } from '@/types/project';
+import { supabase } from '@/integrations/supabase/client';
+import { loadApprovedTotalsByPayItem } from '@/lib/approved-quantities';
+
 
 interface ExportRow {
   itemNumber: number;
@@ -17,23 +20,31 @@ interface ExportRow {
   section: number;
 }
 
-function buildRows(annotations: Annotation[], payItems: PayItem[]): ExportRow[] {
+function buildRows(
+  annotations: Annotation[],
+  payItems: PayItem[],
+  approvedOverrides?: Map<string, number>,
+): ExportRow[] {
   return payItems
     .map(item => {
       const anns = annotations.filter(a => a.payItemId === item.id);
       let qty = 0;
-      for (const a of anns) {
-        if (a.manualQuantity != null) { qty += a.manualQuantity; continue; }
-        if (a.type === 'count') { qty += 1; continue; }
-        if (a.depth && a.depth > 0) qty += sfToCY(a.measurement, a.depth);
-        else if (item.unit === 'SY') qty += sfToSY(a.measurement);
-        else qty += a.measurement;
+      if (approvedOverrides) {
+        qty = approvedOverrides.get(item.id) ?? 0;
+      } else {
+        for (const a of anns) {
+          if (a.manualQuantity != null) { qty += a.manualQuantity; continue; }
+          if (a.type === 'count') { qty += 1; continue; }
+          if (a.depth && a.depth > 0) qty += sfToCY(a.measurement, a.depth);
+          else if (item.unit === 'SY') qty += sfToSY(a.measurement);
+          else qty += a.measurement;
+        }
       }
       return {
         itemNumber: item.itemNumber,
         itemCode: item.itemCode,
         name: item.name,
-        count: anns.length,
+        count: approvedOverrides ? (qty > 0 ? 1 : 0) : anns.length,
         quantity: qty,
         unit: item.unit,
         unitLabel: UNIT_LABELS[item.unit],
@@ -43,13 +54,12 @@ function buildRows(annotations: Annotation[], payItems: PayItem[]): ExportRow[] 
         section: getPayItemSection(item.itemCode),
       };
     })
-    .filter(r => r.count > 0);
+    .filter(r => r.quantity > 0 || r.count > 0);
 }
 
-export function exportCsv(annotations: Annotation[], payItems: PayItem[], projectName: string): void {
-  const rows = buildRows(annotations, payItems);
+
+function writeCsvFromRows(rows: ExportRow[], projectName: string, fileSuffix = 'summary'): void {
   const header = 'Section,Item #,Item Code,Pay Item,Count,Measured Qty,Unit,Unit Price,Contract Qty,Variance %,Extended Cost';
-  // Contract Qty and Variance % are already in the header and row output below
 
   const sections = new Map<number, ExportRow[]>();
   for (const r of rows) {
@@ -78,24 +88,43 @@ export function exportCsv(annotations: Annotation[], payItems: PayItem[], projec
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `${projectName || 'takeoff'}_summary.csv`;
+  a.download = `${projectName || 'takeoff'}_${fileSuffix}.csv`;
   a.click();
   URL.revokeObjectURL(url);
 }
 
-export async function exportPdfReport(
-  annotations: Annotation[],
-  payItems: PayItem[],
+export function exportCsv(annotations: Annotation[], payItems: PayItem[], projectName: string): void {
+  writeCsvFromRows(buildRows(annotations, payItems), projectName);
+}
+
+/**
+ * Export only RE-approved quantities (from v_approved_pay_item_quantities).
+ * Use this for any "official" contract export.
+ */
+export async function exportApprovedCsv(
+  projectId: string, payItems: PayItem[], projectName: string,
+): Promise<void> {
+  const approved = await loadApprovedTotalsByPayItem(projectId);
+  const overrides = new Map<string, number>();
+  for (const [k, v] of approved) overrides.set(k, v.approved_quantity);
+  writeCsvFromRows(buildRows([], payItems, overrides), projectName, 'approved_summary');
+}
+
+
+async function writePdfFromRows(
+  rows: ExportRow[],
   projectName: string,
-  contractNumber: string
+  contractNumber: string,
+  opts: { title?: string; fileSuffix?: string } = {},
 ): Promise<void> {
   const { jsPDF } = await import('jspdf');
   const doc = new jsPDF();
-  const rows = buildRows(annotations, payItems);
   const total = rows.reduce((s, r) => s + r.extended, 0);
+  const title = opts.title ?? 'Quantity Takeoff Summary';
+  const fileSuffix = opts.fileSuffix ?? 'report';
 
   doc.setFontSize(16);
-  doc.text('Quantity Takeoff Summary', 14, 20);
+  doc.text(title, 14, 20);
   doc.setFontSize(10);
   doc.text(`Project: ${projectName}`, 14, 30);
   if (contractNumber) doc.text(`Contract: ${contractNumber}`, 14, 36);
@@ -162,8 +191,39 @@ export async function exportPdfReport(
   doc.text('GRAND TOTAL', 14, y);
   doc.text(`$${total.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, 185, y, { align: 'right' });
 
-  doc.save(`${projectName || 'takeoff'}_report.pdf`);
+  doc.save(`${projectName || 'takeoff'}_${fileSuffix}.pdf`);
 }
+
+export async function exportPdfReport(
+  annotations: Annotation[],
+  payItems: PayItem[],
+  projectName: string,
+  contractNumber: string,
+): Promise<void> {
+  await writePdfFromRows(buildRows(annotations, payItems), projectName, contractNumber);
+}
+
+/**
+ * Export only RE-approved quantities (from v_approved_pay_item_quantities).
+ * Use this for any "official" contract export.
+ */
+export async function exportApprovedPdfReport(
+  projectId: string,
+  payItems: PayItem[],
+  projectName: string,
+  contractNumber: string,
+): Promise<void> {
+  const approved = await loadApprovedTotalsByPayItem(projectId);
+  const overrides = new Map<string, number>();
+  for (const [k, v] of approved) overrides.set(k, v.approved_quantity);
+  await writePdfFromRows(
+    buildRows([], payItems, overrides),
+    projectName,
+    contractNumber,
+    { title: 'RE-Approved Quantity Report', fileSuffix: 'approved_report' },
+  );
+}
+
 
 /**
  * Export annotations by one inspector as an Excel workbook.
@@ -249,4 +309,77 @@ export function exportInspectorDaily(
   XLSX.utils.book_append_sheet(wb, ws2, 'Plan Pages');
 
   XLSX.writeFile(wb, `${projectName || 'takeoff'}_daily_${dateStr}.xlsx`);
+}
+
+/**
+ * Export an inspector's RE-approved daily-report snapshot for a single date.
+ * Pulls the frozen snapshot from `daily_reports` where status='approved'.
+ * If no approved report exists for that inspector/date, the workbook contains
+ * a single notice row instead of unapproved data.
+ */
+export async function exportApprovedInspectorDaily(
+  projectId: string,
+  payItems: PayItem[],
+  projectName: string,
+  contractNumber: string,
+  inspectorName: string,
+  userId: string,
+  date?: Date,
+): Promise<void> {
+  const targetDate = date || new Date();
+  const dateStr = targetDate.toISOString().slice(0, 10);
+
+  const { data, error } = await supabase
+    .from('daily_reports')
+    .select('snapshot, approved_at, status')
+    .eq('project_id', projectId)
+    .eq('user_id', userId)
+    .eq('report_date', dateStr)
+    .eq('status', 'approved')
+    .maybeSingle();
+  if (error) throw error;
+
+  const snapshot: Array<{
+    pay_item_id: string; item_code: string; name: string; unit: string;
+    delta_quantity: number; new_cumulative: number; notes?: string;
+  }> = Array.isArray((data as any)?.snapshot) ? (data as any).snapshot : [];
+
+  const itemById = new Map(payItems.map(p => [p.id, p]));
+
+  const wb = XLSX.utils.book_new();
+  const headerRows: any[][] = [
+    ['RE-Approved Daily Inspector Report'],
+    [`Project: ${projectName}`, '', `Contract: ${contractNumber || 'N/A'}`],
+    [`Inspector: ${inspectorName || 'Unknown'}`, '', `Date: ${targetDate.toLocaleDateString()}`],
+    [
+      `Status: ${data ? 'Approved' : 'No approved report for this date'}`,
+      '',
+      data?.approved_at ? `Approved: ${new Date(data.approved_at).toLocaleString()}` : '',
+    ],
+    [],
+    ['Pay Item Code', 'Pay Item Name', 'Approved Qty (Day)', 'Cumulative Qty', 'Unit', 'Notes'],
+  ];
+
+  const dataRows = snapshot.length === 0
+    ? [['—', 'No RE-approved snapshot exists for this date.', '', '', '', '']]
+    : snapshot.map(s => {
+        const item = itemById.get(s.pay_item_id);
+        return [
+          s.item_code || item?.itemCode || '',
+          s.name || item?.name || '',
+          Number((s.delta_quantity ?? 0).toFixed(2)),
+          Number((s.new_cumulative ?? 0).toFixed(2)),
+          s.unit || item?.unit || '',
+          s.notes || '',
+        ];
+      });
+
+  const ws = XLSX.utils.aoa_to_sheet([...headerRows, ...dataRows]);
+  ws['!cols'] = [
+    { wch: 16 }, { wch: 36 }, { wch: 16 }, { wch: 16 }, { wch: 8 }, { wch: 40 },
+  ];
+  ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 5 } }];
+  XLSX.utils.book_append_sheet(wb, ws, 'Approved Daily');
+
+  XLSX.writeFile(wb, `${projectName || 'takeoff'}_approved_daily_${dateStr}.xlsx`);
 }
