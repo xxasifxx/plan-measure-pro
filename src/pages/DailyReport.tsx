@@ -17,7 +17,7 @@ export default function DailyReport() {
   const { projectId } = useParams<{ projectId: string }>();
   const { user, profile } = useAuth();
   const [dateISO, setDateISO] = useState(todayISO());
-  const { report, isLoading, preview, previewLoading, submit, reopen } = useDailyReport(projectId, user?.id, dateISO);
+  const { report, isLoading, preview, previewLoading, isStale, submit, reopen } = useDailyReport(projectId, user?.id, dateISO);
 
   const status = report?.status ?? 'draft';
   const isDraft = status === 'draft' || report == null;
