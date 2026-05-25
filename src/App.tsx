@@ -21,6 +21,8 @@ import ResetPassword from "./pages/ResetPassword";
 import Landing from "./pages/Landing";
 import NotFound from "./pages/NotFound";
 import Documents from "./pages/Documents";
+import { PwaShell } from "@/components/PwaShell";
+
 
 const queryClient = new QueryClient();
 
@@ -48,7 +50,9 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
+        <PwaShell />
         <BrowserRouter>
+
           <Routes>
             <Route path="/landing" element={<Landing />} />
             <Route path="/demo" element={<Demo />} />

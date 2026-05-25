@@ -63,8 +63,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    // Refresh session when the app returns from background (fixes 401s after
+    // resume on iOS / installed PWAs sitting overnight on the home screen).
+    const onVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        supabase.auth.getSession().catch(() => {});
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+
+    return () => {
+      subscription.unsubscribe();
+      document.removeEventListener('visibilitychange', onVisibility);
+    };
   }, [fetchRolesAndProfile]);
+
 
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
