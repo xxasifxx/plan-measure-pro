@@ -2,8 +2,10 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
+import { useMemo } from "react";
 import Admin from "./pages/Admin";
 import Dashboard from "./pages/Dashboard";
 import Index from "./pages/Index";
@@ -22,9 +24,52 @@ import Landing from "./pages/Landing";
 import NotFound from "./pages/NotFound";
 import Documents from "./pages/Documents";
 import { PwaShell } from "@/components/PwaShell";
+import { createIdbPersister } from "@/lib/offline/idb-persister";
 
+// 14 days; bust on app version (Vite injects from package.json via env if defined).
+const PERSIST_BUSTER = import.meta.env.VITE_APP_VERSION || "v1";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      gcTime: 1000 * 60 * 60 * 24 * 14, // keep cache long enough to persist
+      staleTime: 1000 * 30,
+    },
+  },
+});
+
+// Persist only project-domain queries; skip auth/realtime ephemera.
+const PERSIST_PREFIXES = [
+  "projects", "project", "pay-items", "annotations", "calibrations",
+  "documents", "daily-report", "schedule", "specs", "notifications",
+  "team", "members", "rocks", "scorecard",
+];
+
+function shouldDehydrateQuery(query: { queryKey: readonly unknown[] }): boolean {
+  const head = query.queryKey?.[0];
+  if (typeof head !== "string") return false;
+  return PERSIST_PREFIXES.some((p) => head === p || head.startsWith(p));
+}
+
+function PersistedQueryProvider({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth();
+  const userScope = user?.id || "anon";
+  const persistOptions = useMemo(
+    () => ({
+      persister: createIdbPersister(userScope),
+      buster: `${PERSIST_BUSTER}:${userScope}`,
+      maxAge: 1000 * 60 * 60 * 24 * 14,
+      dehydrateOptions: { shouldDehydrateQuery },
+    }),
+    [userScope]
+  );
+  // Re-mount when the user changes so we never restore another user's cache.
+  return (
+    <PersistQueryClientProvider key={userScope} client={queryClient} persistOptions={persistOptions}>
+      {children}
+    </PersistQueryClientProvider>
+  );
+}
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -47,34 +92,35 @@ function AuthRoute({ children }: { children: React.ReactNode }) {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <PwaShell />
-        <BrowserRouter>
-
-          <Routes>
-            <Route path="/landing" element={<Landing />} />
-            <Route path="/demo" element={<Demo />} />
-            <Route path="/mcfa" element={<McfaPitch />} />
-            <Route path="/fajar" element={<FajarPitch />} />
-            <Route path="/mcfa/demo" element={<XerDemo />} />
-            <Route path="/p6-xml" element={<P6XmlDemo />} />
-            <Route path="/mcfa/p6-xml" element={<P6XmlDemo />} />
-            <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            <Route path="/project/:projectId" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-            <Route path="/project/:projectId/controls" element={<ProtectedRoute><ProjectControls /></ProtectedRoute>} />
-            <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
-            <Route path="/re-review" element={<ProtectedRoute><ReReview /></ProtectedRoute>} />
-            <Route path="/project/:projectId/daily-report" element={<ProtectedRoute><DailyReport /></ProtectedRoute>} />
-            <Route path="/project/:projectId/p6-export" element={<ProtectedRoute><P6Export /></ProtectedRoute>} />
-            <Route path="/project/:projectId/documents" element={<ProtectedRoute><Documents /></ProtectedRoute>} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
+      <PersistedQueryProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <PwaShell />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/landing" element={<Landing />} />
+              <Route path="/demo" element={<Demo />} />
+              <Route path="/mcfa" element={<McfaPitch />} />
+              <Route path="/fajar" element={<FajarPitch />} />
+              <Route path="/mcfa/demo" element={<XerDemo />} />
+              <Route path="/p6-xml" element={<P6XmlDemo />} />
+              <Route path="/mcfa/p6-xml" element={<P6XmlDemo />} />
+              <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              <Route path="/project/:projectId" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+              <Route path="/project/:projectId/controls" element={<ProtectedRoute><ProjectControls /></ProtectedRoute>} />
+              <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+              <Route path="/re-review" element={<ProtectedRoute><ReReview /></ProtectedRoute>} />
+              <Route path="/project/:projectId/daily-report" element={<ProtectedRoute><DailyReport /></ProtectedRoute>} />
+              <Route path="/project/:projectId/p6-export" element={<ProtectedRoute><P6Export /></ProtectedRoute>} />
+              <Route path="/project/:projectId/documents" element={<ProtectedRoute><Documents /></ProtectedRoute>} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </PersistedQueryProvider>
     </AuthProvider>
   </QueryClientProvider>
 );
