@@ -16,6 +16,12 @@ export async function loadPdfFromUrl(url: string): Promise<pdfjsLib.PDFDocumentP
   return pdf;
 }
 
+export async function loadPdfFromBlob(blob: Blob): Promise<pdfjsLib.PDFDocumentProxy> {
+  const arrayBuffer = await blob.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  return pdf;
+}
+
 export async function renderPage(
   pdf: pdfjsLib.PDFDocumentProxy,
   pageNum: number,
