@@ -67,6 +67,29 @@ export default defineConfig(({ mode }) => ({
               expiration: { maxEntries: 200, maxAgeSeconds: 60 * 60 * 24 * 30 },
             },
           },
+          {
+            // Supabase REST GETs — cache for offline reads
+            urlPattern: ({ url, request }) =>
+              request.method === "GET" && url.pathname.startsWith("/rest/v1/"),
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "supabase-rest",
+              networkTimeoutSeconds: 3,
+              cacheableResponse: { statuses: [0, 200] },
+              expiration: { maxEntries: 300, maxAgeSeconds: 60 * 60 * 24 * 7 },
+            },
+          },
+          {
+            // Supabase Storage signed/authenticated objects (PDFs, photos, specs)
+            urlPattern: ({ url }) => url.pathname.startsWith("/storage/v1/object/"),
+            handler: "CacheFirst",
+            options: {
+              cacheName: "supabase-files",
+              cacheableResponse: { statuses: [0, 200] },
+              expiration: { maxEntries: 200, maxAgeSeconds: 60 * 60 * 24 * 30 },
+              rangeRequests: true,
+            },
+          },
         ],
       },
     }),

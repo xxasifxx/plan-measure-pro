@@ -3,6 +3,7 @@ import { Download, RefreshCw, WifiOff, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { registerSWWithUpdates } from "@/lib/pwa";
 import { useNetworkStatus } from "@/hooks/useNetworkStatus";
+import { getDB } from "@/lib/offline/db";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -34,6 +35,21 @@ export function PwaShell() {
   const [installEvent, setInstallEvent] = useState<BeforeInstallPromptEvent | null>(null);
   const [showIosHint, setShowIosHint] = useState(false);
   const [reloadFn, setReloadFn] = useState<null | (() => Promise<void>)>(null);
+  const [offlineProjectCount, setOfflineProjectCount] = useState<number>(0);
+
+  // Refresh cached project count whenever we go offline
+  useEffect(() => {
+    if (online) return;
+    (async () => {
+      try {
+        const db = await getDB();
+        const count = await db.count("projects" as any);
+        setOfflineProjectCount(count);
+      } catch {
+        setOfflineProjectCount(0);
+      }
+    })();
+  }, [online]);
 
   // Register SW + listen for updates
   useEffect(() => {
@@ -78,7 +94,7 @@ export function PwaShell() {
       {!online && (
         <div className="fixed top-3 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-2 rounded-full bg-destructive text-destructive-foreground px-3 py-1.5 text-xs font-medium shadow-lg">
           <WifiOff className="w-3.5 h-3.5" />
-          You are offline — changes will be queued.
+          Offline — viewing cached data{offlineProjectCount > 0 ? ` (${offlineProjectCount} project${offlineProjectCount === 1 ? "" : "s"})` : ""}.
         </div>
       )}
 

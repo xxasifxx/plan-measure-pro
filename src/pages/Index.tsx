@@ -20,7 +20,9 @@ import { useAuth } from '@/hooks/useAuth';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useTheme } from '@/hooks/useTheme';
 import { useTour, type TourStep } from '@/hooks/useTour';
-import { loadPdf, loadPdfFromUrl, extractTextFromRegion, extractPayItemsFromPage } from '@/lib/pdf-utils';
+import { loadPdf, loadPdfFromUrl, loadPdfFromBlob, extractTextFromRegion, extractPayItemsFromPage } from '@/lib/pdf-utils';
+import { safeGet, safeGetAllByIndex, safeBulkPut, safePut } from '@/lib/offline/db';
+import { warmPdf, getCachedPdf } from '@/lib/offline/pdf-cache';
 import { extractAllText, buildSectionPageIndex, getSectionFromItemCode } from '@/lib/specs-utils';
 import { exportApprovedCsv, exportApprovedPdfReport, exportApprovedInspectorDaily } from '@/lib/export-utils';
 import { useToast } from '@/hooks/use-toast';
@@ -103,35 +105,47 @@ const Index = () => {
     async function load() {
       setProjectLoading(true);
       try {
-        // Fetch project record
-        const { data: proj, error } = await supabase
-          .from('projects')
-          .select('*')
-          .eq('id', projectId)
-          .single();
-        if (error || !proj) throw error || new Error('Project not found');
+        // ── Try Supabase first ──
+        let proj: any = null;
+        let dbPayItems: any[] = [];
+        let dbCals: any[] = [];
+        let dbAnns: any[] = [];
+        let usedOffline = false;
+
+        try {
+          const { data, error } = await supabase.from('projects').select('*').eq('id', projectId).single();
+          if (error || !data) throw error || new Error('Project not found');
+          proj = data;
+          const [pi, cal, an] = await Promise.all([
+            supabase.from('pay_items').select('*').eq('project_id', projectId).order('item_number'),
+            supabase.from('calibrations').select('*').eq('project_id', projectId),
+            supabase.from('annotations').select('*').eq('project_id', projectId),
+          ]);
+          dbPayItems = pi.data || [];
+          dbCals = cal.data || [];
+          dbAnns = an.data || [];
+
+          // Mirror to IDB for next offline session
+          await safePut('projects', proj);
+          await safeBulkPut('pay_items', dbPayItems);
+          await safeBulkPut('calibrations', dbCals);
+          await safeBulkPut('annotations', dbAnns);
+        } catch (onlineErr) {
+          // ── Offline fallback: read from IDB ──
+          const cachedProj = await safeGet<any>('projects', projectId);
+          if (!cachedProj) throw onlineErr;
+          proj = cachedProj;
+          dbPayItems = await safeGetAllByIndex<any>('pay_items', 'by_project', projectId);
+          dbCals = await safeGetAllByIndex<any>('calibrations', 'by_project', projectId);
+          dbAnns = await safeGetAllByIndex<any>('annotations', 'by_project', projectId);
+          usedOffline = true;
+          toast({ title: 'Offline mode', description: 'Viewing cached project data.' });
+        }
+
         if (cancelled) return;
 
-        // Fetch pay items
-        const { data: dbPayItems } = await supabase
-          .from('pay_items')
-          .select('*')
-          .eq('project_id', projectId)
-          .order('item_number');
-
-        // Fetch calibrations
-        const { data: dbCals } = await supabase
-          .from('calibrations')
-          .select('*')
-          .eq('project_id', projectId);
-
-        // Fetch annotations
-        const { data: dbAnns } = await supabase
-          .from('annotations')
-          .select('*')
-          .eq('project_id', projectId);
-
-        if (cancelled) return;
+        // Sort pay items locally if from cache
+        dbPayItems.sort((a, b) => (a.item_number || 0) - (b.item_number || 0));
 
         // Map DB rows to local types
         const mappedPayItems = (dbPayItems || []).map(pi => ({
@@ -184,20 +198,41 @@ const Index = () => {
           mappedPayItems,
         );
 
-        // Load PDF from storage
+        // Load PDF — try cached blob first when offline, then signed URL with warm cache.
         if (proj.pdf_storage_path) {
-          const { data: signedData, error: signErr } = await supabase.storage
-            .from('project-pdfs')
-            .createSignedUrl(proj.pdf_storage_path, 3600);
-          if (signErr) throw signErr;
-          if (cancelled) return;
-          const pdfDoc = await loadPdfFromUrl(signedData.signedUrl);
-          setPdf(pdfDoc);
-          setTotalPages(pdfDoc.numPages);
+          let pdfDoc: PDFDocumentProxy | null = null;
+
+          if (usedOffline) {
+            const cachedBlob = await getCachedPdf(projectId);
+            if (cachedBlob) pdfDoc = await loadPdfFromBlob(cachedBlob);
+          }
+
+          if (!pdfDoc) {
+            try {
+              const { data: signedData, error: signErr } = await supabase.storage
+                .from('project-pdfs')
+                .createSignedUrl(proj.pdf_storage_path, 3600);
+              if (signErr || !signedData) throw signErr || new Error('No signed URL');
+              if (cancelled) return;
+              pdfDoc = await loadPdfFromUrl(signedData.signedUrl);
+              // Warm the cache for offline use (fire-and-forget).
+              void warmPdf(projectId, signedData.signedUrl);
+            } catch (pdfErr) {
+              // Last-ditch: cached blob if we hadn't tried it yet
+              const cachedBlob = await getCachedPdf(projectId);
+              if (cachedBlob) pdfDoc = await loadPdfFromBlob(cachedBlob);
+              else throw pdfErr;
+            }
+          }
+
+          if (pdfDoc && !cancelled) {
+            setPdf(pdfDoc);
+            setTotalPages(pdfDoc.numPages);
+          }
         }
 
-        // Load specs PDF from storage if available
-        if (proj.specs_storage_path) {
+        // Load specs PDF from storage if available (skipped offline — non-critical)
+        if (proj.specs_storage_path && !usedOffline) {
           try {
             const { data: specsSignedData, error: specsSignErr } = await supabase.storage
               .from('specs-pdfs')
