@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { GanttUploader } from '@/components/GanttUploader';
+import { ScheduleWorkspace } from '@/components/schedule/ScheduleWorkspace';
 
 type Activity = {
   id: string; project_id: string; wbs_code: string; name: string;
@@ -401,56 +402,10 @@ export default function ProjectControls() {
             </Section>
           </TabsContent>
 
-          {/* === ACTIVITIES === */}
-          <TabsContent value="activities" className="space-y-4">
+          {/* === ACTIVITIES === Primavera P6-style workspace */}
+          <TabsContent value="activities" className="space-y-3">
             <GanttUploader projectId={projectId!} />
-            <ActivityEditor
-              payItems={payItemsQuery.data || []}
-              onAdd={(a) => addActivity.mutate({ ...a, project_id: projectId! })}
-              isPending={addActivity.isPending}
-            />
-            <Section title="Schedule Activities" subtitle="Baseline vs % complete; flagged when behind expected by ≥10%">
-              {!activitiesQuery.data?.length ? (
-                <Empty>No activities yet. Add your first WBS row above.</Empty>
-              ) : (
-                <div className="space-y-2">
-                  <div className="grid grid-cols-12 gap-2 text-[10px] uppercase tracking-wider text-muted-foreground font-mono px-2">
-                    <div className="col-span-2">WBS</div>
-                    <div className="col-span-3">Activity</div>
-                    <div className="col-span-2">Baseline</div>
-                    <div className="col-span-3">Progress</div>
-                    <div className="col-span-1">Var</div>
-                    <div className="col-span-1"></div>
-                  </div>
-                  {activitiesQuery.data.map(a => {
-                    const expected = computeExpectedPct(a);
-                    const variance = Number(a.percent_complete) - expected;
-                    return (
-                      <div key={a.id} className="grid grid-cols-12 gap-2 items-center text-xs font-mono bg-card border border-border rounded px-2 py-2">
-                        <div className="col-span-2 text-foreground">{a.wbs_code}</div>
-                        <div className="col-span-3 truncate">{a.name}</div>
-                        <div className="col-span-2 text-muted-foreground text-[11px]">
-                          {a.baseline_start?.slice(5)} → {a.baseline_end?.slice(5)}
-                        </div>
-                        <div className="col-span-3 flex items-center gap-2">
-                          <Input type="number" min={0} max={100} value={a.percent_complete}
-                            onChange={(e) => updateActivityPct.mutate({ id: a.id, percent_complete: Number(e.target.value) })}
-                            className="h-7 w-16 text-xs" />
-                          <Progress value={Number(a.percent_complete)} className="h-1.5 flex-1" />
-                        </div>
-                        <div className={cn('col-span-1 text-right',
-                          variance >= 0 ? 'text-success' : variance > -10 ? 'text-warning' : 'text-destructive')}>
-                          {variance >= 0 ? '+' : ''}{variance.toFixed(0)}%
-                        </div>
-                        <div className="col-span-1 text-right">
-                          <Button variant="ghost" size="sm" className="h-6 px-1 text-destructive" onClick={() => deleteActivity.mutate(a.id)}>×</Button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </Section>
+            <ScheduleWorkspace projectId={projectId!} />
           </TabsContent>
 
           {/* === SCORECARD === */}
