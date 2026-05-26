@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import type { PointXY } from '@/types/project';
 import type { GeoControlPoint, GeoCalibration, GpsCoord } from '@/lib/geo-transform';
 import { buildGeoCalibration } from '@/lib/geo-transform';
+import { watchPosition, type WatchHandle } from '@/lib/native/geolocation';
 
 interface Props {
   onComplete: (cal: GeoCalibration) => void;
@@ -24,50 +25,33 @@ export function GpsCalibration({ onComplete, onCancel, onRequestPlanTap, existin
   const [currentGps, setCurrentGps] = useState<GpsCoord | null>(null);
   const [gpsAccuracy, setGpsAccuracy] = useState<number | null>(null);
   const [gpsError, setGpsError] = useState<string | null>(null);
-  const watchIdRef = useRef<number | null>(null);
+  const watchIdRef = useRef<WatchHandle | null>(null);
 
   // Cleanup GPS watch on unmount
   useEffect(() => {
     return () => {
-      if (watchIdRef.current != null) {
-        navigator.geolocation.clearWatch(watchIdRef.current);
-      }
+      watchIdRef.current?.stop();
+      watchIdRef.current = null;
     };
   }, []);
 
-  const captureGps = useCallback(() => {
+  const captureGps = useCallback(async () => {
     setGpsError(null);
     setStep('waiting-gps');
-
-    if (!navigator.geolocation) {
-      setGpsError('GPS not available on this device');
-      return;
-    }
-
-    // Clear previous watch
-    if (watchIdRef.current != null) {
-      navigator.geolocation.clearWatch(watchIdRef.current);
-    }
-
-    watchIdRef.current = navigator.geolocation.watchPosition(
-      (pos) => {
-        setCurrentGps({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-        setGpsAccuracy(pos.coords.accuracy);
+    watchIdRef.current?.stop();
+    watchIdRef.current = await watchPosition(
+      (s) => {
+        setCurrentGps({ lat: s.latitude, lng: s.longitude });
+        setGpsAccuracy(s.accuracy);
       },
-      (err) => {
-        setGpsError(err.message);
-      },
-      { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 }
+      (err) => setGpsError(err.message),
     );
   }, []);
 
   const confirmGpsAndRequestPlan = useCallback(() => {
     if (!currentGps) return;
-    // Stop watching
-    if (watchIdRef.current != null) {
-      navigator.geolocation.clearWatch(watchIdRef.current);
-      watchIdRef.current = null;
-    }
+    watchIdRef.current?.stop();
+    watchIdRef.current = null;
 
     setStep('waiting-plan');
     const capturedGps = { ...currentGps };
