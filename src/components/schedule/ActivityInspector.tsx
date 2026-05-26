@@ -275,3 +275,91 @@ function RelationshipList({
     </Section>
   );
 }
+
+function ResourceSection({
+  sch, projectId, activityId,
+}: { sch: ReturnType<typeof useSchedule>; projectId: string; activityId: string }) {
+  const assignments = sch.assignments.filter(a => a.activity_id === activityId);
+  const resourceById = new Map(sch.resources.map(r => [r.id, r]));
+  const [pick, setPick] = useState('');
+  const [units, setUnits] = useState(0);
+
+  const totalBudget = assignments.reduce((s, a) => s + Number(a.budgeted_cost || 0), 0);
+  const totalActual = assignments.reduce((s, a) => s + Number(a.actual_cost || 0), 0);
+
+  return (
+    <Section title={`Resources (${assignments.length})`}>
+      {assignments.length === 0 && <div className="text-[11px] text-muted-foreground">No assignments</div>}
+      {assignments.map(asg => {
+        const r = resourceById.get(asg.resource_id);
+        return (
+          <div key={asg.id} className="border border-border/40 rounded p-2 space-y-1 bg-muted/20">
+            <div className="flex items-center justify-between">
+              <div className="text-[11px] font-mono truncate">
+                {r?.resource_code ? `${r.resource_code} · ` : ''}{r?.name || 'Unknown'} <span className="text-muted-foreground">({r?.unit || 'hr'})</span>
+              </div>
+              <Button size="sm" variant="ghost" className="h-5 w-5 p-0" onClick={() => sch.deleteAssignment.mutate(asg.id)}>
+                <X className="h-3 w-3" />
+              </Button>
+            </div>
+            <div className="grid grid-cols-3 gap-1">
+              <NumField label="Budgeted" v={asg.budgeted_units} onChange={n => sch.upsertAssignment.mutate({
+                id: asg.id, budgeted_units: n,
+                budgeted_cost: n * Number(r?.cost_per_unit || 0),
+              })} />
+              <NumField label="Actual" v={asg.actual_units} onChange={n => sch.upsertAssignment.mutate({
+                id: asg.id, actual_units: n,
+                actual_cost: n * Number(r?.cost_per_unit || 0),
+              })} />
+              <NumField label="Remaining" v={asg.remaining_units} onChange={n => sch.upsertAssignment.mutate({ id: asg.id, remaining_units: n })} />
+            </div>
+            <div className="text-[10px] text-muted-foreground font-mono">
+              Cost: ${Number(asg.budgeted_cost || 0).toFixed(0)} budget · ${Number(asg.actual_cost || 0).toFixed(0)} actual
+            </div>
+          </div>
+        );
+      })}
+      <div className="grid grid-cols-[1fr_70px_28px] gap-1 pt-1 border-t border-border/40">
+        <Select value={pick} onValueChange={setPick}>
+          <SelectTrigger className="h-6 text-[11px]"><SelectValue placeholder="Add resource…" /></SelectTrigger>
+          <SelectContent>
+            {sch.resources.length === 0 && <div className="px-2 py-1 text-[11px] text-muted-foreground">No resources — create one in the Resource Library</div>}
+            {sch.resources.map(r => (
+              <SelectItem key={r.id} value={r.id} className="text-[11px] font-mono">
+                {r.resource_code ? `${r.resource_code} · ` : ''}{r.name} ({r.unit})
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Input type="number" value={units} onChange={e => setUnits(Number(e.target.value))} className="h-6 text-[11px]" placeholder="units" />
+        <Button size="sm" variant="ghost" className="h-6 w-6 p-0" disabled={!pick}
+          onClick={() => {
+            const r = resourceById.get(pick);
+            const cost = units * Number(r?.cost_per_unit || 0);
+            sch.upsertAssignment.mutate({
+              activity_id: activityId, resource_id: pick,
+              budgeted_units: units, remaining_units: units, actual_units: 0,
+              budgeted_cost: cost, actual_cost: 0,
+            });
+            setPick(''); setUnits(0);
+          }}><Plus className="h-3 w-3" /></Button>
+      </div>
+      {assignments.length > 0 && (
+        <div className="text-[11px] font-mono pt-1 flex justify-between border-t border-border/40">
+          <span className="text-muted-foreground">Activity cost</span>
+          <span>${totalActual.toFixed(0)} / ${totalBudget.toFixed(0)}</span>
+        </div>
+      )}
+    </Section>
+  );
+}
+
+function NumField({ label, v, onChange }: { label: string; v: number; onChange: (n: number) => void }) {
+  return (
+    <div className="space-y-0.5">
+      <div className="text-[9px] uppercase font-mono text-muted-foreground">{label}</div>
+      <Input type="number" defaultValue={Number(v || 0)} className="h-6 text-[11px] px-1 font-mono"
+        onBlur={e => { const n = Number(e.target.value); if (n !== Number(v)) onChange(n); }} />
+    </div>
+  );
+}
