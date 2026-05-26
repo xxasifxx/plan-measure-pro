@@ -238,30 +238,46 @@ export function useProject(options: UseProjectOptions = {}) {
   }, [project, persist, dbSync, supabaseProjectId]);
 
   // ── Undo/Redo ──
+  const reinsertAnnotation = useCallback(async (ann: Annotation) => {
+    if (!supabaseProjectId || !userId) return;
+    await offlineMutate({
+      entity: 'annotations', op: 'insert', rowId: ann.id,
+      projectId: supabaseProjectId,
+      payload: {
+        project_id: supabaseProjectId, user_id: userId,
+        type: ann.type, points: ann.points as any, pay_item_id: ann.payItemId || null,
+        page: ann.page, depth: ann.depth ?? null, measurement: ann.measurement,
+        measurement_unit: ann.measurementUnit,
+        manual_quantity: ann.manualQuantity ?? null,
+        location: ann.location || '', notes: ann.notes || '',
+      },
+    });
+  }, [supabaseProjectId, userId]);
+
+  const deleteAnnotationRemote = useCallback(async (id: string) => {
+    if (!supabaseProjectId) return;
+    await offlineMutate({
+      entity: 'annotations', op: 'delete', rowId: id,
+      projectId: supabaseProjectId, payload: null,
+    });
+  }, [supabaseProjectId]);
+
   const undo = useCallback(async () => {
     if (!project || undoStack.current.length === 0) return;
     const action = undoStack.current.pop()!;
     if (action.type === 'add') {
       const updated = { ...project, annotations: project.annotations.filter(a => a.id !== action.annotation.id) };
       persist(updated);
-      if (dbSync()) await supabase.from('annotations').delete().eq('id', action.annotation.id);
+      if (dbSync()) await deleteAnnotationRemote(action.annotation.id);
     } else {
       const updated = { ...project, annotations: [...project.annotations, action.annotation] };
       persist(updated);
-      if (dbSync() && supabaseProjectId && userId) {
-        const ann = action.annotation;
-        await supabase.from('annotations').insert({
-          id: ann.id, project_id: supabaseProjectId, user_id: userId,
-          type: ann.type, points: ann.points as any, pay_item_id: ann.payItemId || null,
-          page: ann.page, depth: ann.depth ?? null, measurement: ann.measurement,
-          measurement_unit: ann.measurementUnit,
-        });
-      }
+      if (dbSync()) await reinsertAnnotation(action.annotation);
     }
     redoStack.current.push(action);
     setUndoCount(undoStack.current.length);
     setRedoCount(redoStack.current.length);
-  }, [project, persist, dbSync, supabaseProjectId, userId]);
+  }, [project, persist, dbSync, reinsertAnnotation, deleteAnnotationRemote]);
 
   const redo = useCallback(async () => {
     if (!project || redoStack.current.length === 0) return;
@@ -269,24 +285,16 @@ export function useProject(options: UseProjectOptions = {}) {
     if (action.type === 'add') {
       const updated = { ...project, annotations: [...project.annotations, action.annotation] };
       persist(updated);
-      if (dbSync() && supabaseProjectId && userId) {
-        const ann = action.annotation;
-        await supabase.from('annotations').insert({
-          id: ann.id, project_id: supabaseProjectId, user_id: userId,
-          type: ann.type, points: ann.points as any, pay_item_id: ann.payItemId || null,
-          page: ann.page, depth: ann.depth ?? null, measurement: ann.measurement,
-          measurement_unit: ann.measurementUnit,
-        });
-      }
+      if (dbSync()) await reinsertAnnotation(action.annotation);
     } else {
       const updated = { ...project, annotations: project.annotations.filter(a => a.id !== action.annotation.id) };
       persist(updated);
-      if (dbSync()) await supabase.from('annotations').delete().eq('id', action.annotation.id);
+      if (dbSync()) await deleteAnnotationRemote(action.annotation.id);
     }
     undoStack.current.push(action);
     setUndoCount(undoStack.current.length);
     setRedoCount(redoStack.current.length);
-  }, [project, persist, dbSync, supabaseProjectId, userId]);
+  }, [project, persist, dbSync, reinsertAnnotation, deleteAnnotationRemote]);
 
   const canUndo = !!project && undoCount > 0;
   const canRedo = !!project && redoCount > 0;
