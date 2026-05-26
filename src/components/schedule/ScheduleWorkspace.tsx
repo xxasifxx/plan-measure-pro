@@ -143,6 +143,9 @@ export function ScheduleWorkspace({ projectId }: Props) {
         onRecalc={() => sch.persistCpm.mutate()}
         onExportPmxml={handleExport}
         onImportP6={() => setImportOpen(true)}
+        onOpenCalendars={() => setCalOpen(true)}
+        onOpenResources={() => setResOpen(true)}
+        onOpenBaselines={() => setBlOpen(true)}
         selectedCount={selected.length}
         canLink={selected.length >= 2}
         meta={sch.meta}
