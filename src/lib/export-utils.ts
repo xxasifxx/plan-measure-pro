@@ -305,7 +305,8 @@ export function exportInspectorDaily(
   ws2['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 2 } }];
   XLSX.utils.book_append_sheet(wb, ws2, 'Plan Pages');
 
-  XLSX.writeFile(wb, `${projectName || 'takeoff'}_daily_${dateStr}.xlsx`);
+  const ab = XLSX.write(wb, { bookType: 'xlsx', type: 'array' }) as ArrayBuffer;
+  void saveExport(`${projectName || 'takeoff'}_daily_${dateStr}.xlsx`, new Blob([ab], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
 }
 
 /**
@@ -395,6 +396,7 @@ export async function exportApprovedInspectorDaily(
   XLSX.utils.book_append_sheet(wb, ws, isApproved ? 'Approved Daily' : 'PENDING Daily');
 
   const suffix = isApproved ? 'approved_daily' : 'PENDING_daily';
-  XLSX.writeFile(wb, `${projectName || 'takeoff'}_${suffix}_${dateStr}.xlsx`);
+  const ab2 = XLSX.write(wb, { bookType: 'xlsx', type: 'array' }) as ArrayBuffer;
+  void saveExport(`${projectName || 'takeoff'}_${suffix}_${dateStr}.xlsx`, new Blob([ab2], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
 }
 
