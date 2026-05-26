@@ -2,6 +2,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import type { ActivityRelationship, ScheduleActivity, ScheduleMeta } from './types';
 import { runCpm } from './cpm';
+import { calendarFrom, normalizeActivityPatch } from './baseline';
+import type { ImportedSchedule } from './import-p6';
 import { useMemo } from 'react';
 
 export function useSchedule(projectId: string) {
@@ -60,19 +62,24 @@ export function useSchedule(projectId: string) {
 
   const upsertActivity = useMutation({
     mutationFn: async (patch: Partial<ScheduleActivity> & { id?: string }) => {
+      const workdays = calendarFrom(metaQ.data);
       if (patch.id) {
+        const current = activitiesQ.data?.find(a => a.id === patch.id) || {};
         const { id, ...rest } = patch;
-        const { error } = await supabase.from('schedule_activities').update(rest as any).eq('id', id);
+        const normalized = normalizeActivityPatch(current, rest, workdays);
+        const { error } = await supabase.from('schedule_activities').update(normalized as any).eq('id', id);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from('schedule_activities').insert({
+        const base: any = {
           project_id: projectId,
           wbs_code: patch.wbs_code || 'NEW',
           name: patch.name || 'New Activity',
           activity_type: patch.activity_type || 'task',
           duration_days: patch.duration_days ?? 1,
           ...patch,
-        } as any);
+        };
+        const normalized = normalizeActivityPatch({}, base, workdays);
+        const { error } = await supabase.from('schedule_activities').insert({ ...base, ...normalized });
         if (error) throw error;
       }
     },
@@ -90,6 +97,14 @@ export function useSchedule(projectId: string) {
   const addRelationship = useMutation({
     mutationFn: async (r: Omit<ActivityRelationship, 'id'>) => {
       const { error } = await supabase.from('activity_relationships' as any).insert(r as any);
+      if (error) throw error;
+    },
+    onSuccess: invalidate,
+  });
+
+  const updateRelationship = useMutation({
+    mutationFn: async ({ id, ...patch }: Partial<ActivityRelationship> & { id: string }) => {
+      const { error } = await supabase.from('activity_relationships' as any).update(patch as any).eq('id', id);
       if (error) throw error;
     },
     onSuccess: invalidate,
@@ -115,7 +130,7 @@ export function useSchedule(projectId: string) {
             early_finish: r.early_finish,
             late_start: r.late_start,
             late_finish: r.late_finish,
-            total_float_days: r.total_float_days,
+            total_float_days: Number.isNaN(r.total_float_days) ? null : r.total_float_days,
             is_critical: r.is_critical,
           } as any).eq('id', a.id);
         });
@@ -130,10 +145,27 @@ export function useSchedule(projectId: string) {
         project_id: projectId,
         ...(metaQ.data || {}),
         ...patch,
-      } as any);
+      } as any, { onConflict: 'project_id' } as any);
       if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ['schedule-meta', projectId] }),
+  });
+
+  const importSchedule = useMutation({
+    mutationFn: async (imp: ImportedSchedule) => {
+      const { data, error } = await supabase.rpc('replace_project_schedule' as any, {
+        p_project_id: projectId,
+        p_acts: imp.activities as any,
+        p_rels: imp.relationships as any,
+        p_meta: imp.meta as any,
+      });
+      if (error) throw error;
+      return data as any;
+    },
+    onSuccess: () => {
+      invalidate();
+      qc.invalidateQueries({ queryKey: ['schedule-meta', projectId] });
+    },
   });
 
   return {
@@ -145,8 +177,10 @@ export function useSchedule(projectId: string) {
     upsertActivity,
     deleteActivity,
     addRelationship,
+    updateRelationship,
     removeRelationship,
     persistCpm,
     setMeta,
+    importSchedule,
   };
 }
