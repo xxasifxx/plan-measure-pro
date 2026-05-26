@@ -99,10 +99,8 @@ export function GpsTraceControls({
   }, [handleSample]);
 
   const finishTrace = useCallback(() => {
-    if (watchIdRef.current != null) {
-      navigator.geolocation.clearWatch(watchIdRef.current);
-      watchIdRef.current = null;
-    }
+    watchIdRef.current?.stop();
+    watchIdRef.current = null;
     onPositionUpdate(null);
 
     if (tracePoints.length < 2 || !activePayItem || !scaleCalibration) {
@@ -160,10 +158,8 @@ export function GpsTraceControls({
   }, [tracePoints, activePayItem, scaleCalibration, currentPage, onAddAnnotation, onPositionUpdate, onTracePointsUpdate]);
 
   const cancelTrace = useCallback(() => {
-    if (watchIdRef.current != null) {
-      navigator.geolocation.clearWatch(watchIdRef.current);
-      watchIdRef.current = null;
-    }
+    watchIdRef.current?.stop();
+    watchIdRef.current = null;
     setMode('idle');
     setTracePoints([]);
     setCurrentPos(null);
