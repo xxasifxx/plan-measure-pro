@@ -4,6 +4,8 @@ import { sfToCY, sfToSY } from '@/lib/geometry';
 import { UNIT_LABELS, getPayItemSection } from '@/types/project';
 import { supabase } from '@/integrations/supabase/client';
 import { loadApprovedTotalsByPayItem } from '@/lib/approved-quantities';
+import { saveExport } from '@/lib/native/filesystem';
+
 
 
 interface ExportRow {
@@ -85,12 +87,7 @@ function writeCsvFromRows(rows: ExportRow[], projectName: string, fileSuffix = '
 
   const csv = [header, ...lines].join('\n');
   const blob = new Blob([csv], { type: 'text/csv' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `${projectName || 'takeoff'}_${fileSuffix}.csv`;
-  a.click();
-  URL.revokeObjectURL(url);
+  void saveExport(`${projectName || 'takeoff'}_${fileSuffix}.csv`, blob);
 }
 
 export function exportCsv(annotations: Annotation[], payItems: PayItem[], projectName: string): void {
