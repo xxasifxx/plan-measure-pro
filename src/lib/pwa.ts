@@ -35,6 +35,12 @@ export function shouldRegisterSW(): boolean {
   if (import.meta.env.DEV) return false;
   if (isInIframe()) return false;
   if (isPreviewHost()) return false;
+  // Capacitor WebView handles its own caching — never register a SW inside the native shell.
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const cap = (window as any).Capacitor;
+    if (cap?.isNativePlatform?.()) return false;
+  } catch { /* noop */ }
   return true;
 }
 
