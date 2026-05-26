@@ -10,6 +10,22 @@ export type ActivityType =
 
 export type RelType = 'FS' | 'SS' | 'FF' | 'SF';
 
+export type ConstraintType =
+  | 'SNET' | 'SNLT' | 'FNET' | 'FNLT'
+  | 'MSO'  | 'MFO'
+  | 'ASAP' | 'ALAP';
+
+export const CONSTRAINT_LABELS: Record<ConstraintType, string> = {
+  SNET: 'Start No Earlier Than',
+  SNLT: 'Start No Later Than',
+  FNET: 'Finish No Earlier Than',
+  FNLT: 'Finish No Later Than',
+  MSO:  'Must Start On',
+  MFO:  'Must Finish On',
+  ASAP: 'As Soon As Possible',
+  ALAP: 'As Late As Possible',
+};
+
 export interface ScheduleActivity {
   id: string;
   project_id: string;
@@ -18,7 +34,7 @@ export interface ScheduleActivity {
   activity_id: string | null;
   name: string;
   activity_type: ActivityType;
-  baseline_start: string | null;   // ISO date YYYY-MM-DD
+  baseline_start: string | null;
   baseline_end: string | null;
   duration_days: number;
   percent_complete: number;
@@ -35,6 +51,10 @@ export interface ScheduleActivity {
   baseline_quantity: number | null;
   manual_finish?: boolean;
   remaining_duration_days?: number | null;
+  calendar_id?: string | null;
+  constraint_type?: ConstraintType | null;
+  constraint_date?: string | null;
+  primary_resource_id?: string | null;
 }
 
 export interface ActivityRelationship {
@@ -49,7 +69,73 @@ export interface ActivityRelationship {
 export interface ScheduleMeta {
   project_id: string;
   data_date: string | null;
-  calendar: { workdays: number[] };  // 0=Sun..6=Sat; default [1,2,3,4,5]
+  calendar: { workdays: number[] };
+}
+
+export interface CalendarException {
+  date: string;     // ISO date
+  hours: number;    // 0 = holiday, >0 = working
+  name?: string;
+}
+
+export interface ScheduleCalendar {
+  id: string;
+  project_id: string;
+  name: string;
+  is_default: boolean;
+  hours_per_day: number;
+  /** day index → hours (0=Sun..6=Sat). 0 hours = nonworking. */
+  workweek: Record<string, number>;
+  exceptions: CalendarException[];
+}
+
+export type ResourceType = 'labor' | 'material' | 'equipment' | 'nonlabor';
+
+export interface ScheduleResource {
+  id: string;
+  project_id: string;
+  name: string;
+  resource_code: string | null;
+  resource_type: ResourceType;
+  unit: string;
+  cost_per_unit: number;
+  max_units_per_day: number;
+}
+
+export interface ResourceAssignment {
+  id: string;
+  project_id: string;
+  activity_id: string;
+  resource_id: string;
+  budgeted_units: number;
+  actual_units: number;
+  remaining_units: number;
+  budgeted_cost: number;
+  actual_cost: number;
+}
+
+export interface ScheduleBaseline {
+  id: string;
+  project_id: string;
+  name: string;
+  notes: string | null;
+  captured_by: string;
+  captured_at: string;
+}
+
+export interface BaselineActivity {
+  id: string;
+  baseline_id: string;
+  activity_id: string;
+  activity_code: string | null;
+  wbs_code: string | null;
+  name: string | null;
+  baseline_start: string | null;
+  baseline_end: string | null;
+  duration_days: number | null;
+  total_float_days: number | null;
+  percent_complete: number | null;
+  budgeted_cost: number | null;
 }
 
 export interface CpmResult {
@@ -60,8 +146,9 @@ export interface CpmResult {
     late_finish: string;
     total_float_days: number;
     is_critical: boolean;
+    constraint_violated?: boolean;
   }>;
   projectStart: string;
   projectFinish: string;
-  cycles: string[][]; // ids forming cycles, if any
+  cycles: string[][];
 }

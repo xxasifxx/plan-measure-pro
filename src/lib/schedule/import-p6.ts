@@ -3,10 +3,13 @@
 import { parseXer } from '@/lib/xer/parser';
 import { parseP6Xml } from '@/lib/p6xml/parser';
 import type { XerTables, XerTask } from '@/lib/xer/types';
-import type { ActivityType, RelType } from './types';
+import type {
+  ActivityType, RelType, ConstraintType, CalendarException, ResourceType,
+} from './types';
+import { parseClndrData, parsePmxmlCalendar, DEFAULT_WORKWEEK } from './calendars';
 
 export interface ImportedActivity {
-  ext_id: string;            // stable id from the source file
+  ext_id: string;
   parent_ext_id?: string | null;
   wbs_code: string;
   activity_id?: string | null;
@@ -20,6 +23,9 @@ export interface ImportedActivity {
   actual_finish?: string | null;
   sort_order: number;
   manual_finish?: boolean;
+  calendar_ext_id?: string | null;
+  constraint_type?: ConstraintType | null;
+  constraint_date?: string | null;
 }
 
 export interface ImportedRelationship {
@@ -29,12 +35,47 @@ export interface ImportedRelationship {
   lag_days: number;
 }
 
+export interface ImportedCalendar {
+  ext_id: string;
+  name: string;
+  is_default: boolean;
+  hours_per_day: number;
+  workweek: Record<string, number>;
+  exceptions: CalendarException[];
+}
+
+export interface ImportedResource {
+  ext_id: string;
+  name: string;
+  resource_code?: string | null;
+  resource_type: ResourceType;
+  unit: string;
+  cost_per_unit: number;
+  max_units_per_day: number;
+}
+
+export interface ImportedAssignment {
+  activity_ext_id: string;
+  resource_ext_id: string;
+  budgeted_units: number;
+  actual_units: number;
+  remaining_units: number;
+  budgeted_cost: number;
+  actual_cost: number;
+}
+
 export interface ImportedSchedule {
   activities: ImportedActivity[];
   relationships: ImportedRelationship[];
+  calendars: ImportedCalendar[];
+  resources: ImportedResource[];
+  assignments: ImportedAssignment[];
   meta: { data_date: string | null; calendar: { workdays: number[] } };
   warnings: string[];
-  counts: { wbs: number; tasks: number; milestones: number; loe: number; relationships: number };
+  counts: {
+    wbs: number; tasks: number; milestones: number; loe: number;
+    relationships: number; calendars: number; resources: number; assignments: number;
+  };
 }
 
 const HRS_PER_DAY = 8;
@@ -54,6 +95,28 @@ function xerRelType(p?: string): RelType {
   if (p === 'PR_FF') return 'FF';
   if (p === 'PR_SF') return 'SF';
   return 'FS';
+}
+
+function xerConstraint(t?: string): ConstraintType | null {
+  switch (t) {
+    case 'CS_MSO':    return 'MSO';
+    case 'CS_MFO':    return 'MFO';
+    case 'CS_MEO':    return 'SNET';
+    case 'CS_MEOA':   return 'SNET';
+    case 'CS_MEOB':   return 'SNLT';
+    case 'CS_MANDSTART': return 'MSO';
+    case 'CS_MANDFIN':   return 'MFO';
+    case 'CS_ALAP':   return 'ALAP';
+    case 'CS_ASAP':   return 'ASAP';
+    default: return null;
+  }
+}
+
+function xerResourceType(t?: string): ResourceType {
+  if (t === 'RT_Mat')   return 'material';
+  if (t === 'RT_Equip') return 'equipment';
+  if (t === 'RT_Nonlabor') return 'nonlabor';
+  return 'labor';
 }
 
 function xerStatusPct(t: XerTask): number {
@@ -77,7 +140,39 @@ export function mapXer(t: XerTables): ImportedSchedule {
   const activities: ImportedActivity[] = [];
   const wbsIds = new Set<string>();
 
-  // WBS first (parents may appear in any order in XER)
+  // ===== Calendars =====
+  const calendars: ImportedCalendar[] = [];
+  const calRows = t.raw?.CALENDAR || [];
+  for (const r of calRows) {
+    const ext = `C:${r.clndr_id}`;
+    const parsed = parseClndrData(r.clndr_data);
+    calendars.push({
+      ext_id: ext,
+      name: r.clndr_name || `Calendar ${r.clndr_id}`,
+      is_default: r.default_flag === 'Y',
+      hours_per_day: Number(r.day_hr_cnt) || 8,
+      workweek: parsed.workweek,
+      exceptions: parsed.exceptions,
+    });
+  }
+  if (calendars.length && !calendars.some(c => c.is_default)) calendars[0].is_default = true;
+
+  // ===== Resources =====
+  const resources: ImportedResource[] = [];
+  const rsrcRows = t.raw?.RSRC || [];
+  for (const r of rsrcRows) {
+    resources.push({
+      ext_id: `R:${r.rsrc_id}`,
+      name: r.rsrc_name || r.rsrc_short_name || `Resource ${r.rsrc_id}`,
+      resource_code: r.rsrc_short_name || null,
+      resource_type: xerResourceType(r.rsrc_type),
+      unit: r.unit_id || 'hr',
+      cost_per_unit: Number(r.cost_per_qty) || 0,
+      max_units_per_day: (Number(r.def_qty_per_hr) || 1) * 8,
+    });
+  }
+
+  // ===== WBS =====
   for (const w of t.PROJWBS) {
     wbsIds.add(`W:${w.wbs_id}`);
     activities.push({
@@ -92,12 +187,14 @@ export function mapXer(t: XerTables): ImportedSchedule {
     });
   }
 
-  // Tasks
+  // ===== Tasks =====
   t.TASK.forEach((task, i) => {
     const at = xerTaskType(task.task_type);
     const dur = at === 'start_milestone' || at === 'finish_milestone' ? 0 : hoursToDays(task.target_drtn_hr_cnt);
     const parent = task.wbs_id ? `W:${task.wbs_id}` : null;
     if (parent && !wbsIds.has(parent)) warnings.push(`Task ${task.task_code} references unknown WBS ${task.wbs_id}`);
+    const raw = (t.raw?.TASK || [])[i] || {};
+    const calExt = raw.clndr_id ? `C:${raw.clndr_id}` : null;
     activities.push({
       ext_id: `T:${task.task_id}`,
       parent_ext_id: parent,
@@ -112,11 +209,14 @@ export function mapXer(t: XerTables): ImportedSchedule {
       actual_start: dateOnly(task.act_start_date),
       actual_finish: dateOnly(task.act_end_date),
       sort_order: i,
-      manual_finish: true, // P6 finish dates are authoritative on import
+      manual_finish: true,
+      calendar_ext_id: calExt,
+      constraint_type: xerConstraint(task.cstr_type),
+      constraint_date: dateOnly(task.cstr_date),
     });
   });
 
-  // Relationships
+  // ===== Relationships =====
   const taskExt = new Set(t.TASK.map(x => `T:${x.task_id}`));
   const relationships: ImportedRelationship[] = [];
   for (const r of t.TASKPRED) {
@@ -134,6 +234,28 @@ export function mapXer(t: XerTables): ImportedSchedule {
     });
   }
 
+  // ===== Resource assignments =====
+  const assignments: ImportedAssignment[] = [];
+  const resourceExt = new Set(resources.map(r => r.ext_id));
+  for (const r of t.raw?.TASKRSRC || []) {
+    const aExt = `T:${r.task_id}`;
+    const rExt = `R:${r.rsrc_id}`;
+    if (!taskExt.has(aExt) || !resourceExt.has(rExt)) continue;
+    const budgetedHrs = Number(r.target_qty) || 0;
+    const actualHrs = Number(r.act_reg_qty) || 0;
+    const remainingHrs = Number(r.remain_qty) || Math.max(0, budgetedHrs - actualHrs);
+    const cpu = Number(r.cost_per_qty) || 0;
+    assignments.push({
+      activity_ext_id: aExt,
+      resource_ext_id: rExt,
+      budgeted_units: budgetedHrs,
+      actual_units: actualHrs,
+      remaining_units: remainingHrs,
+      budgeted_cost: Number(r.target_cost) || budgetedHrs * cpu,
+      actual_cost: Number(r.act_reg_cost) || actualHrs * cpu,
+    });
+  }
+
   const project = t.PROJECT[0];
   const counts = {
     wbs: t.PROJWBS.length,
@@ -141,24 +263,26 @@ export function mapXer(t: XerTables): ImportedSchedule {
     milestones: t.TASK.filter(x => x.task_type === 'TT_Mile' || x.task_type === 'TT_FinMile').length,
     loe: t.TASK.filter(x => x.task_type === 'TT_LOE').length,
     relationships: relationships.length,
+    calendars: calendars.length,
+    resources: resources.length,
+    assignments: assignments.length,
   };
 
   return {
-    activities,
-    relationships,
-    meta: { data_date: dateOnly(project?.last_recalc_date) || dateOnly(project?.plan_start_date), calendar: { workdays: [1, 2, 3, 4, 5] } },
-    warnings,
-    counts,
+    activities, relationships, calendars, resources, assignments,
+    meta: {
+      data_date: dateOnly(project?.last_recalc_date) || dateOnly(project?.plan_start_date),
+      calendar: { workdays: [1, 2, 3, 4, 5] },
+    },
+    warnings, counts,
   };
 }
 
+// ===== PMXML =====
 const PMXML_REL: Record<string, RelType> = {
-  'Finish to Start': 'FS',
-  'Start to Start': 'SS',
-  'Finish to Finish': 'FF',
-  'Start to Finish': 'SF',
+  'Finish to Start': 'FS', 'Start to Start': 'SS',
+  'Finish to Finish': 'FF', 'Start to Finish': 'SF',
 };
-
 const PMXML_TYPE: Record<string, ActivityType> = {
   'Start Milestone': 'start_milestone',
   'Finish Milestone': 'finish_milestone',
@@ -166,6 +290,18 @@ const PMXML_TYPE: Record<string, ActivityType> = {
   'WBS Summary': 'wbs',
   'Task Dependent': 'task',
   'Resource Dependent': 'task',
+};
+const PMXML_CONSTRAINT: Record<string, ConstraintType> = {
+  'Start On': 'MSO', 'Mandatory Start': 'MSO',
+  'Finish On': 'MFO', 'Mandatory Finish': 'MFO',
+  'Start On or After': 'SNET',
+  'Start On or Before': 'SNLT',
+  'Finish On or After': 'FNET',
+  'Finish On or Before': 'FNLT',
+  'As Late As Possible': 'ALAP',
+};
+const PMXML_RES_TYPE: Record<string, ResourceType> = {
+  'Labor': 'labor', 'Material': 'material', 'Equipment': 'equipment', 'Nonlabor': 'nonlabor',
 };
 
 function pmxmlChildText(el: Element, name: string): string | undefined {
@@ -182,11 +318,48 @@ function pmxmlChildNum(el: Element, name: string): number | undefined {
 export function importFromPmxml(text: string): ImportedSchedule {
   const tables = parseP6Xml(text);
   const warnings: string[] = [];
+  const root = tables.doc.documentElement;
   const projectEl = tables.project._el;
   const activities: ImportedActivity[] = [];
   const wbsIds = new Set<string>();
 
-  // WBS
+  // ===== Calendars (siblings of Project, OR inside Project) =====
+  const calendars: ImportedCalendar[] = [];
+  const calendarEls = [
+    ...Array.from(root.children).filter(c => c.localName === 'Calendar'),
+    ...Array.from(projectEl.children).filter(c => c.localName === 'Calendar'),
+  ];
+  for (const el of calendarEls) {
+    const oid = pmxmlChildText(el, 'ObjectId') || pmxmlChildText(el, 'Id') || `cal-${calendars.length}`;
+    const parsed = parsePmxmlCalendar(el);
+    calendars.push({
+      ext_id: `C:${oid}`,
+      name: pmxmlChildText(el, 'Name') || `Calendar ${oid}`,
+      is_default: pmxmlChildText(el, 'IsDefault') === 'true' || pmxmlChildText(el, 'Type') === 'Project',
+      hours_per_day: pmxmlChildNum(el, 'HoursPerDay') ?? 8,
+      workweek: parsed.workweek,
+      exceptions: parsed.exceptions,
+    });
+  }
+  if (calendars.length && !calendars.some(c => c.is_default)) calendars[0].is_default = true;
+
+  // ===== Resources (siblings of Project) =====
+  const resources: ImportedResource[] = [];
+  for (const el of Array.from(root.children)) {
+    if (el.localName !== 'Resource') continue;
+    const oid = pmxmlChildText(el, 'ObjectId') || pmxmlChildText(el, 'Id') || `res-${resources.length}`;
+    resources.push({
+      ext_id: `R:${oid}`,
+      name: pmxmlChildText(el, 'Name') || `Resource ${oid}`,
+      resource_code: pmxmlChildText(el, 'Id') || null,
+      resource_type: PMXML_RES_TYPE[pmxmlChildText(el, 'ResourceType') || ''] || 'labor',
+      unit: pmxmlChildText(el, 'UnitOfMeasureObjectId') || 'hr',
+      cost_per_unit: pmxmlChildNum(el, 'PricePerUnit') ?? 0,
+      max_units_per_day: pmxmlChildNum(el, 'MaxUnitsPerTime') ?? 8,
+    });
+  }
+
+  // ===== WBS =====
   let order = 0;
   for (const el of Array.from(projectEl.children)) {
     if (el.localName !== 'WBS') continue;
@@ -206,7 +379,7 @@ export function importFromPmxml(text: string): ImportedSchedule {
     });
   }
 
-  // Activities
+  // ===== Activities =====
   const actEls = Array.from(projectEl.children).filter(c => c.localName === 'Activity');
   actEls.forEach((el, i) => {
     const oid = pmxmlChildText(el, 'ObjectId') || pmxmlChildText(el, 'Id') || `act-${i}`;
@@ -219,6 +392,8 @@ export function importFromPmxml(text: string): ImportedSchedule {
     const status = pmxmlChildText(el, 'Status');
     let pct = pmxmlChildNum(el, 'PhysicalPercentComplete') ?? pmxmlChildNum(el, 'DurationPercentComplete') ?? 0;
     if (status === 'Completed') pct = 100;
+    const calRef = pmxmlChildText(el, 'CalendarObjectId');
+    const cstrType = pmxmlChildText(el, 'PrimaryConstraintType');
     activities.push({
       ext_id: `T:${oid}`,
       parent_ext_id: parent,
@@ -234,10 +409,13 @@ export function importFromPmxml(text: string): ImportedSchedule {
       actual_finish: dateOnly(pmxmlChildText(el, 'ActualFinishDate')),
       sort_order: order + i,
       manual_finish: true,
+      calendar_ext_id: calRef ? `C:${calRef}` : null,
+      constraint_type: cstrType ? (PMXML_CONSTRAINT[cstrType] ?? null) : null,
+      constraint_date: dateOnly(pmxmlChildText(el, 'PrimaryConstraintDate')),
     });
   });
 
-  // Relationships
+  // ===== Relationships =====
   const relationships: ImportedRelationship[] = [];
   const actSet = new Set(actEls.map(el => `T:${pmxmlChildText(el, 'ObjectId') || pmxmlChildText(el, 'Id')}`));
   for (const el of Array.from(projectEl.children)) {
@@ -250,10 +428,31 @@ export function importFromPmxml(text: string): ImportedSchedule {
     }
     const typeRaw = pmxmlChildText(el, 'Type') || 'Finish to Start';
     relationships.push({
-      pred_ext_id: pred,
-      succ_ext_id: succ,
+      pred_ext_id: pred, succ_ext_id: succ,
       rel_type: PMXML_REL[typeRaw] || 'FS',
       lag_days: hoursToDays(pmxmlChildNum(el, 'Lag')),
+    });
+  }
+
+  // ===== Assignments =====
+  const assignments: ImportedAssignment[] = [];
+  const resourceExt = new Set(resources.map(r => r.ext_id));
+  for (const el of Array.from(projectEl.children)) {
+    if (el.localName !== 'ResourceAssignment') continue;
+    const aRef = pmxmlChildText(el, 'ActivityObjectId');
+    const rRef = pmxmlChildText(el, 'ResourceObjectId');
+    if (!aRef || !rRef) continue;
+    const aExt = `T:${aRef}`;
+    const rExt = `R:${rRef}`;
+    if (!actSet.has(aExt) || !resourceExt.has(rExt)) continue;
+    const budgetedHrs = pmxmlChildNum(el, 'PlannedUnits') ?? 0;
+    const actualHrs = pmxmlChildNum(el, 'ActualUnits') ?? 0;
+    const remainingHrs = pmxmlChildNum(el, 'RemainingUnits') ?? Math.max(0, budgetedHrs - actualHrs);
+    assignments.push({
+      activity_ext_id: aExt, resource_ext_id: rExt,
+      budgeted_units: budgetedHrs, actual_units: actualHrs, remaining_units: remainingHrs,
+      budgeted_cost: pmxmlChildNum(el, 'PlannedCost') ?? 0,
+      actual_cost: pmxmlChildNum(el, 'ActualCost') ?? 0,
     });
   }
 
@@ -263,14 +462,15 @@ export function importFromPmxml(text: string): ImportedSchedule {
     milestones: activities.filter(a => a.activity_type === 'start_milestone' || a.activity_type === 'finish_milestone').length,
     loe: activities.filter(a => a.activity_type === 'loe').length,
     relationships: relationships.length,
+    calendars: calendars.length,
+    resources: resources.length,
+    assignments: assignments.length,
   };
 
   return {
-    activities,
-    relationships,
+    activities, relationships, calendars, resources, assignments,
     meta: { data_date: dateOnly(tables.project.dataDate) || null, calendar: { workdays: [1, 2, 3, 4, 5] } },
-    warnings,
-    counts,
+    warnings, counts,
   };
 }
 

@@ -10,7 +10,8 @@ import { Badge } from '@/components/ui/badge';
 import { X, Plus } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
-import type { ActivityRelationship, ActivityType, RelType, ScheduleActivity } from '@/lib/schedule/types';
+import type { ActivityRelationship, ActivityType, RelType, ScheduleActivity, ConstraintType } from '@/lib/schedule/types';
+import { CONSTRAINT_LABELS } from '@/lib/schedule/types';
 import type { useSchedule } from '@/lib/schedule/use-schedule';
 
 interface Props {
@@ -145,6 +146,37 @@ export function ActivityInspector({ activity, open, onClose, sch, projectId }: P
               </SelectContent>
             </Select>
           </Section>
+
+          <Section title="Calendar">
+            <Select value={a.calendar_id || 'default'} onValueChange={v => save({ calendar_id: v === 'default' ? null : v })}>
+              <SelectTrigger className="h-7 text-[12px]"><SelectValue placeholder="Project default" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="default" className="text-[12px]">— Project default —</SelectItem>
+                {sch.calendars.map(c => <SelectItem key={c.id} value={c.id} className="text-[12px] font-mono">{c.name}{c.is_default ? ' ★' : ''}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </Section>
+
+          <Section title="Constraint">
+            <Row label="Type">
+              <Select value={a.constraint_type || 'none'} onValueChange={(v: any) => save({ constraint_type: v === 'none' ? null : v as ConstraintType })}>
+                <SelectTrigger className="h-7 text-[12px]"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none" className="text-[12px]">— None —</SelectItem>
+                  {(Object.keys(CONSTRAINT_LABELS) as ConstraintType[]).map(k => (
+                    <SelectItem key={k} value={k} className="text-[12px] font-mono">{k} — {CONSTRAINT_LABELS[k]}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Row>
+            {a.constraint_type && a.constraint_type !== 'ASAP' && a.constraint_type !== 'ALAP' && (
+              <Row label="Date">
+                <Input type="date" value={a.constraint_date || ''} onChange={e => save({ constraint_date: e.target.value || null })} className="h-7 text-[12px]" />
+              </Row>
+            )}
+          </Section>
+
+          <ResourceSection sch={sch} projectId={projectId} activityId={activity.id} />
 
           <RelationshipList title="Predecessors" rels={preds} side="pred" leaves={leaves} sch={sch} activityId={activity.id} projectId={projectId} />
           <RelationshipList title="Successors" rels={succs} side="succ" leaves={leaves} sch={sch} activityId={activity.id} projectId={projectId} />

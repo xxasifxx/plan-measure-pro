@@ -7,13 +7,6 @@ export function calendarFrom(meta?: ScheduleMeta | null): Set<number> {
   return new Set(meta?.calendar?.workdays ?? [1, 2, 3, 4, 5]);
 }
 
-/**
- * Normalize a partial activity update so derived fields stay correct.
- * - Milestones are forced to duration 0.
- * - When duration_days or baseline_start change (and manual_finish is not on),
- *   baseline_end is recomputed.
- * - When percent_complete changes, remaining_duration_days is recomputed.
- */
 export function normalizeActivityPatch(
   current: Partial<ScheduleActivity>,
   patch: Partial<ScheduleActivity>,
@@ -30,7 +23,6 @@ export function normalizeActivityPatch(
     merged.duration_days = 0;
   }
 
-  // baseline_end auto-derive
   const manual = !!merged.manual_finish;
   const startTouched = 'baseline_start' in patch || 'duration_days' in patch || 'activity_type' in patch;
   if (!manual && startTouched && merged.baseline_start) {
@@ -42,17 +34,22 @@ export function normalizeActivityPatch(
     out.baseline_end = addWorkdays(merged.baseline_start, dur, workdays);
   }
 
-  // actual_finish ⇒ % = 100
   if (patch.actual_finish && Number(merged.percent_complete || 0) < 100) {
     out.percent_complete = 100;
     merged.percent_complete = 100;
   }
-  // % = 100 ⇒ remaining = 0
   if ('percent_complete' in patch || 'duration_days' in patch || 'actual_finish' in patch) {
     const pct = Math.min(100, Math.max(0, Number(merged.percent_complete || 0)));
     const dur = Math.max(0, Number(merged.duration_days || 0));
     out.remaining_duration_days = Math.round(dur * (1 - pct / 100) * 100) / 100;
   }
 
+  // Constraint date is required when type is a hard constraint; clearing type clears date.
+  if ('constraint_type' in patch) {
+    const ct = patch.constraint_type;
+    if (!ct || ct === 'ASAP' || ct === 'ALAP') {
+      out.constraint_date = null;
+    }
+  }
   return out;
 }
