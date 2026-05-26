@@ -130,6 +130,48 @@ export type Database = {
           },
         ]
       }
+      activity_resource_assignments: {
+        Row: {
+          activity_id: string
+          actual_cost: number
+          actual_units: number
+          budgeted_cost: number
+          budgeted_units: number
+          created_at: string
+          id: string
+          project_id: string
+          remaining_units: number
+          resource_id: string
+          updated_at: string
+        }
+        Insert: {
+          activity_id: string
+          actual_cost?: number
+          actual_units?: number
+          budgeted_cost?: number
+          budgeted_units?: number
+          created_at?: string
+          id?: string
+          project_id: string
+          remaining_units?: number
+          resource_id: string
+          updated_at?: string
+        }
+        Update: {
+          activity_id?: string
+          actual_cost?: number
+          actual_units?: number
+          budgeted_cost?: number
+          budgeted_units?: number
+          created_at?: string
+          id?: string
+          project_id?: string
+          remaining_units?: number
+          resource_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       annotation_photos: {
         Row: {
           ai_confidence: number | null
@@ -234,6 +276,62 @@ export type Database = {
             columns: ["project_id"]
             isOneToOne: false
             referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      baseline_activities: {
+        Row: {
+          activity_code: string | null
+          activity_id: string
+          baseline_end: string | null
+          baseline_id: string
+          baseline_start: string | null
+          budgeted_cost: number | null
+          created_at: string
+          duration_days: number | null
+          id: string
+          name: string | null
+          percent_complete: number | null
+          total_float_days: number | null
+          wbs_code: string | null
+        }
+        Insert: {
+          activity_code?: string | null
+          activity_id: string
+          baseline_end?: string | null
+          baseline_id: string
+          baseline_start?: string | null
+          budgeted_cost?: number | null
+          created_at?: string
+          duration_days?: number | null
+          id?: string
+          name?: string | null
+          percent_complete?: number | null
+          total_float_days?: number | null
+          wbs_code?: string | null
+        }
+        Update: {
+          activity_code?: string | null
+          activity_id?: string
+          baseline_end?: string | null
+          baseline_id?: string
+          baseline_start?: string | null
+          budgeted_cost?: number | null
+          created_at?: string
+          duration_days?: number | null
+          id?: string
+          name?: string | null
+          percent_complete?: number | null
+          total_float_days?: number | null
+          wbs_code?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "baseline_activities_baseline_id_fkey"
+            columns: ["baseline_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_baselines"
             referencedColumns: ["id"]
           },
         ]
@@ -900,6 +998,9 @@ export type Database = {
           baseline_end: string | null
           baseline_quantity: number | null
           baseline_start: string | null
+          calendar_id: string | null
+          constraint_date: string | null
+          constraint_type: string | null
           created_at: string
           duration_days: number
           early_finish: string | null
@@ -913,6 +1014,7 @@ export type Database = {
           parent_wbs_id: string | null
           pay_item_id: string | null
           percent_complete: number | null
+          primary_resource_id: string | null
           project_id: string
           remaining_duration_days: number | null
           sort_order: number
@@ -928,6 +1030,9 @@ export type Database = {
           baseline_end?: string | null
           baseline_quantity?: number | null
           baseline_start?: string | null
+          calendar_id?: string | null
+          constraint_date?: string | null
+          constraint_type?: string | null
           created_at?: string
           duration_days?: number
           early_finish?: string | null
@@ -941,6 +1046,7 @@ export type Database = {
           parent_wbs_id?: string | null
           pay_item_id?: string | null
           percent_complete?: number | null
+          primary_resource_id?: string | null
           project_id: string
           remaining_duration_days?: number | null
           sort_order?: number
@@ -956,6 +1062,9 @@ export type Database = {
           baseline_end?: string | null
           baseline_quantity?: number | null
           baseline_start?: string | null
+          calendar_id?: string | null
+          constraint_date?: string | null
+          constraint_type?: string | null
           created_at?: string
           duration_days?: number
           early_finish?: string | null
@@ -969,6 +1078,7 @@ export type Database = {
           parent_wbs_id?: string | null
           pay_item_id?: string | null
           percent_complete?: number | null
+          primary_resource_id?: string | null
           project_id?: string
           remaining_duration_days?: number | null
           sort_order?: number
@@ -985,6 +1095,108 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      schedule_baselines: {
+        Row: {
+          captured_at: string
+          captured_by: string
+          id: string
+          name: string
+          notes: string | null
+          project_id: string
+        }
+        Insert: {
+          captured_at?: string
+          captured_by: string
+          id?: string
+          name: string
+          notes?: string | null
+          project_id: string
+        }
+        Update: {
+          captured_at?: string
+          captured_by?: string
+          id?: string
+          name?: string
+          notes?: string | null
+          project_id?: string
+        }
+        Relationships: []
+      }
+      schedule_calendars: {
+        Row: {
+          created_at: string
+          exceptions: Json
+          hours_per_day: number
+          id: string
+          is_default: boolean
+          name: string
+          project_id: string
+          updated_at: string
+          workweek: Json
+        }
+        Insert: {
+          created_at?: string
+          exceptions?: Json
+          hours_per_day?: number
+          id?: string
+          is_default?: boolean
+          name: string
+          project_id: string
+          updated_at?: string
+          workweek?: Json
+        }
+        Update: {
+          created_at?: string
+          exceptions?: Json
+          hours_per_day?: number
+          id?: string
+          is_default?: boolean
+          name?: string
+          project_id?: string
+          updated_at?: string
+          workweek?: Json
+        }
+        Relationships: []
+      }
+      schedule_resources: {
+        Row: {
+          cost_per_unit: number
+          created_at: string
+          id: string
+          max_units_per_day: number
+          name: string
+          project_id: string
+          resource_code: string | null
+          resource_type: Database["public"]["Enums"]["resource_type"]
+          unit: string
+          updated_at: string
+        }
+        Insert: {
+          cost_per_unit?: number
+          created_at?: string
+          id?: string
+          max_units_per_day?: number
+          name: string
+          project_id: string
+          resource_code?: string | null
+          resource_type?: Database["public"]["Enums"]["resource_type"]
+          unit?: string
+          updated_at?: string
+        }
+        Update: {
+          cost_per_unit?: number
+          created_at?: string
+          id?: string
+          max_units_per_day?: number
+          name?: string
+          project_id?: string
+          resource_code?: string | null
+          resource_type?: Database["public"]["Enums"]["resource_type"]
+          unit?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       scorecard_metrics: {
         Row: {
@@ -1057,6 +1269,11 @@ export type Database = {
     Functions: {
       accept_invitation: { Args: { _token: string }; Returns: string }
       assign_owner_role: { Args: { _user_id: string }; Returns: undefined }
+      capture_baseline: {
+        Args: { p_name: string; p_notes?: string; p_project_id: string }
+        Returns: string
+      }
+      delete_baseline: { Args: { p_baseline_id: string }; Returns: undefined }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -1068,10 +1285,28 @@ export type Database = {
         Args: { _project_id: string; _user_id: string }
         Returns: boolean
       }
-      replace_project_schedule: {
-        Args: { p_acts: Json; p_meta: Json; p_project_id: string; p_rels: Json }
-        Returns: Json
-      }
+      replace_project_schedule:
+        | {
+            Args: {
+              p_acts: Json
+              p_meta: Json
+              p_project_id: string
+              p_rels: Json
+            }
+            Returns: Json
+          }
+        | {
+            Args: {
+              p_acts: Json
+              p_assignments?: Json
+              p_calendars?: Json
+              p_meta: Json
+              p_project_id: string
+              p_rels: Json
+              p_resources?: Json
+            }
+            Returns: Json
+          }
       seed_project_standard_folders: {
         Args: { _project_id: string; _user: string }
         Returns: undefined
@@ -1079,6 +1314,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "project_manager" | "inspector" | "resident_engineer"
+      resource_type: "labor" | "material" | "equipment" | "nonlabor"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1207,6 +1443,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "project_manager", "inspector", "resident_engineer"],
+      resource_type: ["labor", "material", "equipment", "nonlabor"],
     },
   },
 } as const
