@@ -1,95 +1,103 @@
+## Phase 8 — Full P6 Import Fidelity, Visible Forms, and Correct Math
 
-## Goal
-Replace the flat list inside **Project Controls → Activities** with a Primavera P6-style workspace that lets PMs build, edit and analyze the project schedule directly in the app — WBS hierarchy on the left, spreadsheet-style activity grid in the middle, interactive Gantt on the right, with dependencies and a forward/backward-pass critical-path calculation.
+Three problems to fix together: (1) imported P6 files lose data, (2) several P6 fields exist in the DB but have no UI, (3) duration/finish/remaining/float math has gaps. The Activities tab keeps the same 3-pane workspace; this phase makes it complete and trustworthy.
 
-## What the user will see
+---
 
-```text
-┌─────────────────────────────────────────────────────────────────────────────┐
-│  Schedule (P6 view)                  Data Date: Mar 14   [Recalculate CPM] │
-├─────────────┬───────────────────────────────────┬───────────────────────────┤
-│ WBS TREE    │ ACTIVITY GRID                     │ GANTT                    │
-│ ▼ 1 Project │ ID    Name     Start  Fin  Dur %  │ ──█████──────            │
-│   ▼ 1.1 Pav │ A1010 Mill     3/01  3/05 5d  60  │   ████░░──               │
-│     • A1010 │ A1020 Pave     3/06  3/12 7d  10  │      ████──── (critical) │
-│     • A1020 │ A1030 Stripe   3/13  3/15 3d  0   │          ███             │
-└─────────────┴───────────────────────────────────┴───────────────────────────┘
-```
+### 1. Real P6 import into the workspace
 
-- **WBS tree (left, resizable)** — collapsible parent/child WBS rows, "+ Add child", drag-to-reparent, click filters the grid.
-- **Activity grid (center)** — inline-editable columns: Activity ID, Name, Type (Task / Milestone / LOE), Start, Finish, Duration (days), % Complete, Predecessors (chip list), Float, Pay item. Sortable, multi-select, keyboard nav.
-- **Gantt (right)** — day/week/month zoom; draggable bars (move = shift start; resize-right = change duration); dependency arrows; critical-path bars in `--destructive`; today/data-date marker line; milestones as diamonds.
-- **Toolbar** — Add WBS, Add Activity, Indent/Outdent, Delete, Link selected (FS by default), Unlink, Recalculate CPM, Zoom in/out, Filter by WBS / status, Export to PMXML (reuses existing `serializeP6Xml`).
-- **Compliance strip (bottom)** — reuses `complianceSnapshot` + `checkNjdotMilestones` from `src/lib/xer/wbs.ts`: open-ended logic, negative lags, missing NJDOT M-codes.
+Add a new "Import P6" panel inside `ScheduleWorkspace` (replaces the current image-only `GanttUploader` location for this tab; image upload stays available as a secondary option).
 
-## Data model changes
-Migration adds the missing P6 fields to `schedule_activities` and a new relationships table:
+**Supported inputs**: `.xer` (existing `parseXer`) and `.xml` / PMXML (existing `parseP6Xml`).
 
-| Table | Column | Notes |
-|---|---|---|
-| `schedule_activities` | `parent_wbs_id uuid null` | self-FK for WBS tree |
-| `schedule_activities` | `activity_id text` | human ID, e.g. `A1010` |
-| `schedule_activities` | `activity_type text` default `'task'` | task / start_milestone / finish_milestone / loe / wbs |
-| `schedule_activities` | `duration_days numeric` default `0` | |
-| `schedule_activities` | `actual_start date null`, `actual_finish date null` | |
-| `schedule_activities` | `early_start/early_finish/late_start/late_finish date null`, `total_float_days numeric null`, `is_critical boolean default false` | CPM outputs |
-| `schedule_activities` | `sort_order int default 0` | sibling ordering |
-| new: `activity_relationships` | `id, project_id, pred_activity_id, succ_activity_id, rel_type ('FS'|'SS'|'FF'|'SF'), lag_days numeric default 0` | unique(pred,succ,rel_type) |
-| new: `project_schedule_meta` | `project_id pk, data_date date, calendar jsonb` | per-project schedule settings |
+**New file `src/lib/schedule/import-p6.ts`** — adapters that map parsed P6 structures into `schedule_activities` + `activity_relationships` + `project_schedule_meta`. For each import:
 
-RLS mirrors existing `schedule_activities` policies (members read, creators manage).
+- **WBS**: every `PROJWBS` row / PMXML `<WBS>` becomes an `activity_type='wbs'` row with `parent_wbs_id` linked through a temp-id → uuid map. Top-level nodes get `parent_wbs_id = null`.
+- **Activities**: every `TASK` / `<Activity>` becomes a leaf. Map:
+  - `task_type` / `<Type>` → `activity_type` (`TT_Mile`→`start_milestone`, `TT_FinMile`→`finish_milestone`, `TT_LOE`→`loe`, else `task`).
+  - `target_drtn_hr_cnt` (hours) → `duration_days = round(hr/8, 2)` and PMXML `<PlannedDuration>` same conversion (P6 stores hours; we standardize on workdays).
+  - `target_start_date`/`<PlannedStartDate>` → `baseline_start`; `target_end_date`/`<PlannedFinishDate>` → `baseline_end`.
+  - `act_start_date`/`<ActualStartDate>` → `actual_start`; finish equivalents → `actual_finish`.
+  - `status_code` / `<Status>` + `<PhysicalPercentComplete>` → `percent_complete`.
+  - `task_code` → `activity_id`; `wbs_id` → `parent_wbs_id` (via map).
+- **Relationships**: `TASKPRED` `pred_type` (`PR_FS`/`PR_SS`/`PR_FF`/`PR_SF`) → `rel_type`; `lag_hr_cnt / 8` → `lag_days`. PMXML `<Relationship>` `<Type>` "Finish to Start" etc. → enum, `<Lag>/8` → days.
+- **Meta**: `last_recalc_date` / PMXML `<DataDate>` → `project_schedule_meta.data_date`. Calendar workdays left at default unless we can read CALENDAR (out of scope for v1 — flagged in import summary).
 
-## Code structure
+**Preview-then-commit UI**: show counts (WBS, activities, relationships, milestones, LOEs) plus a sample table of first 20 activities and a warnings list (unknown types, missing dates, relationships referencing tasks outside the file). User clicks **Import** to insert; **Cancel** discards. Optional **Replace existing schedule** checkbox wipes current rows for this project inside a single transaction (via RPC `replace_project_schedule(p_project_id, p_acts jsonb, p_rels jsonb, p_meta jsonb)` — new SECURITY DEFINER function that the import calls so all writes happen atomically and respect RLS via creator check).
 
-New files (kept small and composable):
+---
 
-```
-src/lib/schedule/
-  types.ts                — Activity, Relationship, ScheduleMeta
-  cpm.ts                  — forward + backward pass, marks is_critical, computes float
-  date-utils.ts           — workdays add/diff (5-day default calendar)
-  use-schedule.ts         — react-query hook: activities + relationships + meta
-src/components/schedule/
-  ScheduleWorkspace.tsx   — top-level layout (resizable panels)
-  WbsTree.tsx             — recursive tree, indent/outdent, drag-reparent
-  ActivityGrid.tsx        — virtualized table, inline editors, predecessor chips
-  GanttChart.tsx          — SVG/Canvas timeline, draggable bars, arrows, CP coloring
-  GanttTimeline.tsx       — header rows (year / month / day) with zoom
-  RelationshipEditor.tsx  — popover to add/remove FS/SS/FF/SF + lag
-  ScheduleToolbar.tsx     — add/indent/link/zoom/recalc/export buttons
-  ComplianceStrip.tsx     — re-uses wbs.ts checks against live data
-```
+### 2. Expose every stored field through proper forms
 
-Modified:
-- `src/pages/ProjectControls.tsx` — Activities tab body becomes `<ScheduleWorkspace projectId={projectId}/>`. The existing flat `ActivityEditor` and inspector list are removed (their pay-item linking moves into the grid's Pay Item column). `GanttUploader` stays at the top as a one-shot importer that now also seeds `activity_id` + `duration_days`.
-- `src/lib/xer/wbs.ts` — `complianceSnapshot`/`checkNjdotMilestones` get a `fromScheduleActivities()` adapter so the strip works without an XER file.
-- `src/lib/p6xml/*` — add a `buildPmxmlFromProject(projectId)` that mirrors the live tables into the existing serializer for "Export to P6".
+**a. Activity Details drawer** — new `ActivityInspector.tsx` opened by clicking a row's name (or pressing Enter on a selection). Sections:
 
-## CPM algorithm (src/lib/schedule/cpm.ts)
-1. Build adjacency map from `activity_relationships`.
-2. Topological sort; reject + surface cycle errors in the compliance strip.
-3. Forward pass — ES/EF using rel type + lag (FS default).
-4. Backward pass from project finish (max EF or `must_finish_by`) — LS/LF.
-5. `total_float = LS - ES` (in workdays). `is_critical = total_float <= 0`.
-6. Results persisted in the same `update` mutation that fires on any edit, debounced 400 ms; also exposed as a manual "Recalculate" button.
+- **Identity**: `activity_id`, `name`, `wbs_code`, `activity_type` (Select: Task / Start Milestone / Finish Milestone / LoE / WBS Summary).
+- **Schedule**: `baseline_start`, `baseline_end` (read-only mirror of `start + duration_days`, with override toggle), `duration_days`, calendar pill.
+- **Progress**: `percent_complete` slider 0–100, `actual_start`, `actual_finish` (date pickers). Setting actual_finish auto-sets % to 100 with a confirm.
+- **CPM (read-only)**: ES, EF, LS, LF, total float, criticality badge, with a tooltip explaining the formula.
+- **Pay item link**: Select bound to existing `pay_items` for project; used by export and field reports.
+- **Relationships**: lifted-up version of the popover, full table with type/lag editable inline and "Add successor" alongside "Add predecessor".
 
-## Gantt interaction
-- Bars are absolutely positioned divs inside a horizontally scrollable lane container; width = `duration_days * pxPerDay`.
-- Drag bar body → updates `start` (and `finish` by duration). Drag right edge → updates `duration_days`. Drop triggers mutation + CPM recalculation.
-- Dependency arrows drawn in an overlay `<svg>` using right-edge → left-edge cubic paths; click to open `RelationshipEditor`.
-- Zoom buttons cycle `pxPerDay` (day=24, week=8, month=2). Today line + data-date line render as full-height vertical bars.
+**b. Grid columns** — keep the dense grid but add three sortable columns hidden behind a "Columns" menu: Type icon, Finish (computed), Actual Start, Pay Item. Default columns unchanged so density is preserved.
 
-## Acceptance criteria
-- Open Project Controls → Activities. The flat list is gone; the 3-pane P6 workspace loads with the project's existing rows.
-- I can add a parent WBS "Earthwork", indent two child activities under it, set durations and dates inline, and link them FS+2d.
-- Gantt shows bars in correct lanes; dragging the second bar pushes its start; releasing recalculates CPM and the critical chain turns red.
-- Compliance strip flags any missing NJDOT milestone (M100–M950) and any negative lag.
-- Export to P6 button downloads a valid PMXML built from the live project (reuses `serializeP6Xml`).
-- Web build still passes; existing tests (`p6xml.test.ts`, `xer-parser.test.ts`) untouched; one new test for `cpm.ts` (small fixture, two parallel chains, verifies critical path).
-- RLS unchanged for existing tables; new `activity_relationships` + `project_schedule_meta` carry equivalent policies.
+**c. Toolbar additions**:
+- **Activity Type** dropdown when the "+" insert button is used (so milestones are reachable without the inspector).
+- **Data Date** date picker bound to `project_schedule_meta.data_date` (saves via `setMeta`).
+- **Calendar** popover toggling Sun–Sat workday checkboxes (also via `setMeta`).
+- **Import P6** button opens the panel from §1.
 
-## Out of scope (can follow up)
-- Multi-calendar / per-activity calendars (uses a single 5-day project calendar).
-- Resource loading, cost loading, baselines vs current schedule comparison.
-- Risk register / Monte-Carlo.
-- Mobile layout for the Gantt (workspace gracefully degrades to grid-only under 768 px).
+**d. PredecessorPopover** — make `rel_type` and `lag_days` editable on existing rows (currently they can only be added/removed). Show successor's computed ES as a hint after change.
+
+---
+
+### 3. Calculation correctness
+
+- **Derive `baseline_end`** automatically whenever `baseline_start` or `duration_days` changes (unless the inspector's "manual finish" override is on). Formula: `addWorkdays(baseline_start, duration_days, calendar)`. Mutation helper in `useSchedule.upsertActivity` recomputes server-side payload before writing.
+- **CPM seeds the right thing**:
+  - If `actual_start` is set, ES = actual_start (and is locked, since the work has begun).
+  - If `actual_finish` is set, EF = actual_finish, remaining duration = 0, total float = 0, not on critical path unless successors are.
+  - If `project_schedule_meta.data_date` is set, an activity whose `actual_start` is null cannot have ES earlier than `data_date` (progress override).
+- **Milestones**: `start_milestone` and `finish_milestone` force `duration_days = 0`; finish_milestone EF = ES; CPM treats them as zero-duration nodes (already works, but enforce in the writer).
+- **Remaining duration & physical %**: when user edits `percent_complete`, store as-is; export converts to remaining = `duration_days * (1 - pct/100)` consistently (fix `build-from-project.ts` to use days as days, not `*8`, by emitting both `<PlannedDuration>` in hours via `days*8` AND keeping the days canonical internally — round-trip test asserts hours-in == hours-out).
+- **P6 hours/days round-trip**: round-trip test (importer → DB → exporter → re-importer) must produce identical durations within 0.01 day.
+- **Float on disconnected nodes**: currently they get `float = 0` because LS=ES default to project finish minus duration; switch to `LS = max(projectFinish - duration, ES)` so an isolated 5-day activity at projectStart shows positive float instead of being mis-flagged critical.
+- **Cycle handling**: when a cycle is detected, return the activities involved (already done) but also mark them with `is_critical = false` and `total_float = null`, and surface them in `ComplianceStrip` with a "Break cycle" action that opens the relationship list for those ids.
+
+---
+
+### Data-model changes (one migration)
+
+Additive only — nothing destructive:
+
+- `schedule_activities.manual_finish boolean default false` (locks auto baseline_end recompute).
+- `schedule_activities.remaining_duration_days numeric` (cached, written by CPM).
+- RPC `replace_project_schedule(p_project_id uuid, p_acts jsonb, p_rels jsonb, p_meta jsonb)` — SECURITY DEFINER, checks `created_by = auth.uid()`, deletes existing rows, inserts new ones in dependency order. RLS unchanged.
+
+---
+
+### Tests
+
+- `import-p6.test.ts`: parse `SAMPLE_XER` → mapped tables → assert WBS parent linkage, relationship type mapping, hour→day conversion, milestone detection.
+- `import-p6.test.ts` round-trip: in-app rows → `buildPmxmlFromProject` → `parseP6Xml` → re-mapped rows; activity ids, durations (±0.01d), relationship types/lags must match.
+- `cpm.test.ts` additions: actual_start locks ES; actual_finish forces EF and float=0; data_date pushes ES forward; isolated activity has positive float; finish_milestone EF=ES; cycle members get `total_float=null`.
+- `baseline-end.test.ts`: edit duration → baseline_end recomputes; manual_finish=true preserves user-entered finish.
+
+---
+
+### Files
+
+**New**: `src/lib/schedule/import-p6.ts`, `src/lib/schedule/baseline.ts` (baseline_end + milestone enforcement helpers), `src/components/schedule/ImportP6Panel.tsx`, `src/components/schedule/ActivityInspector.tsx`, `src/components/schedule/DataDateControl.tsx`, `src/components/schedule/CalendarControl.tsx`, `src/test/import-p6.test.ts`, `src/test/baseline-end.test.ts`.
+
+**Modified**: `src/lib/schedule/cpm.ts` (actual dates, data_date, isolated float, milestones), `src/lib/schedule/use-schedule.ts` (baseline_end derivation, `importP6` mutation calling the RPC), `src/lib/p6xml/build-from-project.ts` (correct unit conversion), `src/components/schedule/ScheduleWorkspace.tsx` (inspector wiring, toolbar additions, import panel), `src/components/schedule/ScheduleToolbar.tsx` (new buttons + type selector), `src/components/schedule/ComplianceStrip.tsx` (cycle action), `src/test/cpm.test.ts` (new cases), supabase migration adding `manual_finish`, `remaining_duration_days`, and `replace_project_schedule` RPC.
+
+### Out of scope
+
+P6 multi-calendar import, resource/cost loading, baseline snapshots, constraint types (FNLT/SNET), CALENDAR table parsing — flagged in import warnings but not implemented.
+
+### Acceptance
+
+- Upload `SAMPLE_XER` from the Activities tab → preview shows ~15 activities with WBS tree → Import → workspace populated with hierarchy, relationships, milestones, and actual dates visible.
+- Open inspector on any activity → every column in `schedule_activities` is visible and editable (or shown read-only with explanation for CPM-derived fields).
+- Edit `duration_days` → `baseline_end` updates without manual entry.
+- Set `actual_finish` → % jumps to 100, float goes to 0, Gantt bar fills.
+- Round-trip test passes: import → export → re-import yields identical durations and relationships.
