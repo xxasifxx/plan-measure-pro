@@ -149,8 +149,7 @@ export function useProject(options: UseProjectOptions = {}) {
     setRedoCount(0);
 
     if (dbSync() && supabaseProjectId && userId) {
-      await supabase.from('annotations').insert({
-        id: annotation.id,
+      const payload = {
         project_id: supabaseProjectId,
         user_id: userId,
         type: annotation.type,
@@ -163,6 +162,10 @@ export function useProject(options: UseProjectOptions = {}) {
         manual_quantity: annotation.manualQuantity ?? null,
         location: annotation.location || '',
         notes: annotation.notes || '',
+      };
+      await offlineMutate({
+        entity: 'annotations', op: 'insert', rowId: annotation.id,
+        projectId: supabaseProjectId, payload,
       });
     }
   }, [project, persist, dbSync, supabaseProjectId, userId]);
@@ -178,10 +181,13 @@ export function useProject(options: UseProjectOptions = {}) {
     setUndoCount(undoStack.current.length);
     setRedoCount(0);
 
-    if (dbSync()) {
-      await supabase.from('annotations').delete().eq('id', id);
+    if (dbSync() && supabaseProjectId) {
+      await offlineMutate({
+        entity: 'annotations', op: 'delete', rowId: id,
+        projectId: supabaseProjectId, payload: null,
+      });
     }
-  }, [project, persist, dbSync]);
+  }, [project, persist, dbSync, supabaseProjectId]);
 
   const updateAnnotation = useCallback(async (id: string, changes: Partial<Annotation>) => {
     if (!project) return;
@@ -191,7 +197,7 @@ export function useProject(options: UseProjectOptions = {}) {
     };
     persist(updated);
 
-    if (dbSync()) {
+    if (dbSync() && supabaseProjectId) {
       const dbChanges: Record<string, unknown> = {};
       if (changes.type !== undefined) dbChanges.type = changes.type;
       if (changes.points !== undefined) dbChanges.points = changes.points;
@@ -204,10 +210,13 @@ export function useProject(options: UseProjectOptions = {}) {
       if (changes.location !== undefined) dbChanges.location = changes.location;
       if (changes.notes !== undefined) dbChanges.notes = changes.notes;
       if (Object.keys(dbChanges).length > 0) {
-        await supabase.from('annotations').update(dbChanges as any).eq('id', id);
+        await offlineMutate({
+          entity: 'annotations', op: 'update', rowId: id,
+          projectId: supabaseProjectId, payload: dbChanges,
+        });
       }
     }
-  }, [project, persist, dbSync]);
+  }, [project, persist, dbSync, supabaseProjectId]);
 
   const removeAnnotationsForPayItem = useCallback(async (payItemId: string) => {
     if (!project) return;
@@ -219,9 +228,11 @@ export function useProject(options: UseProjectOptions = {}) {
     persist(updated);
 
     if (dbSync() && supabaseProjectId) {
-      const ids = toRemove.map(a => a.id);
-      if (ids.length > 0) {
-        await supabase.from('annotations').delete().in('id', ids);
+      for (const a of toRemove) {
+        await offlineMutate({
+          entity: 'annotations', op: 'delete', rowId: a.id,
+          projectId: supabaseProjectId, payload: null,
+        });
       }
     }
   }, [project, persist, dbSync, supabaseProjectId]);
