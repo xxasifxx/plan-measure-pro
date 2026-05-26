@@ -23,7 +23,10 @@ import ResetPassword from "./pages/ResetPassword";
 import Landing from "./pages/Landing";
 import NotFound from "./pages/NotFound";
 import Documents from "./pages/Documents";
+import Settings from "./pages/Settings";
 import { PwaShell } from "@/components/PwaShell";
+import { BiometricGate } from "@/components/BiometricGate";
+import { NativeFirstRun } from "@/components/NativeFirstRun";
 import { createIdbPersister } from "@/lib/offline/idb-persister";
 
 // 14 days; bust on app version (Vite injects from package.json via env if defined).
@@ -97,28 +100,32 @@ const App = () => (
           <Toaster />
           <Sonner />
           <PwaShell />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/landing" element={<Landing />} />
-              <Route path="/demo" element={<Demo />} />
-              <Route path="/mcfa" element={<McfaPitch />} />
-              <Route path="/fajar" element={<FajarPitch />} />
-              <Route path="/mcfa/demo" element={<XerDemo />} />
-              <Route path="/p6-xml" element={<P6XmlDemo />} />
-              <Route path="/mcfa/p6-xml" element={<P6XmlDemo />} />
-              <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
-              <Route path="/reset-password" element={<ResetPassword />} />
-              <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-              <Route path="/project/:projectId" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-              <Route path="/project/:projectId/controls" element={<ProtectedRoute><ProjectControls /></ProtectedRoute>} />
-              <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
-              <Route path="/re-review" element={<ProtectedRoute><ReReview /></ProtectedRoute>} />
-              <Route path="/project/:projectId/daily-report" element={<ProtectedRoute><DailyReport /></ProtectedRoute>} />
-              <Route path="/project/:projectId/p6-export" element={<ProtectedRoute><P6Export /></ProtectedRoute>} />
-              <Route path="/project/:projectId/documents" element={<ProtectedRoute><Documents /></ProtectedRoute>} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
+          <BiometricGate>
+            <NativeFirstRun />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/landing" element={<Landing />} />
+                <Route path="/demo" element={<Demo />} />
+                <Route path="/mcfa" element={<McfaPitch />} />
+                <Route path="/fajar" element={<FajarPitch />} />
+                <Route path="/mcfa/demo" element={<XerDemo />} />
+                <Route path="/p6-xml" element={<P6XmlDemo />} />
+                <Route path="/mcfa/p6-xml" element={<P6XmlDemo />} />
+                <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+                <Route path="/project/:projectId" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+                <Route path="/project/:projectId/controls" element={<ProtectedRoute><ProjectControls /></ProtectedRoute>} />
+                <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+                <Route path="/re-review" element={<ProtectedRoute><ReReview /></ProtectedRoute>} />
+                <Route path="/project/:projectId/daily-report" element={<ProtectedRoute><DailyReport /></ProtectedRoute>} />
+                <Route path="/project/:projectId/p6-export" element={<ProtectedRoute><P6Export /></ProtectedRoute>} />
+                <Route path="/project/:projectId/documents" element={<ProtectedRoute><Documents /></ProtectedRoute>} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </BiometricGate>
         </TooltipProvider>
       </PersistedQueryProvider>
     </AuthProvider>
