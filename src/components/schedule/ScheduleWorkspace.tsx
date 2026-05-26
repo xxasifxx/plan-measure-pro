@@ -7,6 +7,9 @@ import { ScheduleToolbar } from './ScheduleToolbar';
 import { ComplianceStrip } from './ComplianceStrip';
 import { ActivityInspector } from './ActivityInspector';
 import { ImportP6Panel } from './ImportP6Panel';
+import { CalendarManager } from './CalendarManager';
+import { ResourceManager } from './ResourceManager';
+import { BaselineManager } from './BaselineManager';
 import { Input } from '@/components/ui/input';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -25,6 +28,9 @@ export function ScheduleWorkspace({ projectId }: Props) {
   const [zoomIdx, setZoomIdx] = useState(2);
   const [inspectorId, setInspectorId] = useState<string | null>(null);
   const [importOpen, setImportOpen] = useState(false);
+  const [calOpen, setCalOpen] = useState(false);
+  const [resOpen, setResOpen] = useState(false);
+  const [blOpen, setBlOpen] = useState(false);
   const pxPerDay = ZOOM_STEPS[zoomIdx];
 
   const allLeaves = useMemo(
@@ -137,6 +143,9 @@ export function ScheduleWorkspace({ projectId }: Props) {
         onRecalc={() => sch.persistCpm.mutate()}
         onExportPmxml={handleExport}
         onImportP6={() => setImportOpen(true)}
+        onOpenCalendars={() => setCalOpen(true)}
+        onOpenResources={() => setResOpen(true)}
+        onOpenBaselines={() => setBlOpen(true)}
         selectedCount={selected.length}
         canLink={selected.length >= 2}
         meta={sch.meta}
@@ -255,6 +264,9 @@ export function ScheduleWorkspace({ projectId }: Props) {
         onOpenChange={setImportOpen}
         onImport={async (imp) => { await sch.importSchedule.mutateAsync(imp); }}
       />
+      <CalendarManager open={calOpen} onOpenChange={setCalOpen} sch={sch} />
+      <ResourceManager open={resOpen} onOpenChange={setResOpen} sch={sch} />
+      <BaselineManager open={blOpen} onOpenChange={setBlOpen} sch={sch} />
     </div>
   );
 }
