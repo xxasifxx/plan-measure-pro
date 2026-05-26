@@ -73,6 +73,17 @@ export function ScheduleToolbar(p: Props) {
       <MetaControls meta={p.meta} onChange={p.onMetaChange} />
       <div className="w-px h-4 bg-border mx-1" />
 
+      <Button size="sm" variant="ghost" className="h-7 text-[11px]" onClick={p.onOpenCalendars} title="Calendars">
+        <CalendarDays className="h-3.5 w-3.5 mr-1" /> Calendars
+      </Button>
+      <Button size="sm" variant="ghost" className="h-7 text-[11px]" onClick={p.onOpenResources} title="Resource library">
+        <Users className="h-3.5 w-3.5 mr-1" /> Resources
+      </Button>
+      <Button size="sm" variant="ghost" className="h-7 text-[11px]" onClick={p.onOpenBaselines} title="Baselines">
+        <Camera className="h-3.5 w-3.5 mr-1" /> Baselines
+      </Button>
+      <div className="w-px h-4 bg-border mx-1" />
+
       <Button size="sm" variant="ghost" className="h-7 text-[11px]" onClick={p.onRecalc} title="Persist CPM to DB">
         <RefreshCw className="h-3.5 w-3.5 mr-1" /> CPM
       </Button>
