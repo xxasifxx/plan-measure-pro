@@ -85,6 +85,51 @@ export type Database = {
           },
         ]
       }
+      activity_relationships: {
+        Row: {
+          created_at: string
+          id: string
+          lag_days: number
+          pred_activity_id: string
+          project_id: string
+          rel_type: string
+          succ_activity_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          lag_days?: number
+          pred_activity_id: string
+          project_id: string
+          rel_type?: string
+          succ_activity_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          lag_days?: number
+          pred_activity_id?: string
+          project_id?: string
+          rel_type?: string
+          succ_activity_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activity_relationships_pred_activity_id_fkey"
+            columns: ["pred_activity_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_activities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "activity_relationships_succ_activity_id_fkey"
+            columns: ["succ_activity_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_activities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       annotation_photos: {
         Row: {
           ai_confidence: number | null
@@ -747,6 +792,27 @@ export type Database = {
           },
         ]
       }
+      project_schedule_meta: {
+        Row: {
+          calendar: Json
+          data_date: string | null
+          project_id: string
+          updated_at: string
+        }
+        Insert: {
+          calendar?: Json
+          data_date?: string | null
+          project_id: string
+          updated_at?: string
+        }
+        Update: {
+          calendar?: Json
+          data_date?: string | null
+          project_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       projects: {
         Row: {
           contract_number: string | null
@@ -827,45 +893,92 @@ export type Database = {
       }
       schedule_activities: {
         Row: {
+          activity_id: string | null
+          activity_type: string
+          actual_finish: string | null
+          actual_start: string | null
           baseline_end: string | null
           baseline_quantity: number | null
           baseline_start: string | null
           created_at: string
+          duration_days: number
+          early_finish: string | null
+          early_start: string | null
           id: string
+          is_critical: boolean
+          late_finish: string | null
+          late_start: string | null
           name: string
+          parent_wbs_id: string | null
           pay_item_id: string | null
           percent_complete: number | null
           project_id: string
+          sort_order: number
+          total_float_days: number | null
           updated_at: string
           wbs_code: string
         }
         Insert: {
+          activity_id?: string | null
+          activity_type?: string
+          actual_finish?: string | null
+          actual_start?: string | null
           baseline_end?: string | null
           baseline_quantity?: number | null
           baseline_start?: string | null
           created_at?: string
+          duration_days?: number
+          early_finish?: string | null
+          early_start?: string | null
           id?: string
+          is_critical?: boolean
+          late_finish?: string | null
+          late_start?: string | null
           name: string
+          parent_wbs_id?: string | null
           pay_item_id?: string | null
           percent_complete?: number | null
           project_id: string
+          sort_order?: number
+          total_float_days?: number | null
           updated_at?: string
           wbs_code: string
         }
         Update: {
+          activity_id?: string | null
+          activity_type?: string
+          actual_finish?: string | null
+          actual_start?: string | null
           baseline_end?: string | null
           baseline_quantity?: number | null
           baseline_start?: string | null
           created_at?: string
+          duration_days?: number
+          early_finish?: string | null
+          early_start?: string | null
           id?: string
+          is_critical?: boolean
+          late_finish?: string | null
+          late_start?: string | null
           name?: string
+          parent_wbs_id?: string | null
           pay_item_id?: string | null
           percent_complete?: number | null
           project_id?: string
+          sort_order?: number
+          total_float_days?: number | null
           updated_at?: string
           wbs_code?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "schedule_activities_parent_wbs_id_fkey"
+            columns: ["parent_wbs_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_activities"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       scorecard_metrics: {
         Row: {
