@@ -264,6 +264,9 @@ export function ScheduleWorkspace({ projectId }: Props) {
         onOpenChange={setImportOpen}
         onImport={async (imp) => { await sch.importSchedule.mutateAsync(imp); }}
       />
+      <CalendarManager open={calOpen} onOpenChange={setCalOpen} sch={sch} />
+      <ResourceManager open={resOpen} onOpenChange={setResOpen} sch={sch} />
+      <BaselineManager open={blOpen} onOpenChange={setBlOpen} sch={sch} />
     </div>
   );
 }
