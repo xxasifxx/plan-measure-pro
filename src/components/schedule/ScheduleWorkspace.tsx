@@ -28,6 +28,9 @@ export function ScheduleWorkspace({ projectId }: Props) {
   const [zoomIdx, setZoomIdx] = useState(2);
   const [inspectorId, setInspectorId] = useState<string | null>(null);
   const [importOpen, setImportOpen] = useState(false);
+  const [calOpen, setCalOpen] = useState(false);
+  const [resOpen, setResOpen] = useState(false);
+  const [blOpen, setBlOpen] = useState(false);
   const pxPerDay = ZOOM_STEPS[zoomIdx];
 
   const allLeaves = useMemo(
