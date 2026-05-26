@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import type { Project, PayItem, Annotation, Calibration, TocEntry, ToolMode } from '@/types/project';
 import { supabase } from '@/integrations/supabase/client';
+import { mutate as offlineMutate } from '@/lib/offline/mutation-client';
 
 interface UndoAction {
   type: 'add' | 'remove';
@@ -148,8 +149,7 @@ export function useProject(options: UseProjectOptions = {}) {
     setRedoCount(0);
 
     if (dbSync() && supabaseProjectId && userId) {
-      await supabase.from('annotations').insert({
-        id: annotation.id,
+      const payload = {
         project_id: supabaseProjectId,
         user_id: userId,
         type: annotation.type,
@@ -162,6 +162,10 @@ export function useProject(options: UseProjectOptions = {}) {
         manual_quantity: annotation.manualQuantity ?? null,
         location: annotation.location || '',
         notes: annotation.notes || '',
+      };
+      await offlineMutate({
+        entity: 'annotations', op: 'insert', rowId: annotation.id,
+        projectId: supabaseProjectId, payload,
       });
     }
   }, [project, persist, dbSync, supabaseProjectId, userId]);
@@ -177,10 +181,13 @@ export function useProject(options: UseProjectOptions = {}) {
     setUndoCount(undoStack.current.length);
     setRedoCount(0);
 
-    if (dbSync()) {
-      await supabase.from('annotations').delete().eq('id', id);
+    if (dbSync() && supabaseProjectId) {
+      await offlineMutate({
+        entity: 'annotations', op: 'delete', rowId: id,
+        projectId: supabaseProjectId, payload: null,
+      });
     }
-  }, [project, persist, dbSync]);
+  }, [project, persist, dbSync, supabaseProjectId]);
 
   const updateAnnotation = useCallback(async (id: string, changes: Partial<Annotation>) => {
     if (!project) return;
@@ -190,7 +197,7 @@ export function useProject(options: UseProjectOptions = {}) {
     };
     persist(updated);
 
-    if (dbSync()) {
+    if (dbSync() && supabaseProjectId) {
       const dbChanges: Record<string, unknown> = {};
       if (changes.type !== undefined) dbChanges.type = changes.type;
       if (changes.points !== undefined) dbChanges.points = changes.points;
@@ -203,10 +210,13 @@ export function useProject(options: UseProjectOptions = {}) {
       if (changes.location !== undefined) dbChanges.location = changes.location;
       if (changes.notes !== undefined) dbChanges.notes = changes.notes;
       if (Object.keys(dbChanges).length > 0) {
-        await supabase.from('annotations').update(dbChanges as any).eq('id', id);
+        await offlineMutate({
+          entity: 'annotations', op: 'update', rowId: id,
+          projectId: supabaseProjectId, payload: dbChanges,
+        });
       }
     }
-  }, [project, persist, dbSync]);
+  }, [project, persist, dbSync, supabaseProjectId]);
 
   const removeAnnotationsForPayItem = useCallback(async (payItemId: string) => {
     if (!project) return;
@@ -218,38 +228,56 @@ export function useProject(options: UseProjectOptions = {}) {
     persist(updated);
 
     if (dbSync() && supabaseProjectId) {
-      const ids = toRemove.map(a => a.id);
-      if (ids.length > 0) {
-        await supabase.from('annotations').delete().in('id', ids);
+      for (const a of toRemove) {
+        await offlineMutate({
+          entity: 'annotations', op: 'delete', rowId: a.id,
+          projectId: supabaseProjectId, payload: null,
+        });
       }
     }
   }, [project, persist, dbSync, supabaseProjectId]);
 
   // ── Undo/Redo ──
+  const reinsertAnnotation = useCallback(async (ann: Annotation) => {
+    if (!supabaseProjectId || !userId) return;
+    await offlineMutate({
+      entity: 'annotations', op: 'insert', rowId: ann.id,
+      projectId: supabaseProjectId,
+      payload: {
+        project_id: supabaseProjectId, user_id: userId,
+        type: ann.type, points: ann.points as any, pay_item_id: ann.payItemId || null,
+        page: ann.page, depth: ann.depth ?? null, measurement: ann.measurement,
+        measurement_unit: ann.measurementUnit,
+        manual_quantity: ann.manualQuantity ?? null,
+        location: ann.location || '', notes: ann.notes || '',
+      },
+    });
+  }, [supabaseProjectId, userId]);
+
+  const deleteAnnotationRemote = useCallback(async (id: string) => {
+    if (!supabaseProjectId) return;
+    await offlineMutate({
+      entity: 'annotations', op: 'delete', rowId: id,
+      projectId: supabaseProjectId, payload: null,
+    });
+  }, [supabaseProjectId]);
+
   const undo = useCallback(async () => {
     if (!project || undoStack.current.length === 0) return;
     const action = undoStack.current.pop()!;
     if (action.type === 'add') {
       const updated = { ...project, annotations: project.annotations.filter(a => a.id !== action.annotation.id) };
       persist(updated);
-      if (dbSync()) await supabase.from('annotations').delete().eq('id', action.annotation.id);
+      if (dbSync()) await deleteAnnotationRemote(action.annotation.id);
     } else {
       const updated = { ...project, annotations: [...project.annotations, action.annotation] };
       persist(updated);
-      if (dbSync() && supabaseProjectId && userId) {
-        const ann = action.annotation;
-        await supabase.from('annotations').insert({
-          id: ann.id, project_id: supabaseProjectId, user_id: userId,
-          type: ann.type, points: ann.points as any, pay_item_id: ann.payItemId || null,
-          page: ann.page, depth: ann.depth ?? null, measurement: ann.measurement,
-          measurement_unit: ann.measurementUnit,
-        });
-      }
+      if (dbSync()) await reinsertAnnotation(action.annotation);
     }
     redoStack.current.push(action);
     setUndoCount(undoStack.current.length);
     setRedoCount(redoStack.current.length);
-  }, [project, persist, dbSync, supabaseProjectId, userId]);
+  }, [project, persist, dbSync, reinsertAnnotation, deleteAnnotationRemote]);
 
   const redo = useCallback(async () => {
     if (!project || redoStack.current.length === 0) return;
@@ -257,24 +285,16 @@ export function useProject(options: UseProjectOptions = {}) {
     if (action.type === 'add') {
       const updated = { ...project, annotations: [...project.annotations, action.annotation] };
       persist(updated);
-      if (dbSync() && supabaseProjectId && userId) {
-        const ann = action.annotation;
-        await supabase.from('annotations').insert({
-          id: ann.id, project_id: supabaseProjectId, user_id: userId,
-          type: ann.type, points: ann.points as any, pay_item_id: ann.payItemId || null,
-          page: ann.page, depth: ann.depth ?? null, measurement: ann.measurement,
-          measurement_unit: ann.measurementUnit,
-        });
-      }
+      if (dbSync()) await reinsertAnnotation(action.annotation);
     } else {
       const updated = { ...project, annotations: project.annotations.filter(a => a.id !== action.annotation.id) };
       persist(updated);
-      if (dbSync()) await supabase.from('annotations').delete().eq('id', action.annotation.id);
+      if (dbSync()) await deleteAnnotationRemote(action.annotation.id);
     }
     undoStack.current.push(action);
     setUndoCount(undoStack.current.length);
     setRedoCount(redoStack.current.length);
-  }, [project, persist, dbSync, supabaseProjectId, userId]);
+  }, [project, persist, dbSync, reinsertAnnotation, deleteAnnotationRemote]);
 
   const canUndo = !!project && undoCount > 0;
   const canRedo = !!project && redoCount > 0;

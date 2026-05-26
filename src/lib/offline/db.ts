@@ -1,6 +1,40 @@
-// IndexedDB schema for offline mirror of project data.
+// IndexedDB schema for offline mirror of project data + write outbox.
 // All writes are best-effort and never throw into render.
 import { openDB, type DBSchema, type IDBPDatabase } from "idb";
+
+export type OutboxEntity =
+  | "annotations"
+  | "annotation_photos"
+  | "daily_reports"
+  | "calibrations"
+  | "pay_items";
+
+export type OutboxOp = "insert" | "update" | "delete";
+
+export type OutboxStatus = "pending" | "inflight" | "failed" | "conflict" | "done";
+
+export interface OutboxRecord {
+  seq?: number;                  // auto-increment key
+  rowId: string;                 // affected row id
+  entity: OutboxEntity;
+  op: OutboxOp;
+  projectId: string;
+  payload: Record<string, unknown> | null;
+  baseUpdatedAt?: string | null; // for conflict detection
+  blobSeq?: number | null;       // points at outbox_blobs.seq if a binary payload
+  storagePath?: string | null;   // for photo inserts after upload
+  createdAt: number;
+  attempts: number;
+  lastError?: string | null;
+  status: OutboxStatus;
+}
+
+export interface OutboxBlobRecord {
+  seq?: number;
+  blob: Blob;
+  mimeType: string;
+  createdAt: number;
+}
 
 export interface TakeoffOfflineDB extends DBSchema {
   projects: { key: string; value: any };
@@ -14,33 +48,47 @@ export interface TakeoffOfflineDB extends DBSchema {
   daily_reports: { key: string; value: any; indexes: { by_project: string } };
   pdf_cache_meta: { key: string; value: { projectId: string; size: number; lastUsed: number } };
   meta: { key: string; value: any };
+  outbox: {
+    key: number;
+    value: OutboxRecord;
+    indexes: { by_status: string; by_row: string };
+  };
+  outbox_blobs: { key: number; value: OutboxBlobRecord };
 }
 
 let dbPromise: Promise<IDBPDatabase<TakeoffOfflineDB>> | null = null;
 
 export function getDB(): Promise<IDBPDatabase<TakeoffOfflineDB>> {
   if (!dbPromise) {
-    dbPromise = openDB<TakeoffOfflineDB>("takeoffpro-offline", 1, {
-      upgrade(db) {
-        db.createObjectStore("projects", { keyPath: "id" });
-        const payItems = db.createObjectStore("pay_items", { keyPath: "id" });
-        payItems.createIndex("by_project", "project_id");
-        const ann = db.createObjectStore("annotations", { keyPath: "id" });
-        ann.createIndex("by_project", "project_id");
-        const photos = db.createObjectStore("annotation_photos", { keyPath: "id" });
-        photos.createIndex("by_annotation", "annotation_id");
-        const cal = db.createObjectStore("calibrations", { keyPath: "id" });
-        cal.createIndex("by_project", "project_id");
-        const geo = db.createObjectStore("geo_calibrations", { keyPath: "id" });
-        geo.createIndex("by_project", "project_id");
-        const sched = db.createObjectStore("schedule_activities", { keyPath: "id" });
-        sched.createIndex("by_project", "project_id");
-        const docs = db.createObjectStore("documents_meta", { keyPath: "id" });
-        docs.createIndex("by_project", "project_id");
-        const dr = db.createObjectStore("daily_reports", { keyPath: "id" });
-        dr.createIndex("by_project", "project_id");
-        db.createObjectStore("pdf_cache_meta", { keyPath: "projectId" });
-        db.createObjectStore("meta");
+    dbPromise = openDB<TakeoffOfflineDB>("takeoffpro-offline", 2, {
+      upgrade(db, oldVersion) {
+        if (oldVersion < 1) {
+          db.createObjectStore("projects", { keyPath: "id" });
+          const payItems = db.createObjectStore("pay_items", { keyPath: "id" });
+          payItems.createIndex("by_project", "project_id");
+          const ann = db.createObjectStore("annotations", { keyPath: "id" });
+          ann.createIndex("by_project", "project_id");
+          const photos = db.createObjectStore("annotation_photos", { keyPath: "id" });
+          photos.createIndex("by_annotation", "annotation_id");
+          const cal = db.createObjectStore("calibrations", { keyPath: "id" });
+          cal.createIndex("by_project", "project_id");
+          const geo = db.createObjectStore("geo_calibrations", { keyPath: "id" });
+          geo.createIndex("by_project", "project_id");
+          const sched = db.createObjectStore("schedule_activities", { keyPath: "id" });
+          sched.createIndex("by_project", "project_id");
+          const docs = db.createObjectStore("documents_meta", { keyPath: "id" });
+          docs.createIndex("by_project", "project_id");
+          const dr = db.createObjectStore("daily_reports", { keyPath: "id" });
+          dr.createIndex("by_project", "project_id");
+          db.createObjectStore("pdf_cache_meta", { keyPath: "projectId" });
+          db.createObjectStore("meta");
+        }
+        if (oldVersion < 2) {
+          const out = db.createObjectStore("outbox", { keyPath: "seq", autoIncrement: true });
+          out.createIndex("by_status", "status");
+          out.createIndex("by_row", "rowId");
+          db.createObjectStore("outbox_blobs", { keyPath: "seq", autoIncrement: true });
+        }
       },
     }).catch((err) => {
       // eslint-disable-next-line no-console
@@ -68,6 +116,15 @@ export async function safePut(store: keyof TakeoffOfflineDB, value: any, key?: s
   } catch (err) {
     // eslint-disable-next-line no-console
     console.warn("[offline] put failed", store, err);
+  }
+}
+
+export async function safeDelete(store: keyof TakeoffOfflineDB, key: string): Promise<void> {
+  try {
+    const db = await getDB();
+    await db.delete(store as any, key as any);
+  } catch {
+    /* noop */
   }
 }
 
@@ -104,6 +161,7 @@ export async function clearAll(): Promise<void> {
       "projects", "pay_items", "annotations", "annotation_photos",
       "calibrations", "geo_calibrations", "schedule_activities",
       "documents_meta", "daily_reports", "pdf_cache_meta", "meta",
+      "outbox", "outbox_blobs",
     ];
     await Promise.all(stores.map((s) => db.clear(s as any)));
   } catch {
