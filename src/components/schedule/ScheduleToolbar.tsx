@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Link2, Unlink, ZoomIn, ZoomOut, RefreshCw, Download, Trash2, IndentIncrease, IndentDecrease, FileCode2, Flag, FlagOff, Activity as ActivityIcon, Layers } from 'lucide-react';
+import { Plus, Link2, Unlink, ZoomIn, ZoomOut, RefreshCw, Download, Trash2, IndentIncrease, IndentDecrease, FileCode2, Flag, FlagOff, Activity as ActivityIcon, Layers, CalendarDays, Users, Camera } from 'lucide-react';
 import type { ActivityType, ScheduleMeta } from '@/lib/schedule/types';
 import { MetaControls } from './MetaControls';
 
@@ -17,6 +17,9 @@ interface Props {
   onRecalc: () => void;
   onExportPmxml: () => void;
   onImportP6: () => void;
+  onOpenCalendars: () => void;
+  onOpenResources: () => void;
+  onOpenBaselines: () => void;
   selectedCount: number;
   canLink: boolean;
   meta?: ScheduleMeta;
