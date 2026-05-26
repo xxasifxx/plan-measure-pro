@@ -77,120 +77,26 @@ export function GpsTraceControls({
     }
   }, [geoCalibration, scaleCalibration, onPositionUpdate, onTracePointsUpdate]);
 
-  const startTrace = useCallback(() => {
-    if (!navigator.geolocation) return;
-
+  const startTrace = useCallback(async () => {
     setMode('tracing');
     setTracePoints([]);
     setRunningDistance(0);
     setRunningArea(0);
     lastAddedRef.current = null;
     kalmanRef.current = null;
-
-    watchIdRef.current = navigator.geolocation.watchPosition(
-      (pos) => {
-        const gps: GpsCoord = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-        const accuracy = pos.coords.accuracy;
-        const now = pos.timestamp;
-
-        // Apply Kalman filter
-        if (!kalmanRef.current) {
-          kalmanRef.current = initKalman(gps, accuracy, now);
-        } else {
-          kalmanRef.current = updateKalman(kalmanRef.current, gps, accuracy, now);
-        }
-
-        const smoothed: GpsCoord = { lat: kalmanRef.current.lat, lng: kalmanRef.current.lng };
-        const planPos = gpsToplan(geoCalibration, smoothed);
-
-        setCurrentPos(planPos);
-        setGpsAccuracy(accuracy);
-        onPositionUpdate(planPos);
-
-        // Add to trace if far enough from last point
-        if (!lastAddedRef.current || distancePx(planPos, lastAddedRef.current) >= MIN_POINT_SPACING) {
-          lastAddedRef.current = planPos;
-          setTracePoints(prev => {
-            const updated = [...prev, planPos];
-            onTracePointsUpdate(updated);
-
-            // Update running measurements
-            if (updated.length >= 2 && scaleCalibration) {
-              const ppf = scaleCalibration.pixelsPerFoot;
-              // Total distance
-              let dist = 0;
-              for (let i = 1; i < updated.length; i++) {
-                dist += distancePx(updated[i - 1], updated[i]) / ppf;
-              }
-              setRunningDistance(dist);
-
-              // Area if 3+ points
-              if (updated.length >= 3) {
-                setRunningArea(polygonAreaSF(updated, ppf));
-              }
-            }
-            return updated;
-          });
-        }
-      },
-      () => { /* ignore errors during trace */ },
-      { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
-    );
-  }, [geoCalibration, scaleCalibration, onPositionUpdate, onTracePointsUpdate]);
+    watchIdRef.current = await watchPosition(handleSample);
+  }, [handleSample]);
 
   const pauseTrace = useCallback(() => {
-    if (watchIdRef.current != null) {
-      navigator.geolocation.clearWatch(watchIdRef.current);
-      watchIdRef.current = null;
-    }
+    watchIdRef.current?.stop();
+    watchIdRef.current = null;
     setMode('paused');
   }, []);
 
-  const resumeTrace = useCallback(() => {
+  const resumeTrace = useCallback(async () => {
     setMode('tracing');
-    watchIdRef.current = navigator.geolocation.watchPosition(
-      (pos) => {
-        const gps: GpsCoord = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-        const accuracy = pos.coords.accuracy;
-        const now = pos.timestamp;
-
-        if (kalmanRef.current) {
-          kalmanRef.current = updateKalman(kalmanRef.current, gps, accuracy, now);
-        } else {
-          kalmanRef.current = initKalman(gps, accuracy, now);
-        }
-
-        const smoothed: GpsCoord = { lat: kalmanRef.current.lat, lng: kalmanRef.current.lng };
-        const planPos = gpsToplan(geoCalibration, smoothed);
-
-        setCurrentPos(planPos);
-        setGpsAccuracy(accuracy);
-        onPositionUpdate(planPos);
-
-        if (!lastAddedRef.current || distancePx(planPos, lastAddedRef.current) >= MIN_POINT_SPACING) {
-          lastAddedRef.current = planPos;
-          setTracePoints(prev => {
-            const updated = [...prev, planPos];
-            onTracePointsUpdate(updated);
-            if (updated.length >= 2 && scaleCalibration) {
-              const ppf = scaleCalibration.pixelsPerFoot;
-              let dist = 0;
-              for (let i = 1; i < updated.length; i++) {
-                dist += distancePx(updated[i - 1], updated[i]) / ppf;
-              }
-              setRunningDistance(dist);
-              if (updated.length >= 3) {
-                setRunningArea(polygonAreaSF(updated, ppf));
-              }
-            }
-            return updated;
-          });
-        }
-      },
-      () => {},
-      { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
-    );
-  }, [geoCalibration, scaleCalibration, onPositionUpdate, onTracePointsUpdate]);
+    watchIdRef.current = await watchPosition(handleSample);
+  }, [handleSample]);
 
   const finishTrace = useCallback(() => {
     if (watchIdRef.current != null) {
