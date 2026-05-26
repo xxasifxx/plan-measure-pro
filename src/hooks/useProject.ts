@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import type { Project, PayItem, Annotation, Calibration, TocEntry, ToolMode } from '@/types/project';
 import { supabase } from '@/integrations/supabase/client';
+import { mutate as offlineMutate } from '@/lib/offline/mutation-client';
 
 interface UndoAction {
   type: 'add' | 'remove';
