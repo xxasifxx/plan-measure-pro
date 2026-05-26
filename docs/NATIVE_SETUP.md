@@ -36,19 +36,32 @@ producing a release build** so the binary loads its own embedded `dist/`.
 
 ## Capabilities wired
 
-| Capability      | Plugin                              | Status   |
-|-----------------|-------------------------------------|----------|
-| Camera          | `@capacitor/camera`                 | Active   |
-| Geolocation     | `@capacitor/geolocation`            | Active   |
-| Filesystem      | `@capacitor/filesystem`, `@capacitor/share` | Active   |
-| App lifecycle   | `@capacitor/app`                    | Active   |
-| Status bar      | `@capacitor/status-bar`             | Active   |
-| Splash screen   | `@capacitor/splash-screen`          | Active   |
-| Keyboard        | `@capacitor/keyboard`               | Active   |
-| Push (FCM/APNs) | `@capacitor/push-notifications`     | Scaffolded — needs `FCM_SERVER_KEY` |
+| Capability      | Plugin                                          | Status   |
+|-----------------|-------------------------------------------------|----------|
+| Camera          | `@capacitor/camera`                             | Active   |
+| Geolocation     | `@capacitor/geolocation`                        | Active   |
+| Filesystem      | `@capacitor/filesystem`, `@capacitor/share`     | Active   |
+| App lifecycle   | `@capacitor/app`                                | Active   |
+| Status bar      | `@capacitor/status-bar`                         | Active   |
+| Splash screen   | `@capacitor/splash-screen`                      | Active   |
+| Keyboard        | `@capacitor/keyboard`                           | Active   |
+| Biometric       | `capacitor-native-biometric`                    | Active   |
+| Push (FCM/APNs) | `@capacitor/push-notifications`                 | Active — needs `FCM_SERVER_KEY` secret to deliver |
+| Background sync | `@transistorsoft/capacitor-background-fetch`    | Active   |
 
 All native capabilities go through `src/lib/native/*` shims so the web build
-keeps working unchanged.
+keeps working unchanged. User-facing toggles for Biometric / Push / Background
+sync live in `/settings`.
+
+## App icon & splash assets
+
+Master art lives at `src/assets/app-icon-master.png` (1024×1024). After
+exporting to GitHub, regenerate the icon/splash sets:
+
+```bash
+npm install -D @capacitor/assets
+npx capacitor-assets generate --iconBackgroundColor "#0b1220"
+```
 
 ## Permissions checklist (App Store / Play Store)
 
