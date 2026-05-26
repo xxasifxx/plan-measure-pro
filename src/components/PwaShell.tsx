@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { registerSWWithUpdates } from "@/lib/pwa";
 import { useNetworkStatus } from "@/hooks/useNetworkStatus";
 import { getDB } from "@/lib/offline/db";
+import { SyncPanel } from "@/components/SyncPanel";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -97,6 +98,9 @@ export function PwaShell() {
           Offline — viewing cached data{offlineProjectCount > 0 ? ` (${offlineProjectCount} project${offlineProjectCount === 1 ? "" : "s"})` : ""}.
         </div>
       )}
+
+      {/* Sync queue (only renders when there are pending items or while offline) */}
+      <SyncPanel variant="pill" />
 
       {/* Install CTA (Android / desktop) */}
       {installEvent && (
