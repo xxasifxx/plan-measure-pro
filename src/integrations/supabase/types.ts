@@ -908,11 +908,13 @@ export type Database = {
           is_critical: boolean
           late_finish: string | null
           late_start: string | null
+          manual_finish: boolean
           name: string
           parent_wbs_id: string | null
           pay_item_id: string | null
           percent_complete: number | null
           project_id: string
+          remaining_duration_days: number | null
           sort_order: number
           total_float_days: number | null
           updated_at: string
@@ -934,11 +936,13 @@ export type Database = {
           is_critical?: boolean
           late_finish?: string | null
           late_start?: string | null
+          manual_finish?: boolean
           name: string
           parent_wbs_id?: string | null
           pay_item_id?: string | null
           percent_complete?: number | null
           project_id: string
+          remaining_duration_days?: number | null
           sort_order?: number
           total_float_days?: number | null
           updated_at?: string
@@ -960,11 +964,13 @@ export type Database = {
           is_critical?: boolean
           late_finish?: string | null
           late_start?: string | null
+          manual_finish?: boolean
           name?: string
           parent_wbs_id?: string | null
           pay_item_id?: string | null
           percent_complete?: number | null
           project_id?: string
+          remaining_duration_days?: number | null
           sort_order?: number
           total_float_days?: number | null
           updated_at?: string
@@ -1061,6 +1067,10 @@ export type Database = {
       is_project_member: {
         Args: { _project_id: string; _user_id: string }
         Returns: boolean
+      }
+      replace_project_schedule: {
+        Args: { p_acts: Json; p_meta: Json; p_project_id: string; p_rels: Json }
+        Returns: Json
       }
       seed_project_standard_folders: {
         Args: { _project_id: string; _user: string }

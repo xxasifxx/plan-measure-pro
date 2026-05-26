@@ -30,10 +30,12 @@ export function ComplianceStrip({ activities, relationships, cycles }: Props) {
       <span className="text-muted-foreground">NJDOT Compliance</span>
       <Pill ok={stats.negativeLags === 0} label={`Negative lags: ${stats.negativeLags}`} />
       <Pill ok={stats.openEnded === 0} label={`Open-ended: ${stats.openEnded}/${stats.totalTasks}`} />
-      <Pill ok={cycles.length === 0} label={`Cycles: ${cycles.length}`} />
+      <Pill ok={cycles.length === 0} label={`Cycles: ${cycles.reduce((n, c) => n + c.length, 0)}`} />
       <Pill ok={stats.missing === 0} label={`Missing M-codes: ${stats.missing}/${stats.milestones.length}`} />
       <span className="ml-auto text-muted-foreground normal-case">
-        {stats.milestones.filter(m => !m.present).map(m => m.code).join(' · ') || 'All NJDOT milestones present'}
+        {cycles.length > 0
+          ? `Cycle: ${cycles[0].slice(0, 3).join(' ↔ ')}${cycles[0].length > 3 ? '…' : ''}`
+          : stats.milestones.filter(m => !m.present).map(m => m.code).join(' · ') || 'All NJDOT milestones present'}
       </span>
     </div>
   );

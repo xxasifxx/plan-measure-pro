@@ -33,6 +33,8 @@ export interface ScheduleActivity {
   sort_order: number;
   pay_item_id: string | null;
   baseline_quantity: number | null;
+  manual_finish?: boolean;
+  remaining_duration_days?: number | null;
 }
 
 export interface ActivityRelationship {
