@@ -1,0 +1,16 @@
+# TakeoffPro
+
+> Digital quantity takeoff and construction inspection platform purpose-built for NJTA and NJDOT projects. Measure from PDF plans, track contract vs. measured quantities, and export audit-ready reports.
+
+TakeoffPro replaces paper DC forms with audit-ready digital records. It supports the NJTA 7th Edition 2016 Standard Specifications and is used by Org Owners, Project Managers, and Field Inspectors.
+
+## Pages
+
+- [Landing](/landing): Product overview, features, FAQ, and demo request.
+- [Interactive Demo](/demo): Standalone walkthrough of field setup and measurement.
+- [Sign in](/auth): Authentication for existing teams.
+
+## Optional
+
+- [MCFA Pitch](/mcfa): Partner-specific overview for MCFA.
+- [Fajar Pitch](/fajar): Partner-specific overview for Fajar.

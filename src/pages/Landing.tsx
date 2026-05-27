@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import heroScreenshot from '@/assets/hero-screenshot.jpg';
@@ -241,8 +241,59 @@ export default function Landing() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
+  useEffect(() => {
+    const prevTitle = document.title;
+    document.title = 'TakeoffPro for NJTA & NJDOT — Digital Quantity Takeoff';
+
+    const setMeta = (selector: string, attr: string, name: string, content: string) => {
+      let el = document.head.querySelector<HTMLMetaElement>(selector);
+      if (!el) {
+        el = document.createElement('meta');
+        el.setAttribute(attr, name);
+        document.head.appendChild(el);
+      }
+      el.setAttribute('content', content);
+      return el;
+    };
+
+    const desc = 'Replace paper DC forms with audit-ready digital takeoffs. Built for NJTA and NJDOT inspection teams — measure plans, track quantities, export reports.';
+    setMeta('meta[name="description"]', 'name', 'description', desc);
+    setMeta('meta[property="og:title"]', 'property', 'og:title', 'TakeoffPro for NJTA & NJDOT — Digital Quantity Takeoff');
+    setMeta('meta[property="og:description"]', 'property', 'og:description', desc);
+    setMeta('meta[property="og:url"]', 'property', 'og:url', 'https://draw-quantify-dash.lovable.app/landing');
+
+    let canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (!canonical) {
+      canonical = document.createElement('link');
+      canonical.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonical);
+    }
+    const prevCanonical = canonical.getAttribute('href');
+    canonical.setAttribute('href', 'https://draw-quantify-dash.lovable.app/landing');
+
+    const faqLd = document.createElement('script');
+    faqLd.type = 'application/ld+json';
+    faqLd.text = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    });
+    document.head.appendChild(faqLd);
+
+    return () => {
+      document.title = prevTitle;
+      if (prevCanonical) canonical?.setAttribute('href', prevCanonical);
+      faqLd.remove();
+    };
+  }, []);
+
   const scrollTo = (id: string) =>
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+
 
   const handleDemoSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
