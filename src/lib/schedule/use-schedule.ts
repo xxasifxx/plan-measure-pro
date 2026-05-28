@@ -214,22 +214,6 @@ export function useSchedule(projectId: string) {
     onSuccess: () => qc.invalidateQueries({ queryKey: ['schedule-meta', projectId] }),
   });
 
-  const importSchedule = useMutation({
-    mutationFn: async (imp: ImportedSchedule) => {
-      const { data, error } = await supabase.rpc('replace_project_schedule' as any, {
-        p_project_id: projectId,
-        p_acts: imp.activities as any,
-        p_rels: imp.relationships as any,
-        p_meta: imp.meta as any,
-        p_calendars: (imp.calendars || []) as any,
-        p_resources: (imp.resources || []) as any,
-        p_assignments: (imp.assignments || []) as any,
-      });
-      if (error) throw error;
-      return data as any;
-    },
-    onSuccess: invalidateAll,
-  });
 
   // ===== Calendars CRUD =====
   const upsertCalendar = useMutation({
