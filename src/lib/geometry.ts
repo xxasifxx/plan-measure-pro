@@ -6,7 +6,11 @@ export function distancePx(p1: PointXY, p2: PointXY): number {
 
 export function lineLength(points: PointXY[], pixelsPerFoot: number): number {
   if (points.length < 2) return 0;
-  return distancePx(points[0], points[1]) / pixelsPerFoot;
+  let totalPx = 0;
+  for (let i = 1; i < points.length; i++) {
+    totalPx += distancePx(points[i - 1], points[i]);
+  }
+  return totalPx / pixelsPerFoot;
 }
 
 // Shoelace formula for polygon area in pixels²

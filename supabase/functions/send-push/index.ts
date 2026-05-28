@@ -3,8 +3,13 @@
 // or directly by edge functions when a notification is created.
 import "https://deno.land/x/[email protected]/load.ts";
 import { createClient } from "https://esm.sh/@supabase/[email protected]";
-import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { z } from "https://esm.sh/[email protected]";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+};
 
 const FCM_SERVER_KEY = Deno.env.get("FCM_SERVER_KEY");
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
