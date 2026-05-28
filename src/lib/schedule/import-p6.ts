@@ -104,6 +104,8 @@ function xerConstraint(t?: string): ConstraintType | null {
     case 'CS_MEO':    return 'SNET';
     case 'CS_MEOA':   return 'SNET';
     case 'CS_MEOB':   return 'SNLT';
+    case 'CS_FNET':   return 'FNET';
+    case 'CS_FNLT':   return 'FNLT';
     case 'CS_MANDSTART': return 'MSO';
     case 'CS_MANDFIN':   return 'MFO';
     case 'CS_ALAP':   return 'ALAP';

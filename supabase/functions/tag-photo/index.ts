@@ -34,6 +34,14 @@ Deno.serve(async (req) => {
       .single();
     if (photoErr || !photo) return json({ error: "Photo not found" }, 404);
 
+    // M-7: verify the caller is still a member of the photo's project before
+    // we spend AI credits and surface pay-item suggestions for it.
+    const { data: isMember } = await supabase.rpc("is_project_member", {
+      _user_id: user.id,
+      _project_id: photo.project_id,
+    });
+    if (!isMember) return json({ error: "Forbidden" }, 403);
+
     const { data: payItems } = await supabase
       .from("pay_items")
       .select("id, item_code, name, unit")

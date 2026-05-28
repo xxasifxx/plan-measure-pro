@@ -104,8 +104,31 @@ export function useSchedule(projectId: string) {
     qc.invalidateQueries({ queryKey: ['schedule-baselines', projectId] });
   };
 
+  const importSchedule = useMutation({
+    mutationFn: async (imp: ImportedSchedule) => {
+      const { data, error } = await supabase.rpc('replace_project_schedule' as any, {
+        p_project_id: projectId,
+        p_acts: imp.activities as any,
+        p_rels: imp.relationships as any,
+        p_meta: imp.meta as any,
+        p_calendars: (imp.calendars || []) as any,
+        p_resources: (imp.resources || []) as any,
+        p_assignments: (imp.assignments || []) as any,
+      });
+      if (error) throw error;
+      return data as any;
+    },
+    onSuccess: invalidateAll,
+  });
+
   const upsertActivity = useMutation({
     mutationFn: async (patch: Partial<ScheduleActivity> & { id?: string }) => {
+      // M-6: refuse edits while an atomic schedule replace is in flight; the
+      // import wipes and re-creates rows so a concurrent update could target a
+      // UUID that no longer exists or one that's about to be replaced.
+      if (importSchedule.isPending) {
+        throw new Error('A schedule import is in progress — please wait for it to finish.');
+      }
       const workdays = calendarFrom(metaQ.data);
       if (patch.id) {
         const current = activitiesQ.data?.find(a => a.id === patch.id) || {};

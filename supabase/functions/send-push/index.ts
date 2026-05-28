@@ -25,6 +25,29 @@ const BodySchema = z.object({
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
+  // M-10: require either the service-role key (internal callers / DB triggers)
+  // or a valid signed-in user. Refuse anonymous public callers — otherwise
+  // anyone with the anon key could push arbitrary notifications to any user.
+  const authHeader = req.headers.get("Authorization") ?? "";
+  const bearer = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
+  const isService = bearer && bearer === SERVICE_ROLE;
+  if (!isService) {
+    if (!bearer) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const userClient = createClient(SUPABASE_URL, Deno.env.get("SUPABASE_ANON_KEY")!, {
+      global: { headers: { Authorization: authHeader } },
+    });
+    const { data: u, error: uErr } = await userClient.auth.getUser();
+    if (uErr || !u?.user?.id) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+  }
+
   if (!FCM_SERVER_KEY) {
     return new Response(
       JSON.stringify({ ok: false, skipped: true, reason: "FCM_SERVER_KEY not configured" }),

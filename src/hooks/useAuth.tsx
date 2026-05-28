@@ -27,14 +27,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [roles, setRoles] = useState<AppRole[]>([]);
   const [profile, setProfile] = useState<{ full_name: string; email: string } | null>(null);
 
+  const fetchedForRef = (typeof window !== 'undefined') ? (window as any).__authFetchRef ?? ((window as any).__authFetchRef = { current: null as string | null }) : { current: null as string | null };
+
   const fetchRolesAndProfile = useCallback(async (userId: string) => {
+    // L-4: avoid double-fire on boot when both onAuthStateChange and
+    // getSession resolve with the same session.
+    if (fetchedForRef.current === userId) return;
+    fetchedForRef.current = userId;
     const [rolesRes, profileRes] = await Promise.all([
       supabase.from('user_roles').select('role').eq('user_id', userId),
       supabase.from('profiles').select('full_name, email').eq('id', userId).single(),
     ]);
     if (rolesRes.data) setRoles(rolesRes.data.map(r => r.role as AppRole));
     if (profileRes.data) setProfile(profileRes.data);
-  }, []);
+  }, [fetchedForRef]);
 
   useEffect(() => {
     // Set up listener FIRST
