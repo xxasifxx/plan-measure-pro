@@ -92,6 +92,18 @@ function AuthRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+function AdminRoute({ children }: { children: React.ReactNode }) {
+  const { user, loading, isAdmin } = useAuth();
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full" />
+    </div>
+  );
+  if (!user) return <Navigate to="/landing" replace />;
+  if (!isAdmin) return <Navigate to="/" replace />;
+  return <>{children}</>;
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
@@ -117,7 +129,7 @@ const App = () => (
                 <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
                 <Route path="/project/:projectId" element={<ProtectedRoute><Index /></ProtectedRoute>} />
                 <Route path="/project/:projectId/controls" element={<ProtectedRoute><ProjectControls /></ProtectedRoute>} />
-                <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+                <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
                 <Route path="/re-review" element={<ProtectedRoute><ReReview /></ProtectedRoute>} />
                 <Route path="/project/:projectId/daily-report" element={<ProtectedRoute><DailyReport /></ProtectedRoute>} />
                 <Route path="/project/:projectId/p6-export" element={<ProtectedRoute><P6Export /></ProtectedRoute>} />
