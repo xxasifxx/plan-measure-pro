@@ -154,15 +154,19 @@ export function runCpm(
     let lf = projectFinish;
     for (const r of succs) {
       const s = byId.get(r.succ_activity_id)!;
+      // M-2: date arithmetic against the successor's LS/LF uses the successor's
+      // calendar, not the predecessor's. Without this, half-day calendars on
+      // either side produce off-by-one workday errors in the backward pass.
+      const succCal = calFor(s);
       const sLS = LS.get(s.id);
       const sLF = LF.get(s.id);
       if (!sLS || !sLF) continue;
       const lag = Number(r.lag_days || 0);
       let candidate: string;
-      if (r.rel_type === 'FS') candidate = addWorkdays(sLS, -lag, cal);
-      else if (r.rel_type === 'FF') candidate = addWorkdays(sLF, -lag, cal);
-      else if (r.rel_type === 'SS') candidate = addWorkdays(sLS, -lag + dur(a), cal);
-      else candidate = addWorkdays(sLF, -lag + dur(a), cal);
+      if (r.rel_type === 'FS') candidate = addWorkdays(sLS, -lag, succCal);
+      else if (r.rel_type === 'FF') candidate = addWorkdays(sLF, -lag, succCal);
+      else if (r.rel_type === 'SS') candidate = addWorkdays(sLS, -lag + dur(a), succCal);
+      else candidate = addWorkdays(sLF, -lag + dur(a), succCal);
       if (candidate < lf) lf = candidate;
     }
 

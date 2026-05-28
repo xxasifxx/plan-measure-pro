@@ -37,9 +37,15 @@ export function isWorkday(d: Date, input?: Set<number> | WorkCalendar): boolean 
 
 export function addWorkdays(iso: string, n: number, input?: Set<number> | WorkCalendar): string {
   const cal = asCal(input);
+  // L-3: guard against malformed calendars that have no working days.
+  if ((cal.workdays ?? DEFAULT_WORKDAYS).size === 0) {
+    throw new Error('addWorkdays: calendar has no working days');
+  }
   const d = parseISO(iso);
   while (!isWorkday(d, cal)) d.setUTCDate(d.getUTCDate() + 1);
-  let remaining = Math.round(n);
+  // M-1: preserve fractional lags conservatively (P6 rounds up partial days).
+  // For 0 < |n| < 1 this means at least one workday is consumed.
+  let remaining = n >= 0 ? Math.ceil(n) : -Math.ceil(-n);
   const dir = remaining >= 0 ? 1 : -1;
   remaining = Math.abs(remaining);
   let guard = 0;

@@ -7,7 +7,8 @@ export type OutboxEntity =
   | "annotation_photos"
   | "daily_reports"
   | "calibrations"
-  | "pay_items";
+  | "pay_items"
+  | "schedule_activities";
 
 export type OutboxOp = "insert" | "update" | "delete";
 

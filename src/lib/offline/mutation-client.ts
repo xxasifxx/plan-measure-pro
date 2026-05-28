@@ -29,6 +29,7 @@ async function applyMirror(entity: OutboxEntity, op: OutboxOp, rowId: string, mi
     daily_reports: "daily_reports",
     calibrations: "calibrations",
     pay_items: "pay_items",
+    schedule_activities: "schedule_activities",
   };
   const store = storeMap[entity];
   if (!store) return;
