@@ -1,0 +1,775 @@
+{
+  "_doc": "Per-activity verification recipes. Keyed by activity id (STREAM:slug). kind=auto|manual|infeasible. For manual, fill verifiedE2E true once you have observed the flow with seeded data. Re-run scripts/build-dev-wbs.mjs to propagate.",
+  "activities": {
+    "01:docs:organic-signup-admin-role": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "01:docs:invitation-flow": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "01:docs:roles-populated": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "01:docs:role-booleans-correct": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "01:mobile:biometric-gate": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "01:docs:password-reset": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "01:docs:rls-posture": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "01:remaining:assign-owner-role-is-called-in-both-auth-1": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "01:remaining:biometricgate-only-runs-the-native-path--2": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "01:remaining:the-resident-engineer-role-was-added-lat-3": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "01:remaining:resetpassword-tsx-46-shows-a-loading-rec-4": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "02:docs:ownership-member-union": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "02:docs:card-stats": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "02:docs:new-project-dialog": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "02:docs:delete-guard": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "02:docs:pm-inspector-detail": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "02:docs:role-badge": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "02:docs:inspector-empty-state": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "02:remaining:useprojects-fetches-all-annotations-for--1": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "02:remaining:totalpages-in-the-pm-inspector-detail-pa-2": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "02:remaining:no-react-query-cache-invalidation-when-a-3": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "02:remaining:loadpendingreviewcounts-fires-per-projec-4": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "03:docs:create-project-pdf-upload": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "03:docs:load-with-offline-fallback": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "03:docs:toc-drag-select": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "03:docs:pay-item-import": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "03:docs:specs-pdf-upload-indexing": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "03:docs:toc-pay-items-survive-reload": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "03:remaining:extractpayitemsfrompage-is-a-pure-heuris-1": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "03:remaining:toc-parsing-uses-a-hardcoded-5px-y-group-2": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "03:remaining:the-up-to-4-subsequent-pages-pay-item-sc-3": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "03:remaining:specs-storage-path-is-uploaded-with-upse-4": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "04:docs:drawable-flag": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "04:docs:delete-cascade": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "04:docs:edit-inline": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "04:docs:db-persistence": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "04:docs:section-keyed-colors": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "04:docs:contract-quantity-denominator": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "04:docs:contract-modifications": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "04:remaining:updatepayitems-issues-full-delete-bulk-i-1": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "04:remaining:no-contract-modification-workflow-exists-2": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "04:remaining:pay-item-color-auto-assigned-from-sectio-3": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "04:remaining:cascade-deletion-done-client-side-via-n--4": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "05:docs:scale-calibration": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "05:docs:polygon-with-cy-depth-prompt": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "05:docs:drag-handle-editing": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "05:docs:undo-redo-with-db-sync": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "05:docs:realtime-multi-user-sync": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "05:docs:gps-calibration-overlay": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "05:docs:manual-quantity-override": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "05:docs:readonly-mode": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "05:remaining:pdfcanvas-is-1-426-lines-with-pointer-to-1": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "05:remaining:buildgeocalibration-silently-throws-on-d-2": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "05:remaining:undo-stack-is-per-session-and-per-device-3": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "05:remaining:copy-calibration-to-pages-does-a-bulk-db-4": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "06:remaining:daily-report-snapshots-table-missing-fro-1": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "06:remaining:role-enforcement-is-client-only-useappro-2": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "06:remaining:rejected-at-not-cleared-on-reopen-usedai-3": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "06:remaining:no-push-notification-to-inspector-on-re--4": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "07:remaining:projectcontrols-variance-uses-raw-annota-1": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "07:remaining:summarypanel-operates-on-live-annotation-2": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "07:remaining:no-payment-period-scoping-there-is-no-da-3": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "07:remaining:view-definition-not-in-repo-v-approved-p-4": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "08:remaining:annotation-id-linkage-is-missing-in-prac-1": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "08:remaining:ai-call-is-fire-and-forget-with-no-retry-2": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "08:remaining:gallery-lives-only-in-projectcontrols-th-3": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "08:remaining:offline-blob-serialization-unresolved-in-4": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "09:remaining:entire-pdf-loaded-into-memory-pdfjs-dist-1": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "09:remaining:search-highlight-is-canvas-drawn-not-dom-2": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "09:remaining:extractalltext-runs-on-the-main-thread-t-3": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "09:remaining:no-spec-pdf-upload-ui-in-this-stream-spe-4": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "10:remaining:fetchdocumentversions-fetches-all-projec-1": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "10:remaining:blob-orphan-risk-on-insert-failure-runup-2": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "10:remaining:no-folder-level-permission-model-all-fol-3": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "10:remaining:preview-uses-signed-urls-with-1-hour-ttl-4": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "11:remaining:drag-mutation-race-ganttchart-tsx-88-mut-1": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "11:remaining:as-any-casts-on-every-supabase-call-gene-2": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "11:remaining:cpm-not-persisted-automatically-persistc-3": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "11:remaining:tia-narrative-is-a-static-template-build-4": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "12:remaining:hardcoded-cpi-spi-primary-schedule-kpi-t-1": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "12:remaining:computeexpectedpct-provenance-unclear-da-2": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "12:remaining:no-pagination-on-scorecard-metrics-limit-3": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "12:remaining:photo-ai-confidence-threshold-not-enforc-4": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "13:remaining:no-round-trip-test-suite-p6-import-compa-1": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "13:remaining:applydailyreportstop6-mutates-the-live-d-2": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "13:remaining:jspdf-doc-save-bypasses-saveexport-write-3": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "13:remaining:as-of-date-cutoff-is-ui-only-never-valid-4": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "14:remaining:pixelsperfoot-is-a-single-global-scalar--1": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "14:remaining:estimateerror-reports-pixels-not-feet-do-2": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "14:remaining:no-coordinate-normalization-spec-pdfcanv-3": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "14:remaining:kalman-state-is-in-memory-only-kalmansta-4": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "15:remaining:daily-reports-capped-at-30-rows-inspecto-1": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "15:remaining:no-conflict-resolution-ui-outboxstatus-i-2": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "15:remaining:idb-schema-is-v2-with-no-documented-migr-3": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "15:remaining:jspdf-save-bypass-generated-pdfs-aren-t--4": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "16:docs:tab-switching-pdf-persistence": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "16:docs:active-pay-item-chip": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "16:docs:badge-counts": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "16:docs:zoom-clamp": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "16:docs:calibration-chip-tap": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "16:remaining:no-enforced-minimum-touch-target-size-on-1": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "16:remaining:useismobile-uses-hard-768-px-breakpoint--2": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "16:remaining:mobiletoolbar-duplicates-zoom-logic-from-3": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "16:remaining:demo-tsx-reimplements-full-mobile-layout-4": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "17:docs:bell-realtime-subscribe": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "17:docs:markread-markallread": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "17:docs:navigation-on-click": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "17:mobile:native-push-registration": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "17:docs:send-push-edge-function": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "17:docs:presence-online-users": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "17:remaining:no-confirmed-trigger-that-auto-inserts-i-1": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "17:remaining:presence-name-always-online-user-list-sh-2": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "17:remaining:usenotifications-polls-every-60s-on-web--3": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "17:remaining:send-push-reads-fcm-server-key-but-fcm-h-4": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "18:docs:negative-lag-m-code-check": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "18:docs:dcma-14-point": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "18:docs:approve-reject-timestamps-reviewer": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "18:docs:snapshot-freeze": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "18:docs:drift-detection": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "18:remaining:m-code-detection-relies-on-activity-id-p-1": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "18:remaining:approval-fields-are-plain-mutable-column-2": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "18:remaining:dcma-runs-client-side-on-full-activity-s-3": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "18:remaining:reject-reason-is-freeform-with-no-charac-4": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "19:docs:welcomecarousel-gating": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "19:docs:role-filtering": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "19:docs:guided-tour-auto-start": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "19:docs:demo-12-step-walkthrough": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "19:docs:nativefirstrun-shown-once": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "19:remaining:guidedtour-polls-queryselector-every-500-1": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "19:remaining:usetour-stores-completion-only-in-locals-2": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "19:remaining:welcomecarousel-hard-codes-5-slides-addi-3": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "19:remaining:demo-tsx-is-400-lines-of-standalone-work-4": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "20:docs:landing-page": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "20:docs:demo-cta-linkage": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "20:docs:mcfapitch-fajarpitch": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "20:docs:p6xmldemo": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "20:docs:sitemap-xml-completeness": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "20:docs:llms-txt-accuracy": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "20:remaining:demo-requests-table-referenced-but-no-mi-1": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "20:remaining:fajarpitch-tsx-uses-deterministic-seed-t-2": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "20:remaining:mcfapitch-and-fajarpitch-hard-code-propo-3": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "20:remaining:llms-txt-and-sitemap-xml-hard-code-produ-4": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "21:promise:prom-1": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "21:promise:prom-2": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "21:promise:prom-3": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "21:promise:prom-4": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "21:promise:prom-5": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "21:promise:prom-6": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "21:promise:prom-7": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "21:promise:prom-8": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "99:cross:xer-ingest-scrapped": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "99:cross:pmxml-pivot": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "99:cross:comprehension-pass": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    },
+    "99:cross:dev-wbs-authoring": {
+      "kind": "manual",
+      "verifiedE2E": false,
+      "recipe": null
+    }
+  }
+}

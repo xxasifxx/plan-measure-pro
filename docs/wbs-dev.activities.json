@@ -1,0 +1,3441 @@
+{
+  "generatedAt": "2026-05-29T15:13:37.827Z",
+  "totals": {
+    "activities": 154,
+    "completed": 2,
+    "inProgress": 63,
+    "notStarted": 89,
+    "verifiedE2E": 2,
+    "codeOnlyDowngraded": 61,
+    "marketingDebtItems": 8
+  },
+  "strictCompletionPct": 1,
+  "activities": [
+    {
+      "id": "01:docs:organic-signup-admin-role",
+      "wbs": "01-identity-and-access/Docs",
+      "name": "Organic signup → admin role",
+      "stream": "Identity & Access",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "Auth.tsx",
+        "useAuth.tsx"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "01:docs:invitation-flow",
+      "wbs": "01-identity-and-access/Docs",
+      "name": "Invitation flow",
+      "stream": "Identity & Access",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "Auth.tsx"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "01:docs:roles-populated",
+      "wbs": "01-identity-and-access/Docs",
+      "name": "Roles populated",
+      "stream": "Identity & Access",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "useAuth.tsx"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "01:docs:role-booleans-correct",
+      "wbs": "01-identity-and-access/Docs",
+      "name": "Role booleans correct",
+      "stream": "Identity & Access",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "useAuth.tsx"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "01:mobile:biometric-gate",
+      "wbs": "01-identity-and-access/Mobile",
+      "name": "Biometric gate",
+      "stream": "Identity & Access",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "BiometricGate.tsx"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "01:docs:password-reset",
+      "wbs": "01-identity-and-access/Docs",
+      "name": "Password reset",
+      "stream": "Identity & Access",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "ResetPassword.tsx"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "01:docs:rls-posture",
+      "wbs": "01-identity-and-access/Docs",
+      "name": "RLS posture",
+      "stream": "Identity & Access",
+      "verdict": "partial",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 30,
+      "evidence": [],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "01:remaining:assign-owner-role-is-called-in-both-auth-1",
+      "wbs": "01-identity-and-access/Remaining",
+      "name": "`assign_owner_role` is called in both `Auth.tsx:103` and `useAuth.tsx:55` — one of these will always be a redundant no-o",
+      "stream": "Identity & Access",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "01:remaining:biometricgate-only-runs-the-native-path--2",
+      "wbs": "01-identity-and-access/Remaining",
+      "name": "`BiometricGate` only runs the native path; there is no web-equivalent MFA or session idle timeout, leaving browser sessi",
+      "stream": "Identity & Access",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 5,
+      "source": "brief-risk"
+    },
+    {
+      "id": "01:remaining:the-resident-engineer-role-was-added-lat-3",
+      "wbs": "01-identity-and-access/Remaining",
+      "name": "The `resident_engineer` role was added late and backfilled to all existing admins — new user invitations do not expose a",
+      "stream": "Identity & Access",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "01:remaining:resetpassword-tsx-46-shows-a-loading-rec-4",
+      "wbs": "01-identity-and-access/Remaining",
+      "name": "`ResetPassword.tsx:46` shows a \"Loading recovery session…\" spinner indefinitely if `PASSWORD_RECOVERY` never fires (e.g.",
+      "stream": "Identity & Access",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "02:docs:ownership-member-union",
+      "wbs": "02-portfolio-and-pm-home/Docs",
+      "name": "Ownership + member union",
+      "stream": "Portfolio & PM Home",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "useProjects.ts"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "02:docs:card-stats",
+      "wbs": "02-portfolio-and-pm-home/Docs",
+      "name": "Card stats",
+      "stream": "Portfolio & PM Home",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "useProjects.ts",
+        "Dashboard.tsx"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "02:docs:new-project-dialog",
+      "wbs": "02-portfolio-and-pm-home/Docs",
+      "name": "New Project dialog",
+      "stream": "Portfolio & PM Home",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "Dashboard.tsx"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "02:docs:delete-guard",
+      "wbs": "02-portfolio-and-pm-home/Docs",
+      "name": "Delete guard",
+      "stream": "Portfolio & PM Home",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "Dashboard.tsx"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "02:docs:pm-inspector-detail",
+      "wbs": "02-portfolio-and-pm-home/Docs",
+      "name": "PM inspector detail",
+      "stream": "Portfolio & PM Home",
+      "verdict": "partial",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 30,
+      "evidence": [
+        "Dashboard.tsx"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "02:docs:role-badge",
+      "wbs": "02-portfolio-and-pm-home/Docs",
+      "name": "Role badge",
+      "stream": "Portfolio & PM Home",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "Dashboard.tsx"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "02:docs:inspector-empty-state",
+      "wbs": "02-portfolio-and-pm-home/Docs",
+      "name": "Inspector empty state",
+      "stream": "Portfolio & PM Home",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "Dashboard.tsx"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "02:remaining:useprojects-fetches-all-annotations-for--1",
+      "wbs": "02-portfolio-and-pm-home/Remaining",
+      "name": "`useProjects` fetches all annotations for all user projects in a single unbounded query — will be slow/expensive at scal",
+      "stream": "Portfolio & PM Home",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "02:remaining:totalpages-in-the-pm-inspector-detail-pa-2",
+      "wbs": "02-portfolio-and-pm-home/Remaining",
+      "name": "`totalPages` in the PM inspector detail panel is hardcoded to `0` (`Dashboard.tsx:154`), making the \"pages annotated\" de",
+      "stream": "Portfolio & PM Home",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "02:remaining:no-react-query-cache-invalidation-when-a-3",
+      "wbs": "02-portfolio-and-pm-home/Remaining",
+      "name": "No React Query cache invalidation when a team member adds annotations in another session; `staleTime` defaults cause sta",
+      "stream": "Portfolio & PM Home",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "02:remaining:loadpendingreviewcounts-fires-per-projec-4",
+      "wbs": "02-portfolio-and-pm-home/Remaining",
+      "name": "`loadPendingReviewCounts` fires per-project-list render with all project IDs as a comma-joined cache key, recomputing on",
+      "stream": "Portfolio & PM Home",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "03:docs:create-project-pdf-upload",
+      "wbs": "03-project-onboarding/Docs",
+      "name": "Create project / PDF upload",
+      "stream": "Project Onboarding",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "useProjects.ts"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "03:docs:load-with-offline-fallback",
+      "wbs": "03-project-onboarding/Docs",
+      "name": "Load with offline fallback",
+      "stream": "Project Onboarding",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "Index.tsx"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "03:docs:toc-drag-select",
+      "wbs": "03-project-onboarding/Docs",
+      "name": "TOC drag-select",
+      "stream": "Project Onboarding",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "PdfCanvas.tsx",
+        "Index.tsx",
+        "pdf-utils.ts"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "03:docs:pay-item-import",
+      "wbs": "03-project-onboarding/Docs",
+      "name": "Pay-item import",
+      "stream": "Project Onboarding",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "03:docs:specs-pdf-upload-indexing",
+      "wbs": "03-project-onboarding/Docs",
+      "name": "Specs PDF upload + indexing",
+      "stream": "Project Onboarding",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "Index.tsx"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "03:docs:toc-pay-items-survive-reload",
+      "wbs": "03-project-onboarding/Docs",
+      "name": "TOC / pay-items survive reload",
+      "stream": "Project Onboarding",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "useProject.ts",
+        "useProject.ts"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "03:remaining:extractpayitemsfrompage-is-a-pure-heuris-1",
+      "wbs": "03-project-onboarding/Remaining",
+      "name": "`extractPayItemsFromPage` is a pure heuristic regex scan of PDF text layers; non-standard table layouts (rotated text, s",
+      "stream": "Project Onboarding",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "03:remaining:toc-parsing-uses-a-hardcoded-5px-y-group-2",
+      "wbs": "03-project-onboarding/Remaining",
+      "name": "TOC parsing uses a hardcoded 5px Y-grouping tolerance and `console.log` debug noise in production — no structured loggin",
+      "stream": "Project Onboarding",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "03:remaining:the-up-to-4-subsequent-pages-pay-item-sc-3",
+      "wbs": "03-project-onboarding/Remaining",
+      "name": "The \"Up to 4 subsequent pages\" pay-item scan is a magic number with no UI indication of where the scan stopped.",
+      "stream": "Project Onboarding",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "03:remaining:specs-storage-path-is-uploaded-with-upse-4",
+      "wbs": "03-project-onboarding/Remaining",
+      "name": "`specs_storage_path` is uploaded with `upsert: true` at fixed path `{projectId}/specs.pdf` — concurrent uploads silently",
+      "stream": "Project Onboarding",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "04:docs:drawable-flag",
+      "wbs": "04-pay-item-catalog/Docs",
+      "name": "drawable flag",
+      "stream": "Pay Item Catalog",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "types/project.ts",
+        "Toolbar.tsx"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "04:docs:delete-cascade",
+      "wbs": "04-pay-item-catalog/Docs",
+      "name": "Delete cascade",
+      "stream": "Pay Item Catalog",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "ProjectSidebar.tsx",
+        "useProject.ts"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "04:docs:edit-inline",
+      "wbs": "04-pay-item-catalog/Docs",
+      "name": "Edit inline",
+      "stream": "Pay Item Catalog",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "ProjectSidebar.tsx"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "04:docs:db-persistence",
+      "wbs": "04-pay-item-catalog/Docs",
+      "name": "DB persistence",
+      "stream": "Pay Item Catalog",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "useProject.ts"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "04:docs:section-keyed-colors",
+      "wbs": "04-pay-item-catalog/Docs",
+      "name": "Section-keyed colors",
+      "stream": "Pay Item Catalog",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "pdf-utils.ts"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "04:docs:contract-quantity-denominator",
+      "wbs": "04-pay-item-catalog/Docs",
+      "name": "Contract quantity denominator",
+      "stream": "Pay Item Catalog",
+      "verdict": "partial",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 30,
+      "evidence": [],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "04:docs:contract-modifications",
+      "wbs": "04-pay-item-catalog/Docs",
+      "name": "Contract modifications",
+      "stream": "Pay Item Catalog",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "04:remaining:updatepayitems-issues-full-delete-bulk-i-1",
+      "wbs": "04-pay-item-catalog/Remaining",
+      "name": "`updatePayItems` issues full `DELETE` + bulk `INSERT` on every change — data-loss race if two users edit pay items concu",
+      "stream": "Pay Item Catalog",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "04:remaining:no-contract-modification-workflow-exists-2",
+      "wbs": "04-pay-item-catalog/Remaining",
+      "name": "No contract-modification workflow exists; no audit trail for `contract_quantity` bumps.",
+      "stream": "Pay Item Catalog",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 2,
+      "source": "brief-risk"
+    },
+    {
+      "id": "04:remaining:pay-item-color-auto-assigned-from-sectio-3",
+      "wbs": "04-pay-item-catalog/Remaining",
+      "name": "Pay-item color auto-assigned from `SECTION_COLORS` at import; no per-item color picker on mobile.",
+      "stream": "Pay Item Catalog",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "04:remaining:cascade-deletion-done-client-side-via-n--4",
+      "wbs": "04-pay-item-catalog/Remaining",
+      "name": "Cascade deletion done client-side via N individual `offlineMutate` calls, not a single server-side DELETE; unreliable on",
+      "stream": "Pay Item Catalog",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 5,
+      "source": "brief-risk"
+    },
+    {
+      "id": "05:docs:scale-calibration",
+      "wbs": "05-field-capture/Docs",
+      "name": "Scale calibration",
+      "stream": "Field Capture",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "PdfCanvas.tsx",
+        "Toolbar.tsx"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "05:docs:polygon-with-cy-depth-prompt",
+      "wbs": "05-field-capture/Docs",
+      "name": "Polygon with CY depth prompt",
+      "stream": "Field Capture",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "PdfCanvas.tsx"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "05:docs:drag-handle-editing",
+      "wbs": "05-field-capture/Docs",
+      "name": "Drag-handle editing",
+      "stream": "Field Capture",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "PdfCanvas.tsx",
+        "PdfCanvas.tsx"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "05:docs:undo-redo-with-db-sync",
+      "wbs": "05-field-capture/Docs",
+      "name": "Undo/redo with DB sync",
+      "stream": "Field Capture",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "useProject.ts"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "05:docs:realtime-multi-user-sync",
+      "wbs": "05-field-capture/Docs",
+      "name": "Realtime multi-user sync",
+      "stream": "Field Capture",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "useProject.ts",
+        "useProject.ts"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "05:docs:gps-calibration-overlay",
+      "wbs": "05-field-capture/Docs",
+      "name": "GPS calibration overlay",
+      "stream": "Field Capture",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "GpsCalibration.tsx",
+        "GpsTraceControls.tsx",
+        "PdfCanvas.tsx"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "05:docs:manual-quantity-override",
+      "wbs": "05-field-capture/Docs",
+      "name": "Manual quantity override",
+      "stream": "Field Capture",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "PdfCanvas.tsx"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "05:docs:readonly-mode",
+      "wbs": "05-field-capture/Docs",
+      "name": "readOnly mode",
+      "stream": "Field Capture",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "Index.tsx",
+        "Toolbar.tsx"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "05:remaining:pdfcanvas-is-1-426-lines-with-pointer-to-1",
+      "wbs": "05-field-capture/Remaining",
+      "name": "`PdfCanvas` is 1,426 lines with pointer/touch/draw/GPS/TOC/drag logic co-located — extremely hard to test in isolation.",
+      "stream": "Field Capture",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 2,
+      "source": "brief-risk"
+    },
+    {
+      "id": "05:remaining:buildgeocalibration-silently-throws-on-d-2",
+      "wbs": "05-field-capture/Remaining",
+      "name": "`buildGeoCalibration` silently throws on degenerate transforms (`GpsCalibration.tsx:72–79`); no diagnostic when affine m",
+      "stream": "Field Capture",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "05:remaining:undo-stack-is-per-session-and-per-device-3",
+      "wbs": "05-field-capture/Remaining",
+      "name": "Undo stack is per-session and per-device only; undoing on one device does not roll back another user's view.",
+      "stream": "Field Capture",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "05:remaining:copy-calibration-to-pages-does-a-bulk-db-4",
+      "wbs": "05-field-capture/Remaining",
+      "name": "\"Copy calibration to pages\" does a bulk DB delete + re-insert with no confirmation of which pages were overwritten.",
+      "stream": "Field Capture",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "06:remaining:daily-report-snapshots-table-missing-fro-1",
+      "wbs": "06-daily-report-lifecycle/Remaining",
+      "name": "**`daily_report_snapshots` table missing from generated types** — queried with `as any` cast; if the table doesn't exist",
+      "stream": "Daily Report Lifecycle",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "06:remaining:role-enforcement-is-client-only-useappro-2",
+      "wbs": "06-daily-report-lifecycle/Remaining",
+      "name": "**Role enforcement is client-only** — `useApproveReport`/`useRejectReport` do a plain `update` with no server-side RLS p",
+      "stream": "Daily Report Lifecycle",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-risk"
+    },
+    {
+      "id": "06:remaining:rejected-at-not-cleared-on-reopen-usedai-3",
+      "wbs": "06-daily-report-lifecycle/Remaining",
+      "name": "**`rejected_at` not cleared on reopen** — `useDailyReport.reopen` only sets `status: 'draft'`; `rejected_at` and `reject",
+      "stream": "Daily Report Lifecycle",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 2,
+      "source": "brief-risk"
+    },
+    {
+      "id": "06:remaining:no-push-notification-to-inspector-on-re--4",
+      "wbs": "06-daily-report-lifecycle/Remaining",
+      "name": "**No push notification to inspector on RE decision** — `useApproveReport` and `useRejectReport` only invalidate React Qu",
+      "stream": "Daily Report Lifecycle",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "07:remaining:projectcontrols-variance-uses-raw-annota-1",
+      "wbs": "07-quantity-to-payment/Remaining",
+      "name": "**ProjectControls variance uses raw annotations, not approved quantities** — `ProjectControls.tsx:180-187` sums `manual_",
+      "stream": "Quantity to Payment",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "07:remaining:summarypanel-operates-on-live-annotation-2",
+      "wbs": "07-quantity-to-payment/Remaining",
+      "name": "**SummaryPanel operates on live annotations, not `v_approved_pay_item_quantities`** — the embedded summary in the main t",
+      "stream": "Quantity to Payment",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "07:remaining:no-payment-period-scoping-there-is-no-da-3",
+      "wbs": "07-quantity-to-payment/Remaining",
+      "name": "**No payment-period scoping** — there is no date-range filter on approved quantity exports; a pay estimate must be compu",
+      "stream": "Quantity to Payment",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "07:remaining:view-definition-not-in-repo-v-approved-p-4",
+      "wbs": "07-quantity-to-payment/Remaining",
+      "name": "**View definition not in repo** — `v_approved_pay_item_quantities` is consumed everywhere but its SQL is not in `supabas",
+      "stream": "Quantity to Payment",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-risk"
+    },
+    {
+      "id": "08:remaining:annotation-id-linkage-is-missing-in-prac-1",
+      "wbs": "08-photo-evidence/Remaining",
+      "name": "**`annotation_id` linkage is missing in practice** — the `by_annotation` IndexedDB index implies photos should be tied t",
+      "stream": "Photo Evidence",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "08:remaining:ai-call-is-fire-and-forget-with-no-retry-2",
+      "wbs": "08-photo-evidence/Remaining",
+      "name": "**AI call is fire-and-forget with no retry** — if `tag-photo` fails (rate limit, credits exhausted), the error is swallo",
+      "stream": "Photo Evidence",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "08:remaining:gallery-lives-only-in-projectcontrols-th-3",
+      "wbs": "08-photo-evidence/Remaining",
+      "name": "**Gallery lives only in ProjectControls** — the photo tab is buried in the PM-facing controls hub; inspectors using `Dai",
+      "stream": "Photo Evidence",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "08:remaining:offline-blob-serialization-unresolved-in-4",
+      "wbs": "08-photo-evidence/Remaining",
+      "name": "**Offline blob serialization unresolved** — IndexedDB store exists but camera blob is never serialized to it; offline ca",
+      "stream": "Photo Evidence",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 5,
+      "source": "brief-risk"
+    },
+    {
+      "id": "09:remaining:entire-pdf-loaded-into-memory-pdfjs-dist-1",
+      "wbs": "09-standard-specifications/Remaining",
+      "name": "**Entire PDF loaded into memory** — `pdfjs-dist` loads the full binary; a 1,200-page NJDOT spec PDF can consume 200–400 ",
+      "stream": "Standard Specifications",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "09:remaining:search-highlight-is-canvas-drawn-not-dom-2",
+      "wbs": "09-standard-specifications/Remaining",
+      "name": "**Search highlight is canvas-drawn, not DOM-native** — the highlight overlay re-renders the entire page canvas on every ",
+      "stream": "Standard Specifications",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 5,
+      "source": "brief-risk"
+    },
+    {
+      "id": "09:remaining:extractalltext-runs-on-the-main-thread-t-3",
+      "wbs": "09-standard-specifications/Remaining",
+      "name": "**`extractAllText` runs on the main thread** — though batched, there is no Web Worker; a 900-page extraction still block",
+      "stream": "Standard Specifications",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "09:remaining:no-spec-pdf-upload-ui-in-this-stream-spe-4",
+      "wbs": "09-standard-specifications/Remaining",
+      "name": "**No spec PDF upload UI in this stream** — `specs_storage_path` must be set externally (e.g., through the admin panel or",
+      "stream": "Standard Specifications",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "10:remaining:fetchdocumentversions-fetches-all-projec-1",
+      "wbs": "10-document-management/Remaining",
+      "name": "**`fetchDocumentVersions` fetches all project documents** — the version-chain query selects the entire `documents` table",
+      "stream": "Document Management",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "10:remaining:blob-orphan-risk-on-insert-failure-runup-2",
+      "wbs": "10-document-management/Remaining",
+      "name": "**Blob orphan risk on insert failure** — `runUploads` in `Documents.tsx` does a best-effort `remove` on insert failure, ",
+      "stream": "Document Management",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "10:remaining:no-folder-level-permission-model-all-fol-3",
+      "wbs": "10-document-management/Remaining",
+      "name": "**No folder-level permission model** — all folders within a project share the same manager/inspector role split; there i",
+      "stream": "Document Management",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "10:remaining:preview-uses-signed-urls-with-1-hour-ttl-4",
+      "wbs": "10-document-management/Remaining",
+      "name": "**Preview uses signed URLs with 1-hour TTL** — if a user keeps a preview modal open for > 1 hour (e.g., reviewing a larg",
+      "stream": "Document Management",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-risk"
+    },
+    {
+      "id": "11:remaining:drag-mutation-race-ganttchart-tsx-88-mut-1",
+      "wbs": "11-schedule-management/Remaining",
+      "name": "**Drag mutation race** — `GanttChart.tsx:88` mutates `cpm.byId` in-place during drag; parent re-render resets position s",
+      "stream": "Schedule Management",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "11:remaining:as-any-casts-on-every-supabase-call-gene-2",
+      "wbs": "11-schedule-management/Remaining",
+      "name": "**`as any` casts on every Supabase call** — generated types don't yet include schedule tables; full persistence layer un",
+      "stream": "Schedule Management",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "11:remaining:cpm-not-persisted-automatically-persistc-3",
+      "wbs": "11-schedule-management/Remaining",
+      "name": "**CPM not persisted automatically** — `persistCpm` is a separate manual mutation; tab close after import leaves `is_crit",
+      "stream": "Schedule Management",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "11:remaining:tia-narrative-is-a-static-template-build-4",
+      "wbs": "11-schedule-management/Remaining",
+      "name": "**TIA narrative is a static template** — `buildTia` (tia.ts:23) inserts only the first direct successor; multi-path impa",
+      "stream": "Schedule Management",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "12:remaining:hardcoded-cpi-spi-primary-schedule-kpi-t-1",
+      "wbs": "12-project-health-and-controls/Remaining",
+      "name": "**Hardcoded CPI/SPI** — primary schedule KPI tile shows `CPI 1.03 · SPI 0.98` unconditionally; real values from `analysi",
+      "stream": "Project Health and Controls",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "12:remaining:computeexpectedpct-provenance-unclear-da-2",
+      "wbs": "12-project-health-and-controls/Remaining",
+      "name": "**`computeExpectedPct` provenance unclear** — `dashboard` memo calls it but function is not visible in first 389 lines; ",
+      "stream": "Project Health and Controls",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "12:remaining:no-pagination-on-scorecard-metrics-limit-3",
+      "wbs": "12-project-health-and-controls/Remaining",
+      "name": "**No pagination on scorecard metrics** — `limit(60)` silently drops older data on long-running projects.",
+      "stream": "Project Health and Controls",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "12:remaining:photo-ai-confidence-threshold-not-enforc-4",
+      "wbs": "12-project-health-and-controls/Remaining",
+      "name": "**Photo AI confidence threshold not enforced** — `ai_confidence` read but never used to filter or warn in UI.",
+      "stream": "Project Health and Controls",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "13:remaining:no-round-trip-test-suite-p6-import-compa-1",
+      "wbs": "13-data-export-and-interoperability/Remaining",
+      "name": "**No round-trip test suite** — P6 import compatibility asserted only in comments; schema regression caught only by contr",
+      "stream": "Data Export and Interoperability",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 2,
+      "source": "brief-risk"
+    },
+    {
+      "id": "13:remaining:applydailyreportstop6-mutates-the-live-d-2",
+      "wbs": "13-data-export-and-interoperability/Remaining",
+      "name": "**`applyDailyReportsToP6` mutates the live DOM** — shared state; double-apply stacks silently.",
+      "stream": "Data Export and Interoperability",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "13:remaining:jspdf-doc-save-bypasses-saveexport-write-3",
+      "wbs": "13-data-export-and-interoperability/Remaining",
+      "name": "**`jsPDF` `doc.save()` bypasses `saveExport`** — `writePdfFromRows` calls `doc.save()` directly; on native, PDF goes to ",
+      "stream": "Data Export and Interoperability",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 5,
+      "source": "brief-risk"
+    },
+    {
+      "id": "13:remaining:as-of-date-cutoff-is-ui-only-never-valid-4",
+      "wbs": "13-data-export-and-interoperability/Remaining",
+      "name": "**`as-of-date` cutoff is UI-only** — never validated server-side; blank value returns all-time approved quantities.",
+      "stream": "Data Export and Interoperability",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "14:remaining:pixelsperfoot-is-a-single-global-scalar--1",
+      "wbs": "14-measurement-and-geometry-engine/Remaining",
+      "name": "**`pixelsPerFoot` is a single global scalar** — assumes uniform scale; scanned/tilted drawings produce systematic invisi",
+      "stream": "Measurement and Geometry Engine",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "14:remaining:estimateerror-reports-pixels-not-feet-do-2",
+      "wbs": "14-measurement-and-geometry-engine/Remaining",
+      "name": "**`estimateError` reports pixels, not feet** — docstring says \"rough feet\" but returns plan-pixel residual (geo-transfor",
+      "stream": "Measurement and Geometry Engine",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "14:remaining:no-coordinate-normalization-spec-pdfcanv-3",
+      "wbs": "14-measurement-and-geometry-engine/Remaining",
+      "name": "**No coordinate normalization spec** — `PdfCanvas.tsx` renders raw pixel coordinates; zoom-independent normalization ref",
+      "stream": "Measurement and Geometry Engine",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "14:remaining:kalman-state-is-in-memory-only-kalmansta-4",
+      "wbs": "14-measurement-and-geometry-engine/Remaining",
+      "name": "**Kalman state is in-memory only** — `KalmanState` never persisted; filter cold-starts on every `GpsTraceControls` remou",
+      "stream": "Measurement and Geometry Engine",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "15:remaining:daily-reports-capped-at-30-rows-inspecto-1",
+      "wbs": "15-offline-and-native-durability/Remaining",
+      "name": "**`daily_reports` capped at 30 rows** — inspectors reviewing older history offline see gaps with no warning.",
+      "stream": "Offline and Native Durability",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 5,
+      "source": "brief-risk"
+    },
+    {
+      "id": "15:remaining:no-conflict-resolution-ui-outboxstatus-i-2",
+      "wbs": "15-offline-and-native-durability/Remaining",
+      "name": "**No conflict resolution UI** — `OutboxStatus` includes `\"conflict\"` but `mutation-client.ts` never sets it; conflicts l",
+      "stream": "Offline and Native Durability",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "15:remaining:idb-schema-is-v2-with-no-documented-migr-3",
+      "wbs": "15-offline-and-native-durability/Remaining",
+      "name": "**IDB schema is v2 with no documented migration path** — `getDB` only handles `oldVersion < 1` and `< 2`; a future v3 ri",
+      "stream": "Offline and Native Durability",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-risk"
+    },
+    {
+      "id": "15:remaining:jspdf-save-bypass-generated-pdfs-aren-t--4",
+      "wbs": "15-offline-and-native-durability/Remaining",
+      "name": "**`jsPDF.save()` bypass** — generated PDFs aren't warmable and won't be available offline.",
+      "stream": "Offline and Native Durability",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 5,
+      "source": "brief-risk"
+    },
+    {
+      "id": "16:docs:tab-switching-pdf-persistence",
+      "wbs": "16-mobile-field-ergonomics/Docs",
+      "name": "Tab switching / PDF persistence",
+      "stream": "Mobile Field Ergonomics",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "16:docs:active-pay-item-chip",
+      "wbs": "16-mobile-field-ergonomics/Docs",
+      "name": "Active pay item chip",
+      "stream": "Mobile Field Ergonomics",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "16:docs:badge-counts",
+      "wbs": "16-mobile-field-ergonomics/Docs",
+      "name": "Badge counts",
+      "stream": "Mobile Field Ergonomics",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "16:docs:zoom-clamp",
+      "wbs": "16-mobile-field-ergonomics/Docs",
+      "name": "Zoom clamp",
+      "stream": "Mobile Field Ergonomics",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "16:docs:calibration-chip-tap",
+      "wbs": "16-mobile-field-ergonomics/Docs",
+      "name": "Calibration chip tap",
+      "stream": "Mobile Field Ergonomics",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "16:remaining:no-enforced-minimum-touch-target-size-on-1",
+      "wbs": "16-mobile-field-ergonomics/Remaining",
+      "name": "No enforced minimum touch-target size on annotation handles; overlapping annotations on zoomed-out sheets are very hard ",
+      "stream": "Mobile Field Ergonomics",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "16:remaining:useismobile-uses-hard-768-px-breakpoint--2",
+      "wbs": "16-mobile-field-ergonomics/Remaining",
+      "name": "`useIsMobile` uses hard 768 px breakpoint with no resize listener; tablet rotation doesn't re-evaluate.",
+      "stream": "Mobile Field Ergonomics",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "16:remaining:mobiletoolbar-duplicates-zoom-logic-from-3",
+      "wbs": "16-mobile-field-ergonomics/Remaining",
+      "name": "`MobileToolbar` duplicates zoom logic from desktop `Toolbar`; no shared `useZoom` hook.",
+      "stream": "Mobile Field Ergonomics",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "16:remaining:demo-tsx-reimplements-full-mobile-layout-4",
+      "wbs": "16-mobile-field-ergonomics/Remaining",
+      "name": "`Demo.tsx` reimplements full mobile layout independently rather than reusing `Index.tsx` — two maintenance surfaces.",
+      "stream": "Mobile Field Ergonomics",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "17:docs:bell-realtime-subscribe",
+      "wbs": "17-notifications-and-presence/Docs",
+      "name": "Bell + realtime subscribe",
+      "stream": "Notifications & Presence",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "17:docs:markread-markallread",
+      "wbs": "17-notifications-and-presence/Docs",
+      "name": "markRead / markAllRead",
+      "stream": "Notifications & Presence",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "17:docs:navigation-on-click",
+      "wbs": "17-notifications-and-presence/Docs",
+      "name": "Navigation on click",
+      "stream": "Notifications & Presence",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "17:mobile:native-push-registration",
+      "wbs": "17-notifications-and-presence/Mobile",
+      "name": "Native push registration",
+      "stream": "Notifications & Presence",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "lib/native/push.ts"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "17:docs:send-push-edge-function",
+      "wbs": "17-notifications-and-presence/Docs",
+      "name": "send-push edge function",
+      "stream": "Notifications & Presence",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "17:docs:presence-online-users",
+      "wbs": "17-notifications-and-presence/Docs",
+      "name": "Presence / online users",
+      "stream": "Notifications & Presence",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "17:remaining:no-confirmed-trigger-that-auto-inserts-i-1",
+      "wbs": "17-notifications-and-presence/Remaining",
+      "name": "No confirmed trigger that auto-inserts into `notifications`; notification pipeline may be entirely manual/missing.",
+      "stream": "Notifications & Presence",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 2,
+      "source": "brief-risk"
+    },
+    {
+      "id": "17:remaining:presence-name-always-online-user-list-sh-2",
+      "wbs": "17-notifications-and-presence/Remaining",
+      "name": "Presence `name` always `''`; online user list shows \"User\" for everyone.",
+      "stream": "Notifications & Presence",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "17:remaining:usenotifications-polls-every-60s-on-web--3",
+      "wbs": "17-notifications-and-presence/Remaining",
+      "name": "`useNotifications` polls every 60s on web; poor UX fallback for time-sensitive RE actions.",
+      "stream": "Notifications & Presence",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "17:remaining:send-push-reads-fcm-server-key-but-fcm-h-4",
+      "wbs": "17-notifications-and-presence/Remaining",
+      "name": "`send-push` reads `FCM_SERVER_KEY` but FCM HTTP v1 requires OAuth2 service-account tokens, not legacy server key; likely",
+      "stream": "Notifications & Presence",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "18:docs:negative-lag-m-code-check",
+      "wbs": "18-compliance-and-audit/Docs",
+      "name": "Negative lag / M-code check",
+      "stream": "Compliance & Audit",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "18:docs:dcma-14-point",
+      "wbs": "18-compliance-and-audit/Docs",
+      "name": "DCMA 14-point",
+      "stream": "Compliance & Audit",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [
+        "lib/schedule/analysis/dcma.ts"
+      ],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "18:docs:approve-reject-timestamps-reviewer",
+      "wbs": "18-compliance-and-audit/Docs",
+      "name": "Approve/reject timestamps + reviewer",
+      "stream": "Compliance & Audit",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "18:docs:snapshot-freeze",
+      "wbs": "18-compliance-and-audit/Docs",
+      "name": "Snapshot freeze",
+      "stream": "Compliance & Audit",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "18:docs:drift-detection",
+      "wbs": "18-compliance-and-audit/Docs",
+      "name": "Drift detection",
+      "stream": "Compliance & Audit",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "18:remaining:m-code-detection-relies-on-activity-id-p-1",
+      "wbs": "18-compliance-and-audit/Remaining",
+      "name": "M-code detection relies on `activity_id` prefix; non-standard prefix (`AD-M100`) breaks check with no fallback to name m",
+      "stream": "Compliance & Audit",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "18:remaining:approval-fields-are-plain-mutable-column-2",
+      "wbs": "18-compliance-and-audit/Remaining",
+      "name": "Approval fields are plain mutable columns; admin could UPDATE `approved_at` retroactively — no immutable audit trail.",
+      "stream": "Compliance & Audit",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 2,
+      "source": "brief-risk"
+    },
+    {
+      "id": "18:remaining:dcma-runs-client-side-on-full-activity-s-3",
+      "wbs": "18-compliance-and-audit/Remaining",
+      "name": "DCMA runs client-side on full activity set; 1000+ task schedules block JS thread with no web-worker offload.",
+      "stream": "Compliance & Audit",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "18:remaining:reject-reason-is-freeform-with-no-charac-4",
+      "wbs": "18-compliance-and-audit/Remaining",
+      "name": "`reject_reason` is freeform with no character minimum at mutation layer; empty-string rejections allowed.",
+      "stream": "Compliance & Audit",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "19:docs:welcomecarousel-gating",
+      "wbs": "19-onboarding-and-tutorials/Docs",
+      "name": "WelcomeCarousel gating",
+      "stream": "Onboarding & Tutorials",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "19:docs:role-filtering",
+      "wbs": "19-onboarding-and-tutorials/Docs",
+      "name": "Role filtering",
+      "stream": "Onboarding & Tutorials",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "19:docs:guided-tour-auto-start",
+      "wbs": "19-onboarding-and-tutorials/Docs",
+      "name": "Guided tour auto-start",
+      "stream": "Onboarding & Tutorials",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "19:docs:demo-12-step-walkthrough",
+      "wbs": "19-onboarding-and-tutorials/Docs",
+      "name": "Demo 12-step walkthrough",
+      "stream": "Onboarding & Tutorials",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "19:docs:nativefirstrun-shown-once",
+      "wbs": "19-onboarding-and-tutorials/Docs",
+      "name": "NativeFirstRun shown once",
+      "stream": "Onboarding & Tutorials",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "19:remaining:guidedtour-polls-queryselector-every-500-1",
+      "wbs": "19-onboarding-and-tutorials/Remaining",
+      "name": "`GuidedTour` polls `querySelector` every 500ms; missing `data-tour` attribute (e.g. collapsed sidebar) means tooltip nev",
+      "stream": "Onboarding & Tutorials",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "19:remaining:usetour-stores-completion-only-in-locals-2",
+      "wbs": "19-onboarding-and-tutorials/Remaining",
+      "name": "`useTour` stores completion only in `localStorage`; clearing storage replays tour; second device sees it fresh.",
+      "stream": "Onboarding & Tutorials",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "19:remaining:welcomecarousel-hard-codes-5-slides-addi-3",
+      "wbs": "19-onboarding-and-tutorials/Remaining",
+      "name": "`WelcomeCarousel` hard-codes 5 slides; adding a new role requires editing component.",
+      "stream": "Onboarding & Tutorials",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "19:remaining:demo-tsx-is-400-lines-of-standalone-work-4",
+      "wbs": "19-onboarding-and-tutorials/Remaining",
+      "name": "`Demo.tsx` is ~400 lines of standalone workspace duplication; core takeoff UI changes require parallel updates.",
+      "stream": "Onboarding & Tutorials",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "20:docs:landing-page",
+      "wbs": "20-sales-and-pitch/Docs",
+      "name": "Landing page",
+      "stream": "Sales & Pitch",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "20:docs:demo-cta-linkage",
+      "wbs": "20-sales-and-pitch/Docs",
+      "name": "Demo CTA linkage",
+      "stream": "Sales & Pitch",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "20:docs:mcfapitch-fajarpitch",
+      "wbs": "20-sales-and-pitch/Docs",
+      "name": "McfaPitch / FajarPitch",
+      "stream": "Sales & Pitch",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "20:docs:p6xmldemo",
+      "wbs": "20-sales-and-pitch/Docs",
+      "name": "P6XmlDemo",
+      "stream": "Sales & Pitch",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "20:docs:sitemap-xml-completeness",
+      "wbs": "20-sales-and-pitch/Docs",
+      "name": "sitemap.xml completeness",
+      "stream": "Sales & Pitch",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "20:docs:llms-txt-accuracy",
+      "wbs": "20-sales-and-pitch/Docs",
+      "name": "llms.txt accuracy",
+      "stream": "Sales & Pitch",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "In Progress",
+      "pctComplete": 50,
+      "evidence": [],
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-criterion"
+    },
+    {
+      "id": "20:remaining:demo-requests-table-referenced-but-no-mi-1",
+      "wbs": "20-sales-and-pitch/Remaining",
+      "name": "`demo_requests` table referenced but no migration found; contact form may be silently broken in production.",
+      "stream": "Sales & Pitch",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-risk"
+    },
+    {
+      "id": "20:remaining:fajarpitch-tsx-uses-deterministic-seed-t-2",
+      "wbs": "20-sales-and-pitch/Remaining",
+      "name": "`FajarPitch.tsx` uses deterministic seed to generate fake equipment availability; if interpreted as real fleet data, mis",
+      "stream": "Sales & Pitch",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "20:remaining:mcfapitch-and-fajarpitch-hard-code-propo-3",
+      "wbs": "20-sales-and-pitch/Remaining",
+      "name": "`McfaPitch` and `FajarPitch` hard-code proposal specifics in source; updating pricing/scope requires code deploy rather ",
+      "stream": "Sales & Pitch",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 3,
+      "source": "brief-risk"
+    },
+    {
+      "id": "20:remaining:llms-txt-and-sitemap-xml-hard-code-produ-4",
+      "wbs": "20-sales-and-pitch/Remaining",
+      "name": "`llms.txt` and `sitemap.xml` hard-code production domain (`draw-quantify-dash.lovable.app`); staging/preview deployments",
+      "stream": "Sales & Pitch",
+      "verdict": "missing",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 1,
+      "source": "brief-risk"
+    },
+    {
+      "id": "21:promise:prom-1",
+      "wbs": "21-marketing-debt/05-field-capture",
+      "name": "Deliver: Walk the site. Measure automatically.",
+      "stream": "21 Marketing Debt",
+      "verdict": "undelivered",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 5,
+      "marketingClaimAgeDays": 68,
+      "marketingSource": "landing",
+      "source": "marketing-promise"
+    },
+    {
+      "id": "21:promise:prom-2",
+      "wbs": "21-marketing-debt/19-onboarding-and-tutorials",
+      "name": "Deliver: We'll configure a walkthrough around your contract.",
+      "stream": "21 Marketing Debt",
+      "verdict": "undelivered",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 5,
+      "marketingClaimAgeDays": 68,
+      "marketingSource": "landing",
+      "source": "marketing-promise"
+    },
+    {
+      "id": "21:promise:prom-3",
+      "wbs": "21-marketing-debt/Unmapped",
+      "name": "Deliver: [Landing](/landing): Product overview, features, FAQ, and demo request.",
+      "stream": "21 Marketing Debt",
+      "verdict": "undelivered",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 5,
+      "marketingClaimAgeDays": 2,
+      "marketingSource": "llms",
+      "source": "marketing-promise"
+    },
+    {
+      "id": "21:promise:prom-4",
+      "wbs": "21-marketing-debt/03-project-onboarding",
+      "name": "Deliver: [Interactive Demo](/demo): Standalone walkthrough of field setup and measurement.",
+      "stream": "21 Marketing Debt",
+      "verdict": "undelivered",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 5,
+      "marketingClaimAgeDays": 2,
+      "marketingSource": "llms",
+      "source": "marketing-promise"
+    },
+    {
+      "id": "21:promise:prom-5",
+      "wbs": "21-marketing-debt/01-identity-and-access",
+      "name": "Deliver: [Sign in](/auth): Authentication for existing teams.",
+      "stream": "21 Marketing Debt",
+      "verdict": "undelivered",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 5,
+      "marketingClaimAgeDays": 2,
+      "marketingSource": "llms",
+      "source": "marketing-promise"
+    },
+    {
+      "id": "21:promise:prom-6",
+      "wbs": "21-marketing-debt/Unmapped",
+      "name": "Deliver: [MCFA Pitch](/mcfa): Partner-specific overview for MCFA.",
+      "stream": "21 Marketing Debt",
+      "verdict": "undelivered",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 5,
+      "marketingClaimAgeDays": 2,
+      "marketingSource": "llms",
+      "source": "marketing-promise"
+    },
+    {
+      "id": "21:promise:prom-7",
+      "wbs": "21-marketing-debt/Unmapped",
+      "name": "Deliver: [Fajar Pitch](/fajar): Partner-specific overview for Fajar.",
+      "stream": "21 Marketing Debt",
+      "verdict": "undelivered",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 5,
+      "marketingClaimAgeDays": 2,
+      "marketingSource": "llms",
+      "source": "marketing-promise"
+    },
+    {
+      "id": "21:promise:prom-8",
+      "wbs": "21-marketing-debt/11-schedule-management",
+      "name": "Deliver: [PMXML Demo](/p6-xml): Primavera P6 XML round-trip demo (DCMA, progress, RE memo).",
+      "stream": "21 Marketing Debt",
+      "verdict": "undelivered",
+      "codePresent": false,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "status": "Not Started",
+      "pctComplete": 0,
+      "evidence": [],
+      "actualStart": null,
+      "actualFinish": null,
+      "durationDays": 5,
+      "marketingClaimAgeDays": 2,
+      "marketingSource": "llms",
+      "source": "marketing-promise"
+    },
+    {
+      "id": "99:cross:xer-ingest-scrapped",
+      "name": "XER ingest engine (scrapped pivot)",
+      "status": "Completed",
+      "pctComplete": 100,
+      "actualStart": "2026-04-01T00:00:00Z",
+      "actualFinish": "2026-05-20T00:00:00Z",
+      "durationDays": 30,
+      "note": "Built then deleted when format proved hostile; informed PMXML pivot.",
+      "wbs": "99-cross-cutting/Narrative",
+      "stream": "99 Cross-cutting",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": true,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "evidence": [],
+      "source": "cross-cutting"
+    },
+    {
+      "id": "99:cross:pmxml-pivot",
+      "name": "PMXML pivot — replace XER with Oracle PMXML round-trip",
+      "status": "In Progress",
+      "pctComplete": 60,
+      "actualStart": "2026-05-15T00:00:00Z",
+      "actualFinish": null,
+      "durationDays": 14,
+      "note": "Parser + serializer + apply-progress shipped; baseline import + UDF round-trip remain.",
+      "wbs": "99-cross-cutting/Narrative",
+      "stream": "99 Cross-cutting",
+      "verdict": "partial",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "evidence": [],
+      "source": "cross-cutting"
+    },
+    {
+      "id": "99:cross:comprehension-pass",
+      "name": "20-stream comprehension pass (this artefact set)",
+      "status": "Completed",
+      "pctComplete": 100,
+      "actualStart": "2026-05-28T00:00:00Z",
+      "actualFinish": "2026-05-29T00:00:00Z",
+      "durationDays": 2,
+      "note": "Briefs, wbs-v2.json, comprehension-report.md.",
+      "wbs": "99-cross-cutting/Narrative",
+      "stream": "99 Cross-cutting",
+      "verdict": "implemented",
+      "codePresent": true,
+      "verifiedE2E": true,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "evidence": [],
+      "source": "cross-cutting"
+    },
+    {
+      "id": "99:cross:dev-wbs-authoring",
+      "name": "Dev WBS authoring (recursive — this effort)",
+      "status": "In Progress",
+      "pctComplete": 50,
+      "actualStart": "2026-05-29T00:00:00Z",
+      "actualFinish": null,
+      "durationDays": 1,
+      "note": "Strict-rule scoring + marketing-debt branch + PMXML self-proof.",
+      "wbs": "99-cross-cutting/Narrative",
+      "stream": "99 Cross-cutting",
+      "verdict": "partial",
+      "codePresent": true,
+      "verifiedE2E": false,
+      "verification": {
+        "kind": "manual",
+        "verifiedE2E": false,
+        "recipe": null,
+        "status": "unverified"
+      },
+      "evidence": [],
+      "source": "cross-cutting"
+    }
+  ]
+}
