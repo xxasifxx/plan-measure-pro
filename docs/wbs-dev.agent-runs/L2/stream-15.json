@@ -1,0 +1,87 @@
+{
+  "stream": 15,
+  "title": "Offline and Native Durability",
+  "l2_summary": "Provides full offline capability and native mobile integration for TakeoffPro. Offline durability is achieved through a layered stack: IndexedDB (takeoffpro-offline v2, 13 stores) mirrors 8 Supabase tables via mirrorProject; all writes flow through a single mutate() path that applies an optimistic IDB update and enqueues to a durable outbox when offline; a sync loop drains the outbox with 4 parallel workers (per-row serial ordering) and exponential backoff (1s→4s→15s→60s→180s, max 5 attempts). Plan PDFs are cached in CacheStorage pdf-cache-v1 with 500 MB LRU eviction tracked in IDB. The PWA layer registers a Workbox service worker on web and gates registration behind Capacitor.isNativePlatform() to prevent double registration on iOS/Android. The Capacitor native shell wraps geolocation, camera, biometric auth (FaceID/TouchID), filesystem export, push notifications, and background-sync via appStateChange. Platform detection is centralised in src/lib/native/platform.ts. TanStack Query cache is persisted to IDB via idb-persister.ts. UI surfaces include an offline pill, install CTA, update-available toast (PwaShell), outbox queue inspector with per-item retry (SyncPanel), biometric gate (BiometricGate), and native first-run onboarding (NativeFirstRun).",
+  "status_by_criterion": {
+    "AC1_offline_serve": "partial — mirrorProject snapshots 8 tables but daily_reports is hard-capped at 30 rows, silently truncating older history for offline inspectors",
+    "AC2_optimistic_idb": "implemented — mutate() writes _pendingSync:true to IDB before enqueue",
+    "AC3_serial_per_row_4_workers": "implemented — drainOnce groups by rowId, runs up to 4 concurrent row-groups serially",
+    "AC4_backoff_sync_panel": "implemented — BACKOFF_MS=[1000,4000,15000,60000,180000]; SyncPanel exposes retryItem",
+    "AC5_capacitor_no_sw": "implemented — shouldRegisterSW() returns false when Capacitor.isNativePlatform()",
+    "AC6_pwa_update_toast": "implemented — registerSWWithUpdates uses Workbox; PwaShell wires setReloadFn on waiting event",
+    "AC7_pdf_cache": "implemented — warmPdf stores in pdf-cache-v1; evictIfNeeded enforces 500 MB LRU cap"
+  },
+  "surfaces": [
+    { "file": "src/lib/offline/db.ts", "role": "IDB persistence — opens takeoffpro-offline v2, 13 stores, CRUD helpers" },
+    { "file": "src/lib/offline/mirror.ts", "role": "Snapshots 8 Supabase tables into IDB; mirrorProjectList for project list" },
+    { "file": "src/lib/offline/outbox.ts", "role": "Durable outbox — enqueue/list/count/update/remove + blob store + subscribeOutbox" },
+    { "file": "src/lib/offline/mutation-client.ts", "role": "Online-first mutate() with optimistic IDB mirror and outbox fallback; runDirect" },
+    { "file": "src/lib/offline/sync.ts", "role": "triggerSync / startSyncLoop — 4-worker drain, serial per-row, exponential backoff" },
+    { "file": "src/lib/offline/pdf-cache.ts", "role": "warmPdf / getCachedPdf — CacheStorage pdf-cache-v1, 500 MB LRU via IDB metadata" },
+    { "file": "src/lib/offline/idb-persister.ts", "role": "TanStack Query IDB persister" },
+    { "file": "src/lib/pwa.ts", "role": "shouldRegisterSW / registerSWWithUpdates / unregisterAllSW; iframe/preview/localhost/Capacitor guards" },
+    { "file": "src/components/PwaShell.tsx", "role": "Offline pill, install CTA, update-available toast" },
+    { "file": "src/components/SyncPanel.tsx", "role": "Outbox queue status UI with per-item retry" },
+    { "file": "src/lib/native/platform.ts", "role": "isNative / platform / isIOS / isAndroid detection" },
+    { "file": "src/lib/native/filesystem.ts", "role": "saveExport — Capacitor Filesystem write" },
+    { "file": "src/lib/native/camera.ts", "role": "Capacitor Camera shim" },
+    { "file": "src/lib/native/biometric.ts", "role": "FaceID/TouchID via Capacitor" },
+    { "file": "src/lib/native/background-sync.ts", "role": "App.addListener('appStateChange') → triggerSync on foreground resume" },
+    { "file": "src/lib/native/push.ts", "role": "Capacitor PushNotifications registration and handler" },
+    { "file": "src/lib/native/geolocation.ts", "role": "Capacitor Geolocation wrapper" },
+    { "file": "src/lib/native/app-state.ts", "role": "Foreground/background lifecycle events" },
+    { "file": "src/components/BiometricGate.tsx", "role": "Biometric prompt gate component" },
+    { "file": "src/components/NativeFirstRun.tsx", "role": "First-run onboarding for native installs" },
+    { "file": "src/hooks/useNetworkStatus.ts", "role": "Reactive navigator.onLine + event listeners" },
+    { "file": "src/hooks/useOutbox.ts", "role": "Reactive outbox count/items via subscribeOutbox" },
+    { "file": "capacitor.config.ts", "role": "Capacitor app config" },
+    { "file": "public/manifest.webmanifest", "role": "PWA manifest" }
+  ],
+  "risks_and_debt": [
+    {
+      "id": "R1",
+      "severity": "medium",
+      "description": "daily_reports mirrored at 30-row cap — inspectors reviewing older history offline see silent data gaps",
+      "location": "src/lib/offline/mirror.ts:27"
+    },
+    {
+      "id": "R2",
+      "severity": "medium",
+      "description": "No conflict resolution UI — OutboxStatus includes 'conflict' but mutation-client never sets it; conflicts silently land in 'failed'",
+      "location": "src/lib/offline/mutation-client.ts"
+    },
+    {
+      "id": "R3",
+      "severity": "high",
+      "description": "IDB schema v2 has no forward migration path — getDB only handles oldVersion < 1 and < 2; v3 upgrade risks data loss",
+      "location": "src/lib/offline/db.ts"
+    },
+    {
+      "id": "R4",
+      "severity": "low",
+      "description": "jsPDF.save() bypasses warmPdf — generated PDFs are not cacheable and will be unavailable offline",
+      "location": "src/lib/offline/pdf-cache.ts"
+    }
+  ],
+  "cross_stream_handoffs": {
+    "serves_inbound": [
+      "all streams (annotations, daily reports, calibrations, pay items, schedule activities) via mutate()",
+      "data-export-and-interoperability via saveExport on native",
+      "measurement-and-geometry-engine via calibrations/geo_calibrations IDB stores"
+    ],
+    "feeds_outbound": [
+      "schedule-management reads schedule_activities IDB store offline"
+    ]
+  },
+  "key_constants": {
+    "idb_name": "takeoffpro-offline",
+    "idb_version": 2,
+    "idb_stores": 13,
+    "mirrored_supabase_tables": 8,
+    "outbox_workers": 4,
+    "backoff_ms": [1000, 4000, 15000, 60000, 180000],
+    "max_retry_attempts": 5,
+    "pdf_cache_storage_name": "pdf-cache-v1",
+    "pdf_cache_max_bytes": 524288000
+  }
+}
