@@ -1,118 +1,88 @@
-## Reframe
+## Reset
 
-The "project" to schedule is **TakeoffPro itself**. We have ground truth: 953 commits across 83 days (2026-03-08 → 2026-05-29) with per-path commit clusters. That makes this a **forensic reconstruction of how TakeoffPro was actually built**, exported as a P6-importable PMXML. A construction PM opens it in P6 and sees real start, real critical path, real variance, real forecast for remaining work.
+You're right on both counts. The 19-leaf WBS I started with is a top-down guess dressed up as ground truth. The honest move is: **let the commits tell us what the activities are**, then group those activities into WBS. Depth will likely land at 40–80 leaves, not 19.
 
-Locked decisions from earlier in this thread:
-- **Strict E2E scoring** for % complete (no credit for "code exists")
-- **Hybrid WBS** — product surface top branches, engineering layer sub-WBS
-- **Commit-cluster activity splitting** — every path becomes "Build" + "Refine" (+ optional Hardening) activities, not one monolithic blob
+Duration rule for refine/minor-change clusters is locked in: **span of the acceptance cluster, split into Refine-1/2/… when there's a gap > 7 days**.
 
----
+## Phase A — Enrich the raw data (one pass, all in `build-history.json`)
 
-## Deliverables
+Per commit, capture:
 
-### 1. `scripts/extract-build-history.mjs` — git → schedule input
+- `sha`, `date`, `kind` (build / acceptance / bootstrap) — already there
+- `subject` — full first line
+- `files`: `[{path, insertions, deletions, status}]` from `git log --numstat --name-status`
+- `pathTags`: deterministic labels derived from path (`pages/Landing` → `page:landing`, `src/lib/p6xml/*` → `lib:p6xml`, `supabase/functions/invite-user/*` → `edge:invite-user`, `src/components/schedule/*` → `ui:schedule`, etc.). Mapping table lives in the script, exhaustive over the actual file tree, no "unclassified" fallback — anything unmatched is a script bug to fix.
+- `subjectTokens`: lowercased noun/verb tokens after stop-word strip ("fix", "add", "round", "polish", "tour", "pwa", "biometric", "gps", …)
 
-Read-only mining of `git log`. Produces `docs/build-history.json` containing, per WBS leaf:
+No WBS assignment yet. Just facts.
 
-- First commit, last commit, total commits, list of touched files
-- **Commit clusters** detected by an algorithm with tunable thresholds (all surfaced in the JSON for hand-audit):
-  - **Build burst** = densest contiguous window holding ≥60% of commits in ≤20% of path lifespan → activity `X.Y.10 Build <feature>`
-  - **Refinement tail** = remaining commits after the burst → activity `X.Y.20 Refine <feature>`, FS or SS+lag from build
-  - **Hardening clusters** = commits whose messages match `/fix|hardening|round \d|polish|cleanup/i` and that land across multiple WBS leaves on the same day → cross-WBS milestone (`Round N hardening`) with fan-in
-  - **Lone late commits** = singletons weeks after the burst → punch-list items, in-progress
-- Glob → WBS mapping table (hand-tuned, lives in the script so you can audit/correct before activities are generated)
-- Chat-message timestamp enrichment (best-effort) for milestone labels
+## Phase B — Discover work items bottom-up
 
-### 2. `docs/AUDIT_2026Q2.md` — strict reconciliation
+Two clustering passes over the enriched commits, both written into `docs/work-items.json` for hand-review:
 
-Hat-by-hat audit (PM, RE, Inspector, Schedule Analyst, PWA/Native, Backend, Security, Design, QA). One table:
+1. **Path-cohort clusters** — connected components over commits that share ≥1 path-tag, then split a component when the inter-commit gap inside it exceeds 7 days. Each resulting cluster is a candidate "work item" with: lifespan, commit count, dominant path-tags, sample subjects, build vs acceptance counts.
+2. **Subject-theme overlay** — within each path-cohort, detect sub-themes by recurring subject tokens (e.g. inside `ui:schedule`, separate "import P6 panel" from "Gantt chart" from "baseline manager"). This catches the case where one folder hosts multiple distinct features built in different weeks.
 
-| WBS | Feature claim | Source (marketing / code / both) | Evidence verified | Strict % | Gap |
-|---|---|---|---|---|---|
+Output: ~40–80 candidate work items, each with hard evidence (commits + files + dates). No WBS yet.
 
-Strict rule: complete only if a seeded user flow (`demo.pm@`, `demo.re@`, `demo.inspector@njta.test`) executes end-to-end against the NJTA I-95 seed today. Code-existing-but-no-UX → in-progress with % proportional to integration gap. Marketing-only → 0%, listed as remaining activity.
+## Phase C — Hand-review + WBS emergence
 
-Each subagent receives `build-history.json` + the strict rubric and returns its slice. Items that can't be verified automatically are flagged "code-complete, E2E unverified" for your spot-check.
+You and I walk `docs/work-items.json` together. For each candidate work item we decide:
 
-### 3. `src/lib/p6xml/fixtures/takeoffpro-build.def.ts` — typed schedule data
+- Keep / merge / split
+- Name (real noun phrase, not a folder name)
+- Which top-level product surface it belongs to
 
-**Hybrid WBS, ~150 activities** (the build/refine split roughly doubles activity count vs the earlier ~90 estimate, which is the right shape for a credible P6 schedule):
+WBS emerges from the grouping, not the other way around. Top branches will probably still be roughly: Takeoff & Measurement, Schedule & P6, Field/Mobile, RE Workflow, Reporting, Admin/Org, Marketing/Onboarding, Pilot — but leaves are dictated by what got built.
 
-```text
-TakeoffPro Build  (start 2026-03-08, data date 2026-05-29)
-├── 1. Takeoff & Measurement      (1.1 FE / 1.2 BE / 1.3 Offline / 1.4 QA)
-├── 2. Schedule & P6              (2.1 FE / 2.2 BE / 2.3 Import-Export / 2.4 QA)
-├── 3. Field / Mobile             (3.1 PWA / 3.2 Native / 3.3 Mobile UX / 3.4 QA)
-├── 4. RE Workflow & Approvals    (4.1 FE / 4.2 BE+triggers / 4.3 QA)
-├── 5. Reporting & Export         (5.1 In-app / 5.2 Daily report / 5.3 P6 PMXML)
-├── 6. Admin & Org                (6.1 org flow / 6.2 TeamManager / 6.3 Admin panel)
-├── 7. Marketing & Onboarding     (7.1 Landing/Pitch/Demo / 7.2 Tour/Carousel / 7.3 Pricing)
-└── 8. Pilot Readiness            milestones M1–M4 (M4 = NJTA pilot kickoff, Mandatory Finish)
-```
+Result: `docs/wbs.json` — frozen WBS tree with each leaf pointing to its work-item IDs.
 
-Per activity (driven by build-history.json + audit row):
-- `actual_start` = cluster start (Build) or build-end (Refine)
-- `actual_finish` = cluster end when strict E2E verified, else NULL
-- `baseline_start/end` = back-projected from typical planned duration → variance becomes the story (foundation overran, integration compressed)
-- `duration_days` = cluster span (min 1d)
-- `remaining_duration_days` for in-progress = honest forecast forward from today
-- `percent_complete` = strict score from #2
-- Relationships: real build order. BE → FE → QA within a surface (FS, 0d). Schedule export (2.3) fans in from 2.1 + 2.2. Refine activities SS+lag from their Build. Pilot milestones fan in from everything.
-- Calendars: **Lovable 7-day** (continuous deploy) + **Standard 5-day** (NJTA pilot side)
-- Resources: Lovable Agent, Human PM, Pilot Inspector, with assignments
-- **Baseline captured** at file creation; future rounds measure drift
+## Phase D — Activities per leaf
 
-### 4. `src/lib/p6xml/fixtures/takeoffpro-build.xml` — generated PMXML
+For each leaf, derive activities mechanically from its commits:
 
-Built by running our exporter over #3, committed. **Validated against published P6 v22.12 PMXML XSD** with xmllint in the sandbox. Exporter patches scoped narrowly: only what's needed to make this fixture XSD-valid. Broader exporter gaps become activities in WBS 2.3.
+- **Build burst** — first dense cluster of build commits (≥60% in ≤20% of leaf lifespan). Start = first build commit, finish = last build commit in the burst.
+- **Refine-N** — every subsequent acceptance/build cluster, split whenever inter-commit gap > 7 days. Min duration 1d.
+- **Hardening cross-leaf milestone** — commits matching `/round \d|hardening|polish|cleanup/i` that span ≥3 leaves on the same day become a fan-in milestone.
+- **Lone late singletons** — punch list, in-progress, 1d each.
 
-### 5. `src/test/p6xml-build-roundtrip.test.ts`
+Acceptance merges attach to whichever leaf the build commits between this merge and the prior merge touched. Multi-leaf merges fan out.
 
-`def → buildPmxmlFromProject → importFromPmxml` round-trips: WBS hierarchy, all 4 relationship types, lag, calendars, resources, assignments, baseline, constraints all preserved.
+## Phase E — Audit (the thing you stopped me from starting prematurely)
 
-### 6. `.lovable/plan.md` — rewrite to thin pointer
+Only after C+D do I spawn per-leaf audit subagents. Each gets: its leaf's commits, files, work-item description, and the strict E2E rubric. Writes `docs/audit/<leaf-code>.md`. Then `docs/AUDIT_2026Q2.md` synthesizes.
 
-"Source of truth is `docs/AUDIT_2026Q2.md` + `takeoffpro-build.xml`. Work is named by activity ID."
+## Phase F — Schedule fixture + PMXML
 
----
+Translate audited leaves into `takeoffpro-build.def.ts` → exporter → `takeoffpro-build.xml` → XSD validate → round-trip test. Unchanged from the earlier plan.
 
-## Process
-
-1. Run `extract-build-history.mjs` → `build-history.json`. Hand-review glob → WBS mapping and cluster thresholds.
-2. Parallel hat subagents read history + strict rubric, return audit slices.
-3. Cross-walk against live DB (`information_schema`, RLS, seed contents) so % complete reflects what's actually wired.
-4. Synthesize `AUDIT_2026Q2.md`.
-5. Translate audit rows into typed activities in `takeoffpro-build.def.ts` (mechanical once #4 exists).
-6. Generate `takeoffpro-build.xml`. Validate against PMXML XSD.
-7. Patch exporter narrowly until fixture is XSD-valid.
-8. Add round-trip test, run vitest, confirm green.
-9. Rewrite `.lovable/plan.md`.
-10. Stop. You open the XML in P6, see the real picture, pick the next activity by ID.
-
----
-
-## Technical notes
+## File-level change set
 
 ```text
-File-level change set
-─────────────────────
-scripts/extract-build-history.mjs              NEW  read-only git mining + clustering
-docs/build-history.json                        NEW  generated, committed
-docs/AUDIT_2026Q2.md                           NEW  reconciliation + ranked roadmap
-src/lib/p6xml/fixtures/takeoffpro-build.def.ts NEW  typed schedule data
-src/lib/p6xml/fixtures/takeoffpro-build.xml    NEW  generated PMXML (committed)
-src/test/p6xml-build-roundtrip.test.ts         NEW  round-trip assertion
-src/lib/p6xml/build-from-project.ts            EDIT only what's needed for XSD validity
-.lovable/plan.md                               EDIT thin pointer to new source of truth
+scripts/extract-build-history.mjs    EDIT  add numstat+name-status, pathTags, subjectTokens, drop top-down WBS mapping
+scripts/discover-work-items.mjs      NEW   path-cohort + subject-theme clustering → docs/work-items.json
+docs/build-history.json              REGEN enriched commit records, no WBS field
+docs/work-items.json                 NEW   candidate work items for hand-review (Phase B output)
+docs/wbs.json                        NEW   frozen WBS tree after Phase C review
+docs/audit/<leaf>.md                 NEW   per-leaf strict E2E audit (Phase E)
+docs/AUDIT_2026Q2.md                 NEW   synthesis (Phase E)
+src/lib/p6xml/fixtures/takeoffpro-build.def.ts   NEW   Phase F
+src/lib/p6xml/fixtures/takeoffpro-build.xml      NEW   Phase F
+src/test/p6xml-build-roundtrip.test.ts           NEW   Phase F
+.lovable/plan.md                     EDIT  thin pointer (last)
 ```
 
-No DB migration. No behaviour changes. No marketing edits. Findings that need code fixes become activities in the schedule, executed in subsequent loops by activity ID.
+## Checkpoints where I stop and wait for you
 
----
+1. End of Phase A — you eyeball `build-history.json` to confirm enrichment looks right.
+2. End of Phase B — you eyeball `work-items.json`. **This is the critical review.** Adjusting clustering here is cheap; adjusting after WBS is frozen is expensive.
+3. End of Phase C — you sign off on `wbs.json` before any activity generation.
+4. End of Phase D — you sign off on the activity list before audit subagents are spawned.
 
-## Caveats
-- Glob → WBS mapping is hand-tuned; surfaced in JSON for you to correct before activity generation.
-- Cluster thresholds (60% / 20%, hardening regex) are heuristics; tunable in the script and visible in the JSON output.
-- Subagents can't click through UI; anything they can't verify via DB queries gets flagged for your spot-check.
-- Back-projected baselines model the variance story. If you'd rather derive baselines from chat-stated intent at start-of-work, say so — more work, more honest, default stays back-project.
+I will not spawn the audit subagents until checkpoint 4.
+
+## What I am explicitly not doing this round
+
+- No edits to app code, DB, marketing, or exporter
+- No assumed WBS, no guessed activity names, no back-projected baselines yet (baselines come after audit when we know actual span)
+- No subagents until Phase E
