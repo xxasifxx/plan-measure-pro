@@ -1,0 +1,68 @@
+{
+  "agent": "l3-historian",
+  "generatedAt": "2026-05-29T18:00:00.000Z",
+  "timeline": [
+    {
+      "date": "2026-03-15",
+      "event": "Stream 09 (Standard Specifications) proto-logic established",
+      "details": "Initial SpecViewer text-dump approach implemented, later replaced by PDF.js."
+    },
+    {
+      "date": "2026-03-21",
+      "event": "Stream 01 (Identity & Access) and Stream 05 (Field Capture) core schemas",
+      "details": "Supabase-backed projects, auth roles, and Fabric.js annotation layer established."
+    },
+    {
+      "date": "2026-03-23",
+      "event": "Stream 01 (Identity & Access) expanded",
+      "details": "Invitation RBAC and organization-based signup model added."
+    },
+    {
+      "date": "2026-05-05",
+      "event": "Stream 05 (Field Capture) pivot and Stream 13 (Data Export) addition",
+      "details": "GPS field-measurement UI removed; jsPDF added for PNG/PDF summary exports."
+    },
+    {
+      "date": "2026-05-26",
+      "event": "Stream 11 (Schedule Management) pivot",
+      "details": "XER flat-file import replaced by PMXML pipeline; core schedule tables added."
+    },
+    {
+      "date": "2026-05-29",
+      "event": "Formal Value Stream Documentation (Phase 1)",
+      "details": "All 20 stream briefs (01-20) documented in docs/streams/ following the adoption of the value-stream model."
+    },
+    {
+      "date": "2026-05-29",
+      "event": "Stream 11 (Schedule Management) consolidation",
+      "details": "XER parser deleted; all analysis modules relocated under schedule/ and retargeted to PMXML."
+    },
+    {
+      "date": "2026-05-29",
+      "event": "Comprehension Roll-up",
+      "details": "docs/wbs-v2.json and docs/comprehension-report.md generated to track completion (86% weighted score)."
+    }
+  ],
+  "streams": [
+    {"id": "01", "name": "Identity & Access", "documented": "2026-05-29", "status": "active"},
+    {"id": "02", "name": "Portfolio & PM Home", "documented": "2026-05-29", "status": "active"},
+    {"id": "03", "name": "Project Onboarding", "documented": "2026-05-29", "status": "active"},
+    {"id": "04", "name": "Pay Item Catalog", "documented": "2026-05-29", "status": "active"},
+    {"id": "05", "name": "Field Capture", "documented": "2026-05-29", "status": "active"},
+    {"id": "06", "name": "Daily Report Lifecycle", "documented": "2026-05-29", "status": "active"},
+    {"id": "07", "name": "Quantity to Payment", "documented": "2026-05-29", "status": "active"},
+    {"id": "08", "name": "Photo Evidence", "documented": "2026-05-29", "status": "active"},
+    {"id": "09", "name": "Standard Specifications", "documented": "2026-05-29", "status": "active"},
+    {"id": "10", "name": "Document Management", "documented": "2026-05-29", "status": "active"},
+    {"id": "11", "name": "Schedule Management", "documented": "2026-05-29", "status": "pivoted-from-xer"},
+    {"id": "12", "name": "Project Health & Controls", "documented": "2026-05-29", "status": "active"},
+    {"id": "13", "name": "Data Export & Interoperability", "documented": "2026-05-29", "status": "active"},
+    {"id": "14", "name": "Measurement & Geometry Engine", "documented": "2026-05-29", "status": "active"},
+    {"id": "15", "name": "Offline & Native Durability", "documented": "2026-05-29", "status": "active"},
+    {"id": "16", "name": "Mobile Field Ergonomics", "documented": "2026-05-29", "status": "active"},
+    {"id": "17", "name": "Notifications & Presence", "documented": "2026-05-29", "status": "active"},
+    {"id": "18", "name": "Compliance & Audit", "documented": "2026-05-29", "status": "active"},
+    {"id": "19", "name": "Onboarding & Tutorials", "documented": "2026-05-29", "status": "active"},
+    {"id": "20", "name": "Sales & Pitch", "documented": "2026-05-29", "status": "active"}
+  ]
+}
