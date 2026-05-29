@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-29T11:01:04.727Z",
+  "generatedAt": "2026-05-29T11:40:35.761Z",
   "summary": {
     "totalLeaves": 276,
     "bySurface": {
@@ -37,7 +37,7 @@
     },
     "duplicateIds": [],
     "orphanPrereqCount": 2,
-    "remainingEstimatedDays": 2038,
+    "remainingEstimatedDays": 2128.5,
     "sourceFiles": [
       {
         "file": "docs/wbs-leaves.yaml",
@@ -75,7 +75,14 @@
         "file": "/mnt/documents/wbs-native-offline-notifications.yaml",
         "leaves": 39
       }
-    ]
+    ],
+    "depthAudit": {
+      "appliedAt": "2026-05-29T11:40:35.761Z",
+      "patchesApplied": 25,
+      "patchesMissing": 0,
+      "missingIds": [],
+      "netDurationDelta": 96.5
+    }
   },
   "leaves": [
     {
@@ -1148,7 +1155,7 @@
       "name": "Mobile Pay Items & Sections Panels",
       "surface": "Takeoff",
       "status": "shipped",
-      "durationDays": 3,
+      "durationDays": 4,
       "prerequisites": [
         "TK-014"
       ],
@@ -1163,23 +1170,47 @@
       "rationale": "Dedicated mobile-optimised views for the pay-items list and TOC section list within the bottom-sheet drawer. Separate from desktop panel layout to ensure touch target sizes and scroll performance on tablets.",
       "subTasks": [
         {
-          "name": "MobileSections panel: sheet list from TOC, tap to jump page",
+          "name": "MobileSections panel: TOC sheet list from project.toc jsonb; tap row to jump to plan page via PdfCanvas ref",
           "days": 1
         },
         {
-          "name": "MobilePayItems panel: grouped list with swipe-to-select",
+          "name": "MobilePayItems panel: grouped list (by spec-section prefix) with swipe-to-select item and active-item highlight",
           "days": 1
         },
         {
-          "name": "Status shortcuts strip (active item indicator + measurement)",
+          "name": "Status shortcuts strip: active pay-item chip + today's running measurement value below toolbar",
           "days": 0.5
         },
         {
-          "name": "Keyboard avoid when virtual keyboard open",
+          "name": "Empty-state handling: 'No TOC detected' prompt in Sections, 'Import pay items' CTA in PayItems",
+          "days": 0.5,
+          "notes": "Avoids blank panel when project is newly created without TOC or pay items."
+        },
+        {
+          "name": "Virtual keyboard avoidance: listen to visualViewport resize and shift panel above keyboard",
+          "days": 0.5
+        },
+        {
+          "name": "Accessibility: aria-label on list items, role='listbox' on pay-items selector, VoiceOver/TalkBack smoke test on iOS/Android",
           "days": 0.5
         }
       ],
-      "_sourceFile": "docs/wbs-leaves.yaml"
+      "_sourceFile": "docs/wbs-leaves.yaml",
+      "depthAudit": {
+        "agent": "A",
+        "patchFile": "/mnt/documents/wbs-depth-patches-a.yaml",
+        "priorDurationDays": 3,
+        "priorSubTaskCount": 4,
+        "newSubTaskCount": 6,
+        "durationDelta": 1,
+        "rationale": "The 4-task original omits empty-state handling (necessary since projects often start without a parsed TOC), the virtual-keyboard avoid listener (a known mobile UX regression on iOS), and accessibility annotations required for NJDOT public-sector apps. Expanding to 6 tasks adds 1 day.",
+        "reuseFromCode": [
+          "src/components/MobilePayItems.tsx",
+          "src/components/MobileSections.tsx",
+          "src/components/MobileTabBar.tsx"
+        ],
+        "thinnessCriteria": null
+      }
     },
     {
       "id": "TK-016",
@@ -1380,7 +1411,7 @@
       "name": "Report Snapshot Archive on Reopen",
       "surface": "Field Operations",
       "status": "shipped",
-      "durationDays": 3,
+      "durationDays": 5,
       "prerequisites": [
         "FO-001"
       ],
@@ -1395,19 +1426,51 @@
       "rationale": "When a rejected report is reopened and re-annotated, the prior snapshot is archived in daily_report_snapshots before the new snapshot is written. Enables full audit trail per NJDOT inspection requirements.",
       "subTasks": [
         {
-          "name": "Archive-on-reopen trigger or client logic saving old snapshot",
-          "days": 1
+          "name": "Decide archive strategy: Postgres trigger on daily_reports status→draft vs. client mutation in useDailyReport.reopen()",
+          "days": 0.5,
+          "notes": "Trigger is safer for race conditions; client path in src/hooks/useDailyReport.ts line ~103 is already partially wired."
         },
         {
-          "name": "Snapshot history viewer in ReReviewCard (collapsible timeline)",
-          "days": 1.5
+          "name": "Implement archive write: insert old snapshot JSON into daily_report_snapshots before updating daily_reports.snapshot",
+          "days": 1,
+          "notes": "Must capture user_id, archived_at, and report_date; ref src/hooks/useDailyReport.ts reopen mutation."
         },
         {
-          "name": "Hard-immutability guard: no mutation on archived snapshots",
+          "name": "Add RLS policy on daily_report_snapshots: RE and inspector (owner) read-only; no UPDATE/DELETE",
+          "days": 0.5,
+          "notes": "Hard immutability must be enforced at DB level, not just client guard."
+        },
+        {
+          "name": "Build collapsible snapshot history timeline in ReReviewCard component",
+          "days": 1.5,
+          "notes": "Each archived row = one timeline entry with archived_at, prior status, and collapsed diff count."
+        },
+        {
+          "name": "Expose archived snapshots in daily report PDF export (RE-002 / RPT-002) as appendix",
           "days": 0.5
+        },
+        {
+          "name": "Write Vitest integration test: submit → reject → reopen → verify archived row count increments",
+          "days": 1,
+          "notes": "Regression guard for the core audit-trail invariant."
         }
       ],
-      "_sourceFile": "docs/wbs-leaves.yaml"
+      "_sourceFile": "docs/wbs-leaves.yaml",
+      "depthAudit": {
+        "agent": "A",
+        "patchFile": "/mnt/documents/wbs-depth-patches-a.yaml",
+        "priorDurationDays": 3,
+        "priorSubTaskCount": 3,
+        "newSubTaskCount": 6,
+        "durationDelta": 2,
+        "rationale": "Three sub-tasks are insufficient for an audit-trail feature with compliance implications; the original tasks omit the DB-vs-client strategy decision, RLS enforcement on archived rows, and any test coverage. Expanding to 6 tasks covering the full write-read-export-test cycle raises the estimate from 3 → 5 days, consistent with analogous shipped partial features (FO-003 at 5d).",
+        "reuseFromCode": [
+          "src/hooks/useDailyReport.ts",
+          "src/components/ReReviewCard.tsx",
+          "src/lib/daily-report-snapshot.ts"
+        ],
+        "thinnessCriteria": null
+      }
     },
     {
       "id": "FO-005",
@@ -1810,7 +1873,7 @@
       "name": "Document Preview — Image & PDF Inline",
       "surface": "Documents",
       "status": "shipped",
-      "durationDays": 3,
+      "durationDays": 4,
       "prerequisites": [
         "DOC-002"
       ],
@@ -1824,23 +1887,48 @@
       "rationale": "Click a document row to open a modal preview: pdf.js render for PDFs, <img> for images, download fallback for other MIME types. Necessary for quick plan and submittal review without leaving the app.",
       "subTasks": [
         {
-          "name": "PreviewDialog component with MIME type dispatch",
+          "name": "Build PreviewDialog component with MIME-type dispatch (pdf / image / video / office / unknown)",
+          "days": 1,
+          "notes": "useDocuments.ts already carries MIME info; dispatch table in component."
+        },
+        {
+          "name": "PDF preview: pdf.js single-page render with prev/next page navigation and zoom controls",
           "days": 1
         },
         {
-          "name": "PDF preview: pdf.js single-page render with page nav",
-          "days": 1
-        },
-        {
-          "name": "Image preview with pinch-zoom",
+          "name": "Image preview with pinch-to-zoom (touch) and scroll-wheel zoom (desktop)",
           "days": 0.5
         },
         {
-          "name": "Download button + loading skeleton",
+          "name": "Unsupported MIME fallback: download-only UI with file-type icon and size display",
+          "days": 0.5,
+          "notes": "Covers .docx, .xlsx, .dwg — prevents blank modal on unknown types."
+        },
+        {
+          "name": "Keyboard accessibility: Escape closes dialog, ← → navigate PDF pages, Tab traps focus inside modal",
+          "days": 0.5
+        },
+        {
+          "name": "Large-file guard: show progress spinner + abort button for files > 50 MB; signed-URL timeout handling",
           "days": 0.5
         }
       ],
-      "_sourceFile": "docs/wbs-leaves.yaml"
+      "_sourceFile": "docs/wbs-leaves.yaml",
+      "depthAudit": {
+        "agent": "A",
+        "patchFile": "/mnt/documents/wbs-depth-patches-a.yaml",
+        "priorDurationDays": 3,
+        "priorSubTaskCount": 4,
+        "newSubTaskCount": 6,
+        "durationDelta": 1,
+        "rationale": "The original 4 tasks omit the MIME fallback branch (critical for .docx/.dwg files common in construction), keyboard accessibility (WCAG 2.1 requirement for modal dialogs), and large-file UX — all of which are evident gaps in a shipped document-management feature. Expanding to 6 tasks adds 1 day for these omissions.",
+        "reuseFromCode": [
+          "src/hooks/useDocuments.ts",
+          "src/lib/pdf-utils.ts",
+          "src/pages/Documents.tsx"
+        ],
+        "thinnessCriteria": null
+      }
     },
     {
       "id": "DOC-006",
@@ -2246,7 +2334,7 @@
       "name": "P6 XML Round-Trip Demo Page",
       "surface": "Marketing & Sales",
       "status": "shipped",
-      "durationDays": 3,
+      "durationDays": 4,
       "prerequisites": [
         "BS-001"
       ],
@@ -2260,23 +2348,47 @@
       "rationale": "Standalone public page demonstrating the daily-report → PMXML apply-progress round-trip. Upload contractor PMXML, apply sample approved quantities, download updated XML. Sales collateral for NJDOT / MCFA audiences.",
       "subTasks": [
         {
-          "name": "PMXML upload + parse metadata display",
+          "name": "PMXML upload with content-type guard (XML only) and parse-metadata display (project name, activity count, data date)",
           "days": 0.5
         },
         {
-          "name": "Sample approved quantities injection UI",
+          "name": "PMXML schema validation: detect missing required elements, show human-readable error panel instead of crash",
+          "days": 0.5,
+          "notes": "p6xml/apply-progress.ts throws on malformed XML; wrap and surface to user."
+        },
+        {
+          "name": "Sample approved-quantities injection UI: editable table of activity-ID → qty pairs with preset 'Load Sample' button",
           "days": 1
         },
         {
-          "name": "Apply progress + per-activity change log display",
+          "name": "Apply progress via p6xml/apply-progress.ts and render per-activity change log (before/after % complete diff)",
           "days": 1
         },
         {
-          "name": "Download updated PMXML",
+          "name": "Download updated PMXML with browser anchor + native filesystem share-sheet",
+          "days": 0.5
+        },
+        {
+          "name": "Reset / clear demo state button; persist last upload in sessionStorage so reload doesn't lose demo progress",
           "days": 0.5
         }
       ],
-      "_sourceFile": "docs/wbs-leaves.yaml"
+      "_sourceFile": "docs/wbs-leaves.yaml",
+      "depthAudit": {
+        "agent": "A",
+        "patchFile": "/mnt/documents/wbs-depth-patches-a.yaml",
+        "priorDurationDays": 3,
+        "priorSubTaskCount": 4,
+        "newSubTaskCount": 6,
+        "durationDelta": 1,
+        "rationale": "The original 4 tasks are too coarse for a demo page handling arbitrary user-uploaded P6 XML: there is no error-handling task (essential when third-party PMXML is malformed), no reset flow for repeat visits, and no share-sheet for native users. Expanding to 6 tasks and 4 days closes these gaps.",
+        "reuseFromCode": [
+          "src/lib/p6xml/apply-progress.ts",
+          "src/pages/P6XmlDemo.tsx",
+          "src/lib/native"
+        ],
+        "thinnessCriteria": null
+      }
     },
     {
       "id": "MS-005",
@@ -2391,7 +2503,7 @@
       "name": "Privacy Policy & Terms of Service Pages (Planned)",
       "surface": "Marketing & Sales",
       "status": "planned",
-      "durationDays": 3,
+      "durationDays": 6.5,
       "prerequisites": [
         "BS-001",
         "BS-002"
@@ -2407,23 +2519,44 @@
       "rationale": "Legal pages required for App Store submission (Apple / Google) and NJDOT enterprise procurement. Currently not implemented; marketing-promises.md notes aspirational SOC 2 compliance roadmap.",
       "subTasks": [
         {
-          "name": "Draft Privacy Policy content (data collected, retention, GDPR)",
-          "days": 1
+          "name": "Draft Privacy Policy: data collected (GPS, photos, PII), retention schedule, third-party processors (Supabase, Resend, FCM)",
+          "days": 1.5
         },
         {
-          "name": "Draft Terms of Service content",
-          "days": 1
+          "name": "Draft Terms of Service: acceptable use, NJDOT data ownership clause, subscription/billing terms, limitation of liability",
+          "days": 1.5
         },
         {
-          "name": "Render as static /privacy and /terms routes",
+          "name": "Legal / counsel review cycle: collect redlines, incorporate edits, obtain sign-off",
+          "days": 2,
+          "notes": "Cannot skip for enterprise procurement; schedule at least one external review."
+        },
+        {
+          "name": "Build static /privacy and /terms React routes with last-updated date and version history anchor",
           "days": 0.5
         },
         {
-          "name": "Link from Landing page footer + App Store metadata",
+          "name": "Apple App Store Privacy Nutrition Label: complete data-type declarations for App Store Connect submission",
+          "days": 0.5,
+          "notes": "Required for iOS App Store; covers location, usage data, identifiers."
+        },
+        {
+          "name": "Footer links from Landing, App, and App Store metadata; verify all external links resolve",
           "days": 0.5
         }
       ],
-      "_sourceFile": "docs/wbs-leaves.yaml"
+      "_sourceFile": "docs/wbs-leaves.yaml",
+      "depthAudit": {
+        "agent": "A",
+        "patchFile": "/mnt/documents/wbs-depth-patches-a.yaml",
+        "priorDurationDays": 3,
+        "priorSubTaskCount": 4,
+        "newSubTaskCount": 6,
+        "durationDelta": 3.5,
+        "rationale": "The original 4 tasks omit the legal review cycle (required for NJDOT enterprise procurement and App Store submission), CCPA/GDPR data-processor disclosure, Apple privacy nutrition label, and version-history anchoring. Dropping durationDays from 3 to 3 was optimistic; expanding to 6 tasks at 6.5 days reflects the realistic effort for legally defensible pages.",
+        "reuseFromCode": [],
+        "thinnessCriteria": null
+      }
     },
     {
       "id": "MS-008",
@@ -3961,7 +4094,7 @@
       "name": "Stacked Resource-by-Activity Chart",
       "surface": "Resource Management",
       "status": "planned",
-      "durationDays": 8,
+      "durationDays": 10,
       "prerequisites": [
         "RES-014"
       ],
@@ -3976,27 +4109,60 @@
       "rationale": "The stacked chart shows which activities consume a resource in each period, making it easy to identify which activity to shift to relieve an over-allocation. Done means colour-coded activity bands stack within resource bars with tooltips showing activity name, units, and float, and the time axis is synchronised with the main Gantt scroll.",
       "subTasks": [
         {
-          "name": "Compute per-activity unit contributions within each time bucket",
-          "days": 2
+          "name": "Define histogram data contract — usePeriodSpread hook interface consumed by histogram",
+          "days": 1,
+          "notes": "Typed {period, activityId, units}[] API; decouple from GanttChart scroll state."
         },
         {
-          "name": "Stacked bar rendering with deterministic activity colour assignment",
-          "days": 2
+          "name": "Per-activity period-spread computation feeding into stacked bar segments",
+          "days": 2,
+          "notes": "Reuse RES-019 output; aggregate by {period, activityId} for stacking."
         },
         {
-          "name": "Tooltip component (activity name, units, total float, is_critical)",
-          "days": 1
+          "name": "Virtualised stacked bar renderer using TanStack Virtual — render only visible date columns",
+          "days": 2,
+          "notes": "Critical for projects > 500 activities; benchmark renders < 16ms per frame."
+        },
+        {
+          "name": "Tooltip component — activity name, units, total float, is_critical on hover",
+          "days": 1,
+          "notes": "Use Radix Tooltip; position above bar column to avoid clipping at chart edge."
         },
         {
           "name": "Time-axis sync with Gantt horizontal scroll (shared scroll ref)",
-          "days": 2
+          "days": 1,
+          "notes": "Wire scrollLeft to shared context so histogram and Gantt scroll in lockstep."
         },
         {
-          "name": "Legend panel with activity list and colour swatches",
-          "days": 1
+          "name": "Legend panel with activity list, colour swatches, and toggle hide/show per activity",
+          "days": 1,
+          "notes": "Deterministic activity colour from HSL hash of activity ID."
+        },
+        {
+          "name": "PNG export of histogram + CSV export of period-spread data",
+          "days": 1,
+          "notes": "Reuse chart-export.ts pattern; include date range and resource label in filename."
         }
       ],
-      "_sourceFile": "/mnt/documents/wbs-resource-management.yaml"
+      "_sourceFile": "/mnt/documents/wbs-resource-management.yaml",
+      "depthAudit": {
+        "agent": "B",
+        "patchFile": "/mnt/documents/wbs-depth-patches-b.yaml",
+        "priorDurationDays": 8,
+        "priorSubTaskCount": 5,
+        "newSubTaskCount": 7,
+        "durationDelta": 2,
+        "rationale": "Five tasks for the stacked activity resource histogram miss: the period-spread aggregation data contract between RES-019 and this component (which must be explicit to avoid coupling regressions), a virtualisation strategy for large schedules (500+ bars would freeze the browser), a PNG/CSV export, and a test suite. Two extra days cover these gaps.",
+        "reuseFromCode": [
+          "src/lib/schedule/use-schedule.ts",
+          "src/components/schedule/GanttChart.tsx",
+          "src/lib/xer/chart-export.ts"
+        ],
+        "thinnessCriteria": [
+          "A",
+          "D"
+        ]
+      }
     },
     {
       "id": "RES-016",
@@ -4225,7 +4391,7 @@
       "name": "Cross-Project Resource Pool",
       "surface": "Resource Management",
       "status": "aspirational",
-      "durationDays": 15,
+      "durationDays": 18,
       "prerequisites": [
         "RES-001",
         "RES-013"
@@ -4237,27 +4403,64 @@
       "rationale": "Enterprise resource management requires one excavator or one senior engineer to be shared across multiple concurrent projects in the same portfolio, with leveling respecting commitments on all projects simultaneously. Done means resources can be flagged as \"pooled\", assignments from all projects aggregate into the histogram, and cross-project leveling defers lower-priority project activities to relieve conflicts.",
       "subTasks": [
         {
-          "name": "Pool flag and owning_org_id on schedule_resources (shared vs project-local)",
-          "days": 2
+          "name": "DB schema — resource_pools (org_id, name, manager_user_id) + pool membership FK on schedule_resources",
+          "days": 2,
+          "notes": "Pool flag replaces the ad-hoc owning_org_id field; a resource belongs to at most one pool."
         },
         {
-          "name": "Cross-project assignment query — aggregate demand across project portfolio",
-          "days": 3
+          "name": "RLS policy — pool manager can read/write pool members across all projects in org",
+          "days": 2,
+          "notes": "Extend existing schedule_resources RLS; add pool_manager role claim in JWT."
         },
         {
-          "name": "Histogram and over-allocation report spanning multiple projects",
-          "days": 3
+          "name": "Booking / reservation workflow — pool manager approves or rejects cross-project assignment requests",
+          "days": 3,
+          "notes": "resource_booking_requests table with status (pending/approved/rejected); UI notification flow."
         },
         {
-          "name": "Cross-project leveling — priority by project priority score",
-          "days": 5
+          "name": "Cross-project demand aggregation query — sum units per period across all projects for a pooled resource",
+          "days": 3,
+          "notes": "RPC function joining schedule_activities across project_id; must respect data-date of each project."
         },
         {
-          "name": "Conflict notification when a pooled resource is double-booked",
-          "days": 2
+          "name": "Portfolio over-allocation histogram — chart spanning multiple projects with project colour-coding",
+          "days": 2,
+          "notes": "Extend RES-015 histogram; group bars by project on secondary axis."
+        },
+        {
+          "name": "Cross-project leveling priority — delay lower-priority project's activities first",
+          "days": 3,
+          "notes": "Priority score from project table; feed into RES-013 engine with cross-project conflict flag."
+        },
+        {
+          "name": "Conflict notification — push alert to pool manager when a pooled resource is double-booked",
+          "days": 1,
+          "notes": "Supabase realtime on resource_booking_requests; edge-function notifier."
+        },
+        {
+          "name": "Audit log — every cross-project assignment records user, timestamp, project, units, period",
+          "days": 2,
+          "notes": "Append-only resource_assignment_audit table; surfaced in pool manager dashboard."
         }
       ],
-      "_sourceFile": "/mnt/documents/wbs-resource-management.yaml"
+      "_sourceFile": "/mnt/documents/wbs-resource-management.yaml",
+      "depthAudit": {
+        "agent": "B",
+        "patchFile": "/mnt/documents/wbs-depth-patches-b.yaml",
+        "priorDurationDays": 15,
+        "priorSubTaskCount": 5,
+        "newSubTaskCount": 8,
+        "durationDelta": 3,
+        "rationale": "Cross-project resource pooling is a complex aspirational feature touching RLS security boundaries, cross-project API design, and multi-project conflict resolution workflows. Five tasks omit: the org-level pool governance data model (who manages the pool), RLS policy changes allowing cross-project reads of pooled resources, a booking/reservation workflow to avoid ad-hoc double-booking, an audit log of cross-project assignments, and performance considerations for portfolio-scale queries.",
+        "reuseFromCode": [
+          "src/lib/schedule/types.ts",
+          "src/components/schedule/ResourceManager.tsx"
+        ],
+        "thinnessCriteria": [
+          "C",
+          "D"
+        ]
+      }
     },
     {
       "id": "RES-022",
@@ -4311,7 +4514,7 @@
       "name": "Resource Auto-Assignment via Skill Match",
       "surface": "Resource Management",
       "status": "aspirational",
-      "durationDays": 10,
+      "durationDays": 12,
       "prerequisites": [
         "RES-005",
         "RES-002",
@@ -4324,27 +4527,59 @@
       "rationale": "Activities assigned with roles can be automatically staffed by matching resource code values (skills, certifications) against resource profiles, availability windows, and max units. Done means an \"Auto-staff\" action runs the matching algorithm across all unstaffed role assignments, proposes a solution, and lets the planner accept or override individual choices before committing.",
       "subTasks": [
         {
-          "name": "Skill-profile schema — resource_skills linking resources to code values with proficiency",
-          "days": 2
+          "name": "Skill-profile schema — resource_skills (resource_id, code_value_id, proficiency 1-5)",
+          "days": 1,
+          "notes": "Links to RES-002 code values taxonomy; proficiency drives matching weight."
         },
         {
-          "name": "Matching algorithm — score resources by skill match + availability",
-          "days": 3
+          "name": "Scoring algorithm — composite score: skill-match weight (0.5) + availability (0.3) + cost (0.2)",
+          "days": 2,
+          "notes": "Configurable weights stored per org; algorithm documented and unit-tested."
         },
         {
-          "name": "Proposal UI — show ranked candidates per unstaffed role",
-          "days": 2
+          "name": "Candidate ranking engine — query available resources, score each, return top-N ranked list",
+          "days": 2,
+          "notes": "Availability = 1 − (committed units / max units) in the activity's date range from period-spread."
         },
         {
-          "name": "Batch accept with conflict detection",
-          "days": 2
+          "name": "Proposal UI — show ranked candidates per unstaffed role with score breakdown tooltip",
+          "days": 2,
+          "notes": "Expandable panel in Activity Inspector; each row shows name, skill match %, availability %, day rate."
         },
         {
-          "name": "Audit log of auto-staffing decisions",
-          "days": 1
+          "name": "Batch-accept action with conflict detection — detect overlap with other accepted proposals",
+          "days": 2,
+          "notes": "Optimistic lock: two planners accepting same resource simultaneously must see a conflict prompt."
+        },
+        {
+          "name": "User-feedback loop — thumbs-up/down on accepted/rejected proposals; store in staffing_feedback table",
+          "days": 2,
+          "notes": "Feedback persisted for future scoring tuning; shown as running acceptance-rate badge per resource."
+        },
+        {
+          "name": "Audit log of auto-staffing decisions — accepted proposals stored with scorer version + weights used",
+          "days": 1,
+          "notes": "Append-only staffing_audit table; satisfies NJDOT accountability requirements."
         }
       ],
-      "_sourceFile": "/mnt/documents/wbs-resource-management.yaml"
+      "_sourceFile": "/mnt/documents/wbs-resource-management.yaml",
+      "depthAudit": {
+        "agent": "B",
+        "patchFile": "/mnt/documents/wbs-depth-patches-b.yaml",
+        "priorDurationDays": 10,
+        "priorSubTaskCount": 5,
+        "newSubTaskCount": 7,
+        "durationDelta": 2,
+        "rationale": "AI-assisted staffing recommendation is aspirational and algorithmically complex. Five tasks omit: the scoring algorithm design (skill-match + availability + cost weights), integration with the OpenAI / embedding layer already present elsewhere in the codebase, a user-feedback loop to improve recommendations, explanation UI for why a candidate was ranked, and batch-accept conflict detection. Two extra days cover scoring design and the feedback loop.",
+        "reuseFromCode": [
+          "src/lib/schedule/types.ts",
+          "src/components/schedule/ResourceManager.tsx"
+        ],
+        "thinnessCriteria": [
+          "C",
+          "D"
+        ]
+      }
     },
     {
       "id": "RES-024",
@@ -5375,7 +5610,7 @@
       "name": "Cost Code Import from XER ACCOUNT Table",
       "surface": "Cost Management",
       "status": "planned",
-      "durationDays": 5,
+      "durationDays": 7,
       "prerequisites": [
         "COST-001"
       ],
@@ -5387,23 +5622,58 @@
       "rationale": "Contractors maintaining a P6 schedule export XER files containing the ACCOUNT table, which holds the full CBS. Importing this table eliminates manual re-entry and ensures TakeoffPro's chart of accounts is synchronized with the contractor's P6 project, which is essential for NJDOT oversight workflows.",
       "subTasks": [
         {
-          "name": "\"Extend XER parser to extract ACCOUNT, ACTVCODE, and PROJCOST tables\"",
-          "days": 2
+          "name": "Extend XER parser to extract ACCOUNT, ACTVCODE, and PROJCOST table rows",
+          "days": 1,
+          "notes": "Add parsers in parser.ts following existing tab-delimited section pattern."
         },
         {
-          "name": "\"Map XER account fields to TakeoffPro CBS schema with collision-detection\"",
-          "days": 1
+          "name": "DB migration — add acct_id, acct_short_name fields to cost_accounts table to hold P6 keys",
+          "days": 1,
+          "notes": "Required for subsequent re-import to resolve existing rows rather than duplicating."
         },
         {
-          "name": "\"Present import preview with diff view (new / changed / unchanged accounts)\"",
-          "days": 1
+          "name": "Map XER account fields to TakeoffPro CBS schema — collision detection (match by acct_id)",
+          "days": 1,
+          "notes": "Three states: new (insert), changed (update preview), unchanged (skip)."
         },
         {
-          "name": "\"Write rollback mechanism if import validation fails mid-stream\"",
+          "name": "Import preview with diff view — new / changed / unchanged rows in collapsible table",
+          "days": 1,
+          "notes": "User must confirm before commit; summary counts shown in modal header."
+        },
+        {
+          "name": "Conflict-resolution UI — existing CBS account vs incoming XER account: keep-ours / use-theirs / merge",
+          "days": 1,
+          "notes": "Per-row decision; batch apply for 'use-theirs all' shortcut."
+        },
+        {
+          "name": "Rollback mechanism — wrap entire import in DB transaction; rollback on validation failure",
+          "days": 1,
+          "notes": "Use Supabase RPC for transactional import; surface error reason to user."
+        },
+        {
+          "name": "Unit tests — import clean XER, reimport same file (idempotency), import conflicting file",
           "days": 1
         }
       ],
-      "_sourceFile": "/mnt/documents/wbs-cost-risk-claims.yaml"
+      "_sourceFile": "/mnt/documents/wbs-cost-risk-claims.yaml",
+      "depthAudit": {
+        "agent": "B",
+        "patchFile": "/mnt/documents/wbs-depth-patches-b.yaml",
+        "priorDurationDays": 5,
+        "priorSubTaskCount": 4,
+        "newSubTaskCount": 7,
+        "durationDelta": 2,
+        "rationale": "Four tasks for XER cost-code import omit: a DB migration to add new cost-code columns aligned with the XER ACCOUNT schema, a unit-test suite verifying that the CBS hierarchy survives import-collision edge cases, and a conflict-resolution UI for accounts that exist both in the imported XER and in the project's existing CBS. Two extra days close these gaps.",
+        "reuseFromCode": [
+          "src/lib/xer/parser.ts",
+          "src/lib/schedule/import-p6.ts"
+        ],
+        "thinnessCriteria": [
+          "A",
+          "D"
+        ]
+      }
     },
     {
       "id": "EVM-001",
@@ -5920,7 +6190,7 @@
       "name": "Schedule Contingency Activity Pattern (Named Buffer Activities)",
       "surface": "Risk & Contingency",
       "status": "planned",
-      "durationDays": 5,
+      "durationDays": 8,
       "prerequisites": [
         "SCH-001",
         "RISK-004"
@@ -5933,23 +6203,61 @@
       "rationale": "DCMA 14-point check requires explicit representation of schedule contingency. Best practice inserts named contingency buffer activities at phase transitions. TakeoffPro has no buffer-activity pattern; contingency is currently invisible in the schedule, which causes DCMA check failures.",
       "subTasks": [
         {
-          "name": "\"Define contingency-buffer activity type with duration sourced from RISK-004 output\"",
-          "days": 1
+          "name": "DB schema — add activity_type enum value 'contingency_buffer' to schedule_activities; migration",
+          "days": 1,
+          "notes": "Buffer activities have source_risk_id FK back to risks table and buffer_duration_days column."
         },
         {
-          "name": "\"Build wizard: insert buffer activities at selected WBS boundaries with auto-naming\"",
-          "days": 2
+          "name": "Contingency duration source — link buffer duration to RISK-004 expected-impact output; auto-update on risk change",
+          "days": 1,
+          "notes": "Supabase trigger or client-side subscription: when risk impact updates, recalculate buffer duration."
         },
         {
-          "name": "\"Color-code buffer activities on Gantt (distinct from critical-path and normal activities)\"",
-          "days": 1
+          "name": "Buffer insertion wizard — select WBS boundary, choose risk(s), auto-name and insert buffer activity",
+          "days": 2,
+          "notes": "Buffer inserted as FS successor of last WBS node activity; no resources assigned by default."
         },
         {
-          "name": "\"Recalculate DCMA check #8 (logic density) and #14 (contingency) after buffer insertion\"",
+          "name": "Gantt colour coding — buffer bars rendered in amber/hatched pattern distinct from critical and normal bars",
+          "days": 1,
+          "notes": "Extend GanttChart bar renderer to check activity_type === 'contingency_buffer'."
+        },
+        {
+          "name": "DCMA recalculation — check #8 (logic density) and #14 (contingency) updated after buffer insert",
+          "days": 1,
+          "notes": "Reuse dcma.ts compliance check; surface updated score in ComplianceStrip immediately."
+        },
+        {
+          "name": "XER / PMXML export — emit buffer activities as TASK records with task_type annotation",
+          "days": 1,
+          "notes": "Ensure buffers are importable back into P6 without error; use task_type='TT_TASK' with contingency flag in memo."
+        },
+        {
+          "name": "Unit tests — insert single buffer, insert at multiple WBS levels, risk impact change propagation",
           "days": 1
         }
       ],
-      "_sourceFile": "/mnt/documents/wbs-cost-risk-claims.yaml"
+      "_sourceFile": "/mnt/documents/wbs-cost-risk-claims.yaml",
+      "depthAudit": {
+        "agent": "B",
+        "patchFile": "/mnt/documents/wbs-depth-patches-b.yaml",
+        "priorDurationDays": 5,
+        "priorSubTaskCount": 4,
+        "newSubTaskCount": 7,
+        "durationDelta": 3,
+        "rationale": "Four tasks for contingency buffer activities miss: the DB schema for the buffer activity type (required for persistence), XER / PMXML round-trip support (critical for NJDOT contract submissions that must be importable into P6), an auto-recalculation trigger when RISK-004 adjusts duration impacts, and a test suite. Three extra days cover these engineering essentials.",
+        "reuseFromCode": [
+          "src/lib/schedule/types.ts",
+          "src/lib/xer/parser.ts",
+          "src/lib/p6xml/serializer.ts",
+          "src/lib/schedule/cpm.ts",
+          "src/components/schedule/GanttChart.tsx"
+        ],
+        "thinnessCriteria": [
+          "A",
+          "D"
+        ]
+      }
     },
     {
       "id": "CLM-001",
@@ -6004,7 +6312,7 @@
       "name": "Impacted-As-Planned Method (Insert Delay Fragnet into Baseline)",
       "surface": "Claims & Delay Analysis",
       "status": "planned",
-      "durationDays": 10,
+      "durationDays": 13,
       "prerequisites": [
         "SCH-001"
       ],
@@ -6016,27 +6324,65 @@
       "rationale": "The impacted-as-planned (IAP) method inserts delay fragnets representing owner-caused events into the baseline schedule and measures the resulting finish-date extension. It is the simplest prospective delay method, widely used for entitlement analysis on NJDOT contracts. TakeoffPro has fragnet creation but no mechanism to inject fragnets into the baseline and compute the resulting critical-path impact automatically.",
       "subTasks": [
         {
-          "name": "\"Build fragnet library: create, name, version, and store reusable delay fragnets\"",
-          "days": 2
+          "name": "Fragnet library data model — fragnet_templates (name, version, activities_json, relationships_json, causal_event_type)",
+          "days": 1,
+          "notes": "Versioned so that claim packages reference exact fragnet version used; FK to projects or org."
         },
         {
-          "name": "\"Implement fragnet injection: insert fragnet activities into baseline copy at a specified anchor activity\"",
-          "days": 3
+          "name": "Fragnet library CRUD UI — create, name, version-bump, and preview fragnets as mini-Gantt",
+          "days": 2,
+          "notes": "Reuse EXT-011 fragnet library components if available; add causal-event-type tagging."
         },
         {
-          "name": "\"Run CPM on impacted baseline; compute finish-date delta vs original baseline\"",
-          "days": 2
+          "name": "Fragnet injection engine — insert fragnet activities into a baseline copy at anchor activity",
+          "days": 2,
+          "notes": "Anchor via FS predecessor; auto-generate internal IDs; must not modify live baseline."
         },
         {
-          "name": "\"Display impacted baseline vs original baseline in side-by-side Gantt\"",
-          "days": 2
+          "name": "Pre-injection CPM validity check — cycle detection on impacted baseline before commit",
+          "days": 1,
+          "notes": "Reuse cpm.ts cycle detector; surface specific cycle path to user if detected."
         },
         {
-          "name": "\"Generate IAP narrative: causal event, fragnet, days of impact, critical path through fragnet\"",
+          "name": "CPM recalculation on impacted baseline — forward/backward pass; compute finish-date delta",
+          "days": 2,
+          "notes": "Impacted baseline stored as separate schedule_baselines row with source='IAP'."
+        },
+        {
+          "name": "Side-by-side comparison Gantt — original baseline vs impacted baseline with delay delta annotation",
+          "days": 2,
+          "notes": "Extend BaselineManager dual-bar overlay; colour delay-extended activities in red."
+        },
+        {
+          "name": "IAP narrative generator — causal event, fragnet name, CPM path through fragnet, days of impact",
+          "days": 2,
+          "notes": "Markdown/HTML template populated from CPM output; exported to CLM-006 package."
+        },
+        {
+          "name": "Integration tests — inject single fragnet, inject overlapping fragnets, cycle-detection guard",
           "days": 1
         }
       ],
-      "_sourceFile": "/mnt/documents/wbs-cost-risk-claims.yaml"
+      "_sourceFile": "/mnt/documents/wbs-cost-risk-claims.yaml",
+      "depthAudit": {
+        "agent": "B",
+        "patchFile": "/mnt/documents/wbs-depth-patches-b.yaml",
+        "priorDurationDays": 10,
+        "priorSubTaskCount": 5,
+        "newSubTaskCount": 8,
+        "durationDelta": 3,
+        "rationale": "The Impacted-As-Planned method requires a fragnet library with versioning, a CPM validity check before and after injection (injecting a fragnet can introduce cycles), and a user review step before committing the impacted baseline — all missing from the current five tasks. The feature feeds directly into CLM-001 windows analysis and CLM-006 claim package; gaps here propagate. Three extra days added for versioning, validation, and review.",
+        "reuseFromCode": [
+          "src/lib/xer/tia.ts",
+          "src/lib/schedule/cpm.ts",
+          "src/lib/p6xml/serializer.ts",
+          "src/components/schedule/GanttChart.tsx"
+        ],
+        "thinnessCriteria": [
+          "C",
+          "D"
+        ]
+      }
     },
     {
       "id": "CLM-003",
@@ -6176,7 +6522,7 @@
       "name": "Claim Narrative & Exhibit Package Generator",
       "surface": "Claims & Delay Analysis",
       "status": "aspirational",
-      "durationDays": 10,
+      "durationDays": 13,
       "prerequisites": [
         "CLM-001",
         "CLM-002",
@@ -6192,27 +6538,63 @@
       "rationale": "After delay analysis is complete, contractors must assemble a formal claim package containing narrative, schedule exhibits, cost exhibits, and entitlement calculations. This process is currently entirely manual. An exhibit-package generator that assembles computed outputs into a NJDOT-compliant claim document would dramatically reduce preparation time and improve consistency.",
       "subTasks": [
         {
-          "name": "\"Define claim-package template: cover page, executive summary, delay narrative, schedule exhibits, cost exhibits\"",
-          "days": 2
+          "name": "Claim package data model — claim_packages (project_id, version, status, locked_at, submitted_by)",
+          "days": 1,
+          "notes": "Versioned; a locked package cannot be edited — a new version must be created."
         },
         {
-          "name": "\"Auto-populate narrative sections from analysis outputs (windows table, IAP delta, concurrent apportionment)\"",
-          "days": 3
+          "name": "NJDOT-specific cover page template — project name, contract number, RE name, submission date, claim reference",
+          "days": 1,
+          "notes": "Pre-fill from project metadata; contractor review before lock."
         },
         {
-          "name": "\"Embed Gantt screenshots and S-curve charts as numbered exhibits with captions\"",
-          "days": 2
+          "name": "Auto-populate narrative sections from analysis outputs (windows table, IAP delta, concurrent apportionment)",
+          "days": 3,
+          "notes": "Pull data from CLM-001, CLM-002, CLM-005 outputs; editable rich-text narrative per section."
         },
         {
-          "name": "\"Compile cost entitlement table from COST-004 variance report filtered to claim period\"",
+          "name": "Embed Gantt screenshots and S-curve charts as numbered exhibits with captions and references in body text",
+          "days": 2,
+          "notes": "Use chart-export.ts; exhibits stored in Supabase Storage; referenced by exhibit number in narrative."
+        },
+        {
+          "name": "Cost entitlement table — COST-004 variance report filtered to claim period; labour/material/equipment subtotals",
+          "days": 1,
+          "notes": "Formatted per NJDOT CCO form conventions; totals reconciled to contract value."
+        },
+        {
+          "name": "Approval workflow — submitter → PM review → RE countersign; status transitions lock the package",
+          "days": 2,
+          "notes": "Use existing approval pattern from daily-reports; signature field stored as base64 or DocuSign hook."
+        },
+        {
+          "name": "PDF compilation with page numbers, table of contents, and exhibit index",
+          "days": 2,
+          "notes": "Use memo-export.ts as base; ensure PDF/A compliance for NJDOT archival requirements."
+        },
+        {
+          "name": "Package version history viewer — list all versions with submitter, date, status badge",
           "days": 1
-        },
-        {
-          "name": "\"Export assembled package to PDF with page numbers, table of contents, and exhibit index\"",
-          "days": 2
         }
       ],
-      "_sourceFile": "/mnt/documents/wbs-cost-risk-claims.yaml"
+      "_sourceFile": "/mnt/documents/wbs-cost-risk-claims.yaml",
+      "depthAudit": {
+        "agent": "B",
+        "patchFile": "/mnt/documents/wbs-depth-patches-b.yaml",
+        "priorDurationDays": 10,
+        "priorSubTaskCount": 5,
+        "newSubTaskCount": 8,
+        "durationDelta": 3,
+        "rationale": "A claim package generator for NJDOT submissions must support NJDOT-specific form templates (not just generic PDF), a signature / approval workflow before the package is locked for submission, and version management so that iterative claim negotiations can reference prior package versions. These gaps mean the feature as specified would not pass a realistic NJDOT submission review. Three extra days added.",
+        "reuseFromCode": [
+          "src/lib/xer/memo-export.ts",
+          "src/lib/xer/chart-export.ts"
+        ],
+        "thinnessCriteria": [
+          "C",
+          "D"
+        ]
+      }
     },
     {
       "id": "SCN-001",
@@ -6434,7 +6816,7 @@
       "name": "ALAP Scheduling Mode",
       "surface": "Scheduling",
       "status": "aspirational",
-      "durationDays": 10,
+      "durationDays": 12,
       "prerequisites": [
         "SCH-001"
       ],
@@ -6446,23 +6828,62 @@
       "rationale": "cpm.ts explicitly notes ALAP is not implemented. Required for resource- leveling prep and late-start float analysis.",
       "subTasks": [
         {
-          "name": "ALAP flag on Activity type + UI toggle",
-          "days": 2
+          "name": "Add alap_flag boolean to ScheduleActivity type + DB column + migration",
+          "days": 1,
+          "notes": "Persist flag in schedule_activities table; include in XER TASK record map."
         },
         {
-          "name": "Backward-pass-first scheduling mode in cpm.ts",
-          "days": 4
+          "name": "Implement backward-pass-first scheduling mode in cpm.ts respecting all constraint types",
+          "days": 3,
+          "notes": "Must handle SNET/MFO/MSO/SNLT/FNET/FNLT combos with ALAP; preserve forward-pass dates for non-ALAP activities."
         },
         {
-          "name": "Gantt rendering adjustment (late bars vs early bars)",
-          "days": 2
+          "name": "Conflict resolution — ALAP activity with SNET constraint: document tie-break rule",
+          "days": 1,
+          "notes": "Agree on P6-matching behaviour; encode as invariant test."
         },
         {
-          "name": "Regression tests for ALAP constraint combos",
-          "days": 2
+          "name": "Gantt rendering: dual 'late bar' ghost overlay alongside early bar for ALAP activities",
+          "days": 2,
+          "notes": "Use existing GanttChart lane system; add opacity styling for late bars."
+        },
+        {
+          "name": "ALAP mode UI toggle in MetaControls / Activity Inspector",
+          "days": 1,
+          "notes": "Per-activity checkbox + global schedule-level default toggle."
+        },
+        {
+          "name": "XER / PMXML import-export round-trip preserving alap_flag",
+          "days": 2,
+          "notes": "TASK.task_type='TT_RSRC' maps to ALAP in P6; verify in import-p6.ts + serializer.ts."
+        },
+        {
+          "name": "Regression tests: ALAP + SNET, ALAP + MFO, all-ALAP network, mixed ASAP/ALAP",
+          "days": 2,
+          "notes": "Add to existing cpm.test.ts suite; compare against P6 expected output."
         }
       ],
-      "_sourceFile": "/mnt/documents/wbs-scheduling-controls-reporting.yaml"
+      "_sourceFile": "/mnt/documents/wbs-scheduling-controls-reporting.yaml",
+      "depthAudit": {
+        "agent": "B",
+        "patchFile": "/mnt/documents/wbs-depth-patches-b.yaml",
+        "priorDurationDays": 10,
+        "priorSubTaskCount": 4,
+        "newSubTaskCount": 7,
+        "durationDelta": 2,
+        "rationale": "ALAP (As-Late-As-Possible) is a foundational CPM scheduling mode required for P6 parity and upstream of resource leveling (RES-013). Four tasks omit the DB/XER persistence layer for the ALAP flag, the backward-pass-first algorithm integration with existing constraint types, Gantt rendering of late-bar vs early-bar positions, and a round-trip test through PMXML import/export. Two extra days allow realistic constraint-combination edge-case coverage.",
+        "reuseFromCode": [
+          "src/lib/schedule/cpm.ts",
+          "src/lib/schedule/types.ts",
+          "src/lib/xer/parser.ts",
+          "src/lib/p6xml/serializer.ts",
+          "src/components/schedule/GanttChart.tsx"
+        ],
+        "thinnessCriteria": [
+          "A",
+          "D"
+        ]
+      }
     },
     {
       "id": "SCH-003",
@@ -7038,42 +7459,70 @@
       "rationale": "Promised in McfaPitch as deterministic-to-probabilistic estimate progression guide. Only Class selector + band display currently exist. Full tool: stage-gated estimate form, historical basis-of-estimate library, Monte Carlo cost risk, and PDF deliverable per class.",
       "subTasks": [
         {
-          "name": "Stage-gate wizard: Class 5 conceptual estimate form",
-          "days": 6
+          "name": "Define EstimateClass data model: class (1-5), method, contingency range, accuracy range, basis_of_estimate text",
+          "days": 2,
+          "notes": "DB table estimate_classes linked to projects; constrain class field to enum 1–5."
         },
         {
-          "name": "Class 4 schematic estimate (factored / parametric)",
-          "days": 6
+          "name": "Class 5 & 4 input forms: parametric cost factors, unit-cost lookups, scope percent completeness",
+          "days": 6,
+          "notes": "Multi-step wizard gated by class level; pull NJDOT parametric unit costs from reference table."
         },
         {
-          "name": "Class 3 budget estimate (semi-detailed take-off integration)",
-          "days": 6
+          "name": "Class 3 & 2 semi-detailed input: integrate takeoff pay-item quantities → cost estimate line items",
+          "days": 7,
+          "notes": "Reuse COST-005 pay-item register; calculate total from qty × unit rate per account code."
         },
         {
-          "name": "Class 2 definitive estimate (near-final quantities)",
-          "days": 6
+          "name": "Class 1 check-estimate: full quantity reconciliation against approved takeoff; variance flag",
+          "days": 5,
+          "notes": "Show delta between Class-1 and Class-5 estimates as accuracy sanity check."
         },
         {
-          "name": "Class 1 check estimate (full detailed take-off)",
-          "days": 6
+          "name": "Shared cost-roll-up engine: aggregate line items through CBS hierarchy for any class",
+          "days": 5,
+          "notes": "Reuse COST-001 CBS; expose per-class estimate total and account-level breakdown."
         },
         {
-          "name": "Monte Carlo cost-risk simulation (P10/P50/P90)",
-          "days": 8
+          "name": "Monte Carlo cost-risk simulation (P10/P50/P90) using RISK-003 engine wired to estimate uncertainty ranges",
+          "days": 8,
+          "notes": "Pass contingency range from class definition as distribution bounds into RISK-003 sampler."
         },
         {
-          "name": "PDF Basis-of-Estimate deliverable generator per class",
+          "name": "PDF Basis-of-Estimate deliverable generator per class (AACE 18R-97 format)",
+          "days": 5,
+          "notes": "Parameterised template with project metadata, class-level accuracy statement, cost summary table, assumptions narrative."
+        },
+        {
+          "name": "Integration tests: Class 5 → Class 1 progression, Monte Carlo p50 within accuracy band, PDF correctness",
           "days": 2
         }
       ],
-      "_sourceFile": "/mnt/documents/wbs-scheduling-controls-reporting.yaml"
+      "_sourceFile": "/mnt/documents/wbs-scheduling-controls-reporting.yaml",
+      "depthAudit": {
+        "agent": "B",
+        "patchFile": "/mnt/documents/wbs-depth-patches-b.yaml",
+        "priorDurationDays": 40,
+        "priorSubTaskCount": 7,
+        "newSubTaskCount": 8,
+        "durationDelta": 0,
+        "rationale": "Seven tasks labelled \"Class 4 schematic estimate\", \"Class 3 budget estimate\", etc. are deliverable labels, not engineering steps — they describe outputs, not what an engineer builds. A 40-day AACE estimate-class feature requires a shared data-model layer, a per-class calculation engine, integration with takeoff quantities, Monte Carlo wiring to the RISK-003 engine, and a PDF generator per AACE 18R-97. The rewrite replaces deliverable labels with concrete implementation tasks.",
+        "reuseFromCode": [
+          "src/lib/schedule/types.ts",
+          "src/lib/xer/aace.ts"
+        ],
+        "thinnessCriteria": [
+          "B",
+          "C"
+        ]
+      }
     },
     {
       "id": "SCH-016",
       "name": "Activity User Assignments UI",
       "surface": "Scheduling",
       "status": "planned",
-      "durationDays": 10,
+      "durationDays": 12,
       "prerequisites": [
         "SCH-005"
       ],
@@ -7084,27 +7533,59 @@
       "rationale": "activity_assignments DB table exists with RLS; no src/ queries it. Needed for crew responsibility tracking and push-notification triggers when an assigned activity's schedule slips.",
       "subTasks": [
         {
-          "name": "useActivityAssignments hook (CRUD via activity_assignments table)",
-          "days": 2
+          "name": "DB schema — activity_assignments (activity_id, user_id, role, assigned_at, assigned_by) + migration",
+          "days": 1,
+          "notes": "FK to auth.users and schedule_activities; add index on user_id for calendar queries."
         },
         {
-          "name": "Activity Inspector: assignee multi-select (team members)",
-          "days": 2
+          "name": "RLS policy — crew members see only activities assigned to them; PM/admin see all",
+          "days": 1,
+          "notes": "Row-level security on activity_assignments table; extend existing schedule RLS patterns."
         },
         {
-          "name": "Gantt bar tooltip: assigned crew avatars",
-          "days": 2
+          "name": "useActivityAssignments hook — CRUD mutations + optimistic update",
+          "days": 2,
+          "notes": "Invalidate schedule query on assignment change so Gantt re-renders."
         },
         {
-          "name": "Push notification on assignment or float erosion",
-          "days": 2
+          "name": "Activity Inspector: assignee multi-select with user-avatar autocomplete",
+          "days": 2,
+          "notes": "Use existing team-members query; show role badge (foreman, laborer, operator)."
         },
         {
-          "name": "Responsibility matrix export (PDF/CSV)",
+          "name": "Gantt bar tooltip: assigned crew avatar stack (max 3 + overflow count)",
+          "days": 2,
+          "notes": "Add tooltip portal within GanttChart without breaking drag-reschedule hit area."
+        },
+        {
+          "name": "Push notification on new assignment or when activity float erodes below 3 days",
+          "days": 2,
+          "notes": "Use existing notification edge-function; include deep-link to activity."
+        },
+        {
+          "name": "Responsibility matrix export (PDF/CSV) — activity × assignee grid per WBS node",
           "days": 2
         }
       ],
-      "_sourceFile": "/mnt/documents/wbs-scheduling-controls-reporting.yaml"
+      "_sourceFile": "/mnt/documents/wbs-scheduling-controls-reporting.yaml",
+      "depthAudit": {
+        "agent": "B",
+        "patchFile": "/mnt/documents/wbs-depth-patches-b.yaml",
+        "priorDurationDays": 10,
+        "priorSubTaskCount": 5,
+        "newSubTaskCount": 7,
+        "durationDelta": 2,
+        "rationale": "Five tasks for a team-assignment surface omit: the DB schema and migration for the activity_assignments junction table, RLS policies ensuring crew members can only see their own assignments, an audit/history log of assignment changes (required for NJDOT accountability), and a test suite. These gaps leave the feature unshippable without additional hidden work.",
+        "reuseFromCode": [
+          "src/lib/schedule/use-schedule.ts",
+          "src/components/schedule/ActivityInspector.tsx",
+          "src/components/schedule/GanttChart.tsx"
+        ],
+        "thinnessCriteria": [
+          "A",
+          "D"
+        ]
+      }
     },
     {
       "id": "SCH-017",
@@ -7246,7 +7727,7 @@
       "name": "Resource Leveling (Automated)",
       "surface": "Scheduling",
       "status": "aspirational",
-      "durationDays": 25,
+      "durationDays": 28,
       "prerequisites": [
         "SCH-001",
         "SCH-019",
@@ -7259,27 +7740,65 @@
       "rationale": "Not implemented; requires resource loading module. Automated leveling shifts non-critical activities within float to resolve over-allocations.",
       "subTasks": [
         {
-          "name": "Over-allocation detection algorithm",
-          "days": 4
+          "name": "Leveling mode toggle — Time-Limited (preserve end date) vs Resource-Limited (extend end date)",
+          "days": 2,
+          "notes": "Persist selected mode in schedule settings; feed into RES-013 engine call."
         },
         {
-          "name": "Float-based delay heuristic (earliest finish first)",
-          "days": 6
+          "name": "Activity splitting engine — allow one activity to be split across non-consecutive work periods",
+          "days": 5,
+          "notes": "Add split_allowed boolean on Activity; implement split-segment storage (activity_segments table)."
         },
         {
-          "name": "User-controllable priority rules (total float / late finish)",
-          "days": 4
+          "name": "Over-allocation detection algorithm — identify resource-period demand > max_units",
+          "days": 4,
+          "notes": "Consume period-spread output from RES-019; compare against resource.max_units_per_day."
         },
         {
-          "name": "Before/after histogram comparison",
-          "days": 5
+          "name": "Float-based delay heuristic — earliest-finish-first priority among competing activities",
+          "days": 4,
+          "notes": "Implement configurable priority rules: total float / late finish / activity ID / user rank."
         },
         {
-          "name": "Leveled schedule export to XER / PMXML",
-          "days": 6
+          "name": "CPM recompute after leveling — backward pass + float recalculation on leveled dates",
+          "days": 4,
+          "notes": "Leveled dates replace early dates as CPM input; must flag new critical path correctly."
+        },
+        {
+          "name": "Before/after histogram comparison — overlay pre-leveling and post-leveling resource profiles",
+          "days": 3,
+          "notes": "Reuse RES-014/RES-015 histogram component; add toggle for leveled vs un-leveled view."
+        },
+        {
+          "name": "Leveled schedule export to XER / PMXML — emit leveled start/finish in TASK record",
+          "days": 4,
+          "notes": "Add leveled_start / leveled_finish to XER TASK row alongside early/late dates."
+        },
+        {
+          "name": "Performance test — 2000-activity × 20-resource project completes leveling < 10s",
+          "days": 2
         }
       ],
-      "_sourceFile": "/mnt/documents/wbs-scheduling-controls-reporting.yaml"
+      "_sourceFile": "/mnt/documents/wbs-scheduling-controls-reporting.yaml",
+      "depthAudit": {
+        "agent": "B",
+        "patchFile": "/mnt/documents/wbs-depth-patches-b.yaml",
+        "priorDurationDays": 25,
+        "priorSubTaskCount": 5,
+        "newSubTaskCount": 8,
+        "durationDelta": 3,
+        "rationale": "Resource leveling at 25 days is one of the most algorithmically complex P6-parity features. Five tasks omit: activity splitting (critical for P6-matching output), time-limited vs resource-limited mode distinction, a UI control panel for leveling options, CPM back-pass recompute after leveling to update float values, and performance validation. The existing RES-013 covers the core engine; this leaf should own the Scheduling-surface integration layer — but even then needs more depth.",
+        "reuseFromCode": [
+          "src/lib/schedule/cpm.ts",
+          "src/lib/schedule/types.ts",
+          "src/components/schedule/GanttChart.tsx",
+          "src/components/schedule/ScheduleToolbar.tsx"
+        ],
+        "thinnessCriteria": [
+          "C",
+          "D"
+        ]
+      }
     },
     {
       "id": "SCH-021",
@@ -7532,7 +8051,7 @@
       "name": "Cross-Project EOS Trends",
       "surface": "Project Controls",
       "status": "planned",
-      "durationDays": 15,
+      "durationDays": 18,
       "prerequisites": [
         "PC-004",
         "PC-005"
@@ -7544,27 +8063,62 @@
       "rationale": "No cross-project EOS view exists. Needed for portfolio-level EOS L10 meeting review showing trend lines for each scorecard metric across multiple projects over 13 weeks.",
       "subTasks": [
         {
-          "name": "Cross-project eos_scorecard aggregate query",
-          "days": 3
+          "name": "DB schema — eos_scorecards (metric, owner, goal, week_values[]), eos_rocks (title, who, due, on_track), eos_issues (title, priority, resolution) tables",
+          "days": 2,
+          "notes": "All three tables FK to projects; eos_issues links optionally to schedule_activities."
         },
         {
-          "name": "13-week trend sparkline per metric (Recharts)",
-          "days": 4
+          "name": "Scorecard CRUD UI — add/edit/remove metrics; enter weekly actuals inline",
+          "days": 3,
+          "notes": "Inline cell editing in table; red/green threshold badge from goal comparison."
         },
         {
-          "name": "Project selector multi-pick filter",
+          "name": "Rocks tracker — quarterly priority list with on-track / off-track / done status",
+          "days": 2,
+          "notes": "Kanban-style columns or table view; due-date countdown badge."
+        },
+        {
+          "name": "Issues / headlines log — title, priority, owner, date-opened, resolution notes",
+          "days": 2,
+          "notes": "Filtered list with 7-day and 30-day IDS (Issues, Decisions, To-Dos) sub-tabs."
+        },
+        {
+          "name": "Real-time subscription — all L10 attendees see scorecard updates without refresh",
+          "days": 2,
+          "notes": "Supabase realtime channel scoped to project_id; optimistic local update + broadcast."
+        },
+        {
+          "name": "Cross-project EOS aggregate query — roll up on-track % and open-issue count per project",
+          "days": 3,
+          "notes": "Used in portfolio dashboard; RPC function returns per-project EOS health score."
+        },
+        {
+          "name": "13-week trend sparkline per scorecard metric (Recharts)",
+          "days": 2,
+          "notes": "Computed from eos_scorecards.week_values array; render as inline sparkline in table row."
+        },
+        {
+          "name": "PDF export of L10 meeting pack (scorecard + rocks + issues for current week)",
           "days": 2
-        },
-        {
-          "name": "EOS L10 dashboard page route (/eos)",
-          "days": 3
-        },
-        {
-          "name": "PDF export of L10 trends",
-          "days": 3
         }
       ],
-      "_sourceFile": "/mnt/documents/wbs-scheduling-controls-reporting.yaml"
+      "_sourceFile": "/mnt/documents/wbs-scheduling-controls-reporting.yaml",
+      "depthAudit": {
+        "agent": "B",
+        "patchFile": "/mnt/documents/wbs-depth-patches-b.yaml",
+        "priorDurationDays": 15,
+        "priorSubTaskCount": 5,
+        "newSubTaskCount": 8,
+        "durationDelta": 3,
+        "rationale": "Five tasks for an EOS L10 dashboard miss: the data models for the three core EOS artefacts (Scorecard metrics, Rocks/quarterly priorities, and Issues/headlines log), a real-time subscription so that L10 meeting updates are visible to all attendees simultaneously, and role-based access so only the leadership team populates the scorecard. Three extra days cover these gaps; the feature is 15d planned and will not ship correctly without them.",
+        "reuseFromCode": [
+          "src/lib/schedule/use-schedule.ts"
+        ],
+        "thinnessCriteria": [
+          "A",
+          "D"
+        ]
+      }
     },
     {
       "id": "PC-007",
@@ -7995,7 +8549,7 @@
       "name": "Schedule Progress Summary PDF",
       "surface": "Reporting",
       "status": "shipped",
-      "durationDays": 5,
+      "durationDays": 5.5,
       "prerequisites": [
         "SCH-012"
       ],
@@ -8012,23 +8566,47 @@
       "rationale": "xer/chart-export.ts exports Recharts slip chart as PNG; XerDemo also generates a progress summary PDF via jsPDF combining SPI/CPI stats and the chart image.",
       "subTasks": [
         {
-          "name": "Gantt slip chart PNG export (html2canvas / Recharts ref)",
-          "days": 1
+          "name": "Capture Recharts slip-chart PNG via xer/chart-export.ts embedChartPng() helper at 150 DPI",
+          "days": 1,
+          "notes": "Depends on RPT-008 exposing embedChartPng()."
         },
         {
-          "name": "Progress summary PDF: SPI/CPI table + chart embed",
+          "name": "Progress summary PDF (jsPDF): SPI/CPI KPI tiles + chart image embed + project header + data-date watermark",
           "days": 2
         },
         {
-          "name": "Top-slipping activities table in PDF",
+          "name": "Top-slipping activities table (up to 10 rows, sorted by total float ascending) in PDF body",
           "days": 1
         },
         {
-          "name": "Cover page with project metadata + as-of date",
-          "days": 1
+          "name": "Cover page: project name, contract number, RE name, as-of data date, report generation timestamp",
+          "days": 0.5
+        },
+        {
+          "name": "Native share-sheet dispatch (Capacitor) + browser anchor-download fallback",
+          "days": 0.5
+        },
+        {
+          "name": "Snapshot regression test: load XerDemo sample XER, generate PDF, assert page count ≥ 2 and file size > 10 KB",
+          "days": 0.5
         }
       ],
-      "_sourceFile": "/mnt/documents/wbs-scheduling-controls-reporting.yaml"
+      "_sourceFile": "/mnt/documents/wbs-scheduling-controls-reporting.yaml",
+      "depthAudit": {
+        "agent": "A",
+        "patchFile": "/mnt/documents/wbs-depth-patches-a.yaml",
+        "priorDurationDays": 5,
+        "priorSubTaskCount": 4,
+        "newSubTaskCount": 6,
+        "durationDelta": 0.5,
+        "rationale": "The 4 original tasks omit a data-date watermark (critical for P6 progress reports where the as-of date determines SPI/CPI validity), native share-sheet parity with other export features, and any regression test for a multi-library pipeline (xer + chart-export + jsPDF). Adding these 2 tasks brings coverage to 6 and bumps estimate by 0.5 days.",
+        "reuseFromCode": [
+          "src/lib/xer/chart-export.ts",
+          "src/pages/XerDemo.tsx",
+          "src/lib/xer/feedback.ts"
+        ],
+        "thinnessCriteria": null
+      }
     },
     {
       "id": "RPT-005",
@@ -8169,7 +8747,7 @@
       "name": "XER / Gantt Chart Export (PNG)",
       "surface": "Reporting",
       "status": "shipped",
-      "durationDays": 3,
+      "durationDays": 3.5,
       "prerequisites": [],
       "workItemHint": {
         "primaryTags": [
@@ -8184,19 +8762,49 @@
       "rationale": "xer/chart-export.ts provides PNG export of the Recharts Gantt slip chart used in XerDemo.",
       "subTasks": [
         {
-          "name": "html2canvas / Recharts ref capture to PNG blob",
-          "days": 1
+          "name": "Capture Recharts SVG/canvas to PNG blob via html2canvas with configurable DPI (150 / 300)",
+          "days": 1,
+          "notes": "src/lib/xer/chart-export.ts already has the capture stub; add DPI option."
         },
         {
-          "name": "Download trigger with filename (project + date)",
-          "days": 1
+          "name": "Trigger browser anchor-download with filename pattern <project>_gantt_<YYYY-MM-DD>.png",
+          "days": 0.5
         },
         {
-          "name": "PNG embed into PDF reports (RPT-004, RPT-005)",
-          "days": 1
+          "name": "Native share-sheet dispatch via native/filesystem.ts (Capacitor writeFile + Share.share)",
+          "days": 0.5,
+          "notes": "Parity with RE-001 / RE-002 which already use native share sheet."
+        },
+        {
+          "name": "Provide PNG blob reference to RPT-004 and RPT-005 consumers via exported helper embedChartPng()",
+          "days": 0.5,
+          "notes": "This replaces the vague 'PNG embed into PDF reports' sub-task with a clear API contract."
+        },
+        {
+          "name": "Add aria-label and figure caption to the Recharts container so exported image has accessible context",
+          "days": 0.5
+        },
+        {
+          "name": "Smoke test: render XerDemo chart in jsdom, call exportChartPng(), assert blob size > 1KB",
+          "days": 0.5
         }
       ],
-      "_sourceFile": "/mnt/documents/wbs-scheduling-controls-reporting.yaml"
+      "_sourceFile": "/mnt/documents/wbs-scheduling-controls-reporting.yaml",
+      "depthAudit": {
+        "agent": "A",
+        "patchFile": "/mnt/documents/wbs-depth-patches-a.yaml",
+        "priorDurationDays": 3,
+        "priorSubTaskCount": 3,
+        "newSubTaskCount": 6,
+        "durationDelta": 0.5,
+        "rationale": "Sub-task 3 in the original ('PNG embed into PDF reports') is not work performed by RPT-008 — it is consumption by RPT-004/005 — reducing the effective sub-task count to 2. Replacing it with a typed helper function, adding native share-sheet parity, DPI control, accessibility annotation, and a smoke test brings this to 6 defensible tasks while holding the estimate to 3.5 days.",
+        "reuseFromCode": [
+          "src/lib/xer/chart-export.ts",
+          "src/pages/XerDemo.tsx",
+          "src/lib/native"
+        ],
+        "thinnessCriteria": null
+      }
     },
     {
       "id": "RPT-009",
@@ -9021,7 +9629,7 @@
       "name": "Power BI semantic model export",
       "surface": "Integrations",
       "status": "aspirational",
-      "durationDays": 15,
+      "durationDays": 25,
       "prerequisites": [
         "INT-05"
       ],
@@ -9034,49 +9642,60 @@
       "rationale": "McfaPitch.tsx integrationLayers.Outputs explicitly lists \"Power BI Semantic Model\" as an output; MCFA Project Controls Directors require live dashboards in their existing Power BI environment rather than yet another SaaS portal.",
       "subTasks": [
         {
-          "name": "Discovery — Power BI dataset push API vs DirectQuery via public API",
-          "days": 3,
-          "notes": "Evaluate two architecture options: (A) Push dataset via Power BI REST API (requires Azure AD app registration, service principal, workspace admin consent); (B) Power BI DirectQuery or Dataflow connecting to TakeoffPro public REST API with OAuth2. Document pros/cons for MCFA's IT posture.\n"
+          "name": "Discovery — Power BI dataset push API vs DirectQuery via Supabase public API",
+          "days": 2,
+          "notes": "Confirm which Power BI SKU (Pro vs Premium) NJTA/NJDOT has."
         },
         {
-          "name": "Power BI app registration and service-principal auth",
+          "name": "Power BI app registration and service-principal auth (Azure AD)",
           "days": 3,
-          "notes": "Register Azure AD application; configure Entra service principal with Dataset.ReadWrite.All; store credentials in Supabase Vault; Edge Function pbi-auth returning access tokens for subsequent push calls.\n"
+          "notes": "Client-credentials flow; store client_id/client_secret in Supabase vault."
         },
         {
-          "name": "Semantic model schema design",
-          "days": 3,
-          "notes": "Design star-schema: fact_quantities (approved qty, measured qty, contract qty, date, project, pay item); dim_project; dim_pay_item; dim_inspector; dim_date. Write Power BI dataset definition JSON.\n"
+          "name": "Semantic model schema design (projects, pay_items, annotations, daily_reports fact tables)",
+          "days": 3
         },
         {
-          "name": "Push-dataset Edge Function and nightly refresh cron",
+          "name": "Push-dataset Edge Function: batch upsert rows via Power BI REST API",
           "days": 5,
-          "notes": "Edge Function pbi-push: upsert rows into Power BI push dataset via REST API after each daily-report approval. Supabase cron pbi-nightly: full refresh of dimension tables at 02:00 EST. Retry with exponential back-off on 429/503.\n"
+          "notes": "Implement idempotent upsert; handle 429 rate-limit with retry."
         },
         {
-          "name": "Template Power BI report (.pbix)",
-          "days": 5,
-          "notes": "Build and publish a starter .pbix with: SPI/CPI trend line, contract vs measured quantity waterfall, inspector adoption heatmap, portfolio health matrix. Distribute via GitHub and in-app \"Connect Power BI\" wizard download link.\n"
+          "name": "Nightly refresh cron (pg_cron or Supabase scheduled function) to re-push incremental rows",
+          "days": 3
         },
         {
-          "name": "UI — Power BI connection wizard in Project Controls",
-          "days": 3,
-          "notes": "\"Connect to Power BI\" drawer: workspace selector (calls pbi-list-workspaces), one-click create/update dataset, dataset ID display, last-pushed timestamp, manual re-push button.\n"
+          "name": "Template Power BI report (.pbix) with 3 pre-built visuals (quantity progress, daily burn, SPI)",
+          "days": 5
         },
         {
-          "name": "Testing and documentation",
-          "days": 3,
-          "notes": "Unit tests for pbi-push; integration test against Power BI sandbox workspace; user guide: app registration steps, wizard walkthrough, template report customization guide.\n"
+          "name": "UI — Power BI connection wizard in Project Controls (enter workspace ID + dataset ID)",
+          "days": 2
+        },
+        {
+          "name": "Integration testing + documentation for BI admin",
+          "days": 2
         }
       ],
-      "_sourceFile": "/mnt/documents/wbs-integrations.yaml"
+      "_sourceFile": "/mnt/documents/wbs-integrations.yaml",
+      "depthAudit": {
+        "agent": "C",
+        "patchFile": "/mnt/documents/wbs-depth-patches-c.yaml",
+        "priorDurationDays": 15,
+        "priorSubTaskCount": 7,
+        "newSubTaskCount": 8,
+        "durationDelta": 10,
+        "rationale": "Declared durationDays=15 but sub-task days sum to 25 — a 67 % under-estimate. Power BI push-dataset + nightly cron alone requires full sprint capacity; correcting to 25 days aligns duration with the existing seven concrete sub-tasks.",
+        "reuseFromCode": null,
+        "thinnessCriteria": null
+      }
     },
     {
       "id": "INT-05",
       "name": "Public REST / GraphQL enterprise API",
       "surface": "Integrations",
       "status": "aspirational",
-      "durationDays": 25,
+      "durationDays": 46,
       "prerequisites": [],
       "workItemHint": null,
       "sources": [
@@ -9087,59 +9706,63 @@
       "rationale": "Landing.tsx FAQ (\"API access is available for enterprise integrations — SiteManager, AASHTOWare, or internal reporting systems\") is a direct customer-facing commitment; all other enterprise integrations (INT-02, INT-04) depend on a stable API surface with versioning and auth.",
       "subTasks": [
         {
-          "name": "API design — resource model, versioning, auth strategy",
-          "days": 3,
-          "notes": "Design OpenAPI 3.1 spec: /v1/projects, /v1/projects/{id}/pay-items, /v1/projects/{id}/daily-reports, /v1/projects/{id}/quantities (approved), /v1/projects/{id}/schedule-activities. Choose OAuth2 client-credentials for M2M; API key with HMAC for simpler integrations. Define pagination, filtering, field-selection, rate-limit headers.\n"
+          "name": "API design — resource model, versioning strategy (URI versioning v1), auth strategy",
+          "days": 3
         },
         {
-          "name": "OAuth2 client-credentials server (M2M)",
+          "name": "OAuth2 client-credentials server (M2M) — Supabase Edge Function acting as token issuer",
           "days": 5,
-          "notes": "Edge Function api-token: POST /v1/oauth/token with client_id + client_secret → JWT scoped to org. Admin UI panel to create/revoke API clients. Store hashed secrets in api_clients table with RLS.\n"
+          "notes": "Issue signed JWTs with scope claims; verify via RLS service-role check."
         },
         {
-          "name": "Core REST endpoints (projects, pay-items, quantities)",
-          "days": 10,
-          "notes": "Supabase Edge Functions per resource group: api-projects (list, get), api-pay-items (list, get, upsert from external), api-quantities (list approved quantities by date range + pay item), api-daily-reports (list approved, get with line items). Enforce org-scoped RLS on JWT sub claim. Return JSON:API-compatible envelopes.\n"
+          "name": "Core REST endpoints: GET/POST /v1/projects, /pay-items, /quantities, /daily-reports",
+          "days": 8,
+          "notes": "Re-use existing Supabase queries; add pagination (cursor-based) + filtering."
         },
         {
-          "name": "GraphQL schema layer (optional query surface)",
-          "days": 5,
-          "notes": "Wrap REST endpoints in a PostGraphile or Hasura-style GraphQL schema via Edge Function api-graphql; expose same resource graph with introspection disabled in production. Primarily for Power BI DirectQuery and analytics tooling.\n"
+          "name": "GraphQL schema layer (optional query surface via postgraphile or graphql-js edge fn)",
+          "days": 6
         },
         {
-          "name": "Webhook outbound events",
-          "days": 5,
-          "notes": "Webhook registration table (endpoint_url, events[], secret); trigger on: daily_report.approved, quantity.updated, schedule.updated. Edge Function webhook-dispatch: signs payload with HMAC-SHA256 X-TakeoffPro-Signature header; retries with exponential back-off; delivers status dashboard per endpoint.\n"
+          "name": "Webhook outbound events (measurement.created, report.approved) with HMAC signing",
+          "days": 5
         },
         {
-          "name": "API developer portal and OpenAPI docs site",
-          "days": 5,
-          "notes": "Generate Redoc / Stoplight Elements HTML from OpenAPI spec; host at /api/docs. Include code samples (curl, Python, Node); interactive \"Try it\" panel requires API key. Add link from in-app Admin → API Keys page.\n"
+          "name": "API developer portal and OpenAPI 3.1 docs site (Redoc or Stoplight Elements)",
+          "days": 5
         },
         {
-          "name": "Rate limiting, audit logging, usage metering",
-          "days": 3,
-          "notes": "Upstash Redis sliding-window rate limiting (per client_id, 1000 req/min). api_request_log table: endpoint, status, duration_ms, org_id, client_id. Admin dashboard table showing request volume and error rate per API client.\n"
+          "name": "Rate limiting, audit logging, per-org usage metering (Upstash Redis or custom)",
+          "days": 5
         },
         {
-          "name": "Security review, penetration test, and OWASP API top-10 remediation",
-          "days": 5,
-          "notes": "Engage external security reviewer; test for BOLA (broken object-level auth), BFLA, mass assignment, excessive data exposure. Remediate findings; sign off before GA.\n"
+          "name": "Security review, penetration test (OWASP API Top-10 scope) and remediation",
+          "days": 7
         },
         {
-          "name": "SDK packages (TypeScript + Python)",
-          "days": 5,
-          "notes": "Generate typed TypeScript SDK from OpenAPI spec via openapi-typescript-codegen; Python SDK via openapi-python-client. Publish to npm and PyPI under @takeoffpro/sdk-ts and takeoffpro-sdk. Include changelog and semantic versioning.\n"
+          "name": "SDK packages — TypeScript (npm) + Python (PyPI) generated from OpenAPI spec",
+          "days": 2
         }
       ],
-      "_sourceFile": "/mnt/documents/wbs-integrations.yaml"
+      "_sourceFile": "/mnt/documents/wbs-integrations.yaml",
+      "depthAudit": {
+        "agent": "C",
+        "patchFile": "/mnt/documents/wbs-depth-patches-c.yaml",
+        "priorDurationDays": 25,
+        "priorSubTaskCount": 9,
+        "newSubTaskCount": 9,
+        "durationDelta": 21,
+        "rationale": "Declared durationDays=25 but nine sub-tasks sum to 46 days — an 84 % under-estimate. OAuth2 server, GraphQL layer, portal, pen-test, and dual SDK packages are each multi-week efforts; proposedDurationDays corrected to 46 to reflect genuine scope.",
+        "reuseFromCode": null,
+        "thinnessCriteria": null
+      }
     },
     {
       "id": "INT-06",
       "name": "NJDOT DC-84 monthly estimate export",
       "surface": "Integrations",
       "status": "aspirational",
-      "durationDays": 15,
+      "durationDays": 21,
       "prerequisites": [],
       "workItemHint": null,
       "sources": [
@@ -9151,49 +9774,55 @@
       "rationale": "Landing.tsx roadmap promises \"Automated Monthly Estimate Generation — format quantities into NJDOT DC-84 payment estimate format\"; this is the primary payment-cycle deliverable for every NJDOT construction contract and is the most direct path to RE adoption.",
       "subTasks": [
         {
-          "name": "Discovery — obtain and parse current NJDOT DC-84 form specification",
+          "name": "Discovery — obtain current NJDOT DC-84 Excel/PDF form spec + RE instructions",
           "days": 2,
-          "notes": "Obtain official DC-84 Excel/PDF template from NJDOT Construction Bureau; parse all required fields: contract ID, prime contractor, estimate number, period dates, pay-item table (item no., description, unit, contract qty, previous qty, current qty, total to date, unit price, amount). Confirm column order for both original and revised formats.\n"
+          "notes": "Confirm exact column order, computation rules, and signature block requirements."
         },
         {
-          "name": "DC-84 data model and rollup query",
-          "days": 3,
-          "notes": "Write Supabase SQL view dc84_rollup: aggregates approved daily-report quantities by pay item, filtered to a calendar month and project; returns previous total (all months before period start), current period, and running total. Handles partial-period re-opens via snapshot archive.\n"
+          "name": "DC-84 data model: pay_item rollup query aggregating approved DWRs by period",
+          "days": 3
         },
         {
-          "name": "Excel (.xlsx) DC-84 generator Edge Function",
-          "days": 5,
-          "notes": "Edge Function dc84-export: accepts {projectId, year, month}; queries dc84_rollup; populates the official DC-84 xlsx template using exceljs; streams file to client. Preserves NJDOT cell formatting, merged cells, and summary rows. Includes unit-price column pulled from bid-schedule import.\n"
+          "name": "Excel (.xlsx) DC-84 generator Edge Function (ExcelJS library)",
+          "days": 4,
+          "notes": "Produce locked formula cells matching NJDOT expected layout."
         },
         {
-          "name": "PDF rendering of DC-84 for RE signature",
-          "days": 3,
-          "notes": "Edge Function dc84-pdf: renders DC-84 data into a pixel-accurate PDF (Puppeteer headless or jsPDF template); includes signature blocks for RE and PM; embeds TakeoffPro watermark and generation timestamp. Stores generated PDF in project Documents folder automatically.\n"
+          "name": "PDF rendering of DC-84 for RE wet or digital signature (Puppeteer or PDFKit)",
+          "days": 3
         },
         {
-          "name": "UI — DC-84 export wizard in monthly estimate panel",
-          "days": 3,
-          "notes": "New \"Generate DC-84\" button on Project Controls page; modal: select estimate period (month/year picker), preview rollup table (item count, total amount), \"Download Excel\" and \"Download PDF\" buttons. Warning banner if any pay items have unapproved quantities in the period.\n"
+          "name": "UI — DC-84 export wizard in monthly estimate panel (period picker + preview)",
+          "days": 4
         },
         {
-          "name": "Estimate submission history log",
-          "days": 2,
-          "notes": "estimate_submissions table: project_id, period_start, period_end, generated_at, generated_by, file_path, status (draft/submitted/paid). History tab on the DC-84 wizard showing all past estimates with download links.\n"
+          "name": "Estimate submission history log (generated_at, period, file URL, RE name)",
+          "days": 2
         },
         {
-          "name": "Testing and NJDOT RE validation",
-          "days": 3,
-          "notes": "Unit tests for dc84_rollup query with edge cases (zero quantities, partial month, re-opened reports); visual regression test on Excel output; coordinate with an NJDOT RE to validate against a real DC-84 submission; fix discrepancies before GA.\n"
+          "name": "NJDOT RE validation round — submit test DC-84 + incorporate feedback",
+          "days": 3
         }
       ],
-      "_sourceFile": "/mnt/documents/wbs-integrations.yaml"
+      "_sourceFile": "/mnt/documents/wbs-integrations.yaml",
+      "depthAudit": {
+        "agent": "C",
+        "patchFile": "/mnt/documents/wbs-depth-patches-c.yaml",
+        "priorDurationDays": 15,
+        "priorSubTaskCount": 7,
+        "newSubTaskCount": 7,
+        "durationDelta": 6,
+        "rationale": "Declared durationDays=15 but seven sub-tasks sum to 21 days — a 40 % under-estimate. DC-84 form parsing and NJDOT RE validation cycles are notoriously iterative; proposedDurationDays corrected to 21 to match the already-concrete sub-task plan.",
+        "reuseFromCode": null,
+        "thinnessCriteria": null
+      }
     },
     {
       "id": "INT-07",
       "name": "Contractor read-only quantity portal",
       "surface": "Integrations",
       "status": "aspirational",
-      "durationDays": 15,
+      "durationDays": 23,
       "prerequisites": [
         "INT-06"
       ],
@@ -9207,49 +9836,60 @@
       "rationale": "Landing.tsx roadmap and FAQ both promise a contractor portal (\"Give contractors read-only access to measured quantities before payment disputes arise\"); pre-payment quantity transparency is cited as the primary dispute- prevention mechanism on the landing page.",
       "subTasks": [
         {
-          "name": "Discovery — contractor portal UX requirements and data scope",
+          "name": "Discovery — contractor portal UX requirements, data scope, and FHWA transparency rules",
+          "days": 2
+        },
+        {
+          "name": "Data model — contractor_access_grants table with project_id, expiry, scoped pay-item list",
           "days": 2,
-          "notes": "Interview 2-3 NJTA/NJDOT REs on what data contractors need to see (approved totals only? pending? plan annotations?); confirm whether contractors need their own accounts or a shareable token-link; define what is explicitly excluded (RE comments, internal notes, unapproved quantities).\n"
+          "notes": "RLS policies allow read-only to granted project quantities only."
         },
         {
-          "name": "Data model — contractor access grants and RLS policies",
-          "days": 3,
-          "notes": "contractor_access_grants table: project_id, contractor_name, contractor_email, access_token (UUID), scopes (quantities_approved, dc84_pdf), granted_by, expires_at, revoked_at. RLS policy: SELECT only on approved quantities where project_id matches grant. No access to annotations, GPS traces, or internal comments.\n"
+          "name": "Token-link auth flow — signed URL (no Supabase account required); JWT with contractor claims",
+          "days": 4,
+          "notes": "Use Supabase signing key; enforce expiry and single-use semantics."
         },
         {
-          "name": "Token-link auth flow (no contractor Supabase account required)",
-          "days": 5,
-          "notes": "Edge Function contractor-auth: validates access_token from URL param; issues short-lived JWT with role=contractor and project_id claim; cookie-based session with 8-hour expiry. No email/password; link is the credential. Rate-limited to 60 req/hr per token. Revocation checked on every request.\n"
+          "name": "Contractor portal UI — approved quantities table + DC-84 PDF download link",
+          "days": 4
         },
         {
-          "name": "Contractor portal UI — approved quantities and DC-84 view",
-          "days": 5,
-          "notes": "Standalone route /contractor/:token: branded header (TakeoffPro + project name), pay-item summary table (item no., description, unit, contract qty, total approved to date, % complete), month selector, \"Download DC-84 PDF\" button. Read-only — no annotations, no edit controls. Mobile-optimized for field office tablets.\n"
+          "name": "RE portal-management UI — grant / revoke / view audit log of contractor accesses",
+          "days": 4
         },
         {
-          "name": "RE portal-management UI (grant / revoke / audit)",
-          "days": 3,
-          "notes": "\"Contractor Access\" tab on Project Settings: \"Create Access Link\" form (contractor name, email, optional expiry); table of active grants with last-accessed timestamp, \"Revoke\" button; full access log (IP, timestamp, pages viewed) for audit trail.\n"
+          "name": "Dispute flag — contractor marks line item contested, submits reason + supporting note",
+          "days": 4,
+          "notes": "Triggers RE notification (NT-02 webhook path)."
         },
         {
-          "name": "Email delivery of portal link to contractor",
-          "days": 2,
-          "notes": "Supabase Edge Function contractor-invite-email: sends branded email via Resend with portal URL, project name, scope description, and expiry date. RE triggers from the grant UI. Logs send status.\n"
+          "name": "Email delivery of portal link to contractor with branded email template",
+          "days": 1
         },
         {
-          "name": "Testing and security review",
-          "days": 3,
-          "notes": "Test token replay attacks, IDOR between projects, session fixation; verify RLS prevents access to unapproved/internal data; Playwright E2E for full contractor grant → view → RE revoke flow; load test token-auth endpoint.\n"
+          "name": "Security review — verify RLS prevents contractor seeing PII or other projects",
+          "days": 2
         }
       ],
-      "_sourceFile": "/mnt/documents/wbs-integrations.yaml"
+      "_sourceFile": "/mnt/documents/wbs-integrations.yaml",
+      "depthAudit": {
+        "agent": "C",
+        "patchFile": "/mnt/documents/wbs-depth-patches-c.yaml",
+        "priorDurationDays": 15,
+        "priorSubTaskCount": 7,
+        "newSubTaskCount": 8,
+        "durationDelta": 8,
+        "rationale": "Declared durationDays=15 but seven sub-tasks sum to 23 days — a 53 % under-estimate. Token-link auth without a Supabase account, dispute workflow, and security review each exceed a day; proposedDurationDays corrected to 23.",
+        "reuseFromCode": null,
+        "thinnessCriteria": null
+      }
     },
     {
       "id": "INT-08",
       "name": "Primavera P6 Cloud live API integration",
       "surface": "Integrations",
       "status": "aspirational",
-      "durationDays": 25,
+      "durationDays": 33,
       "prerequisites": [
         "INT-05"
       ],
@@ -9264,54 +9904,60 @@
       "rationale": "McfaPitch.tsx integrationLayers lists \"Primavera P6 — Schedule\" as a primary data source; current XER file-upload (cap.p6.xml-parse-serialize, shipped) is a manual step — a live API connection enables real-time schedule telemetry as described in McfaPitch tenCoreActivities item 05.",
       "subTasks": [
         {
-          "name": "Discovery — P6 EPPM REST API vs P6 Professional Cloud API",
+          "name": "Discovery — P6 EPPM REST API vs P6 Professional Cloud API editions + licensing scope",
           "days": 3,
-          "notes": "Oracle P6 EPPM exposes a REST API (v2) at /p6ws; P6 Cloud (Oracle Cloud) exposes OAuth2-secured endpoints. Confirm which deployment MCFA/PANYNJ uses; document auth model, rate limits, WBS/activity/ resource endpoints, and progress-update write permissions.\n"
+          "notes": "Confirm whether NJTA/NJDOT uses P6 EPPM (web) or P6 Professional (thick client)."
         },
         {
-          "name": "OAuth2 / SAML connector for Oracle P6 Cloud",
+          "name": "OAuth2 / SAML connector for Oracle P6 Cloud (service account + token exchange)",
+          "days": 5
+        },
+        {
+          "name": "Schedule pull — activities, relationships, WBS codes, resources, calendars",
           "days": 5,
-          "notes": "Edge Function p6cloud-auth: OAuth2 authorization-code flow with Oracle Identity Cloud Service (IDCS); store refresh tokens in Vault. Fallback: Basic auth for P6 EPPM on-prem via encrypted service account credentials.\n"
+          "notes": "Map P6 fields to schedule_activities schema; handle P6 WBS hierarchy."
         },
         {
-          "name": "Schedule pull — activities, relationships, WBS, resources",
-          "days": 5,
-          "notes": "Edge Function p6cloud-pull: GET /projects/{id}/activities with resource assignments, baseline data, current dates, % complete; normalize into TakeoffPro schedule schema; upsert into schedule_activities, schedule_resources, schedule_relationships; record p6_last_synced_at timestamp.\n"
+          "name": "Progress push — approved quantities → P6 actual units via PATCH activity endpoint",
+          "days": 5
         },
         {
-          "name": "Progress push — approved quantities → P6 actual units",
-          "days": 5,
-          "notes": "Edge Function p6cloud-push: on daily-report approval, map approved quantities to P6 resource assignments via activity_pay_items junction; PATCH /activities/{id} with actual_units, remaining_units, physical_percent_complete. This is the live extension of the existing PMXML-based cap.p6.apply-progress flow.\n"
+          "name": "Real-time SPI/CPI telemetry dashboard widget in Project Controls",
+          "days": 4,
+          "notes": "Reuse ai.evm-telemetry-dashboard EVM calc engine."
         },
         {
-          "name": "Real-time SPI/CPI telemetry dashboard widget",
-          "days": 5,
-          "notes": "New P6LiveTelemetry component on Project Controls: SPI/CPI gauges updating from p6cloud-pull every sync cycle; top-5 slipping activities list; \"Last synced\" timestamp with manual refresh button. Replaces hardcoded placeholder noted in cap.controls.executive-kpi.\n"
+          "name": "Scheduled sync cron (pg_cron) + conflict resolution when P6 actuals differ from TakeoffPro",
+          "days": 6
         },
         {
-          "name": "Scheduled sync cron and conflict resolution",
-          "days": 3,
-          "notes": "Supabase cron p6cloud-sync: runs every 4 hours per connected project; detects conflicts where P6 has been manually updated since last push; creates conflict_flags record; surfaces in RE dashboard for manual resolution.\n"
+          "name": "Integration testing against Oracle P6 sandbox environment (E2E)",
+          "days": 3
         },
         {
-          "name": "Testing (unit + P6 sandbox E2E)",
-          "days": 5,
-          "notes": "Unit tests for p6cloud-auth, pull, push; E2E against Oracle P6 EPPM demo environment; validate round-trip fidelity for SPI/CPI computation; test conflict detection with simulated parallel edits.\n"
-        },
-        {
-          "name": "Documentation and P6 admin guide",
-          "days": 2,
-          "notes": "P6 admin guide: creating REST API user, granting project roles, configuring redirect URIs in IDCS. User guide: connecting a P6 project, reviewing telemetry, resolving sync conflicts.\n"
+          "name": "Documentation: P6 admin guide + connection runbook for NJTA IT",
+          "days": 2
         }
       ],
-      "_sourceFile": "/mnt/documents/wbs-integrations.yaml"
+      "_sourceFile": "/mnt/documents/wbs-integrations.yaml",
+      "depthAudit": {
+        "agent": "C",
+        "patchFile": "/mnt/documents/wbs-depth-patches-c.yaml",
+        "priorDurationDays": 25,
+        "priorSubTaskCount": 8,
+        "newSubTaskCount": 8,
+        "durationDelta": 8,
+        "rationale": "Declared durationDays=25 but eight sub-tasks sum to 33 days — a 32 % under-estimate (just above the 30 % threshold). Oracle P6 EPPM OAuth/SAML connector and the conflict-resolution layer both routinely slip; proposedDurationDays corrected to 33.",
+        "reuseFromCode": null,
+        "thinnessCriteria": null
+      }
     },
     {
       "id": "INT-09",
       "name": "DC-84 to SiteManager auto-submit pipeline",
       "surface": "Integrations",
       "status": "aspirational",
-      "durationDays": 10,
+      "durationDays": 16,
       "prerequisites": [
         "INT-06",
         "INT-02"
@@ -9325,32 +9971,48 @@
       "rationale": "The combination of DC-84 generation (INT-06) and SiteManager sync (INT-02) creates a straight-through processing pipeline that eliminates all manual data re-entry from field measurement to NJDOT payment system — the core value proposition stated on the landing page.",
       "subTasks": [
         {
-          "name": "Pipeline orchestration design (trigger, stages, rollback)",
-          "days": 3,
-          "notes": "Design pipeline state machine: DRAFT → GENERATED → VALIDATED → SUBMITTED → ACCEPTED / REJECTED. Define rollback: if SM rejects, flag quantities for RE review without reverting approved status. Document NJDOT's electronic estimate submission protocol.\n"
-        },
-        {
-          "name": "Validation gate — pre-submission quantity completeness check",
-          "days": 3,
-          "notes": "Edge Function dc84-validate: checks all contract pay items have at least one approved quantity entry for the period; flags items with zero current quantity as warnings (not errors); confirms unit-price table is complete; returns pass/warn/fail with item-level detail.\n"
-        },
-        {
-          "name": "End-to-end pipeline UI and submission confirmation",
-          "days": 5,
-          "notes": "\"Submit Estimate to NJDOT\" stepper in Project Controls: Step 1 Generate DC-84 → Step 2 Validate (show warnings) → Step 3 Push to SiteManager → Step 4 Confirmation (SM transaction ID + timestamp). Full pipeline log persisted to estimate_submissions table.\n"
-        },
-        {
-          "name": "Integration testing of full pipeline",
-          "days": 3,
-          "notes": "E2E test: create project with pay items → submit daily reports → approve → generate DC-84 → push to SM test environment → verify SM accepted quantities. Regression suite added to CI.\n"
-        },
-        {
-          "name": "RE training materials and standard operating procedure",
+          "name": "Pipeline orchestration design — trigger event (RE approves estimate), stages, and rollback",
           "days": 2,
-          "notes": "1-page SOP for NJDOT REs: month-end closeout checklist, pipeline walkthrough, error codes and remediation steps. Embedded as in-app help tooltip on each pipeline step.\n"
+          "notes": "Use Supabase pg_net or a Step Functions-style Edge Function chain."
+        },
+        {
+          "name": "Pre-submission validation gate — quantity completeness check (all pay items have approved DWR)",
+          "days": 2
+        },
+        {
+          "name": "DC-84 auto-generation step (call INT-06 generator) + attach to pipeline run record",
+          "days": 2
+        },
+        {
+          "name": "SiteManager API submit step (call INT-02 push endpoint) with retry + idempotency key",
+          "days": 3,
+          "notes": "Store submission_id returned by SiteManager for reconciliation."
+        },
+        {
+          "name": "End-to-end pipeline UI — submission status page with stage progress + error details",
+          "days": 3
+        },
+        {
+          "name": "Integration testing of full pipeline against NJDOT UAT environment",
+          "days": 2
+        },
+        {
+          "name": "RE training materials and standard operating procedure (1-page runbook)",
+          "days": 2
         }
       ],
-      "_sourceFile": "/mnt/documents/wbs-integrations.yaml"
+      "_sourceFile": "/mnt/documents/wbs-integrations.yaml",
+      "depthAudit": {
+        "agent": "C",
+        "patchFile": "/mnt/documents/wbs-depth-patches-c.yaml",
+        "priorDurationDays": 10,
+        "priorSubTaskCount": 5,
+        "newSubTaskCount": 7,
+        "durationDelta": 6,
+        "rationale": "Declared durationDays=10 but five sub-tasks sum to 16 days — a 60 % under-estimate. The pipeline depends on INT-06 (DC-84 generator) and INT-02 (SiteManager API), so the orchestration, rollback, and UAT steps alone exceed 10 days; corrected to 16.",
+        "reuseFromCode": null,
+        "thinnessCriteria": null
+      }
     },
     {
       "id": "ai.qty-extraction",
