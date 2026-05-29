@@ -1,94 +1,80 @@
-# Phase D — Finish the WBS
+# Phase D — Reset, v2: solve the allowlist problem first
 
-You're right: critical path is garbage-in/garbage-out until (a) thin leaves are fleshed out so durations are real, and (b) commits are mapped so "shipped" leaves carry actual completion evidence. So we sequence:
+You caught the recursion: if I hand each subagent a curated file list, I'm just laundering the same broken tags through a different name. An auth agent that only sees `useAuth.tsx` + `Auth.tsx` will miss that auth touches `Admin.tsx`, every page guard, every RLS-aware hook, and half the edge functions. Same disease.
 
-```text
-Step 1  Depth audit          ──► fattens thin leaves, fixes duration estimates
-Step 2  Commit reconciliation ──► proves shipped/partial status, splits BC-001
-Step 3  Critical path         ──► now meaningful, renders dependency graph
-```
+So the allowlist itself has to be **derived, broad, and verified**, not curated by me up front.
 
-Each step writes its own artifact and updates `docs/wbs.json` before the next step consumes it.
+## Step −1 (NEW) — Build a defensible file→surface map
 
----
+Three passes, each independent, results merged with disagreement flagged for human review. **Nothing else runs until this passes.**
 
-## Step 1 — Depth audit
+### Pass A — Static derivation (cheap, mechanical, wrong on purpose)
 
-**Goal:** Every leaf has enough sub-tasks that its `durationDays` is defensible.
+Script `scripts/derive-file-surface.mjs`:
+- For each file under `src/`, `supabase/`, `scripts/`, `docs/`: record path, top-level imports, top-level exports, and the leaf IDs that mention it in their `sources[]`.
+- Emit `docs/file-surface-a.json` — naive path-based guess + reverse index from `wbs.json sources[]`.
 
-Spawn 3 parallel subagents, each owning a slice of the 276 leaves:
-- **Agent A** — surfaces Takeoff, Field Ops, Documents, Reporting, Marketing (≈90 leaves)
-- **Agent B** — Scheduling, Scheduling Extras, Project Controls, Resource Mgmt, Cost/EVM/Risk/Claims (≈110 leaves)
-- **Agent C** — Bootstrap/Shell, Auth/Admin, AI, Integrations, Native/Offline, Notifications, Fajar, Backend/Infra (≈76 leaves)
+This gives a baseline + exposes every file the WBS already claims to cover.
 
-Each agent reads `docs/wbs.json` + the relevant source code, flags every leaf where:
-- sub-tasks < 3, OR
-- sub-task names are single words / non-actionable, OR
-- duration estimate is missing or inconsistent with sub-task sum
+### Pass B — Semantic survey (one subagent, capable model)
 
-Output per agent: a patch list in `/mnt/documents/wbs-depth-patches-{a,b,c}.yaml` — only the leaves needing edits, with proposed expanded `subTasks[]` and revised `durationDays`.
+One agent, read-only, gets **the entire `src/` tree** (it's ~250 files — fits) plus `supabase/functions/` and `docs/scope-inventory/*.md`. Task:
 
-**Synthesis:** I merge the three patch files into the canonical source YAMLs (`docs/wbs-leaves.yaml` and the `/mnt/documents/wbs-*.yaml` files), re-run `node scripts/consolidate-wbs.mjs`, and report delta (leaves touched, days added/removed).
+> For each file, in one sentence, say what user-facing capability it implements. Then assign it to one **or more** surfaces from this list: [13 surfaces]. A file can belong to N surfaces. Cite the import graph or the JSX it renders as justification. Flag files where no surface fits.
 
----
+Output: `docs/file-surface-b.json` — `{ path, summary, surfaces[], confidence, justification }`.
 
-## Step 2 — Commit reconciliation
+This is the only pass that actually reads code to make the call. The capable model is worth it here.
 
-**Goal:** Every `shipped`/`partial` leaf points to real commits; the BC-001 megacluster and 12 UNASSIGNED clusters disappear.
+### Pass C — Reverse derivation from leaves (capable model, one agent)
 
-Write `scripts/reconcile-commits.mjs` that:
-1. Loads `docs/wbs.json` + `docs/wbs-proposals.reconciled.json` + `docs/work-items.json`.
-2. For each shipped/partial leaf, uses `workItemHint` + name/sub-task tokens to score work-item matches; assigns commits above threshold.
-3. Splits BC-001 (915 commits) by re-running the same scorer on individual work items inside the cluster — each one routes to its best-fit leaf.
-4. Folds the 12 UNASSIGNED clusters: each member work-item is re-scored against all 276 leaves; leftovers become net-new `planned` leaves under a new surface `Unmapped Engineering` for user review.
-5. Writes `docs/wbs-commits.json` (leaf → commit[] map) and appends a `commits` field on each leaf in `docs/wbs.json`.
+Different angle. Same agent type, different task:
 
-**Output report:**
-- Leaves now backed by ≥1 commit (shipped sanity check)
-- Shipped leaves with **0** commits (status downgrade candidates)
-- Work-items still unmapped (true orphans)
+> Here are 276 WBS leaves with names + sub-tasks. For each leaf, list every file in `src/` or `supabase/` whose code is *necessary to implement* this leaf. Do not use the leaf's `sources[]` field — derive from leaf semantics.
 
----
+Output: `docs/file-surface-c.json` — `{ leafId, requiredFiles[], rationale }`.
 
-## Step 3 — Critical path
+### Merge + disagreement report
 
-**Goal:** Render the longest-duration path through remaining non-shipped work.
+`scripts/merge-file-surface.mjs`:
+- For each file, compare Pass A's guess, Pass B's assignment, Pass C's reverse map.
+- **Agreement (all three concur on at least one surface):** lock it in.
+- **Disagreement (B and C disagree, or either disagrees with A):** emit to `docs/file-surface-disputed.md` for you and me to resolve manually.
+- **Orphan files (no leaf in C claims them):** emit separately — these are either dead code, missed leaves, or genuinely cross-cutting (`lib/utils.ts`).
 
-Write `scripts/critical-path.mjs`:
-1. Build DAG from `prerequisites[]` on non-shipped leaves.
-2. Detect cycles → report as data bugs (don't crash).
-3. Forward pass (ES/EF) + backward pass (LS/LF) → compute float per leaf.
-4. Tag leaves with `float === 0` as critical.
-5. Emit:
-   - `docs/critical-path.json` — ordered list of critical leaves, total duration, near-critical (float ≤ 5d) list
-   - `docs/critical-path.md` — human view: critical chain table + per-surface contribution to the critical path
-   - `docs/critical-path.mmd` — Mermaid flowchart of the critical chain (max 50 nodes; longer chains get a collapsed sub-graph per surface)
+You and I walk the disputed list together. Probably <30 files. After that, the allowlist is grounded in three independent passes plus human adjudication on the contested edges.
 
-**Output report:**
-- Total critical-path days vs. total remaining days (parallelism ratio)
-- Top 5 surfaces on the critical path
-- Resource Mgmt / Fajar / EVM presence on critical path — answers your "are these gating or nice-to-have?" question
+## Why this fixes the recursion you spotted
 
----
+- The mapping isn't authored by me from priors. It's derived three ways and the contradictions are the deliverable.
+- Pass B reads code without seeing the WBS, so it can't be biased by existing leaf assignments.
+- Pass C reads the WBS without seeing the import graph, so it can't be biased by file paths.
+- Where they agree, we trust it. Where they disagree, *you* see the disagreement before I act on it.
+- Orphan files surface dead code and missed leaves automatically.
 
-## Deliverables checklist
+## Sequence (revised)
 
 ```text
-Step 1: /mnt/documents/wbs-depth-patches-{a,b,c}.yaml
-        updated source YAMLs, regenerated docs/wbs.json + docs/wbs.md
-Step 2: scripts/reconcile-commits.mjs, docs/wbs-commits.json,
-        commits[] added to docs/wbs.json
-Step 3: scripts/critical-path.mjs, docs/critical-path.{json,md,mmd}
-        .lovable/plan.md updated to reflect Phase D close-out
+Step −1   File→surface mapping (3 passes + merge + dispute resolution)  ← we are here
+Step  0   Per-surface ground-truth audit using the locked allowlist
+Step 0.5  Apply ground-truth to wbs.json
+Step  1   Spot-fill thin leaves (mostly moot)
+Step  2   Commit reconciliation as evidence layer
+Step  3   Critical path
 ```
 
-## Non-goals
+## Cost estimate
 
-- No app/UI code changes — this is all docs + scripts.
-- No commits added to git history; we're only labeling existing ones.
-- No re-estimating shipped leaves' duration unless Step 1 surfaces an obvious error.
-- I will NOT cull any leaves; aspirational stays aspirational.
+- Pass A: one script, <1 min, no LLM.
+- Pass B: one capable subagent, ~250 files, one pass. Big context, single result.
+- Pass C: one capable subagent, 276 leaves, one pass.
+- Merge: one script.
+- Dispute resolution: depends on disagreement rate — my guess is 20-40 files needing your call.
 
-## Approval gates
+Total before Step 0 even starts: roughly the work of two subagents + a script + a review session. Cheap relative to redoing the whole WBS on a bad foundation.
 
-I'll pause and report after each step so you can sanity-check before the next one runs (especially after Step 2, since downgraded "shipped" leaves may need your judgment).
+## What I need from you
+
+1. **Green-light Step −1** as written, or push back on the structure.
+2. **Confirm the 13 surfaces** are the right vocabulary for Pass B to assign to. If you want to split (e.g. "Auth" vs "Admin", "Native" vs "Offline") or merge any, now's the time — Pass B's output is only as good as the label set.
+3. **Decide who adjudicates disputes.** I'll propose for each, you decide? Or you want to see all of them raw and call them yourself?
