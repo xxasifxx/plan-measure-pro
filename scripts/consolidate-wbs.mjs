@@ -23,8 +23,18 @@ const SOURCES = [
 // Map surface-key (the YAML group key under which a leaf lives) to a human surface label.
 const SURFACE_KEY_LABEL = {
   bootstrap_shell:     'Bootstrap & Shell',
+  project_lifecycle:   'Project Lifecycle',
+  takeoff:             'Takeoff',
+  field_ops:           'Field Operations',
+  documents:           'Documents',
+  reporting_exports:   'Reporting & Exports',
+  reporting:           'Reporting',
+  marketing_sales:     'Marketing & Sales',
+  backend_infra:       'Backend & Infra',
+  cross_cutting:       'Cross-Cutting',
   scheduling:          'Scheduling',
   scheduling_extras:   'Scheduling Extras',
+  project_controls:    'Project Controls',
   ai:                  'AI',
   auth:                'Auth & Admin',
   auth_admin:          'Auth & Admin',
@@ -33,7 +43,7 @@ const SURFACE_KEY_LABEL = {
   notifications:       'Notifications',
   integrations_surface:'Integrations',
   workPackages:        'Integrations',
-  leaves:              null, // pass-through
+  leaves:              null,
 };
 
 function looksLikeLeaf(o) {
