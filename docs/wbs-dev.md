@@ -6,12 +6,26 @@ This is the schedule of **building TakeoffPro**, not the schedule of work *insid
 
 | File | Role |
 |---|---|
+| `docs/wbs-dev.leaves.json` | **Canonical leaf catalog** — brief + code reconciled, with provenance per leaf. |
+| `docs/wbs-dev.leaves.md` | Human-readable leaf tree. |
+| `docs/wbs-dev.code-leaves.json` | Intermediate — pure code-derived leaves (file-clusters, tables, migration weeks, edge fns). |
+| `docs/wbs-dev.catalog-gaps.md` | Where the catalog is dishonest: code-only leaves (brief silent), brief-only leaves (stale), unclaimed files. |
 | `docs/wbs-dev.activities.json` | Canonical activity list — strict scoring applied. |
 | `docs/wbs-dev.promises.json` | Marketing claims extracted from landing/pitch/llms with seeded stream mapping. **Reviewer-edited**. |
 | `docs/wbs-dev.verification.manifest.json` | Per-activity e2e verification recipes. **Reviewer-edited.** |
 | `docs/wbs-dev.verification.md` | Auto-generated report of verification status by bucket. |
 | `public/exports/takeoffpro-dev.xml` | PMXML fixture — round-trips through `/p6-xml`. |
 | `src/test/dev-pmxml.test.ts` | Round-trip + status-distribution assertions. |
+
+## Catalog provenance
+
+Leaves are derived from two converging passes and reconciled by file-path overlap:
+
+1. **Brief pass** (`build-leaves.mjs`) — one leaf per "Surfaces (files)" entry plus one per "Current state vs criteria" bullet that didn't merge into a surface.
+2. **Code pass** (`build-code-leaves.mjs`) — walks `src/**`, `supabase/**`, `scripts/**`, root configs, plus `public.*` tables (from `src/integrations/supabase/types.ts`) and weekly migration clusters.
+3. **Reconcile** (`reconcile-leaves.mjs`) — file overlap merges the two; provenance is recorded as `brief+code`, `brief-only`, or `code-only`. New streams `97 Plumbing`, `98 Build & Infra`, `99 Cross-cutting` (shadcn) catch what no brief claims.
+
+`catalog-gaps.md` is the honest accounting: every `code-only` leaf is work that happened with no brief acceptance criterion, every `brief-only` leaf points at a file the resolver couldn't find (probably renamed or deleted).
 
 ## WBS shape
 
