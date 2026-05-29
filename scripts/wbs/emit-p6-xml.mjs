@@ -126,14 +126,25 @@ function activityType(act, state) {
 }
 
 function activityStatus(act, state) {
-  const lc = state?.lifecycle;
+  const lc = comprehensionLifecycle(act, state);
   if (lc === "shipped")   return "Completed";
   if (lc === "in-flight") return "In Progress";
   if (lc === "paused" || lc === "dormant") return "In Progress";
   return "Not Started"; // planned, abandoned
 }
 
+// Lifecycle: comprehension overrides for git-origin activities use the
+// stream-grounded percent (≥95→shipped, ≥50→in-flight, else planned).
+// Fall back to commit-recency state for activities outside any stream.
+function comprehensionLifecycle(act, state) {
+  const ov = compByAct.get(act.id);
+  if (ov?.lifecycle) return ov.lifecycle;
+  return state?.lifecycle;
+}
+
 function percentComplete(act, state) {
+  const ov = compByAct.get(act.id);
+  if (ov && typeof ov.percent_complete === "number") return ov.percent_complete;
   const lc = state?.lifecycle;
   if (lc === "shipped")   return 100;
   if (lc === "in-flight") return 50;
