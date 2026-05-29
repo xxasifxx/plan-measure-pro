@@ -1,10 +1,13 @@
 {
-  "generatedAt": "2026-05-29T05:59:15.958Z",
+  "generatedAt": "2026-05-29T06:07:43.018Z",
   "project": {
     "start": "2026-03-08",
     "latestCommit": "2026-05-29",
     "lifespanDays": 83,
-    "totalCommits": 815
+    "totalCommits": 961,
+    "buildCommits": 751,
+    "acceptanceCommits": 142,
+    "bootstrapCommits": 68
   },
   "thresholds": {
     "BURST_MIN_FRAC": 0.6,
@@ -120,6 +123,7 @@
       "label": "Takeoff frontend (canvas, annotations, pay items)",
       "fileCount": 37,
       "commitCount": 450,
+      "acceptanceCount": 96,
       "firstCommit": "2026-03-08",
       "lastCommit": "2026-05-28",
       "lifespanDays": 83,
@@ -131,6 +135,12 @@
       },
       "refine": {
         "count": 150,
+        "start": "2026-03-08",
+        "end": "2026-05-28",
+        "spanDays": 83
+      },
+      "accept": {
+        "count": 96,
         "start": "2026-03-08",
         "end": "2026-05-28",
         "spanDays": 83
@@ -191,6 +201,7 @@
       "label": "Takeoff backend (RLS, RPCs, triggers)",
       "fileCount": 40,
       "commitCount": 44,
+      "acceptanceCount": 31,
       "firstCommit": "2026-03-21",
       "lastCommit": "2026-05-29",
       "lifespanDays": 70,
@@ -201,6 +212,12 @@
         "spanDays": 70
       },
       "refine": null,
+      "accept": {
+        "count": 31,
+        "start": "2026-03-21",
+        "end": "2026-05-29",
+        "spanDays": 70
+      },
       "punchList": null,
       "sampleSubjects": [
         "Connected to Lovable Cloud",
@@ -257,6 +274,7 @@
       "label": "Offline mirror & outbox",
       "fileCount": 7,
       "commitCount": 3,
+      "acceptanceCount": 3,
       "firstCommit": "2026-05-25",
       "lastCommit": "2026-05-28",
       "lifespanDays": 4,
@@ -271,6 +289,12 @@
         "start": "2026-05-28",
         "end": "2026-05-28",
         "spanDays": 1
+      },
+      "accept": {
+        "count": 3,
+        "start": "2026-05-25",
+        "end": "2026-05-28",
+        "spanDays": 4
       },
       "punchList": null,
       "sampleSubjects": [
@@ -291,6 +315,7 @@
       "label": "Takeoff QA",
       "fileCount": 1,
       "commitCount": 11,
+      "acceptanceCount": 6,
       "firstCommit": "2026-03-15",
       "lastCommit": "2026-03-15",
       "lifespanDays": 1,
@@ -301,6 +326,12 @@
         "spanDays": 1
       },
       "refine": null,
+      "accept": {
+        "count": 6,
+        "start": "2026-03-15",
+        "end": "2026-03-15",
+        "spanDays": 1
+      },
       "punchList": null,
       "sampleSubjects": [
         "Add plan & specs test hook",
@@ -318,6 +349,7 @@
       "label": "Schedule workspace UI",
       "fileCount": 11,
       "commitCount": 13,
+      "acceptanceCount": 4,
       "firstCommit": "2026-05-26",
       "lastCommit": "2026-05-26",
       "lifespanDays": 1,
@@ -328,6 +360,12 @@
         "spanDays": 1
       },
       "refine": null,
+      "accept": {
+        "count": 4,
+        "start": "2026-05-26",
+        "end": "2026-05-26",
+        "spanDays": 1
+      },
       "punchList": null,
       "sampleSubjects": [
         "Changes"
@@ -351,6 +389,7 @@
       "label": "Schedule engine (CPM, calendars, baselines)",
       "fileCount": 7,
       "commitCount": 10,
+      "acceptanceCount": 4,
       "firstCommit": "2026-05-26",
       "lastCommit": "2026-05-28",
       "lifespanDays": 3,
@@ -365,6 +404,12 @@
         "start": "2026-05-28",
         "end": "2026-05-28",
         "spanDays": 1
+      },
+      "accept": {
+        "count": 4,
+        "start": "2026-05-26",
+        "end": "2026-05-28",
+        "spanDays": 3
       },
       "punchList": null,
       "sampleSubjects": [
@@ -385,6 +430,7 @@
       "label": "P6 / XER import-export",
       "fileCount": 21,
       "commitCount": 17,
+      "acceptanceCount": 12,
       "firstCommit": "2026-05-05",
       "lastCommit": "2026-05-26",
       "lifespanDays": 22,
@@ -395,6 +441,12 @@
         "spanDays": 22
       },
       "refine": null,
+      "accept": {
+        "count": 12,
+        "start": "2026-05-05",
+        "end": "2026-05-26",
+        "spanDays": 22
+      },
       "punchList": null,
       "sampleSubjects": [
         "Changes"
@@ -428,6 +480,7 @@
       "label": "Schedule QA",
       "fileCount": 7,
       "commitCount": 6,
+      "acceptanceCount": 5,
       "firstCommit": "2026-05-05",
       "lastCommit": "2026-05-29",
       "lifespanDays": 25,
@@ -442,6 +495,12 @@
         "start": "2026-05-05",
         "end": "2026-05-24",
         "spanDays": 20
+      },
+      "accept": {
+        "count": 5,
+        "start": "2026-05-05",
+        "end": "2026-05-29",
+        "spanDays": 25
       },
       "punchList": null,
       "sampleSubjects": [
@@ -462,6 +521,7 @@
       "label": "PWA shell",
       "fileCount": 2,
       "commitCount": 4,
+      "acceptanceCount": 4,
       "firstCommit": "2026-05-25",
       "lastCommit": "2026-05-26",
       "lifespanDays": 1,
@@ -472,6 +532,12 @@
         "spanDays": 1
       },
       "refine": null,
+      "accept": {
+        "count": 4,
+        "start": "2026-05-25",
+        "end": "2026-05-26",
+        "spanDays": 1
+      },
       "punchList": null,
       "sampleSubjects": [
         "Changes"
@@ -486,6 +552,7 @@
       "label": "Native shell (Capacitor)",
       "fileCount": 10,
       "commitCount": 3,
+      "acceptanceCount": 2,
       "firstCommit": "2026-05-26",
       "lastCommit": "2026-05-26",
       "lifespanDays": 1,
@@ -496,6 +563,12 @@
         "spanDays": 1
       },
       "refine": null,
+      "accept": {
+        "count": 2,
+        "start": "2026-05-26",
+        "end": "2026-05-26",
+        "spanDays": 1
+      },
       "punchList": null,
       "sampleSubjects": [
         "Changes"
@@ -518,6 +591,7 @@
       "label": "Mobile UX (tab bar, toolbar, sheets)",
       "fileCount": 7,
       "commitCount": 14,
+      "acceptanceCount": 8,
       "firstCommit": "2026-03-19",
       "lastCommit": "2026-05-26",
       "lifespanDays": 68,
@@ -532,6 +606,12 @@
         "start": "2026-04-07",
         "end": "2026-05-26",
         "spanDays": 49
+      },
+      "accept": {
+        "count": 8,
+        "start": "2026-03-19",
+        "end": "2026-05-26",
+        "spanDays": 68
       },
       "punchList": {
         "count": 4,
@@ -559,6 +639,7 @@
       "label": "Mobile / offline QA",
       "fileCount": 1,
       "commitCount": 1,
+      "acceptanceCount": 1,
       "firstCommit": "2026-05-28",
       "lastCommit": "2026-05-28",
       "lifespanDays": 1,
@@ -569,6 +650,12 @@
         "spanDays": 1
       },
       "refine": null,
+      "accept": {
+        "count": 1,
+        "start": "2026-05-28",
+        "end": "2026-05-28",
+        "spanDays": 1
+      },
       "punchList": null,
       "sampleSubjects": [
         "Changes"
@@ -582,6 +669,7 @@
       "label": "RE review UI",
       "fileCount": 4,
       "commitCount": 11,
+      "acceptanceCount": 4,
       "firstCommit": "2026-05-24",
       "lastCommit": "2026-05-24",
       "lifespanDays": 2,
@@ -596,6 +684,12 @@
         "start": "2026-05-24",
         "end": "2026-05-24",
         "spanDays": 1
+      },
+      "accept": {
+        "count": 4,
+        "start": "2026-05-24",
+        "end": "2026-05-24",
+        "spanDays": 2
       },
       "punchList": null,
       "sampleSubjects": [
@@ -613,6 +707,7 @@
       "label": "RE workflow QA",
       "fileCount": 1,
       "commitCount": 1,
+      "acceptanceCount": 1,
       "firstCommit": "2026-05-24",
       "lastCommit": "2026-05-24",
       "lifespanDays": 1,
@@ -623,6 +718,12 @@
         "spanDays": 1
       },
       "refine": null,
+      "accept": {
+        "count": 1,
+        "start": "2026-05-24",
+        "end": "2026-05-24",
+        "spanDays": 1
+      },
       "punchList": null,
       "sampleSubjects": [
         "Changes"
@@ -636,6 +737,7 @@
       "label": "Auth & org flow",
       "fileCount": 3,
       "commitCount": 10,
+      "acceptanceCount": 7,
       "firstCommit": "2026-03-21",
       "lastCommit": "2026-05-28",
       "lifespanDays": 69,
@@ -646,6 +748,12 @@
         "spanDays": 69
       },
       "refine": null,
+      "accept": {
+        "count": 7,
+        "start": "2026-03-21",
+        "end": "2026-05-28",
+        "spanDays": 69
+      },
       "punchList": null,
       "sampleSubjects": [
         "Connected to Lovable Cloud",
@@ -665,6 +773,7 @@
       "label": "Admin panel",
       "fileCount": 1,
       "commitCount": 6,
+      "acceptanceCount": 5,
       "firstCommit": "2026-03-21",
       "lastCommit": "2026-05-24",
       "lifespanDays": 65,
@@ -675,6 +784,12 @@
         "spanDays": 65
       },
       "refine": null,
+      "accept": {
+        "count": 5,
+        "start": "2026-03-21",
+        "end": "2026-05-24",
+        "spanDays": 65
+      },
       "punchList": null,
       "sampleSubjects": [
         "Add admin RLS policies",
@@ -691,6 +806,7 @@
       "label": "Landing / Pitch / Demo pages",
       "fileCount": 6,
       "commitCount": 133,
+      "acceptanceCount": 32,
       "firstCommit": "2026-03-21",
       "lastCommit": "2026-05-27",
       "lifespanDays": 68,
@@ -702,6 +818,12 @@
       },
       "refine": {
         "count": 40,
+        "start": "2026-03-21",
+        "end": "2026-05-27",
+        "spanDays": 68
+      },
+      "accept": {
+        "count": 32,
         "start": "2026-03-21",
         "end": "2026-05-27",
         "spanDays": 68
@@ -731,6 +853,7 @@
       "label": "Onboarding tour & welcome",
       "fileCount": 5,
       "commitCount": 16,
+      "acceptanceCount": 9,
       "firstCommit": "2026-03-21",
       "lastCommit": "2026-05-26",
       "lifespanDays": 66,
@@ -742,6 +865,12 @@
       },
       "refine": {
         "count": 3,
+        "start": "2026-03-21",
+        "end": "2026-05-26",
+        "spanDays": 66
+      },
+      "accept": {
+        "count": 9,
         "start": "2026-03-21",
         "end": "2026-05-26",
         "spanDays": 66
@@ -768,6 +897,7 @@
       "label": "SEO & marketing infra",
       "fileCount": 5,
       "commitCount": 9,
+      "acceptanceCount": 6,
       "firstCommit": "2026-03-14",
       "lastCommit": "2026-05-28",
       "lifespanDays": 76,
@@ -782,6 +912,12 @@
         "start": "2026-03-14",
         "end": "2026-03-25",
         "spanDays": 12
+      },
+      "accept": {
+        "count": 6,
+        "start": "2026-03-14",
+        "end": "2026-05-28",
+        "spanDays": 76
       },
       "punchList": null,
       "sampleSubjects": [
@@ -825,7 +961,7 @@
   "unmappedTopFiles": [
     {
       "file": "scripts/extract-build-history.mjs",
-      "count": 2
+      "count": 5
     },
     {
       "file": "public/favicon.ico",
