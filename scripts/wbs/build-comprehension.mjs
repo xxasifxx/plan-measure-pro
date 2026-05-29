@@ -52,19 +52,21 @@ function bullets(section) {
 }
 
 // ---------- verdict classifier ----------
-// First word(s) after the bold prefix or after the bullet, before the em-dash.
-// Maps loose vocabulary to: implemented | partial | planned | missing | aspirational.
+// Stream docs use two interchangeable formats:
+//   **Title**: Implemented — evidence
+//   **Title** — implemented; evidence
+// We scan the first ~120 chars after the bold prefix for status keywords.
+// Negation ("not implemented", "no longer") takes precedence over the bare verb.
 function classify(stateLine) {
-  const head = stateLine.replace(/^\*\*[^*]+\*\*:\s*/, '').split(/\s+—\s+|\s+--\s+|:\s|\.\s/)[0].toLowerCase();
-  if (/\bimplemented\b/.test(head) && !/not\b/.test(head)) {
-    if (/destructive|but\b/.test(head)) return 'partial';
-    return 'implemented';
-  }
-  if (/\bshipped\b|\bdone\b|\bcomplete\b/.test(head)) return 'implemented';
-  if (/\bpartial\b|\bpartly\b|\bin[- ]flight\b|\bin progress\b/.test(head)) return 'partial';
-  if (/\bnot implemented\b|\bmissing\b|\bnone\b|\bnot started\b|\babsent\b/.test(head)) return 'missing';
-  if (/\bplanned\b|\bscheduled\b|\bqueued\b/.test(head)) return 'planned';
-  if (/\baspirational\b|\bfuture\b|\bvision\b/.test(head)) return 'aspirational';
+  if (!stateLine) return 'unknown';
+  const body = stateLine.replace(/^\*\*[^*]+\*\*\s*[:—-]\s*/, '').slice(0, 160).toLowerCase();
+  // Negative first
+  if (/\b(not implemented|never implemented|no longer|not started|missing\b|absent|stubbed only)\b/.test(body)) return 'missing';
+  if (/\b(partial|partly|in[- ]flight|in progress|fragile|leaky|but\b.*(?:not|never|missing)|implemented but)\b/.test(body)) return 'partial';
+  // Two-word combos
+  if (/\b(implemented|shipped|done|complete|wired|landed)\b/.test(body)) return 'implemented';
+  if (/\b(planned|scheduled|queued|todo|to[- ]do)\b/.test(body)) return 'planned';
+  if (/\b(aspirational|future|vision|roadmap)\b/.test(body)) return 'aspirational';
   return 'unknown';
 }
 
