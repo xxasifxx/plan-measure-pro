@@ -1,6 +1,6 @@
 # P6 XML field-coverage report
 
-Generated: 2026-05-29T19:25:27.123Z
+Generated: 2026-05-29T19:47:23.973Z
 Source: `.lovable/wbs/{wbs,activities,relationships,state,links,next}.json`
 Output: `.lovable/wbs/project.p6.xml` (+ `.rejected.xml`)
 
@@ -10,12 +10,12 @@ Output: `.lovable/wbs/project.p6.xml` (+ `.rejected.xml`)
 |---|---|---|
 | ActivityName        | 669/669 (100.0%) | — |
 | ActivityType        | 669/669 (100.0%) | [Task Dependent 242 | Finish Milestone 8 | Level of Effort 419] |
-| Status              | 669/669 (100.0%) | [Completed 20 | In Progress 157 | Not Started 492] |
-| ActualStart         | 177/669 (26.5%) | Only emitted when lifecycle ∈ {in-flight, paused, dormant, shipped} (D3) |
-| ActualFinish        | 20/669 (3.0%) | Only emitted when lifecycle = shipped (D3) |
+| Status              | 669/669 (100.0%) | [Completed 19 | In Progress 184 | Not Started 466] |
+| ActualStart         | 203/669 (30.3%) | Only emitted when lifecycle ∈ {in-flight, paused, dormant, shipped} (D3) |
+| ActualFinish        | 19/669 (2.8%) | Only emitted when lifecycle = shipped (D3) |
 | PlannedStart        | 0/669 (0.0%) | Never fabricated. TT_LOE activities infer span from successors in P6 (D3b) |
-| PlannedDuration     | 242/669 (36.2%) | Only Task Dependent activities; LOE and Milestone do not require it (D1) |
-| PercentComplete     | 177/669 (26.5%) | Only set when lifecycle ≠ planned/abandoned (D2) |
+| PlannedDuration     | 572/669 (85.5%) | Only Task Dependent activities; LOE and Milestone do not require it (D1) |
+| PercentComplete     | 203/669 (30.3%) | Only set when lifecycle ≠ planned/abandoned (D2) |
 | Calendar            | 669/669 (100.0%) | Single default "Lovable 7-day" (D9) |
 | NotebookTopics      | 669/669 (100.0%) | Every activity has evidence prose (D5) |
 | ActivityCodes       | 4683 assignments across 7 dimensions (D4) | ORIGIN, LIFECYCLE, BLOCKING, VISIBILITY, STREAM, LAYER, HEALTH |

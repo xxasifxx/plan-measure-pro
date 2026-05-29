@@ -27,6 +27,12 @@ const relsDoc       = read("relationships.json");
 const stateDoc      = read("state.json");
 const linksDoc      = read("links.json");
 const nextDoc       = read("next.json");
+// Phase 2 comprehension layer (stream-doc-grounded). Optional — older runs
+// without comprehension.json fall back to commit-recency-only heuristics.
+const compDoc       = fs.existsSync(path.join(ROOT, "comprehension.json"))
+  ? read("comprehension.json") : null;
+const compByAct = new Map((compDoc?.activity_overrides || []).map(o => [o.id, o]));
+const compHandoffs = compDoc?.handoff_edges || [];
 
 // ─── lookups ───────────────────────────────────────────────────────────────
 const stateById = new Map(stateDoc.states.map(s => [s.activity_id, s]));
@@ -120,14 +126,25 @@ function activityType(act, state) {
 }
 
 function activityStatus(act, state) {
-  const lc = state?.lifecycle;
+  const lc = comprehensionLifecycle(act, state);
   if (lc === "shipped")   return "Completed";
   if (lc === "in-flight") return "In Progress";
   if (lc === "paused" || lc === "dormant") return "In Progress";
   return "Not Started"; // planned, abandoned
 }
 
+// Lifecycle: comprehension overrides for git-origin activities use the
+// stream-grounded percent (≥95→shipped, ≥50→in-flight, else planned).
+// Fall back to commit-recency state for activities outside any stream.
+function comprehensionLifecycle(act, state) {
+  const ov = compByAct.get(act.id);
+  if (ov?.lifecycle) return ov.lifecycle;
+  return state?.lifecycle;
+}
+
 function percentComplete(act, state) {
+  const ov = compByAct.get(act.id);
+  if (ov && typeof ov.percent_complete === "number") return ov.percent_complete;
   const lc = state?.lifecycle;
   if (lc === "shipped")   return 100;
   if (lc === "in-flight") return 50;
@@ -270,10 +287,11 @@ function buildActivities() {
     const wbsOid = wbsOidByLeafId.get(a.primary_leaf) || ROOT_WBS_OID;
     const aOid = activityOidById.get(a.id);
 
-    // Dates
+    // Dates + duration. Comprehension overrides duration for future activities
+    // so CPM has something to chain against (was 0 → finish collapsed to data date).
     let actualStart = "", actualFinish = "", plannedDuration = "";
     if (a.time_window) {
-      const lc = state?.lifecycle;
+      const lc = comprehensionLifecycle(a, state);
       if (lc === "shipped" || lc === "in-flight" || lc === "paused" || lc === "dormant") {
         actualStart = fmtDate(a.time_window.first); cov.actualStart++;
       }
@@ -282,9 +300,12 @@ function buildActivities() {
       }
       if (type === "Task Dependent") {
         const days = Math.max(1, a.time_window.active_days || 1);
-        plannedDuration = (days * 8).toFixed(1); // hours
-        cov.plannedDuration++;
+        plannedDuration = (days * 8).toFixed(1); cov.plannedDuration++;
       }
+    }
+    const ov = compByAct.get(a.id);
+    if (!plannedDuration && ov?.duration_days) {
+      plannedDuration = (ov.duration_days * 8).toFixed(1); cov.plannedDuration++;
     }
 
     out += `
@@ -410,7 +431,7 @@ const mainXml = HEADER
   + buildCalendar()
   + buildCodeTypes()
   + buildUDFTypes()
-  + buildProjectInline(buildActivities(), buildRelationships(relsDoc.edges))
+  + buildProjectInline(buildActivities(), buildRelationships([...relsDoc.edges, ...compHandoffs]))
   + `\n</APIBusinessObjects>\n`;
 
 fs.writeFileSync(path.join(ROOT, "project.p6.xml"), mainXml);
