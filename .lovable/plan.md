@@ -1,66 +1,94 @@
-## Goal
+## Reframe
 
-Stand up a **repeatable demo environment** — 3 seeded users with distinct roles, a realistic project with PDF + 50-activity XER + tagged annotations — so you can click through schedule import, offline mirror, and pay-item tagging without hand-wiring data. Then land **Round 3** (the remaining Low-tier items + a few hardening fixes surfaced during seed work).
+The "project" to schedule is **TakeoffPro itself**. We have ground truth: 953 commits across 83 days (2026-03-08 → 2026-05-29) with per-path commit clusters. That makes this a **forensic reconstruction of how TakeoffPro was actually built**, exported as a P6-importable PMXML. A construction PM opens it in P6 and sees real start, real critical path, real variance, real forecast for remaining work.
 
----
-
-## Part A — Expanded seed dataset
-
-### A1. Demo users (3) via a SECURITY DEFINER RPC
-
-Add `public.seed_demo_users()` (admin-only, idempotent). It uses `auth.admin_create_user`-equivalent inserts into `auth.users` + `auth.identities` with fixed UUIDs and bcrypt-hashed passwords so reruns are no-ops.
-
-| Role | Email | Password | UUID |
-|------|-------|----------|------|
-| Admin / PM (project creator) | `demo.pm@njta.test` | `DemoPass123!` | `aaaaaaaa-…-0001` |
-| Resident Engineer | `demo.re@njta.test` | `DemoPass123!` | `aaaaaaaa-…-0002` |
-| Inspector | `demo.inspector@njta.test` | `DemoPass123!` | `aaaaaaaa-…-0003` |
-
-Roles inserted into `user_roles`; PM creator-owns the project; RE + Inspector added to `project_members`.
-
-### A2. Expand `supabase/seed.sql`
-
-Drop the `:demo_user` psql variable gate — instead call `seed_demo_users()` first, then seed against the known PM UUID. Adds:
-
-- **1 project** (NJTA I-95 Resurfacing, MP 56–62) — already drafted, keep
-- **15 pay items** — already drafted, keep
-- **1 PDF calibration** — already drafted, keep
-- **~15 annotations** across 2 pages (was 10) covering line/polygon/count, mixed inspector + PM `user_id`
-- **NEW: 50-activity XER-equivalent schedule** seeded directly via `replace_project_schedule(...)` JSONB call. Covers: 1 WBS root → 4 sub-WBS (Mobilization, Earthwork, Pavement, Closeout), ~46 tasks + 4 milestones, FS/SS/FF mix, 2 calendars (Standard 5d + 6d), 3 resources, ~20 resource assignments, realistic baseline dates spanning ~6 months.
-- **NEW: 1 captured baseline** via `capture_baseline()`
-- **NEW: ~5 pay-item ↔ activity links** in `activity_pay_items` so the pay-item-activity map renders something
-- **NEW: 2 daily reports** (1 draft, 1 submitted) for the inspector
-
-### A3. Sample PDF for storage
-
-Generate a tiny synthetic 2-page "plan sheet" PDF (pdf-lib in a one-off script committed under `scripts/build-demo-pdf.mjs`) and upload via `supabase storage` to `project-pdfs/<project-id>/demo.pdf`. Update the project row's `pdf_storage_path`.
-
-> Note: this part runs as a separate `bun scripts/build-demo-pdf.mjs` step rather than from `seed.sql`, since SQL can't upload to Storage. Documented in README.
-
-### A4. Verification matrix (manual smoke test you'll run after seeding)
-
-1. Log in as `demo.pm@njta.test` → open project → schedule tab shows 50 activities, baseline, critical path. ✅ schedule import.
-2. Same user → toggle network offline → reload project → annotations/pay items/schedule still render from IndexedDB mirror. ✅ offline mirror.
-3. Log in as `demo.inspector@njta.test` → open annotation → assign pay item → check `activity_pay_items` updates. ✅ pay-item tagging.
-4. Log in as `demo.re@njta.test` → see submitted daily report → approve. ✅ RE workflow.
+Locked decisions from earlier in this thread:
+- **Strict E2E scoring** for % complete (no credit for "code exists")
+- **Hybrid WBS** — product surface top branches, engineering layer sub-WBS
+- **Commit-cluster activity splitting** — every path becomes "Build" + "Refine" (+ optional Hardening) activities, not one monolithic blob
 
 ---
 
-## Part B — Round 3 (remaining Low tier + seed-surfaced fixes)
+## Deliverables
 
-From the original audit's **6 Low** items, these are still open:
+### 1. `scripts/extract-build-history.mjs` — git → schedule input
 
-1. **L-1 `PdfCanvas` resize/render atomicity** — concurrent resize + render can leave a stale canvas. Wrap render task in a cancel token tied to the resize observer.
-2. **L-2 `estimateError` unit mislabel** in `src/lib/geo-transform.ts` — variable named `_ft` but stores meters in one branch. Rename + add unit-conversion guard.
-3. **L-3 DCMA resources stub** in `src/lib/xer/dcma.ts` — `resources` check always returns `pass` with a TODO. Either implement (count unstaffed tasks) or remove from the rendered checklist so it doesn't lie.
-4. **L-4 Missing TIA tests** — add `src/test/tia.test.ts` covering single-activity insertion + multi-activity ripple.
-5. **L-5 `useAuth` boot double-fire** — already partially fixed via `fetchedForRef`, but `onAuthStateChange` still runs `setUser` synchronously before the guard; tighten so the first `INITIAL_SESSION` event short-circuits.
-6. **L-6 `addWorkdays` empty-calendar guard** — already added in Round 2; promote to a unit test in `date-utils.test.ts` (new file).
+Read-only mining of `git log`. Produces `docs/build-history.json` containing, per WBS leaf:
 
-Plus 2 fixes likely to surface while writing the seed:
+- First commit, last commit, total commits, list of touched files
+- **Commit clusters** detected by an algorithm with tunable thresholds (all surfaced in the JSON for hand-audit):
+  - **Build burst** = densest contiguous window holding ≥60% of commits in ≤20% of path lifespan → activity `X.Y.10 Build <feature>`
+  - **Refinement tail** = remaining commits after the burst → activity `X.Y.20 Refine <feature>`, FS or SS+lag from build
+  - **Hardening clusters** = commits whose messages match `/fix|hardening|round \d|polish|cleanup/i` and that land across multiple WBS leaves on the same day → cross-WBS milestone (`Round N hardening`) with fan-in
+  - **Lone late commits** = singletons weeks after the burst → punch-list items, in-progress
+- Glob → WBS mapping table (hand-tuned, lives in the script so you can audit/correct before activities are generated)
+- Chat-message timestamp enrichment (best-effort) for milestone labels
 
-7. **S-1** `replace_project_schedule` 7-arg overload silently drops `primary_resource_id` and `remaining_duration_days` on activities — add to the INSERT column list so the seeded schedule round-trips.
-8. **S-2** `capture_baseline` doesn't snapshot `early_start/early_finish` if CPM hasn't run — call a `recalc_cpm(project_id)` helper (or document that the caller must run CPM first; will choose based on what current `use-schedule.ts` does).
+### 2. `docs/AUDIT_2026Q2.md` — strict reconciliation
+
+Hat-by-hat audit (PM, RE, Inspector, Schedule Analyst, PWA/Native, Backend, Security, Design, QA). One table:
+
+| WBS | Feature claim | Source (marketing / code / both) | Evidence verified | Strict % | Gap |
+|---|---|---|---|---|---|
+
+Strict rule: complete only if a seeded user flow (`demo.pm@`, `demo.re@`, `demo.inspector@njta.test`) executes end-to-end against the NJTA I-95 seed today. Code-existing-but-no-UX → in-progress with % proportional to integration gap. Marketing-only → 0%, listed as remaining activity.
+
+Each subagent receives `build-history.json` + the strict rubric and returns its slice. Items that can't be verified automatically are flagged "code-complete, E2E unverified" for your spot-check.
+
+### 3. `src/lib/p6xml/fixtures/takeoffpro-build.def.ts` — typed schedule data
+
+**Hybrid WBS, ~150 activities** (the build/refine split roughly doubles activity count vs the earlier ~90 estimate, which is the right shape for a credible P6 schedule):
+
+```text
+TakeoffPro Build  (start 2026-03-08, data date 2026-05-29)
+├── 1. Takeoff & Measurement      (1.1 FE / 1.2 BE / 1.3 Offline / 1.4 QA)
+├── 2. Schedule & P6              (2.1 FE / 2.2 BE / 2.3 Import-Export / 2.4 QA)
+├── 3. Field / Mobile             (3.1 PWA / 3.2 Native / 3.3 Mobile UX / 3.4 QA)
+├── 4. RE Workflow & Approvals    (4.1 FE / 4.2 BE+triggers / 4.3 QA)
+├── 5. Reporting & Export         (5.1 In-app / 5.2 Daily report / 5.3 P6 PMXML)
+├── 6. Admin & Org                (6.1 org flow / 6.2 TeamManager / 6.3 Admin panel)
+├── 7. Marketing & Onboarding     (7.1 Landing/Pitch/Demo / 7.2 Tour/Carousel / 7.3 Pricing)
+└── 8. Pilot Readiness            milestones M1–M4 (M4 = NJTA pilot kickoff, Mandatory Finish)
+```
+
+Per activity (driven by build-history.json + audit row):
+- `actual_start` = cluster start (Build) or build-end (Refine)
+- `actual_finish` = cluster end when strict E2E verified, else NULL
+- `baseline_start/end` = back-projected from typical planned duration → variance becomes the story (foundation overran, integration compressed)
+- `duration_days` = cluster span (min 1d)
+- `remaining_duration_days` for in-progress = honest forecast forward from today
+- `percent_complete` = strict score from #2
+- Relationships: real build order. BE → FE → QA within a surface (FS, 0d). Schedule export (2.3) fans in from 2.1 + 2.2. Refine activities SS+lag from their Build. Pilot milestones fan in from everything.
+- Calendars: **Lovable 7-day** (continuous deploy) + **Standard 5-day** (NJTA pilot side)
+- Resources: Lovable Agent, Human PM, Pilot Inspector, with assignments
+- **Baseline captured** at file creation; future rounds measure drift
+
+### 4. `src/lib/p6xml/fixtures/takeoffpro-build.xml` — generated PMXML
+
+Built by running our exporter over #3, committed. **Validated against published P6 v22.12 PMXML XSD** with xmllint in the sandbox. Exporter patches scoped narrowly: only what's needed to make this fixture XSD-valid. Broader exporter gaps become activities in WBS 2.3.
+
+### 5. `src/test/p6xml-build-roundtrip.test.ts`
+
+`def → buildPmxmlFromProject → importFromPmxml` round-trips: WBS hierarchy, all 4 relationship types, lag, calendars, resources, assignments, baseline, constraints all preserved.
+
+### 6. `.lovable/plan.md` — rewrite to thin pointer
+
+"Source of truth is `docs/AUDIT_2026Q2.md` + `takeoffpro-build.xml`. Work is named by activity ID."
+
+---
+
+## Process
+
+1. Run `extract-build-history.mjs` → `build-history.json`. Hand-review glob → WBS mapping and cluster thresholds.
+2. Parallel hat subagents read history + strict rubric, return audit slices.
+3. Cross-walk against live DB (`information_schema`, RLS, seed contents) so % complete reflects what's actually wired.
+4. Synthesize `AUDIT_2026Q2.md`.
+5. Translate audit rows into typed activities in `takeoffpro-build.def.ts` (mechanical once #4 exists).
+6. Generate `takeoffpro-build.xml`. Validate against PMXML XSD.
+7. Patch exporter narrowly until fixture is XSD-valid.
+8. Add round-trip test, run vitest, confirm green.
+9. Rewrite `.lovable/plan.md`.
+10. Stop. You open the XML in P6, see the real picture, pick the next activity by ID.
 
 ---
 
@@ -69,31 +97,22 @@ Plus 2 fixes likely to surface while writing the seed:
 ```text
 File-level change set
 ─────────────────────
-supabase/migrations/<new>.sql       (a) public.seed_demo_users() RPC
-                                    (b) replace_project_schedule 7-arg:
-                                        add primary_resource_id +
-                                        remaining_duration_days to INSERT
-supabase/seed.sql                   rewrite — calls seed_demo_users(),
-                                    seeds project/items/calibration/
-                                    annotations/schedule/baseline/
-                                    activity_pay_items/daily_reports
-scripts/build-demo-pdf.mjs          NEW – pdf-lib 2-page synthetic plan
-                                    + storage upload via service role key
-README.md                           "Seeding the demo" section
-src/components/PdfCanvas.tsx        L-1 cancel-token on resize
-src/lib/geo-transform.ts            L-2 unit fix
-src/lib/xer/dcma.ts                 L-3 implement or remove resources check
-src/test/tia.test.ts                NEW – L-4
-src/test/date-utils.test.ts         NEW – L-6
-src/hooks/useAuth.tsx               L-5 INITIAL_SESSION short-circuit
+scripts/extract-build-history.mjs              NEW  read-only git mining + clustering
+docs/build-history.json                        NEW  generated, committed
+docs/AUDIT_2026Q2.md                           NEW  reconciliation + ranked roadmap
+src/lib/p6xml/fixtures/takeoffpro-build.def.ts NEW  typed schedule data
+src/lib/p6xml/fixtures/takeoffpro-build.xml    NEW  generated PMXML (committed)
+src/test/p6xml-build-roundtrip.test.ts         NEW  round-trip assertion
+src/lib/p6xml/build-from-project.ts            EDIT only what's needed for XSD validity
+.lovable/plan.md                               EDIT thin pointer to new source of truth
 ```
 
-The migration goes via the migration tool (single call). Seed SQL + scripts land via normal file edits. After everything's in place I'll run `vitest` to confirm the new tests pass and re-read the audit list to confirm no Medium-tier regressions.
+No DB migration. No behaviour changes. No marketing edits. Findings that need code fixes become activities in the schedule, executed in subsequent loops by activity ID.
 
 ---
 
-## Out of scope this round
-- Sample storage objects beyond the demo PDF (annotation photos, RFI attachments)
-- Seeded `notifications` rows (will populate naturally when RE approves report in verification step 4)
-- Multi-project seed — single project keeps reset cycle fast
-- Realistic XER **file** import path — seed goes through `replace_project_schedule` directly so we don't depend on the XER parser fixture
+## Caveats
+- Glob → WBS mapping is hand-tuned; surfaced in JSON for you to correct before activity generation.
+- Cluster thresholds (60% / 20%, hardening regex) are heuristics; tunable in the script and visible in the JSON output.
+- Subagents can't click through UI; anything they can't verify via DB queries gets flagged for your spot-check.
+- Back-projected baselines model the variance story. If you'd rather derive baselines from chat-stated intent at start-of-work, say so — more work, more honest, default stays back-project.
