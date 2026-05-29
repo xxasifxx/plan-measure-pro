@@ -73,21 +73,24 @@ function classify(stateLine) {
 const VERDICT_PCT = { implemented: 100, shipped: 100, partial: 50, planned: 0, missing: 0, aspirational: 0, unknown: 25 };
 
 // ---------- handoff parser ----------
-// Examples:
+// Accepts any of:
 //   **Feeds → schedule-management**: ...
+//   **Feeds schedule-management**: ...
 //   **Consumes ← measurement-and-geometry-engine**: ...
-//   **Seam**: ...
-const HANDOFF_RE = /\*\*(Feeds|Consumes|Seam|Provides|Receives)(?:\s*(→|←|->|<-)\s*([a-z0-9-]+))?\*\*\s*:?\s*(.*)/i;
+//   **Feeds everything**: ...        (skipped — no specific target)
+//   **Seam**: ...                    (kept, target null)
+const HANDOFF_RE = /\*\*(Feeds|Consumes|Seam|Provides|Receives)(?:\s*(?:→|←|->|<-)?\s*([a-z0-9-]+))?\*\*\s*:?\s*(.*)/i;
 function parseHandoff(line) {
   const m = line.match(HANDOFF_RE);
   if (!m) return null;
   const kind = m[1].toLowerCase();
-  const arrow = (m[2] || '').replace('->', '→').replace('<-', '←');
-  const target = m[3] || null;
-  const desc = (m[4] || '').replace(/^[-—:\s]+/, '').trim();
+  let target = m[2] || null;
+  const desc = (m[3] || '').replace(/^[-—:\s]+/, '').trim();
+  // Skip generic-target words ("everything", "all", "every")
+  if (target && /^(everything|all|every|various|several)$/i.test(target)) target = null;
   let direction = 'related';
-  if (kind === 'feeds' || arrow === '→' || /^provides/.test(kind)) direction = 'outbound';
-  if (kind === 'consumes' || arrow === '←' || /^receives/.test(kind)) direction = 'inbound';
+  if (kind === 'feeds' || /^provides/.test(kind)) direction = 'outbound';
+  if (kind === 'consumes' || /^receives/.test(kind)) direction = 'inbound';
   return { kind, direction, target, desc };
 }
 
