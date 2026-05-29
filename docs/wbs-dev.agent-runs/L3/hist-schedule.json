@@ -1,0 +1,446 @@
+{
+  "meta": {
+    "generator": "L3-git-historian",
+    "generated_at": "2026-05-29",
+    "scope": [
+      "src/components/schedule/ScheduleWorkspace.tsx",
+      "src/lib/schedule/"
+    ],
+    "known_pivot": "XER→PMXML (pivot-detector anchor)",
+    "total_commits_analysed": 21
+  },
+  "timeline": [
+    {
+      "sha": "03607cf",
+      "date": "2026-05-26T10:56:02Z",
+      "classification": "capability-add",
+      "label": "Schedule lib foundation",
+      "targets": [
+        "src/lib/schedule/cpm.ts",
+        "src/lib/schedule/date-utils.ts",
+        "src/lib/schedule/types.ts",
+        "src/lib/schedule/use-schedule.ts"
+      ],
+      "lines_added": 422,
+      "lines_removed": 0,
+      "capabilities_introduced": [
+        "ScheduleActivity / Relationship / ScheduleMeta type definitions",
+        "CPM forward/backward pass skeleton",
+        "date-utils (workday arithmetic)",
+        "useSchedule React-Query hook (activities, relationships, upsert, remove)"
+      ],
+      "notes": "Initial drop of the entire schedule engine; no UI yet."
+    },
+    {
+      "sha": "b808f36",
+      "date": "2026-05-26T10:58:17Z",
+      "classification": "capability-add",
+      "label": "ScheduleWorkspace initial creation",
+      "targets": [
+        "src/components/schedule/ScheduleWorkspace.tsx"
+      ],
+      "lines_added": 350,
+      "lines_removed": 0,
+      "capabilities_introduced": [
+        "WbsTree + GanttChart layout scaffold",
+        "Inline PredecessorPopover (select/add/remove relationships)",
+        "Zoom control (ZOOM_STEPS)",
+        "WBS filter / visible-leaves memo",
+        "PMXML export (buildPmxmlFromProject)",
+        "ComplianceStrip integration",
+        "ScheduleToolbar wiring"
+      ],
+      "notes": "First renderable schedule UI; predecessor management was inline, not extracted."
+    },
+    {
+      "sha": "3a18a91",
+      "date": "2026-05-26T11:49:33Z",
+      "classification": "capability-add",
+      "label": "P6 import + baseline lib added",
+      "targets": [
+        "src/lib/schedule/import-p6.ts",
+        "src/lib/schedule/baseline.ts"
+      ],
+      "lines_added": 339,
+      "lines_removed": 0,
+      "capabilities_introduced": [
+        "XER parser integration (importFromXer / mapXer)",
+        "PMXML parser (importFromPmxml) — first PMXML capability",
+        "detectAndImport dispatcher (XER vs PMXML by filename/content)",
+        "baseline snapshot create/compare logic (baseline.ts)"
+      ],
+      "notes": "Dual-format ingest established; XER was primary entry path at this point."
+    },
+    {
+      "sha": "bef62b6",
+      "date": "2026-05-26T11:49:41Z",
+      "classification": "edit",
+      "label": "types.ts minor additions",
+      "targets": [
+        "src/lib/schedule/types.ts"
+      ],
+      "lines_added": 2,
+      "lines_removed": 0,
+      "capabilities_introduced": [],
+      "notes": "Incremental type patch; no functional change."
+    },
+    {
+      "sha": "e396fb2",
+      "date": "2026-05-26T11:51:54Z",
+      "classification": "capability-add",
+      "label": "ActivityInspector, ImportP6Panel, MetaControls added; CPM + hook enhanced",
+      "targets": [
+        "src/components/schedule/ActivityInspector.tsx",
+        "src/components/schedule/ImportP6Panel.tsx",
+        "src/components/schedule/MetaControls.tsx",
+        "src/components/schedule/ScheduleToolbar.tsx",
+        "src/lib/schedule/cpm.ts",
+        "src/lib/schedule/use-schedule.ts"
+      ],
+      "lines_added": 602,
+      "lines_removed": 59,
+      "capabilities_introduced": [
+        "ActivityInspector panel (activity detail / edit sheet)",
+        "ImportP6Panel dialog (file upload → detectAndImport → importSchedule mutation)",
+        "MetaControls (data-date / project-name edit)",
+        "CPM persist mutation wired to toolbar recalc",
+        "P6 PMXML export hook (onExportPmxml)"
+      ],
+      "notes": "Gantt chart import-p6 UI surface lands here alongside CPM persist."
+    },
+    {
+      "sha": "e7bc0cb",
+      "date": "2026-05-26T11:59:15Z",
+      "classification": "capability-add",
+      "label": "Calendar engine + expanded types",
+      "targets": [
+        "src/lib/schedule/calendars.ts",
+        "src/lib/schedule/date-utils.ts",
+        "src/lib/schedule/types.ts"
+      ],
+      "lines_added": 265,
+      "lines_removed": 21,
+      "capabilities_introduced": [
+        "calendars.ts — workweek + exception modelling, calendar-aware working-days arithmetic",
+        "ScheduleCalendar / CalendarWorkweek / CalendarException types",
+        "ScheduleResource / ResourceType / ConstraintType types",
+        "ImportedCalendar / ImportedResource / ImportedAssignment types",
+        "date-utils refactored to use Calendar objects"
+      ],
+      "notes": "Prerequisite for resource-loaded scheduling and DCMA calendar checks."
+    },
+    {
+      "sha": "42910cd",
+      "date": "2026-05-26T11:59:56Z",
+      "classification": "edit",
+      "label": "CPM algorithm enhanced; baseline.ts refinements",
+      "targets": [
+        "src/lib/schedule/cpm.ts",
+        "src/lib/schedule/baseline.ts"
+      ],
+      "lines_added": 100,
+      "lines_removed": 37,
+      "capabilities_introduced": [
+        "Calendar-aware CPM (early/late dates routed through working-day arithmetic)",
+        "Total float, free float, is_critical flag computation",
+        "Baseline variance fields (BL_VAR_START, BL_VAR_FINISH)"
+      ],
+      "notes": "CPM now calendar-driven; float + criticality ready for DCMA 14-point checks."
+    },
+    {
+      "sha": "98976cd",
+      "date": "2026-05-26T12:01:25Z",
+      "classification": "capability-add",
+      "label": "Full XER mapper + PMXML resource/calendar ingest expansion",
+      "targets": [
+        "src/lib/schedule/import-p6.ts",
+        "src/lib/p6xml/build-from-project.ts"
+      ],
+      "lines_added": 310,
+      "lines_removed": 30,
+      "capabilities_introduced": [
+        "XER: calendar rows (CALENDAR table) → ImportedCalendar",
+        "XER: resource rows (RSRC table) → ImportedResource",
+        "XER: resource assignments (TASKRSRC) → ImportedAssignment",
+        "XER: constraint mapping (CS_* codes → ConstraintType)",
+        "PMXML: resource + assignment blocks parsed",
+        "build-from-project.ts: export now includes resources and calendars"
+      ],
+      "notes": "Dual-format ingest reaches feature parity on resources and calendars."
+    },
+    {
+      "sha": "08b2275",
+      "date": "2026-05-26T12:02:44Z",
+      "classification": "capability-add",
+      "label": "BaselineManager, CalendarManager, ResourceManager panels; hook expansion",
+      "targets": [
+        "src/components/schedule/BaselineManager.tsx",
+        "src/components/schedule/CalendarManager.tsx",
+        "src/components/schedule/ResourceManager.tsx",
+        "src/lib/schedule/use-schedule.ts"
+      ],
+      "lines_added": 409,
+      "lines_removed": 34,
+      "capabilities_introduced": [
+        "BaselineManager dialog — snapshot list, create/restore/delete baselines",
+        "CalendarManager dialog — workweek editor, exception date management",
+        "ResourceManager dialog — resource list, add/edit/delete",
+        "useSchedule: calendars, resources, baselines query+mutations",
+        "importSchedule replace_project_schedule RPC wiring"
+      ],
+      "notes": "Full resource + calendar + baseline management surface landed in one commit."
+    },
+    {
+      "sha": "622360f",
+      "date": "2026-05-26T12:06:30Z",
+      "classification": "capability-add",
+      "label": "ScheduleWorkspace: import CalendarManager / ResourceManager / BaselineManager",
+      "targets": [
+        "src/components/schedule/ScheduleWorkspace.tsx"
+      ],
+      "lines_added": 3,
+      "lines_removed": 0,
+      "capabilities_introduced": [
+        "Import declarations for BaselineManager, CalendarManager, ResourceManager"
+      ],
+      "notes": "Step 1 of 4 incremental integration commits (2026-05-26 ~12:06 burst)."
+    },
+    {
+      "sha": "b073db9",
+      "date": "2026-05-26T12:06:39Z",
+      "classification": "capability-add",
+      "label": "ScheduleWorkspace: panel open-state added",
+      "targets": [
+        "src/components/schedule/ScheduleWorkspace.tsx"
+      ],
+      "lines_added": 3,
+      "lines_removed": 0,
+      "capabilities_introduced": [
+        "calOpen, resOpen, blOpen useState flags"
+      ],
+      "notes": "Step 2 of integration burst."
+    },
+    {
+      "sha": "8a98528",
+      "date": "2026-05-26T12:06:46Z",
+      "classification": "capability-add",
+      "label": "ScheduleWorkspace: toolbar callbacks wired",
+      "targets": [
+        "src/components/schedule/ScheduleWorkspace.tsx"
+      ],
+      "lines_added": 3,
+      "lines_removed": 0,
+      "capabilities_introduced": [
+        "onOpenCalendars, onOpenResources, onOpenBaselines toolbar props"
+      ],
+      "notes": "Step 3 of integration burst."
+    },
+    {
+      "sha": "e03c2fb",
+      "date": "2026-05-26T12:06:59Z",
+      "classification": "capability-add",
+      "label": "ScheduleWorkspace: CalendarManager / ResourceManager / BaselineManager mounted",
+      "targets": [
+        "src/components/schedule/ScheduleWorkspace.tsx"
+      ],
+      "lines_added": 3,
+      "lines_removed": 0,
+      "capabilities_introduced": [
+        "CalendarManager, ResourceManager, BaselineManager rendered in JSX tree"
+      ],
+      "notes": "Step 4 — panels now reachable from toolbar. Baseline manager capability complete."
+    },
+    {
+      "sha": "785a2d4",
+      "date": "2026-05-26T11:53:03Z",
+      "classification": "rewrite",
+      "label": "ScheduleWorkspace major refactor — inline popover extracted, inspector added",
+      "targets": [
+        "src/components/schedule/ScheduleWorkspace.tsx"
+      ],
+      "lines_added": 61,
+      "lines_removed": 151,
+      "capabilities_introduced": [
+        "ActivityInspector sheet integrated (inspectorId state, open/close)",
+        "ImportP6Panel dialog integrated (importOpen state)",
+        "ActivityType enum threaded through handleAddActivity",
+        "handleAddWbs simplified (uses selectedWbsId)",
+        "NaN guard on total_float_days display"
+      ],
+      "notes": "Removed inline PredecessorPopover component (300+ lines); moved to ActivityInspector. Net -90 lines despite new capabilities."
+    },
+    {
+      "sha": "eb8ef8f",
+      "date": "2026-05-28T16:00:47Z",
+      "classification": "edit",
+      "label": "CPM + date-utils bug fixes; offline layer integration",
+      "targets": [
+        "src/lib/schedule/cpm.ts",
+        "src/lib/schedule/date-utils.ts",
+        "src/lib/schedule/import-p6.ts",
+        "src/lib/schedule/use-schedule.ts"
+      ],
+      "lines_added": 45,
+      "lines_removed": 13,
+      "capabilities_introduced": [
+        "CPM cycle-detection safety improvements",
+        "date-utils edge-case fix (zero-duration milestones)",
+        "import-p6.ts annotation update",
+        "use-schedule.ts offline mirror integration"
+      ],
+      "notes": "Cross-cutting patch; offline/push infrastructure landed in same commit."
+    },
+    {
+      "sha": "bc9b52a",
+      "date": "2026-05-28T16:01:05Z",
+      "classification": "remove",
+      "label": "use-schedule.ts dead-code removal",
+      "targets": [
+        "src/lib/schedule/use-schedule.ts"
+      ],
+      "lines_added": 0,
+      "lines_removed": 16,
+      "capabilities_introduced": [],
+      "notes": "Cleanup only; no capability change."
+    },
+    {
+      "sha": "69d18ee",
+      "date": "2026-05-29T13:38:45Z",
+      "classification": "capability-add",
+      "label": "Analysis subdirectory — DCMA 14-point, TIA, AACE, progress, RE memo, chart export",
+      "targets": [
+        "src/lib/schedule/analysis/dcma.ts",
+        "src/lib/schedule/analysis/tia.ts",
+        "src/lib/schedule/analysis/aace.ts",
+        "src/lib/schedule/analysis/progress.ts",
+        "src/lib/schedule/analysis/feedback.ts",
+        "src/lib/schedule/analysis/memo-export.ts",
+        "src/lib/schedule/analysis/chart-export.ts"
+      ],
+      "lines_added": 752,
+      "lines_removed": 0,
+      "capabilities_introduced": [
+        "DCMA 14-Point Assessment engine (logic, leads, float, resources, BEI, CPLI, missed, invalid-dates, milestones, critical-path, hard-constraints checks)",
+        "TIA (Time Impact Analysis) — windows float-diff and impacted-path computation",
+        "AACE metrics (SPI, CPI, TSPI stubs)",
+        "Progress tracking (earned-value / percent-complete rollup)",
+        "RE feedback memo generator (plain-English Resident Engineer memo with hard-blocker/advisory classification)",
+        "Memo export — PDF (jsPDF) and Word-compatible HTML download",
+        "Chart export (PNG/SVG from canvas)"
+      ],
+      "notes": "Largest single-commit addition (+752 lines). DCMA panel backend fully enabled here."
+    },
+    {
+      "sha": "3f95e0a",
+      "date": "2026-05-29T13:39:50Z",
+      "classification": "pivot",
+      "label": "XER→PMXML pivot — comment declares XER removal intent",
+      "targets": [
+        "src/lib/schedule/import-p6.ts"
+      ],
+      "lines_added": 4,
+      "lines_removed": 5,
+      "capabilities_introduced": [],
+      "pivot_anchor": true,
+      "pivot_detail": "File header comment changed from 'Maps parsed P6 inputs (.xer or PMXML)' to 'Maps a parsed PMXML file … XER ingest was removed'. Signals start of XER excision.",
+      "notes": "Pivot step 1 of 3. Functional behaviour unchanged at this point."
+    },
+    {
+      "sha": "458127b",
+      "date": "2026-05-29T13:40:02Z",
+      "classification": "pivot",
+      "label": "XER→PMXML pivot — all XER-specific mapper code deleted",
+      "targets": [
+        "src/lib/schedule/import-p6.ts"
+      ],
+      "lines_added": 1,
+      "lines_removed": 197,
+      "capabilities_introduced": [],
+      "capabilities_removed": [
+        "importFromXer()",
+        "mapXer()",
+        "xerTaskType() / xerRelType() / xerConstraint() / xerResourceType() / xerStatusPct()",
+        "XER PROJWBS / TASK / TASKPRED / TASKRSRC / RSRC / CALENDAR mapping",
+        "parseXer import"
+      ],
+      "pivot_anchor": true,
+      "pivot_detail": "197 lines of XER mapper code deleted. Replaced by single-line tombstone comment '// (XER-specific mappers removed — PMXML is now the sole ingest format.)'",
+      "notes": "Pivot step 2 of 3. XER code path no longer callable."
+    },
+    {
+      "sha": "23d0b5b",
+      "date": "2026-05-29T13:40:39Z",
+      "classification": "pivot",
+      "label": "XER→PMXML pivot — detectAndImport hardcoded to PMXML only",
+      "targets": [
+        "src/lib/schedule/import-p6.ts"
+      ],
+      "lines_added": 4,
+      "lines_removed": 4,
+      "capabilities_introduced": [],
+      "capabilities_removed": [
+        "XER branch in detectAndImport (filename/content sniff)"
+      ],
+      "pivot_anchor": true,
+      "pivot_detail": "detectAndImport(filename, text) renamed param to _filename (unused), body replaced with unconditional return importFromPmxml(text). JSDoc: 'PMXML is the sole ingest format.'",
+      "notes": "Pivot step 3 of 3. Pivot complete — XER fully dead. Matches pivot-detector anchor."
+    },
+    {
+      "sha": "0c0ed98",
+      "date": "2026-05-29T13:49:53Z",
+      "classification": "capability-add",
+      "label": "DcmaPanel wired into ScheduleWorkspace",
+      "targets": [
+        "src/components/schedule/ScheduleWorkspace.tsx"
+      ],
+      "lines_added": 10,
+      "lines_removed": 0,
+      "capabilities_introduced": [
+        "DcmaPanel imported and mounted",
+        "dcmaOpen state flag",
+        "onOpenDcma toolbar callback",
+        "DcmaPanel receives activities, relationships, meta props"
+      ],
+      "notes": "Closes the DCMA loop: engine (69d18ee) → UI panel → workspace integration."
+    }
+  ],
+  "capability_summary": {
+    "gantt_chart": "b808f36 (initial), 785a2d4 (refactor)",
+    "wbs_tree": "b808f36",
+    "import_p6": {
+      "panel_ui": "e396fb2",
+      "xer_ingest": "3a18a91 → 98976cd",
+      "pmxml_ingest": "3a18a91 → 98976cd",
+      "pivot_to_pmxml_only": ["3f95e0a", "458127b", "23d0b5b"]
+    },
+    "cpm": {
+      "skeleton": "03607cf",
+      "calendar_aware_float_criticality": "42910cd",
+      "persist_mutation": "e396fb2",
+      "bug_fixes": "eb8ef8f"
+    },
+    "calendars": {
+      "types_engine": "e7bc0cb",
+      "manager_ui": "08b2275",
+      "workspace_wired": ["622360f", "b073db9", "8a98528", "e03c2fb"]
+    },
+    "resources": {
+      "types": "e7bc0cb",
+      "xer_pmxml_ingest": "98976cd",
+      "manager_ui": "08b2275",
+      "workspace_wired": ["622360f", "b073db9", "8a98528", "e03c2fb"]
+    },
+    "baseline_manager": {
+      "lib": "3a18a91",
+      "enhanced": "42910cd",
+      "manager_ui": "08b2275",
+      "workspace_wired": ["622360f", "b073db9", "8a98528", "e03c2fb"]
+    },
+    "dcma_panel": {
+      "engine_14pt": "69d18ee",
+      "workspace_wired": "0c0ed98"
+    },
+    "tia": "69d18ee",
+    "activity_inspector": "e396fb2 (component), 785a2d4 (workspace integration)"
+  }
+}
