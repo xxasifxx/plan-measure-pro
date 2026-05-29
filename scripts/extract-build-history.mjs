@@ -305,16 +305,20 @@ function main() {
     });
 
     const label = WBS_MAP.find(r => r.wbs === wbs)?.label || wbs;
+    const acceptDates = entry.acceptances.map(a => a.iso).sort();
+    const acceptSummary = summarizeCluster(acceptDates);
     wbsRows.push({
       wbs,
       label,
       fileCount: entry.files.size,
       commitCount: sortedCommits.length,
+      acceptanceCount: entry.acceptances.length,
       firstCommit: dates[0].slice(0, 10),
       lastCommit: dates[dates.length - 1].slice(0, 10),
       lifespanDays: dayDiff(dates[0], dates[dates.length - 1]) + 1,
       build: burstSummary,
       refine: tailSummary,
+      accept: acceptSummary,
       punchList: lonely.length > 0 ? {
         count: lonely.length,
         latest: lonely[lonely.length - 1].slice(0, 10),
@@ -331,6 +335,9 @@ function main() {
       latestCommit: projectEnd,
       lifespanDays: dayDiff(projectStart, projectEnd) + 1,
       totalCommits: commits.length,
+      buildCommits: buildCommits.length,
+      acceptanceCommits: acceptanceCommits.length,
+      bootstrapCommits: bootstrapCommits.length,
     },
     thresholds: { ...CLUSTER, HARDENING_REGEX: CLUSTER.HARDENING_REGEX.toString() },
     wbsMap: WBS_MAP.map(r => ({ wbs: r.wbs, label: r.label })),
