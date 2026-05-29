@@ -106,6 +106,11 @@ const fileStats = [];
 for (const src of SOURCES) {
   if (!fs.existsSync(src.file)) { console.warn('skip (missing):', src.file); continue; }
   let raw = fs.readFileSync(src.file, 'utf8');
+  // Fix `- { name: X, days: N }` flow-mapping rows whose values contain brackets/slashes.
+  raw = raw.replace(
+    /^(\s*)-\s*\{\s*name:\s*(.+?),\s*days:\s*([\d.]+)\s*\}\s*$/gm,
+    (_, ind, n, d) => `${ind}- name: ${JSON.stringify(n.trim())}\n${ind}  days: ${d}`
+  );
   // Fix the wbs-leaves.yaml malformed inline pattern: "- task: X   days: N"
   raw = raw.replace(
     /^(\s*)-\s*task:\s*(.+?)\s+days:\s*([\d.]+)\s*$/gm,
