@@ -67,11 +67,14 @@ Unmapped claims stay under `21-marketing-debt/Unmapped` until reviewed.
 ## Refresh pipeline
 
 ```bash
-node scripts/extract-marketing-promises.mjs   # writes docs/wbs-dev.promises.json
-node scripts/verify-e2e.mjs                   # ensures verification manifest exists
-node scripts/build-dev-wbs.mjs                # writes docs/wbs-dev.activities.json + verification.md
-node scripts/build-dev-pmxml.mjs              # writes public/exports/takeoffpro-dev.xml
-npx vitest run dev-pmxml                      # round-trip assertions
+node scripts/dev-wbs/build-leaves.mjs        # brief-derived leaves
+node scripts/dev-wbs/build-code-leaves.mjs   # code-derived leaves (files + tables + migrations)
+node scripts/dev-wbs/reconcile-leaves.mjs    # merges → leaves.json + leaves.md + catalog-gaps.md
+node scripts/extract-marketing-promises.mjs  # writes docs/wbs-dev.promises.json
+node scripts/verify-e2e.mjs                  # ensures verification manifest exists
+node scripts/build-dev-wbs.mjs               # writes docs/wbs-dev.activities.json + verification.md
+node scripts/build-dev-pmxml.mjs             # writes public/exports/takeoffpro-dev.xml
+npx vitest run dev-pmxml                     # round-trip assertions
 ```
 
 The pipeline is idempotent. Edit a brief, re-run, the fixture updates. Fill a verification recipe, re-run, the status flips.
