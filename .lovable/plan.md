@@ -128,12 +128,27 @@ The report is the user-facing proof that no field is blank by accident — every
 
 - No invented dates or durations to fill cells.
 - No Resource Assignments, Costs, Roles, Risks, Issues, Documents, Baselines.
-- No round-trip into the app's Supabase or UI.
+- ~~No round-trip into the app's Supabase or UI.~~ Done — see Phase 2.
 - No P6 viewer/import automation — file lands in `.lovable/wbs/` and you import it.
 
-## Questions before I write the plan-into-code
+## Phase 2 — comprehension + narrative arcs (added after round-trip)
 
-1. **D1–D10:** ack all, or push back on any?
-2. **D3b (planned-stub dates):** confirm "leave empty + Notebook" rather than fabricate? This is the single biggest "looks empty" complaint risk.
-3. **Single XML vs split:** one `project.p6.xml`, or split past-and-shipped into one project and future-planned into a second project (cleaner Gantt, but two imports)?
-4. Anything in the 4-D state vector you want surfaced *inside* Status itself (e.g. force `abandoned` → Completed-with-flag) rather than via Activity Code?
+The naive emit produced a structurally clean PMXML that round-tripped through the app's CPM with 0 warnings but finished only 4 weeks past the data date (2026-06-24). Diagnosis was weak comprehension: 419 of 669 activities were `TT_LOE` with zero duration and only 169 of 669 had any predecessor at all, so CPM saw mostly disparate parallel work collapsed onto the data date. Two passes added:
+
+1. **`build-comprehension.mjs`** parses `docs/streams/*.md` "Current state vs criteria" sections and reconciles them against activities — 146/147 criteria classified, durations seeded on 572/669 activities, lifecycle and `% complete` overridden from documentation truth instead of commit recency, 15 cross-stream handoff edges promoted from prose.
+
+2. **`build-narrative-arcs.mjs`** distinguishes *disparate progress* (many independent surfaces moving in parallel) from *dependent progress* (one criterion enabling the next). Two signals:
+   - **Verify chain (within stream, by criterion ordinal):** the team works through remaining criteria sequentially, so `[verify]` activities chain FS in ordinal order — 121 edges.
+   - **Stubs-before-verify (parallel across leaves, serial within a leaf):** within a leaf one developer builds serially; across leaves a stream runs parallel; each leaf-tail converges into the stream's first verify activity — 184 edges.
+   - Result: future-side dependent share rose ~2% → **43%**, CPM finish moved 2026-06-24 → **2026-07-02**.
+
+### Narrative-arc honesty check
+
+The modest 8-day shift is the finding, not a failure: median stream health is ~85% Implemented, so there genuinely isn't much chainable remaining work. Where the schedule would extend if comprehension were tightened: stream 11 (schedule-management, 43 serialized stubs) and stream 15 (offline-and-native-durability, 35 stubs) — the stub-chain dominates and is probably under-estimated. 102 future-side activities remain orphan-parallel (mostly marketing promises + 99-cross-cutting); chaining them would be theater.
+
+### What this changes about reading the PMXML
+
+- "Critical path" now means the longest chain through verify activities and stub serializations, not whichever activity happened to inherit an old git timestamp.
+- A wide stream finishing fast = real parallelism, not missing edges.
+- A narrow stream with many stubs finishing slowly = real serialization, not over-constraint.
+- The 102 orphan-parallel future activities mark where comprehension is still thin.

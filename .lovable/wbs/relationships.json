@@ -1,14 +1,19 @@
 {
-  "generatedAt": "2026-05-29T19:18:51.319Z",
+  "generatedAt": "2026-05-29T19:53:44.994Z",
   "totals": {
-    "edges": 169,
+    "edges": 474,
     "rejected": 52,
     "cycle_breaks": 0,
     "by_source": {
       "shared-leaf-time": 163,
       "intent:triggers": 1,
-      "leaf-criterion-order": 5
-    }
+      "leaf-criterion-order": 5,
+      "narrative-verify-chain": 122,
+      "narrative-stub-to-verify": 141,
+      "narrative-stub-serial": 42
+    },
+    "narrative_arc_edges": 305,
+    "narrative_cycle_breaks": 2
   },
   "edges": [
     {
@@ -1816,17 +1821,6 @@
       ]
     },
     {
-      "pred": "ACT-0457",
-      "succ": "ACT-0458",
-      "type": "FS",
-      "lag_days": 0,
-      "confidence": 0.4,
-      "source": "leaf-criterion-order",
-      "sources": [
-        "leaf-criterion-order"
-      ]
-    },
-    {
       "pred": "ACT-0470",
       "succ": "ACT-0471",
       "type": "FS",
@@ -1849,8 +1843,8 @@
       ]
     },
     {
-      "pred": "ACT-0472",
-      "succ": "ACT-0473",
+      "pred": "ACT-0473",
+      "succ": "ACT-0474",
       "type": "FS",
       "lag_days": 0,
       "confidence": 0.4,
@@ -1860,14 +1854,3358 @@
       ]
     },
     {
+      "pred": "ACT-0499",
+      "succ": "ACT-0495",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0495",
+      "succ": "ACT-0494",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0494",
+      "succ": "ACT-0492",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0492",
+      "succ": "ACT-0490",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0490",
+      "succ": "ACT-0489",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0489",
+      "succ": "ACT-0491",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0491",
+      "succ": "ACT-0497",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0497",
+      "succ": "ACT-0498",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0498",
+      "succ": "ACT-0493",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0493",
+      "succ": "ACT-0496",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0253",
+      "succ": "ACT-0499",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0254",
+      "succ": "ACT-0499",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0255",
+      "succ": "ACT-0499",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0528",
+      "succ": "ACT-0529",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0529",
+      "succ": "ACT-0530",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0530",
+      "succ": "ACT-0531",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0265",
+      "succ": "ACT-0528",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0266",
+      "succ": "ACT-0528",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0366",
+      "succ": "ACT-0528",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0400",
+      "succ": "ACT-0621",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0621",
+      "succ": "ACT-0528",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0509",
+      "succ": "ACT-0511",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0511",
+      "succ": "ACT-0502",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0502",
+      "succ": "ACT-0505",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0505",
+      "succ": "ACT-0506",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0506",
+      "succ": "ACT-0508",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0508",
+      "succ": "ACT-0501",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0501",
+      "succ": "ACT-0507",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0507",
+      "succ": "ACT-0504",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0504",
+      "succ": "ACT-0500",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0500",
+      "succ": "ACT-0503",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0503",
+      "succ": "ACT-0510",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0256",
+      "succ": "ACT-0509",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0257",
+      "succ": "ACT-0509",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0358",
+      "succ": "ACT-0509",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0359",
+      "succ": "ACT-0509",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0362",
+      "succ": "ACT-0509",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0370",
+      "succ": "ACT-0509",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0376",
+      "succ": "ACT-0509",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0377",
+      "succ": "ACT-0509",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0380",
+      "succ": "ACT-0509",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0382",
+      "succ": "ACT-0603",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0603",
+      "succ": "ACT-0509",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0524",
+      "succ": "ACT-0525",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0525",
+      "succ": "ACT-0526",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0526",
+      "succ": "ACT-0527",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0264",
+      "succ": "ACT-0524",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0577",
+      "succ": "ACT-0573",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0573",
+      "succ": "ACT-0572",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0572",
+      "succ": "ACT-0578",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0578",
+      "succ": "ACT-0575",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0575",
+      "succ": "ACT-0576",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0576",
+      "succ": "ACT-0571",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0571",
+      "succ": "ACT-0579",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0579",
+      "succ": "ACT-0574",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0288",
+      "succ": "ACT-0577",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0289",
+      "succ": "ACT-0577",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0290",
+      "succ": "ACT-0577",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0291",
+      "succ": "ACT-0577",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0292",
+      "succ": "ACT-0577",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0293",
+      "succ": "ACT-0577",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0294",
+      "succ": "ACT-0577",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0311",
+      "succ": "ACT-0577",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0312",
+      "succ": "ACT-0577",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0313",
+      "succ": "ACT-0577",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0314",
+      "succ": "ACT-0577",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0462",
+      "succ": "ACT-0464",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0464",
+      "succ": "ACT-0461",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0461",
+      "succ": "ACT-0465",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0465",
+      "succ": "ACT-0458",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0458",
+      "succ": "ACT-0457",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0457",
+      "succ": "ACT-0467",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0467",
+      "succ": "ACT-0463",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0463",
+      "succ": "ACT-0460",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0460",
+      "succ": "ACT-0459",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0459",
+      "succ": "ACT-0466",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0243",
+      "succ": "ACT-0462",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0244",
+      "succ": "ACT-0462",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0245",
+      "succ": "ACT-0462",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0246",
+      "succ": "ACT-0462",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0470",
+      "succ": "ACT-0473",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
       "pred": "ACT-0473",
+      "succ": "ACT-0469",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0469",
+      "succ": "ACT-0471",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0471",
       "succ": "ACT-0474",
       "type": "FS",
       "lag_days": 0,
-      "confidence": 0.4,
-      "source": "leaf-criterion-order",
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
       "sources": [
-        "leaf-criterion-order"
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0474",
+      "succ": "ACT-0478",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0478",
+      "succ": "ACT-0477",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0477",
+      "succ": "ACT-0468",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0468",
+      "succ": "ACT-0472",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0472",
+      "succ": "ACT-0476",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0476",
+      "succ": "ACT-0475",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0247",
+      "succ": "ACT-0470",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0248",
+      "succ": "ACT-0470",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0249",
+      "succ": "ACT-0470",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0250",
+      "succ": "ACT-0470",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0589",
+      "succ": "ACT-0590",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0590",
+      "succ": "ACT-0591",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0591",
+      "succ": "ACT-0592",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0592",
+      "succ": "ACT-0593",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0593",
+      "succ": "ACT-0594",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0594",
+      "succ": "ACT-0595",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0595",
+      "succ": "ACT-0596",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0596",
+      "succ": "ACT-0597",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0597",
+      "succ": "ACT-0598",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0301",
+      "succ": "ACT-0589",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0302",
+      "succ": "ACT-0589",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0303",
+      "succ": "ACT-0589",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0304",
+      "succ": "ACT-0589",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0305",
+      "succ": "ACT-0589",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0347",
+      "succ": "ACT-0589",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0363",
+      "succ": "ACT-0589",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0423",
+      "succ": "ACT-0644",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0644",
+      "succ": "ACT-0589",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0424",
+      "succ": "ACT-0645",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0645",
+      "succ": "ACT-0589",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0425",
+      "succ": "ACT-0646",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0646",
+      "succ": "ACT-0589",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0426",
+      "succ": "ACT-0647",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0647",
+      "succ": "ACT-0589",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0427",
+      "succ": "ACT-0648",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0648",
+      "succ": "ACT-0589",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0479",
+      "succ": "ACT-0485",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0485",
+      "succ": "ACT-0480",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0480",
+      "succ": "ACT-0482",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0482",
+      "succ": "ACT-0483",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0483",
+      "succ": "ACT-0488",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0488",
+      "succ": "ACT-0487",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0487",
+      "succ": "ACT-0481",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0481",
+      "succ": "ACT-0486",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0486",
+      "succ": "ACT-0484",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0251",
+      "succ": "ACT-0479",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0252",
+      "succ": "ACT-0479",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0520",
+      "succ": "ACT-0521",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0521",
+      "succ": "ACT-0522",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0522",
+      "succ": "ACT-0523",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0263",
+      "succ": "ACT-0520",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0516",
+      "succ": "ACT-0517",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0517",
+      "succ": "ACT-0518",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0518",
+      "succ": "ACT-0519",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0262",
+      "succ": "ACT-0516",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0533",
+      "succ": "ACT-0534",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0534",
+      "succ": "ACT-0532",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0532",
+      "succ": "ACT-0535",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0267",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0268",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0269",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0270",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0271",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0272",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0273",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0274",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0342",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0343",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0344",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0345",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0346",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0351",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0353",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0354",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0355",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0356",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0360",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0372",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0378",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0383",
+      "succ": "ACT-0604",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0604",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0384",
+      "succ": "ACT-0605",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0605",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0385",
+      "succ": "ACT-0606",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0606",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0386",
+      "succ": "ACT-0607",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0607",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0387",
+      "succ": "ACT-0608",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0608",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0388",
+      "succ": "ACT-0609",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0609",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0389",
+      "succ": "ACT-0610",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0610",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0390",
+      "succ": "ACT-0611",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0611",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0391",
+      "succ": "ACT-0612",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0612",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0392",
+      "succ": "ACT-0613",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0613",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0393",
+      "succ": "ACT-0614",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0614",
+      "succ": "ACT-0533",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0537",
+      "succ": "ACT-0536",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0536",
+      "succ": "ACT-0538",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0538",
+      "succ": "ACT-0539",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0352",
+      "succ": "ACT-0537",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0357",
+      "succ": "ACT-0537",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0394",
+      "succ": "ACT-0615",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0615",
+      "succ": "ACT-0537",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0395",
+      "succ": "ACT-0616",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0616",
+      "succ": "ACT-0537",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0396",
+      "succ": "ACT-0617",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0617",
+      "succ": "ACT-0537",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0397",
+      "succ": "ACT-0618",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0618",
+      "succ": "ACT-0537",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0398",
+      "succ": "ACT-0619",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0619",
+      "succ": "ACT-0537",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0399",
+      "succ": "ACT-0620",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0620",
+      "succ": "ACT-0537",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0541",
+      "succ": "ACT-0543",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0543",
+      "succ": "ACT-0542",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0542",
+      "succ": "ACT-0540",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0332",
+      "succ": "ACT-0541",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0512",
+      "succ": "ACT-0515",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0515",
+      "succ": "ACT-0514",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0514",
+      "succ": "ACT-0513",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0258",
+      "succ": "ACT-0512",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0259",
+      "succ": "ACT-0512",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0260",
+      "succ": "ACT-0512",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0261",
+      "succ": "ACT-0512",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0367",
+      "succ": "ACT-0512",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0548",
+      "succ": "ACT-0550",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0550",
+      "succ": "ACT-0551",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0551",
+      "succ": "ACT-0549",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0375",
+      "succ": "ACT-0548",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0403",
+      "succ": "ACT-0624",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0624",
+      "succ": "ACT-0548",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0404",
+      "succ": "ACT-0625",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0625",
+      "succ": "ACT-0548",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0405",
+      "succ": "ACT-0626",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0626",
+      "succ": "ACT-0548",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0406",
+      "succ": "ACT-0627",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0627",
+      "succ": "ACT-0548",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0407",
+      "succ": "ACT-0628",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0628",
+      "succ": "ACT-0548",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0408",
+      "succ": "ACT-0629",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0629",
+      "succ": "ACT-0548",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0409",
+      "succ": "ACT-0630",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0630",
+      "succ": "ACT-0548",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0410",
+      "succ": "ACT-0631",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0631",
+      "succ": "ACT-0548",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0411",
+      "succ": "ACT-0632",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0632",
+      "succ": "ACT-0548",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0412",
+      "succ": "ACT-0633",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0633",
+      "succ": "ACT-0548",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0413",
+      "succ": "ACT-0634",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0634",
+      "succ": "ACT-0548",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0414",
+      "succ": "ACT-0635",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0635",
+      "succ": "ACT-0548",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0415",
+      "succ": "ACT-0636",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0636",
+      "succ": "ACT-0548",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0416",
+      "succ": "ACT-0637",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0637",
+      "succ": "ACT-0548",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0417",
+      "succ": "ACT-0638",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0638",
+      "succ": "ACT-0548",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0418",
+      "succ": "ACT-0639",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0639",
+      "succ": "ACT-0548",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0419",
+      "succ": "ACT-0640",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0640",
+      "succ": "ACT-0548",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0553",
+      "succ": "ACT-0554",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0554",
+      "succ": "ACT-0552",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0552",
+      "succ": "ACT-0555",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0555",
+      "succ": "ACT-0556",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0556",
+      "succ": "ACT-0557",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0557",
+      "succ": "ACT-0558",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0558",
+      "succ": "ACT-0559",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0559",
+      "succ": "ACT-0560",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0275",
+      "succ": "ACT-0553",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0276",
+      "succ": "ACT-0553",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0277",
+      "succ": "ACT-0553",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0278",
+      "succ": "ACT-0553",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0279",
+      "succ": "ACT-0553",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0280",
+      "succ": "ACT-0553",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0561",
+      "succ": "ACT-0562",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0562",
+      "succ": "ACT-0563",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0563",
+      "succ": "ACT-0564",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0564",
+      "succ": "ACT-0565",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0565",
+      "succ": "ACT-0566",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0566",
+      "succ": "ACT-0567",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0567",
+      "succ": "ACT-0568",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0568",
+      "succ": "ACT-0569",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0569",
+      "succ": "ACT-0570",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0281",
+      "succ": "ACT-0561",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0282",
+      "succ": "ACT-0561",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0283",
+      "succ": "ACT-0561",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0284",
+      "succ": "ACT-0561",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0285",
+      "succ": "ACT-0561",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0286",
+      "succ": "ACT-0561",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0287",
+      "succ": "ACT-0561",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0348",
+      "succ": "ACT-0561",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0350",
+      "succ": "ACT-0561",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0368",
+      "succ": "ACT-0561",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0402",
+      "succ": "ACT-0623",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.5,
+      "source": "narrative-stub-serial",
+      "sources": [
+        "narrative-stub-serial"
+      ]
+    },
+    {
+      "pred": "ACT-0623",
+      "succ": "ACT-0561",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0580",
+      "succ": "ACT-0581",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0581",
+      "succ": "ACT-0582",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0582",
+      "succ": "ACT-0583",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0583",
+      "succ": "ACT-0584",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0584",
+      "succ": "ACT-0585",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0585",
+      "succ": "ACT-0586",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0586",
+      "succ": "ACT-0587",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0587",
+      "succ": "ACT-0588",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0295",
+      "succ": "ACT-0580",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0296",
+      "succ": "ACT-0580",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0297",
+      "succ": "ACT-0580",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0298",
+      "succ": "ACT-0580",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0299",
+      "succ": "ACT-0580",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0300",
+      "succ": "ACT-0580",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
+      ]
+    },
+    {
+      "pred": "ACT-0545",
+      "succ": "ACT-0547",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0547",
+      "succ": "ACT-0546",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0546",
+      "succ": "ACT-0544",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.6,
+      "source": "narrative-verify-chain",
+      "sources": [
+        "narrative-verify-chain"
+      ]
+    },
+    {
+      "pred": "ACT-0349",
+      "succ": "ACT-0545",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.55,
+      "source": "narrative-stub-to-verify",
+      "sources": [
+        "narrative-stub-to-verify"
       ]
     }
   ]

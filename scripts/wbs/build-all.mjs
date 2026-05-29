@@ -5,6 +5,8 @@ const steps = [
   'scripts/wbs/build-spine.mjs',
   'scripts/wbs/build-activities.mjs',
   'scripts/wbs/build-relationships.mjs',
+  'scripts/wbs/build-comprehension.mjs',
+  'scripts/wbs/build-narrative-arcs.mjs',
   'scripts/wbs/build-state.mjs',
   'scripts/wbs/build-next.mjs',
 ];
