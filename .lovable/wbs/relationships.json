@@ -1,0 +1,1874 @@
+{
+  "generatedAt": "2026-05-29T19:18:51.319Z",
+  "totals": {
+    "edges": 169,
+    "rejected": 52,
+    "cycle_breaks": 0,
+    "by_source": {
+      "shared-leaf-time": 163,
+      "intent:triggers": 1,
+      "leaf-criterion-order": 5
+    }
+  },
+  "edges": [
+    {
+      "pred": "ACT-0001",
+      "succ": "ACT-0002",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0002",
+      "succ": "ACT-0003",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0003",
+      "succ": "ACT-0011",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0011",
+      "succ": "ACT-0015",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0015",
+      "succ": "ACT-0016",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0016",
+      "succ": "ACT-0017",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0017",
+      "succ": "ACT-0018",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0018",
+      "succ": "ACT-0021",
+      "type": "FS",
+      "lag_days": 2,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0021",
+      "succ": "ACT-0028",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0028",
+      "succ": "ACT-0029",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0029",
+      "succ": "ACT-0030",
+      "type": "FS",
+      "lag_days": 2,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0030",
+      "succ": "ACT-0038",
+      "type": "FS",
+      "lag_days": 1,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0038",
+      "succ": "ACT-0039",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0039",
+      "succ": "ACT-0040",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0040",
+      "succ": "ACT-0063",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0063",
+      "succ": "ACT-0064",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0064",
+      "succ": "ACT-0066",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0066",
+      "succ": "ACT-0071",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0071",
+      "succ": "ACT-0073",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0073",
+      "succ": "ACT-0074",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0074",
+      "succ": "ACT-0075",
+      "type": "FS",
+      "lag_days": 1,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0075",
+      "succ": "ACT-0076",
+      "type": "FS",
+      "lag_days": 1,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0076",
+      "succ": "ACT-0077",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0077",
+      "succ": "ACT-0079",
+      "type": "FS",
+      "lag_days": 1,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0079",
+      "succ": "ACT-0080",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0080",
+      "succ": "ACT-0081",
+      "type": "FS",
+      "lag_days": 1,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0081",
+      "succ": "ACT-0082",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0082",
+      "succ": "ACT-0083",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0083",
+      "succ": "ACT-0089",
+      "type": "FS",
+      "lag_days": 1,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0089",
+      "succ": "ACT-0092",
+      "type": "FS",
+      "lag_days": 1,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0092",
+      "succ": "ACT-0093",
+      "type": "FS",
+      "lag_days": 9,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0093",
+      "succ": "ACT-0095",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0095",
+      "succ": "ACT-0096",
+      "type": "FS",
+      "lag_days": 2,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0096",
+      "succ": "ACT-0097",
+      "type": "FS",
+      "lag_days": 3,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0097",
+      "succ": "ACT-0098",
+      "type": "FS",
+      "lag_days": 2,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0098",
+      "succ": "ACT-0099",
+      "type": "FS",
+      "lag_days": 13,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0099",
+      "succ": "ACT-0102",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0102",
+      "succ": "ACT-0112",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0112",
+      "succ": "ACT-0113",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0113",
+      "succ": "ACT-0114",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0114",
+      "succ": "ACT-0115",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0115",
+      "succ": "ACT-0116",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0116",
+      "succ": "ACT-0117",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0117",
+      "succ": "ACT-0118",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0118",
+      "succ": "ACT-0120",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0120",
+      "succ": "ACT-0121",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0121",
+      "succ": "ACT-0122",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0122",
+      "succ": "ACT-0123",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0123",
+      "succ": "ACT-0124",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0124",
+      "succ": "ACT-0125",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0125",
+      "succ": "ACT-0126",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0126",
+      "succ": "ACT-0127",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0127",
+      "succ": "ACT-0128",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0128",
+      "succ": "ACT-0131",
+      "type": "FS",
+      "lag_days": 19,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0131",
+      "succ": "ACT-0142",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0142",
+      "succ": "ACT-0164",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0164",
+      "succ": "ACT-0168",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0168",
+      "succ": "ACT-0172",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0172",
+      "succ": "ACT-0174",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0174",
+      "succ": "ACT-0180",
+      "type": "FS",
+      "lag_days": 1,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0180",
+      "succ": "ACT-0221",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0004",
+      "succ": "ACT-0005",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0005",
+      "succ": "ACT-0006",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0006",
+      "succ": "ACT-0007",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0007",
+      "succ": "ACT-0008",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0008",
+      "succ": "ACT-0009",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0009",
+      "succ": "ACT-0012",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0012",
+      "succ": "ACT-0013",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0010",
+      "succ": "ACT-0185",
+      "type": "FS",
+      "lag_days": 65,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0019",
+      "succ": "ACT-0020",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0022",
+      "succ": "ACT-0023",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0023",
+      "succ": "ACT-0176",
+      "type": "FS",
+      "lag_days": 72,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0176",
+      "succ": "ACT-0177",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0177",
+      "succ": "ACT-0178",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0178",
+      "succ": "ACT-0179",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0024",
+      "succ": "ACT-0025",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0031",
+      "succ": "ACT-0032",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0032",
+      "succ": "ACT-0033",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0033",
+      "succ": "ACT-0034",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0034",
+      "succ": "ACT-0035",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0035",
+      "succ": "ACT-0036",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0043",
+      "succ": "ACT-0044",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0044",
+      "succ": "ACT-0045",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0045",
+      "succ": "ACT-0046",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0046",
+      "succ": "ACT-0047",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0047",
+      "succ": "ACT-0048",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0048",
+      "succ": "ACT-0049",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0049",
+      "succ": "ACT-0061",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0061",
+      "succ": "ACT-0062",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0062",
+      "succ": "ACT-0091",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0091",
+      "succ": "ACT-0100",
+      "type": "FS",
+      "lag_days": 13,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0100",
+      "succ": "ACT-0101",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0101",
+      "succ": "ACT-0107",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0107",
+      "succ": "ACT-0108",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0108",
+      "succ": "ACT-0138",
+      "type": "FS",
+      "lag_days": 19,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0138",
+      "succ": "ACT-0139",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0139",
+      "succ": "ACT-0140",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0140",
+      "succ": "ACT-0157",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0157",
+      "succ": "ACT-0158",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0158",
+      "succ": "ACT-0159",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0159",
+      "succ": "ACT-0160",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0160",
+      "succ": "ACT-0205",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0205",
+      "succ": "ACT-0206",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0206",
+      "succ": "ACT-0235",
+      "type": "FS",
+      "lag_days": 3,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0235",
+      "succ": "ACT-0236",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0236",
+      "succ": "ACT-0237",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0053",
+      "succ": "ACT-0054",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0056",
+      "succ": "ACT-0057",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0057",
+      "succ": "ACT-0058",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0058",
+      "succ": "ACT-0059",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0067",
+      "succ": "ACT-0068",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0085",
+      "succ": "ACT-0086",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0086",
+      "succ": "ACT-0199",
+      "type": "FS",
+      "lag_days": 60,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0090",
+      "succ": "ACT-0234",
+      "type": "FS",
+      "lag_days": 60,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0094",
+      "succ": "ACT-0191",
+      "type": "FS",
+      "lag_days": 48,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0105",
+      "succ": "ACT-0106",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0106",
+      "succ": "ACT-0218",
+      "type": "FS",
+      "lag_days": 21,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0218",
+      "succ": "ACT-0219",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0132",
+      "succ": "ACT-0133",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0133",
+      "succ": "ACT-0134",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0134",
+      "succ": "ACT-0135",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0135",
+      "succ": "ACT-0136",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0136",
+      "succ": "ACT-0137",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0144",
+      "succ": "ACT-0238",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0146",
+      "succ": "ACT-0147",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0148",
+      "succ": "ACT-0149",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0150",
+      "succ": "ACT-0151",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0152",
+      "succ": "ACT-0153",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0153",
+      "succ": "ACT-0154",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0154",
+      "succ": "ACT-0155",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0161",
+      "succ": "ACT-0162",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0166",
+      "succ": "ACT-0167",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0181",
+      "succ": "ACT-0182",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0182",
+      "succ": "ACT-0183",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0183",
+      "succ": "ACT-0184",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0184",
+      "succ": "ACT-0186",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0186",
+      "succ": "ACT-0187",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0187",
+      "succ": "ACT-0188",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0189",
+      "succ": "ACT-0190",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0192",
+      "succ": "ACT-0193",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0193",
+      "succ": "ACT-0194",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0194",
+      "succ": "ACT-0195",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0195",
+      "succ": "ACT-0196",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0196",
+      "succ": "ACT-0197",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0200",
+      "succ": "ACT-0201",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0201",
+      "succ": "ACT-0202",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0203",
+      "succ": "ACT-0204",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0208",
+      "succ": "ACT-0209",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0209",
+      "succ": "ACT-0210",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0210",
+      "succ": "ACT-0211",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0212",
+      "succ": "ACT-0213",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0213",
+      "succ": "ACT-0214",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0214",
+      "succ": "ACT-0215",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0215",
+      "succ": "ACT-0227",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0227",
+      "succ": "ACT-0228",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0216",
+      "succ": "ACT-0217",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0222",
+      "succ": "ACT-0223",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0224",
+      "succ": "ACT-0225",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0225",
+      "succ": "ACT-0226",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0230",
+      "succ": "ACT-0231",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0231",
+      "succ": "ACT-0232",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0239",
+      "succ": "ACT-0240",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0240",
+      "succ": "ACT-0241",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "shared-leaf-time",
+      "sources": [
+        "shared-leaf-time"
+      ]
+    },
+    {
+      "pred": "ACT-0147",
+      "succ": "ACT-0293",
+      "type": "SS",
+      "lag_days": 0,
+      "confidence": 0.3,
+      "source": "intent:triggers",
+      "sources": [
+        "intent:triggers"
+      ]
+    },
+    {
+      "pred": "ACT-0457",
+      "succ": "ACT-0458",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.4,
+      "source": "leaf-criterion-order",
+      "sources": [
+        "leaf-criterion-order"
+      ]
+    },
+    {
+      "pred": "ACT-0470",
+      "succ": "ACT-0471",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.4,
+      "source": "leaf-criterion-order",
+      "sources": [
+        "leaf-criterion-order"
+      ]
+    },
+    {
+      "pred": "ACT-0471",
+      "succ": "ACT-0472",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.4,
+      "source": "leaf-criterion-order",
+      "sources": [
+        "leaf-criterion-order"
+      ]
+    },
+    {
+      "pred": "ACT-0472",
+      "succ": "ACT-0473",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.4,
+      "source": "leaf-criterion-order",
+      "sources": [
+        "leaf-criterion-order"
+      ]
+    },
+    {
+      "pred": "ACT-0473",
+      "succ": "ACT-0474",
+      "type": "FS",
+      "lag_days": 0,
+      "confidence": 0.4,
+      "source": "leaf-criterion-order",
+      "sources": [
+        "leaf-criterion-order"
+      ]
+    }
+  ]
+}

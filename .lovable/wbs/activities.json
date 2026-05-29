@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-29T19:17:31.077Z",
+  "generatedAt": "2026-05-29T19:18:51.187Z",
   "totals": {
     "activities": 669,
     "byOrigin": {
@@ -86,7 +86,11 @@
           "Save plan in Lovable",
           "Save plan in Lovable"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0002"
+      ]
     },
     {
       "id": "ACT-0002",
@@ -113,7 +117,13 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0001"
+      ],
+      "successors": [
+        "ACT-0003"
+      ]
     },
     {
       "id": "ACT-0003",
@@ -158,7 +168,13 @@
           "Refined TOC for INDEX OF SHEETS",
           "Manual TOC via selection"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0002"
+      ],
+      "successors": [
+        "ACT-0011"
+      ]
     },
     {
       "id": "ACT-0004",
@@ -226,7 +242,11 @@
           "Overhauled Pay Items UI",
           "Improve Pay Items grouping by item number"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0005"
+      ]
     },
     {
       "id": "ACT-0005",
@@ -332,7 +352,13 @@
           "Make canvas toolbar sticky",
           "Decoupled canvas controls"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0004"
+      ],
+      "successors": [
+        "ACT-0006"
+      ]
     },
     {
       "id": "ACT-0006",
@@ -430,7 +456,13 @@
           "Preceding changes",
           "Preceding changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0005"
+      ],
+      "successors": [
+        "ACT-0007"
+      ]
     },
     {
       "id": "ACT-0007",
@@ -506,7 +538,13 @@
           "Reworked Pay Items grouping",
           "Reworked Pay Items by section"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0006"
+      ],
+      "successors": [
+        "ACT-0008"
+      ]
     },
     {
       "id": "ACT-0008",
@@ -577,7 +615,13 @@
           "Auto-activate tool on pay item",
           "Auto-activate tool on click"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0007"
+      ],
+      "successors": [
+        "ACT-0009"
+      ]
     },
     {
       "id": "ACT-0009",
@@ -662,7 +706,13 @@
           "Changes",
           "Fix persist pay items bug"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0008"
+      ],
+      "successors": [
+        "ACT-0012"
+      ]
     },
     {
       "id": "ACT-0010",
@@ -723,7 +773,11 @@
           "Improve TOC parsing robustness",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0185"
+      ]
     },
     {
       "id": "ACT-0011",
@@ -750,7 +804,13 @@
         "sample_subjects": [
           "Work in progress"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0003"
+      ],
+      "successors": [
+        "ACT-0015"
+      ]
     },
     {
       "id": "ACT-0012",
@@ -853,7 +913,13 @@
           "Preceding changes",
           "Preceding changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0009"
+      ],
+      "successors": [
+        "ACT-0013"
+      ]
     },
     {
       "id": "ACT-0013",
@@ -935,7 +1001,11 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0012"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0014",
@@ -962,7 +1032,9 @@
         "sample_subjects": [
           "Add clear project button"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0015",
@@ -997,7 +1069,13 @@
           "Persist data to Supabase",
           "Enable realtime on annotations"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0011"
+      ],
+      "successors": [
+        "ACT-0016"
+      ]
     },
     {
       "id": "ACT-0016",
@@ -1028,7 +1106,13 @@
           "Clear pay items on idle load",
           "Auto-activate tool on pay item"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0015"
+      ],
+      "successors": [
+        "ACT-0017"
+      ]
     },
     {
       "id": "ACT-0017",
@@ -1077,7 +1161,13 @@
           "Refined multi-table parser",
           "Organized pay items by section"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0016"
+      ],
+      "successors": [
+        "ACT-0018"
+      ]
     },
     {
       "id": "ACT-0018",
@@ -1104,7 +1194,13 @@
         "sample_subjects": [
           "Work in progress"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0017"
+      ],
+      "successors": [
+        "ACT-0021"
+      ]
     },
     {
       "id": "ACT-0019",
@@ -1159,7 +1255,11 @@
           "Preceding changes",
           "Add annotation fields migration"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0020"
+      ]
     },
     {
       "id": "ACT-0020",
@@ -1202,7 +1302,11 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0019"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0021",
@@ -1235,7 +1339,13 @@
           "Add annotation fields to DB",
           "Add mobile annotation sheet UI"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0018"
+      ],
+      "successors": [
+        "ACT-0028"
+      ]
     },
     {
       "id": "ACT-0022",
@@ -1270,7 +1380,11 @@
           "Landing page added",
           "Rewrote NJTA/NJDOT landing page"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0023"
+      ]
     },
     {
       "id": "ACT-0023",
@@ -1298,7 +1412,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0022"
+      ],
+      "successors": [
+        "ACT-0176"
+      ]
     },
     {
       "id": "ACT-0024",
@@ -1359,7 +1479,11 @@
           "Make spec viewer resizable",
           "Resizable spec viewer panel"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0025"
+      ]
     },
     {
       "id": "ACT-0025",
@@ -1405,7 +1529,11 @@
           "Preceding changes",
           "Refined section boundary lookup"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0024"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0026",
@@ -1446,7 +1574,9 @@
           "Add spec utils tests",
           "Add specs tests"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0027",
@@ -1473,7 +1603,9 @@
         "sample_subjects": [
           "Add unit tests for specs utils"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0028",
@@ -1504,7 +1636,13 @@
           "Improve SpecViewer: highlights, resize, search",
           "Improve SpecViewer rendering debounce"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0021"
+      ],
+      "successors": [
+        "ACT-0029"
+      ]
     },
     {
       "id": "ACT-0029",
@@ -1531,7 +1669,13 @@
         "sample_subjects": [
           "Work in progress"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0028"
+      ],
+      "successors": [
+        "ACT-0030"
+      ]
     },
     {
       "id": "ACT-0030",
@@ -1558,7 +1702,13 @@
         "sample_subjects": [
           "Work in progress"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0029"
+      ],
+      "successors": [
+        "ACT-0038"
+      ]
     },
     {
       "id": "ACT-0031",
@@ -1598,7 +1748,11 @@
           "Overhauled mobile UI",
           "Created UI revamp tasks for app"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0032"
+      ]
     },
     {
       "id": "ACT-0032",
@@ -1639,7 +1793,13 @@
           "Inspector view streamlined",
           "Add inspector view UI"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0031"
+      ],
+      "successors": [
+        "ACT-0033"
+      ]
     },
     {
       "id": "ACT-0033",
@@ -1673,7 +1833,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0032"
+      ],
+      "successors": [
+        "ACT-0034"
+      ]
     },
     {
       "id": "ACT-0034",
@@ -1707,7 +1873,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0033"
+      ],
+      "successors": [
+        "ACT-0035"
+      ]
     },
     {
       "id": "ACT-0035",
@@ -1754,7 +1926,13 @@
           "Implement inspector view UI",
           "Revamped mobile demo UX"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0034"
+      ],
+      "successors": [
+        "ACT-0036"
+      ]
     },
     {
       "id": "ACT-0036",
@@ -1788,7 +1966,11 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0035"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0037",
@@ -1826,7 +2008,9 @@
         "sample_subjects": [
           "Added enterprise landing imagery"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0038",
@@ -1859,7 +2043,13 @@
           "Implement continuous scroll UI",
           "Fix mobile FAB + PM dashboard"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0030"
+      ],
+      "successors": [
+        "ACT-0039"
+      ]
     },
     {
       "id": "ACT-0039",
@@ -1896,7 +2086,13 @@
           "Add tocSelect touch support",
           "Prevent edge swipe on touch"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0038"
+      ],
+      "successors": [
+        "ACT-0040"
+      ]
     },
     {
       "id": "ACT-0040",
@@ -1923,7 +2119,13 @@
         "sample_subjects": [
           "Work in progress"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0039"
+      ],
+      "successors": [
+        "ACT-0063"
+      ]
     },
     {
       "id": "ACT-0041",
@@ -1950,7 +2152,9 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0042",
@@ -1996,7 +2200,9 @@
         "sample_subjects": [
           "Connected to Lovable Cloud"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0043",
@@ -2049,7 +2255,11 @@
           "Admin panel implemented",
           "Preceding changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0044"
+      ]
     },
     {
       "id": "ACT-0044",
@@ -2085,7 +2295,13 @@
         "sample_subjects": [
           "Organize signup with invitations"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0043"
+      ],
+      "successors": [
+        "ACT-0045"
+      ]
     },
     {
       "id": "ACT-0045",
@@ -2122,7 +2338,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0044"
+      ],
+      "successors": [
+        "ACT-0046"
+      ]
     },
     {
       "id": "ACT-0046",
@@ -2159,7 +2381,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0045"
+      ],
+      "successors": [
+        "ACT-0047"
+      ]
     },
     {
       "id": "ACT-0047",
@@ -2195,7 +2423,13 @@
           "Preceding changes",
           "Enhance mobile annotation sheet"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0046"
+      ],
+      "successors": [
+        "ACT-0048"
+      ]
     },
     {
       "id": "ACT-0048",
@@ -2263,7 +2497,13 @@
           "Add onboarding tutorials",
           "Preceding changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0047"
+      ],
+      "successors": [
+        "ACT-0049"
+      ]
     },
     {
       "id": "ACT-0049",
@@ -2360,7 +2600,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0048"
+      ],
+      "successors": [
+        "ACT-0061"
+      ]
     },
     {
       "id": "ACT-0050",
@@ -2391,7 +2637,9 @@
         "sample_subjects": [
           "Add project dashboard"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0051",
@@ -2425,7 +2673,9 @@
           "Pivot to Supabase-backed projects",
           "Add Supabase-backed projects"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0052",
@@ -2457,7 +2707,9 @@
         "sample_subjects": [
           "Add admin panel and policies"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0053",
@@ -2493,7 +2745,11 @@
           "Add admin RLS policies",
           "Implement team management UI"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0054"
+      ]
     },
     {
       "id": "ACT-0054",
@@ -2526,7 +2782,11 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0053"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0055",
@@ -2553,7 +2813,9 @@
         "sample_subjects": [
           "Add realtime annotation sync"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0056",
@@ -2587,7 +2849,11 @@
         "sample_subjects": [
           "Add welcome carousel onboarding"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0057"
+      ]
     },
     {
       "id": "ACT-0057",
@@ -2623,7 +2889,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0056"
+      ],
+      "successors": [
+        "ACT-0058"
+      ]
     },
     {
       "id": "ACT-0058",
@@ -2655,7 +2927,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0057"
+      ],
+      "successors": [
+        "ACT-0059"
+      ]
     },
     {
       "id": "ACT-0059",
@@ -2687,7 +2965,11 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0058"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0060",
@@ -2714,7 +2996,9 @@
         "sample_subjects": [
           "Add inspector export"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0061",
@@ -2765,7 +3049,13 @@
           "Added GPS landing imagery",
           "Enhanced landing with FAQ form"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0049"
+      ],
+      "successors": [
+        "ACT-0062"
+      ]
     },
     {
       "id": "ACT-0062",
@@ -2851,7 +3141,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0061"
+      ],
+      "successors": [
+        "ACT-0091"
+      ]
     },
     {
       "id": "ACT-0063",
@@ -2891,7 +3187,13 @@
           "Added resizable line endpoints",
           "Redesigned Landing with enterprise visuals"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0040"
+      ],
+      "successors": [
+        "ACT-0064"
+      ]
     },
     {
       "id": "ACT-0064",
@@ -2918,7 +3220,13 @@
         "sample_subjects": [
           "Work in progress"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0063"
+      ],
+      "successors": [
+        "ACT-0066"
+      ]
     },
     {
       "id": "ACT-0065",
@@ -2955,7 +3263,9 @@
           "Fix signup profile conflict",
           "Implement org-based signup"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0066",
@@ -2984,7 +3294,13 @@
           "Fix signup profile trigger",
           "Organize signup with invites"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0064"
+      ],
+      "successors": [
+        "ACT-0071"
+      ]
     },
     {
       "id": "ACT-0067",
@@ -3029,7 +3345,11 @@
         "sample_subjects": [
           "Introduce org invites RBAC"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0068"
+      ]
     },
     {
       "id": "ACT-0068",
@@ -3058,7 +3378,11 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0067"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0069",
@@ -3091,7 +3415,9 @@
         "sample_subjects": [
           "Fix invite-user edge function"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0070",
@@ -3121,7 +3447,9 @@
         "sample_subjects": [
           "Team management UI implemented"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0071",
@@ -3156,7 +3484,13 @@
           "Revamped demo mobile UX",
           "Fix Demo toReal App parity"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0066"
+      ],
+      "successors": [
+        "ACT-0073"
+      ]
     },
     {
       "id": "ACT-0072",
@@ -3186,7 +3520,9 @@
         "sample_subjects": [
           "Real-time annotations enabled"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0073",
@@ -3213,7 +3549,13 @@
         "sample_subjects": [
           "Work in progress"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0071"
+      ],
+      "successors": [
+        "ACT-0074"
+      ]
     },
     {
       "id": "ACT-0074",
@@ -3240,7 +3582,13 @@
         "sample_subjects": [
           "Fix half-measures in parallel"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0073"
+      ],
+      "successors": [
+        "ACT-0075"
+      ]
     },
     {
       "id": "ACT-0075",
@@ -3267,7 +3615,13 @@
         "sample_subjects": [
           "Work in progress"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0074"
+      ],
+      "successors": [
+        "ACT-0076"
+      ]
     },
     {
       "id": "ACT-0076",
@@ -3294,7 +3648,13 @@
         "sample_subjects": [
           "Work in progress"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0075"
+      ],
+      "successors": [
+        "ACT-0077"
+      ]
     },
     {
       "id": "ACT-0077",
@@ -3321,7 +3681,13 @@
         "sample_subjects": [
           "Work in progress"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0076"
+      ],
+      "successors": [
+        "ACT-0079"
+      ]
     },
     {
       "id": "ACT-0078",
@@ -3358,7 +3724,9 @@
           "Generated NJTA interface hero mockup",
           "Overhauled Landing page visuals"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0079",
@@ -3385,7 +3753,13 @@
         "sample_subjects": [
           "Work in progress"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0077"
+      ],
+      "successors": [
+        "ACT-0080"
+      ]
     },
     {
       "id": "ACT-0080",
@@ -3412,7 +3786,13 @@
         "sample_subjects": [
           "Fixed quantity recalcs on drag"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0079"
+      ],
+      "successors": [
+        "ACT-0081"
+      ]
     },
     {
       "id": "ACT-0081",
@@ -3439,7 +3819,13 @@
         "sample_subjects": [
           "Work in progress"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0080"
+      ],
+      "successors": [
+        "ACT-0082"
+      ]
     },
     {
       "id": "ACT-0082",
@@ -3466,7 +3852,13 @@
         "sample_subjects": [
           "Work in progress"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0081"
+      ],
+      "successors": [
+        "ACT-0083"
+      ]
     },
     {
       "id": "ACT-0083",
@@ -3493,7 +3885,13 @@
         "sample_subjects": [
           "Polished TakeoffPro UI branding"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0082"
+      ],
+      "successors": [
+        "ACT-0089"
+      ]
     },
     {
       "id": "ACT-0084",
@@ -3523,7 +3921,9 @@
         "sample_subjects": [
           "Added GPS-to-plan feature plan"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0085",
@@ -3555,7 +3955,11 @@
         "sample_subjects": [
           "Added geo-transform utilities"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0086"
+      ]
     },
     {
       "id": "ACT-0086",
@@ -3585,7 +3989,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0085"
+      ],
+      "successors": [
+        "ACT-0199"
+      ]
     },
     {
       "id": "ACT-0087",
@@ -3615,7 +4025,9 @@
         "sample_subjects": [
           "Added GPS calibration UI flow"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0088",
@@ -3642,7 +4054,9 @@
         "sample_subjects": [
           "Added GPS-to-plan georeferencing"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0089",
@@ -3669,7 +4083,13 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0083"
+      ],
+      "successors": [
+        "ACT-0092"
+      ]
     },
     {
       "id": "ACT-0090",
@@ -3700,7 +4120,11 @@
         "sample_subjects": [
           "Completed landing page FAQ and demo lead capture"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0234"
+      ]
     },
     {
       "id": "ACT-0091",
@@ -3750,7 +4174,13 @@
           "Revamped demo mobile UI",
           "Demo mobile UX overhaul"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0062"
+      ],
+      "successors": [
+        "ACT-0100"
+      ]
     },
     {
       "id": "ACT-0092",
@@ -3777,7 +4207,13 @@
         "sample_subjects": [
           "Work in progress"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0089"
+      ],
+      "successors": [
+        "ACT-0093"
+      ]
     },
     {
       "id": "ACT-0093",
@@ -3804,7 +4240,13 @@
         "sample_subjects": [
           "Work in progress"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0092"
+      ],
+      "successors": [
+        "ACT-0095"
+      ]
     },
     {
       "id": "ACT-0094",
@@ -3836,7 +4278,11 @@
         "sample_subjects": [
           "Improve demo mobile UX"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0191"
+      ]
     },
     {
       "id": "ACT-0095",
@@ -3863,7 +4309,13 @@
         "sample_subjects": [
           "Work in progress"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0093"
+      ],
+      "successors": [
+        "ACT-0096"
+      ]
     },
     {
       "id": "ACT-0096",
@@ -3890,7 +4342,13 @@
         "sample_subjects": [
           "Work in progress"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0095"
+      ],
+      "successors": [
+        "ACT-0097"
+      ]
     },
     {
       "id": "ACT-0097",
@@ -3917,7 +4375,13 @@
         "sample_subjects": [
           "Work in progress"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0096"
+      ],
+      "successors": [
+        "ACT-0098"
+      ]
     },
     {
       "id": "ACT-0098",
@@ -3944,7 +4408,13 @@
         "sample_subjects": [
           "Work in progress"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0097"
+      ],
+      "successors": [
+        "ACT-0099"
+      ]
     },
     {
       "id": "ACT-0099",
@@ -3982,7 +4452,13 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0098"
+      ],
+      "successors": [
+        "ACT-0102"
+      ]
     },
     {
       "id": "ACT-0100",
@@ -4020,7 +4496,13 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0091"
+      ],
+      "successors": [
+        "ACT-0101"
+      ]
     },
     {
       "id": "ACT-0101",
@@ -4104,7 +4586,13 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0100"
+      ],
+      "successors": [
+        "ACT-0107"
+      ]
     },
     {
       "id": "ACT-0102",
@@ -4152,7 +4640,13 @@
           "Added negotiation script to §9",
           "Added recruiter Q&A panel"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0099"
+      ],
+      "successors": [
+        "ACT-0112"
+      ]
     },
     {
       "id": "ACT-0103",
@@ -4196,7 +4690,9 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0104",
@@ -4223,7 +4719,9 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0105",
@@ -4260,7 +4758,11 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0106"
+      ]
     },
     {
       "id": "ACT-0106",
@@ -4292,7 +4794,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0105"
+      ],
+      "successors": [
+        "ACT-0218"
+      ]
     },
     {
       "id": "ACT-0107",
@@ -4321,7 +4829,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0101"
+      ],
+      "successors": [
+        "ACT-0108"
+      ]
     },
     {
       "id": "ACT-0108",
@@ -4350,7 +4864,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0107"
+      ],
+      "successors": [
+        "ACT-0138"
+      ]
     },
     {
       "id": "ACT-0109",
@@ -4377,7 +4897,9 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0110",
@@ -4404,7 +4926,9 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0111",
@@ -4438,7 +4962,9 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0112",
@@ -4465,7 +4991,13 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0102"
+      ],
+      "successors": [
+        "ACT-0113"
+      ]
     },
     {
       "id": "ACT-0113",
@@ -4493,7 +5025,13 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0112"
+      ],
+      "successors": [
+        "ACT-0114"
+      ]
     },
     {
       "id": "ACT-0114",
@@ -4518,7 +5056,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0113"
+      ],
+      "successors": [
+        "ACT-0115"
+      ]
     },
     {
       "id": "ACT-0115",
@@ -4543,7 +5087,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0114"
+      ],
+      "successors": [
+        "ACT-0116"
+      ]
     },
     {
       "id": "ACT-0116",
@@ -4568,7 +5118,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0115"
+      ],
+      "successors": [
+        "ACT-0117"
+      ]
     },
     {
       "id": "ACT-0117",
@@ -4593,7 +5149,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0116"
+      ],
+      "successors": [
+        "ACT-0118"
+      ]
     },
     {
       "id": "ACT-0118",
@@ -4661,7 +5223,13 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0117"
+      ],
+      "successors": [
+        "ACT-0120"
+      ]
     },
     {
       "id": "ACT-0119",
@@ -4704,7 +5272,9 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0120",
@@ -4731,7 +5301,13 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0118"
+      ],
+      "successors": [
+        "ACT-0121"
+      ]
     },
     {
       "id": "ACT-0121",
@@ -4756,7 +5332,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0120"
+      ],
+      "successors": [
+        "ACT-0122"
+      ]
     },
     {
       "id": "ACT-0122",
@@ -4784,7 +5366,13 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0121"
+      ],
+      "successors": [
+        "ACT-0123"
+      ]
     },
     {
       "id": "ACT-0123",
@@ -4811,7 +5399,13 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0122"
+      ],
+      "successors": [
+        "ACT-0124"
+      ]
     },
     {
       "id": "ACT-0124",
@@ -4838,7 +5432,13 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0123"
+      ],
+      "successors": [
+        "ACT-0125"
+      ]
     },
     {
       "id": "ACT-0125",
@@ -4865,7 +5465,13 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0124"
+      ],
+      "successors": [
+        "ACT-0126"
+      ]
     },
     {
       "id": "ACT-0126",
@@ -4896,7 +5502,13 @@
           "Fixed low-contrast text on MCFA",
           "Fixed XER parser space tolerance"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0125"
+      ],
+      "successors": [
+        "ACT-0127"
+      ]
     },
     {
       "id": "ACT-0127",
@@ -4923,7 +5535,13 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0126"
+      ],
+      "successors": [
+        "ACT-0128"
+      ]
     },
     {
       "id": "ACT-0128",
@@ -4950,7 +5568,13 @@
         "sample_subjects": [
           "Swept TakeoffPro mentions"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0127"
+      ],
+      "successors": [
+        "ACT-0131"
+      ]
     },
     {
       "id": "ACT-0129",
@@ -4989,7 +5613,9 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0130",
@@ -5022,7 +5648,9 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0131",
@@ -5080,7 +5708,13 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0128"
+      ],
+      "successors": [
+        "ACT-0142"
+      ]
     },
     {
       "id": "ACT-0132",
@@ -5115,7 +5749,11 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0133"
+      ]
     },
     {
       "id": "ACT-0133",
@@ -5148,7 +5786,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0132"
+      ],
+      "successors": [
+        "ACT-0134"
+      ]
     },
     {
       "id": "ACT-0134",
@@ -5181,7 +5825,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0133"
+      ],
+      "successors": [
+        "ACT-0135"
+      ]
     },
     {
       "id": "ACT-0135",
@@ -5214,7 +5864,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0134"
+      ],
+      "successors": [
+        "ACT-0136"
+      ]
     },
     {
       "id": "ACT-0136",
@@ -5247,7 +5903,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0135"
+      ],
+      "successors": [
+        "ACT-0137"
+      ]
     },
     {
       "id": "ACT-0137",
@@ -5280,7 +5942,11 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0136"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0138",
@@ -5348,7 +6014,13 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0108"
+      ],
+      "successors": [
+        "ACT-0139"
+      ]
     },
     {
       "id": "ACT-0139",
@@ -5377,7 +6049,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0138"
+      ],
+      "successors": [
+        "ACT-0140"
+      ]
     },
     {
       "id": "ACT-0140",
@@ -5411,7 +6089,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0139"
+      ],
+      "successors": [
+        "ACT-0157"
+      ]
     },
     {
       "id": "ACT-0141",
@@ -5438,7 +6122,9 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0142",
@@ -5484,7 +6170,13 @@
           "Added bulk approve & filters",
           "Added approved-only exports"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0131"
+      ],
+      "successors": [
+        "ACT-0164"
+      ]
     },
     {
       "id": "ACT-0143",
@@ -5602,7 +6294,9 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0144",
@@ -5659,7 +6353,11 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0238"
+      ]
     },
     {
       "id": "ACT-0145",
@@ -5703,7 +6401,9 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0146",
@@ -5735,7 +6435,11 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0147"
+      ]
     },
     {
       "id": "ACT-0147",
@@ -5777,7 +6481,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0146"
+      ],
+      "successors": [
+        "ACT-0293"
+      ]
     },
     {
       "id": "ACT-0148",
@@ -5809,7 +6519,11 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0149"
+      ]
     },
     {
       "id": "ACT-0149",
@@ -5841,7 +6555,11 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0148"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0150",
@@ -5890,7 +6608,11 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0151"
+      ]
     },
     {
       "id": "ACT-0151",
@@ -5972,7 +6694,11 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0150"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0152",
@@ -6013,7 +6739,11 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0153"
+      ]
     },
     {
       "id": "ACT-0153",
@@ -6061,7 +6791,13 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0152"
+      ],
+      "successors": [
+        "ACT-0154"
+      ]
     },
     {
       "id": "ACT-0154",
@@ -6100,7 +6836,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0153"
+      ],
+      "successors": [
+        "ACT-0155"
+      ]
     },
     {
       "id": "ACT-0155",
@@ -6146,7 +6888,11 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0154"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0156",
@@ -6178,7 +6924,9 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0157",
@@ -6217,7 +6965,13 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0140"
+      ],
+      "successors": [
+        "ACT-0158"
+      ]
     },
     {
       "id": "ACT-0158",
@@ -6256,7 +7010,13 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0157"
+      ],
+      "successors": [
+        "ACT-0159"
+      ]
     },
     {
       "id": "ACT-0159",
@@ -6305,7 +7065,13 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0158"
+      ],
+      "successors": [
+        "ACT-0160"
+      ]
     },
     {
       "id": "ACT-0160",
@@ -6345,7 +7111,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0159"
+      ],
+      "successors": [
+        "ACT-0205"
+      ]
     },
     {
       "id": "ACT-0161",
@@ -6377,7 +7149,11 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0162"
+      ]
     },
     {
       "id": "ACT-0162",
@@ -6407,7 +7183,11 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0161"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0163",
@@ -6448,7 +7228,9 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0164",
@@ -6475,7 +7257,13 @@
         "sample_subjects": [
           "Prioritized next steps"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0142"
+      ],
+      "successors": [
+        "ACT-0168"
+      ]
     },
     {
       "id": "ACT-0165",
@@ -6506,7 +7294,9 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0166",
@@ -6535,7 +7325,11 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0167"
+      ]
     },
     {
       "id": "ACT-0167",
@@ -6561,7 +7355,11 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0166"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0168",
@@ -6594,7 +7392,13 @@
           "Implemented offline sync engine",
           "Updated chart data and colors"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0164"
+      ],
+      "successors": [
+        "ACT-0172"
+      ]
     },
     {
       "id": "ACT-0169",
@@ -6623,7 +7427,9 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0170",
@@ -6661,7 +7467,9 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0171",
@@ -6737,7 +7545,9 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0172",
@@ -6773,7 +7583,13 @@
           "Applied 7 security fixes",
           "Completed Round 2 fixes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0168"
+      ],
+      "successors": [
+        "ACT-0174"
+      ]
     },
     {
       "id": "ACT-0173",
@@ -6800,7 +7616,9 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0174",
@@ -6827,7 +7645,13 @@
         "sample_subjects": [
           "Migrated confirm to useConfirm"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0172"
+      ],
+      "successors": [
+        "ACT-0180"
+      ]
     },
     {
       "id": "ACT-0175",
@@ -6861,7 +7685,9 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0176",
@@ -6900,7 +7726,13 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0023"
+      ],
+      "successors": [
+        "ACT-0177"
+      ]
     },
     {
       "id": "ACT-0177",
@@ -6934,7 +7766,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0176"
+      ],
+      "successors": [
+        "ACT-0178"
+      ]
     },
     {
       "id": "ACT-0178",
@@ -6971,7 +7809,13 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0177"
+      ],
+      "successors": [
+        "ACT-0179"
+      ]
     },
     {
       "id": "ACT-0179",
@@ -7007,7 +7851,11 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0178"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0180",
@@ -7036,7 +7884,13 @@
           "Extended WBS with PWA Phases 1-2",
           "Extended P6 schedule parity"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0174"
+      ],
+      "successors": [
+        "ACT-0221"
+      ]
     },
     {
       "id": "ACT-0181",
@@ -7083,7 +7937,11 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0182"
+      ]
     },
     {
       "id": "ACT-0182",
@@ -7114,7 +7972,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0181"
+      ],
+      "successors": [
+        "ACT-0183"
+      ]
     },
     {
       "id": "ACT-0183",
@@ -7155,7 +8019,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0182"
+      ],
+      "successors": [
+        "ACT-0184"
+      ]
     },
     {
       "id": "ACT-0184",
@@ -7186,7 +8056,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0183"
+      ],
+      "successors": [
+        "ACT-0186"
+      ]
     },
     {
       "id": "ACT-0185",
@@ -7219,7 +8095,11 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0010"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0186",
@@ -7260,7 +8140,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0184"
+      ],
+      "successors": [
+        "ACT-0187"
+      ]
     },
     {
       "id": "ACT-0187",
@@ -7292,7 +8178,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0186"
+      ],
+      "successors": [
+        "ACT-0188"
+      ]
     },
     {
       "id": "ACT-0188",
@@ -7324,7 +8216,11 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0187"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0189",
@@ -7353,7 +8249,11 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0190"
+      ]
     },
     {
       "id": "ACT-0190",
@@ -7382,7 +8282,11 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0189"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0191",
@@ -7418,7 +8322,11 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0094"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0192",
@@ -7454,7 +8362,11 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0193"
+      ]
     },
     {
       "id": "ACT-0193",
@@ -7488,7 +8400,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0192"
+      ],
+      "successors": [
+        "ACT-0194"
+      ]
     },
     {
       "id": "ACT-0194",
@@ -7522,7 +8440,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0193"
+      ],
+      "successors": [
+        "ACT-0195"
+      ]
     },
     {
       "id": "ACT-0195",
@@ -7556,7 +8480,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0194"
+      ],
+      "successors": [
+        "ACT-0196"
+      ]
     },
     {
       "id": "ACT-0196",
@@ -7590,7 +8520,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0195"
+      ],
+      "successors": [
+        "ACT-0197"
+      ]
     },
     {
       "id": "ACT-0197",
@@ -7624,7 +8560,11 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0196"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0198",
@@ -7658,7 +8598,9 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0199",
@@ -7688,7 +8630,11 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0086"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0200",
@@ -7720,7 +8666,11 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0201"
+      ]
     },
     {
       "id": "ACT-0201",
@@ -7750,7 +8700,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0200"
+      ],
+      "successors": [
+        "ACT-0202"
+      ]
     },
     {
       "id": "ACT-0202",
@@ -7780,7 +8736,11 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0201"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0203",
@@ -7812,7 +8772,11 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0204"
+      ]
     },
     {
       "id": "ACT-0204",
@@ -7842,7 +8806,11 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0203"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0205",
@@ -7893,7 +8861,13 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0160"
+      ],
+      "successors": [
+        "ACT-0206"
+      ]
     },
     {
       "id": "ACT-0206",
@@ -7924,7 +8898,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0205"
+      ],
+      "successors": [
+        "ACT-0235"
+      ]
     },
     {
       "id": "ACT-0207",
@@ -7951,7 +8931,9 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0208",
@@ -7991,7 +8973,11 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0209"
+      ]
     },
     {
       "id": "ACT-0209",
@@ -8023,7 +9009,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0208"
+      ],
+      "successors": [
+        "ACT-0210"
+      ]
     },
     {
       "id": "ACT-0210",
@@ -8058,7 +9050,13 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0209"
+      ],
+      "successors": [
+        "ACT-0211"
+      ]
     },
     {
       "id": "ACT-0211",
@@ -8102,7 +9100,11 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0210"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0212",
@@ -8141,7 +9143,11 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0213"
+      ]
     },
     {
       "id": "ACT-0213",
@@ -8172,7 +9178,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0212"
+      ],
+      "successors": [
+        "ACT-0214"
+      ]
     },
     {
       "id": "ACT-0214",
@@ -8208,7 +9220,13 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0213"
+      ],
+      "successors": [
+        "ACT-0215"
+      ]
     },
     {
       "id": "ACT-0215",
@@ -8239,7 +9257,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0214"
+      ],
+      "successors": [
+        "ACT-0227"
+      ]
     },
     {
       "id": "ACT-0216",
@@ -8281,7 +9305,11 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0217"
+      ]
     },
     {
       "id": "ACT-0217",
@@ -8325,7 +9353,11 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0216"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0218",
@@ -8356,7 +9388,13 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0106"
+      ],
+      "successors": [
+        "ACT-0219"
+      ]
     },
     {
       "id": "ACT-0219",
@@ -8385,7 +9423,11 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0218"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0220",
@@ -8421,7 +9463,9 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0221",
@@ -8450,7 +9494,11 @@
           "Refactored Activities workspace",
           "Wired up toolbar & workspace"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0180"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0222",
@@ -8483,7 +9531,11 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0223"
+      ]
     },
     {
       "id": "ACT-0223",
@@ -8513,7 +9565,11 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0222"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0224",
@@ -8551,7 +9607,11 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0225"
+      ]
     },
     {
       "id": "ACT-0225",
@@ -8584,7 +9644,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0224"
+      ],
+      "successors": [
+        "ACT-0226"
+      ]
     },
     {
       "id": "ACT-0226",
@@ -8617,7 +9683,11 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0225"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0227",
@@ -8652,7 +9722,13 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0215"
+      ],
+      "successors": [
+        "ACT-0228"
+      ]
     },
     {
       "id": "ACT-0228",
@@ -8685,7 +9761,11 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0227"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0229",
@@ -8716,7 +9796,9 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0230",
@@ -8746,7 +9828,11 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0231"
+      ]
     },
     {
       "id": "ACT-0231",
@@ -8776,7 +9862,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0230"
+      ],
+      "successors": [
+        "ACT-0232"
+      ]
     },
     {
       "id": "ACT-0232",
@@ -8806,7 +9898,11 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0231"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0233",
@@ -8843,7 +9939,9 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0234",
@@ -8872,7 +9970,11 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0090"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0235",
@@ -8907,7 +10009,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0206"
+      ],
+      "successors": [
+        "ACT-0236"
+      ]
     },
     {
       "id": "ACT-0236",
@@ -8942,7 +10050,13 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0235"
+      ],
+      "successors": [
+        "ACT-0237"
+      ]
     },
     {
       "id": "ACT-0237",
@@ -8980,7 +10094,11 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0236"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0238",
@@ -9018,7 +10136,11 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0144"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0239",
@@ -9049,7 +10171,11 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0240"
+      ]
     },
     {
       "id": "ACT-0240",
@@ -9081,7 +10207,13 @@
         "sample_subjects": [
           "Changes"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0239"
+      ],
+      "successors": [
+        "ACT-0241"
+      ]
     },
     {
       "id": "ACT-0241",
@@ -9111,7 +10243,11 @@
         ],
         "total_commits": 0,
         "sample_subjects": []
-      }
+      },
+      "predecessors": [
+        "ACT-0240"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0242",
@@ -9148,7 +10284,9 @@
           "Changes",
           "Changes"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0243",
@@ -9164,7 +10302,9 @@
         "leaf_origins": [
           "brief+code"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0244",
@@ -9180,7 +10320,9 @@
         "leaf_origins": [
           "brief+code"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0245",
@@ -9196,7 +10338,9 @@
         "leaf_origins": [
           "brief+code"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0246",
@@ -9212,7 +10356,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0247",
@@ -9228,7 +10374,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0248",
@@ -9244,7 +10392,9 @@
         "leaf_origins": [
           "brief+code"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0249",
@@ -9260,7 +10410,9 @@
         "leaf_origins": [
           "brief+code"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0250",
@@ -9276,7 +10428,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0251",
@@ -9292,7 +10446,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0252",
@@ -9308,7 +10464,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0253",
@@ -9324,7 +10482,9 @@
         "leaf_origins": [
           "brief+code"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0254",
@@ -9340,7 +10500,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0255",
@@ -9356,7 +10518,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0256",
@@ -9372,7 +10536,9 @@
         "leaf_origins": [
           "brief+code"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0257",
@@ -9388,7 +10554,9 @@
         "leaf_origins": [
           "brief+code"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0258",
@@ -9404,7 +10572,9 @@
         "leaf_origins": [
           "brief+code"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0259",
@@ -9420,7 +10590,9 @@
         "leaf_origins": [
           "brief+code"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0260",
@@ -9436,7 +10608,9 @@
         "leaf_origins": [
           "brief+code"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0261",
@@ -9452,7 +10626,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0262",
@@ -9468,7 +10644,9 @@
         "leaf_origins": [
           "brief+code"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0263",
@@ -9484,7 +10662,9 @@
         "leaf_origins": [
           "brief+code"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0264",
@@ -9500,7 +10680,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0265",
@@ -9516,7 +10698,9 @@
         "leaf_origins": [
           "brief+code"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0266",
@@ -9532,7 +10716,9 @@
         "leaf_origins": [
           "brief+code"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0267",
@@ -9548,7 +10734,9 @@
         "leaf_origins": [
           "brief+code"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0268",
@@ -9564,7 +10752,9 @@
         "leaf_origins": [
           "brief+code"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0269",
@@ -9580,7 +10770,9 @@
         "leaf_origins": [
           "brief+code"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0270",
@@ -9596,7 +10788,9 @@
         "leaf_origins": [
           "brief+code"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0271",
@@ -9612,7 +10806,9 @@
         "leaf_origins": [
           "brief+code"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0272",
@@ -9628,7 +10824,9 @@
         "leaf_origins": [
           "brief+code"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0273",
@@ -9644,7 +10842,9 @@
         "leaf_origins": [
           "brief+code"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0274",
@@ -9660,7 +10860,9 @@
         "leaf_origins": [
           "brief+code"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0275",
@@ -9676,7 +10878,9 @@
         "leaf_origins": [
           "brief+code"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0276",
@@ -9692,7 +10896,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0277",
@@ -9708,7 +10914,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0278",
@@ -9724,7 +10932,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0279",
@@ -9740,7 +10950,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0280",
@@ -9756,7 +10968,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0281",
@@ -9772,7 +10986,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0282",
@@ -9788,7 +11004,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0283",
@@ -9804,7 +11022,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0284",
@@ -9820,7 +11040,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0285",
@@ -9836,7 +11058,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0286",
@@ -9852,7 +11076,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0287",
@@ -9868,7 +11094,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0288",
@@ -9884,7 +11112,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0289",
@@ -9900,7 +11130,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0290",
@@ -9916,7 +11148,9 @@
         "leaf_origins": [
           "brief+code"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0291",
@@ -9932,7 +11166,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0292",
@@ -9948,7 +11184,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0293",
@@ -9964,7 +11202,11 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [
+        "ACT-0147"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0294",
@@ -9980,7 +11222,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0295",
@@ -9996,7 +11240,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0296",
@@ -10012,7 +11258,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0297",
@@ -10028,7 +11276,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0298",
@@ -10044,7 +11294,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0299",
@@ -10060,7 +11312,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0300",
@@ -10076,7 +11330,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0301",
@@ -10092,7 +11348,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0302",
@@ -10108,7 +11366,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0303",
@@ -10124,7 +11384,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0304",
@@ -10140,7 +11402,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0305",
@@ -10156,7 +11420,9 @@
         "leaf_origins": [
           "brief-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0306",
@@ -10172,7 +11438,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0307",
@@ -10188,7 +11456,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0308",
@@ -10204,7 +11474,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0309",
@@ -10220,7 +11492,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0310",
@@ -10236,7 +11510,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0311",
@@ -10252,7 +11528,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0312",
@@ -10268,7 +11546,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0313",
@@ -10284,7 +11564,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0314",
@@ -10300,7 +11582,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0315",
@@ -10316,7 +11600,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0316",
@@ -10332,7 +11618,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0317",
@@ -10348,7 +11636,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0318",
@@ -10364,7 +11654,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0319",
@@ -10380,7 +11672,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0320",
@@ -10396,7 +11690,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0321",
@@ -10412,7 +11708,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0322",
@@ -10428,7 +11726,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0323",
@@ -10444,7 +11744,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0324",
@@ -10460,7 +11762,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0325",
@@ -10476,7 +11780,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0326",
@@ -10492,7 +11798,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0327",
@@ -10508,7 +11816,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0328",
@@ -10524,7 +11834,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0329",
@@ -10540,7 +11852,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0330",
@@ -10556,7 +11870,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0331",
@@ -10572,7 +11888,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0332",
@@ -10588,7 +11906,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0333",
@@ -10604,7 +11924,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0334",
@@ -10620,7 +11942,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0335",
@@ -10636,7 +11960,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0336",
@@ -10652,7 +11978,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0337",
@@ -10668,7 +11996,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0338",
@@ -10684,7 +12014,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0339",
@@ -10700,7 +12032,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0340",
@@ -10716,7 +12050,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0341",
@@ -10732,7 +12068,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0342",
@@ -10748,7 +12086,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0343",
@@ -10764,7 +12104,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0344",
@@ -10780,7 +12122,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0345",
@@ -10796,7 +12140,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0346",
@@ -10812,7 +12158,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0347",
@@ -10828,7 +12176,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0348",
@@ -10844,7 +12194,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0349",
@@ -10860,7 +12212,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0350",
@@ -10876,7 +12230,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0351",
@@ -10892,7 +12248,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0352",
@@ -10908,7 +12266,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0353",
@@ -10924,7 +12284,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0354",
@@ -10940,7 +12302,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0355",
@@ -10956,7 +12320,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0356",
@@ -10972,7 +12338,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0357",
@@ -10988,7 +12356,9 @@
         "leaf_origins": [
           "code-only"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0358",
@@ -11004,7 +12374,9 @@
         "leaf_origins": [
           "code-surface"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0359",
@@ -11020,7 +12392,9 @@
         "leaf_origins": [
           "code-surface"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0360",
@@ -11036,7 +12410,9 @@
         "leaf_origins": [
           "code-surface"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0361",
@@ -11052,7 +12428,9 @@
         "leaf_origins": [
           "code-surface"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0362",
@@ -11068,7 +12446,9 @@
         "leaf_origins": [
           "code-surface"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0363",
@@ -11084,7 +12464,9 @@
         "leaf_origins": [
           "code-surface"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0364",
@@ -11100,7 +12482,9 @@
         "leaf_origins": [
           "code-surface"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0365",
@@ -11116,7 +12500,9 @@
         "leaf_origins": [
           "code-surface"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0366",
@@ -11132,7 +12518,9 @@
         "leaf_origins": [
           "code-surface"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0367",
@@ -11148,7 +12536,9 @@
         "leaf_origins": [
           "code-surface"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0368",
@@ -11164,7 +12554,9 @@
         "leaf_origins": [
           "code-surface"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0369",
@@ -11180,7 +12572,9 @@
         "leaf_origins": [
           "code-surface"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0370",
@@ -11196,7 +12590,9 @@
         "leaf_origins": [
           "code-surface"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0371",
@@ -11212,7 +12608,9 @@
         "leaf_origins": [
           "code-surface"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0372",
@@ -11228,7 +12626,9 @@
         "leaf_origins": [
           "code-surface"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0373",
@@ -11244,7 +12644,9 @@
         "leaf_origins": [
           "code-surface"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0374",
@@ -11260,7 +12662,9 @@
         "leaf_origins": [
           "code-surface"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0375",
@@ -11276,7 +12680,9 @@
         "leaf_origins": [
           "code-surface"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0376",
@@ -11292,7 +12698,9 @@
         "leaf_origins": [
           "code-surface"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0377",
@@ -11308,7 +12716,9 @@
         "leaf_origins": [
           "code-surface"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0378",
@@ -11324,7 +12734,9 @@
         "leaf_origins": [
           "code-surface"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0379",
@@ -11340,7 +12752,9 @@
         "leaf_origins": [
           "code-surface"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0380",
@@ -11356,7 +12770,9 @@
         "leaf_origins": [
           "code-surface"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0381",
@@ -11372,7 +12788,9 @@
         "leaf_origins": [
           "code-surface"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0382",
@@ -11388,7 +12806,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0383",
@@ -11404,7 +12824,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0384",
@@ -11420,7 +12842,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0385",
@@ -11436,7 +12860,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0386",
@@ -11452,7 +12878,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0387",
@@ -11468,7 +12896,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0388",
@@ -11484,7 +12914,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0389",
@@ -11500,7 +12932,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0390",
@@ -11516,7 +12950,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0391",
@@ -11532,7 +12968,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0392",
@@ -11548,7 +12986,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0393",
@@ -11564,7 +13004,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0394",
@@ -11580,7 +13022,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0395",
@@ -11596,7 +13040,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0396",
@@ -11612,7 +13058,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0397",
@@ -11628,7 +13076,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0398",
@@ -11644,7 +13094,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0399",
@@ -11660,7 +13112,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0400",
@@ -11676,7 +13130,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0401",
@@ -11692,7 +13148,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0402",
@@ -11708,7 +13166,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0403",
@@ -11724,7 +13184,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0404",
@@ -11740,7 +13202,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0405",
@@ -11756,7 +13220,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0406",
@@ -11772,7 +13238,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0407",
@@ -11788,7 +13256,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0408",
@@ -11804,7 +13274,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0409",
@@ -11820,7 +13292,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0410",
@@ -11836,7 +13310,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0411",
@@ -11852,7 +13328,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0412",
@@ -11868,7 +13346,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0413",
@@ -11884,7 +13364,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0414",
@@ -11900,7 +13382,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0415",
@@ -11916,7 +13400,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0416",
@@ -11932,7 +13418,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0417",
@@ -11948,7 +13436,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0418",
@@ -11964,7 +13454,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0419",
@@ -11980,7 +13472,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0420",
@@ -11996,7 +13490,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0421",
@@ -12012,7 +13508,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0422",
@@ -12028,7 +13526,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0423",
@@ -12044,7 +13544,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0424",
@@ -12060,7 +13562,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0425",
@@ -12076,7 +13580,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0426",
@@ -12092,7 +13598,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0427",
@@ -12108,7 +13616,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0428",
@@ -12124,7 +13634,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0429",
@@ -12140,7 +13652,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0430",
@@ -12156,7 +13670,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0431",
@@ -12172,7 +13688,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0432",
@@ -12188,7 +13706,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0433",
@@ -12204,7 +13724,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0434",
@@ -12220,7 +13742,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0435",
@@ -12236,7 +13760,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0436",
@@ -12252,7 +13778,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0437",
@@ -12268,7 +13796,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0438",
@@ -12284,7 +13814,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0439",
@@ -12300,7 +13832,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0440",
@@ -12316,7 +13850,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0441",
@@ -12332,7 +13868,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0442",
@@ -12348,7 +13886,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0443",
@@ -12364,7 +13904,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0444",
@@ -12380,7 +13922,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0445",
@@ -12396,7 +13940,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0446",
@@ -12412,7 +13958,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0447",
@@ -12428,7 +13976,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0448",
@@ -12444,7 +13994,9 @@
         "leaf_origins": [
           "orphan-capability"
         ]
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0449",
@@ -12459,7 +14011,9 @@
         "source": "landing",
         "sourceFile": "src/pages/Landing.tsx",
         "claim": "Walk the site. Measure automatically."
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0450",
@@ -12474,7 +14028,9 @@
         "source": "landing",
         "sourceFile": "src/pages/Landing.tsx",
         "claim": "We'll configure a walkthrough around your contract."
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0451",
@@ -12489,7 +14045,9 @@
         "source": "llms",
         "sourceFile": "public/llms.txt",
         "claim": "[Landing](/landing): Product overview, features, FAQ, and demo request."
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0452",
@@ -12504,7 +14062,9 @@
         "source": "llms",
         "sourceFile": "public/llms.txt",
         "claim": "[Interactive Demo](/demo): Standalone walkthrough of field setup and measurement."
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0453",
@@ -12519,7 +14079,9 @@
         "source": "llms",
         "sourceFile": "public/llms.txt",
         "claim": "[Sign in](/auth): Authentication for existing teams."
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0454",
@@ -12534,7 +14096,9 @@
         "source": "llms",
         "sourceFile": "public/llms.txt",
         "claim": "[MCFA Pitch](/mcfa): Partner-specific overview for MCFA."
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0455",
@@ -12549,7 +14113,9 @@
         "source": "llms",
         "sourceFile": "public/llms.txt",
         "claim": "[Fajar Pitch](/fajar): Partner-specific overview for Fajar."
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0456",
@@ -12564,7 +14130,9 @@
         "source": "llms",
         "sourceFile": "public/llms.txt",
         "claim": "[PMXML Demo](/p6-xml): Primavera P6 XML round-trip demo (DCMA, progress, RE memo)."
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0457",
@@ -12578,7 +14146,11 @@
         "verification_activity_id": "01:docs:organic-signup-admin-role",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0458"
+      ]
     },
     {
       "id": "ACT-0458",
@@ -12592,7 +14164,11 @@
         "verification_activity_id": "01:docs:invitation-flow",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [
+        "ACT-0457"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0459",
@@ -12606,7 +14182,9 @@
         "verification_activity_id": "01:docs:roles-populated",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0460",
@@ -12620,7 +14198,9 @@
         "verification_activity_id": "01:docs:role-booleans-correct",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0461",
@@ -12634,7 +14214,9 @@
         "verification_activity_id": "01:mobile:biometric-gate",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0462",
@@ -12648,7 +14230,9 @@
         "verification_activity_id": "01:docs:password-reset",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0463",
@@ -12662,7 +14246,9 @@
         "verification_activity_id": "01:docs:rls-posture",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0464",
@@ -12676,7 +14262,9 @@
         "verification_activity_id": "01:remaining:assign-owner-role-is-called-in-both-auth-1",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0465",
@@ -12690,7 +14278,9 @@
         "verification_activity_id": "01:remaining:biometricgate-only-runs-the-native-path--2",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0466",
@@ -12704,7 +14294,9 @@
         "verification_activity_id": "01:remaining:the-resident-engineer-role-was-added-lat-3",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0467",
@@ -12718,7 +14310,9 @@
         "verification_activity_id": "01:remaining:resetpassword-tsx-46-shows-a-loading-rec-4",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0468",
@@ -12732,7 +14326,9 @@
         "verification_activity_id": "02:docs:ownership-member-union",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0469",
@@ -12746,7 +14342,9 @@
         "verification_activity_id": "02:docs:card-stats",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0470",
@@ -12760,7 +14358,11 @@
         "verification_activity_id": "02:docs:new-project-dialog",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": [
+        "ACT-0471"
+      ]
     },
     {
       "id": "ACT-0471",
@@ -12774,7 +14376,13 @@
         "verification_activity_id": "02:docs:delete-guard",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [
+        "ACT-0470"
+      ],
+      "successors": [
+        "ACT-0472"
+      ]
     },
     {
       "id": "ACT-0472",
@@ -12788,7 +14396,13 @@
         "verification_activity_id": "02:docs:pm-inspector-detail",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [
+        "ACT-0471"
+      ],
+      "successors": [
+        "ACT-0473"
+      ]
     },
     {
       "id": "ACT-0473",
@@ -12802,7 +14416,13 @@
         "verification_activity_id": "02:docs:role-badge",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [
+        "ACT-0472"
+      ],
+      "successors": [
+        "ACT-0474"
+      ]
     },
     {
       "id": "ACT-0474",
@@ -12816,7 +14436,11 @@
         "verification_activity_id": "02:docs:inspector-empty-state",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [
+        "ACT-0473"
+      ],
+      "successors": []
     },
     {
       "id": "ACT-0475",
@@ -12830,7 +14454,9 @@
         "verification_activity_id": "02:remaining:useprojects-fetches-all-annotations-for--1",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0476",
@@ -12844,7 +14470,9 @@
         "verification_activity_id": "02:remaining:totalpages-in-the-pm-inspector-detail-pa-2",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0477",
@@ -12858,7 +14486,9 @@
         "verification_activity_id": "02:remaining:no-react-query-cache-invalidation-when-a-3",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0478",
@@ -12872,7 +14502,9 @@
         "verification_activity_id": "02:remaining:loadpendingreviewcounts-fires-per-projec-4",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0479",
@@ -12886,7 +14518,9 @@
         "verification_activity_id": "03:docs:create-project-pdf-upload",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0480",
@@ -12900,7 +14534,9 @@
         "verification_activity_id": "03:docs:load-with-offline-fallback",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0481",
@@ -12914,7 +14550,9 @@
         "verification_activity_id": "03:docs:toc-drag-select",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0482",
@@ -12928,7 +14566,9 @@
         "verification_activity_id": "03:docs:pay-item-import",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0483",
@@ -12942,7 +14582,9 @@
         "verification_activity_id": "03:docs:specs-pdf-upload-indexing",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0484",
@@ -12956,7 +14598,9 @@
         "verification_activity_id": "03:docs:toc-pay-items-survive-reload",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0485",
@@ -12970,7 +14614,9 @@
         "verification_activity_id": "03:remaining:extractpayitemsfrompage-is-a-pure-heuris-1",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0486",
@@ -12984,7 +14630,9 @@
         "verification_activity_id": "03:remaining:toc-parsing-uses-a-hardcoded-5px-y-group-2",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0487",
@@ -12998,7 +14646,9 @@
         "verification_activity_id": "03:remaining:the-up-to-4-subsequent-pages-pay-item-sc-3",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0488",
@@ -13012,7 +14662,9 @@
         "verification_activity_id": "03:remaining:specs-storage-path-is-uploaded-with-upse-4",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0489",
@@ -13026,7 +14678,9 @@
         "verification_activity_id": "04:docs:drawable-flag",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0490",
@@ -13040,7 +14694,9 @@
         "verification_activity_id": "04:docs:delete-cascade",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0491",
@@ -13054,7 +14710,9 @@
         "verification_activity_id": "04:docs:edit-inline",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0492",
@@ -13068,7 +14726,9 @@
         "verification_activity_id": "04:docs:db-persistence",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0493",
@@ -13082,7 +14742,9 @@
         "verification_activity_id": "04:docs:section-keyed-colors",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0494",
@@ -13096,7 +14758,9 @@
         "verification_activity_id": "04:docs:contract-quantity-denominator",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0495",
@@ -13110,7 +14774,9 @@
         "verification_activity_id": "04:docs:contract-modifications",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0496",
@@ -13124,7 +14790,9 @@
         "verification_activity_id": "04:remaining:updatepayitems-issues-full-delete-bulk-i-1",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0497",
@@ -13138,7 +14806,9 @@
         "verification_activity_id": "04:remaining:no-contract-modification-workflow-exists-2",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0498",
@@ -13152,7 +14822,9 @@
         "verification_activity_id": "04:remaining:pay-item-color-auto-assigned-from-sectio-3",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0499",
@@ -13166,7 +14838,9 @@
         "verification_activity_id": "04:remaining:cascade-deletion-done-client-side-via-n--4",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0500",
@@ -13180,7 +14854,9 @@
         "verification_activity_id": "05:docs:scale-calibration",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0501",
@@ -13194,7 +14870,9 @@
         "verification_activity_id": "05:docs:polygon-with-cy-depth-prompt",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0502",
@@ -13208,7 +14886,9 @@
         "verification_activity_id": "05:docs:drag-handle-editing",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0503",
@@ -13222,7 +14902,9 @@
         "verification_activity_id": "05:docs:undo-redo-with-db-sync",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0504",
@@ -13236,7 +14918,9 @@
         "verification_activity_id": "05:docs:realtime-multi-user-sync",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0505",
@@ -13250,7 +14934,9 @@
         "verification_activity_id": "05:docs:gps-calibration-overlay",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0506",
@@ -13264,7 +14950,9 @@
         "verification_activity_id": "05:docs:manual-quantity-override",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0507",
@@ -13278,7 +14966,9 @@
         "verification_activity_id": "05:docs:readonly-mode",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0508",
@@ -13292,7 +14982,9 @@
         "verification_activity_id": "05:remaining:pdfcanvas-is-1-426-lines-with-pointer-to-1",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0509",
@@ -13306,7 +14998,9 @@
         "verification_activity_id": "05:remaining:buildgeocalibration-silently-throws-on-d-2",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0510",
@@ -13320,7 +15014,9 @@
         "verification_activity_id": "05:remaining:undo-stack-is-per-session-and-per-device-3",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0511",
@@ -13334,7 +15030,9 @@
         "verification_activity_id": "05:remaining:copy-calibration-to-pages-does-a-bulk-db-4",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0512",
@@ -13348,7 +15046,9 @@
         "verification_activity_id": "06:remaining:daily-report-snapshots-table-missing-fro-1",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0513",
@@ -13362,7 +15062,9 @@
         "verification_activity_id": "06:remaining:role-enforcement-is-client-only-useappro-2",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0514",
@@ -13376,7 +15078,9 @@
         "verification_activity_id": "06:remaining:rejected-at-not-cleared-on-reopen-usedai-3",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0515",
@@ -13390,7 +15094,9 @@
         "verification_activity_id": "06:remaining:no-push-notification-to-inspector-on-re--4",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0516",
@@ -13404,7 +15110,9 @@
         "verification_activity_id": "07:remaining:projectcontrols-variance-uses-raw-annota-1",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0517",
@@ -13418,7 +15126,9 @@
         "verification_activity_id": "07:remaining:summarypanel-operates-on-live-annotation-2",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0518",
@@ -13432,7 +15142,9 @@
         "verification_activity_id": "07:remaining:no-payment-period-scoping-there-is-no-da-3",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0519",
@@ -13446,7 +15158,9 @@
         "verification_activity_id": "07:remaining:view-definition-not-in-repo-v-approved-p-4",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0520",
@@ -13460,7 +15174,9 @@
         "verification_activity_id": "08:remaining:annotation-id-linkage-is-missing-in-prac-1",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0521",
@@ -13474,7 +15190,9 @@
         "verification_activity_id": "08:remaining:ai-call-is-fire-and-forget-with-no-retry-2",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0522",
@@ -13488,7 +15206,9 @@
         "verification_activity_id": "08:remaining:gallery-lives-only-in-projectcontrols-th-3",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0523",
@@ -13502,7 +15222,9 @@
         "verification_activity_id": "08:remaining:offline-blob-serialization-unresolved-in-4",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0524",
@@ -13516,7 +15238,9 @@
         "verification_activity_id": "09:remaining:entire-pdf-loaded-into-memory-pdfjs-dist-1",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0525",
@@ -13530,7 +15254,9 @@
         "verification_activity_id": "09:remaining:search-highlight-is-canvas-drawn-not-dom-2",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0526",
@@ -13544,7 +15270,9 @@
         "verification_activity_id": "09:remaining:extractalltext-runs-on-the-main-thread-t-3",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0527",
@@ -13558,7 +15286,9 @@
         "verification_activity_id": "09:remaining:no-spec-pdf-upload-ui-in-this-stream-spe-4",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0528",
@@ -13572,7 +15302,9 @@
         "verification_activity_id": "10:remaining:fetchdocumentversions-fetches-all-projec-1",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0529",
@@ -13586,7 +15318,9 @@
         "verification_activity_id": "10:remaining:blob-orphan-risk-on-insert-failure-runup-2",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0530",
@@ -13600,7 +15334,9 @@
         "verification_activity_id": "10:remaining:no-folder-level-permission-model-all-fol-3",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0531",
@@ -13614,7 +15350,9 @@
         "verification_activity_id": "10:remaining:preview-uses-signed-urls-with-1-hour-ttl-4",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0532",
@@ -13628,7 +15366,9 @@
         "verification_activity_id": "11:remaining:drag-mutation-race-ganttchart-tsx-88-mut-1",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0533",
@@ -13642,7 +15382,9 @@
         "verification_activity_id": "11:remaining:as-any-casts-on-every-supabase-call-gene-2",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0534",
@@ -13656,7 +15398,9 @@
         "verification_activity_id": "11:remaining:cpm-not-persisted-automatically-persistc-3",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0535",
@@ -13670,7 +15414,9 @@
         "verification_activity_id": "11:remaining:tia-narrative-is-a-static-template-build-4",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0536",
@@ -13684,7 +15430,9 @@
         "verification_activity_id": "12:remaining:hardcoded-cpi-spi-primary-schedule-kpi-t-1",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0537",
@@ -13698,7 +15446,9 @@
         "verification_activity_id": "12:remaining:computeexpectedpct-provenance-unclear-da-2",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0538",
@@ -13712,7 +15462,9 @@
         "verification_activity_id": "12:remaining:no-pagination-on-scorecard-metrics-limit-3",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0539",
@@ -13726,7 +15478,9 @@
         "verification_activity_id": "12:remaining:photo-ai-confidence-threshold-not-enforc-4",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0540",
@@ -13740,7 +15494,9 @@
         "verification_activity_id": "13:remaining:no-round-trip-test-suite-p6-import-compa-1",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0541",
@@ -13754,7 +15510,9 @@
         "verification_activity_id": "13:remaining:applydailyreportstop6-mutates-the-live-d-2",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0542",
@@ -13768,7 +15526,9 @@
         "verification_activity_id": "13:remaining:jspdf-doc-save-bypasses-saveexport-write-3",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0543",
@@ -13782,7 +15542,9 @@
         "verification_activity_id": "13:remaining:as-of-date-cutoff-is-ui-only-never-valid-4",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0544",
@@ -13796,7 +15558,9 @@
         "verification_activity_id": "14:remaining:pixelsperfoot-is-a-single-global-scalar--1",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0545",
@@ -13810,7 +15574,9 @@
         "verification_activity_id": "14:remaining:estimateerror-reports-pixels-not-feet-do-2",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0546",
@@ -13824,7 +15590,9 @@
         "verification_activity_id": "14:remaining:no-coordinate-normalization-spec-pdfcanv-3",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0547",
@@ -13838,7 +15606,9 @@
         "verification_activity_id": "14:remaining:kalman-state-is-in-memory-only-kalmansta-4",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0548",
@@ -13852,7 +15622,9 @@
         "verification_activity_id": "15:remaining:daily-reports-capped-at-30-rows-inspecto-1",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0549",
@@ -13866,7 +15638,9 @@
         "verification_activity_id": "15:remaining:no-conflict-resolution-ui-outboxstatus-i-2",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0550",
@@ -13880,7 +15654,9 @@
         "verification_activity_id": "15:remaining:idb-schema-is-v2-with-no-documented-migr-3",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0551",
@@ -13894,7 +15670,9 @@
         "verification_activity_id": "15:remaining:jspdf-save-bypass-generated-pdfs-aren-t--4",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0552",
@@ -13908,7 +15686,9 @@
         "verification_activity_id": "16:docs:tab-switching-pdf-persistence",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0553",
@@ -13922,7 +15702,9 @@
         "verification_activity_id": "16:docs:active-pay-item-chip",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0554",
@@ -13936,7 +15718,9 @@
         "verification_activity_id": "16:docs:badge-counts",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0555",
@@ -13950,7 +15734,9 @@
         "verification_activity_id": "16:docs:zoom-clamp",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0556",
@@ -13964,7 +15750,9 @@
         "verification_activity_id": "16:docs:calibration-chip-tap",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0557",
@@ -13978,7 +15766,9 @@
         "verification_activity_id": "16:remaining:no-enforced-minimum-touch-target-size-on-1",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0558",
@@ -13992,7 +15782,9 @@
         "verification_activity_id": "16:remaining:useismobile-uses-hard-768-px-breakpoint--2",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0559",
@@ -14006,7 +15798,9 @@
         "verification_activity_id": "16:remaining:mobiletoolbar-duplicates-zoom-logic-from-3",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0560",
@@ -14020,7 +15814,9 @@
         "verification_activity_id": "16:remaining:demo-tsx-reimplements-full-mobile-layout-4",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0561",
@@ -14034,7 +15830,9 @@
         "verification_activity_id": "17:docs:bell-realtime-subscribe",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0562",
@@ -14048,7 +15846,9 @@
         "verification_activity_id": "17:docs:markread-markallread",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0563",
@@ -14062,7 +15862,9 @@
         "verification_activity_id": "17:docs:navigation-on-click",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0564",
@@ -14076,7 +15878,9 @@
         "verification_activity_id": "17:mobile:native-push-registration",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0565",
@@ -14090,7 +15894,9 @@
         "verification_activity_id": "17:docs:send-push-edge-function",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0566",
@@ -14104,7 +15910,9 @@
         "verification_activity_id": "17:docs:presence-online-users",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0567",
@@ -14118,7 +15926,9 @@
         "verification_activity_id": "17:remaining:no-confirmed-trigger-that-auto-inserts-i-1",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0568",
@@ -14132,7 +15942,9 @@
         "verification_activity_id": "17:remaining:presence-name-always-online-user-list-sh-2",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0569",
@@ -14146,7 +15958,9 @@
         "verification_activity_id": "17:remaining:usenotifications-polls-every-60s-on-web--3",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0570",
@@ -14160,7 +15974,9 @@
         "verification_activity_id": "17:remaining:send-push-reads-fcm-server-key-but-fcm-h-4",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0571",
@@ -14174,7 +15990,9 @@
         "verification_activity_id": "18:docs:negative-lag-m-code-check",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0572",
@@ -14188,7 +16006,9 @@
         "verification_activity_id": "18:docs:dcma-14-point",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0573",
@@ -14202,7 +16022,9 @@
         "verification_activity_id": "18:docs:approve-reject-timestamps-reviewer",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0574",
@@ -14216,7 +16038,9 @@
         "verification_activity_id": "18:docs:snapshot-freeze",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0575",
@@ -14230,7 +16054,9 @@
         "verification_activity_id": "18:docs:drift-detection",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0576",
@@ -14244,7 +16070,9 @@
         "verification_activity_id": "18:remaining:m-code-detection-relies-on-activity-id-p-1",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0577",
@@ -14258,7 +16086,9 @@
         "verification_activity_id": "18:remaining:approval-fields-are-plain-mutable-column-2",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0578",
@@ -14272,7 +16102,9 @@
         "verification_activity_id": "18:remaining:dcma-runs-client-side-on-full-activity-s-3",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0579",
@@ -14286,7 +16118,9 @@
         "verification_activity_id": "18:remaining:reject-reason-is-freeform-with-no-charac-4",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0580",
@@ -14300,7 +16134,9 @@
         "verification_activity_id": "19:docs:welcomecarousel-gating",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0581",
@@ -14314,7 +16150,9 @@
         "verification_activity_id": "19:docs:role-filtering",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0582",
@@ -14328,7 +16166,9 @@
         "verification_activity_id": "19:docs:guided-tour-auto-start",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0583",
@@ -14342,7 +16182,9 @@
         "verification_activity_id": "19:docs:demo-12-step-walkthrough",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0584",
@@ -14356,7 +16198,9 @@
         "verification_activity_id": "19:docs:nativefirstrun-shown-once",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0585",
@@ -14370,7 +16214,9 @@
         "verification_activity_id": "19:remaining:guidedtour-polls-queryselector-every-500-1",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0586",
@@ -14384,7 +16230,9 @@
         "verification_activity_id": "19:remaining:usetour-stores-completion-only-in-locals-2",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0587",
@@ -14398,7 +16246,9 @@
         "verification_activity_id": "19:remaining:welcomecarousel-hard-codes-5-slides-addi-3",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0588",
@@ -14412,7 +16262,9 @@
         "verification_activity_id": "19:remaining:demo-tsx-is-400-lines-of-standalone-work-4",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0589",
@@ -14426,7 +16278,9 @@
         "verification_activity_id": "20:docs:landing-page",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0590",
@@ -14440,7 +16294,9 @@
         "verification_activity_id": "20:docs:demo-cta-linkage",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0591",
@@ -14454,7 +16310,9 @@
         "verification_activity_id": "20:docs:mcfapitch-fajarpitch",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0592",
@@ -14468,7 +16326,9 @@
         "verification_activity_id": "20:docs:p6xmldemo",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0593",
@@ -14482,7 +16342,9 @@
         "verification_activity_id": "20:docs:sitemap-xml-completeness",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0594",
@@ -14496,7 +16358,9 @@
         "verification_activity_id": "20:docs:llms-txt-accuracy",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0595",
@@ -14510,7 +16374,9 @@
         "verification_activity_id": "20:remaining:demo-requests-table-referenced-but-no-mi-1",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0596",
@@ -14524,7 +16390,9 @@
         "verification_activity_id": "20:remaining:fajarpitch-tsx-uses-deterministic-seed-t-2",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0597",
@@ -14538,7 +16406,9 @@
         "verification_activity_id": "20:remaining:mcfapitch-and-fajarpitch-hard-code-propo-3",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0598",
@@ -14552,7 +16422,9 @@
         "verification_activity_id": "20:remaining:llms-txt-and-sitemap-xml-hard-code-produ-4",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0599",
@@ -14566,7 +16438,9 @@
         "verification_activity_id": "99:cross:xer-ingest-scrapped",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0600",
@@ -14580,7 +16454,9 @@
         "verification_activity_id": "99:cross:pmxml-pivot",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0601",
@@ -14594,7 +16470,9 @@
         "verification_activity_id": "99:cross:comprehension-pass",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0602",
@@ -14608,7 +16486,9 @@
         "verification_activity_id": "99:cross:dev-wbs-authoring",
         "kind": "manual",
         "recipe": null
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0603",
@@ -14622,7 +16502,9 @@
         "cap_id": "cap.field.photo-capture",
         "status": "partial",
         "notes": "Camera shim + annotation_photos table exist; landing/store promise this with geo-tag dispute resolution which is unbuilt."
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0604",
@@ -14636,7 +16518,9 @@
         "cap_id": "cap.schedule.activity-user-assignments",
         "status": "planned",
         "notes": "activity_assignments table exists; no UI."
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0605",
@@ -14649,7 +16533,9 @@
       "evidence": {
         "cap_id": "cap.scheduling.xer-dcma14",
         "status": "shipped"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0606",
@@ -14663,7 +16549,9 @@
         "cap_id": "cap.scheduling.xer-tia",
         "status": "partial",
         "notes": "FS-only fragnet; no actual CPM re-computation."
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0607",
@@ -14677,7 +16565,9 @@
         "cap_id": "cap.scheduling.xer-progress",
         "status": "partial",
         "notes": "CPI=SPI because no cost data loaded."
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0608",
@@ -14690,7 +16580,9 @@
       "evidence": {
         "cap_id": "cap.scheduling.xer-wbs-njdot",
         "status": "shipped"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0609",
@@ -14703,7 +16595,9 @@
       "evidence": {
         "cap_id": "cap.scheduling.xer-feedback",
         "status": "shipped"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0610",
@@ -14716,7 +16610,9 @@
       "evidence": {
         "cap_id": "cap.scheduling.xer-aace",
         "status": "shipped"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0611",
@@ -14730,7 +16626,9 @@
         "cap_id": "cap.scheduling.portfolio-rollup",
         "status": "aspirational",
         "notes": "Promised in McfaPitch; no implementation."
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0612",
@@ -14744,7 +16642,9 @@
         "cap_id": "cap.scheduling.aace-progression",
         "status": "aspirational",
         "notes": "Promised in McfaPitch; metadata only exists."
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0613",
@@ -14757,7 +16657,9 @@
       "evidence": {
         "cap_id": "cap.p6.xml-parse-serialize",
         "status": "shipped"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0614",
@@ -14771,7 +16673,9 @@
         "cap_id": "cap.p6.approved-quantity-embed",
         "status": "planned",
         "notes": "P6Export only writes dates/% - not approved quantities."
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0615",
@@ -14784,7 +16688,9 @@
       "evidence": {
         "cap_id": "cap.eos.rocks",
         "status": "shipped"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0616",
@@ -14797,7 +16703,9 @@
       "evidence": {
         "cap_id": "cap.eos.scorecard",
         "status": "shipped"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0617",
@@ -14811,7 +16719,9 @@
         "cap_id": "cap.eos.cross-project-trends",
         "status": "planned",
         "notes": "scorecard_metrics exists but no aggregating widget."
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0618",
@@ -14825,7 +16735,9 @@
         "cap_id": "cap.controls.executive-kpi",
         "status": "partial",
         "notes": "Has hardcoded CPI/SPI placeholder."
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0619",
@@ -14838,7 +16750,9 @@
       "evidence": {
         "cap_id": "cap.controls.variance-tracking",
         "status": "shipped"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0620",
@@ -14851,7 +16765,9 @@
       "evidence": {
         "cap_id": "cap.controls.bid-summary",
         "status": "shipped"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0621",
@@ -14864,7 +16780,9 @@
       "evidence": {
         "cap_id": "cap.docs.system-folder-rendering",
         "status": "planned"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0622",
@@ -14877,7 +16795,9 @@
       "evidence": {
         "cap_id": "cap.auth.profile-table",
         "status": "shipped"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0623",
@@ -14890,7 +16810,9 @@
       "evidence": {
         "cap_id": "cap.notif.push-tap-deeplink",
         "status": "planned"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0624",
@@ -14903,7 +16825,9 @@
       "evidence": {
         "cap_id": "cap.native.platform-shim",
         "status": "shipped"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0625",
@@ -14916,7 +16840,9 @@
       "evidence": {
         "cap_id": "cap.native.camera",
         "status": "shipped"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0626",
@@ -14929,7 +16855,9 @@
       "evidence": {
         "cap_id": "cap.native.geolocation",
         "status": "shipped"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0627",
@@ -14942,7 +16870,9 @@
       "evidence": {
         "cap_id": "cap.native.biometric",
         "status": "shipped"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0628",
@@ -14955,7 +16885,9 @@
       "evidence": {
         "cap_id": "cap.native.filesystem-share",
         "status": "shipped"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0629",
@@ -14968,7 +16900,9 @@
       "evidence": {
         "cap_id": "cap.native.push-registration",
         "status": "shipped"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0630",
@@ -14981,7 +16915,9 @@
       "evidence": {
         "cap_id": "cap.native.app-state",
         "status": "shipped"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0631",
@@ -14994,7 +16930,9 @@
       "evidence": {
         "cap_id": "cap.native.background-sync",
         "status": "partial"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0632",
@@ -15007,7 +16945,9 @@
       "evidence": {
         "cap_id": "cap.native.first-run-wizard",
         "status": "shipped"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0633",
@@ -15020,7 +16960,9 @@
       "evidence": {
         "cap_id": "cap.native.deep-link",
         "status": "planned"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0634",
@@ -15033,7 +16975,9 @@
       "evidence": {
         "cap_id": "cap.native.ios-android-folders",
         "status": "planned"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0635",
@@ -15046,7 +16990,9 @@
       "evidence": {
         "cap_id": "cap.native.transistorsoft-license",
         "status": "planned"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0636",
@@ -15059,7 +17005,9 @@
       "evidence": {
         "cap_id": "cap.native.store-icons-splash",
         "status": "planned"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0637",
@@ -15072,7 +17020,9 @@
       "evidence": {
         "cap_id": "cap.native.store-screenshots",
         "status": "planned"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0638",
@@ -15085,7 +17035,9 @@
       "evidence": {
         "cap_id": "cap.offline.sync-panel",
         "status": "shipped"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0639",
@@ -15098,7 +17050,9 @@
       "evidence": {
         "cap_id": "cap.offline.service-worker",
         "status": "planned"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0640",
@@ -15111,7 +17065,9 @@
       "evidence": {
         "cap_id": "cap.offline.install-prompt",
         "status": "planned"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0641",
@@ -15124,7 +17080,9 @@
       "evidence": {
         "cap_id": "cap.app.toast",
         "status": "shipped"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0642",
@@ -15137,7 +17095,9 @@
       "evidence": {
         "cap_id": "cap.app.confirm-dialog",
         "status": "shipped"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0643",
@@ -15150,7 +17110,9 @@
       "evidence": {
         "cap_id": "cap.app.keyboard-shortcuts",
         "status": "shipped"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0644",
@@ -15163,7 +17125,9 @@
       "evidence": {
         "cap_id": "cap.marketing.mcfa-pitch",
         "status": "shipped"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0645",
@@ -15176,7 +17140,9 @@
       "evidence": {
         "cap_id": "cap.marketing.xerlens-demo",
         "status": "shipped"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0646",
@@ -15189,7 +17155,9 @@
       "evidence": {
         "cap_id": "cap.marketing.p6xml-demo",
         "status": "shipped"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0647",
@@ -15202,7 +17170,9 @@
       "evidence": {
         "cap_id": "cap.marketing.fajar-pitch",
         "status": "shipped"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0648",
@@ -15215,7 +17185,9 @@
       "evidence": {
         "cap_id": "cap.marketing.privacy-terms",
         "status": "planned"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0649",
@@ -15228,7 +17200,9 @@
       "evidence": {
         "cap_id": "cap.integrations.projectwise",
         "status": "aspirational"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0650",
@@ -15241,7 +17215,9 @@
       "evidence": {
         "cap_id": "cap.integrations.sitemanager-aashtoware",
         "status": "aspirational"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0651",
@@ -15254,7 +17230,9 @@
       "evidence": {
         "cap_id": "cap.integrations.bim360",
         "status": "aspirational"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0652",
@@ -15267,7 +17245,9 @@
       "evidence": {
         "cap_id": "cap.integrations.power-bi",
         "status": "aspirational"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0653",
@@ -15280,7 +17260,9 @@
       "evidence": {
         "cap_id": "cap.integrations.public-api",
         "status": "aspirational"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0654",
@@ -15293,7 +17275,9 @@
       "evidence": {
         "cap_id": "cap.integrations.dc84-export",
         "status": "aspirational"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0655",
@@ -15306,7 +17290,9 @@
       "evidence": {
         "cap_id": "cap.integrations.contractor-portal",
         "status": "aspirational"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0656",
@@ -15319,7 +17305,9 @@
       "evidence": {
         "cap_id": "cap.ai.quantity-extraction",
         "status": "aspirational"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0657",
@@ -15332,7 +17320,9 @@
       "evidence": {
         "cap_id": "cap.ai.tia-narrative-draft",
         "status": "partial"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0658",
@@ -15345,7 +17335,9 @@
       "evidence": {
         "cap_id": "cap.admin.soc2",
         "status": "aspirational"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0659",
@@ -15358,7 +17350,9 @@
       "evidence": {
         "cap_id": "cap.admin.uptime-sla",
         "status": "aspirational"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0660",
@@ -15371,7 +17365,9 @@
       "evidence": {
         "cap_id": "cap.admin.dedicated-onboarding",
         "status": "aspirational"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0661",
@@ -15384,7 +17380,9 @@
       "evidence": {
         "cap_id": "cap.fajar.whatsapp-booking-agent",
         "status": "aspirational"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0662",
@@ -15397,7 +17395,9 @@
       "evidence": {
         "cap_id": "cap.fajar.whatsapp-maintenance-agent",
         "status": "aspirational"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0663",
@@ -15410,7 +17410,9 @@
       "evidence": {
         "cap_id": "cap.fajar.availability-engine",
         "status": "aspirational"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0664",
@@ -15423,7 +17425,9 @@
       "evidence": {
         "cap_id": "cap.fajar.seo-machine-pages",
         "status": "aspirational"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0665",
@@ -15436,7 +17440,9 @@
       "evidence": {
         "cap_id": "cap.fajar.arabic-hreflang",
         "status": "aspirational"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0666",
@@ -15449,7 +17455,9 @@
       "evidence": {
         "cap_id": "cap.fajar.admin-dashboard",
         "status": "aspirational"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0667",
@@ -15462,7 +17470,9 @@
       "evidence": {
         "cap_id": "cap.fajar.human-handoff",
         "status": "aspirational"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0668",
@@ -15475,7 +17485,9 @@
       "evidence": {
         "cap_id": "cap.fajar.uae-hosting",
         "status": "aspirational"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     },
     {
       "id": "ACT-0669",
@@ -15488,7 +17500,9 @@
       "evidence": {
         "cap_id": "cap.infra.testing",
         "status": "shipped"
-      }
+      },
+      "predecessors": [],
+      "successors": []
     }
   ]
 }

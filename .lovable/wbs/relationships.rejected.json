@@ -1,0 +1,324 @@
+{
+  "generatedAt": "2026-05-29T19:18:51.320Z",
+  "totals": {
+    "rejected": 52,
+    "by_reason": {
+      "intent-leaf-unresolved": 34,
+      "no-activities-in-mapped-leaves": 18
+    }
+  },
+  "rejected": [
+    {
+      "from": "s01.signup-login",
+      "to": "S03-L01",
+      "kind": "gates",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "s01.rls-coverage",
+      "to": "S03-L02",
+      "kind": "secures",
+      "reason": "no-activities-in-mapped-leaves"
+    },
+    {
+      "from": "s02.project-membership",
+      "to": "S03-L01",
+      "kind": "gates",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "S03-L01",
+      "to": "stream-05.scale-calibration",
+      "kind": "prerequisite",
+      "reason": "no-activities-in-mapped-leaves"
+    },
+    {
+      "from": "S03-L02",
+      "to": "stream-05.pdf-render",
+      "kind": "feeds",
+      "reason": "no-activities-in-mapped-leaves"
+    },
+    {
+      "from": "S03-L03",
+      "to": "stream-05.pdf-render",
+      "kind": "feeds",
+      "reason": "no-activities-in-mapped-leaves"
+    },
+    {
+      "from": "S03-L07",
+      "to": "stream-05.line-tool",
+      "kind": "feeds",
+      "reason": "no-activities-in-mapped-leaves"
+    },
+    {
+      "from": "S03-L12",
+      "to": "stream-05.scale-calibration",
+      "kind": "feeds",
+      "reason": "no-activities-in-mapped-leaves"
+    },
+    {
+      "from": "stream-05.line-tool",
+      "to": "06-L2-01",
+      "kind": "feeds",
+      "reason": "no-activities-in-mapped-leaves"
+    },
+    {
+      "from": "stream-05.polygon-tool",
+      "to": "06-L2-01",
+      "kind": "feeds",
+      "reason": "no-activities-in-mapped-leaves"
+    },
+    {
+      "from": "stream-05.count-tool",
+      "to": "06-L2-01",
+      "kind": "feeds",
+      "reason": "no-activities-in-mapped-leaves"
+    },
+    {
+      "from": "stream-05.depth-prompt-cy",
+      "to": "06-L2-01",
+      "kind": "feeds",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "06-L2-04",
+      "to": "s07.AC-01",
+      "kind": "feeds",
+      "reason": "no-activities-in-mapped-leaves"
+    },
+    {
+      "from": "06-L2-09",
+      "to": "s07.AC-02",
+      "kind": "feeds",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "stream-14.line-length",
+      "to": "stream-05.line-tool",
+      "kind": "implements",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "stream-14.polygon-area-sf",
+      "to": "stream-05.polygon-tool",
+      "kind": "implements",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "stream-14.sf-conversions",
+      "to": "stream-05.depth-prompt-cy",
+      "kind": "implements",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "stream-14.hit-testing",
+      "to": "stream-05.drag-handle-editing",
+      "kind": "implements",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "stream-14.gps-to-plan",
+      "to": "s09.gps-calibration-wizard",
+      "kind": "implements",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "s04.pdf-canvas-component",
+      "to": "stream-05.pdf-render",
+      "kind": "implements",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "s04.annotation-tools",
+      "to": "stream-05.line-tool",
+      "kind": "implements",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "s04.annotation-tools",
+      "to": "stream-05.polygon-tool",
+      "kind": "implements",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "s04.gps-plan-overlay",
+      "to": "s09.gps-panel-ui",
+      "kind": "implements",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "stream-11.cpm-computation",
+      "to": "stream-13.dcma-14-audit",
+      "kind": "feeds",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "stream-11.compliance-strip",
+      "to": "stream-13.schedule-health-panel",
+      "kind": "overlaps",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "stream-11.dcma-14-audit",
+      "to": "stream-13.dcma-14-audit",
+      "kind": "overlaps",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "stream-11.tia-generator",
+      "to": "stream-13.tia-generator",
+      "kind": "overlaps",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "stream-11.progress-spi-cpi",
+      "to": "stream-13.progress-variance",
+      "kind": "overlaps",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "stream-11.baseline-management",
+      "to": "stream-13.progress-variance",
+      "kind": "feeds",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "s12.cpm-engine",
+      "to": "stream-11.cpm-computation",
+      "kind": "overlaps",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "s12.p6-pmxml-import",
+      "to": "stream-11.pmxml-import",
+      "kind": "overlaps",
+      "reason": "no-activities-in-mapped-leaves"
+    },
+    {
+      "from": "s12.baseline-manager",
+      "to": "stream-11.baseline-management",
+      "kind": "overlaps",
+      "reason": "no-activities-in-mapped-leaves"
+    },
+    {
+      "from": "s12.gantt-visualization",
+      "to": "stream-11.gantt-rendering",
+      "kind": "overlaps",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "s12.calendar-management",
+      "to": "stream-11.calendar-manager",
+      "kind": "overlaps",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "s17.offline-idb-schema",
+      "to": "s15.AC2_optimistic_idb",
+      "kind": "implements",
+      "reason": "no-activities-in-mapped-leaves"
+    },
+    {
+      "from": "s17.offline-mutate",
+      "to": "s15.AC2_optimistic_idb",
+      "kind": "implements",
+      "reason": "no-activities-in-mapped-leaves"
+    },
+    {
+      "from": "s17.offline-sync-loop",
+      "to": "s15.AC3_serial_per_row_4_workers",
+      "kind": "implements",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "s17.offline-mirror",
+      "to": "s15.AC1_offline_serve",
+      "kind": "implements",
+      "reason": "no-activities-in-mapped-leaves"
+    },
+    {
+      "from": "s17.offline-service-worker",
+      "to": "s15.AC5_capacitor_no_sw",
+      "kind": "implements",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "s01.signup-login",
+      "to": "s02.signup-organic",
+      "kind": "overlaps",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "s01.invitations",
+      "to": "s02.invitation-acceptance",
+      "kind": "overlaps",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "s01.biometric-gate",
+      "to": "s02.biometric-gate",
+      "kind": "overlaps",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "s01.project-membership",
+      "to": "s02.project-membership",
+      "kind": "overlaps",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "s01.rls-coverage",
+      "to": "s02.rls-enforcement",
+      "kind": "overlaps",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "06-L2-04",
+      "to": "S18-2",
+      "kind": "triggers",
+      "reason": "no-activities-in-mapped-leaves"
+    },
+    {
+      "from": "06-L2-07",
+      "to": "S18-3",
+      "kind": "feeds",
+      "reason": "no-activities-in-mapped-leaves"
+    },
+    {
+      "from": "S18-1",
+      "to": "06-L2-01",
+      "kind": "implements",
+      "reason": "no-activities-in-mapped-leaves"
+    },
+    {
+      "from": "s16.daily-reports-status-side-effects",
+      "to": "06-L2-08",
+      "kind": "implements",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "s16.send-push-edge-fn",
+      "to": "06-L2-08",
+      "kind": "implements",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "s19.landing-page-implementation",
+      "to": "stream-20.landing-page",
+      "kind": "overlaps",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "s19.demo-requests-form",
+      "to": "stream-20.demo-requests-table",
+      "kind": "overlaps",
+      "reason": "intent-leaf-unresolved"
+    },
+    {
+      "from": "S03-L11",
+      "to": "stream-10.upload",
+      "kind": "feeds",
+      "reason": "intent-leaf-unresolved"
+    }
+  ]
+}
