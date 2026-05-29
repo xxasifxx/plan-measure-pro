@@ -494,16 +494,18 @@ const RECENT_DAYS = 14;
 function classify(a) {
   const dormancy = a.dormancy.currentDormancyDays;
 
-  // Pivot abandonment: blast-radius keyword match on tag
-  const tagLower = a.tag.toLowerCase();
-  for (const [key, info] of Object.entries(pivotByTag)) {
-    if (tagLower.includes(key) || key.includes(tagLower.split(":").pop())) {
-      if (info.abandoned && a.lastDate <= info.date) {
-        return {
-          status: "abandoned",
-          evidence: `tag '${a.tag}' falls in blast-radius of pivot '${info.pivot}' (${info.date}); no commits after pivot`,
-        };
-      }
+  // Pivot abandonment: require the tag's distinctive segment to literally
+  // match a path component from a capability-removal pivot's blast radius.
+  const tagDistinct = a.tag.split(":").pop().toLowerCase();
+  if (tagDistinct.length >= 4 && !PIVOT_STOPWORDS.has(tagDistinct)) {
+    const hit = pivotRemovalTokens.find(
+      (t) => t.token === tagDistinct && a.lastDate <= t.date
+    );
+    if (hit) {
+      return {
+        status: "abandoned",
+        evidence: `tag '${a.tag}' literally appears in blast-radius of capability-removal pivot '${hit.pivot}' (${hit.date}); no commits after pivot`,
+      };
     }
   }
 
