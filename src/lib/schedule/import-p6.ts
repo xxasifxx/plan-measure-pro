@@ -1,12 +1,11 @@
-// Maps parsed P6 inputs (.xer or PMXML) into the shapes used by
-// `replace_project_schedule`. All durations standardized to days (P6 hours / 8).
-import { parseXer } from '@/lib/xer/parser';
+// Maps a parsed PMXML file into the shapes used by `replace_project_schedule`.
+// All durations standardized to days (P6 hours / 8). XER ingest was removed
+// when PMXML became the sole round-trip format for Schedule Management.
 import { parseP6Xml } from '@/lib/p6xml/parser';
-import type { XerTables, XerTask } from '@/lib/xer/types';
 import type {
   ActivityType, RelType, ConstraintType, CalendarException, ResourceType,
 } from './types';
-import { parseClndrData, parsePmxmlCalendar, DEFAULT_WORKWEEK } from './calendars';
+import { parsePmxmlCalendar } from './calendars';
 
 export interface ImportedActivity {
   ext_id: string;
