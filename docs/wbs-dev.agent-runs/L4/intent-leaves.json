@@ -1,0 +1,2997 @@
+{
+  "generated_at": "2026-05-29T18:19:18.173741+00:00",
+  "streams": [
+    {
+      "id": "01",
+      "name": "Identity & Access",
+      "leaves": [
+        {
+          "id": "s01.signup-login",
+          "intent": "A new organic signup creates an account via email/password, receives admin role via assign_owner_role, and is redirected to Dashboard on first login. Sign-in flow also calls assign_owner_role (idempotent). Forgot-password mode sends reset email with correct redirectTo.",
+          "evidence": [
+            "src/pages/Auth.tsx",
+            "src/hooks/useAuth.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "assign_owner_role is called in BOTH Auth.tsx:103 (after signInWithPassword) and useAuth.tsx:~55 (on SIGNED_IN event) \u2014 one is always a redundant no-op DB round-trip; no retry/error surfacing on the RPC call in Auth.tsx.",
+            "No automated test coverage for signup or sign-in flows.",
+            "App brand name shown as 'Quantity Takeoff' in Auth.tsx JSX but BiometricGate.tsx JSX shows 'TakeoffPro' \u2014 inconsistent product name between auth surfaces."
+          ],
+          "links_to": [
+            "s02.signup-organic",
+            "S03-L01"
+          ]
+        },
+        {
+          "id": "s01.password-reset",
+          "intent": "Forgot-password sends email with redirectTo=/reset-password. ResetPassword.tsx detects PASSWORD_RECOVERY event and allows supabase.auth.updateUser. Invalid direct navigation shows loading state.",
+          "evidence": [
+            "src/pages/Auth.tsx",
+            "src/pages/ResetPassword.tsx"
+          ],
+          "status": "partial",
+          "confidence": 0.6,
+          "gaps": [
+            "ResetPassword.tsx shows 'Loading recovery session...' spinner indefinitely (line 50) if PASSWORD_RECOVERY never fires \u2014 no timeout, no auto-redirect back to /auth. Fragile on direct navigation or slow hash parsing (documented as Risk #4 in stream doc).",
+            "No automated test for the PASSWORD_RECOVERY event path."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "s01.profile-creation",
+          "intent": "A profiles row (id, full_name, email) is created for every new auth.users insert. useAuth fetches profile after session and exposes it via AuthContextType.profile. RLS allows only own-row read/update/insert.",
+          "evidence": [
+            "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+            "supabase/migrations/20260321162349_089b7eac-a691-474e-96f4-b97ab4d2581d.sql",
+            "src/hooks/useAuth.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "profiles table lacks avatar_url or phone fields \u2014 no user-editable extended profile beyond full_name/email; downstream surfaces (Admin panel, project member lists) may show incomplete info.",
+            "has_seen_welcome column was added in a later migration (20260321164809) but is not surfaced in AuthContextType \u2014 onboarding flag is unused in auth context."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "s01.role-assignment",
+          "intent": "All four roles (admin, project_manager, inspector, resident_engineer) are members of the app_role enum. assign_owner_role grants admin to organic signups. useAuth exposes isAdmin, isManager, isInspector, isResidentEngineer booleans derived from user_roles rows.",
+          "evidence": [
+            "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+            "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql",
+            "src/hooks/useAuth.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "Doc-drift (critical): stream doc claims resident_engineer was added in migration 20260524015102, but L1 parser reports that migration as 1 LOC / 71 bytes with zero createTypes/alterTypes entries \u2014 the ALTER TYPE ADD VALUE may be in a DO $$ block that the L1 SQL parser did not detect. Actual enum membership in prod cannot be confirmed from L1 output alone.",
+            "isManager is true for both admin AND project_manager \u2014 this conflation means admins inherit all PM-gated UI without an explicit PM role, which may be intentional but is not stated in acceptance criteria.",
+            "No UI in Admin page to demote/remove a role once assigned (only additive role assignment confirmed from migrations)."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "s01.invitations",
+          "intent": "Admin calls invite-user edge function with email+role; function inserts invitations row and emails token link. Invited user lands on /auth?invitation=<token>, token is persisted to localStorage through email confirmation redirect, accept_invitation RPC is called after session established, role is applied, invitation marked accepted_at.",
+          "evidence": [
+            "supabase/functions/invite-user/index.ts",
+            "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql",
+            "src/pages/Auth.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "invite-user edge function accepts any string value for role (requestFields: [email, role]) with no server-side enum validation against app_role \u2014 a caller could inject an invalid role string that silently fails at DB constraint.",
+            "Stream doc Risk #3: resident_engineer is not exposed as an option in the invite-user frontend UI (confirmed: edge function accepts it generically but no UI control surfaces it). Invited RE cannot be invited without manual API call.",
+            "accept_invitation is called twice on sign-in when token is present: once in the useEffect (line ~39) and again inside handleSubmit (line ~108) \u2014 both paths fire if session already exists on mount.",
+            "No expiry timestamp on invitations table visible in L1 output \u2014 accept_invitation RPC claims to return 'expired' but expiry logic is entirely inside the function body (not verifiable from migration metadata alone).",
+            "No automated tests for invitation acceptance flow."
+          ],
+          "links_to": [
+            "s02.invitation-acceptance"
+          ]
+        },
+        {
+          "id": "s01.biometric-gate",
+          "intent": "On cold start (native only), BiometricGate checks stored credential via lib/native/biometric.getStatus; if enrolled, renders fingerprint unlock UI and blocks app tree until successful unlock. Web path is skipped via isNative() check.",
+          "evidence": [
+            "src/components/BiometricGate.tsx",
+            "src/App.tsx"
+          ],
+          "status": "partial",
+          "confidence": 0.6,
+          "gaps": [
+            "Web sessions have no equivalent MFA, idle timeout, or re-auth challenge \u2014 browser sessions remain valid indefinitely after initial login (documented Risk #2).",
+            "BiometricGate imports from @/lib/native/biometric but no lib/native/biometric file is visible in L1 frontend AST file list \u2014 if this is a platform-shim not in src/, it may be absent from AST coverage.",
+            "No automated tests for biometric unlock or bypass paths.",
+            "Unenroll path (lib/native/biometric.unenroll) is referenced in stream doc but no UI surface for unenrolling biometric is visible in BiometricGate JSX strings ('Unlock', 'Use a different account' only)."
+          ],
+          "links_to": [
+            "s02.biometric-gate"
+          ]
+        },
+        {
+          "id": "s01.project-membership",
+          "intent": "project_members table stores user_id + project_id. is_project_member() SQL function gates RLS policies for pay_items, calibrations, annotations, and project-scoped storage buckets. Members can view assigned projects; creators can manage members.",
+          "evidence": [
+            "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+            "supabase/migrations/20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "project_members table has no role column \u2014 membership is binary (in/out); PM-vs-inspector distinctions inside a project are derived from user_roles (global), not per-project membership role. This makes it impossible to have someone be a PM on project A but inspector on project B.",
+            "No migration or policy covers removing a user from a project (DELETE on project_members) except via 'Project creators can manage members' which uses a broad manage policy \u2014 no audit log or cascade for removed members' annotations/pay_items.",
+            "No realtime subscription on project_members \u2014 membership changes require page reload to take effect in the client."
+          ],
+          "links_to": [
+            "s02.project-membership"
+          ]
+        },
+        {
+          "id": "s01.rls-coverage",
+          "intent": "Supabase RLS is enabled on profiles, user_roles, projects, project_members, pay_items, calibrations, annotations, invitations. No row from pay_items, annotations, or projects is readable without valid session and appropriate project_members or ownership check. Storage buckets enforce equivalent policies.",
+          "evidence": [
+            "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+            "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql",
+            "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql"
+          ],
+          "status": "partial",
+          "confidence": 0.6,
+          "gaps": [
+            "No migration audits cross-table join correctness \u2014 e.g., is_project_member() correctness under concurrent role changes is not tested at the DB level.",
+            "Storage bucket policies were initially set as 'Authenticated users can upload/read' (broad) in migration 20260321160419 and then tightened in migration 20260526121114 \u2014 any rows/objects inserted in the window between these migrations may have been created under the permissive policy without retroactive access control.",
+            "daily_report_snapshots, notifications, document_folders, documents tables (added in later migrations) have RLS enabled but their policies rely on is_project_member() \u2014 no explicit audit confirms has_role('admin') bypass exists for all new tables as it does for the original set.",
+            "No row-level policy on pay_items or annotations for DELETE by inspectors \u2014 'Users can manage own annotations' covers INSERT/UPDATE/DELETE for annotations but pay_items only has view (members) and manage (creators); inspector DELETE path is undefined.",
+            "Stream doc acceptance criteria mentions 'appropriate project_members or ownership check' but storage bucket policies in migration 20260526121114 show 'PMs delete project documents storage' which gates on role not membership \u2014 inconsistency with stated RLS model.",
+            "No automated RLS integration tests found in tests.json for any identity or access policy."
+          ],
+          "links_to": [
+            "s02.rls-enforcement",
+            "S03-L02"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "02",
+      "name": "Authentication & Membership",
+      "leaves": [
+        {
+          "id": "s02.signup-organic",
+          "intent": "Handle organic user signups and assign the initial 'admin' role automatically.",
+          "evidence": [
+            "src/pages/Auth.tsx",
+            "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+            "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "s02.invitation-acceptance",
+          "intent": "Allow users to join a team via a tokenized invitation link, applying target roles.",
+          "evidence": [
+            "src/pages/Auth.tsx",
+            "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql",
+            "supabase/functions/invite-user/index.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "New user invitations do not expose a resident_engineer invite option in invite-user function"
+          ],
+          "links_to": []
+        },
+        {
+          "id": "s02.rbac-model",
+          "intent": "Enforce application-wide capabilities based on user roles (admin, manager, inspector, resident_engineer).",
+          "evidence": [
+            "src/hooks/useAuth.tsx",
+            "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "s02.project-membership",
+          "intent": "Define and manage the mapping between users and projects via explicit membership table.",
+          "evidence": [
+            "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+            "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": [
+            "S03-L01"
+          ]
+        },
+        {
+          "id": "s02.rls-enforcement",
+          "intent": "Secure data access by enforcing ownership and membership checks at the database level using RLS.",
+          "evidence": [
+            "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "No migration audits cross-table joins or storage bucket policies"
+          ],
+          "links_to": []
+        },
+        {
+          "id": "s02.auth-double-fire-fix",
+          "intent": "Prevent race conditions and redundant network/database calls during the authentication lifecycle.",
+          "evidence": [
+            "src/hooks/useAuth.tsx",
+            "docs/streams/01-identity-and-access.md"
+          ],
+          "status": "partial",
+          "confidence": 0.9,
+          "gaps": [
+            "assign_owner_role redundant call persists in both Auth.tsx and useAuth.tsx"
+          ],
+          "links_to": []
+        },
+        {
+          "id": "s02.biometric-gate",
+          "intent": "Protect stored sessions on native devices using biometric (fingerprint/FaceID) cold-start gate.",
+          "evidence": [
+            "src/components/BiometricGate.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "Native only; no web-equivalent MFA or session idle timeout"
+          ],
+          "links_to": []
+        }
+      ]
+    },
+    {
+      "id": "03",
+      "name": "Project Onboarding",
+      "leaves": [
+        {
+          "id": "S03-L01",
+          "intent": "Project creation dialog",
+          "evidence": [
+            "src/pages/Dashboard.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": [
+            "feeds: S04 (field-capture initProject)",
+            "stream-05.scale-calibration",
+            "feeds: S01 (portfolio list)"
+          ]
+        },
+        {
+          "id": "S03-L02",
+          "intent": "Plan PDF upload to storage",
+          "evidence": [
+            "src/hooks/useProjects.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": [
+            "stream-05.pdf-render",
+            "feeds: S03-L03 (PDF load on /project/:id)"
+          ]
+        },
+        {
+          "id": "S03-L03",
+          "intent": "Project load with offline fallback",
+          "evidence": [
+            "src/pages/Index.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "IDB cache staleness not surfaced to user beyond toast"
+          ],
+          "links_to": [
+            "stream-05.pdf-render",
+            "feeds: S04 (initProject seam at Index.tsx:190)",
+            "receives: S03-L02 (storage path)"
+          ]
+        },
+        {
+          "id": "S03-L04",
+          "intent": "Sheet/TOC drag-select (Index of Sheets parsing)",
+          "evidence": [
+            "src/pages/Index.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "Hardcoded 5px Y-grouping tolerance breaks dense or rotated text layouts",
+            "console.log debug noise in production (pdf-utils.ts extractTextFromRegion)"
+          ],
+          "links_to": [
+            "feeds: S04 (section-keyed color assignment for pay items)"
+          ]
+        },
+        {
+          "id": "S03-L05",
+          "intent": "TOC extraction logic (text-layer heuristic)",
+          "evidence": [
+            "src/lib/pdf-utils.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "No parse-quality indicator returned to UI",
+            "Scanned/rasterized pages silently return []"
+          ],
+          "links_to": []
+        },
+        {
+          "id": "S03-L06",
+          "intent": "TOC persistence (survives reload)",
+          "evidence": [
+            "src/hooks/useProject.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "S03-L07",
+          "intent": "Pay-item import from contract PDF",
+          "evidence": [
+            "src/pages/Index.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "Magic number +4 pages: no UI indication of scan extent or stop point",
+            "Heuristic regex fails on non-standard table layouts (merged cells, scanned pages)"
+          ],
+          "links_to": [
+            "stream-05.line-tool",
+            "feeds: S05 (pay-item-catalog initial population)"
+          ]
+        },
+        {
+          "id": "S03-L08",
+          "intent": "Pay-item extraction logic (heuristic)",
+          "evidence": [
+            "src/lib/pdf-utils.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "Silently returns [] on rotated text or scanned pages"
+          ],
+          "links_to": []
+        },
+        {
+          "id": "S03-L09",
+          "intent": "Manual pay-item add dialog",
+          "evidence": [
+            "src/components/ProjectSidebar.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "S03-L10",
+          "intent": "Pay-item persistence (survives reload)",
+          "evidence": [
+            "src/hooks/useProject.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "S03-L11",
+          "intent": "Standard Specs PDF upload and indexing",
+          "evidence": [
+            "src/pages/Index.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "upsert: true at fixed path {projectId}/specs.pdf \u2014 concurrent uploads silently overwrite previous specs"
+          ],
+          "links_to": [
+            "feeds: S04 (SpecViewer search context)",
+            "stream-10.upload"
+          ]
+        },
+        {
+          "id": "S03-L12",
+          "intent": "Calibration hydration on project load",
+          "evidence": [
+            "src/pages/Index.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": [
+            "feeds: S04 (field-capture measurement accuracy)",
+            "stream-05.scale-calibration"
+          ]
+        },
+        {
+          "id": "S03-L13",
+          "intent": "Folder / section seeding from TOC",
+          "evidence": [
+            "src/components/ProjectSidebar.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "No persistence model for section colors beyond in-memory assignment; color conflicts on large TOCs not handled"
+          ],
+          "links_to": []
+        },
+        {
+          "id": "S03-L14",
+          "intent": "initProject seam \u2014 single hydration entry point",
+          "evidence": [
+            "src/pages/Index.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "Partial hydration (e.g. specs not yet uploaded) is not distinguished from fully onboarded state"
+          ],
+          "links_to": [
+            "feeds: S04 (field-capture)",
+            "feeds: S05 (pay-item-catalog)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "04",
+      "name": "PDF Canvas Annotation",
+      "leaves": [
+        {
+          "id": "s04.pdf-canvas-component",
+          "intent": "Core PdfCanvas component for interactive PDF annotation and measurement",
+          "evidence": [
+            "src/components/PdfCanvas.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": [
+            "stream-05.pdf-render"
+          ]
+        },
+        {
+          "id": "s04.canvas-handlers",
+          "intent": "Implement 26 event and interaction handlers for drawing, selection, and viewport management",
+          "evidence": [
+            "src/components/PdfCanvas.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "s04.annotation-tools",
+          "intent": "Support multiple tool modes: select, calibrate, line, polygon, count, label, pan, tocSelect",
+          "evidence": [
+            "src/types/project.ts",
+            "src/components/PdfCanvas.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": [
+            "stream-05.line-tool",
+            "stream-05.polygon-tool"
+          ]
+        },
+        {
+          "id": "s04.dual-layer-rendering",
+          "intent": "Render PDF background and interactive annotations using a dual-canvas architecture",
+          "evidence": [
+            "src/components/PdfCanvas.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "s04.coordinate-normalization",
+          "intent": "Maintain a normalized coordinate system (scale=1) for persistent storage and cross-device consistency",
+          "evidence": [
+            "src/components/PdfCanvas.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "s04.touch-and-gestures",
+          "intent": "Provide comprehensive touch support including pinch-to-zoom, two-finger pan, and touch-optimized drawing",
+          "evidence": [
+            "src/components/PdfCanvas.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "s04.gps-plan-overlay",
+          "intent": "Overlay live GPS position and breadcrumb traces onto the engineering plans",
+          "evidence": [
+            "src/components/PdfCanvas.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": [
+            "s09.gps-panel-ui"
+          ]
+        },
+        {
+          "id": "s04.data-persistence-bridge",
+          "intent": "Interface with project state via callbacks for adding, updating, and removing annotations and calibrations",
+          "evidence": [
+            "src/components/PdfCanvas.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        }
+      ]
+    },
+    {
+      "id": "05",
+      "name": "Field Capture",
+      "leaves": [
+        {
+          "id": "stream-05.pdf-render",
+          "intent": "Render PDF page on dual-canvas: PDF pages render on a PDF canvas layer with an overlay for annotation drawing.",
+          "evidence": [
+            "src/components/PdfCanvas.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "stream-05.scale-calibration",
+          "intent": "Calibrate drawing scale (two-point distance entry): Setting calibration by clicking two points and entering a known distance produces a pixelsPerFoot; line measurements match real scale.",
+          "evidence": [
+            "src/components/PdfCanvas.tsx",
+            "src/components/PdfCanvas.tsx",
+            "src/components/Toolbar.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "No automated test for calibration correctness."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-05.copy-calibration-pages",
+          "intent": "Copy calibration to all / range of pages: User can apply calibration to all sheets or a range.",
+          "evidence": [
+            "src/components/Toolbar.tsx",
+            "src/hooks/useProject.ts"
+          ],
+          "status": "partial",
+          "confidence": 0.6,
+          "gaps": [
+            "No confirmation dialog before overwriting pages.",
+            "No automated test."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-05.line-tool",
+          "intent": "Draw two-point line measurement (LF): Placing a line on a calibrated page produces a length in linear feet stored as an annotation.",
+          "evidence": [
+            "src/components/PdfCanvas.tsx",
+            "src/lib/geometry.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "No automated tests."
+          ],
+          "links_to": [
+            "06-L2-01"
+          ]
+        },
+        {
+          "id": "stream-05.polygon-tool",
+          "intent": "Draw multi-point polygon measurement (SF/SY): Placing a polygon on calibrated page shows live SF running total; completing it stores area result.",
+          "evidence": [
+            "src/components/PdfCanvas.tsx",
+            "src/components/PdfCanvas.tsx",
+            "src/lib/geometry.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "No automated tests."
+          ],
+          "links_to": [
+            "06-L2-01"
+          ]
+        },
+        {
+          "id": "stream-05.depth-prompt-cy",
+          "intent": "Prompt for depth on CY polygon and compute volume: Completing a CY polygon prompts for depth and stores the cubic yard result.",
+          "evidence": [
+            "src/components/PdfCanvas.tsx",
+            "src/components/PdfCanvas.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "No automated test for CY volume."
+          ],
+          "links_to": [
+            "06-L2-01"
+          ]
+        },
+        {
+          "id": "stream-05.count-tool",
+          "intent": "Place count / point marker annotation (EA): Placing a count marker stores a count annotation keyed to the active pay item.",
+          "evidence": [
+            "src/components/PdfCanvas.tsx",
+            "src/components/PdfCanvas.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": [
+            "06-L2-01"
+          ]
+        },
+        {
+          "id": "stream-05.label-tool",
+          "intent": "Place text label annotation on canvas: Select Label tool, tap anchor point, tap label position, enter text \u2014 stored as annotation.",
+          "evidence": [
+            "src/components/PdfCanvas.tsx",
+            "src/components/PdfCanvas.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "stream-05.segmented-length",
+          "intent": "Draw segmented / polyline length measurement: Segmented length tool accumulates intermediate points and sums segment lengths.",
+          "evidence": [],
+          "status": "missing",
+          "confidence": 0.0,
+          "gaps": [
+            "No 'polyline' ToolMode.",
+            "No drawing handler for multi-segment line.",
+            "No geometry function for summing multi-segment distances."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-05.drag-handle-editing",
+          "intent": "Select and drag vertex handles to edit placed annotations: Selecting an existing annotation shows drag handles; dragging a vertex updates the measurement label in real time.",
+          "evidence": [
+            "src/components/PdfCanvas.tsx",
+            "src/components/PdfCanvas.tsx",
+            "src/components/PdfCanvas.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "stream-05.annotation-metadata-edit",
+          "intent": "Edit annotation metadata (location, notes, manual quantity) on canvas panel: Inspector can set location string, notes, and manual quantity override on a selected annotation.",
+          "evidence": [
+            "src/components/PdfCanvas.tsx",
+            "src/components/PdfCanvas.tsx",
+            "src/components/PdfCanvas.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "MobileAnnotationSheet mobile-specific fields not fully cross-checked."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-05.annotation-delete",
+          "intent": "Delete selected annotation via keyboard (Delete/Backspace): Pressing Delete or Backspace while an annotation is selected removes it.",
+          "evidence": [
+            "src/components/PdfCanvas.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "stream-05.undo-redo",
+          "intent": "Undo/redo annotation actions with DB sync: Undo (Ctrl+Z) removes the last-placed annotation from both local state and Supabase; redo restores it.",
+          "evidence": [
+            "src/hooks/useProject.ts",
+            "src/hooks/useProject.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "Per-session only; another user's view not rolled back."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-05.realtime-sync",
+          "intent": "Receive annotations from other users in real time without page reload: An annotation created by another user appears on the canvas without page reload.",
+          "evidence": [
+            "src/hooks/useProject.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "Undo stack not shared across users."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-05.gps-overlay",
+          "intent": "Display GPS position dot and trace polyline on plan canvas: GPS calibration with \u2265 2 control points renders a position dot and trace polyline at the correct location.",
+          "evidence": [
+            "src/components/PdfCanvas.tsx",
+            "src/components/PdfCanvas.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "stream-05.gps-calibration-wizard",
+          "intent": "Calibrate GPS-to-plan affine transform via 2\u20133 control-point wizard: GPS calibration with \u2265 2 control points produces a correct affine transform mapping GPS coords to plan pixels.",
+          "evidence": [
+            "src/components/GpsCalibration.tsx",
+            "src/lib/geo-transform.ts",
+            "src/lib/geo-transform.ts",
+            "src/lib/geo-transform.ts"
+          ],
+          "status": "partial",
+          "confidence": 0.6,
+          "gaps": [
+            "buildGeoCalibration silently throws on degenerate transforms \u2014 no user-visible diagnostic.",
+            "No GPS affine accuracy test."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-05.gps-trace-recording",
+          "intent": "Start/stop GPS trace recording: User can start and stop GPS trace recording; trace polyline is stored and rendered.",
+          "evidence": [
+            "src/components/GpsTraceControls.tsx"
+          ],
+          "status": "partial",
+          "confidence": 0.6,
+          "gaps": [
+            "No automated test.",
+            "Kalman filter wiring not verified end-to-end."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-05.toc-import-canvas",
+          "intent": "Draw rectangle on canvas to import Table of Contents region: User drags a box around the sheet list; app parses sheet numbers and descriptions.",
+          "evidence": [
+            "src/components/PdfCanvas.tsx",
+            "src/components/PdfCanvas.tsx",
+            "src/components/PdfCanvas.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "stream-05.mobile-touch-gestures",
+          "intent": "Touch pan/pinch-zoom and single-tap drawing on mobile: Mobile two-finger pinch zooms; single-finger taps place drawing points; double-tap closes polygon.",
+          "evidence": [
+            "src/components/PdfCanvas.tsx",
+            "src/components/PdfCanvas.tsx",
+            "src/components/PdfCanvas.tsx",
+            "src/components/MobileToolbar.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "No automated touch-interaction tests."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-05.readonly-mode",
+          "intent": "Enforce read-only mode hiding edit controls: The readOnly flag disables the calibrate tool and hides pay-item edit controls.",
+          "evidence": [
+            "src/components/Toolbar.tsx",
+            "src/pages/Index.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        }
+      ]
+    },
+    {
+      "id": "06",
+      "name": "Daily Report Lifecycle",
+      "leaves": [
+        {
+          "id": "06-L2-01",
+          "intent": "Inspector selects a work date; useDailyReport fetches or lazily creates a daily_reports row (status='draft'). buildDailyReportSnapshot groups annotations by pay_item_id, applies unit conversion, and joins prior_cumulative from v_approved_pay_item_quantities. The result is returned as SnapshotItem[] and displayed as a live preview without persisting.",
+          "evidence": [
+            "useDailyReport.ts:54-101"
+          ],
+          "status": "implemented",
+          "confidence": 0.9,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "06-L2-02",
+          "intent": "On submit: (1) buildDailyReportSnapshot is called fresh to produce the frozen snapshot; (2) if no row exists it is inserted as draft+snapshot then immediately updated to submitted; (3) if a rejected/submitted row already exists it is first reset to draft+snapshot, then flipped to submitted; (4) a single update sets status='submitted'. The frozen snapshot JSONB is the source of truth for RE review.",
+          "evidence": [
+            "useDailyReport.ts:54-101"
+          ],
+          "status": "implemented",
+          "confidence": 0.9,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "06-L2-03",
+          "intent": "After submit, previewQuery continues running. isStale compares frozen snapshot vs live preview: length mismatch or any per-item delta_quantity diff > 0.005 triggers stale=true. Inspector sees an 'out of date' alert with a Resubmit button, which calls submit() again and replaces the snapshot atomically.",
+          "evidence": [
+            "useDailyReport.ts:119-133"
+          ],
+          "status": "implemented",
+          "confidence": 0.9,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "06-L2-04",
+          "intent": "RE calls useApproveReport(reportId) which issues update({status:'approved'}) on daily_reports. Approved rows are excluded from the submitted queue and their snapshot.delta_quantity values become visible through v_approved_pay_item_quantities to downstream quantity-to-payment rollups. useBulkApproveReports handles multiple IDs in a single .in() update.",
+          "evidence": [
+            "useReReviewQueue.ts:153-185"
+          ],
+          "status": "implemented",
+          "confidence": 0.9,
+          "gaps": [],
+          "links_to": [
+            "S18-2",
+            "s07.AC-01"
+          ]
+        },
+        {
+          "id": "06-L2-05",
+          "intent": "RE opens ReRejectDialog which enforces a non-empty reason before calling useRejectReport. The mutation: (1) updates daily_reports with status='rejected' and reject_reason; (2) auto-inserts a daily_report_comments row with body='Rejected: <reason>' attributed to the RE user. The inspector sees the rejection reason on their DailyReport page.",
+          "evidence": [
+            "useReReviewQueue.ts:187-212"
+          ],
+          "status": "implemented",
+          "confidence": 0.9,
+          "gaps": [],
+          "links_to": [
+            "S18-3"
+          ]
+        },
+        {
+          "id": "06-L2-06",
+          "intent": "Inspector calls reopen() on a rejected report. Mutation issues update({status:'draft'}) only. Inspector can then edit annotations and resubmit.",
+          "evidence": [
+            "useDailyReport.ts:103-117"
+          ],
+          "status": "implemented",
+          "confidence": 0.9,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "06-L2-07",
+          "intent": "useReportArchives queries the daily_report_snapshots table (cast as `any` due to missing generated types) and returns historical snapshots with archived_at, archived_reason, and reject_reason. The RE review card renders a diff column comparing current snapshot to prior archive entries.",
+          "evidence": [
+            "useReReviewQueue.ts:111-128"
+          ],
+          "status": "implemented",
+          "confidence": 0.9,
+          "gaps": [],
+          "links_to": [
+            "S18-3"
+          ]
+        },
+        {
+          "id": "06-L2-08",
+          "intent": "The daily_reports_status_side_effects DB function is referenced in the stream spec as the notification seam but is NOT present in any migration file found in supabase/migrations/. The send-push edge function exists and accepts {user_id, title, body} with service-role auth, dispatching FCM push via device_tokens table. However, no wiring between daily_report status changes and send-push calls exists in the current codebase.",
+          "evidence": [
+            "docs/streams/06-daily-report-lifecycle.md#risks, send-push/index.ts"
+          ],
+          "status": "partial",
+          "confidence": 0.9,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "06-L2-09",
+          "intent": "Four-state FSM: draft \u2192 submitted (inspector submit) \u2192 approved (RE approve) or rejected (RE reject) \u2192 draft (inspector reopen). Approved is a terminal state from the inspector's perspective; no reopen path exists for approved reports.",
+          "evidence": [
+            "useDailyReport.ts, useReReviewQueue.ts"
+          ],
+          "status": "implemented",
+          "confidence": 0.9,
+          "gaps": [],
+          "links_to": [
+            "s07.AC-02"
+          ]
+        },
+        {
+          "id": "06-L2-10",
+          "intent": "Consolidated open-risk debt items for daily report lifecycle",
+          "evidence": [
+            ""
+          ],
+          "status": "partial",
+          "confidence": 0.9,
+          "gaps": [
+            "daily_report_snapshots missing from generated types \u2014 archive panel silently broken if table absent.",
+            "No server-side RLS on approve/reject \u2014 any authenticated user can approve reports.",
+            "rejected_at / rejected_by not cleared on reopen; approved_by / approved_at not set on approve; rejected_by / rejected_at not set on reject.",
+            "No push notification to inspector on RE decision.",
+            "submit() uses two sequential updates (draft then submitted) \u2014 partial failure risk."
+          ],
+          "links_to": []
+        }
+      ]
+    },
+    {
+      "id": "07",
+      "name": "Quantity to Payment",
+      "leaves": [
+        {
+          "id": "s07.AC-01",
+          "intent": "loadApprovedTotalsByPayItem returns only pay items with at least one approved report; draft/submitted/rejected deltas must not appear.",
+          "evidence": [],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "Enforced by view definition."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "s07.AC-02",
+          "intent": "exportApprovedCsv row quantities equal approved sum; file labeled _approved_summary.csv.",
+          "evidence": [],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "s07.AC-03",
+          "intent": "exportApprovedPdfReport title = 'RE-Approved Quantity Report'; fileSuffix = 'approved_report'.",
+          "evidence": [],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "s07.AC-04",
+          "intent": "SummaryPanel variance column: green \u2264 0%, amber 1\u201310%, red > 10%, dash when contract_quantity absent.",
+          "evidence": [],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "s07.AC-05",
+          "intent": "exportApprovedInspectorDaily marks 'RE-Approved Daily' when status = 'approved'; 'PENDING' prefix otherwise.",
+          "evidence": [],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "s07.AC-06",
+          "intent": "loadPendingReviewCounts returns count only for status = 'submitted' rows.",
+          "evidence": [],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "s07.gap.GAP-01",
+          "intent": "ProjectControls variance uses raw annotations, not approved quantities",
+          "evidence": [],
+          "status": "missing",
+          "confidence": 0.0,
+          "gaps": [
+            "ProjectControls.tsx:180-187 sums manual_quantity ?? measurement from unfiltered annotations. A submitted-but-not-yet-approved report inflates the installed figure shown to PMs."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "s07.gap.GAP-02",
+          "intent": "SummaryPanel uses live annotations instead of v_approved_pay_item_quantities",
+          "evidence": [],
+          "status": "partial",
+          "confidence": 0.0,
+          "gaps": [
+            "The embedded summary in the main takeoff tool does not reflect RE-approved totals, creating a two-source-of-truth problem with exportApprovedCsv/PDF."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "s07.gap.GAP-03",
+          "intent": "No payment-period date-range scoping for exports",
+          "evidence": [],
+          "status": "partial",
+          "confidence": 0.0,
+          "gaps": [
+            "No UI or helper exists to export quantities scoped to a specific payment period. A pay estimate must be computed by manually diffing two full exports."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "s07.gap.GAP-04",
+          "intent": "v_approved_pay_item_quantities SQL not in migrations",
+          "evidence": [],
+          "status": "partial",
+          "confidence": 0.0,
+          "gaps": [
+            "The view is consumed everywhere but its DDL is absent from supabase/migrations/; a schema change could silently break all approved-quantity paths."
+          ],
+          "links_to": []
+        }
+      ]
+    },
+    {
+      "id": "08",
+      "name": "Takeoff & Quantities",
+      "leaves": [
+        {
+          "id": "08:takeoff:measurement-tools",
+          "intent": "Implement geometric measurement tools for area (polygon), length (line), and count markers with live quantity calculation.",
+          "evidence": [
+            "src/lib/geometry.ts",
+            "src/components/SummaryPanel.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "08:takeoff:unit-conversion",
+          "intent": "Apply unit conversion logic to derive cubic yardage (CY) from area/depth and square yardage (SY) from SF.",
+          "evidence": [
+            "src/lib/geometry.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "08:takeoff:geo-transform",
+          "intent": "Provide georeferencing via affine transforms to map GPS coordinates to plan pixels using control points.",
+          "evidence": [
+            "src/lib/geo-transform.ts",
+            "src/components/GpsCalibration.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "08:takeoff:estimate-error",
+          "intent": "Calculate estimated georeferencing error in feet by back-projecting control points through the solved transform.",
+          "evidence": [
+            "src/lib/geo-transform.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "08:takeoff:aace-classes",
+          "intent": "Integrate AACE International cost estimate classification reference data for maturity curve communication.",
+          "evidence": [
+            "src/lib/schedule/analysis/aace.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "08:takeoff:export",
+          "intent": "Export takeoff quantities and progress to CSV, PDF, and P6 XML (PMXML) formats.",
+          "evidence": [
+            "src/components/SummaryPanel.tsx",
+            "src/pages/P6Export.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        }
+      ]
+    },
+    {
+      "id": "09",
+      "name": "GPS & Field Mode",
+      "leaves": [
+        {
+          "id": "s09.gps-panel-ui",
+          "intent": "Implement GPS panel and trace controls for field measurement",
+          "evidence": [
+            "GpsTraceControls.tsx provides UI for starting, pausing, and finishing GPS traces, with live stats for distance and area."
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "s09.geo-transform-logic",
+          "intent": "Develop georeferencing and Kalman filter for coordinate transformation",
+          "evidence": [
+            "geo-transform.ts contains solveAffine algorithms and updateKalman for smoothing GPS noise and mapping to plan XY."
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "s09.location-accuracy-mgmt",
+          "intent": "Handle geolocation permissions and accuracy monitoring",
+          "evidence": [
+            "geolocation.ts shim handles high-accuracy mode and permissions across native/web; GpsTraceControls displays accuracy alerts."
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "s09.gps-calibration-wizard",
+          "intent": "Implement multi-point GPS-to-plan calibration wizard",
+          "evidence": [
+            "GpsCalibration.tsx manages the workflow of benchmarking physical site locations against PDF plan coordinates."
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "s09.field-mode-ui",
+          "intent": "Optimize mobile UI for field usage",
+          "evidence": [
+            "Index.tsx includes a mobile-specific layout with MobileTabBar, MobilePayItems, and MobileAnnotationSheet for touch-first operation."
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "s09.photo-capture-gps",
+          "intent": "Integrate camera capture with GPS metadata capability",
+          "evidence": [
+            "camera.ts provides native/web capture; ProjectControls.tsx handles photo uploads with hooks for AI tagging and geolocation association."
+          ],
+          "status": "implemented",
+          "confidence": 0.9,
+          "gaps": [
+            "Explicit GPS metadata embedding in photo blobs before upload is not fully visible in the current capture shim."
+          ],
+          "links_to": []
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "name": "Document Management",
+      "leaves": [
+        {
+          "id": "stream-10.documents-page",
+          "intent": "Documents page \u2014 three-pane layout: Three-pane layout: folder tree (left), breadcrumb + document list (centre), no persistent right drawer. Folder tree renders system folders sorted before user-created folders; chevron toggle expands nested children. Selecting a folder loads its non-deleted head documents. Breadcrumb reflects the full path from project root.",
+          "evidence": [
+            "src/pages/Documents.tsx",
+            "src/pages/Documents.tsx",
+            "src/pages/Documents.tsx",
+            "src/hooks/useDocuments.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "Folder drag-and-drop is absent; moveFolder mutation exists in useFolders (line 96) but no drag-source or drop-target UI is wired \u2014 folder reorganisation requires direct DB access.",
+            "Tree auto-expansion opens ancestors of the auto-selected 'plans' folder (line 148-153) but does not persist expanded state in localStorage \u2014 every page reload collapses the tree.",
+            "buildTree does not sort user-created child folders independently by name; they are sorted by the same comparator as top-level folders, so a user folder inserted between two system folders can appear out-of-order if its name sorts earlier than a sibling system folder name."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-10.folder-tree",
+          "intent": "Folder tree \u2014 recursive render, counts, create/rename/delete: Folder tree correctly renders nested hierarchy from parent_id. System folders sort before user folders alphabetically. Folder file counts reflect only non-deleted, non-superseded (head) documents. PM/admin can create, rename, delete (empty) folders; inspectors cannot.",
+          "evidence": [
+            "src/pages/Documents.tsx",
+            "src/pages/Documents.tsx",
+            "src/hooks/useDocuments.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "folderCountsQuery fetches the entire project documents table (all columns) to compute counts \u2014 a SELECT * equivalent. A COUNT(*) group-by query would be significantly lighter for projects with large document sets.",
+            "deleteFolder on the client calls supabase.from('document_folders').delete() without a prior empty-check in the hook \u2014 the server-side block-nonempty trigger (trg_document_folders_block_nonempty) prevents the delete, but the client receives a PostgreSQL RAISE EXCEPTION error message, which is surfaced as a destructive toast with the raw SQL message rather than a friendlier UI-level guard.",
+            "System folders can be renamed via the same useFolders.renameFolder mutation; no guard in the mutation or RLS prevents a PM from renaming 'Plans' to an arbitrary name, breaking the system_kind visual hint in KIND_HINTS."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-10.seeded-folders",
+          "intent": "10 standard seeded folders auto-created on project insert: Every new project automatically receives 10 system folders: Plans, Specs, RFIs, Submittals, Shop Drawings, Change Orders, Daily Reports, Photos, As-Builts, Correspondence. Existing projects are backfilled. seed_project_standard_folders is idempotent (ON CONFLICT DO NOTHING).",
+          "evidence": [
+            "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+            "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "The backfill block also inserts legacy PDF rows into plans/specs folders \u2014 if projects.pdf_storage_path or specs_storage_path references a blob that was already deleted from storage, the inserted document row becomes a dangling reference with no storage object.",
+            "ON CONFLICT DO NOTHING relies on the partial unique indexes uq_document_folders_top_name and uq_document_folders_child_name. The seed inserts all 10 folders at the top level (parent_id=NULL), so the top-level unique index covers them \u2014 correct. However if a user manually created a folder named 'Plans' before the migration ran, the conflict suppresses the system-folder insert and that folder remains non-system with no system_kind, breaking role-gating.",
+            "No AFTER INSERT trigger on document_folders validates that exactly 10 system folders exist post-seed; drift from the expected set is not detected at runtime."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-10.upload",
+          "intent": "File upload with per-file progress queue and same-name versioning: Uploading a file with the same name as an existing document in the same folder automatically creates a new version (version + 1) linked via replaces_document_id. Upload queue shows per-file pending/uploading/done/error status. Completed items auto-clear after 5 s; failures persist until dismissed.",
+          "evidence": [
+            "src/pages/Documents.tsx",
+            "src/hooks/useDocuments.ts",
+            "src/pages/Documents.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "runUploads in Documents.tsx and uploadFiles in useDocuments.ts are duplicate upload implementations with slightly different error paths \u2014 the page-level runUploads propagates per-file error status to the queue UI; the hook-level uploadFiles surfaces a single toast on first error and aborts remaining files. Both code paths can be triggered; only runUploads is used for the main upload drag/drop/button flow, but uploadFiles is exported and could be called inconsistently.",
+            "The same-name version check queries deleted_at-filtered documents implicitly (it does not filter .is('deleted_at', null)). A soft-deleted document with the same name is still considered a prior version, so uploading a file whose name matches a trashed document will link a new v2 to a deleted v1 without user awareness.",
+            "Folder upload (folderInputRef) reads webkitRelativePath but only the flat file list is passed to runUploads \u2014 sub-directory structure inside the uploaded folder is ignored and all files land in the current folder.",
+            "No MIME-type validation occurs before upload; any file type can be placed in any folder, including placing executable files in the Specs or Plans folders."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-10.system-kind",
+          "intent": "system_kind enum on document_folders controls role-gated upload: system_kind column is a CHECK-constrained text column accepting 10 values: plans, specs, rfis, submittals, shop_drawings, change_orders, daily_reports, photos, as_builts, correspondence. Inspectors may only upload to photos or daily_reports system folders; managers/admins can upload anywhere.",
+          "evidence": [
+            "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+            "src/hooks/useDocuments.ts",
+            "src/pages/Documents.tsx",
+            "src/pages/Documents.tsx",
+            "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "system_kind is stored as text not a Postgres enum; the CHECK constraint enforces valid values but the Supabase-generated TypeScript types in integrations/supabase/types.ts may use string rather than the narrower SystemKind union \u2014 silent widening if the generated types are not kept in sync with useDocuments.ts.",
+            "The inspector upload RLS policy grants INSERT to any authenticated project member when the target folder's system_kind is in ('photos','daily_reports'). It does not restrict UPDATE or DELETE for inspectors \u2014 an inspector who can insert can also soft-delete their own uploads only if deleted_by=auth.uid(), but the policy only covers INSERT; no explicit DENY exists for inspectors attempting DELETE on their own rows.",
+            "KIND_HINTS is a UI-only constant in Documents.tsx with no server-side backing; if a future system_kind is added to the DB constraint, it will silently display no hint tooltip in the folder tree sidebar."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-10.block-nonempty-delete-trigger",
+          "intent": "block-nonempty-delete trigger prevents deleting non-empty folders: DELETE on document_folders raises an exception if the folder contains any documents (any deleted_at status) or any subfolders. Trigger name: trg_document_folders_block_nonempty. Function: document_folders_block_nonempty_delete.",
+          "evidence": [
+            "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "The trigger checks documents WHERE folder_id = OLD.id with no deleted_at filter, meaning a folder containing only soft-deleted (trashed) documents cannot be deleted even after the user considers those documents 'gone'. The user must empty trash or hard-delete the trashed documents in the folder before the folder can be removed.",
+            "The exception message includes the folder name via OLD.name concatenation. If the folder name contains a percent sign or single quote it could cause unexpected string formatting \u2014 though RAISE EXCEPTION with %% quoting is handled by plpgsql, not raw SQL interpolation, so SQL injection is not a risk; the message may appear mangled in edge cases.",
+            "No client-side pre-flight check in deleteFolder (useFolders) warns the user before the DB round-trip fails; the error only surfaces after the mutation call returns the raw PostgreSQL exception as a destructive toast."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-10.soft-delete-trash",
+          "intent": "Soft-delete to Trash with Undo toast and Empty Trash: Soft-deleting a document sets deleted_at; an Undo toast within the session restores it. 'Empty Trash' permanently removes DB rows and storage blobs. Trash view shows all deleted documents for the project.",
+          "evidence": [
+            "src/pages/Documents.tsx",
+            "src/pages/Documents.tsx",
+            "src/hooks/useDocuments.ts",
+            "supabase/migrations/20260524182507_aa3b520a-cfe2-4510-b710-0caf0809bc7f.sql"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "softDeleteWithUndo in Documents.tsx bypasses the deleteDocument mutation in useDocuments.ts (which invalidates trash/folder-count query keys) and directly calls supabase.from('documents').update() \u2014 the Undo path similarly calls supabase directly. The hook mutation is therefore only partially used; two delete code paths exist with slightly different query invalidation patterns.",
+            "runEmptyTrash collects storage_path values from the in-memory trash array \u2014 if the trash query is stale when Empty Trash is triggered, recently trashed files whose trash query hasn't refreshed will have their DB rows deleted but their blobs orphaned.",
+            "The Undo toast has no timeout guard beyond the default toast duration (~5 s). If the user undoes after the toast has visually disappeared but before it is fully dismissed, the undo click handler still fires \u2014 correct behaviour \u2014 but if the page navigates away in that window the undo is silently lost."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-10.version-history",
+          "intent": "Version history drawer and restore: Version history drawer shows the full chain of replaces_document_id links in descending order. Clicking 'Restore' creates a new head version (source_kind='restore') pointing at the older blob.",
+          "evidence": [
+            "src/pages/Documents.tsx",
+            "src/hooks/useDocuments.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "fetchDocumentVersions fetches ALL documents for a project (line 362: .eq('project_id', projectId) with no folder filter) and walks the chain in JS. For large projects this is O(N) rows transferred on every version drawer open.",
+            "Circular replaces_document_id chains (possible if DB rows are manipulated outside the app) would cause fetchDocumentVersions to loop infinitely \u2014 no cycle detection guard.",
+            "restoreVersion inserts a new row pointing to older.storage_path. It does not check whether that storage path still exists in the bucket \u2014 a restore of a version whose blob was deleted (e.g., empty-trash then DB rows still exist because only DB delete ran) will succeed at the DB level but produce a broken document entry."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-10.pdf-image-preview",
+          "intent": "Inline PDF and image preview modal via signed URL: PDF and image documents open in a signed-URL preview modal without downloading. Non-previewable types trigger browser download. Signed URLs have 1-hour TTL.",
+          "evidence": [
+            "src/pages/Documents.tsx",
+            "src/hooks/useDocuments.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "PDF preview uses <iframe src=signedUrl>. Safari on iOS does not support inline PDF rendering in iframes \u2014 the PDF triggers a download instead of rendering, silently degrading to the same behaviour as a non-previewable file.",
+            "Signed URL TTL is 3600 s. If a user keeps the preview modal open for >1 hour the iframe src silently expires; no refresh mechanism exists. On a page reload the URL is regenerated, but mid-session expiry is not handled.",
+            "isPreviewable gates on mime_type starting with 'image/' but HEIC files (common on iOS) have mime_type 'image/heic'; browser <img> cannot render HEIC natively on non-Safari browsers \u2014 the preview will display a broken image."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-10.bulk-operations",
+          "intent": "Multi-select bulk download and bulk soft-delete: Multi-select checkboxes allow select-all and per-row selection. Bulk download opens each file in a new tab staggered by 250 ms. Bulk soft-delete moves all selected to Trash with a single Undo toast.",
+          "evidence": [
+            "src/pages/Documents.tsx",
+            "src/pages/Documents.tsx",
+            "src/pages/Documents.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "bulkDownload uses window.open() per file \u2014 browsers with popup blockers will suppress all but the first window.open() call even with the 250 ms stagger, silently failing to download most files in a bulk selection.",
+            "selectedIds is cleared when selectedFolderId changes (line 225 effect) but not when filteredDocs changes due to search \u2014 a user can search, select results, clear the search, and still have invisible (now off-screen) IDs in selectedIds that get bulk-deleted.",
+            "No size cap on bulk download; selecting and downloading thousands of files calls window.open N times with no cap or warning."
+          ],
+          "links_to": []
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "name": "Schedule Management",
+      "leaves": [
+        {
+          "id": "stream-11.pmxml-import",
+          "intent": "Import P6 PMXML schedule file",
+          "evidence": [
+            "src/lib/schedule/import-p6.ts",
+            "src/components/schedule/ImportP6Panel.tsx",
+            "src/lib/schedule/use-schedule.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "No automated test for importFromPmxml.",
+            "onImport replace flag ignored \u2014 replace is always atomic via RPC."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-11.xer-import",
+          "intent": "Import XER (Primavera binary export) schedule file",
+          "evidence": [
+            "src/lib/schedule/import-p6.ts",
+            "src/components/schedule/ImportP6Panel.tsx"
+          ],
+          "status": "missing",
+          "confidence": 0.0,
+          "gaps": [
+            "DialogTitle misleadingly claims '.xer or .xml'.",
+            "No XER parser exists."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-11.gantt-image-ai-import",
+          "intent": "Import schedule activities from Gantt chart image via AI",
+          "evidence": [
+            "supabase/functions/parse-schedule/index.ts"
+          ],
+          "status": "partial",
+          "confidence": 0.6,
+          "gaps": [
+            "No frontend invocation of parse-schedule.",
+            "Returned activities not mapped to ImportedSchedule shape.",
+            "Undocumented in stream doc."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-11.cpm-computation",
+          "intent": "Compute CPM critical path (calendar-aware, constraint-aware)",
+          "evidence": [
+            "src/lib/schedule/cpm.ts",
+            "src/lib/schedule/use-schedule.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "CPM not auto-persisted \u2014 persistCpm is manual mutation; tab close leaves is_critical/total_float_days stale.",
+            "No unit tests."
+          ],
+          "links_to": [
+            "stream-13.dcma-14-audit"
+          ]
+        },
+        {
+          "id": "stream-11.activity-grid",
+          "intent": "Editable activity grid (ID, name, start, duration, % complete, float)",
+          "evidence": [
+            "src/components/schedule/ScheduleWorkspace.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "Grid does not show early_start/early_finish (CPM dates).",
+            "No column sorting or filtering."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-11.gantt-rendering",
+          "intent": "Render Gantt chart with dependency arrows and milestone diamonds",
+          "evidence": [
+            "src/components/schedule/GanttChart.tsx"
+          ],
+          "status": "partial",
+          "confidence": 0.6,
+          "gaps": [
+            "In-place mutation can be confusing.",
+            "Milestone diamonds and dependency arrows referenced but need verification.",
+            "No drag-interaction tests."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-11.wbs-tree",
+          "intent": "Navigate and manage WBS hierarchy tree",
+          "evidence": [
+            "src/components/schedule/WbsTree.tsx",
+            "src/components/schedule/ScheduleWorkspace.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "stream-11.compliance-strip",
+          "intent": "Show real-time NJDOT compliance pill bar",
+          "evidence": [
+            "src/components/schedule/ComplianceStrip.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": [
+            "stream-13.schedule-health-panel"
+          ]
+        },
+        {
+          "id": "stream-11.dcma-14-audit",
+          "intent": "Run DCMA 14-point schedule health audit and export .txt",
+          "evidence": [
+            "src/lib/schedule/analysis/dcma.ts",
+            "src/components/schedule/DcmaPanel.tsx",
+            "src/lib/schedule/analysis/feedback.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "No unit tests.",
+            "DCMA check #6 (resources) always returns pass=true \u2014 informational only."
+          ],
+          "links_to": [
+            "stream-13.dcma-14-audit"
+          ]
+        },
+        {
+          "id": "stream-11.baseline-management",
+          "intent": "Capture, name, and delete schedule baseline snapshots",
+          "evidence": [
+            "src/lib/schedule/use-schedule.ts",
+            "src/components/schedule/BaselineManager.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "compareProgress implemented but no UI surface exposes SPI/CPI or slipping activity table \u2014 orphaned."
+          ],
+          "links_to": [
+            "stream-13.progress-variance"
+          ]
+        },
+        {
+          "id": "stream-11.progress-spi-cpi",
+          "intent": "Compare baseline vs forecast and compute SPI/CPI",
+          "evidence": [
+            "src/lib/schedule/analysis/progress.ts",
+            "src/lib/schedule/analysis/progress.ts"
+          ],
+          "status": "partial",
+          "confidence": 0.6,
+          "gaps": [
+            "No UI surface \u2014 progress analysis unreachable.",
+            "CPI is duration proxy.",
+            "chart-export.ts (57 LOC) connection to UI unverified."
+          ],
+          "links_to": [
+            "stream-13.progress-variance"
+          ]
+        },
+        {
+          "id": "stream-11.calendar-manager",
+          "intent": "Manage project calendars (workweek + exceptions)",
+          "evidence": [
+            "src/components/schedule/CalendarManager.tsx",
+            "src/lib/schedule/calendars.ts",
+            "src/lib/schedule/use-schedule.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "stream-11.resource-manager",
+          "intent": "Manage resources and activity assignments",
+          "evidence": [
+            "src/components/schedule/ResourceManager.tsx",
+            "src/lib/schedule/use-schedule.ts"
+          ],
+          "status": "partial",
+          "confidence": 0.6,
+          "gaps": [
+            "ResourceManager UI is thin.",
+            "ActivityInspector may handle per-activity assignment \u2014 not separately verified.",
+            "No cost roll-up or leveling."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-11.tia-generator",
+          "intent": "Generate TIA fragnet and NJDOT 108-03 narrative",
+          "evidence": [
+            "src/lib/schedule/analysis/tia.ts"
+          ],
+          "status": "partial",
+          "confidence": 0.6,
+          "gaps": [
+            "No UI entry point.",
+            "Only first successor traced.",
+            "No tests."
+          ],
+          "links_to": [
+            "stream-13.tia-generator"
+          ]
+        },
+        {
+          "id": "stream-11.schedule-to-pay-item-linking",
+          "intent": "Link schedule activities to pay items",
+          "evidence": [
+            "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql",
+            "supabase/migrations/20260524172951_27a28235-ea50-4c3c-be4a-528f35665ed2.sql"
+          ],
+          "status": "missing",
+          "confidence": 0.0,
+          "gaps": [
+            "No UI to link activities to pay items.",
+            "No hook or mutation reads/writes activity_pay_items.",
+            "Stream doc silent despite DB existing."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-11.milestone-tracking",
+          "intent": "Track NJDOT required milestone activities (M100\u2013M950)",
+          "evidence": [
+            "src/components/schedule/ComplianceStrip.tsx",
+            "src/components/schedule/ScheduleWorkspace.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "Milestone detection uses startsWith \u2014 M code must be first token; no normalization beyond .toUpperCase()."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-11.aace-classification",
+          "intent": "AACE cost estimate class reference",
+          "evidence": [
+            "src/lib/schedule/analysis/aace.ts"
+          ],
+          "status": "partial",
+          "confidence": 0.6,
+          "gaps": [
+            "AACE_CLASSES is orphaned.",
+            "No AACE classification integrated into DCMA panel or compliance strip."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-11.memo-export",
+          "intent": "Export RE feedback memo as PDF or DOCX",
+          "evidence": [
+            "src/lib/schedule/analysis/memo-export.ts"
+          ],
+          "status": "partial",
+          "confidence": 0.6,
+          "gaps": [
+            "DcmaPanel exports .txt not PDF/DOCX; memo-export.ts wiring unverified."
+          ],
+          "links_to": []
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "name": "Schedule Engine (CPM)",
+      "leaves": [
+        {
+          "id": "s12.cpm-engine",
+          "intent": "Robust CPM engine with forward/backward pass, calendar awareness, and constraint support",
+          "evidence": [
+            "src/lib/schedule/cpm.ts",
+            "src/test/cpm.test.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": [
+            "stream-11.cpm-computation"
+          ]
+        },
+        {
+          "id": "s12.p6-pmxml-import",
+          "intent": "Import schedule data from Oracle P6 PMXML files with high fidelity",
+          "evidence": [
+            "src/lib/schedule/import-p6.ts",
+            "src/lib/p6xml/parser.ts",
+            "src/components/GanttUploader.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "XER support explicitly removed in favor of PMXML for better round-tripping reliability"
+          ],
+          "links_to": [
+            "stream-11.pmxml-import"
+          ]
+        },
+        {
+          "id": "s12.parse-schedule-ai",
+          "intent": "AI-powered extraction of schedule activities from Gantt chart images/screenshots",
+          "evidence": [
+            "supabase/functions/parse-schedule/index.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "s12.baseline-manager",
+          "intent": "Manage project baselines, including setting, comparing, and tracking variances",
+          "evidence": [
+            "src/components/schedule/BaselineManager.tsx",
+            "src/lib/schedule/baseline.ts",
+            "src/test/baseline-end.test.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": [
+            "stream-11.baseline-management"
+          ]
+        },
+        {
+          "id": "s12.calendar-management",
+          "intent": "Define and manage work calendars, including workweeks and exceptions (holidays)",
+          "evidence": [
+            "src/components/schedule/CalendarManager.tsx",
+            "src/lib/schedule/calendars.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": [
+            "stream-11.calendar-manager"
+          ]
+        },
+        {
+          "id": "s12.resource-management",
+          "intent": "Manage labor, material, and equipment resources assigned to schedule activities",
+          "evidence": [
+            "src/components/schedule/ResourceManager.tsx",
+            "src/lib/schedule/import-p6.ts"
+          ],
+          "status": "implemented",
+          "confidence": 0.9,
+          "gaps": [
+            "Resource leveling (automated CPM adjustments based on resource availability) is not explicitly implemented in runCpm"
+          ],
+          "links_to": []
+        },
+        {
+          "id": "s12.gantt-visualization",
+          "intent": "Interactive Gantt chart for visualizing and editing the project schedule",
+          "evidence": [
+            "src/components/schedule/GanttChart.tsx",
+            "src/components/schedule/ScheduleWorkspace.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": [
+            "stream-11.gantt-rendering"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "13",
+      "name": "DCMA & Schedule Quality",
+      "leaves": [
+        {
+          "id": "stream-13.dcma-14-audit",
+          "intent": "DCMA 14-Point Schedule Health Audit",
+          "evidence": [
+            "src/lib/schedule/analysis/dcma.ts",
+            "src/components/schedule/DcmaPanel.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "No unit tests for the complex check logic."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-13.tia-generator",
+          "intent": "Time Impact Analysis (TIA) Frag-net Generator",
+          "evidence": [
+            "src/lib/schedule/analysis/tia.ts"
+          ],
+          "status": "partial",
+          "confidence": 0.6,
+          "gaps": [
+            "No UI surface to invoke buildTia.",
+            "Only first direct successor traced."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-13.schedule-health-panel",
+          "intent": "NJDOT Compliance & Health Strip",
+          "evidence": [
+            "src/components/schedule/ComplianceStrip.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "Milestone detection depends on exact prefix match (starts with M###)."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-13.progress-variance",
+          "intent": "Baseline vs Forecast Variance Analysis (compareProgress)",
+          "evidence": [
+            "src/lib/schedule/analysis/progress.ts"
+          ],
+          "status": "partial",
+          "confidence": 0.6,
+          "gaps": [
+            "No UI surface exposing SPI/CPI or slipping activities table."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-13.re-memo-generation",
+          "intent": "Resident Engineer (RE) Feedback Memo",
+          "evidence": [
+            "src/lib/schedule/analysis/feedback.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "Unwired to the 'Download Memo' button in the UI (DcmaPanel currently only exports raw results)."
+          ],
+          "links_to": []
+        }
+      ]
+    },
+    {
+      "id": "14",
+      "name": "Measurement & Geometry Engine",
+      "leaves": [
+        {
+          "id": "stream-14.distance-px",
+          "intent": "Compute pixel distance between two points",
+          "evidence": [
+            "src/lib/geometry.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "stream-14.line-length",
+          "intent": "Calculate polyline length in real-world feet",
+          "evidence": [
+            "src/lib/geometry.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": [
+            "stream-05.line-tool"
+          ]
+        },
+        {
+          "id": "stream-14.polygon-area-sf",
+          "intent": "Compute polygon area via shoelace formula (px\u00b2 \u2192 SF)",
+          "evidence": [
+            "src/lib/geometry.ts",
+            "src/lib/geometry.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": [
+            "stream-05.polygon-tool"
+          ]
+        },
+        {
+          "id": "stream-14.sf-conversions",
+          "intent": "Convert SF to SY and CY",
+          "evidence": [
+            "src/lib/geometry.ts",
+            "src/lib/geometry.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": [
+            "stream-05.depth-prompt-cy"
+          ]
+        },
+        {
+          "id": "stream-14.format-measurement",
+          "intent": "Format measurement value with unit string and K-abbreviation",
+          "evidence": [
+            "src/lib/geometry.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "No unit enum/validation; caller passes arbitrary string \u2014 typos silently pass through"
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-14.hit-testing",
+          "intent": "Hit-test points against polyline segments and polygon fills",
+          "evidence": [
+            "src/lib/geometry.ts",
+            "src/lib/geometry.ts",
+            "src/lib/geometry.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": [
+            "stream-05.drag-handle-editing"
+          ]
+        },
+        {
+          "id": "stream-14.gps-to-local-ft",
+          "intent": "Convert GPS lat/lng to local Cartesian feet relative to origin",
+          "evidence": [
+            "src/lib/geo-transform.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "Flat-earth approximation \u2014 valid only for small project extents (<5 mi); no range guard"
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-14.affine-2pt",
+          "intent": "Solve 2-point similarity transform (scale + rotation + translation)",
+          "evidence": [
+            "src/lib/geo-transform.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "stream-14.affine-3pt",
+          "intent": "Solve 3+ point full affine via least-squares normal equations",
+          "evidence": [
+            "src/lib/geo-transform.ts",
+            "src/lib/geo-transform.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "estimateError returns plan-pixel residual, not feet \u2014 docstring and field name estimatedErrorFt are misleading (confirmed risk in stream doc)"
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-14.gps-to-plan",
+          "intent": "Apply affine calibration to convert live GPS to plan pixel coordinates",
+          "evidence": [
+            "src/lib/geo-transform.ts",
+            "src/lib/geo-transform.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": [
+            "s09.gps-calibration-wizard"
+          ]
+        },
+        {
+          "id": "stream-14.kalman-filter",
+          "intent": "Kalman filter for GPS trace smoothing (predict + update)",
+          "evidence": [
+            "src/lib/geo-transform.ts",
+            "src/lib/geo-transform.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "KalmanState is never persisted \u2014 cold-starts on every GpsTraceControls remount (confirmed debt)"
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-14.coordinate-normalization",
+          "intent": "Normalize plan coordinates to scale=1 for geo control points",
+          "evidence": [
+            "src/lib/geo-transform.ts"
+          ],
+          "status": "partial",
+          "confidence": 0.6,
+          "gaps": [
+            "No normalizeToScale1() helper; callers must manually divide by current scale \u2014 contract not enforced"
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-14.vertex-drag-recalc",
+          "intent": "Live measurement recalculation on polygon vertex drag",
+          "evidence": [
+            "src/components/PdfCanvas.tsx"
+          ],
+          "status": "partial",
+          "confidence": 0.6,
+          "gaps": [
+            "Vertex-drag recalculation coupling lives in PdfCanvas, not testable in isolation"
+          ],
+          "links_to": []
+        }
+      ]
+    },
+    {
+      "id": "15",
+      "name": "Offline & Native Durability",
+      "leaves": [
+        {
+          "id": "s15.AC1_offline_serve",
+          "intent": "partial \u2014 mirrorProject snapshots 8 tables but daily_reports is hard-capped at 30 rows, silently truncating older history for offline inspectors",
+          "evidence": [],
+          "status": "partial",
+          "confidence": 0.6,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "s15.AC2_optimistic_idb",
+          "intent": "implemented \u2014 mutate() writes _pendingSync:true to IDB before enqueue",
+          "evidence": [],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "s15.AC3_serial_per_row_4_workers",
+          "intent": "implemented \u2014 drainOnce groups by rowId, runs up to 4 concurrent row-groups serially",
+          "evidence": [],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "s15.AC4_backoff_sync_panel",
+          "intent": "implemented \u2014 BACKOFF_MS=[1000,4000,15000,60000,180000]; SyncPanel exposes retryItem",
+          "evidence": [],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "s15.AC5_capacitor_no_sw",
+          "intent": "implemented \u2014 shouldRegisterSW() returns false when Capacitor.isNativePlatform()",
+          "evidence": [],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "s15.AC6_pwa_update_toast",
+          "intent": "implemented \u2014 registerSWWithUpdates uses Workbox; PwaShell wires setReloadFn on waiting event",
+          "evidence": [],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "s15.AC7_pdf_cache",
+          "intent": "implemented \u2014 warmPdf stores in pdf-cache-v1; evictIfNeeded enforces 500 MB LRU cap",
+          "evidence": [],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "s15.risk.R1",
+          "intent": "daily_reports mirrored at 30-row cap \u2014 inspectors reviewing older history offline see silent data gaps",
+          "evidence": [
+            "src/lib/offline/mirror.ts:27"
+          ],
+          "status": "partial",
+          "confidence": 0.0,
+          "gaps": [
+            "daily_reports mirrored at 30-row cap \u2014 inspectors reviewing older history offline see silent data gaps"
+          ],
+          "links_to": []
+        },
+        {
+          "id": "s15.risk.R2",
+          "intent": "No conflict resolution UI \u2014 OutboxStatus includes 'conflict' but mutation-client never sets it; conflicts silently land in 'failed'",
+          "evidence": [
+            "src/lib/offline/mutation-client.ts"
+          ],
+          "status": "partial",
+          "confidence": 0.0,
+          "gaps": [
+            "No conflict resolution UI \u2014 OutboxStatus includes 'conflict' but mutation-client never sets it; conflicts silently land in 'failed'"
+          ],
+          "links_to": []
+        },
+        {
+          "id": "s15.risk.R3",
+          "intent": "IDB schema v2 has no forward migration path \u2014 getDB only handles oldVersion < 1 and < 2; v3 upgrade risks data loss",
+          "evidence": [
+            "src/lib/offline/db.ts"
+          ],
+          "status": "partial",
+          "confidence": 0.0,
+          "gaps": [
+            "IDB schema v2 has no forward migration path \u2014 getDB only handles oldVersion < 1 and < 2; v3 upgrade risks data loss"
+          ],
+          "links_to": []
+        },
+        {
+          "id": "s15.risk.R4",
+          "intent": "jsPDF.save() bypasses warmPdf \u2014 generated PDFs are not cacheable and will be unavailable offline",
+          "evidence": [
+            "src/lib/offline/pdf-cache.ts"
+          ],
+          "status": "partial",
+          "confidence": 0.0,
+          "gaps": [
+            "jsPDF.save() bypasses warmPdf \u2014 generated PDFs are not cacheable and will be unavailable offline"
+          ],
+          "links_to": []
+        }
+      ]
+    },
+    {
+      "id": "16",
+      "name": "Push Notifications",
+      "leaves": [
+        {
+          "id": "s16.send-push-edge-fn",
+          "intent": "Implement and maintain send-push Edge Function for FCM/APNs delivery",
+          "evidence": [
+            "supabase/functions/send-push/index.ts exists and uses FCM HTTP v1 API to send notifications to device tokens."
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": [
+            "06-L2-08"
+          ]
+        },
+        {
+          "id": "s16.notification-inserts",
+          "intent": "Ensure in-app notifications are inserted into public.notifications table",
+          "evidence": [
+            "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql creates the table and defines policies."
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "s16.daily-reports-status-side-effects",
+          "intent": "Trigger notifications and snapshots on daily report status changes",
+          "evidence": [
+            "daily_reports_status_side_effects() function in 20260524130242 migration handles 'submitted', 'approved', and 'rejected' states."
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": [
+            "06-L2-08"
+          ]
+        },
+        {
+          "id": "s16.web-push-subscriptions",
+          "intent": "Support Web-Push (VAPID) subscriptions in the frontend and database",
+          "evidence": [
+            "device_tokens table supports 'web' platform, but no VAPID implementation or PushManager registration found in frontend (src/lib/native/push.ts is Capacitor-focused)."
+          ],
+          "status": "todo",
+          "confidence": 0.8,
+          "gaps": [
+            "No VAPID public key configuration found",
+            "No Service Worker PushManager subscription logic for web"
+          ],
+          "links_to": []
+        },
+        {
+          "id": "s16.mobile-push-delivery",
+          "intent": "Deliver push notifications to mobile devices via Capacitor and FCM",
+          "evidence": [
+            "src/lib/native/push.ts handles Capacitor PushNotifications registration and token upsert to device_tokens."
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "s16.notification-trigger-sync",
+          "intent": "Connect public.notifications inserts to the send-push Edge Function",
+          "evidence": [
+            "send-push function exists but no database trigger was found calling it via net.http_post or similar after a notification insert."
+          ],
+          "status": "todo",
+          "confidence": 0.9,
+          "gaps": [
+            "Missing trigger on public.notifications to invoke the send-push edge function"
+          ],
+          "links_to": []
+        }
+      ]
+    },
+    {
+      "id": "17",
+      "name": "Offline Sync",
+      "leaves": [
+        {
+          "id": "s17.offline-idb-schema",
+          "intent": "IndexedDB schema for project mirroring and write outbox",
+          "evidence": [
+            "src/lib/offline/db.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": [
+            "s15.AC2_optimistic_idb"
+          ]
+        },
+        {
+          "id": "s17.offline-mutate",
+          "intent": "Online-first mutation wrapper with optimistic UI and outbox fallback",
+          "evidence": [
+            "src/lib/offline/mutation-client.ts"
+          ],
+          "status": "implemented",
+          "confidence": 0.95,
+          "gaps": [
+            "applyMirror (line 24) does not support all tables found in IDB schema (e.g., pdf_cache_meta, meta are missing from storeMap).",
+            "Optimistic flag _pendingSync is set in IDB but not exposed in types/project.ts, so UI components cannot visually distinguish pending vs synced rows easily."
+          ],
+          "links_to": [
+            "s15.AC2_optimistic_idb"
+          ]
+        },
+        {
+          "id": "s17.offline-sync-loop",
+          "intent": "Reliable outbox drain loop with backoff and causality preservation",
+          "evidence": [
+            "src/lib/offline/sync.ts"
+          ],
+          "status": "implemented",
+          "confidence": 0.9,
+          "gaps": [
+            "Serial processing (line 36) preserves causality per rowId, but there is no mechanism to handle cross-row dependencies (e.g., creating a pay_item then an annotation that references it).",
+            "Conflict detection (baseUpdatedAt) is present in the schema but no resolution logic exists in drainOnce; items that fail with 409 are just marked 'failed' and retried until MAX_ATTEMPTS."
+          ],
+          "links_to": [
+            "s15.AC3_serial_per_row_4_workers"
+          ]
+        },
+        {
+          "id": "s17.offline-mirror",
+          "intent": "Snapshotting Supabase project data to IndexedDB for offline access",
+          "evidence": [
+            "src/lib/offline/mirror.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "mirrorProject is called manually in Index.tsx:128; there is no automatic periodic re-snapshotting if the app stays open for long periods."
+          ],
+          "links_to": [
+            "s15.AC1_offline_serve"
+          ]
+        },
+        {
+          "id": "s17.use-project-offline-pivot",
+          "intent": "Pivot useProject to use offlineMutate for all write operations",
+          "evidence": [
+            "src/hooks/useProject.ts"
+          ],
+          "status": "implemented",
+          "confidence": 0.9,
+          "gaps": [
+            "useProject still accepts supabaseProjectId/userId and performs manual DB updates for calibrations (line 92) and pay_items (line 311) instead of using the uniform offlineMutate path.",
+            "Realtime subscription (line 341) does not check the outbox; incoming remote changes could overwrite local optimistic state before it syncs (documented Risk in stream doc)."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "s17.offline-service-worker",
+          "intent": "PWA Service Worker for asset caching and offline navigation",
+          "evidence": [
+            "vite.config.ts",
+            "src/lib/pwa.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "Runtime caching for Supabase REST (line 72) uses NetworkFirst with 3s timeout; if the network is extremely slow but not 'offline', the UI will hang for 3s on every fetch."
+          ],
+          "links_to": [
+            "s15.AC5_capacitor_no_sw"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "18",
+      "name": "Compliance & Audit",
+      "leaves": [
+        {
+          "id": "S18-1",
+          "intent": "daily-report-snapshot library",
+          "evidence": [
+            "src/lib/daily-report-snapshot.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "_excludeDailyReportId parameter is accepted but never used in the query \u2014 its original intent (exclude the being-edited report's own approved quantities from the prior-cumulative sum) is silently dropped, causing potential double-counting if a report is re-approved.",
+            "v_approved_pay_item_quantities is cast `as any` due to Supabase generated-type lag \u2014 once types are regenerated the cast should be removed and the view added to the types file.",
+            "No test coverage for annotationQty or buildSnapshotFromInputs. The pure-function surface is ideal for vitest unit tests.",
+            "sfToCY and sfToSY are imported from @/lib/geometry but geometry.ts is not covered in stream-18 \u2014 unit-conversion edge cases (negative depth, NaN measurement) are not guarded here.",
+            "Prior cumulative includes all projects' approved quantities for the same pay_item_id without re-filtering to projectId \u2014 the .eq('project_id', projectId) is on daily_reports via the view, but a pay_item_id collision across projects (impossible by FK, but worth asserting) would silently over-count."
+          ],
+          "links_to": [
+            "06-L2-01"
+          ]
+        },
+        {
+          "id": "S18-2",
+          "intent": "daily_reports status FSM (DB trigger)",
+          "evidence": [
+            "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "approved_by = auth.uid() inside a trigger assumes the caller is the approving RE. If a server-side function using service-role key ever approves a report programmatically, auth.uid() returns NULL and approved_by is set to NULL silently \u2014 no guard exists.",
+            "The trigger fires on ANY UPDATE, not just status changes. The IS DISTINCT FROM OLD.status guard avoids false positives, but if a concurrent UPDATE touches only non-status columns while a status change is in flight, the trigger re-executes the IF block unnecessarily.",
+            "No audit log is written by this trigger \u2014 status transitions are visible only if old row versions are preserved via a separate CDC mechanism (which does not currently exist)."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "S18-3",
+          "intent": "daily_report_snapshots archive table + side-effects trigger",
+          "evidence": [
+            "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "Archive only fires on rejected\u2192draft (reopen). A submitted\u2192approved transition does NOT archive the submitted snapshot \u2014 if an RE approves a report with incorrect quantities, there is no immutable record of what was approved before any later corrections.",
+            "archived_reason is free-text, not a CHECK constraint enum \u2014 nothing prevents a programmatic caller from inserting an unrecognised reason value.",
+            "reject_reason is stored redundantly in both daily_reports and daily_report_snapshots. If reject_reason is later corrected on the live row without triggering the archive path, the two records diverge.",
+            "The RE notification fan-out uses a FOR LOOP with individual INSERTs \u2014 for projects with many REs this is N round-trips inside the trigger. A single INSERT \u2026 SELECT would be more efficient.",
+            "daily_report_snapshots has no FK back to projects \u2014 project_id is a denormalised copy. If the project is deleted (CASCADE from daily_reports), orphaned snapshot rows for the project_id remain unless daily_reports CASCADE removes them first.",
+            "No snapshot is archived when a draft is deleted \u2014 a deleted draft leaves no trace in the audit table."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "S18-4",
+          "intent": "useReReviewQueue hook",
+          "evidence": [
+            "src/hooks/useReReviewQueue.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "useApproveReport approves via .update({ status: 'approved' }) \u2014 it does NOT supply reject_reason, which is correct, but it also does not verify the caller is a resident_engineer before sending the request. The DB RLS policy ('RE updates submitted report') enforces this, but a client error surfaces as a generic 403 with no user-facing explanation.",
+            "useRejectReport does a client-side trim check on reason but does NOT enforce a minimum length \u2014 a single space character passes the trim check on the client (the DB trigger will catch it, but the UX gives no early warning).",
+            "No optimistic updates \u2014 approving/rejecting shows a loading state but the card stays in the queue until the invalidation round-trip completes.",
+            "useReReviewQueue fetches ALL submitted reports at once \u2014 no pagination. For a long-running project with many daily submissions this will grow unbounded.",
+            "There is no realtime subscription on daily_reports for the RE queue \u2014 a second RE could approve a report while the first RE is viewing it, and the first RE's UI won't update until they manually refetch.",
+            "daily_report_snapshots table is cast `as any` \u2014 the TypeScript type for ReReportArchive.archived_reason is `string | null` but the generated DB type for the column is also nullable; the any cast masks the need for a type assertion on the snapshot field."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "S18-5",
+          "intent": "ReReviewCard component",
+          "evidence": [
+            "src/components/ReReviewCard.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "diffByItem useMemo depends on archivesQ.data and report.snapshot but archivesQ is only enabled when historyOpen=true \u2014 the diff column never renders on initial load even if archives exist, because historyOpen starts false. The diff should be computed independently of the history toggle.",
+            "Approve/Reject buttons are always rendered even when readOnly=true in the component's Props \u2014 the readOnly prop is passed through to ReRejectDialog but does not disable the Approve button, leaving a potential UI inconsistency.",
+            "The snapshot table has no sort controls \u2014 items are sorted by item_code (ascending, from the DB) and cannot be reordered client-side.",
+            "No print / export button on the ReReviewCard itself \u2014 export is available at a higher page level only.",
+            "The history section uses lazy-loaded archivesQ (enabled on historyOpen) \u2014 if a user expands history on multiple cards simultaneously, N parallel queries are fired with no debounce.",
+            "Contract-quantity percentage column uses `it.contract_quantity` from the frozen snapshot. If a contract amendment has since changed the contract quantity, the percentage shown may be stale.",
+            "No accessibility attributes (aria-label, role) on the approve/reject icon buttons \u2014 keyboard-only users cannot identify the actions."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "S18-6",
+          "intent": "ReRejectDialog component",
+          "evidence": [
+            "src/components/ReRejectDialog.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "No minimum character count enforced (e.g. 10 chars) \u2014 a single character reason ('x') passes. The DB trigger only checks length(trim(reject_reason)) = 0, so single-character reasons persist.",
+            "No character counter or max-length cap \u2014 very long reasons are accepted without UX warning.",
+            "The textarea placeholder is generic ('Enter reason for rejection\u2026') \u2014 no guidance on what constitutes a valid reject reason for compliance purposes (e.g. 'quantity discrepancy', 'missing pay item').",
+            "No audit of WHO triggered the rejection beyond rejected_by=auth.uid() in the DB trigger \u2014 the reason text is the only human-readable record."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "S18-7",
+          "intent": "useDailyReport hook \u2014 submit / reopen / isStale",
+          "evidence": [
+            "src/hooks/useDailyReport.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "submit() performs a multi-step mutation (build snapshot \u2192 upsert draft \u2192 set submitted) without a DB transaction. If the second UPDATE (status flip) fails after the snapshot is already written, the report row is in an inconsistent state (snapshot updated, status still draft).",
+            "reopen() flips to draft via a direct UPDATE \u2014 the side-effects trigger (which archives the snapshot) fires in the DB, but the client does not wait for or handle archive failures. If the trigger fails (e.g. constraint violation), the row is in draft but no archive was created.",
+            "isStale is computed on every render via a side-effect-free useMemo equivalent \u2014 but it reads previewQuery.data which is re-fetched every time the query key changes (including on status change). This can cause a brief isStale=true flash after approval even though the report is now approved and the guard `query.data?.status !== 'approved'` should suppress it \u2014 the guard disables the previewQuery but previewQuery.data may retain stale data from the last successful fetch.",
+            "No optimistic UI on submit \u2014 the inspector sees a loading state while the DB round-trip completes.",
+            "buildDailyReportSnapshot is called twice on resubmission (once to reset to draft with new snapshot, once to submit) \u2014 this doubles the Supabase query load."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "S18-8",
+          "intent": "v_approved_pay_item_quantities view",
+          "evidence": [
+            "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "No RLS policy directly on the view \u2014 access is controlled entirely by the underlying daily_reports table's SELECT policies. If a user gains SELECT on daily_reports outside of RLS (e.g. via service-role), they see all approved quantities without project-membership enforcement.",
+            "new_cumulative in the view is the cumulative as-of the report's snapshot freeze date. If a report is retroactively corrected (status flipped back to draft and resubmitted), the view returns both the old approved row (from before retraction \u2014 which no longer exists because status is now draft/submitted) and the new one. In practice retraction is not possible in the current FSM (approved is terminal) but should be documented as a constraint.",
+            "The view is not materialised \u2014 every query re-parses all approved snapshots. For projects with hundreds of daily reports this is O(n\u00d7items) on every dashboard load.",
+            "delta_quantity and new_cumulative are cast from jsonb text with no bounds check \u2014 malformed snapshot entries (non-numeric strings) will cause the cast to fail and surface as a query error rather than a NULL."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "S18-9",
+          "intent": "DCMA 14-Point Schedule Audit \u2014 analysis library",
+          "evidence": [
+            "src/lib/schedule/analysis/dcma.ts"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "CPLI uses sum of TF across critical activities rather than the path-level float of the longest critical chain \u2014 this overestimates CPLI when there are multiple critical sub-chains with different floats.",
+            "BEI denominator counts ALL completed activities (any status), not just those completed within the baseline window \u2014 inflates BEI when early completions dominate.",
+            "Check #9 (invalid dates) logic is not surfaced in the dcma.ts source visible \u2014 if it exists it is between checks 8 and 10. Verify the implementation covers actual_start/actual_finish > data_date.",
+            "runDcma is recomputed on every useMemo dependency change in DcmaPanel (activities, relationships, meta.data_date) \u2014 for large schedules (1000+ activities) this blocks the render thread. Should be moved to a Web Worker.",
+            "dcmaSummary outputs plain text only \u2014 no JSON export or structured report for downstream tooling (e.g. P6 notebook integration).",
+            "No persistence \u2014 audit results are ephemeral. There is no table or edge function to save a point-in-time DCMA snapshot for compliance record-keeping.",
+            "The Resources check hard-codes pass=true regardless of loading \u2014 once the schedule model supports resource loading, this check will need a real threshold."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "S18-10",
+          "intent": "DcmaPanel component",
+          "evidence": [
+            "src/components/schedule/DcmaPanel.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "idLookup resolves activity IDs to names but the failing-activity list in the expanded row shows only IDs, not names \u2014 the lookup map is built but not applied in the render (the code likely shows a.id only).",
+            "No 'copy to clipboard' option for individual check failure lists.",
+            "Dialog has no max-height guard on mobile \u2014 on small screens the ScrollArea may overflow behind the keyboard.",
+            "Export filename uses client-side new Date() \u2014 timezone is the browser's local zone, not the project's data_date timezone, so filename dates can be inconsistent.",
+            "No keyboard shortcut to open DcmaPanel from the schedule workspace."
+          ],
+          "links_to": []
+        }
+      ]
+    },
+    {
+      "id": "19",
+      "name": "Marketing",
+      "leaves": [
+        {
+          "id": "s19.landing-page-implementation",
+          "intent": "Professional landing page with NJTA-specific messaging and lead capture",
+          "evidence": [
+            "src/pages/Landing.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": [
+            "stream-20.landing-page"
+          ]
+        },
+        {
+          "id": "s19.llms-txt-context",
+          "intent": "Provide machine-readable project context for LLM assistants",
+          "evidence": [
+            "public/llms.txt"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "s19.demo-requests-form",
+          "intent": "Capture potential customer data for sales follow-up",
+          "evidence": [
+            "src/pages/Landing.tsx (handleDemoSubmit), supabase/migrations/20260328182512_208ba41b-5292-403a-baf4-9b9b2d158879.sql"
+          ],
+          "status": "partial",
+          "confidence": 0.8,
+          "gaps": [
+            "User reports 'missing migration' for demo_requests table despite existence in migration files",
+            "No Admin UI for viewing or managing submitted demo requests"
+          ],
+          "links_to": [
+            "stream-20.demo-requests-table"
+          ]
+        },
+        {
+          "id": "s19.pricing-communication",
+          "intent": "Convey value-based, per-project pricing model",
+          "evidence": [
+            "src/pages/Landing.tsx (FAQ section and hero pricing mentions)"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "No self-service pricing calculator or tier selection"
+          ],
+          "links_to": []
+        },
+        {
+          "id": "s19.public-claims-alignment",
+          "intent": "Verify that marketing claims (Landing.tsx) match technical capabilities (Demo.tsx, Index.tsx)",
+          "evidence": [
+            "src/pages/Landing.tsx vs src/pages/Demo.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 0.9,
+          "gaps": [
+            "ProjectWise and SiteManager integrations are claimed as roadmap items but not yet implemented"
+          ],
+          "links_to": []
+        }
+      ]
+    },
+    {
+      "id": "20",
+      "name": "Sales & Pitch",
+      "leaves": [
+        {
+          "id": "stream-20.landing-page",
+          "intent": "Landing Page (marketing surface): /landing renders without auth",
+          "evidence": [
+            "src/pages/Landing.tsx"
+          ],
+          "status": "partial",
+          "confidence": 0.6,
+          "gaps": [
+            "demo_requests table migration missing \u2014 contact form silently fails in production.",
+            "Mobile framer-motion staggerContainer may cause layout shift."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-20.demo-cta-linkage",
+          "intent": "Landing \u2192 /demo CTA linkage: /demo reachable from Landing CTA; begins interactive walkthrough",
+          "evidence": [
+            "src/pages/Landing.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "stream-20.interactive-demo",
+          "intent": "Interactive /demo mode (unauthenticated 12-step walkthrough): /demo accessible without auth",
+          "evidence": [
+            "src/pages/Demo.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "stream-20.mcfa-pitch",
+          "intent": "McfaPitch partner page (/mcfa): /mcfa renders partner content without login",
+          "evidence": [
+            "src/pages/McfaPitch.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "Pricing hard-coded in source \u2014 no CMS."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-20.fajar-pitch",
+          "intent": "FajarPitch partner page (/fajar): /fajar renders partner content without login",
+          "evidence": [
+            "src/pages/FajarPitch.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "Seed-based fake fleet data may mislead during live demos.",
+            "Pricing hard-coded."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-20.p6xml-demo",
+          "intent": "P6XmlDemo (/p6-xml and /mcfa/p6-xml): Live PMXML round-trip demo: parse sample, show DCMA, export RE memo",
+          "evidence": [
+            "src/pages/P6XmlDemo.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [],
+          "links_to": []
+        },
+        {
+          "id": "stream-20.sitemap-robots",
+          "intent": "sitemap.xml and robots.txt SEO assets: sitemap.xml includes all six public routes",
+          "evidence": [
+            "public/sitemap.xml",
+            "public/robots.txt"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "Hard-coded production domain \u2014 staging serves incorrect canonical URLs."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-20.llms-txt",
+          "intent": "llms.txt LLM-readable site description: llms.txt accurately describes product and links correct routes",
+          "evidence": [
+            "public/llms.txt"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "Hard-coded domain incorrect on staging."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-20.roi-calculator",
+          "intent": "ROI / Pricing Calculator (McfaPitch): McfaPitch pricing calculator present with phase-based ROI projection",
+          "evidence": [
+            "src/pages/McfaPitch.tsx"
+          ],
+          "status": "implemented",
+          "confidence": 1.0,
+          "gaps": [
+            "Values hard-coded."
+          ],
+          "links_to": []
+        },
+        {
+          "id": "stream-20.demo-requests-table",
+          "intent": "demo_requests Supabase table (contact form backend): Demo-request form submits to demo_requests with email, name, message",
+          "evidence": [
+            "src/pages/Landing.tsx"
+          ],
+          "status": "missing",
+          "confidence": 0.0,
+          "gaps": [
+            "Missing DB migration.",
+            "Contact form silently broken in production."
+          ],
+          "links_to": []
+        }
+      ]
+    }
+  ],
+  "cross_stream_links": [
+    {
+      "from": "s01.signup-login",
+      "to": "S03-L01",
+      "kind": "gates"
+    },
+    {
+      "from": "s01.rls-coverage",
+      "to": "S03-L02",
+      "kind": "secures"
+    },
+    {
+      "from": "s02.project-membership",
+      "to": "S03-L01",
+      "kind": "gates"
+    },
+    {
+      "from": "S03-L01",
+      "to": "stream-05.scale-calibration",
+      "kind": "prerequisite"
+    },
+    {
+      "from": "S03-L02",
+      "to": "stream-05.pdf-render",
+      "kind": "feeds"
+    },
+    {
+      "from": "S03-L03",
+      "to": "stream-05.pdf-render",
+      "kind": "feeds"
+    },
+    {
+      "from": "S03-L07",
+      "to": "stream-05.line-tool",
+      "kind": "feeds"
+    },
+    {
+      "from": "S03-L12",
+      "to": "stream-05.scale-calibration",
+      "kind": "feeds"
+    },
+    {
+      "from": "stream-05.line-tool",
+      "to": "06-L2-01",
+      "kind": "feeds"
+    },
+    {
+      "from": "stream-05.polygon-tool",
+      "to": "06-L2-01",
+      "kind": "feeds"
+    },
+    {
+      "from": "stream-05.count-tool",
+      "to": "06-L2-01",
+      "kind": "feeds"
+    },
+    {
+      "from": "stream-05.depth-prompt-cy",
+      "to": "06-L2-01",
+      "kind": "feeds"
+    },
+    {
+      "from": "06-L2-04",
+      "to": "s07.AC-01",
+      "kind": "feeds"
+    },
+    {
+      "from": "06-L2-09",
+      "to": "s07.AC-02",
+      "kind": "feeds"
+    },
+    {
+      "from": "stream-14.line-length",
+      "to": "stream-05.line-tool",
+      "kind": "implements"
+    },
+    {
+      "from": "stream-14.polygon-area-sf",
+      "to": "stream-05.polygon-tool",
+      "kind": "implements"
+    },
+    {
+      "from": "stream-14.sf-conversions",
+      "to": "stream-05.depth-prompt-cy",
+      "kind": "implements"
+    },
+    {
+      "from": "stream-14.hit-testing",
+      "to": "stream-05.drag-handle-editing",
+      "kind": "implements"
+    },
+    {
+      "from": "stream-14.gps-to-plan",
+      "to": "s09.gps-calibration-wizard",
+      "kind": "implements"
+    },
+    {
+      "from": "s04.pdf-canvas-component",
+      "to": "stream-05.pdf-render",
+      "kind": "implements"
+    },
+    {
+      "from": "s04.annotation-tools",
+      "to": "stream-05.line-tool",
+      "kind": "implements"
+    },
+    {
+      "from": "s04.annotation-tools",
+      "to": "stream-05.polygon-tool",
+      "kind": "implements"
+    },
+    {
+      "from": "s04.gps-plan-overlay",
+      "to": "s09.gps-panel-ui",
+      "kind": "implements"
+    },
+    {
+      "from": "stream-11.cpm-computation",
+      "to": "stream-13.dcma-14-audit",
+      "kind": "feeds"
+    },
+    {
+      "from": "stream-11.compliance-strip",
+      "to": "stream-13.schedule-health-panel",
+      "kind": "overlaps"
+    },
+    {
+      "from": "stream-11.dcma-14-audit",
+      "to": "stream-13.dcma-14-audit",
+      "kind": "overlaps"
+    },
+    {
+      "from": "stream-11.tia-generator",
+      "to": "stream-13.tia-generator",
+      "kind": "overlaps"
+    },
+    {
+      "from": "stream-11.progress-spi-cpi",
+      "to": "stream-13.progress-variance",
+      "kind": "overlaps"
+    },
+    {
+      "from": "stream-11.baseline-management",
+      "to": "stream-13.progress-variance",
+      "kind": "feeds"
+    },
+    {
+      "from": "s12.cpm-engine",
+      "to": "stream-11.cpm-computation",
+      "kind": "overlaps"
+    },
+    {
+      "from": "s12.p6-pmxml-import",
+      "to": "stream-11.pmxml-import",
+      "kind": "overlaps"
+    },
+    {
+      "from": "s12.baseline-manager",
+      "to": "stream-11.baseline-management",
+      "kind": "overlaps"
+    },
+    {
+      "from": "s12.gantt-visualization",
+      "to": "stream-11.gantt-rendering",
+      "kind": "overlaps"
+    },
+    {
+      "from": "s12.calendar-management",
+      "to": "stream-11.calendar-manager",
+      "kind": "overlaps"
+    },
+    {
+      "from": "s17.offline-idb-schema",
+      "to": "s15.AC2_optimistic_idb",
+      "kind": "implements"
+    },
+    {
+      "from": "s17.offline-mutate",
+      "to": "s15.AC2_optimistic_idb",
+      "kind": "implements"
+    },
+    {
+      "from": "s17.offline-sync-loop",
+      "to": "s15.AC3_serial_per_row_4_workers",
+      "kind": "implements"
+    },
+    {
+      "from": "s17.offline-mirror",
+      "to": "s15.AC1_offline_serve",
+      "kind": "implements"
+    },
+    {
+      "from": "s17.offline-service-worker",
+      "to": "s15.AC5_capacitor_no_sw",
+      "kind": "implements"
+    },
+    {
+      "from": "s01.signup-login",
+      "to": "s02.signup-organic",
+      "kind": "overlaps"
+    },
+    {
+      "from": "s01.invitations",
+      "to": "s02.invitation-acceptance",
+      "kind": "overlaps"
+    },
+    {
+      "from": "s01.biometric-gate",
+      "to": "s02.biometric-gate",
+      "kind": "overlaps"
+    },
+    {
+      "from": "s01.project-membership",
+      "to": "s02.project-membership",
+      "kind": "overlaps"
+    },
+    {
+      "from": "s01.rls-coverage",
+      "to": "s02.rls-enforcement",
+      "kind": "overlaps"
+    },
+    {
+      "from": "06-L2-04",
+      "to": "S18-2",
+      "kind": "triggers"
+    },
+    {
+      "from": "06-L2-05",
+      "to": "S18-3",
+      "kind": "triggers"
+    },
+    {
+      "from": "06-L2-07",
+      "to": "S18-3",
+      "kind": "feeds"
+    },
+    {
+      "from": "S18-1",
+      "to": "06-L2-01",
+      "kind": "implements"
+    },
+    {
+      "from": "s16.daily-reports-status-side-effects",
+      "to": "06-L2-08",
+      "kind": "implements"
+    },
+    {
+      "from": "s16.send-push-edge-fn",
+      "to": "06-L2-08",
+      "kind": "implements"
+    },
+    {
+      "from": "s19.landing-page-implementation",
+      "to": "stream-20.landing-page",
+      "kind": "overlaps"
+    },
+    {
+      "from": "s19.demo-requests-form",
+      "to": "stream-20.demo-requests-table",
+      "kind": "overlaps"
+    },
+    {
+      "from": "S03-L11",
+      "to": "stream-10.upload",
+      "kind": "feeds"
+    }
+  ]
+}
