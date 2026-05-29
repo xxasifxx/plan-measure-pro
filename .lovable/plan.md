@@ -1,75 +1,72 @@
-## Phase C (revised) — Full-Scope WBS Emergence
+## Phase C revision — deepen scheduling & resource-management leaves before freeze
 
-The bottom-up clustering of 103 work items only describes **what has been built**. The P6 schedule must represent the **whole project**: built work, in-flight work, and unbuilt-but-promised scope from the requirements document and marketing roadmap memories. Phase C now has two tracks that converge into a single frozen WBS.
+You're right. Closing now would freeze a WBS whose Takeoff/PDF side is leaf-rich and whose Scheduling/Resources side is one-liner thin. The current YAMLs treat Fajar as a single marketing pitch page (`MKT-fajar`) when it actually represents the **resource-management product path** — equipment fleet, crew, role rates, utilization, leveling. The gap is structural, not cosmetic.
 
-### Track 1 — Built scope (commit-derived, as previously planned)
+### Diagnosis: what we have vs. what P6 has
 
-1. `scripts/cluster-work-items.mjs` — read-only co-occurrence graph over `docs/work-items.json`. Edge weight = shared-commit count normalized by smaller item's `buildCommitCount`. Items in disjoint time windows (no overlap and gap > 30d) are not connected.
-2. Emit `docs/wbs-proposals.built.json` — one proposal per connected component with member work items, combined commit count, total span, top shared subject tokens. Singletons listed separately. Low-signal tags considered for folding in as evidence.
+Current scheduling leaves (21 SCH-### in `wbs-scheduling-controls-reporting.yaml`) cover CPM, ALAP, calendars, baselines, activities CRUD, Gantt, XER import, PMXML round-trip, Gantt-from-image, DCMA, TIA, SPI/CPI, NJDOT WBS. **What's missing or one-line-thin** compared to P6:
 
-### Track 2 — Planned scope (top-down from authoritative sources)
+- **Resource module** — only "TASKRSRC import" and "cost parsing for ACWP/BCWP" as sub-tasks. No full leaves for: resource library/dictionary, resource codes, resource calendars (distinct from activity calendars), role vs. resource modeling, role rates with effective-date stacks, resource curves (front/back/bell-loaded), resource shifts, resource teams.
+- **Resource assignment** — `ResourceManager.tsx` exists but has zero sub-tasks in the WBS. No leaves for: multi-resource per activity, role→resource staffing, unit/time vs. budgeted-units modes, expense items, material quantity tracking against pay items.
+- **Resource leveling** — completely absent. No leaves for: priority-based leveling, max-units-per-period enforcement, preserve-scheduled-early-dates option, level within float, smoothing vs. leveling, what-if scenarios.
+- **Resource analytics** — absent. No leaves for: resource histograms, stacked-resource-by-activity view, over-allocation report, utilization %, S-curve (resource units + cost), spread by period (day/week/month).
+- **Cost module** — only "TASKRSRC cost parsing" sub-task. No leaves for: cost accounts hierarchy, expense items separate from resources, budgeted vs. actual vs. remaining cost rollups, cost variance reports independent of EVM.
+- **Risk & contingency** — absent. No leaves for: risk register, risk-adjusted schedule (Monte Carlo or 3-point), schedule contingency activities, weather-day calendar.
+- **Reflection / what-if** — absent. No leaves for: copy schedule as scenario, scenario compare, branch-and-merge of schedule edits.
+- **Claims / delay analysis beyond TIA** — thin. No leaves for: windows analysis, time-impact-analysis variants (impacted-as-planned, collapsed-as-built), as-built schedule capture from daily reports.
+- **Code libraries** — absent. No leaves for: activity codes, project codes, resource codes, EPS (Enterprise Project Structure).
+- **Notebook / steps** — absent. No leaves for: activity steps with weighted % complete, activity notebook topics, activity feedback from field.
 
-3. `scripts/extract-planned-scope.mjs` — parses two sources into a normalized list of capability candidates:
-   - `docs/TakeoffPro_Requirements_Document.md` — headings and bullet leaves become candidates with `source: "requirements"`, carrying their section path.
-   - Memory files under `mem://marketing/*`, `mem://features/*`, and any `mem://*roadmap*` — each rule becomes a candidate with `source: "marketing"` or `source: "memory:<file>"`. Aspirational/future-facing language ("will", "roadmap", "planned", "vision") flagged.
-4. Emit `docs/wbs-proposals.planned.json` — each candidate carries `{ name, source, sourceRef, evidenceText }` and no commits.
+### Fajar reframed: the resource-management product path
 
-### Track 3 — Reconciliation (the new core of Phase C)
+Fajar is currently `MKT-fajar` (one leaf: a pitch page). The user-facing pitch is the **tip** of a product path. The path is:
 
-5. `scripts/reconcile-scope.mjs` — for each built proposal, attempt to match one or more planned candidates by:
-   - keyword overlap between proposal's shared subject tokens and candidate name/evidence
-   - path-tag → requirements-section heuristic table (e.g. `lib:p6xml` → "Scheduling / P6 XML round-trip"; `page:field-report` → "Field Reporting / Daily reports")
-   Output `docs/wbs-proposals.reconciled.json` with three buckets per top-level surface:
-   - **built** — has commits, matched to a planned candidate (status will be `built` or `in-progress` depending on last-commit recency vs. today)
-   - **partial** — has commits but planned candidate lists sub-capabilities none of the commits touch (status `in-progress`, with unbuilt sub-leaves listed)
-   - **planned** — planned candidate with no commit match (status `planned`)
-6. Top-level surfaces are derived, not pre-declared. Candidates: `Takeoff`, `Scheduling`, `Field Operations`, `Native / Offline`, `Marketing & Sales`, `Auth & Admin`, `Backend & Infra`, `Project Bootstrap`, plus any surface that emerges from requirements sections with no built counterpart (e.g. an unbuilt "Integrations" surface).
+```
+Fajar pitch (sales artifact)
+  → Equipment-rental fleet model (units, categories, day-rates, utilization)
+  → Crew composition (operator + equipment as bundled resource)
+  → Day-rate billing export to invoicing
+  → Fleet utilization dashboard (idle vs. assigned, by yard)
+  → Equipment maintenance windows as calendar exceptions
+  → Cross-project resource pool (one excavator, many projects)
+  → Resource leveling against the shared pool
+  → Rental P&L per unit per project
+```
 
-### Hand-review checkpoint
+Every arrow above is a planned leaf the current WBS does not contain. Treating Fajar as a marketing leaf alone hides ~12 capability leaves of resource-management work.
 
-7. You and I walk `wbs-proposals.reconciled.json` together — decide names, keep/split/merge, confirm which planned items make the cut for this schedule vs. defer. Specifically for each `planned` leaf, you confirm or override the rough duration (see step 8).
+### Plan — deepen, then close
 
-### Freeze WBS
+I'll spawn **four parallel capable subagents**, each scoped to one gap area, before any freeze. No code or WBS files written until you approve the freeze.
 
-8. Write `docs/wbs.json`. Every leaf carries:
-   - `id`, `name`, `parentSurface`
-   - `status`: `built` | `in-progress` | `planned`
-   - `workItemIds[]` (empty for `planned`)
-   - `commitWindow` (null for `planned`)
-   - `plannedDuration` (only for `planned` / unbuilt sub-leaves of `in-progress`) — proposed by `scripts/propose-planned-durations.mjs` using analogous built leaves: median build-burst span + median refine count, scaled by a complexity factor inferred from how many sub-bullets the requirements doc gives the candidate. You override during the hand-review.
-   - `sources[]`: `["commits"]`, `["requirements:<section>"]`, `["memory:<file>"]`, or a combination.
-   - Every `built` leaf is still backed by ≥3 commits.
+**Subagent 1 — Resource management module (P6-parity)**
+Produce `/mnt/documents/wbs-resource-management.yaml` covering: resource library, resource calendars, roles + rates, resource assignments (multi-resource, role-staffing), resource curves, resource leveling (full algorithm leaf with sub-tasks for priority rules, max-units enforcement, level-within-float, smoothing), resource histograms + S-curves, over-allocation report, resource codes, resource teams/shifts. Each leaf with status (mostly `aspirational`/`planned`), durationDays, 4–7 sub-tasks, prerequisites pointing into existing SCH-### leaves.
 
-### Sanity report
+**Subagent 2 — Fajar resource-management product path**
+Produce `/mnt/documents/wbs-fajar-product.yaml` with the 12-leaf path above. Each leaf links upstream to Subagent 1's resource leaves as prerequisites, and downstream to existing marketing/pricing/auth leaves. Distinguish the **Fajar pitch artifact** (shipped MKT-fajar) from the **Fajar product capability** (planned/aspirational FAJ-### leaves).
 
-9. Print: built leaf count, in-progress count, planned count, coverage of requirements-doc sections (% with a matched leaf), orphan commits, orphan planned candidates (rejected during reconciliation), cross-leaf commits (future hardening milestone candidates).
+**Subagent 3 — Cost, EVM, risk, claims, scenarios**
+Produce `/mnt/documents/wbs-cost-risk-claims.yaml` covering: cost accounts hierarchy, expense items, budgeted/actual/remaining rollups, full EVM (BCWS/BCWP/ACWP/EAC/VAC/SPI/CPI/TCPI) as separate leaves from current "TASKRSRC parsing" sub-task, risk register, 3-point estimation + Monte Carlo, weather calendar, schedule contingency activity pattern, claims analysis (windows, impacted-as-planned, collapsed-as-built), as-built schedule from daily-report data-date snapshots, scenario/reflection branch+merge.
 
-### Phase D implication (preview, not executed yet)
+**Subagent 4 — Scheduling extras + cross-cutting depth audit**
+Produce `/mnt/documents/wbs-scheduling-extras.yaml` covering: activity codes, project codes, EPS, activity steps with weighted %, activity notebook, field feedback loop. Then audit **all existing 204 leaves** across the 6 YAMLs for one-line sub-tasks and emit `/mnt/documents/wbs-depth-audit.md` flagging any leaf whose sub-tasks are <4 or look like a heading rather than work. Output an actionable patch list of leaves needing expansion.
 
-- `built` leaves → activities generated from commits (build burst + Refine-N, gap > 7d rule).
-- `in-progress` leaves → same, plus one `Build-Remaining` activity per unbuilt sub-leaf with proposed duration, scheduled after last commit.
-- `planned` leaves → single `Build` activity with proposed duration, no predecessor from commits; logic ties are added during the schedule-fixture step.
+### After subagents return
 
-### Explicitly NOT doing in Phase C
+1. I review their outputs and the depth-audit patch list, then come back to you with:
+   - Summary of new leaves added per surface (delta from ~204 baseline).
+   - List of leaves the audit flagged for expansion, with proposed new sub-tasks inline.
+   - Revised Phase C close-out sequence (consolidate → reconcile → split megacluster → freeze).
+2. You either approve the freeze or redline the additions.
+3. **Only then** do I switch to build mode and write `scripts/consolidate-wbs.mjs`, `scripts/split-megacluster.mjs`, `docs/wbs.json`, `docs/wbs.md`, updated `.lovable/plan.md`.
 
-- No activities, no Build/Refine split, no durations on built leaves, no audit subagents.
-- No app code, no exporter edits, no back-projected baselines.
-- No pre-declared top-down surfaces — surfaces emerge from reconciliation.
-- No commitment that every requirements-doc bullet becomes a leaf — you cull during hand-review.
+### Explicit non-goals for this revision
 
-### Deliverables
+- No leaves written to `docs/` in this step — only `/mnt/documents/` drafts from subagents.
+- No commit-to-leaf reconciliation yet.
+- No durations re-estimated on existing shipped leaves — only new planned/aspirational ones.
+- No culling. Everything stays in scope until you say cut.
 
-- `scripts/cluster-work-items.mjs` (new, read-only)
-- `scripts/extract-planned-scope.mjs` (new, read-only)
-- `scripts/reconcile-scope.mjs` (new, read-only)
-- `scripts/propose-planned-durations.mjs` (new, read-only)
-- `docs/wbs-proposals.built.json` (new)
-- `docs/wbs-proposals.planned.json` (new)
-- `docs/wbs-proposals.reconciled.json` (new)
-- `docs/wbs.json` (new — written only after hand-review)
-- `.lovable/plan.md` (edited)
+### What I need from you
 
-### Checkpoints where I stop and wait
-
-- After step 5 (reconciled proposals emitted) — full review before any naming/cull decisions.
-- After step 7 (your decisions captured) — before I write `wbs.json`.
+A single "go deepen" and I spawn all four subagents in parallel. No checkpoints between spawn and synthesis — the next thing you see from me is the consolidated review with the new leaf counts.
