@@ -1,33 +1,47 @@
 #!/usr/bin/env node
-// Phase 2 comprehension: reads docs/streams/*.md as authoritative truth and
-// reconciles it against .lovable/wbs/{wbs,activities}.json. Produces
-// .lovable/wbs/comprehension.json with per-criterion verdicts, per-stream
-// handoffs, per-stream risks/debt, and a per-activity status override map.
+// Read each docs/streams/NN-*.md and emit:
+//   .lovable/wbs/comprehension.json
 //
-// Input docs are highly regular:
-//   ## Acceptance criteria        — canonical list of N criteria (bullets, numbered or not)
-//   ## Current state vs criteria  — same N items, each with a status keyword and evidence
-//   ## Cross-stream handoffs      — bullets like **Feeds → X** or **Consumes ← Y**
-//   ## Risks / debt               — numbered list of remaining concerns
-//
-// We pair criteria↔current-state by ordinal position (most reliable), with a
-// fallback fuzzy match on shared significant tokens for streams where lengths
-// differ.
+// Self-contained: parses the YAML front-matter (`stream_key`, `paths`,
+// `shared_paths`) and the body sections (Acceptance criteria, Current state,
+// Cross-stream handoffs, Risks/debt). Replaces the old version which
+// depended on a pre-built wbs.json + activities.json.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const STREAMS_DIR = path.join(root, 'docs/streams');
-const WBS = JSON.parse(fs.readFileSync(path.join(root, '.lovable/wbs/wbs.json'), 'utf8'));
-const ACTS = JSON.parse(fs.readFileSync(path.join(root, '.lovable/wbs/activities.json'), 'utf8'));
+
+// ---------- mini YAML front-matter parser (only what we emit) ----------
+function parseFrontMatter(md) {
+  if (!md.startsWith('---\n')) return { data: {}, body: md };
+  const end = md.indexOf('\n---\n', 4);
+  if (end === -1) return { data: {}, body: md };
+  const yaml = md.slice(4, end);
+  const body = md.slice(end + 5);
+  const data = {};
+  let curKey = null;
+  for (const raw of yaml.split('\n')) {
+    if (!raw.trim() || raw.startsWith('#')) continue;
+    const list = raw.match(/^\s*-\s+(.*?)(?:\s+#.*)?$/);
+    if (list && curKey) { (data[curKey] ||= []).push(list[1].trim()); continue; }
+    const kv = raw.match(/^([A-Za-z_][\w-]*)\s*:\s*(.*?)(?:\s+#.*)?$/);
+    if (kv) {
+      curKey = kv[1];
+      const val = kv[2].trim();
+      if (val === '' || val === '[]') data[curKey] = [];
+      else data[curKey] = val.replace(/^['"]|['"]$/g, '');
+    }
+  }
+  return { data, body };
+}
 
 // ---------- markdown sectioner ----------
 function splitSections(md) {
   const out = {};
-  const lines = md.split('\n');
   let cur = null;
-  for (const ln of lines) {
+  for (const ln of md.split('\n')) {
     const h = ln.match(/^##\s+(.+?)\s*$/);
     if (h) { cur = h[1].trim(); out[cur] = []; continue; }
     if (cur) out[cur].push(ln);
@@ -35,8 +49,6 @@ function splitSections(md) {
   return Object.fromEntries(Object.entries(out).map(([k, v]) => [k, v.join('\n').trim()]));
 }
 
-// ---------- bullet extractor ----------
-// Captures all top-level `- ` or `1. ` items, joining continuation lines.
 function bullets(section) {
   if (!section) return [];
   const items = [];
@@ -51,18 +63,12 @@ function bullets(section) {
   return items.map(s => s.trim()).filter(Boolean);
 }
 
-// ---------- verdict classifier ----------
-// Stream docs use three interchangeable formats:
-//   **Title**: Implemented — evidence
-//   **Title** — implemented; evidence
-//   **Implemented** — evidence              (bold IS the verdict — common in 11-15)
-// We scan both the bold prefix and the first ~160 body chars for status keywords.
+// ---------- verdict ----------
 function classify(stateLine) {
   if (!stateLine) return 'unknown';
   const bold = (stateLine.match(/^\*\*([^*]+)\*\*/) || [, ''])[1].toLowerCase();
   const body = stateLine.replace(/^\*\*[^*]+\*\*\s*[:—-]\s*/, '').slice(0, 160).toLowerCase();
   const scan = bold + ' ' + body;
-  // Negative first
   if (/\b(not implemented|never implemented|no longer|not started|missing\b|absent|stubbed only)\b/.test(scan)) return 'missing';
   if (/\b(partial|partly|in[- ]flight|in progress|fragile|leaky|but\b.*(?:not|never|missing)|implemented but)\b/.test(scan)) return 'partial';
   if (/\b(implemented|shipped|done|complete|wired|landed)\b/.test(scan)) return 'implemented';
@@ -70,16 +76,9 @@ function classify(stateLine) {
   if (/\b(aspirational|future|vision|roadmap)\b/.test(scan)) return 'aspirational';
   return 'unknown';
 }
-
 const VERDICT_PCT = { implemented: 100, shipped: 100, partial: 50, planned: 0, missing: 0, aspirational: 0, unknown: 25 };
 
 // ---------- handoff parser ----------
-// Accepts any of:
-//   **Feeds → schedule-management**: ...
-//   **Feeds schedule-management**: ...
-//   **Consumes ← measurement-and-geometry-engine**: ...
-//   **Feeds everything**: ...        (skipped — no specific target)
-//   **Seam**: ...                    (kept, target null)
 const HANDOFF_RE = /\*\*(Feeds|Consumes|Seam|Provides|Receives)(?:\s*(?:→|←|->|<-)?\s*([a-z0-9-]+))?\*\*\s*:?\s*(.*)/i;
 function parseHandoff(line) {
   const m = line.match(HANDOFF_RE);
@@ -87,7 +86,6 @@ function parseHandoff(line) {
   const kind = m[1].toLowerCase();
   let target = m[2] || null;
   const desc = (m[3] || '').replace(/^[-—:\s]+/, '').trim();
-  // Skip generic-target words ("everything", "all", "every")
   if (target && /^(everything|all|every|various|several)$/i.test(target)) target = null;
   let direction = 'related';
   if (kind === 'feeds' || /^provides/.test(kind)) direction = 'outbound';
@@ -95,14 +93,27 @@ function parseHandoff(line) {
   return { kind, direction, target, desc };
 }
 
-// ---------- per-stream comprehension ----------
+// ---------- file path extraction from criterion evidence ----------
+// Pull every `path/with/slash.ext` reference from a string so we can later
+// overlap risks/criteria with file leaves.
+const PATH_RE = /`([a-zA-Z0-9_./@-]+\.[a-zA-Z]{1,5})(?::\d+(?:[–-]\d+)?)?`/g;
+function extractPaths(text) {
+  if (!text) return [];
+  const out = [];
+  let m;
+  while ((m = PATH_RE.exec(text))) out.push(m[1]);
+  return [...new Set(out)];
+}
+
+// ---------- main ----------
 const streamFiles = fs.readdirSync(STREAMS_DIR).filter(f => /^\d{2}-.+\.md$/.test(f)).sort();
 const streams = {};
 for (const f of streamFiles) {
-  const key = f.replace(/\.md$/, '');       // "01-identity-and-access"
-  const md = fs.readFileSync(path.join(STREAMS_DIR, f), 'utf8');
-  const sec = splitSections(md);
-  const title = (md.match(/^#\s+(.+)$/m) || [, key])[1].trim();
+  const key = f.replace(/\.md$/, '');
+  const raw = fs.readFileSync(path.join(STREAMS_DIR, f), 'utf8');
+  const { data: fm, body } = parseFrontMatter(raw);
+  const sec = splitSections(body);
+  const title = (body.match(/^#\s+(.+)$/m) || [, key])[1].trim();
 
   const critRaw = bullets(sec['Acceptance criteria']);
   const stateRaw = bullets(sec['Current state vs criteria']);
@@ -112,7 +123,6 @@ for (const f of streamFiles) {
     const cText = critRaw[i] || '';
     const sText = stateRaw[i] || '';
     const verdict = classify(sText);
-    // Extract evidence after the em-dash if present
     const ev = sText.split(/\s+—\s+/).slice(1).join(' — ').trim();
     criteria.push({
       id: `${key}#c${i + 1}`,
@@ -120,6 +130,7 @@ for (const f of streamFiles) {
       text: cText.replace(/^\*\*[^*]+\*\*:\s*/, ''),
       verdict,
       evidence: ev || null,
+      evidence_paths: extractPaths(sText),
       raw_state: sText || null,
     });
   }
@@ -127,14 +138,12 @@ for (const f of streamFiles) {
   const handoffs = bullets(sec['Cross-stream handoffs']).map(parseHandoff).filter(Boolean);
   const risks = bullets(sec['Risks / debt']).map((text, i) => ({
     n: i + 1, text,
-    // Heuristic severity: capital words / "silent", "fragile", "race"
     severity:
       /\b(crash|race|silent|fragile|destructive|leak|unauthorized|bypass)\b/i.test(text) ? 'high' :
       /\b(missing|broken|never|stale|untyped|no test|untested)\b/.test(text) ? 'medium' : 'low',
+    paths: extractPaths(text),
   }));
-  const surfaces = bullets(sec['Surfaces (files)']);
 
-  // Aggregate stream health
   const counts = { implemented: 0, partial: 0, planned: 0, missing: 0, aspirational: 0, unknown: 0 };
   let pctSum = 0;
   for (const c of criteria) {
@@ -144,142 +153,56 @@ for (const f of streamFiles) {
   const stream_percent = criteria.length ? Math.round(pctSum / criteria.length) : 0;
 
   streams[key] = {
-    key, title, criteria, handoffs, risks, surfaces,
+    key,
+    title,
+    paths: Array.isArray(fm.paths) ? fm.paths : [],
+    shared_paths: Array.isArray(fm.shared_paths) ? fm.shared_paths : [],
+    criteria,
+    handoffs,
+    risks,
     counts,
     stream_percent,
-    remaining_work_units: counts.partial * 1 + counts.planned * 2 + counts.missing * 3 + counts.aspirational * 5 + risks.length,
+    remaining_work_units: counts.partial + counts.planned * 2 + counts.missing * 3 + counts.aspirational * 5 + risks.length,
   };
 }
 
-// ---------- leaf → stream key map ----------
-const leafById = new Map(WBS.leaves.map(l => [l.id, l]));
-function streamKeyOf(leaf) {
-  if (!leaf) return null;
-  return leaf.streamKey || (leaf.stream || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || null;
-}
-
-// ---------- activity overrides ----------
-// For each activity, look up its leaf → stream. Use the stream's criteria pool
-// as the truth set for that activity's region. Activities of `origin=git` get
-// status from leaf criteria verdicts; future-origin activities map to the
-// "remaining-work" residue (partial/planned/missing criteria + risks).
-const overrides = [];
-const streamActivityIndex = new Map();   // streamKey → activities
-for (const act of ACTS.activities) {
-  const leaf = leafById.get(act.primary_leaf);
-  const sk = streamKeyOf(leaf);
-  if (!sk || !streams[sk]) { overrides.push({ id: act.id, reason: 'no-stream-mapping' }); continue; }
-  if (!streamActivityIndex.has(sk)) streamActivityIndex.set(sk, []);
-  streamActivityIndex.get(sk).push(act);
-}
-
-for (const [sk, acts] of streamActivityIndex) {
-  const s = streams[sk];
-  const totalCriteria = s.criteria.length || 1;
-  const remaining = s.criteria.filter(c => c.verdict !== 'implemented' && c.verdict !== 'shipped');
-
-  // Split: git-origin activities represent shipped/in-flight work;
-  // future-origin activities represent remaining work.
-  const past = acts.filter(a => a.origin === 'git');
-  const future = acts.filter(a => a.origin !== 'git');
-
-  // Past activities: percent_complete is the stream's implemented ratio,
-  // scaled by the activity's own commit-count weight within past commits.
-  const totalCommits = past.reduce((s, a) => s + (a.effort?.commit_count || 0), 0) || 1;
-  for (const a of past) {
-    const share = (a.effort?.commit_count || 0) / totalCommits;
-    overrides.push({
-      id: a.id,
-      stream: sk,
-      criteria_verdicts: s.counts,
-      percent_complete: s.stream_percent,
-      lifecycle:
-        s.stream_percent >= 95 ? 'shipped' :
-        s.stream_percent >= 50 ? 'in-flight' :
-        s.stream_percent > 0 ? 'in-flight' : 'planned',
-      stream_share: Math.round(share * 1000) / 1000,
-      remaining_criteria_count: remaining.length,
-      reason: 'past-stream-aggregate',
-    });
-  }
-
-  // Future activities: distribute remaining criteria + risks across them.
-  // Duration heuristic: each remaining criterion = 3d, each risk = 2d.
-  const totalRemainingUnits = s.remaining_work_units || 1;
-  const perFutureUnits = future.length ? totalRemainingUnits / future.length : 0;
-  for (const a of future) {
-    const days = Math.max(1, Math.round(perFutureUnits * 2.5));
-    overrides.push({
-      id: a.id,
-      stream: sk,
-      criteria_verdicts: s.counts,
-      percent_complete: 0,
-      lifecycle: 'planned',
-      duration_days: days,
-      assigned_remaining_units: Math.round(perFutureUnits * 100) / 100,
-      remaining_criteria_count: remaining.length,
-      reason: `future-share-of-${s.remaining_work_units}-remaining-units`,
-    });
-  }
-}
-
-// ---------- handoff edges between activities ----------
-// A handoff "Feeds → X" in stream Y means: a representative past activity in Y
-// is a predecessor of a representative activity in X. We pick the largest
-// past activity (by commits) per stream as the "anchor."
-const anchorByStream = new Map();
-for (const [sk, acts] of streamActivityIndex) {
-  const past = acts.filter(a => a.origin === 'git')
-    .sort((x, y) => (y.effort?.commit_count || 0) - (x.effort?.commit_count || 0));
-  if (past[0]) anchorByStream.set(sk, past[0].id);
-}
-const handoffEdges = [];
+// Cross-stream handoff edges land in the activities pass; here we emit the
+// structured handoff list as raw data only.
+const handoff_records = [];
 for (const s of Object.values(streams)) {
   for (const h of s.handoffs) {
     if (!h.target) continue;
-    // Match target by suffix (handoff target is the kebab name w/o numeric prefix)
     const targetKey = Object.keys(streams).find(k => k.endsWith('-' + h.target) || k === h.target || k.slice(3) === h.target);
     if (!targetKey) continue;
     const fromKey = h.direction === 'outbound' ? s.key : targetKey;
     const toKey = h.direction === 'outbound' ? targetKey : s.key;
-    const fromAct = anchorByStream.get(fromKey);
-    const toAct = anchorByStream.get(toKey);
-    if (!fromAct || !toAct || fromAct === toAct) continue;
-    handoffEdges.push({
-      pred: fromAct, succ: toAct, type: 'FS', lag: 0,
-      source: 'stream-doc-handoff',
-      confidence: 0.9,
-      note: `${s.key} ${h.kind} ${h.direction} ${targetKey}: ${h.desc.slice(0, 100)}`,
-    });
+    handoff_records.push({ from: fromKey, to: toKey, kind: h.kind, desc: h.desc.slice(0, 200) });
   }
 }
 
-// ---------- write ----------
 const out = {
   generatedAt: new Date().toISOString(),
   streams,
+  handoff_records,
   totals: {
     streams: Object.keys(streams).length,
     criteria: Object.values(streams).reduce((s, x) => s + x.criteria.length, 0),
     handoffs: Object.values(streams).reduce((s, x) => s + x.handoffs.length, 0),
     risks: Object.values(streams).reduce((s, x) => s + x.risks.length, 0),
+    paths_declared: Object.values(streams).reduce((s, x) => s + x.paths.length, 0),
     verdict_histogram: Object.values(streams).reduce((acc, s) => {
       for (const c of s.criteria) acc[c.verdict] = (acc[c.verdict] || 0) + 1;
       return acc;
     }, {}),
-    activity_overrides: overrides.length,
-    handoff_edges: handoffEdges.length,
+    handoff_records: handoff_records.length,
   },
-  activity_overrides: overrides,
-  handoff_edges: handoffEdges,
 };
 const outPath = path.join(root, '.lovable/wbs/comprehension.json');
+fs.mkdirSync(path.dirname(outPath), { recursive: true });
 fs.writeFileSync(outPath, JSON.stringify(out, null, 2));
-console.log('streams:', out.totals.streams,
-            ' criteria:', out.totals.criteria,
-            ' handoffs:', out.totals.handoffs,
-            ' risks:', out.totals.risks);
-console.log('verdict histogram:', out.totals.verdict_histogram);
-console.log('activity overrides:', out.totals.activity_overrides,
-            ' handoff edges:', out.totals.handoff_edges);
-console.log('wrote', path.relative(root, outPath));
+console.log('[comprehension] streams:', out.totals.streams,
+  '  criteria:', out.totals.criteria,
+  '  risks:', out.totals.risks,
+  '  paths-declared:', out.totals.paths_declared);
+console.log('[comprehension] verdict histogram:', out.totals.verdict_histogram);
+console.log('[comprehension] handoff records:', out.totals.handoff_records);
