@@ -13,7 +13,6 @@ import ProjectControls from "./pages/ProjectControls";
 import Demo from "./pages/Demo";
 import McfaPitch from "./pages/McfaPitch";
 import FajarPitch from "./pages/FajarPitch";
-import XerDemo from "./pages/XerDemo";
 import P6XmlDemo from "./pages/P6XmlDemo";
 import P6Export from "./pages/P6Export";
 import ReReview from "./pages/ReReview";
@@ -120,7 +119,6 @@ const App = () => (
                 <Route path="/demo" element={<Demo />} />
                 <Route path="/mcfa" element={<McfaPitch />} />
                 <Route path="/fajar" element={<FajarPitch />} />
-                <Route path="/mcfa/demo" element={<XerDemo />} />
                 <Route path="/p6-xml" element={<P6XmlDemo />} />
                 <Route path="/mcfa/p6-xml" element={<P6XmlDemo />} />
                 <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />

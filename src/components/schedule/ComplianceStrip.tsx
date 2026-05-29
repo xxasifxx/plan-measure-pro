@@ -1,8 +1,21 @@
 import { useMemo } from 'react';
 import type { ActivityRelationship, ScheduleActivity } from '@/lib/schedule/types';
-import { NJDOT_REQUIRED_MILESTONES } from '@/lib/xer/wbs';
 import { AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+
+// Per NJDOT Construction Scheduling Standard Coding and Procedures Manual.
+// These M-codes are required milestones on every NJDOT capital project schedule.
+const NJDOT_REQUIRED_MILESTONES: { code: string; name: string }[] = [
+  { code: 'M100', name: 'Advertisement Date' },
+  { code: 'M200', name: 'Bid Opening' },
+  { code: 'M300', name: 'Award Date' },
+  { code: 'M400', name: 'Notice to Proceed' },
+  { code: 'M500', name: 'Construction Start Date' },
+  { code: 'M600', name: 'Substantial Completion' },
+  { code: 'M700', name: 'Final Inspection' },
+  { code: 'M800', name: 'Punch List Complete' },
+  { code: 'M950', name: 'Project Completion (Final Acceptance)' },
+];
 
 interface Props {
   activities: ScheduleActivity[];
