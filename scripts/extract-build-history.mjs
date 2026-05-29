@@ -221,28 +221,41 @@ function main() {
   const projectStart = commits[0].date;
   const projectEnd = commits[commits.length - 1].date;
 
-  // Aggregate per WBS leaf.
-  const byWbs = new Map(); // wbs → { commits:[{iso,subject,hash,files}], files:Set }
-  const unmapped = new Map(); // file → commit count, for tuning the glob map
-  for (const c of commits) {
+  // Split by kind.
+  const buildCommits = commits.filter(c => c.kind === 'build');
+  const acceptanceCommits = commits.filter(c => c.kind === 'acceptance');
+  const bootstrapCommits = commits.filter(c => c.kind === 'bootstrap');
+
+  // Aggregate per WBS leaf (build commits).
+  const byWbs = new Map(); // wbs → { commits:[], acceptances:[], files:Set }
+  const unmapped = new Map();
+  for (const c of buildCommits) {
     const wbsTouched = new Set();
     for (const f of c.files) {
       const w = classifyFile(f);
-      if (!w) {
-        unmapped.set(f, (unmapped.get(f) || 0) + 1);
-        continue;
-      }
+      if (!w) { unmapped.set(f, (unmapped.get(f) || 0) + 1); continue; }
       wbsTouched.add(w);
       let entry = byWbs.get(w);
-      if (!entry) {
-        entry = { commits: [], files: new Set() };
-        byWbs.set(w, entry);
-      }
+      if (!entry) { entry = { commits: [], acceptances: [], files: new Set() }; byWbs.set(w, entry); }
       entry.files.add(f);
     }
     for (const w of wbsTouched) {
-      // Record this commit once per WBS it touched.
       byWbs.get(w).commits.push({ hash: c.hash, iso: c.iso, date: c.date, subject: c.subject });
+    }
+  }
+
+  // Attribute each acceptance (merge) to the WBS leaves touched by build
+  // commits since the previous merge — that's what the user actually accepted.
+  let pendingWbs = new Set();
+  for (const c of commits) {
+    if (c.kind === 'build') {
+      for (const f of c.files) { const w = classifyFile(f); if (w) pendingWbs.add(w); }
+    } else if (c.kind === 'acceptance') {
+      for (const w of pendingWbs) {
+        const entry = byWbs.get(w);
+        if (entry) entry.acceptances.push({ hash: c.hash, iso: c.iso, date: c.date, subject: c.subject });
+      }
+      pendingWbs = new Set();
     }
   }
 
