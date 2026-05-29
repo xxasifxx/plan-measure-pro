@@ -10,7 +10,9 @@
 // Each leaf gets a `fileGlobs` list used later by the commit mapper.
 // Unmatched files in a stream are not invented here; instead the mapper bucket
 // strays into a `Stream/Layer/_unattributed` leaf at attribution time.
-import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync, statSync } from 'node:fs';
+import { join } from 'node:path';
+
 
 const STREAM_DIR = 'docs/streams';
 const INVENTORY_DIR = 'docs/scope-inventory';
