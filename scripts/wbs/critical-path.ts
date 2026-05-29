@@ -86,16 +86,18 @@ for (const r of relationshipsDb) {
 const wbsActs = JSON.parse(
   fs.readFileSync(path.join(root, '.lovable/wbs/activities.json'), 'utf8'),
 ).activities;
-const wbsActByExt = new Map(wbsActs.map((a: any) => [a.id, a]));
+const wbsActByActId = new Map(wbsActs.map((a: any) => [a.id, a]));
 const wbsLeaves = JSON.parse(fs.readFileSync(path.join(root, '.lovable/wbs/wbs.json'), 'utf8')).leaves;
 const leafStream = new Map<string, string>(wbsLeaves.map((l: any) => [l.id, l.streamKey]));
-const streamOf = (extId: string): string => {
-  const a: any = wbsActByExt.get(extId);
+const streamOfUuid = (uuid: string): string => {
+  const actId = uuidToActId.get(uuid);
+  const a: any = actId ? wbsActByActId.get(actId) : null;
   if (!a) return '?';
   return leafStream.get(a.primary_leaf) || '?';
 };
-const originOf = (extId: string): string => {
-  const a: any = wbsActByExt.get(extId);
+const originOfUuid = (uuid: string): string => {
+  const actId = uuidToActId.get(uuid);
+  const a: any = actId ? wbsActByActId.get(actId) : null;
   return a?.origin || '?';
 };
 
