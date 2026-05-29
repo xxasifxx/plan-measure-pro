@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-29T19:59:41.191Z",
+  "generatedAt": "2026-05-29T20:00:39.408Z",
   "data_date": "2026-05-29",
   "project_finish": "2026-07-02",
   "tail": {
@@ -12,13 +12,13 @@
   "after_data_date": 12,
   "phases": [
     {
-      "stream": "?",
+      "stream": "04-pay-item-catalog",
       "steps": [
         {
           "ext_id": "T:1858",
           "name": "[stub] db: pay_items",
-          "stream": "?",
-          "origin": "?",
+          "stream": "04-pay-item-catalog",
+          "origin": "future-risk",
           "early_start": "2026-05-29",
           "early_finish": "2026-06-02",
           "duration_days": 2,
@@ -27,8 +27,8 @@
         {
           "ext_id": "T:2104",
           "name": "[verify] 04:remaining:cascade-deletion-done-client-side-via-n--4",
-          "stream": "?",
-          "origin": "?",
+          "stream": "04-pay-item-catalog",
+          "origin": "future-verification-gap",
           "early_start": "2026-06-02",
           "early_finish": "2026-06-04",
           "duration_days": 2,
@@ -41,8 +41,8 @@
         {
           "ext_id": "T:2100",
           "name": "[verify] 04:docs:contract-modifications",
-          "stream": "?",
-          "origin": "?",
+          "stream": "04-pay-item-catalog",
+          "origin": "future-verification-gap",
           "early_start": "2026-06-04",
           "early_finish": "2026-06-08",
           "duration_days": 2,
@@ -55,8 +55,8 @@
         {
           "ext_id": "T:2099",
           "name": "[verify] 04:docs:contract-quantity-denominator",
-          "stream": "?",
-          "origin": "?",
+          "stream": "04-pay-item-catalog",
+          "origin": "future-verification-gap",
           "early_start": "2026-06-08",
           "early_finish": "2026-06-10",
           "duration_days": 2,
@@ -69,8 +69,8 @@
         {
           "ext_id": "T:2097",
           "name": "[verify] 04:docs:db-persistence",
-          "stream": "?",
-          "origin": "?",
+          "stream": "04-pay-item-catalog",
+          "origin": "future-verification-gap",
           "early_start": "2026-06-10",
           "early_finish": "2026-06-12",
           "duration_days": 2,
@@ -83,8 +83,8 @@
         {
           "ext_id": "T:2095",
           "name": "[verify] 04:docs:delete-cascade",
-          "stream": "?",
-          "origin": "?",
+          "stream": "04-pay-item-catalog",
+          "origin": "future-verification-gap",
           "early_start": "2026-06-12",
           "early_finish": "2026-06-16",
           "duration_days": 2,
@@ -97,8 +97,8 @@
         {
           "ext_id": "T:2094",
           "name": "[verify] 04:docs:drawable-flag",
-          "stream": "?",
-          "origin": "?",
+          "stream": "04-pay-item-catalog",
+          "origin": "future-verification-gap",
           "early_start": "2026-06-16",
           "early_finish": "2026-06-18",
           "duration_days": 2,
@@ -111,8 +111,8 @@
         {
           "ext_id": "T:2096",
           "name": "[verify] 04:docs:edit-inline",
-          "stream": "?",
-          "origin": "?",
+          "stream": "04-pay-item-catalog",
+          "origin": "future-verification-gap",
           "early_start": "2026-06-18",
           "early_finish": "2026-06-22",
           "duration_days": 2,
@@ -125,8 +125,8 @@
         {
           "ext_id": "T:2102",
           "name": "[verify] 04:remaining:no-contract-modification-workflow-exists-2",
-          "stream": "?",
-          "origin": "?",
+          "stream": "04-pay-item-catalog",
+          "origin": "future-verification-gap",
           "early_start": "2026-06-22",
           "early_finish": "2026-06-24",
           "duration_days": 2,
@@ -139,8 +139,8 @@
         {
           "ext_id": "T:2103",
           "name": "[verify] 04:remaining:pay-item-color-auto-assigned-from-sectio-3",
-          "stream": "?",
-          "origin": "?",
+          "stream": "04-pay-item-catalog",
+          "origin": "future-verification-gap",
           "early_start": "2026-06-24",
           "early_finish": "2026-06-26",
           "duration_days": 2,
@@ -153,8 +153,8 @@
         {
           "ext_id": "T:2098",
           "name": "[verify] 04:docs:section-keyed-colors",
-          "stream": "?",
-          "origin": "?",
+          "stream": "04-pay-item-catalog",
+          "origin": "future-verification-gap",
           "early_start": "2026-06-26",
           "early_finish": "2026-06-30",
           "duration_days": 2,
@@ -167,8 +167,8 @@
         {
           "ext_id": "T:2101",
           "name": "[verify] 04:remaining:updatepayitems-issues-full-delete-bulk-i-1",
-          "stream": "?",
-          "origin": "?",
+          "stream": "04-pay-item-catalog",
+          "origin": "future-verification-gap",
           "early_start": "2026-06-30",
           "early_finish": "2026-07-02",
           "duration_days": 2,
@@ -189,8 +189,8 @@
     {
       "ext_id": "T:1858",
       "name": "[stub] db: pay_items",
-      "stream": "?",
-      "origin": "?",
+      "stream": "04-pay-item-catalog",
+      "origin": "future-risk",
       "early_start": "2026-05-29",
       "early_finish": "2026-06-02",
       "duration_days": 2,
@@ -199,8 +199,8 @@
     {
       "ext_id": "T:2104",
       "name": "[verify] 04:remaining:cascade-deletion-done-client-side-via-n--4",
-      "stream": "?",
-      "origin": "?",
+      "stream": "04-pay-item-catalog",
+      "origin": "future-verification-gap",
       "early_start": "2026-06-02",
       "early_finish": "2026-06-04",
       "duration_days": 2,
@@ -213,8 +213,8 @@
     {
       "ext_id": "T:2100",
       "name": "[verify] 04:docs:contract-modifications",
-      "stream": "?",
-      "origin": "?",
+      "stream": "04-pay-item-catalog",
+      "origin": "future-verification-gap",
       "early_start": "2026-06-04",
       "early_finish": "2026-06-08",
       "duration_days": 2,
@@ -227,8 +227,8 @@
     {
       "ext_id": "T:2099",
       "name": "[verify] 04:docs:contract-quantity-denominator",
-      "stream": "?",
-      "origin": "?",
+      "stream": "04-pay-item-catalog",
+      "origin": "future-verification-gap",
       "early_start": "2026-06-08",
       "early_finish": "2026-06-10",
       "duration_days": 2,
@@ -241,8 +241,8 @@
     {
       "ext_id": "T:2097",
       "name": "[verify] 04:docs:db-persistence",
-      "stream": "?",
-      "origin": "?",
+      "stream": "04-pay-item-catalog",
+      "origin": "future-verification-gap",
       "early_start": "2026-06-10",
       "early_finish": "2026-06-12",
       "duration_days": 2,
@@ -255,8 +255,8 @@
     {
       "ext_id": "T:2095",
       "name": "[verify] 04:docs:delete-cascade",
-      "stream": "?",
-      "origin": "?",
+      "stream": "04-pay-item-catalog",
+      "origin": "future-verification-gap",
       "early_start": "2026-06-12",
       "early_finish": "2026-06-16",
       "duration_days": 2,
@@ -269,8 +269,8 @@
     {
       "ext_id": "T:2094",
       "name": "[verify] 04:docs:drawable-flag",
-      "stream": "?",
-      "origin": "?",
+      "stream": "04-pay-item-catalog",
+      "origin": "future-verification-gap",
       "early_start": "2026-06-16",
       "early_finish": "2026-06-18",
       "duration_days": 2,
@@ -283,8 +283,8 @@
     {
       "ext_id": "T:2096",
       "name": "[verify] 04:docs:edit-inline",
-      "stream": "?",
-      "origin": "?",
+      "stream": "04-pay-item-catalog",
+      "origin": "future-verification-gap",
       "early_start": "2026-06-18",
       "early_finish": "2026-06-22",
       "duration_days": 2,
@@ -297,8 +297,8 @@
     {
       "ext_id": "T:2102",
       "name": "[verify] 04:remaining:no-contract-modification-workflow-exists-2",
-      "stream": "?",
-      "origin": "?",
+      "stream": "04-pay-item-catalog",
+      "origin": "future-verification-gap",
       "early_start": "2026-06-22",
       "early_finish": "2026-06-24",
       "duration_days": 2,
@@ -311,8 +311,8 @@
     {
       "ext_id": "T:2103",
       "name": "[verify] 04:remaining:pay-item-color-auto-assigned-from-sectio-3",
-      "stream": "?",
-      "origin": "?",
+      "stream": "04-pay-item-catalog",
+      "origin": "future-verification-gap",
       "early_start": "2026-06-24",
       "early_finish": "2026-06-26",
       "duration_days": 2,
@@ -325,8 +325,8 @@
     {
       "ext_id": "T:2098",
       "name": "[verify] 04:docs:section-keyed-colors",
-      "stream": "?",
-      "origin": "?",
+      "stream": "04-pay-item-catalog",
+      "origin": "future-verification-gap",
       "early_start": "2026-06-26",
       "early_finish": "2026-06-30",
       "duration_days": 2,
@@ -339,8 +339,8 @@
     {
       "ext_id": "T:2101",
       "name": "[verify] 04:remaining:updatepayitems-issues-full-delete-bulk-i-1",
-      "stream": "?",
-      "origin": "?",
+      "stream": "04-pay-item-catalog",
+      "origin": "future-verification-gap",
       "early_start": "2026-06-30",
       "early_finish": "2026-07-02",
       "duration_days": 2,
@@ -352,6 +352,9 @@
     }
   ],
   "criticals_by_stream": {
-    "?": 76
+    "04-pay-item-catalog": 14,
+    "99-cross-cutting": 48,
+    "98-build-and-infra": 2,
+    "01-identity-and-access": 12
   }
 }
