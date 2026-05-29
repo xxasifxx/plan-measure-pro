@@ -1,97 +1,89 @@
-## Goal
+# Phase 1.5 — Close the catalog gap
 
-Stop conflating WBS with activities. Build the WBS first as a stable backbone, then derive activities — past from git, future from known gaps — and attach them to leaves. One commit can progress several activities; the mapper must respect that.
+## The problem your message names
 
-## Phase 1 — Build the comprehensive WBS (300–500 leaves)
+The current 211 leaves come from what stream briefs *wrote down*. But:
 
-**Shape:** `Stream (20) / Layer (Frontend|Backend|Mobile|Verification|Docs) / Feature`
+- Briefs describe **features**, commits touch **files** — and most commits do plumbing work (types, hooks, utility refactors, RLS tweaks, edge-function helpers, migration fixups, test scaffolding, build scripts) that no brief bullet ever names.
+- "Surfaces (files)" sections list the *headline* files per stream; they skip the 60–70% of the tree that exists in service of those headlines.
+- Result: when Phase 2 runs, a large fraction of commit file-touches will hit `_unattributed` or get force-bucketed into the nearest leaf, inflating that leaf and hiding real work.
 
-**Feature leaves** are not invented freely; they're derived from three converging sources, then deduped:
+Proof from the current leaves file: Frontend 149 / Backend 24 / Mobile 33. The repo has ~120 frontend files, ~30 mobile/offline files, **8 edge functions + ~40 migrations + dozens of `public.*` tables** — Backend is undercounted by an order of magnitude because briefs name tables sparingly.
 
-1. **Brief criteria** — every bullet in each stream's "Current state vs criteria" and "Acceptance criteria" becomes a candidate leaf.
-2. **File-surface clusters** — `docs/file-surface-a.json` already groups files; each cluster within a stream becomes a candidate leaf (e.g. `05/Frontend/PdfCanvas`, `05/Frontend/Toolbar`, `05/Backend/annotations-schema`).
-3. **Surface inventory** — `docs/scope-inventory/*.md` items not already covered become leaves (catches pages, hooks, edge functions that no brief bullet names).
+## Fix: derive leaves from code, then reconcile with briefs
 
-Dedupe by normalized name within a `Stream/Layer` bucket. Output:
+Add a second leaf source that walks the actual repo and emits a leaf for every meaningful code unit, then merges with the brief-derived leaves.
 
-- `docs/wbs-dev.leaves.json` — canonical leaf list with `{ id, wbs, stream, layer, name, sources: [...], fileGlobs: [...] }`.
-- `docs/wbs-dev.leaves.md` — human-readable tree, grouped by stream → layer.
+### Three new leaf sources (additive to Phase 1)
 
-This is the artifact the user reviews before any activity work. **Hard checkpoint.**
+1. **File-cluster leaves** — group `src/**` files by directory + naming family:
+   - `src/components/schedule/*` → one leaf per file (these are real features).
+   - `src/lib/<domain>/*` → one leaf per file (already domain-clustered).
+   - `src/components/ui/*` → **one** leaf "shadcn primitives" (intentionally coarse — not feature work).
+   - `src/hooks/*` → one leaf per hook.
+   - `src/pages/*` → one leaf per page.
+   - `src/test/*` → one leaf per test file (Verification layer).
 
-## Phase 2 — Smart commit → activity mapping
+2. **Backend surface leaves** — walk the backend, not the brief:
+   - `supabase/migrations/*.sql` → cluster by week → one leaf per migration cluster (e.g. "Migrations 2026-03-w2").
+   - `supabase/functions/<name>/index.ts` → one leaf per edge function.
+   - `public.<table>` → derive from `src/integrations/supabase/types.ts` (the generated schema), one leaf per table, classified by which stream's RLS migration created it.
 
-A commit touches N files. Each file maps to ≤1 leaf via `fileGlobs`. So one commit can credit M leaves (M = unique leaves touched).
+3. **Build/infra leaves** — `scripts/*`, `vite.config.ts`, `capacitor.config.ts`, `tailwind.config.ts`, `supabase/config.toml`, `tsconfig*.json` → one leaf per file under a new stream **`98 Build & Infra`** (currently invisible work).
 
-**Per-commit, per-leaf "contribution":**
-```text
-contribution = {
-  commitSha, authorDate, leafId,
-  filesTouched, linesChanged,
-  weight = linesChanged_on_leaf / linesChanged_total_in_commit
-}
-```
+### Reconciliation rules
 
-**Session clustering per leaf:** group that leaf's contributions into sessions when consecutive contributions are within a 24h gap. A session becomes one historical activity:
-```text
-activity = {
-  id, leafId, kind: 'historical',
-  start = first session commit date,
-  finish = last session commit date,
-  duration = max(0.5d, finish - start),
-  commits: [shas...],
-  weight = sum of contribution weights  // signals how much of the leaf's mass this session moved
-}
-```
+When a code-derived leaf and a brief-derived leaf claim the same file:
 
-This handles "smarter mapping" the user called out: a single commit refactoring `Toolbar.tsx` + `PdfCanvas.tsx` + a migration creates three contributions, one per leaf, with proportional weights — so it progresses three activities, not one.
+- **Brief wins on name** (human-authored label is better than `geometry.ts`).
+- **Code wins on `fileGlobs`** (the brief often missed sibling files).
+- Merge sources; record both `surface` and `file-cluster` provenance.
 
-**% complete per leaf** = clamp(Σ session weights, 0, 1) × (1 if e2e-verified, else 0.5). Forward activities then carry the remainder.
+When a code-derived leaf has **no** brief claim:
 
-## Phase 3 — Forward activities
+- Assign to a stream via path heuristic (`src/components/schedule/*` → `11 Schedule`, `src/lib/native/*` → `15 Offline & Native`, etc.) using a small explicit table.
+- If no heuristic matches, file under **`97 Plumbing`** (a new stream for cross-cutting code).
+- Mark `provenance: "code-only"` so the verification report can flag "this leaf has code but no brief acceptance criteria" — a different kind of debt.
 
-Per leaf, generate "remaining" activities from three sources, each tagged:
+### Expected new totals (estimated)
 
-- **`risk`** — every "Risks / debt" item in the stream brief that file-matches the leaf (or stream-only if no file hint).
-- **`marketing-debt`** — every `docs/wbs-dev.promises.json` claim mapped to the leaf's stream with verdict ≠ delivered.
-- **`verification-gap`** — synthetic activity emitted whenever leaf has historical work but `verifiedE2E=false` in the manifest. Name: `Verify e2e: <leaf>`.
+| Stream class | Before | After |
+|---|---:|---:|
+| Brief-claimed leaves | 211 | ~211 (renamed/merged) |
+| `98 Build & Infra` | 0 | ~15 |
+| `97 Plumbing` | 0 | ~40–80 |
+| Backend (tables + migrations + functions) | 24 | ~80–100 |
+| **Total** | **211** | **~400–500** |
 
-Durations: 0.5d (verification), 1–5d (risk via existing heuristic), 3–5d (marketing-debt undelivered).
+This lands inside your stated target of 300–500 leaves *honestly*, not by splitting hairs on what briefs already covered.
 
-## Phase 4 — Cross-cutting & narrative branch
+## Two new artifacts
 
-Keep the existing `99 Cross-cutting` hand-authored activities (XER scrap, PMXML pivot, this WBS effort) as-is.
+- `docs/wbs-dev.code-leaves.json` — pure code-derived list, intermediate.
+- `docs/wbs-dev.catalog-gaps.md` — report listing:
+  - leaves with `provenance: "code-only"` (code exists, brief is silent),
+  - leaves with `provenance: "brief-only"` (brief mentions a file the resolver couldn't find — stale brief or rename),
+  - files in `src/`/`supabase/` that no leaf claims after reconciliation (should be near-zero; if not, the heuristic table needs another entry).
 
-## Phase 5 — Regenerate PMXML & docs
+The final `docs/wbs-dev.leaves.json` is regenerated by merging brief + code sources through the reconciliation rules above. `docs/wbs-dev.leaves.md` gains a "Catalog provenance" column.
 
-- `scripts/build-dev-wbs.mjs` becomes a 3-step pipeline: `build-leaves → map-commits → emit-activities`.
-- `scripts/build-dev-pmxml.mjs` consumes the new activity list unchanged.
-- `docs/wbs-dev.md` rewritten to explain the two-phase model and how to read weights.
+## What I will NOT do in this phase
+
+- No commit mapping yet (that's Phase 2 — runs cleanly only once the catalog is honest).
+- No forward activities yet (Phase 3).
+- No PMXML regeneration yet (Phase 5).
 
 ## Deliverables
 
-| File | Purpose |
-|---|---|
-| `scripts/dev-wbs/build-leaves.mjs` | Phase 1: dedupe leaves from briefs + file-surface + inventory |
-| `scripts/dev-wbs/map-commits.mjs` | Phase 2: per-file commit attribution + session clustering |
-| `scripts/dev-wbs/forward-activities.mjs` | Phase 3: risks + marketing + verification-gap activities |
-| `scripts/build-dev-wbs.mjs` | Orchestrator (rewritten) |
-| `docs/wbs-dev.leaves.json` | Canonical leaf backbone (Phase 1 output) |
-| `docs/wbs-dev.leaves.md` | Reviewable tree |
-| `docs/wbs-dev.activities.json` | Rewritten with new schema (historical sessions + forward) |
-| `public/exports/takeoffpro-dev.xml` | Regenerated from new activities |
-| `docs/wbs-dev.md` | Rewritten narrative |
-| `src/test/dev-pmxml.test.ts` | Updated to new schema |
+- `scripts/dev-wbs/build-code-leaves.mjs` — new, walks repo + types.ts.
+- `scripts/dev-wbs/reconcile-leaves.mjs` — new, merges brief + code with the rules above.
+- `scripts/dev-wbs/build-leaves.mjs` — becomes a 2-step orchestrator (existing brief pass → code pass → reconcile).
+- `docs/wbs-dev.code-leaves.json` — new intermediate.
+- `docs/wbs-dev.catalog-gaps.md` — new report.
+- `docs/wbs-dev.leaves.json` + `docs/wbs-dev.leaves.md` — regenerated, ~400–500 leaves with provenance.
 
-## Checkpoints
+## Checkpoint
 
-1. **After Phase 1**: review `docs/wbs-dev.leaves.md`. Add/merge/rename leaves before activities are touched.
-2. **After Phase 2**: spot-check 5 random leaves' sessions against `git log` to confirm weights look right.
-3. **After Phase 3**: review forward activity counts per stream; trim noise.
+After this phase you review `catalog-gaps.md`. If a stream has many "code-only" leaves, that's a brief that needs updating (separate human task). If a stream has many "brief-only" leaves, those files were probably renamed/deleted and the brief is lying. Either way the gap becomes visible *before* commits get attributed, instead of being hidden inside a too-coarse leaf.
 
-## Notes for the technical reader
-
-- `fileGlobs` per leaf are seeded from brief evidence paths + file-surface cluster membership. Unmatched files in a stream get bucketed to a `Stream/Layer/_unattributed` leaf so nothing is dropped.
-- Commit attribution uses `git log --numstat --follow` per file; cached to `.cache/git-numstat.json` so reruns are fast.
-- Session gap (24h) and minimum session duration (0.5d) are constants at the top of `map-commits.mjs` for tuning.
-- A commit credited to >5 leaves is flagged in the report — likely a sprawling refactor worth a manual review.
+Say **proceed** to implement Phase 1.5, or push back on the heuristic stream-assignment table / the `97 Plumbing` + `98 Build & Infra` stream additions.

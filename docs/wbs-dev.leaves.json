@@ -1,13 +1,21 @@
 {
-  "generatedAt": "2026-05-29T15:54:03.675Z",
+  "generatedAt": "2026-05-29T16:10:34.993Z",
   "totals": {
-    "streams": 20,
-    "leaves": 211,
+    "streams": 23,
+    "leaves": 298,
     "byLayer": {
-      "Frontend": 149,
+      "Frontend": 175,
       "Mobile": 33,
-      "Backend": 24,
-      "Docs": 5
+      "Backend": 46,
+      "Docs": 5,
+      "Verification": 30,
+      "Build": 9
+    },
+    "byProvenance": {
+      "brief+code": 123,
+      "brief-only": 88,
+      "code-only": 87,
+      "inventory": 0
     }
   },
   "leaves": [
@@ -36,11 +44,16 @@
           "file": "01-identity-and-access.md",
           "criterion": "Invitation flow",
           "verdict": "implemented"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/Auth.tsx"
         }
       ],
       "note": "email/password sign-in, sign-up (with org-name capture), forgot-password mode, and invitation-token acceptance on landing",
       "verdict": "implemented",
-      "id": "01:frontend:auth"
+      "id": "01:frontend:auth",
+      "provenance": "brief+code"
     },
     {
       "stream": "01 Identity & Access",
@@ -61,11 +74,16 @@
           "file": "01-identity-and-access.md",
           "criterion": "Password reset",
           "verdict": "implemented"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/ResetPassword.tsx"
         }
       ],
       "note": "handles Supabase `PASSWORD_RECOVERY` event; calls `supabase.auth.updateUser`",
       "verdict": "implemented",
-      "id": "01:frontend:resetpassword"
+      "id": "01:frontend:resetpassword",
+      "provenance": "brief+code"
     },
     {
       "stream": "01 Identity & Access",
@@ -92,11 +110,16 @@
           "file": "01-identity-and-access.md",
           "criterion": "Role booleans correct",
           "verdict": "implemented"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/hooks/useAuth.tsx"
         }
       ],
       "note": "`AuthProvider` + `useAuth`; loads `user_roles` + `profiles` after session, exposes `isManager`, `isAdmin`, `isResidentEngineer`, `isInspector` booleans",
       "verdict": "implemented",
-      "id": "01:frontend:useauth"
+      "id": "01:frontend:useauth",
+      "provenance": "brief+code"
     },
     {
       "stream": "01 Identity & Access",
@@ -121,7 +144,8 @@
       ],
       "note": "native-only cold-start gate; calls `lib/native/biometric.{getStatus,unlock,unenroll}`",
       "verdict": "implemented",
-      "id": "01:mobile:biometricgate"
+      "id": "01:mobile:biometricgate",
+      "provenance": "brief-only"
     },
     {
       "stream": "01 Identity & Access",
@@ -136,11 +160,16 @@
           "kind": "surface",
           "file": "01-identity-and-access.md",
           "path": "src/App.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/App.tsx"
         }
       ],
       "note": "wraps tree in `<AuthProvider>`, mounts `<BiometricGate>`",
       "verdict": null,
-      "id": "01:frontend:app"
+      "id": "01:frontend:app",
+      "provenance": "brief+code"
     },
     {
       "stream": "01 Identity & Access",
@@ -155,11 +184,16 @@
           "kind": "surface",
           "file": "01-identity-and-access.md",
           "path": "public.profiles"
+        },
+        {
+          "kind": "table",
+          "table": "profiles"
         }
       ],
       "note": "`id`, `full_name`, `email`; RLS: own row only",
       "verdict": null,
-      "id": "01:backend:db-profiles"
+      "id": "01:backend:db-profiles",
+      "provenance": "brief+code"
     },
     {
       "stream": "01 Identity & Access",
@@ -174,11 +208,16 @@
           "kind": "surface",
           "file": "01-identity-and-access.md",
           "path": "public.user_roles"
+        },
+        {
+          "kind": "table",
+          "table": "user_roles"
         }
       ],
       "note": "`user_id`, `role app_role`; `UNIQUE(user_id, role)`; read own, all via admin policy",
       "verdict": null,
-      "id": "01:backend:db-user-roles"
+      "id": "01:backend:db-user-roles",
+      "provenance": "brief+code"
     },
     {
       "stream": "01 Identity & Access",
@@ -193,11 +232,16 @@
           "kind": "surface",
           "file": "01-identity-and-access.md",
           "path": "public.invitations"
+        },
+        {
+          "kind": "table",
+          "table": "invitations"
         }
       ],
       "note": "`token`, `email`, `role`, `accepted_at`; consumed by `accept_invitation` RPC",
       "verdict": null,
-      "id": "01:backend:db-invitations"
+      "id": "01:backend:db-invitations",
+      "provenance": "brief+code"
     },
     {
       "stream": "01 Identity & Access",
@@ -205,18 +249,24 @@
       "layer": "Backend",
       "name": "fn: invite-user",
       "fileGlobs": [
-        "supabase/functions/invite-user/"
+        "supabase/functions/invite-user/",
+        "supabase/functions/invite-user/index.ts"
       ],
       "sources": [
         {
           "kind": "surface",
           "file": "01-identity-and-access.md",
           "path": "supabase/functions/invite-user/"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "supabase/functions/invite-user/index.ts"
         }
       ],
       "note": "edge function that creates an invitation row and emails token link",
       "verdict": null,
-      "id": "01:backend:fn-invite-user"
+      "id": "01:backend:fn-invite-user",
+      "provenance": "brief+code"
     },
     {
       "stream": "01 Identity & Access",
@@ -234,7 +284,8 @@
       ],
       "verdict": "partial",
       "note": "",
-      "id": "01:frontend:rls-posture"
+      "id": "01:frontend:rls-posture",
+      "provenance": "brief-only"
     },
     {
       "stream": "02 Portfolio & PM Home",
@@ -279,11 +330,16 @@
           "file": "02-portfolio-and-pm-home.md",
           "criterion": "Inspector empty state",
           "verdict": "implemented"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/Dashboard.tsx"
         }
       ],
       "note": "full-screen portfolio view: project card grid, \"New Project\" dialog (name + contract number + PDF upload), delete confirmation, expandable inspector-activity detail, pending RE review badges; also mounts `WelcomeCarousel` and `GuidedTour`",
       "verdict": "implemented",
-      "id": "02:frontend:dashboard"
+      "id": "02:frontend:dashboard",
+      "provenance": "brief+code"
     },
     {
       "stream": "02 Portfolio & PM Home",
@@ -310,11 +366,16 @@
           "file": "02-portfolio-and-pm-home.md",
           "criterion": "Card stats",
           "verdict": "implemented"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/hooks/useProjects.ts"
         }
       ],
       "note": "`useProjects()`: fetches owned + member projects, decorates with `annotation_count`, `latest_annotation_at`, `member_count`; exposes `createProject` and `deleteProject` mutations",
       "verdict": "implemented",
-      "id": "02:frontend:useprojects"
+      "id": "02:frontend:useprojects",
+      "provenance": "brief+code"
     },
     {
       "stream": "02 Portfolio & PM Home",
@@ -333,7 +394,8 @@
       ],
       "note": "first-run onboarding carousel shown once per profile (`has_seen_welcome`)",
       "verdict": null,
-      "id": "02:frontend:welcomecarousel"
+      "id": "02:frontend:welcomecarousel",
+      "provenance": "brief-only"
     },
     {
       "stream": "02 Portfolio & PM Home",
@@ -352,7 +414,8 @@
       ],
       "note": "role-aware guided tooltip tour (`useTour('dashboard')`)",
       "verdict": null,
-      "id": "02:frontend:guidedtour"
+      "id": "02:frontend:guidedtour",
+      "provenance": "brief-only"
     },
     {
       "stream": "02 Portfolio & PM Home",
@@ -371,7 +434,8 @@
       ],
       "note": "per-user notification feed (bell icon in header)",
       "verdict": null,
-      "id": "02:frontend:notificationbell"
+      "id": "02:frontend:notificationbell",
+      "provenance": "brief-only"
     },
     {
       "stream": "02 Portfolio & PM Home",
@@ -390,7 +454,8 @@
       ],
       "note": "queries `daily_report_entries` for items awaiting RE approval across a list of project IDs",
       "verdict": null,
-      "id": "02:frontend:approved-quantities-ts-loadpendingreviewcounts"
+      "id": "02:frontend:approved-quantities-ts-loadpendingreviewcounts",
+      "provenance": "brief-only"
     },
     {
       "stream": "02 Portfolio & PM Home",
@@ -405,11 +470,16 @@
           "kind": "surface",
           "file": "02-portfolio-and-pm-home.md",
           "path": "public.projects"
+        },
+        {
+          "kind": "table",
+          "table": "projects"
         }
       ],
       "note": "`id`, `name`, `contract_number`, `pdf_storage_path`, `specs_storage_path`, `toc`, `created_by`",
       "verdict": null,
-      "id": "02:backend:db-projects"
+      "id": "02:backend:db-projects",
+      "provenance": "brief+code"
     },
     {
       "stream": "02 Portfolio & PM Home",
@@ -424,11 +494,16 @@
           "kind": "surface",
           "file": "02-portfolio-and-pm-home.md",
           "path": "public.project_members"
+        },
+        {
+          "kind": "table",
+          "table": "project_members"
         }
       ],
       "note": "`project_id`, `user_id`, `role`; used to union non-owned projects into the list",
       "verdict": null,
-      "id": "02:backend:db-project-members"
+      "id": "02:backend:db-project-members",
+      "provenance": "brief+code"
     },
     {
       "stream": "02 Portfolio & PM Home",
@@ -447,7 +522,8 @@
       ],
       "note": "queried in bulk to compute `annotation_count` and `latest_annotation_at` per project",
       "verdict": null,
-      "id": "02:backend:db-annotations"
+      "id": "02:backend:db-annotations",
+      "provenance": "brief-only"
     },
     {
       "stream": "03 Project Onboarding",
@@ -462,11 +538,16 @@
           "kind": "surface",
           "file": "03-project-onboarding.md",
           "path": "src/components/ProjectSidebar.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/ProjectSidebar.tsx"
         }
       ],
       "note": "surfaces \"Upload PDF\", \"Upload Standard Specs\", \"Import TOC\", and \"Import Pay Items\" buttons; houses the manual pay-item add dialog",
       "verdict": null,
-      "id": "03:frontend:projectsidebar"
+      "id": "03:frontend:projectsidebar",
+      "provenance": "brief+code"
     },
     {
       "stream": "03 Project Onboarding",
@@ -485,7 +566,8 @@
       ],
       "note": "path in `specs-pdfs` bucket",
       "verdict": null,
-      "id": "03:backend:db-projects-specs-storage-path"
+      "id": "03:backend:db-projects-specs-storage-path",
+      "provenance": "brief-only"
     },
     {
       "stream": "03 Project Onboarding",
@@ -505,7 +587,8 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "03:frontend:create-project-pdf-upload"
+      "id": "03:frontend:create-project-pdf-upload",
+      "provenance": "brief-only"
     },
     {
       "stream": "03 Project Onboarding",
@@ -533,11 +616,16 @@
           "file": "03-project-onboarding.md",
           "criterion": "Specs PDF upload + indexing",
           "verdict": "implemented"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/Index.tsx"
         }
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "03:frontend:load-with-offline-fallback"
+      "id": "03:frontend:load-with-offline-fallback",
+      "provenance": "brief+code"
     },
     {
       "stream": "03 Project Onboarding",
@@ -555,7 +643,8 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "03:frontend:pay-item-import"
+      "id": "03:frontend:pay-item-import",
+      "provenance": "brief-only"
     },
     {
       "stream": "03 Project Onboarding",
@@ -571,11 +660,16 @@
           "file": "03-project-onboarding.md",
           "criterion": "TOC / pay-items survive reload",
           "verdict": "implemented"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/hooks/useProject.ts"
         }
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "03:frontend:toc-pay-items-survive-reload"
+      "id": "03:frontend:toc-pay-items-survive-reload",
+      "provenance": "brief+code"
     },
     {
       "stream": "04 Pay Item Catalog",
@@ -596,11 +690,16 @@
           "file": "04-pay-item-catalog.md",
           "criterion": "drawable flag",
           "verdict": "implemented"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/types/project.ts"
         }
       ],
       "note": "`PayItem` interface, `PayItemUnit` enum, `DRAWABLE_UNITS`, `isDrawableUnit()`, `getPayItemSection()`, `UNIT_LABELS`",
       "verdict": "implemented",
-      "id": "04:frontend:project"
+      "id": "04:frontend:project",
+      "provenance": "brief+code"
     },
     {
       "stream": "04 Pay Item Catalog",
@@ -619,7 +718,8 @@
       ],
       "note": "mobile-first pay-item selector sheet",
       "verdict": null,
-      "id": "04:mobile:mobilepayitems"
+      "id": "04:mobile:mobilepayitems",
+      "provenance": "brief-only"
     },
     {
       "stream": "04 Pay Item Catalog",
@@ -634,11 +734,16 @@
           "kind": "surface",
           "file": "04-pay-item-catalog.md",
           "path": "src/hooks/usePayItemActivityMap.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/hooks/usePayItemActivityMap.ts"
         }
       ],
       "note": "per-pay-item annotation counts for summary display",
       "verdict": null,
-      "id": "04:frontend:usepayitemactivitymap"
+      "id": "04:frontend:usepayitemactivitymap",
+      "provenance": "brief+code"
     },
     {
       "stream": "04 Pay Item Catalog",
@@ -653,11 +758,16 @@
           "kind": "surface",
           "file": "04-pay-item-catalog.md",
           "path": "public.pay_items"
+        },
+        {
+          "kind": "table",
+          "table": "pay_items"
         }
       ],
       "note": "`project_id`, `item_number`, `item_code`, `name`, `unit`, `unit_price`, `color`, `contract_quantity`, `drawable`",
       "verdict": null,
-      "id": "04:backend:db-pay-items"
+      "id": "04:backend:db-pay-items",
+      "provenance": "brief+code"
     },
     {
       "stream": "04 Pay Item Catalog",
@@ -676,7 +786,8 @@
       ],
       "note": "consumes pay items + annotations to render quantity totals",
       "verdict": null,
-      "id": "04:frontend:summarypanel"
+      "id": "04:frontend:summarypanel",
+      "provenance": "brief-only"
     },
     {
       "stream": "04 Pay Item Catalog",
@@ -709,7 +820,8 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "04:frontend:delete-cascade"
+      "id": "04:frontend:delete-cascade",
+      "provenance": "brief-only"
     },
     {
       "stream": "04 Pay Item Catalog",
@@ -725,11 +837,16 @@
           "file": "04-pay-item-catalog.md",
           "criterion": "Section-keyed colors",
           "verdict": "implemented"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/pdf-utils.ts"
         }
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "04:frontend:section-keyed-colors"
+      "id": "04:frontend:section-keyed-colors",
+      "provenance": "brief+code"
     },
     {
       "stream": "04 Pay Item Catalog",
@@ -747,7 +864,8 @@
       ],
       "verdict": "partial",
       "note": "",
-      "id": "04:frontend:contract-quantity-denominator"
+      "id": "04:frontend:contract-quantity-denominator",
+      "provenance": "brief-only"
     },
     {
       "stream": "04 Pay Item Catalog",
@@ -765,7 +883,8 @@
       ],
       "verdict": "missing",
       "note": "",
-      "id": "04:frontend:contract-modifications"
+      "id": "04:frontend:contract-modifications",
+      "provenance": "brief-only"
     },
     {
       "stream": "05 Field Capture",
@@ -790,7 +909,8 @@
       ],
       "note": "top-level workspace; orchestrates PDF load, tool state, GPS state, mobile vs desktop layout, keyboard shortcuts (Ctrl+Z/Y), and all handler wiring",
       "verdict": "implemented",
-      "id": "05:frontend:index"
+      "id": "05:frontend:index",
+      "provenance": "brief-only"
     },
     {
       "stream": "05 Field Capture",
@@ -829,11 +949,16 @@
           "file": "05-field-capture.md",
           "criterion": "Manual quantity override",
           "verdict": "implemented"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/PdfCanvas.tsx"
         }
       ],
       "note": "dual-canvas (PDF render layer + overlay); implements hit-testing, pointer/touch routing, all drawing modes (`line`, `polygon`, `count`, `label`, `calibrate`, `tocSelect`), drag-handle editing, GPS overlay, live measurement labels",
       "verdict": "implemented",
-      "id": "05:frontend:pdfcanvas"
+      "id": "05:frontend:pdfcanvas",
+      "provenance": "brief+code"
     },
     {
       "stream": "05 Field Capture",
@@ -848,11 +973,16 @@
           "kind": "surface",
           "file": "05-field-capture.md",
           "path": "src/components/Toolbar.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/Toolbar.tsx"
         }
       ],
       "note": "desktop toolbar: tool mode buttons, undo/redo, active pay-item pill, calibration indicator with copy-to-pages, page nav, zoom, summary/export",
       "verdict": null,
-      "id": "05:frontend:toolbar"
+      "id": "05:frontend:toolbar",
+      "provenance": "brief+code"
     },
     {
       "stream": "05 Field Capture",
@@ -871,7 +1001,8 @@
       ],
       "note": "mobile two-row toolbar",
       "verdict": null,
-      "id": "05:mobile:mobiletoolbar"
+      "id": "05:mobile:mobiletoolbar",
+      "provenance": "brief-only"
     },
     {
       "stream": "05 Field Capture",
@@ -896,7 +1027,8 @@
       ],
       "note": "step wizard capturing 2–3 GPS/plan control-point pairs; calls `buildGeoCalibration`",
       "verdict": "implemented",
-      "id": "05:frontend:gpscalibration"
+      "id": "05:frontend:gpscalibration",
+      "provenance": "brief-only"
     },
     {
       "stream": "05 Field Capture",
@@ -915,7 +1047,8 @@
       ],
       "note": "start/stop GPS trace recording",
       "verdict": null,
-      "id": "05:frontend:gpstracecontrols"
+      "id": "05:frontend:gpstracecontrols",
+      "provenance": "brief-only"
     },
     {
       "stream": "05 Field Capture",
@@ -934,7 +1067,8 @@
       ],
       "note": "bottom sheet for editing selected annotation metadata",
       "verdict": null,
-      "id": "05:mobile:mobileannotationsheet"
+      "id": "05:mobile:mobileannotationsheet",
+      "provenance": "brief-only"
     },
     {
       "stream": "05 Field Capture",
@@ -965,7 +1099,8 @@
       ],
       "note": "`addAnnotation`, `removeAnnotation`, `updateAnnotation`, `setCalibration`, `copyCalibrationToPages`, `undo`/`redo`; realtime Supabase subscription for multi-user sync; offline via `offlineMutate`",
       "verdict": "implemented",
-      "id": "05:frontend:useproject"
+      "id": "05:frontend:useproject",
+      "provenance": "brief-only"
     },
     {
       "stream": "05 Field Capture",
@@ -984,7 +1119,8 @@
       ],
       "note": "`lineLength`, `polygonAreaSF`, `pointInPolygon`, `pointToSegmentDistance`, `distancePx`, `pointToMarkerDistance`",
       "verdict": null,
-      "id": "05:frontend:geometry"
+      "id": "05:frontend:geometry",
+      "provenance": "brief-only"
     },
     {
       "stream": "05 Field Capture",
@@ -1003,7 +1139,8 @@
       ],
       "note": "`buildGeoCalibration`, affine GPS→plan transform",
       "verdict": null,
-      "id": "05:frontend:geo-transform"
+      "id": "05:frontend:geo-transform",
+      "provenance": "brief-only"
     },
     {
       "stream": "05 Field Capture",
@@ -1022,7 +1159,8 @@
       ],
       "note": "`ToolMode`, `Annotation`, `Calibration`, `PointXY`",
       "verdict": null,
-      "id": "05:frontend:project"
+      "id": "05:frontend:project",
+      "provenance": "brief-only"
     },
     {
       "stream": "05 Field Capture",
@@ -1037,11 +1175,16 @@
           "kind": "surface",
           "file": "05-field-capture.md",
           "path": "public.annotations"
+        },
+        {
+          "kind": "table",
+          "table": "annotations"
         }
       ],
       "note": "`type`, `points` JSONB, `pay_item_id`, `page`, `measurement`, `measurement_unit`, `depth`, `manual_quantity`, `location`, `notes`, `approved_at`, `approved_by`",
       "verdict": null,
-      "id": "05:backend:db-annotations"
+      "id": "05:backend:db-annotations",
+      "provenance": "brief+code"
     },
     {
       "stream": "05 Field Capture",
@@ -1056,11 +1199,16 @@
           "kind": "surface",
           "file": "05-field-capture.md",
           "path": "public.calibrations"
+        },
+        {
+          "kind": "table",
+          "table": "calibrations"
         }
       ],
       "note": "`project_id`, `page`, `point1`/`point2` JSONB, `real_distance`, `pixels_per_foot`",
       "verdict": null,
-      "id": "05:backend:db-calibrations"
+      "id": "05:backend:db-calibrations",
+      "provenance": "brief+code"
     },
     {
       "stream": "06 Daily Report Lifecycle",
@@ -1075,11 +1223,16 @@
           "kind": "surface",
           "file": "06-daily-report-lifecycle.md",
           "path": "src/pages/DailyReport.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/DailyReport.tsx"
         }
       ],
       "note": "Inspector-facing page; date picker, live preview vs frozen snapshot table, submit/reopen actions, status banners",
       "verdict": null,
-      "id": "06:frontend:dailyreport"
+      "id": "06:frontend:dailyreport",
+      "provenance": "brief+code"
     },
     {
       "stream": "06 Daily Report Lifecycle",
@@ -1094,11 +1247,16 @@
           "kind": "surface",
           "file": "06-daily-report-lifecycle.md",
           "path": "src/hooks/useDailyReport.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/hooks/useDailyReport.ts"
         }
       ],
       "note": "Data layer: fetches `daily_reports` row, runs `buildDailyReportSnapshot`, detects snapshot drift, exposes `submit` / `reopen` mutations",
       "verdict": null,
-      "id": "06:frontend:usedailyreport"
+      "id": "06:frontend:usedailyreport",
+      "provenance": "brief+code"
     },
     {
       "stream": "06 Daily Report Lifecycle",
@@ -1113,11 +1271,16 @@
           "kind": "surface",
           "file": "06-daily-report-lifecycle.md",
           "path": "src/lib/daily-report-snapshot.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/daily-report-snapshot.ts"
         }
       ],
       "note": "Pure snapshot builder: groups annotations by pay item, applies unit conversion, attaches prior approved cumulative from `v_approved_pay_item_quantities`",
       "verdict": null,
-      "id": "06:frontend:daily-report-snapshot"
+      "id": "06:frontend:daily-report-snapshot",
+      "provenance": "brief+code"
     },
     {
       "stream": "06 Daily Report Lifecycle",
@@ -1132,11 +1295,16 @@
           "kind": "surface",
           "file": "06-daily-report-lifecycle.md",
           "path": "src/pages/ReReview.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/ReReview.tsx"
         }
       ],
       "note": "RE-facing queue page; project/status/inspector/date filters, bulk approve action",
       "verdict": null,
-      "id": "06:frontend:rereview"
+      "id": "06:frontend:rereview",
+      "provenance": "brief+code"
     },
     {
       "stream": "06 Daily Report Lifecycle",
@@ -1151,11 +1319,16 @@
           "kind": "surface",
           "file": "06-daily-report-lifecycle.md",
           "path": "src/components/ReReviewCard.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/ReReviewCard.tsx"
         }
       ],
       "note": "Card per report: snapshot table with resubmission diff column, history/comments accordion, approve/reject footer buttons",
       "verdict": null,
-      "id": "06:frontend:rereviewcard"
+      "id": "06:frontend:rereviewcard",
+      "provenance": "brief+code"
     },
     {
       "stream": "06 Daily Report Lifecycle",
@@ -1170,11 +1343,16 @@
           "kind": "surface",
           "file": "06-daily-report-lifecycle.md",
           "path": "src/components/ReRejectDialog.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/ReRejectDialog.tsx"
         }
       ],
       "note": "Modal requiring a non-empty rejection reason before `useRejectReport` fires",
       "verdict": null,
-      "id": "06:frontend:rerejectdialog"
+      "id": "06:frontend:rerejectdialog",
+      "provenance": "brief+code"
     },
     {
       "stream": "06 Daily Report Lifecycle",
@@ -1189,11 +1367,16 @@
           "kind": "surface",
           "file": "06-daily-report-lifecycle.md",
           "path": "src/hooks/useReReviewQueue.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/hooks/useReReviewQueue.ts"
         }
       ],
       "note": "RE data layer: `useReReviewQueue`, `useApproveReport`, `useRejectReport`, `useBulkApproveReports`, `useReportComments`, `useReportArchives`, `useAddComment`",
       "verdict": null,
-      "id": "06:frontend:userereviewqueue"
+      "id": "06:frontend:userereviewqueue",
+      "provenance": "brief+code"
     },
     {
       "stream": "06 Daily Report Lifecycle",
@@ -1208,11 +1391,16 @@
           "kind": "surface",
           "file": "06-daily-report-lifecycle.md",
           "path": "public.daily_reports"
+        },
+        {
+          "kind": "table",
+          "table": "daily_reports"
         }
       ],
       "note": "Primary table: `status`, `snapshot` (JSONB), `submitted_at`, `approved_at`, `rejected_at`, `reject_reason`",
       "verdict": null,
-      "id": "06:backend:db-daily-reports"
+      "id": "06:backend:db-daily-reports",
+      "provenance": "brief+code"
     },
     {
       "stream": "06 Daily Report Lifecycle",
@@ -1227,11 +1415,16 @@
           "kind": "surface",
           "file": "06-daily-report-lifecycle.md",
           "path": "public.daily_report_comments"
+        },
+        {
+          "kind": "table",
+          "table": "daily_report_comments"
         }
       ],
       "note": "Thread attached to a report (used by reject mutation to auto-post a comment)",
       "verdict": null,
-      "id": "06:backend:db-daily-report-comments"
+      "id": "06:backend:db-daily-report-comments",
+      "provenance": "brief+code"
     },
     {
       "stream": "06 Daily Report Lifecycle",
@@ -1246,11 +1439,16 @@
           "kind": "surface",
           "file": "06-daily-report-lifecycle.md",
           "path": "public.daily_report_snapshots"
+        },
+        {
+          "kind": "table",
+          "table": "daily_report_snapshots"
         }
       ],
       "note": "Snapshot archive table queried by `useReportArchives` (cast as `any`, type not in generated types)",
       "verdict": null,
-      "id": "06:backend:db-daily-report-snapshots"
+      "id": "06:backend:db-daily-report-snapshots",
+      "provenance": "brief+code"
     },
     {
       "stream": "06 Daily Report Lifecycle",
@@ -1269,7 +1467,8 @@
       ],
       "note": "View consumed by `buildDailyReportSnapshot` for prior cumulative",
       "verdict": null,
-      "id": "06:backend:db-v-approved-pay-item-quantities"
+      "id": "06:backend:db-v-approved-pay-item-quantities",
+      "provenance": "brief-only"
     },
     {
       "stream": "07 Quantity to Payment",
@@ -1284,11 +1483,16 @@
           "kind": "surface",
           "file": "07-quantity-to-payment.md",
           "path": "src/lib/approved-quantities.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/approved-quantities.ts"
         }
       ],
       "note": "Core helpers: `loadApprovedTotalsByPayItem` (sums `delta_quantity` from `v_approved_pay_item_quantities` per pay item), `loadPendingReviewCounts` (badge counts for dashboard)",
       "verdict": null,
-      "id": "07:frontend:approved-quantities"
+      "id": "07:frontend:approved-quantities",
+      "provenance": "brief+code"
     },
     {
       "stream": "07 Quantity to Payment",
@@ -1307,7 +1511,8 @@
       ],
       "note": "Export functions: `exportApprovedCsv`, `exportApprovedPdfReport` (official), `exportInspectorDaily`, `exportApprovedInspectorDaily` (per-inspector Excel); all consume `loadApprovedTotalsByPayItem`",
       "verdict": null,
-      "id": "07:frontend:export-utils"
+      "id": "07:frontend:export-utils",
+      "provenance": "brief-only"
     },
     {
       "stream": "07 Quantity to Payment",
@@ -1322,11 +1527,16 @@
           "kind": "surface",
           "file": "07-quantity-to-payment.md",
           "path": "src/components/SummaryPanel.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/SummaryPanel.tsx"
         }
       ],
       "note": "Desktop quantity summary table with per-item variance % column, color coded green/amber/red via `getVarianceColor`, export button row (CSV, PDF, Daily Excel)",
       "verdict": null,
-      "id": "07:frontend:summarypanel"
+      "id": "07:frontend:summarypanel",
+      "provenance": "brief+code"
     },
     {
       "stream": "07 Quantity to Payment",
@@ -1345,7 +1555,8 @@
       ],
       "note": "\"Variance\" tab: derives `installed` from raw annotations (not approved), computes `pct = installed / contract_quantity`; separate from the approved rollup path",
       "verdict": null,
-      "id": "07:frontend:projectcontrols"
+      "id": "07:frontend:projectcontrols",
+      "provenance": "brief-only"
     },
     {
       "stream": "07 Quantity to Payment",
@@ -1360,11 +1571,16 @@
           "kind": "surface",
           "file": "07-quantity-to-payment.md",
           "path": "public.v_approved_pay_item_quantities"
+        },
+        {
+          "kind": "table",
+          "table": "v_approved_pay_item_quantities"
         }
       ],
       "note": "DB view: rows = one per approved daily_report × pay_item; exposes `delta_quantity`, `approved_at`, `item_code`, `pay_item_name`, `unit`",
       "verdict": null,
-      "id": "07:backend:db-v-approved-pay-item-quantities"
+      "id": "07:backend:db-v-approved-pay-item-quantities",
+      "provenance": "brief+code"
     },
     {
       "stream": "08 Photo Evidence",
@@ -1383,7 +1599,8 @@
       ],
       "note": "Cross-platform camera shim: Capacitor `Camera.getPhoto` on iOS/Android, `<input capture=\"environment\">` fallback on web; returns `{ blob, mimeType }`",
       "verdict": null,
-      "id": "08:mobile:camera"
+      "id": "08:mobile:camera",
+      "provenance": "brief-only"
     },
     {
       "stream": "08 Photo Evidence",
@@ -1402,7 +1619,8 @@
       ],
       "note": "Hosts `uploadPhoto` mutation (uploads blob to `annotation-photos` bucket, inserts `annotation_photos` row, fires `tag-photo` edge function fire-and-forget) and `confirmPhoto` mutation; renders photo gallery tab with confirm/pay-item-select UI (`ProjectControls.tsx:253-278`)",
       "verdict": null,
-      "id": "08:frontend:projectcontrols"
+      "id": "08:frontend:projectcontrols",
+      "provenance": "brief-only"
     },
     {
       "stream": "08 Photo Evidence",
@@ -1417,11 +1635,16 @@
           "kind": "surface",
           "file": "08-photo-evidence.md",
           "path": "supabase/functions/tag-photo/index.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "supabase/functions/tag-photo/index.ts"
         }
       ],
       "note": "Edge function: receives `photoId`, fetches photo + project pay items, calls Gemini 2.5 Flash via Lovable AI Gateway with `suggest_pay_item` tool, writes `ai_suggested_pay_item_id`, `ai_confidence`, `ai_rationale` back to `annotation_photos`",
       "verdict": null,
-      "id": "08:backend:fn-tag-photo"
+      "id": "08:backend:fn-tag-photo",
+      "provenance": "brief+code"
     },
     {
       "stream": "08 Photo Evidence",
@@ -1436,11 +1659,16 @@
           "kind": "surface",
           "file": "08-photo-evidence.md",
           "path": "public.annotation_photos"
+        },
+        {
+          "kind": "table",
+          "table": "annotation_photos"
         }
       ],
       "note": "Table: `storage_path`, `uploaded_by`, `project_id`, `ai_suggested_pay_item_id`, `ai_confidence`, `ai_rationale`, `confirmed` (boolean)",
       "verdict": null,
-      "id": "08:backend:db-annotation-photos"
+      "id": "08:backend:db-annotation-photos",
+      "provenance": "brief+code"
     },
     {
       "stream": "08 Photo Evidence",
@@ -1459,7 +1687,8 @@
       ],
       "note": "Storage bucket; paths follow `{projectId}/{userId}/{uuid}-{filename}`",
       "verdict": null,
-      "id": "08:backend:bucket-annotation-photos"
+      "id": "08:backend:bucket-annotation-photos",
+      "provenance": "brief-only"
     },
     {
       "stream": "08 Photo Evidence",
@@ -1478,7 +1707,8 @@
       ],
       "note": "IndexedDB schema includes `annotation_photos` store with `by_annotation` index, enabling offline queuing (`db.ts:44,72`)",
       "verdict": null,
-      "id": "08:mobile:db"
+      "id": "08:mobile:db",
+      "provenance": "brief-only"
     },
     {
       "stream": "08 Photo Evidence",
@@ -1497,7 +1727,8 @@
       ],
       "note": "Offline mutation registry maps `annotation_photos` table for sync (`mutation-client.ts:28`)",
       "verdict": null,
-      "id": "08:mobile:mutation-client"
+      "id": "08:mobile:mutation-client",
+      "provenance": "brief-only"
     },
     {
       "stream": "09 Standard Specifications",
@@ -1512,11 +1743,16 @@
           "kind": "surface",
           "file": "09-standard-specifications.md",
           "path": "src/components/SpecViewer.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/SpecViewer.tsx"
         }
       ],
       "note": "Main component (696 lines): resizable/draggable slide-over panel, virtualized canvas renderer with visible-page buffer, Ctrl+F search with text-layer highlight overlay, touch pinch-zoom, page-number input, fit-to-width auto-scale; accepts `specsPdf`, `specsPageTexts`, `startPage`, `sectionNumber`",
       "verdict": null,
-      "id": "09:frontend:specviewer"
+      "id": "09:frontend:specviewer",
+      "provenance": "brief+code"
     },
     {
       "stream": "09 Standard Specifications",
@@ -1531,11 +1767,16 @@
           "kind": "surface",
           "file": "09-standard-specifications.md",
           "path": "src/lib/specs-utils.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/specs-utils.ts"
         }
       ],
       "note": "Three-tier section-page index builder (`buildSectionPageIndex`): Tier 1 strict (SECTION NNN + NNN.01 + dominant prefix), Tier 2 relaxed (no NNN.01 required), Tier 3 fallback (any heading on non-TOC page); `extractAllText` batch extracts all pages in chunks of 10; `getSectionFromItemCode` parses item code prefix",
       "verdict": null,
-      "id": "09:frontend:specs-utils"
+      "id": "09:frontend:specs-utils",
+      "provenance": "brief+code"
     },
     {
       "stream": "09 Standard Specifications",
@@ -1554,7 +1795,8 @@
       ],
       "note": "Column pointing to a blob in Supabase Storage; loaded by the host page and passed into SpecViewer as `PDFDocumentProxy`",
       "verdict": null,
-      "id": "09:backend:db-projects-specs-storage-path"
+      "id": "09:backend:db-projects-specs-storage-path",
+      "provenance": "brief-only"
     },
     {
       "stream": "10 Document Management",
@@ -1569,11 +1811,16 @@
           "kind": "surface",
           "file": "10-document-management.md",
           "path": "src/pages/Documents.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/Documents.tsx"
         }
       ],
       "note": "Primary page (1,312 lines): three-pane layout (folder tree, breadcrumb, document list), upload queue with per-file progress, inline preview modal (PDF via `<iframe>`/`<img>`), multi-select bulk download/delete, version history drawer, move-to-folder drag-less modal, empty-trash dialog",
       "verdict": null,
-      "id": "10:frontend:documents"
+      "id": "10:frontend:documents",
+      "provenance": "brief+code"
     },
     {
       "stream": "10 Document Management",
@@ -1588,11 +1835,16 @@
           "kind": "surface",
           "file": "10-document-management.md",
           "path": "src/hooks/useDocuments.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/hooks/useDocuments.ts"
         }
       ],
       "note": "Data layer: `useFolders` (CRUD on `document_folders`), `useDocuments` (query + version-chain dedup, `uploadFiles`, `renameDocument`, `moveDocument`, `deleteDocument`/soft, `restoreDocument`, `hardDeleteDocument`, `uploadNewVersion`, `getDownloadUrl`), `useTrash`, `useUploaderProfiles`, `fetchDocumentVersions`",
       "verdict": null,
-      "id": "10:frontend:usedocuments"
+      "id": "10:frontend:usedocuments",
+      "provenance": "brief+code"
     },
     {
       "stream": "10 Document Management",
@@ -1607,11 +1859,16 @@
           "kind": "surface",
           "file": "10-document-management.md",
           "path": "public.document_folders"
+        },
+        {
+          "kind": "table",
+          "table": "document_folders"
         }
       ],
       "note": "Table: `parent_id` (self-referential tree), `is_system` (boolean), `system_kind` (enum: plans, specs, rfis, submittals, shop_drawings, change_orders, daily_reports, photos, as_builts, correspondence)",
       "verdict": null,
-      "id": "10:backend:db-document-folders"
+      "id": "10:backend:db-document-folders",
+      "provenance": "brief+code"
     },
     {
       "stream": "10 Document Management",
@@ -1626,11 +1883,16 @@
           "kind": "surface",
           "file": "10-document-management.md",
           "path": "public.documents"
+        },
+        {
+          "kind": "table",
+          "table": "documents"
         }
       ],
       "note": "Table: `folder_id`, `storage_path`, `version` (integer), `replaces_document_id` (self-referential chain), `source_kind` (manual_upload / restore), `deleted_at` / `deleted_by` (soft delete)",
       "verdict": null,
-      "id": "10:backend:db-documents"
+      "id": "10:backend:db-documents",
+      "provenance": "brief+code"
     },
     {
       "stream": "10 Document Management",
@@ -1649,7 +1911,8 @@
       ],
       "note": "Storage bucket; paths follow `{projectId}/{docId}.{ext}`",
       "verdict": null,
-      "id": "10:backend:bucket-project-documents"
+      "id": "10:backend:bucket-project-documents",
+      "provenance": "brief-only"
     },
     {
       "stream": "11 Schedule Management",
@@ -1668,7 +1931,8 @@
       ],
       "note": "raw DOM parse of PMXML into `P6Tables`",
       "verdict": null,
-      "id": "11:frontend:parser"
+      "id": "11:frontend:parser",
+      "provenance": "brief-only"
     },
     {
       "stream": "11 Schedule Management",
@@ -1683,11 +1947,16 @@
           "kind": "surface",
           "file": "11-schedule-management.md",
           "path": "src/lib/schedule/import-p6.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/schedule/import-p6.ts"
         }
       ],
       "note": "`importFromPmxml` / `detectAndImport`; maps parsed DOM to normalized `ImportedSchedule`",
       "verdict": null,
-      "id": "11:frontend:import-p6"
+      "id": "11:frontend:import-p6",
+      "provenance": "brief+code"
     },
     {
       "stream": "11 Schedule Management",
@@ -1702,11 +1971,16 @@
           "kind": "surface",
           "file": "11-schedule-management.md",
           "path": "src/lib/schedule/cpm.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/schedule/cpm.ts"
         }
       ],
       "note": "`runCpm`: calendar-aware Kahn topological sort, forward/backward passes, 8 constraint types, cycle detection",
       "verdict": null,
-      "id": "11:frontend:cpm"
+      "id": "11:frontend:cpm",
+      "provenance": "brief+code"
     },
     {
       "stream": "11 Schedule Management",
@@ -1721,11 +1995,16 @@
           "kind": "surface",
           "file": "11-schedule-management.md",
           "path": "src/lib/schedule/calendars.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/schedule/calendars.ts"
         }
       ],
       "note": "`workdaySet`, `exceptionMap`, `parsePmxmlCalendar`",
       "verdict": null,
-      "id": "11:frontend:calendars"
+      "id": "11:frontend:calendars",
+      "provenance": "brief+code"
     },
     {
       "stream": "11 Schedule Management",
@@ -1740,11 +2019,16 @@
           "kind": "surface",
           "file": "11-schedule-management.md",
           "path": "src/lib/schedule/baseline.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/schedule/baseline.ts"
         }
       ],
       "note": "`calendarFrom`, `normalizeActivityPatch`",
       "verdict": null,
-      "id": "11:frontend:baseline"
+      "id": "11:frontend:baseline",
+      "provenance": "brief+code"
     },
     {
       "stream": "11 Schedule Management",
@@ -1759,11 +2043,16 @@
           "kind": "surface",
           "file": "11-schedule-management.md",
           "path": "src/lib/schedule/use-schedule.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/schedule/use-schedule.ts"
         }
       ],
       "note": "`useSchedule` hook: all CRUD mutations, CPM memo, baseline capture/delete via `replace_project_schedule` and `capture_baseline` RPCs",
       "verdict": null,
-      "id": "11:frontend:use-schedule"
+      "id": "11:frontend:use-schedule",
+      "provenance": "brief+code"
     },
     {
       "stream": "11 Schedule Management",
@@ -1778,11 +2067,16 @@
           "kind": "surface",
           "file": "11-schedule-management.md",
           "path": "src/lib/schedule/types.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/schedule/types.ts"
         }
       ],
       "note": "`ScheduleActivity`, `ActivityRelationship`, `ScheduleCalendar`, `ScheduleResource`, `ResourceAssignment`, `ScheduleBaseline`, `CpmResult`",
       "verdict": null,
-      "id": "11:frontend:types"
+      "id": "11:frontend:types",
+      "provenance": "brief+code"
     },
     {
       "stream": "11 Schedule Management",
@@ -1797,11 +2091,16 @@
           "kind": "surface",
           "file": "11-schedule-management.md",
           "path": "src/lib/schedule/analysis/dcma.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/schedule/analysis/dcma.ts"
         }
       ],
       "note": "`runDcma`: 14-point assessment engine",
       "verdict": null,
-      "id": "11:frontend:dcma"
+      "id": "11:frontend:dcma",
+      "provenance": "brief+code"
     },
     {
       "stream": "11 Schedule Management",
@@ -1816,11 +2115,16 @@
           "kind": "surface",
           "file": "11-schedule-management.md",
           "path": "src/lib/schedule/analysis/tia.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/schedule/analysis/tia.ts"
         }
       ],
       "note": "`buildTia`: TIA fragnet + NJDOT 108-03 narrative",
       "verdict": null,
-      "id": "11:frontend:tia"
+      "id": "11:frontend:tia",
+      "provenance": "brief+code"
     },
     {
       "stream": "11 Schedule Management",
@@ -1835,11 +2139,16 @@
           "kind": "surface",
           "file": "11-schedule-management.md",
           "path": "src/lib/schedule/analysis/aace.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/schedule/analysis/aace.ts"
         }
       ],
       "note": "`AACE_CLASSES` reference data",
       "verdict": null,
-      "id": "11:frontend:aace"
+      "id": "11:frontend:aace",
+      "provenance": "brief+code"
     },
     {
       "stream": "11 Schedule Management",
@@ -1854,11 +2163,16 @@
           "kind": "surface",
           "file": "11-schedule-management.md",
           "path": "src/lib/schedule/analysis/feedback.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/schedule/analysis/feedback.ts"
         }
       ],
       "note": "`buildReMemo`: DCMA results → RE accept/reject memo",
       "verdict": null,
-      "id": "11:frontend:feedback"
+      "id": "11:frontend:feedback",
+      "provenance": "brief+code"
     },
     {
       "stream": "11 Schedule Management",
@@ -1873,11 +2187,16 @@
           "kind": "surface",
           "file": "11-schedule-management.md",
           "path": "src/lib/schedule/analysis/progress.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/schedule/analysis/progress.ts"
         }
       ],
       "note": "`compareProgress`: SPI/CPI, baseline-vs-forecast; `chartRows`",
       "verdict": null,
-      "id": "11:frontend:progress"
+      "id": "11:frontend:progress",
+      "provenance": "brief+code"
     },
     {
       "stream": "11 Schedule Management",
@@ -1892,11 +2211,16 @@
           "kind": "surface",
           "file": "11-schedule-management.md",
           "path": "src/lib/schedule/analysis/chart-export.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/schedule/analysis/chart-export.ts"
         }
       ],
       "note": "chart image/data export",
       "verdict": null,
-      "id": "11:frontend:chart-export"
+      "id": "11:frontend:chart-export",
+      "provenance": "brief+code"
     },
     {
       "stream": "11 Schedule Management",
@@ -1911,11 +2235,16 @@
           "kind": "surface",
           "file": "11-schedule-management.md",
           "path": "src/lib/schedule/analysis/memo-export.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/schedule/analysis/memo-export.ts"
         }
       ],
       "note": "`downloadMemoPdf` / `downloadMemoDoc`",
       "verdict": null,
-      "id": "11:frontend:memo-export"
+      "id": "11:frontend:memo-export",
+      "provenance": "brief+code"
     },
     {
       "stream": "11 Schedule Management",
@@ -1930,11 +2259,16 @@
           "kind": "surface",
           "file": "11-schedule-management.md",
           "path": "src/components/schedule/ScheduleWorkspace.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/schedule/ScheduleWorkspace.tsx"
         }
       ],
       "note": "top-level schedule tab orchestrator",
       "verdict": null,
-      "id": "11:frontend:scheduleworkspace"
+      "id": "11:frontend:scheduleworkspace",
+      "provenance": "brief+code"
     },
     {
       "stream": "11 Schedule Management",
@@ -1949,11 +2283,16 @@
           "kind": "surface",
           "file": "11-schedule-management.md",
           "path": "src/components/schedule/GanttChart.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/schedule/GanttChart.tsx"
         }
       ],
       "note": "drag-to-move/resize bars, dependency arrows, milestone diamonds, critical-path colouring",
       "verdict": null,
-      "id": "11:frontend:ganttchart"
+      "id": "11:frontend:ganttchart",
+      "provenance": "brief+code"
     },
     {
       "stream": "11 Schedule Management",
@@ -1968,11 +2307,16 @@
           "kind": "surface",
           "file": "11-schedule-management.md",
           "path": "src/components/schedule/WbsTree.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/schedule/WbsTree.tsx"
         }
       ],
       "note": "hierarchical WBS node tree",
       "verdict": null,
-      "id": "11:frontend:wbstree"
+      "id": "11:frontend:wbstree",
+      "provenance": "brief+code"
     },
     {
       "stream": "11 Schedule Management",
@@ -1987,11 +2331,16 @@
           "kind": "surface",
           "file": "11-schedule-management.md",
           "path": "src/components/schedule/ImportP6Panel.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/schedule/ImportP6Panel.tsx"
         }
       ],
       "note": "file-drop upload + import wizard (PMXML only)",
       "verdict": null,
-      "id": "11:frontend:importp6panel"
+      "id": "11:frontend:importp6panel",
+      "provenance": "brief+code"
     },
     {
       "stream": "11 Schedule Management",
@@ -2006,11 +2355,16 @@
           "kind": "surface",
           "file": "11-schedule-management.md",
           "path": "src/components/schedule/DcmaPanel.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/schedule/DcmaPanel.tsx"
         }
       ],
       "note": "live 14-point audit dialog with downloadable `.txt`",
       "verdict": null,
-      "id": "11:frontend:dcmapanel"
+      "id": "11:frontend:dcmapanel",
+      "provenance": "brief+code"
     },
     {
       "stream": "11 Schedule Management",
@@ -2025,11 +2379,16 @@
           "kind": "surface",
           "file": "11-schedule-management.md",
           "path": "src/components/schedule/ComplianceStrip.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/schedule/ComplianceStrip.tsx"
         }
       ],
       "note": "persistent NJDOT compliance pill bar",
       "verdict": null,
-      "id": "11:frontend:compliancestrip"
+      "id": "11:frontend:compliancestrip",
+      "provenance": "brief+code"
     },
     {
       "stream": "11 Schedule Management",
@@ -2044,11 +2403,16 @@
           "kind": "surface",
           "file": "11-schedule-management.md",
           "path": "src/components/schedule/BaselineManager.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/schedule/BaselineManager.tsx"
         }
       ],
       "note": "snapshot capture/delete UI",
       "verdict": null,
-      "id": "11:frontend:baselinemanager"
+      "id": "11:frontend:baselinemanager",
+      "provenance": "brief+code"
     },
     {
       "stream": "11 Schedule Management",
@@ -2063,11 +2427,16 @@
           "kind": "surface",
           "file": "11-schedule-management.md",
           "path": "src/components/schedule/CalendarManager.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/schedule/CalendarManager.tsx"
         }
       ],
       "note": "workweek + exception editor",
       "verdict": null,
-      "id": "11:frontend:calendarmanager"
+      "id": "11:frontend:calendarmanager",
+      "provenance": "brief+code"
     },
     {
       "stream": "11 Schedule Management",
@@ -2082,11 +2451,16 @@
           "kind": "surface",
           "file": "11-schedule-management.md",
           "path": "src/components/schedule/ResourceManager.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/schedule/ResourceManager.tsx"
         }
       ],
       "note": "resource + assignment CRUD",
       "verdict": null,
-      "id": "11:frontend:resourcemanager"
+      "id": "11:frontend:resourcemanager",
+      "provenance": "brief+code"
     },
     {
       "stream": "11 Schedule Management",
@@ -2101,11 +2475,16 @@
           "kind": "surface",
           "file": "11-schedule-management.md",
           "path": "src/components/schedule/ActivityInspector.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/schedule/ActivityInspector.tsx"
         }
       ],
       "note": "per-activity detail panel",
       "verdict": null,
-      "id": "11:frontend:activityinspector"
+      "id": "11:frontend:activityinspector",
+      "provenance": "brief+code"
     },
     {
       "stream": "11 Schedule Management",
@@ -2120,11 +2499,16 @@
           "kind": "surface",
           "file": "11-schedule-management.md",
           "path": "src/components/schedule/MetaControls.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/schedule/MetaControls.tsx"
         }
       ],
       "note": "data date, project calendar pickers",
       "verdict": null,
-      "id": "11:frontend:metacontrols"
+      "id": "11:frontend:metacontrols",
+      "provenance": "brief+code"
     },
     {
       "stream": "12 Project Health and Controls",
@@ -2139,11 +2523,16 @@
           "kind": "surface",
           "file": "12-project-health-and-controls.md",
           "path": "src/pages/ProjectControls.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/ProjectControls.tsx"
         }
       ],
       "note": "692-line single-page PM hub; five tabs: Dashboard, Activities, Scorecard, AI Photos, Bid",
       "verdict": null,
-      "id": "12:frontend:projectcontrols"
+      "id": "12:frontend:projectcontrols",
+      "provenance": "brief+code"
     },
     {
       "stream": "12 Project Health and Controls",
@@ -2162,7 +2551,8 @@
       ],
       "note": "embedded in the Activities tab",
       "verdict": null,
-      "id": "12:frontend:scheduleworkspace"
+      "id": "12:frontend:scheduleworkspace",
+      "provenance": "brief-only"
     },
     {
       "stream": "12 Project Health and Controls",
@@ -2177,11 +2567,16 @@
           "kind": "surface",
           "file": "12-project-health-and-controls.md",
           "path": "src/components/GanttUploader.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/GanttUploader.tsx"
         }
       ],
       "note": "PMXML drag-drop uploader widget",
       "verdict": null,
-      "id": "12:frontend:ganttuploader"
+      "id": "12:frontend:ganttuploader",
+      "provenance": "brief+code"
     },
     {
       "stream": "12 Project Health and Controls",
@@ -2200,7 +2595,8 @@
       ],
       "note": "`UNIT_LABELS`, `getPayItemSection` used for bid summary",
       "verdict": null,
-      "id": "12:frontend:project"
+      "id": "12:frontend:project",
+      "provenance": "brief-only"
     },
     {
       "stream": "13 Data Export and Interoperability",
@@ -2215,11 +2611,16 @@
           "kind": "surface",
           "file": "13-data-export-and-interoperability.md",
           "path": "src/lib/p6xml/parser.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/p6xml/parser.ts"
         }
       ],
       "note": "`parseP6Xml`: parses uploaded PMXML into a live XMLDocument",
       "verdict": null,
-      "id": "13:frontend:parser"
+      "id": "13:frontend:parser",
+      "provenance": "brief+code"
     },
     {
       "stream": "13 Data Export and Interoperability",
@@ -2234,11 +2635,16 @@
           "kind": "surface",
           "file": "13-data-export-and-interoperability.md",
           "path": "src/lib/p6xml/serializer.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/p6xml/serializer.ts"
         }
       ],
       "note": "`serializeP6Xml`, `downloadP6Xml`: serializes mutated DOM; preserves unmodified elements verbatim",
       "verdict": null,
-      "id": "13:frontend:serializer"
+      "id": "13:frontend:serializer",
+      "provenance": "brief+code"
     },
     {
       "stream": "13 Data Export and Interoperability",
@@ -2253,11 +2659,16 @@
           "kind": "surface",
           "file": "13-data-export-and-interoperability.md",
           "path": "src/lib/p6xml/apply-progress.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/p6xml/apply-progress.ts"
         }
       ],
       "note": "`applyDailyReportsToP6`: writes approved cumulative quantities as `ActualUnits`/`PhysicalPercentComplete` into PMXML",
       "verdict": null,
-      "id": "13:frontend:apply-progress"
+      "id": "13:frontend:apply-progress",
+      "provenance": "brief+code"
     },
     {
       "stream": "13 Data Export and Interoperability",
@@ -2272,11 +2683,16 @@
           "kind": "surface",
           "file": "13-data-export-and-interoperability.md",
           "path": "src/lib/p6xml/load-approved.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/p6xml/load-approved.ts"
         }
       ],
       "note": "`loadApprovedDailyReports`: loads RE-approved rows from Supabase",
       "verdict": null,
-      "id": "13:frontend:load-approved"
+      "id": "13:frontend:load-approved",
+      "provenance": "brief+code"
     },
     {
       "stream": "13 Data Export and Interoperability",
@@ -2291,11 +2707,16 @@
           "kind": "surface",
           "file": "13-data-export-and-interoperability.md",
           "path": "src/lib/p6xml/build-from-project.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/p6xml/build-from-project.ts"
         }
       ],
       "note": "`buildP6XmlFromProject`: synthesizes full PMXML from live tables without an uploaded baseline",
       "verdict": null,
-      "id": "13:frontend:build-from-project"
+      "id": "13:frontend:build-from-project",
+      "provenance": "brief+code"
     },
     {
       "stream": "13 Data Export and Interoperability",
@@ -2310,11 +2731,16 @@
           "kind": "surface",
           "file": "13-data-export-and-interoperability.md",
           "path": "src/lib/p6xml/types.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/p6xml/types.ts"
         }
       ],
       "note": "`P6Tables`, `ActivityChange`, `P6Project`, `P6Activity`",
       "verdict": null,
-      "id": "13:frontend:types"
+      "id": "13:frontend:types",
+      "provenance": "brief+code"
     },
     {
       "stream": "13 Data Export and Interoperability",
@@ -2329,11 +2755,16 @@
           "kind": "surface",
           "file": "13-data-export-and-interoperability.md",
           "path": "src/lib/export-utils.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/export-utils.ts"
         }
       ],
       "note": "`exportCsv`, `exportApprovedCsv`, `exportPdfReport`, `exportApprovedPdfReport`, `exportInspectorDaily`, `exportApprovedInspectorDaily`; uses SheetJS + `jsPDF`",
       "verdict": null,
-      "id": "13:frontend:export-utils"
+      "id": "13:frontend:export-utils",
+      "provenance": "brief+code"
     },
     {
       "stream": "13 Data Export and Interoperability",
@@ -2352,7 +2783,8 @@
       ],
       "note": "`buildDemoPdf` and annotation-overlay PDF helpers",
       "verdict": null,
-      "id": "13:frontend:pdf-utils"
+      "id": "13:frontend:pdf-utils",
+      "provenance": "brief-only"
     },
     {
       "stream": "13 Data Export and Interoperability",
@@ -2371,7 +2803,8 @@
       ],
       "note": "`loadApprovedTotalsByPayItem` from `v_approved_pay_item_quantities`",
       "verdict": null,
-      "id": "13:frontend:approved-quantities"
+      "id": "13:frontend:approved-quantities",
+      "provenance": "brief-only"
     },
     {
       "stream": "13 Data Export and Interoperability",
@@ -2390,7 +2823,8 @@
       ],
       "note": "`saveExport`: Capacitor Filesystem on native, browser download on web",
       "verdict": null,
-      "id": "13:mobile:filesystem"
+      "id": "13:mobile:filesystem",
+      "provenance": "brief-only"
     },
     {
       "stream": "13 Data Export and Interoperability",
@@ -2405,11 +2839,16 @@
           "kind": "surface",
           "file": "13-data-export-and-interoperability.md",
           "path": "src/pages/P6Export.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/P6Export.tsx"
         }
       ],
       "note": "428-line 3-step wizard (upload baseline, map pay items, apply & download)",
       "verdict": null,
-      "id": "13:frontend:p6export"
+      "id": "13:frontend:p6export",
+      "provenance": "brief+code"
     },
     {
       "stream": "13 Data Export and Interoperability",
@@ -2428,7 +2867,8 @@
       ],
       "note": "`usePayItemActivityMap`, `useUpdatePayItemMapping`, `useBulkAutoMap`",
       "verdict": null,
-      "id": "13:frontend:usepayitemactivitymap"
+      "id": "13:frontend:usepayitemactivitymap",
+      "provenance": "brief-only"
     },
     {
       "stream": "14 Measurement and Geometry Engine",
@@ -2443,11 +2883,16 @@
           "kind": "surface",
           "file": "14-measurement-and-geometry-engine.md",
           "path": "src/lib/geometry.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/geometry.ts"
         }
       ],
       "note": "`distancePx`, `lineLength`, `polygonAreaPx`, `polygonAreaSF`, `sfToCY`, `sfToSY`, `formatMeasurement`, `pointToSegmentDistance`, `pointInPolygon`, `pointToMarkerDistance`",
       "verdict": null,
-      "id": "14:frontend:geometry"
+      "id": "14:frontend:geometry",
+      "provenance": "brief+code"
     },
     {
       "stream": "14 Measurement and Geometry Engine",
@@ -2462,11 +2907,16 @@
           "kind": "surface",
           "file": "14-measurement-and-geometry-engine.md",
           "path": "src/lib/geo-transform.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/geo-transform.ts"
         }
       ],
       "note": "`gpsToLocalFt`, `solveAffine2`, `solveAffine3` (least-squares), `gpsToplan`, `estimateError`, `buildGeoCalibration`, `initKalman`, `updateKalman`; types `GeoControlPoint`, `AffineMatrix`, `GeoCalibration`, `KalmanState`",
       "verdict": null,
-      "id": "14:frontend:geo-transform"
+      "id": "14:frontend:geo-transform",
+      "provenance": "brief+code"
     },
     {
       "stream": "14 Measurement and Geometry Engine",
@@ -2481,11 +2931,16 @@
           "kind": "surface",
           "file": "14-measurement-and-geometry-engine.md",
           "path": "src/components/GpsCalibration.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/GpsCalibration.tsx"
         }
       ],
       "note": "UI for placing 2–3 GPS control points with transform-error preview",
       "verdict": null,
-      "id": "14:frontend:gpscalibration"
+      "id": "14:frontend:gpscalibration",
+      "provenance": "brief+code"
     },
     {
       "stream": "14 Measurement and Geometry Engine",
@@ -2500,11 +2955,16 @@
           "kind": "surface",
           "file": "14-measurement-and-geometry-engine.md",
           "path": "src/components/GpsTraceControls.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/GpsTraceControls.tsx"
         }
       ],
       "note": "field GPS trace capture with Kalman-filtered position",
       "verdict": null,
-      "id": "14:frontend:gpstracecontrols"
+      "id": "14:frontend:gpstracecontrols",
+      "provenance": "brief+code"
     },
     {
       "stream": "14 Measurement and Geometry Engine",
@@ -2523,7 +2983,8 @@
       ],
       "note": "annotation canvas: renders annotations, drag-vertex editing, label leader lines, zoom-independent coordinates",
       "verdict": null,
-      "id": "14:frontend:pdfcanvas"
+      "id": "14:frontend:pdfcanvas",
+      "provenance": "brief-only"
     },
     {
       "stream": "14 Measurement and Geometry Engine",
@@ -2542,7 +3003,8 @@
       ],
       "note": "loads `calibrations` and `geo_calibrations`; owns `pixelsPerFoot`",
       "verdict": null,
-      "id": "14:frontend:useproject"
+      "id": "14:frontend:useproject",
+      "provenance": "brief-only"
     },
     {
       "stream": "15 Offline and Native Durability",
@@ -2557,11 +3019,16 @@
           "kind": "surface",
           "file": "15-offline-and-native-durability.md",
           "path": "src/lib/offline/db.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/offline/db.ts"
         }
       ],
       "note": "`getDB`: opens `takeoffpro-offline` IDB v2 with 13 stores; `safeGet/safePut/safeDelete/safeBulkPut/safeGetAllByIndex/clearAll`",
       "verdict": null,
-      "id": "15:mobile:db"
+      "id": "15:mobile:db",
+      "provenance": "brief+code"
     },
     {
       "stream": "15 Offline and Native Durability",
@@ -2576,11 +3043,16 @@
           "kind": "surface",
           "file": "15-offline-and-native-durability.md",
           "path": "src/lib/offline/mirror.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/offline/mirror.ts"
         }
       ],
       "note": "`mirrorProject`: `Promise.allSettled` snapshot of 8 Supabase tables; `mirrorProjectList`",
       "verdict": null,
-      "id": "15:mobile:mirror"
+      "id": "15:mobile:mirror",
+      "provenance": "brief+code"
     },
     {
       "stream": "15 Offline and Native Durability",
@@ -2595,11 +3067,16 @@
           "kind": "surface",
           "file": "15-offline-and-native-durability.md",
           "path": "src/lib/offline/outbox.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/offline/outbox.ts"
         }
       ],
       "note": "`enqueue`, `listByStatus`, `pendingForRow`, `countPending`, `updateRecord`, `removeRecord`, `storeBlob`, `getBlob`; `subscribeOutbox`",
       "verdict": null,
-      "id": "15:mobile:outbox"
+      "id": "15:mobile:outbox",
+      "provenance": "brief+code"
     },
     {
       "stream": "15 Offline and Native Durability",
@@ -2614,11 +3091,16 @@
           "kind": "surface",
           "file": "15-offline-and-native-durability.md",
           "path": "src/lib/offline/mutation-client.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/offline/mutation-client.ts"
         }
       ],
       "note": "`mutate`: online-first wrapper with outbox fallback and optimistic IDB mirror; `runDirect`",
       "verdict": null,
-      "id": "15:mobile:mutation-client"
+      "id": "15:mobile:mutation-client",
+      "provenance": "brief+code"
     },
     {
       "stream": "15 Offline and Native Durability",
@@ -2633,11 +3115,16 @@
           "kind": "surface",
           "file": "15-offline-and-native-durability.md",
           "path": "src/lib/offline/sync.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/offline/sync.ts"
         }
       ],
       "note": "`triggerSync`, `startSyncLoop`: drains outbox with 4 parallel workers, per-row serial ordering, exponential backoff (1s–3m, 5 attempts)",
       "verdict": null,
-      "id": "15:mobile:sync"
+      "id": "15:mobile:sync",
+      "provenance": "brief+code"
     },
     {
       "stream": "15 Offline and Native Durability",
@@ -2652,11 +3139,16 @@
           "kind": "surface",
           "file": "15-offline-and-native-durability.md",
           "path": "src/lib/offline/pdf-cache.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/offline/pdf-cache.ts"
         }
       ],
       "note": "`warmPdf`, `getCachedPdf`: CacheStorage `pdf-cache-v1`, 500 MB LRU cap with IDB metadata",
       "verdict": null,
-      "id": "15:mobile:pdf-cache"
+      "id": "15:mobile:pdf-cache",
+      "provenance": "brief+code"
     },
     {
       "stream": "15 Offline and Native Durability",
@@ -2671,11 +3163,16 @@
           "kind": "surface",
           "file": "15-offline-and-native-durability.md",
           "path": "src/lib/offline/idb-persister.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/offline/idb-persister.ts"
         }
       ],
       "note": "TanStack Query IDB persister",
       "verdict": null,
-      "id": "15:mobile:idb-persister"
+      "id": "15:mobile:idb-persister",
+      "provenance": "brief+code"
     },
     {
       "stream": "15 Offline and Native Durability",
@@ -2690,11 +3187,16 @@
           "kind": "surface",
           "file": "15-offline-and-native-durability.md",
           "path": "src/lib/pwa.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/pwa.ts"
         }
       ],
       "note": "`shouldRegisterSW`, `registerSWWithUpdates`, `unregisterAllSW`; guards iframe/preview/localhost/Capacitor",
       "verdict": null,
-      "id": "15:frontend:pwa"
+      "id": "15:frontend:pwa",
+      "provenance": "brief+code"
     },
     {
       "stream": "15 Offline and Native Durability",
@@ -2709,11 +3211,16 @@
           "kind": "surface",
           "file": "15-offline-and-native-durability.md",
           "path": "src/components/PwaShell.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/PwaShell.tsx"
         }
       ],
       "note": "offline pill, install CTA, update-available toast",
       "verdict": null,
-      "id": "15:mobile:pwashell"
+      "id": "15:mobile:pwashell",
+      "provenance": "brief+code"
     },
     {
       "stream": "15 Offline and Native Durability",
@@ -2728,11 +3235,16 @@
           "kind": "surface",
           "file": "15-offline-and-native-durability.md",
           "path": "src/components/SyncPanel.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/SyncPanel.tsx"
         }
       ],
       "note": "outbox queue status with per-item retry",
       "verdict": null,
-      "id": "15:frontend:syncpanel"
+      "id": "15:frontend:syncpanel",
+      "provenance": "brief+code"
     },
     {
       "stream": "15 Offline and Native Durability",
@@ -2747,11 +3259,16 @@
           "kind": "surface",
           "file": "15-offline-and-native-durability.md",
           "path": "src/lib/native/platform.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/native/platform.ts"
         }
       ],
       "note": "`isNative`, `platform`, `isIOS`, `isAndroid`",
       "verdict": null,
-      "id": "15:mobile:platform"
+      "id": "15:mobile:platform",
+      "provenance": "brief+code"
     },
     {
       "stream": "15 Offline and Native Durability",
@@ -2766,11 +3283,16 @@
           "kind": "surface",
           "file": "15-offline-and-native-durability.md",
           "path": "src/lib/native/filesystem.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/native/filesystem.ts"
         }
       ],
       "note": "`saveExport`",
       "verdict": null,
-      "id": "15:mobile:filesystem"
+      "id": "15:mobile:filesystem",
+      "provenance": "brief+code"
     },
     {
       "stream": "15 Offline and Native Durability",
@@ -2785,11 +3307,16 @@
           "kind": "surface",
           "file": "15-offline-and-native-durability.md",
           "path": "src/lib/native/camera.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/native/camera.ts"
         }
       ],
       "note": "Capacitor Camera shim",
       "verdict": null,
-      "id": "15:mobile:camera"
+      "id": "15:mobile:camera",
+      "provenance": "brief+code"
     },
     {
       "stream": "15 Offline and Native Durability",
@@ -2804,11 +3331,16 @@
           "kind": "surface",
           "file": "15-offline-and-native-durability.md",
           "path": "src/lib/native/biometric.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/native/biometric.ts"
         }
       ],
       "note": "FaceID/TouchID",
       "verdict": null,
-      "id": "15:mobile:biometric"
+      "id": "15:mobile:biometric",
+      "provenance": "brief+code"
     },
     {
       "stream": "15 Offline and Native Durability",
@@ -2823,11 +3355,16 @@
           "kind": "surface",
           "file": "15-offline-and-native-durability.md",
           "path": "src/lib/native/background-sync.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/native/background-sync.ts"
         }
       ],
       "note": "`App.addListener('appStateChange')` → `triggerSync`",
       "verdict": null,
-      "id": "15:mobile:background-sync"
+      "id": "15:mobile:background-sync",
+      "provenance": "brief+code"
     },
     {
       "stream": "15 Offline and Native Durability",
@@ -2842,11 +3379,16 @@
           "kind": "surface",
           "file": "15-offline-and-native-durability.md",
           "path": "src/lib/native/push.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/native/push.ts"
         }
       ],
       "note": "Capacitor PushNotifications",
       "verdict": null,
-      "id": "15:mobile:push"
+      "id": "15:mobile:push",
+      "provenance": "brief+code"
     },
     {
       "stream": "15 Offline and Native Durability",
@@ -2861,11 +3403,16 @@
           "kind": "surface",
           "file": "15-offline-and-native-durability.md",
           "path": "src/lib/native/geolocation.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/native/geolocation.ts"
         }
       ],
       "note": "Capacitor Geolocation",
       "verdict": null,
-      "id": "15:mobile:geolocation"
+      "id": "15:mobile:geolocation",
+      "provenance": "brief+code"
     },
     {
       "stream": "15 Offline and Native Durability",
@@ -2880,11 +3427,16 @@
           "kind": "surface",
           "file": "15-offline-and-native-durability.md",
           "path": "src/lib/native/app-state.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/native/app-state.ts"
         }
       ],
       "note": "foreground/background lifecycle",
       "verdict": null,
-      "id": "15:mobile:app-state"
+      "id": "15:mobile:app-state",
+      "provenance": "brief+code"
     },
     {
       "stream": "15 Offline and Native Durability",
@@ -2899,11 +3451,16 @@
           "kind": "surface",
           "file": "15-offline-and-native-durability.md",
           "path": "src/components/BiometricGate.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/BiometricGate.tsx"
         }
       ],
       "note": "biometric prompt",
       "verdict": null,
-      "id": "15:mobile:biometricgate"
+      "id": "15:mobile:biometricgate",
+      "provenance": "brief+code"
     },
     {
       "stream": "15 Offline and Native Durability",
@@ -2918,11 +3475,16 @@
           "kind": "surface",
           "file": "15-offline-and-native-durability.md",
           "path": "src/components/NativeFirstRun.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/NativeFirstRun.tsx"
         }
       ],
       "note": "first-run onboarding for native",
       "verdict": null,
-      "id": "15:mobile:nativefirstrun"
+      "id": "15:mobile:nativefirstrun",
+      "provenance": "brief+code"
     },
     {
       "stream": "15 Offline and Native Durability",
@@ -2937,11 +3499,16 @@
           "kind": "surface",
           "file": "15-offline-and-native-durability.md",
           "path": "src/hooks/useNetworkStatus.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/hooks/useNetworkStatus.ts"
         }
       ],
       "note": "`navigator.onLine` + listeners",
       "verdict": null,
-      "id": "15:frontend:usenetworkstatus"
+      "id": "15:frontend:usenetworkstatus",
+      "provenance": "brief+code"
     },
     {
       "stream": "15 Offline and Native Durability",
@@ -2956,11 +3523,16 @@
           "kind": "surface",
           "file": "15-offline-and-native-durability.md",
           "path": "src/hooks/useOutbox.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/hooks/useOutbox.ts"
         }
       ],
       "note": "reactive outbox count/items via `subscribeOutbox`",
       "verdict": null,
-      "id": "15:frontend:useoutbox"
+      "id": "15:frontend:useoutbox",
+      "provenance": "brief+code"
     },
     {
       "stream": "15 Offline and Native Durability",
@@ -2975,11 +3547,16 @@
           "kind": "surface",
           "file": "15-offline-and-native-durability.md",
           "path": "capacitor.config.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "capacitor.config.ts"
         }
       ],
       "note": "Capacitor config",
       "verdict": null,
-      "id": "15:docs:capacitor-config"
+      "id": "15:docs:capacitor-config",
+      "provenance": "brief+code"
     },
     {
       "stream": "15 Offline and Native Durability",
@@ -2998,7 +3575,8 @@
       ],
       "note": "PWA manifest",
       "verdict": null,
-      "id": "15:docs:manifest"
+      "id": "15:docs:manifest",
+      "provenance": "brief-only"
     },
     {
       "stream": "16 Mobile Field Ergonomics",
@@ -3013,11 +3591,16 @@
           "kind": "surface",
           "file": "16-mobile-field-ergonomics.md",
           "path": "src/components/MobileTabBar.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/MobileTabBar.tsx"
         }
       ],
       "note": "fixed bottom nav: Plans / Items / Sections / Summary + theme toggle; badge counts per tab",
       "verdict": null,
-      "id": "16:mobile:mobiletabbar"
+      "id": "16:mobile:mobiletabbar",
+      "provenance": "brief+code"
     },
     {
       "stream": "16 Mobile Field Ergonomics",
@@ -3032,11 +3615,16 @@
           "kind": "surface",
           "file": "16-mobile-field-ergonomics.md",
           "path": "src/components/MobileToolbar.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/MobileToolbar.tsx"
         }
       ],
       "note": "two-row contextual toolbar: tool buttons, undo/redo, page nav, active-pay-item chip, calibration chip, zoom",
       "verdict": null,
-      "id": "16:mobile:mobiletoolbar"
+      "id": "16:mobile:mobiletoolbar",
+      "provenance": "brief+code"
     },
     {
       "stream": "16 Mobile Field Ergonomics",
@@ -3051,11 +3639,16 @@
           "kind": "surface",
           "file": "16-mobile-field-ergonomics.md",
           "path": "src/components/MobileAnnotationSheet.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/MobileAnnotationSheet.tsx"
         }
       ],
       "note": "bottom `Sheet` for editing/deleting selected annotation",
       "verdict": null,
-      "id": "16:mobile:mobileannotationsheet"
+      "id": "16:mobile:mobileannotationsheet",
+      "provenance": "brief+code"
     },
     {
       "stream": "16 Mobile Field Ergonomics",
@@ -3070,11 +3663,16 @@
           "kind": "surface",
           "file": "16-mobile-field-ergonomics.md",
           "path": "src/components/MobileSections.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/MobileSections.tsx"
         }
       ],
       "note": "scrollable TOC/page list; tap navigates canvas and switches to Plans tab",
       "verdict": null,
-      "id": "16:mobile:mobilesections"
+      "id": "16:mobile:mobilesections",
+      "provenance": "brief+code"
     },
     {
       "stream": "16 Mobile Field Ergonomics",
@@ -3089,11 +3687,16 @@
           "kind": "surface",
           "file": "16-mobile-field-ergonomics.md",
           "path": "src/components/MobilePayItems.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/MobilePayItems.tsx"
         }
       ],
       "note": "pay item list with inline add/edit; active item highlighted; FAB-style Import action",
       "verdict": null,
-      "id": "16:mobile:mobilepayitems"
+      "id": "16:mobile:mobilepayitems",
+      "provenance": "brief+code"
     },
     {
       "stream": "16 Mobile Field Ergonomics",
@@ -3108,11 +3711,16 @@
           "kind": "surface",
           "file": "16-mobile-field-ergonomics.md",
           "path": "src/hooks/use-mobile.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/hooks/use-mobile.tsx"
         }
       ],
       "note": "`useIsMobile()` breakpoint hook (768 px via `matchMedia`)",
       "verdict": null,
-      "id": "16:frontend:use-mobile"
+      "id": "16:frontend:use-mobile",
+      "provenance": "brief+code"
     },
     {
       "stream": "16 Mobile Field Ergonomics",
@@ -3131,7 +3739,8 @@
       ],
       "note": "orchestrates mobile vs desktop branch; swaps sidebar ↔ `MobileTabBar`",
       "verdict": null,
-      "id": "16:frontend:index"
+      "id": "16:frontend:index",
+      "provenance": "brief-only"
     },
     {
       "stream": "16 Mobile Field Ergonomics",
@@ -3150,7 +3759,8 @@
       ],
       "note": "standalone public demo with same mobile stack; 12-step walkthrough overlay",
       "verdict": null,
-      "id": "16:frontend:demo"
+      "id": "16:frontend:demo",
+      "provenance": "brief-only"
     },
     {
       "stream": "16 Mobile Field Ergonomics",
@@ -3168,7 +3778,8 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "16:frontend:tab-switching-pdf-persistence"
+      "id": "16:frontend:tab-switching-pdf-persistence",
+      "provenance": "brief-only"
     },
     {
       "stream": "16 Mobile Field Ergonomics",
@@ -3186,7 +3797,8 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "16:frontend:active-pay-item-chip"
+      "id": "16:frontend:active-pay-item-chip",
+      "provenance": "brief-only"
     },
     {
       "stream": "16 Mobile Field Ergonomics",
@@ -3204,7 +3816,8 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "16:frontend:badge-counts"
+      "id": "16:frontend:badge-counts",
+      "provenance": "brief-only"
     },
     {
       "stream": "16 Mobile Field Ergonomics",
@@ -3222,7 +3835,8 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "16:frontend:zoom-clamp"
+      "id": "16:frontend:zoom-clamp",
+      "provenance": "brief-only"
     },
     {
       "stream": "16 Mobile Field Ergonomics",
@@ -3240,7 +3854,8 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "16:frontend:calibration-chip-tap"
+      "id": "16:frontend:calibration-chip-tap",
+      "provenance": "brief-only"
     },
     {
       "stream": "17 Notifications & Presence",
@@ -3255,11 +3870,16 @@
           "kind": "surface",
           "file": "17-notifications-and-presence.md",
           "path": "src/components/NotificationBell.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/NotificationBell.tsx"
         }
       ],
       "note": "popover bell with unread badge, per-kind icons, `markRead`/`markAllRead`, navigation on click",
       "verdict": null,
-      "id": "17:frontend:notificationbell"
+      "id": "17:frontend:notificationbell",
+      "provenance": "brief+code"
     },
     {
       "stream": "17 Notifications & Presence",
@@ -3274,11 +3894,16 @@
           "kind": "surface",
           "file": "17-notifications-and-presence.md",
           "path": "src/hooks/useNotifications.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/hooks/useNotifications.ts"
         }
       ],
       "note": "`useQuery` against `notifications` + Supabase Realtime `INSERT` subscription; 60s polling fallback; `markRead`/`markAllRead` mutations",
       "verdict": null,
-      "id": "17:frontend:usenotifications"
+      "id": "17:frontend:usenotifications",
+      "provenance": "brief+code"
     },
     {
       "stream": "17 Notifications & Presence",
@@ -3293,11 +3918,16 @@
           "kind": "surface",
           "file": "17-notifications-and-presence.md",
           "path": "supabase/functions/send-push/index.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "supabase/functions/send-push/index.ts"
         }
       ],
       "note": "edge function: reads `device_tokens`, calls FCM HTTP v1 API; gated on `FCM_SERVER_KEY` secret",
       "verdict": null,
-      "id": "17:backend:fn-send-push"
+      "id": "17:backend:fn-send-push",
+      "provenance": "brief+code"
     },
     {
       "stream": "17 Notifications & Presence",
@@ -3322,7 +3952,8 @@
       ],
       "note": "Capacitor `PushNotifications` shim; registers token to `device_tokens`; foreground Sonner toast; `unregisterPush`",
       "verdict": "implemented",
-      "id": "17:mobile:push"
+      "id": "17:mobile:push",
+      "provenance": "brief-only"
     },
     {
       "stream": "17 Notifications & Presence",
@@ -3341,7 +3972,8 @@
       ],
       "note": "Supabase Presence channel `presence:<projectId>`; tracks `{ name }`; `onlineUsers` array",
       "verdict": null,
-      "id": "17:frontend:useproject-ts-421-448"
+      "id": "17:frontend:useproject-ts-421-448",
+      "provenance": "brief-only"
     },
     {
       "stream": "17 Notifications & Presence",
@@ -3360,7 +3992,8 @@
       ],
       "note": "renders `\"{onlineUsers.length} online\"` badge in desktop toolbar",
       "verdict": null,
-      "id": "17:frontend:index-tsx-795"
+      "id": "17:frontend:index-tsx-795",
+      "provenance": "brief-only"
     },
     {
       "stream": "17 Notifications & Presence",
@@ -3378,7 +4011,8 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "17:frontend:bell-realtime-subscribe"
+      "id": "17:frontend:bell-realtime-subscribe",
+      "provenance": "brief-only"
     },
     {
       "stream": "17 Notifications & Presence",
@@ -3396,7 +4030,8 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "17:frontend:markread-markallread"
+      "id": "17:frontend:markread-markallread",
+      "provenance": "brief-only"
     },
     {
       "stream": "17 Notifications & Presence",
@@ -3414,7 +4049,8 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "17:frontend:navigation-on-click"
+      "id": "17:frontend:navigation-on-click",
+      "provenance": "brief-only"
     },
     {
       "stream": "17 Notifications & Presence",
@@ -3432,7 +4068,8 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "17:frontend:send-push-edge-function"
+      "id": "17:frontend:send-push-edge-function",
+      "provenance": "brief-only"
     },
     {
       "stream": "17 Notifications & Presence",
@@ -3450,7 +4087,8 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "17:frontend:presence-online-users"
+      "id": "17:frontend:presence-online-users",
+      "provenance": "brief-only"
     },
     {
       "stream": "18 Compliance & Audit",
@@ -3469,7 +4107,8 @@
       ],
       "note": "always-visible footer bar: negative lags, open-ended tasks, logic cycles, missing NJDOT M-codes (M100–M950)",
       "verdict": null,
-      "id": "18:frontend:compliancestrip"
+      "id": "18:frontend:compliancestrip",
+      "provenance": "brief-only"
     },
     {
       "stream": "18 Compliance & Audit",
@@ -3488,7 +4127,8 @@
       ],
       "note": "modal: runs `runDcma()` in-memory; 14-point score; per-check failing IDs; exports `.txt`",
       "verdict": null,
-      "id": "18:frontend:dcmapanel"
+      "id": "18:frontend:dcmapanel",
+      "provenance": "brief-only"
     },
     {
       "stream": "18 Compliance & Audit",
@@ -3513,7 +4153,8 @@
       ],
       "note": "`runDcma`, `dcmaSummary`, `DcmaResult`",
       "verdict": "implemented",
-      "id": "18:frontend:dcma"
+      "id": "18:frontend:dcma",
+      "provenance": "brief-only"
     },
     {
       "stream": "18 Compliance & Audit",
@@ -3532,7 +4173,8 @@
       ],
       "note": "RE review UI: approve/reject with reason, snapshot history, comment thread, stale-snapshot warning",
       "verdict": null,
-      "id": "18:frontend:rereviewcard"
+      "id": "18:frontend:rereviewcard",
+      "provenance": "brief-only"
     },
     {
       "stream": "18 Compliance & Audit",
@@ -3551,7 +4193,8 @@
       ],
       "note": "modal for reject-reason text",
       "verdict": null,
-      "id": "18:frontend:rerejectdialog"
+      "id": "18:frontend:rerejectdialog",
+      "provenance": "brief-only"
     },
     {
       "stream": "18 Compliance & Audit",
@@ -3570,7 +4213,8 @@
       ],
       "note": "inspector report lifecycle; snapshot freeze on submit; drift detection",
       "verdict": null,
-      "id": "18:frontend:usedailyreport"
+      "id": "18:frontend:usedailyreport",
+      "provenance": "brief-only"
     },
     {
       "stream": "18 Compliance & Audit",
@@ -3589,7 +4233,8 @@
       ],
       "note": "RE queue; `approve`/`reject` mutations stamping timestamp + user ID",
       "verdict": null,
-      "id": "18:frontend:userereviewqueue"
+      "id": "18:frontend:userereviewqueue",
+      "provenance": "brief-only"
     },
     {
       "stream": "18 Compliance & Audit",
@@ -3608,7 +4253,8 @@
       ],
       "note": "RE-only page",
       "verdict": null,
-      "id": "18:frontend:rereview"
+      "id": "18:frontend:rereview",
+      "provenance": "brief-only"
     },
     {
       "stream": "18 Compliance & Audit",
@@ -3623,11 +4269,16 @@
           "kind": "surface",
           "file": "18-compliance-and-audit.md",
           "path": "src/integrations/supabase/types.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/integrations/supabase/types.ts"
         }
       ],
       "note": "`daily_reports` schema (status, approved_at, approved_by, rejected_at, rejected_by, reject_reason, snapshot JSONB)",
       "verdict": null,
-      "id": "18:frontend:types"
+      "id": "18:frontend:types",
+      "provenance": "brief+code"
     },
     {
       "stream": "18 Compliance & Audit",
@@ -3645,7 +4296,8 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "18:frontend:negative-lag-m-code-check"
+      "id": "18:frontend:negative-lag-m-code-check",
+      "provenance": "brief-only"
     },
     {
       "stream": "18 Compliance & Audit",
@@ -3663,7 +4315,8 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "18:frontend:approve-reject-timestamps-reviewer"
+      "id": "18:frontend:approve-reject-timestamps-reviewer",
+      "provenance": "brief-only"
     },
     {
       "stream": "18 Compliance & Audit",
@@ -3681,7 +4334,8 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "18:frontend:snapshot-freeze"
+      "id": "18:frontend:snapshot-freeze",
+      "provenance": "brief-only"
     },
     {
       "stream": "18 Compliance & Audit",
@@ -3699,7 +4353,8 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "18:frontend:drift-detection"
+      "id": "18:frontend:drift-detection",
+      "provenance": "brief-only"
     },
     {
       "stream": "19 Onboarding & Tutorials",
@@ -3714,11 +4369,16 @@
           "kind": "surface",
           "file": "19-onboarding-and-tutorials.md",
           "path": "src/components/GuidedTour.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/GuidedTour.tsx"
         }
       ],
       "note": "portal overlay: SVG mask cutout, highlight ring, positioned tooltip; reads step `target` as CSS selector via `document.querySelector`",
       "verdict": null,
-      "id": "19:frontend:guidedtour"
+      "id": "19:frontend:guidedtour",
+      "provenance": "brief+code"
     },
     {
       "stream": "19 Onboarding & Tutorials",
@@ -3733,11 +4393,16 @@
           "kind": "surface",
           "file": "19-onboarding-and-tutorials.md",
           "path": "src/hooks/useTour.ts"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/hooks/useTour.ts"
         }
       ],
       "note": "state machine: `isActive`, `currentStep`, `start/next/prev/skip`; completion persisted to `localStorage` (`tour_<id>_completed`)",
       "verdict": null,
-      "id": "19:frontend:usetour"
+      "id": "19:frontend:usetour",
+      "provenance": "brief+code"
     },
     {
       "stream": "19 Onboarding & Tutorials",
@@ -3752,11 +4417,16 @@
           "kind": "surface",
           "file": "19-onboarding-and-tutorials.md",
           "path": "src/components/WelcomeCarousel.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/components/WelcomeCarousel.tsx"
         }
       ],
       "note": "modal carousel (5 slides, role-filtered via `showFor`); dismiss writes `profiles.has_seen_welcome`",
       "verdict": null,
-      "id": "19:frontend:welcomecarousel"
+      "id": "19:frontend:welcomecarousel",
+      "provenance": "brief+code"
     },
     {
       "stream": "19 Onboarding & Tutorials",
@@ -3775,7 +4445,8 @@
       ],
       "note": "Capacitor-only first-run sheet: push permission, biometric opt-in, offline mode; shown once via `localStorage`",
       "verdict": null,
-      "id": "19:mobile:nativefirstrun"
+      "id": "19:mobile:nativefirstrun",
+      "provenance": "brief-only"
     },
     {
       "stream": "19 Onboarding & Tutorials",
@@ -3790,11 +4461,16 @@
           "kind": "surface",
           "file": "19-onboarding-and-tutorials.md",
           "path": "src/pages/Demo.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/Demo.tsx"
         }
       ],
       "note": "unauthenticated interactive demo with 12-step `WALKTHROUGH_STEPS`",
       "verdict": null,
-      "id": "19:frontend:demo"
+      "id": "19:frontend:demo",
+      "provenance": "brief+code"
     },
     {
       "stream": "19 Onboarding & Tutorials",
@@ -3813,7 +4489,8 @@
       ],
       "note": "wires `workspaceTour` (`useTour('workspace')`) with 5 `data-tour` target steps; auto-starts via `startIfNew()`",
       "verdict": null,
-      "id": "19:frontend:index-tsx-80-100"
+      "id": "19:frontend:index-tsx-80-100",
+      "provenance": "brief-only"
     },
     {
       "stream": "19 Onboarding & Tutorials",
@@ -3831,7 +4508,8 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "19:frontend:welcomecarousel-gating"
+      "id": "19:frontend:welcomecarousel-gating",
+      "provenance": "brief-only"
     },
     {
       "stream": "19 Onboarding & Tutorials",
@@ -3849,7 +4527,8 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "19:frontend:role-filtering"
+      "id": "19:frontend:role-filtering",
+      "provenance": "brief-only"
     },
     {
       "stream": "19 Onboarding & Tutorials",
@@ -3867,7 +4546,8 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "19:frontend:guided-tour-auto-start"
+      "id": "19:frontend:guided-tour-auto-start",
+      "provenance": "brief-only"
     },
     {
       "stream": "19 Onboarding & Tutorials",
@@ -3885,7 +4565,8 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "19:frontend:demo-12-step-walkthrough"
+      "id": "19:frontend:demo-12-step-walkthrough",
+      "provenance": "brief-only"
     },
     {
       "stream": "19 Onboarding & Tutorials",
@@ -3903,7 +4584,8 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "19:frontend:nativefirstrun-shown-once"
+      "id": "19:frontend:nativefirstrun-shown-once",
+      "provenance": "brief-only"
     },
     {
       "stream": "20 Sales & Pitch",
@@ -3918,11 +4600,16 @@
           "kind": "surface",
           "file": "20-sales-and-pitch.md",
           "path": "src/pages/Landing.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/Landing.tsx"
         }
       ],
       "note": "primary public marketing page: pain-point stats, capability pairs, workflow steps, persona breakdowns, comparison table, pricing, FAQ, demo request form (writes to `demo_requests`); framer-motion",
       "verdict": null,
-      "id": "20:frontend:landing"
+      "id": "20:frontend:landing",
+      "provenance": "brief+code"
     },
     {
       "stream": "20 Sales & Pitch",
@@ -3937,11 +4624,16 @@
           "kind": "surface",
           "file": "20-sales-and-pitch.md",
           "path": "src/pages/McfaPitch.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/McfaPitch.tsx"
         }
       ],
       "note": "partner pitch for MCFA: proposal data from `MCFA_BYOR_Proposal.pdf`; dark engineering theme; pricing calculator",
       "verdict": null,
-      "id": "20:frontend:mcfapitch"
+      "id": "20:frontend:mcfapitch",
+      "provenance": "brief+code"
     },
     {
       "stream": "20 Sales & Pitch",
@@ -3956,11 +4648,16 @@
           "kind": "surface",
           "file": "20-sales-and-pitch.md",
           "path": "src/pages/FajarPitch.tsx"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/FajarPitch.tsx"
         }
       ],
       "note": "partner pitch for Fajar (equipment rental): availability grid, WhatsApp CTA, seed-based pseudo-random data",
       "verdict": null,
-      "id": "20:frontend:fajarpitch"
+      "id": "20:frontend:fajarpitch",
+      "provenance": "brief+code"
     },
     {
       "stream": "20 Sales & Pitch",
@@ -3981,11 +4678,16 @@
           "file": "20-sales-and-pitch.md",
           "criterion": "P6XmlDemo",
           "verdict": "implemented"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/P6XmlDemo.tsx"
         }
       ],
       "note": "live PMXML round-trip demo: parse sample, show DCMA, export RE memo; linked from `/mcfa/p6-xml`",
       "verdict": "implemented",
-      "id": "20:frontend:p6xmldemo"
+      "id": "20:frontend:p6xmldemo",
+      "provenance": "brief+code"
     },
     {
       "stream": "20 Sales & Pitch",
@@ -4004,7 +4706,8 @@
       ],
       "note": "interactive product demo (unauthenticated); 12-step guided walkthrough",
       "verdict": null,
-      "id": "20:frontend:demo"
+      "id": "20:frontend:demo",
+      "provenance": "brief-only"
     },
     {
       "stream": "20 Sales & Pitch",
@@ -4023,7 +4726,8 @@
       ],
       "note": "LLM-readable site description",
       "verdict": null,
-      "id": "20:docs:llms"
+      "id": "20:docs:llms",
+      "provenance": "brief-only"
     },
     {
       "stream": "20 Sales & Pitch",
@@ -4042,7 +4746,8 @@
       ],
       "note": "SEO sitemap: landing, demo, mcfa, fajar, p6-xml, mcfa/p6-xml",
       "verdict": null,
-      "id": "20:docs:sitemap"
+      "id": "20:docs:sitemap",
+      "provenance": "brief-only"
     },
     {
       "stream": "20 Sales & Pitch",
@@ -4061,7 +4766,8 @@
       ],
       "note": "crawl permissions",
       "verdict": null,
-      "id": "20:docs:robots"
+      "id": "20:docs:robots",
+      "provenance": "brief-only"
     },
     {
       "stream": "20 Sales & Pitch",
@@ -4080,7 +4786,8 @@
       ],
       "note": "routes `/landing`, `/demo`, `/mcfa`, `/fajar`, `/p6-xml`, `/mcfa/p6-xml` as public",
       "verdict": null,
-      "id": "20:frontend:app"
+      "id": "20:frontend:app",
+      "provenance": "brief-only"
     },
     {
       "stream": "20 Sales & Pitch",
@@ -4098,7 +4805,8 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "20:frontend:landing-page"
+      "id": "20:frontend:landing-page",
+      "provenance": "brief-only"
     },
     {
       "stream": "20 Sales & Pitch",
@@ -4116,7 +4824,8 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "20:frontend:demo-cta-linkage"
+      "id": "20:frontend:demo-cta-linkage",
+      "provenance": "brief-only"
     },
     {
       "stream": "20 Sales & Pitch",
@@ -4134,7 +4843,8 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "20:frontend:mcfapitch-fajarpitch"
+      "id": "20:frontend:mcfapitch-fajarpitch",
+      "provenance": "brief-only"
     },
     {
       "stream": "20 Sales & Pitch",
@@ -4152,7 +4862,8 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "20:frontend:sitemap-xml-completeness"
+      "id": "20:frontend:sitemap-xml-completeness",
+      "provenance": "brief-only"
     },
     {
       "stream": "20 Sales & Pitch",
@@ -4170,7 +4881,1695 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "20:frontend:llms-txt-accuracy"
+      "id": "20:frontend:llms-txt-accuracy",
+      "provenance": "brief-only"
+    },
+    {
+      "streamNum": "99",
+      "layer": "Frontend",
+      "name": "shadcn UI primitives",
+      "fileGlobs": [
+        "src/components/ui/accordion.tsx",
+        "src/components/ui/alert-dialog.tsx",
+        "src/components/ui/alert.tsx",
+        "src/components/ui/aspect-ratio.tsx",
+        "src/components/ui/avatar.tsx",
+        "src/components/ui/badge.tsx",
+        "src/components/ui/breadcrumb.tsx",
+        "src/components/ui/button.tsx",
+        "src/components/ui/calendar.tsx",
+        "src/components/ui/card.tsx",
+        "src/components/ui/carousel.tsx",
+        "src/components/ui/chart.tsx",
+        "src/components/ui/checkbox.tsx",
+        "src/components/ui/collapsible.tsx",
+        "src/components/ui/command.tsx",
+        "src/components/ui/context-menu.tsx",
+        "src/components/ui/dialog.tsx",
+        "src/components/ui/drawer.tsx",
+        "src/components/ui/dropdown-menu.tsx",
+        "src/components/ui/form.tsx",
+        "src/components/ui/hover-card.tsx",
+        "src/components/ui/input-otp.tsx",
+        "src/components/ui/input.tsx",
+        "src/components/ui/label.tsx",
+        "src/components/ui/menubar.tsx",
+        "src/components/ui/navigation-menu.tsx",
+        "src/components/ui/pagination.tsx",
+        "src/components/ui/popover.tsx",
+        "src/components/ui/progress.tsx",
+        "src/components/ui/radio-group.tsx",
+        "src/components/ui/resizable.tsx",
+        "src/components/ui/scroll-area.tsx",
+        "src/components/ui/select.tsx",
+        "src/components/ui/separator.tsx",
+        "src/components/ui/sheet.tsx",
+        "src/components/ui/sidebar.tsx",
+        "src/components/ui/skeleton.tsx",
+        "src/components/ui/slider.tsx",
+        "src/components/ui/sonner.tsx",
+        "src/components/ui/switch.tsx",
+        "src/components/ui/table.tsx",
+        "src/components/ui/tabs.tsx",
+        "src/components/ui/textarea.tsx",
+        "src/components/ui/toast.tsx",
+        "src/components/ui/toaster.tsx",
+        "src/components/ui/toggle-group.tsx",
+        "src/components/ui/toggle.tsx",
+        "src/components/ui/tooltip.tsx",
+        "src/components/ui/use-toast.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "cluster": "shadcn"
+        }
+      ],
+      "stream": "99 Cross-cutting",
+      "id": "99:frontend:shadcn-ui-primitives"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "app-icon-master",
+      "fileGlobs": [
+        "src/assets/app-icon-master.png"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/assets/app-icon-master.png"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:app-icon-master"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "blueprint-plans",
+      "fileGlobs": [
+        "src/assets/blueprint-plans.jpg"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/assets/blueprint-plans.jpg"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:blueprint-plans"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "gps-field-measurement",
+      "fileGlobs": [
+        "src/assets/gps-field-measurement.jpg"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/assets/gps-field-measurement.jpg"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:gps-field-measurement"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "hero-product-shot",
+      "fileGlobs": [
+        "src/assets/hero-product-shot.png"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/assets/hero-product-shot.png"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:hero-product-shot"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "hero-screenshot",
+      "fileGlobs": [
+        "src/assets/hero-screenshot.jpg"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/assets/hero-screenshot.jpg"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:hero-screenshot"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "highway-construction-aerial",
+      "fileGlobs": [
+        "src/assets/highway-construction-aerial.jpg"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/assets/highway-construction-aerial.jpg"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:highway-construction-aerial"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "inspector-tablet",
+      "fileGlobs": [
+        "src/assets/inspector-tablet.jpg"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/assets/inspector-tablet.jpg"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:inspector-tablet"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "ConfirmDialog",
+      "fileGlobs": [
+        "src/components/ConfirmDialog.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/ConfirmDialog.tsx"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:confirmdialog"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "EmptyState",
+      "fileGlobs": [
+        "src/components/EmptyState.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/EmptyState.tsx"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:emptystate"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "NavLink",
+      "fileGlobs": [
+        "src/components/NavLink.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/NavLink.tsx"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:navlink"
+    },
+    {
+      "streamNum": "01",
+      "layer": "Frontend",
+      "name": "TeamManager",
+      "fileGlobs": [
+        "src/components/TeamManager.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/TeamManager.tsx"
+        }
+      ],
+      "stream": "01 Identity & Access",
+      "id": "01:frontend:teammanager"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "ScheduleToolbar",
+      "fileGlobs": [
+        "src/components/schedule/ScheduleToolbar.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/schedule/ScheduleToolbar.tsx"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:scheduletoolbar"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "use-toast",
+      "fileGlobs": [
+        "src/hooks/use-toast.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/hooks/use-toast.ts"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:use-toast"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "useTheme",
+      "fileGlobs": [
+        "src/hooks/useTheme.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/hooks/useTheme.ts"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:usetheme"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Frontend",
+      "name": "index",
+      "fileGlobs": [
+        "src/index.css"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/index.css"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:frontend:index"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "client",
+      "fileGlobs": [
+        "src/integrations/supabase/client.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/integrations/supabase/client.ts"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:client"
+    },
+    {
+      "streamNum": "13",
+      "layer": "Frontend",
+      "name": "sample",
+      "fileGlobs": [
+        "src/lib/p6xml/sample.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/p6xml/sample.ts"
+        }
+      ],
+      "stream": "13 Data Export & Interoperability",
+      "id": "13:frontend:sample"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "date-utils",
+      "fileGlobs": [
+        "src/lib/schedule/date-utils.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/schedule/date-utils.ts"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:date-utils"
+    },
+    {
+      "streamNum": "10",
+      "layer": "Frontend",
+      "name": "storage",
+      "fileGlobs": [
+        "src/lib/storage.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/storage.ts"
+        }
+      ],
+      "stream": "10 Document Management",
+      "id": "10:frontend:storage"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "utils",
+      "fileGlobs": [
+        "src/lib/utils.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/utils.ts"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:utils"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Frontend",
+      "name": "main",
+      "fileGlobs": [
+        "src/main.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/main.tsx"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:frontend:main"
+    },
+    {
+      "streamNum": "01",
+      "layer": "Frontend",
+      "name": "Admin",
+      "fileGlobs": [
+        "src/pages/Admin.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/Admin.tsx"
+        }
+      ],
+      "stream": "01 Identity & Access",
+      "id": "01:frontend:admin"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "NotFound",
+      "fileGlobs": [
+        "src/pages/NotFound.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/NotFound.tsx"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:notfound"
+    },
+    {
+      "streamNum": "01",
+      "layer": "Frontend",
+      "name": "Settings",
+      "fileGlobs": [
+        "src/pages/Settings.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/Settings.tsx"
+        }
+      ],
+      "stream": "01 Identity & Access",
+      "id": "01:frontend:settings"
+    },
+    {
+      "streamNum": "18",
+      "layer": "Verification",
+      "name": "analysis-dcma.test",
+      "fileGlobs": [
+        "src/test/analysis-dcma.test.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/test/analysis-dcma.test.ts"
+        }
+      ],
+      "stream": "18 Compliance & Audit",
+      "id": "18:verification:analysis-dcma-test"
+    },
+    {
+      "streamNum": "18",
+      "layer": "Verification",
+      "name": "analysis-tia.test",
+      "fileGlobs": [
+        "src/test/analysis-tia.test.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/test/analysis-tia.test.ts"
+        }
+      ],
+      "stream": "18 Compliance & Audit",
+      "id": "18:verification:analysis-tia-test"
+    },
+    {
+      "streamNum": "18",
+      "layer": "Verification",
+      "name": "baseline-end.test",
+      "fileGlobs": [
+        "src/test/baseline-end.test.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/test/baseline-end.test.ts"
+        }
+      ],
+      "stream": "18 Compliance & Audit",
+      "id": "18:verification:baseline-end-test"
+    },
+    {
+      "streamNum": "18",
+      "layer": "Verification",
+      "name": "cpm.test",
+      "fileGlobs": [
+        "src/test/cpm.test.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/test/cpm.test.ts"
+        }
+      ],
+      "stream": "18 Compliance & Audit",
+      "id": "18:verification:cpm-test"
+    },
+    {
+      "streamNum": "18",
+      "layer": "Verification",
+      "name": "daily-report-snapshot.test",
+      "fileGlobs": [
+        "src/test/daily-report-snapshot.test.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/test/daily-report-snapshot.test.ts"
+        }
+      ],
+      "stream": "18 Compliance & Audit",
+      "id": "18:verification:daily-report-snapshot-test"
+    },
+    {
+      "streamNum": "18",
+      "layer": "Verification",
+      "name": "date-utils.test",
+      "fileGlobs": [
+        "src/test/date-utils.test.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/test/date-utils.test.ts"
+        }
+      ],
+      "stream": "18 Compliance & Audit",
+      "id": "18:verification:date-utils-test"
+    },
+    {
+      "streamNum": "18",
+      "layer": "Verification",
+      "name": "dev-pmxml.test",
+      "fileGlobs": [
+        "src/test/dev-pmxml.test.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/test/dev-pmxml.test.ts"
+        }
+      ],
+      "stream": "18 Compliance & Audit",
+      "id": "18:verification:dev-pmxml-test"
+    },
+    {
+      "streamNum": "18",
+      "layer": "Verification",
+      "name": "example.test",
+      "fileGlobs": [
+        "src/test/example.test.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/test/example.test.ts"
+        }
+      ],
+      "stream": "18 Compliance & Audit",
+      "id": "18:verification:example-test"
+    },
+    {
+      "streamNum": "18",
+      "layer": "Verification",
+      "name": "geometry.test",
+      "fileGlobs": [
+        "src/test/geometry.test.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/test/geometry.test.ts"
+        }
+      ],
+      "stream": "18 Compliance & Audit",
+      "id": "18:verification:geometry-test"
+    },
+    {
+      "streamNum": "18",
+      "layer": "Verification",
+      "name": "import-p6.test",
+      "fileGlobs": [
+        "src/test/import-p6.test.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/test/import-p6.test.ts"
+        }
+      ],
+      "stream": "18 Compliance & Audit",
+      "id": "18:verification:import-p6-test"
+    },
+    {
+      "streamNum": "18",
+      "layer": "Verification",
+      "name": "p6xml.test",
+      "fileGlobs": [
+        "src/test/p6xml.test.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/test/p6xml.test.ts"
+        }
+      ],
+      "stream": "18 Compliance & Audit",
+      "id": "18:verification:p6xml-test"
+    },
+    {
+      "streamNum": "18",
+      "layer": "Verification",
+      "name": "setup",
+      "fileGlobs": [
+        "src/test/setup.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/test/setup.ts"
+        }
+      ],
+      "stream": "18 Compliance & Audit",
+      "id": "18:verification:setup"
+    },
+    {
+      "streamNum": "18",
+      "layer": "Verification",
+      "name": "specs-utils.test",
+      "fileGlobs": [
+        "src/test/specs-utils.test.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/test/specs-utils.test.ts"
+        }
+      ],
+      "stream": "18 Compliance & Audit",
+      "id": "18:verification:specs-utils-test"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Frontend",
+      "name": "vite-env.d",
+      "fileGlobs": [
+        "src/vite-env.d.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/vite-env.d.ts"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:frontend:vite-env-d"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Backend",
+      "name": "fn: parse-schedule",
+      "fileGlobs": [
+        "supabase/functions/parse-schedule/index.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "supabase/functions/parse-schedule/index.ts"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:backend:fn-parse-schedule"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "apply-depth-patches",
+      "fileGlobs": [
+        "scripts/apply-depth-patches.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/apply-depth-patches.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:apply-depth-patches"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "build-demo-pdf",
+      "fileGlobs": [
+        "scripts/build-demo-pdf.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/build-demo-pdf.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:build-demo-pdf"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "build-dev-pmxml",
+      "fileGlobs": [
+        "scripts/build-dev-pmxml.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/build-dev-pmxml.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:build-dev-pmxml"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "build-dev-wbs",
+      "fileGlobs": [
+        "scripts/build-dev-wbs.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/build-dev-wbs.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:build-dev-wbs"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "consolidate-wbs",
+      "fileGlobs": [
+        "scripts/consolidate-wbs.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/consolidate-wbs.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:consolidate-wbs"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "derive-file-surface",
+      "fileGlobs": [
+        "scripts/derive-file-surface.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/derive-file-surface.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:derive-file-surface"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "build-code-leaves",
+      "fileGlobs": [
+        "scripts/dev-wbs/build-code-leaves.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/dev-wbs/build-code-leaves.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:build-code-leaves"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "build-leaves",
+      "fileGlobs": [
+        "scripts/dev-wbs/build-leaves.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/dev-wbs/build-leaves.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:build-leaves"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "git-dates",
+      "fileGlobs": [
+        "scripts/dev-wbs/git-dates.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/dev-wbs/git-dates.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:git-dates"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "parse-brief",
+      "fileGlobs": [
+        "scripts/dev-wbs/parse-brief.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/dev-wbs/parse-brief.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:parse-brief"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "reconcile-leaves",
+      "fileGlobs": [
+        "scripts/dev-wbs/reconcile-leaves.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/dev-wbs/reconcile-leaves.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:reconcile-leaves"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "stream-heuristics",
+      "fileGlobs": [
+        "scripts/dev-wbs/stream-heuristics.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/dev-wbs/stream-heuristics.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:stream-heuristics"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "discover-work-items",
+      "fileGlobs": [
+        "scripts/discover-work-items.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/discover-work-items.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:discover-work-items"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "extract-build-history",
+      "fileGlobs": [
+        "scripts/extract-build-history.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/extract-build-history.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:extract-build-history"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "extract-marketing-promises",
+      "fileGlobs": [
+        "scripts/extract-marketing-promises.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/extract-marketing-promises.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:extract-marketing-promises"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "reconcile-scope",
+      "fileGlobs": [
+        "scripts/reconcile-scope.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/reconcile-scope.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:reconcile-scope"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "verify-e2e",
+      "fileGlobs": [
+        "scripts/verify-e2e.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/verify-e2e.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:verify-e2e"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Build",
+      "name": "vite.config",
+      "fileGlobs": [
+        "vite.config.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "vite.config.ts"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:build:vite-config"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Build",
+      "name": "tailwind.config",
+      "fileGlobs": [
+        "tailwind.config.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "tailwind.config.ts"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:build:tailwind-config"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Build",
+      "name": "postcss.config",
+      "fileGlobs": [
+        "postcss.config.js"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "postcss.config.js"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:build:postcss-config"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Build",
+      "name": "eslint.config",
+      "fileGlobs": [
+        "eslint.config.js"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "eslint.config.js"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:build:eslint-config"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Build",
+      "name": "components",
+      "fileGlobs": [
+        "components.json"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "components.json"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:build:components"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Build",
+      "name": "index",
+      "fileGlobs": [
+        "index.html"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "index.html"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:build:index"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Build",
+      "name": "tsconfig",
+      "fileGlobs": [
+        "tsconfig.json"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "tsconfig.json"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:build:tsconfig"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Build",
+      "name": "tsconfig.app",
+      "fileGlobs": [
+        "tsconfig.app.json"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "tsconfig.app.json"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:build:tsconfig-app"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Build",
+      "name": "tsconfig.node",
+      "fileGlobs": [
+        "tsconfig.node.json"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "tsconfig.node.json"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:build:tsconfig-node"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "config",
+      "fileGlobs": [
+        "supabase/config.toml"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "supabase/config.toml"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:config"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "Migrations 2026-w12",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+        "supabase/migrations/20260321162325_749c9dcd-0ffa-430d-bf20-422872294f47.sql",
+        "supabase/migrations/20260321162349_089b7eac-a691-474e-96f4-b97ab4d2581d.sql",
+        "supabase/migrations/20260321162408_22a25531-f789-4f47-b2d5-ec7d40196497.sql",
+        "supabase/migrations/20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql",
+        "supabase/migrations/20260321164313_fadd3bba-4f5e-4ac1-b47b-3887bdd98769.sql",
+        "supabase/migrations/20260321164809_127eb40b-40a6-4814-b6cc-ed2f3acd27f2.sql",
+        "supabase/migrations/20260321170227_75de1f7c-2825-40a9-b86e-f031966b835e.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260321162325_749c9dcd-0ffa-430d-bf20-422872294f47.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260321162349_089b7eac-a691-474e-96f4-b97ab4d2581d.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260321162408_22a25531-f789-4f47-b2d5-ec7d40196497.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260321164313_fadd3bba-4f5e-4ac1-b47b-3887bdd98769.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260321164809_127eb40b-40a6-4814-b6cc-ed2f3acd27f2.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260321170227_75de1f7c-2825-40a9-b86e-f031966b835e.sql"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migrations-2026-w12"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "Migrations 2026-w13",
+      "fileGlobs": [
+        "supabase/migrations/20260323121718_947e033e-ded7-4dae-9824-5ff155f34faf.sql",
+        "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql",
+        "supabase/migrations/20260323184019_702975d9-3680-45b2-9a82-8587db5f26e5.sql",
+        "supabase/migrations/20260327122843_6f261706-ce0b-4c8a-b707-c3c8b0648540.sql",
+        "supabase/migrations/20260328182512_208ba41b-5292-403a-baf4-9b9b2d158879.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260323121718_947e033e-ded7-4dae-9824-5ff155f34faf.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260323184019_702975d9-3680-45b2-9a82-8587db5f26e5.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260327122843_6f261706-ce0b-4c8a-b707-c3c8b0648540.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260328182512_208ba41b-5292-403a-baf4-9b9b2d158879.sql"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migrations-2026-w13"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "Migrations 2026-w19",
+      "fileGlobs": [
+        "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
+        "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migrations-2026-w19"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "Migrations 2026-w22",
+      "fileGlobs": [
+        "supabase/migrations/20260524015102_6a9de603-5b28-4109-98fe-7e343194da37.sql",
+        "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
+        "supabase/migrations/20260524015158_bd7b1203-22ec-46f0-8c88-3c4208a05c7d.sql",
+        "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql",
+        "supabase/migrations/20260524172951_27a28235-ea50-4c3c-be4a-528f35665ed2.sql",
+        "supabase/migrations/20260524173747_cd76e27d-fda9-4f8b-aac8-c875aa100937.sql",
+        "supabase/migrations/20260524173937_345bb077-7543-4a05-9ef8-c474d5276b1f.sql",
+        "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+        "supabase/migrations/20260524182507_aa3b520a-cfe2-4510-b710-0caf0809bc7f.sql",
+        "supabase/migrations/20260524230947_197a36b0-b223-4c6d-a3b6-73dd795f14de.sql",
+        "supabase/migrations/20260525163245_e34bfccb-6eb4-4a47-b075-1f9c628559da.sql",
+        "supabase/migrations/20260526015440_e7d9bc81-0db3-4acd-88f7-ff486798a2b2.sql",
+        "supabase/migrations/20260526021443_4709d075-1bb1-44b9-ae5f-3edc62bcd171.sql",
+        "supabase/migrations/20260526105432_7d5d3850-b410-4d77-ad92-1f2f0e524b65.sql",
+        "supabase/migrations/20260526114744_9262b81e-12b7-4ca4-a3c8-d39802232caf.sql",
+        "supabase/migrations/20260526114820_e82b22fa-1dac-434e-942a-e18387a3c065.sql",
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+        "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql",
+        "supabase/migrations/20260528155528_44c52ae9-d9c8-4390-8dde-0367583b44ef.sql",
+        "supabase/migrations/20260528155928_1fea17ca-9deb-4078-8173-ee3e52b6eab6.sql",
+        "supabase/migrations/20260529041918_637a0229-3683-4419-9838-890b4e588b31.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524015102_6a9de603-5b28-4109-98fe-7e343194da37.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524015158_bd7b1203-22ec-46f0-8c88-3c4208a05c7d.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524172951_27a28235-ea50-4c3c-be4a-528f35665ed2.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524173747_cd76e27d-fda9-4f8b-aac8-c875aa100937.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524173937_345bb077-7543-4a05-9ef8-c474d5276b1f.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524182507_aa3b520a-cfe2-4510-b710-0caf0809bc7f.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524230947_197a36b0-b223-4c6d-a3b6-73dd795f14de.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260525163245_e34bfccb-6eb4-4a47-b075-1f9c628559da.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260526015440_e7d9bc81-0db3-4acd-88f7-ff486798a2b2.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260526021443_4709d075-1bb1-44b9-ae5f-3edc62bcd171.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260526105432_7d5d3850-b410-4d77-ad92-1f2f0e524b65.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260526114744_9262b81e-12b7-4ca4-a3c8-d39802232caf.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260526114820_e82b22fa-1dac-434e-942a-e18387a3c065.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260528155528_44c52ae9-d9c8-4390-8dde-0367583b44ef.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260528155928_1fea17ca-9deb-4078-8173-ee3e52b6eab6.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260529041918_637a0229-3683-4419-9838-890b4e588b31.sql"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migrations-2026-w22"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Backend",
+      "name": "db: activity_assignments",
+      "fileGlobs": [
+        "public.activity_assignments"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "activity_assignments"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:backend:db-activity-assignments"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Backend",
+      "name": "db: activity_pay_items",
+      "fileGlobs": [
+        "public.activity_pay_items"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "activity_pay_items"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:backend:db-activity-pay-items"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Backend",
+      "name": "db: activity_relationships",
+      "fileGlobs": [
+        "public.activity_relationships"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "activity_relationships"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:backend:db-activity-relationships"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Backend",
+      "name": "db: activity_resource_assignments",
+      "fileGlobs": [
+        "public.activity_resource_assignments"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "activity_resource_assignments"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:backend:db-activity-resource-assignments"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Backend",
+      "name": "db: baseline_activities",
+      "fileGlobs": [
+        "public.baseline_activities"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "baseline_activities"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:backend:db-baseline-activities"
+    },
+    {
+      "streamNum": "20",
+      "layer": "Backend",
+      "name": "db: demo_requests",
+      "fileGlobs": [
+        "public.demo_requests"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "demo_requests"
+        }
+      ],
+      "stream": "20 Sales & Pitch",
+      "id": "20:backend:db-demo-requests"
+    },
+    {
+      "streamNum": "17",
+      "layer": "Backend",
+      "name": "db: device_tokens",
+      "fileGlobs": [
+        "public.device_tokens"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "device_tokens"
+        }
+      ],
+      "stream": "17 Notifications & Presence",
+      "id": "17:backend:db-device-tokens"
+    },
+    {
+      "streamNum": "14",
+      "layer": "Backend",
+      "name": "db: geo_calibrations",
+      "fileGlobs": [
+        "public.geo_calibrations"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "geo_calibrations"
+        }
+      ],
+      "stream": "14 Measurement & Geometry Engine",
+      "id": "14:backend:db-geo-calibrations"
+    },
+    {
+      "streamNum": "17",
+      "layer": "Backend",
+      "name": "db: notifications",
+      "fileGlobs": [
+        "public.notifications"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "notifications"
+        }
+      ],
+      "stream": "17 Notifications & Presence",
+      "id": "17:backend:db-notifications"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Backend",
+      "name": "db: project_schedule_meta",
+      "fileGlobs": [
+        "public.project_schedule_meta"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "project_schedule_meta"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:backend:db-project-schedule-meta"
+    },
+    {
+      "streamNum": "12",
+      "layer": "Backend",
+      "name": "db: rocks",
+      "fileGlobs": [
+        "public.rocks"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "rocks"
+        }
+      ],
+      "stream": "12 Project Health & Controls",
+      "id": "12:backend:db-rocks"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Backend",
+      "name": "db: schedule_activities",
+      "fileGlobs": [
+        "public.schedule_activities"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "schedule_activities"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:backend:db-schedule-activities"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Backend",
+      "name": "db: schedule_baselines",
+      "fileGlobs": [
+        "public.schedule_baselines"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "schedule_baselines"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:backend:db-schedule-baselines"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Backend",
+      "name": "db: schedule_calendars",
+      "fileGlobs": [
+        "public.schedule_calendars"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "schedule_calendars"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:backend:db-schedule-calendars"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Backend",
+      "name": "db: schedule_resources",
+      "fileGlobs": [
+        "public.schedule_resources"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "schedule_resources"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:backend:db-schedule-resources"
+    },
+    {
+      "streamNum": "12",
+      "layer": "Backend",
+      "name": "db: scorecard_metrics",
+      "fileGlobs": [
+        "public.scorecard_metrics"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "scorecard_metrics"
+        }
+      ],
+      "stream": "12 Project Health & Controls",
+      "id": "12:backend:db-scorecard-metrics"
     }
   ]
 }
