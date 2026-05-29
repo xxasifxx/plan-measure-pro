@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-05-29T15:52:25.475Z",
+  "generatedAt": "2026-05-29T15:54:03.675Z",
   "totals": {
     "streams": 20,
-    "leaves": 221,
+    "leaves": 211,
     "byLayer": {
-      "Frontend": 144,
-      "Mobile": 34,
-      "Backend": 20,
-      "Docs": 23
+      "Frontend": 149,
+      "Mobile": 33,
+      "Backend": 24,
+      "Docs": 5
     }
   },
   "leaves": [
@@ -24,10 +24,22 @@
           "kind": "surface",
           "file": "01-identity-and-access.md",
           "path": "src/pages/Auth.tsx"
+        },
+        {
+          "kind": "criterion",
+          "file": "01-identity-and-access.md",
+          "criterion": "Organic signup → admin role",
+          "verdict": "implemented"
+        },
+        {
+          "kind": "criterion",
+          "file": "01-identity-and-access.md",
+          "criterion": "Invitation flow",
+          "verdict": "implemented"
         }
       ],
       "note": "email/password sign-in, sign-up (with org-name capture), forgot-password mode, and invitation-token acceptance on landing",
-      "verdict": null,
+      "verdict": "implemented",
       "id": "01:frontend:auth"
     },
     {
@@ -43,10 +55,16 @@
           "kind": "surface",
           "file": "01-identity-and-access.md",
           "path": "src/pages/ResetPassword.tsx"
+        },
+        {
+          "kind": "criterion",
+          "file": "01-identity-and-access.md",
+          "criterion": "Password reset",
+          "verdict": "implemented"
         }
       ],
       "note": "handles Supabase `PASSWORD_RECOVERY` event; calls `supabase.auth.updateUser`",
-      "verdict": null,
+      "verdict": "implemented",
       "id": "01:frontend:resetpassword"
     },
     {
@@ -62,10 +80,22 @@
           "kind": "surface",
           "file": "01-identity-and-access.md",
           "path": "src/hooks/useAuth.tsx"
+        },
+        {
+          "kind": "criterion",
+          "file": "01-identity-and-access.md",
+          "criterion": "Roles populated",
+          "verdict": "implemented"
+        },
+        {
+          "kind": "criterion",
+          "file": "01-identity-and-access.md",
+          "criterion": "Role booleans correct",
+          "verdict": "implemented"
         }
       ],
       "note": "`AuthProvider` + `useAuth`; loads `user_roles` + `profiles` after session, exposes `isManager`, `isAdmin`, `isResidentEngineer`, `isInspector` booleans",
-      "verdict": null,
+      "verdict": "implemented",
       "id": "01:frontend:useauth"
     },
     {
@@ -81,10 +111,16 @@
           "kind": "surface",
           "file": "01-identity-and-access.md",
           "path": "src/components/BiometricGate.tsx"
+        },
+        {
+          "kind": "criterion",
+          "file": "01-identity-and-access.md",
+          "criterion": "Biometric gate",
+          "verdict": "implemented"
         }
       ],
       "note": "native-only cold-start gate; calls `lib/native/biometric.{getStatus,unlock,unenroll}`",
-      "verdict": null,
+      "verdict": "implemented",
       "id": "01:mobile:biometricgate"
     },
     {
@@ -167,7 +203,7 @@
       "stream": "01 Identity & Access",
       "streamNum": "01",
       "layer": "Backend",
-      "name": "",
+      "name": "fn: invite-user",
       "fileGlobs": [
         "supabase/functions/invite-user/"
       ],
@@ -180,86 +216,7 @@
       ],
       "note": "edge function that creates an invitation row and emails token link",
       "verdict": null,
-      "id": "01:backend:"
-    },
-    {
-      "stream": "01 Identity & Access",
-      "streamNum": "01",
-      "layer": "Docs",
-      "name": "Organic signup → admin role",
-      "fileGlobs": [
-        "Auth.tsx",
-        "useAuth.tsx"
-      ],
-      "sources": [
-        {
-          "kind": "criterion",
-          "file": "01-identity-and-access.md",
-          "criterion": "Organic signup → admin role",
-          "verdict": "implemented"
-        },
-        {
-          "kind": "criterion",
-          "file": "01-identity-and-access.md",
-          "criterion": "Invitation flow",
-          "verdict": "implemented"
-        },
-        {
-          "kind": "criterion",
-          "file": "01-identity-and-access.md",
-          "criterion": "Roles populated",
-          "verdict": "implemented"
-        },
-        {
-          "kind": "criterion",
-          "file": "01-identity-and-access.md",
-          "criterion": "Role booleans correct",
-          "verdict": "implemented"
-        }
-      ],
-      "verdict": "implemented",
-      "note": "",
-      "id": "01:docs:organic-signup-admin-role"
-    },
-    {
-      "stream": "01 Identity & Access",
-      "streamNum": "01",
-      "layer": "Mobile",
-      "name": "Biometric gate",
-      "fileGlobs": [
-        "BiometricGate.tsx"
-      ],
-      "sources": [
-        {
-          "kind": "criterion",
-          "file": "01-identity-and-access.md",
-          "criterion": "Biometric gate",
-          "verdict": "implemented"
-        }
-      ],
-      "verdict": "implemented",
-      "note": "",
-      "id": "01:mobile:biometric-gate"
-    },
-    {
-      "stream": "01 Identity & Access",
-      "streamNum": "01",
-      "layer": "Docs",
-      "name": "Password reset",
-      "fileGlobs": [
-        "ResetPassword.tsx"
-      ],
-      "sources": [
-        {
-          "kind": "criterion",
-          "file": "01-identity-and-access.md",
-          "criterion": "Password reset",
-          "verdict": "implemented"
-        }
-      ],
-      "verdict": "implemented",
-      "note": "",
-      "id": "01:docs:password-reset"
+      "id": "01:backend:fn-invite-user"
     },
     {
       "stream": "01 Identity & Access",
@@ -292,10 +249,40 @@
           "kind": "surface",
           "file": "02-portfolio-and-pm-home.md",
           "path": "src/pages/Dashboard.tsx"
+        },
+        {
+          "kind": "criterion",
+          "file": "02-portfolio-and-pm-home.md",
+          "criterion": "New Project dialog",
+          "verdict": "implemented"
+        },
+        {
+          "kind": "criterion",
+          "file": "02-portfolio-and-pm-home.md",
+          "criterion": "Delete guard",
+          "verdict": "implemented"
+        },
+        {
+          "kind": "criterion",
+          "file": "02-portfolio-and-pm-home.md",
+          "criterion": "PM inspector detail",
+          "verdict": "partial"
+        },
+        {
+          "kind": "criterion",
+          "file": "02-portfolio-and-pm-home.md",
+          "criterion": "Role badge",
+          "verdict": "implemented"
+        },
+        {
+          "kind": "criterion",
+          "file": "02-portfolio-and-pm-home.md",
+          "criterion": "Inspector empty state",
+          "verdict": "implemented"
         }
       ],
       "note": "full-screen portfolio view: project card grid, \"New Project\" dialog (name + contract number + PDF upload), delete confirmation, expandable inspector-activity detail, pending RE review badges; also mounts `WelcomeCarousel` and `GuidedTour`",
-      "verdict": null,
+      "verdict": "implemented",
       "id": "02:frontend:dashboard"
     },
     {
@@ -311,10 +298,22 @@
           "kind": "surface",
           "file": "02-portfolio-and-pm-home.md",
           "path": "src/hooks/useProjects.ts"
+        },
+        {
+          "kind": "criterion",
+          "file": "02-portfolio-and-pm-home.md",
+          "criterion": "Ownership + member union",
+          "verdict": "implemented"
+        },
+        {
+          "kind": "criterion",
+          "file": "02-portfolio-and-pm-home.md",
+          "criterion": "Card stats",
+          "verdict": "implemented"
         }
       ],
       "note": "`useProjects()`: fetches owned + member projects, decorates with `annotation_count`, `latest_annotation_at`, `member_count`; exposes `createProject` and `deleteProject` mutations",
-      "verdict": null,
+      "verdict": "implemented",
       "id": "02:frontend:useprojects"
     },
     {
@@ -451,76 +450,6 @@
       "id": "02:backend:db-annotations"
     },
     {
-      "stream": "02 Portfolio & PM Home",
-      "streamNum": "02",
-      "layer": "Docs",
-      "name": "Ownership + member union",
-      "fileGlobs": [
-        "useProjects.ts"
-      ],
-      "sources": [
-        {
-          "kind": "criterion",
-          "file": "02-portfolio-and-pm-home.md",
-          "criterion": "Ownership + member union",
-          "verdict": "implemented"
-        },
-        {
-          "kind": "criterion",
-          "file": "02-portfolio-and-pm-home.md",
-          "criterion": "Card stats",
-          "verdict": "implemented"
-        }
-      ],
-      "verdict": "implemented",
-      "note": "",
-      "id": "02:docs:ownership-member-union"
-    },
-    {
-      "stream": "02 Portfolio & PM Home",
-      "streamNum": "02",
-      "layer": "Docs",
-      "name": "New Project dialog",
-      "fileGlobs": [
-        "Dashboard.tsx"
-      ],
-      "sources": [
-        {
-          "kind": "criterion",
-          "file": "02-portfolio-and-pm-home.md",
-          "criterion": "New Project dialog",
-          "verdict": "implemented"
-        },
-        {
-          "kind": "criterion",
-          "file": "02-portfolio-and-pm-home.md",
-          "criterion": "Delete guard",
-          "verdict": "implemented"
-        },
-        {
-          "kind": "criterion",
-          "file": "02-portfolio-and-pm-home.md",
-          "criterion": "PM inspector detail",
-          "verdict": "partial"
-        },
-        {
-          "kind": "criterion",
-          "file": "02-portfolio-and-pm-home.md",
-          "criterion": "Role badge",
-          "verdict": "implemented"
-        },
-        {
-          "kind": "criterion",
-          "file": "02-portfolio-and-pm-home.md",
-          "criterion": "Inspector empty state",
-          "verdict": "implemented"
-        }
-      ],
-      "verdict": "implemented",
-      "note": "",
-      "id": "02:docs:new-project-dialog"
-    },
-    {
       "stream": "03 Project Onboarding",
       "streamNum": "03",
       "layer": "Frontend",
@@ -542,7 +471,7 @@
     {
       "stream": "03 Project Onboarding",
       "streamNum": "03",
-      "layer": "Docs",
+      "layer": "Backend",
       "name": "db: projects.specs_storage_path",
       "fileGlobs": [
         "public.projects.specs_storage_path"
@@ -556,15 +485,15 @@
       ],
       "note": "path in `specs-pdfs` bucket",
       "verdict": null,
-      "id": "03:docs:db-projects-specs-storage-path"
+      "id": "03:backend:db-projects-specs-storage-path"
     },
     {
       "stream": "03 Project Onboarding",
       "streamNum": "03",
-      "layer": "Docs",
+      "layer": "Frontend",
       "name": "Create project / PDF upload",
       "fileGlobs": [
-        "useProjects.ts"
+        "src/hooks/useProjects.ts"
       ],
       "sources": [
         {
@@ -576,15 +505,15 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "03:docs:create-project-pdf-upload"
+      "id": "03:frontend:create-project-pdf-upload"
     },
     {
       "stream": "03 Project Onboarding",
       "streamNum": "03",
-      "layer": "Docs",
+      "layer": "Frontend",
       "name": "Load with offline fallback",
       "fileGlobs": [
-        "Index.tsx"
+        "src/pages/Index.tsx"
       ],
       "sources": [
         {
@@ -608,7 +537,7 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "03:docs:load-with-offline-fallback"
+      "id": "03:frontend:load-with-offline-fallback"
     },
     {
       "stream": "03 Project Onboarding",
@@ -631,11 +560,10 @@
     {
       "stream": "03 Project Onboarding",
       "streamNum": "03",
-      "layer": "Docs",
+      "layer": "Frontend",
       "name": "TOC / pay-items survive reload",
       "fileGlobs": [
-        "useProject.ts",
-        "useProject.ts"
+        "src/hooks/useProject.ts"
       ],
       "sources": [
         {
@@ -647,7 +575,7 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "03:docs:toc-pay-items-survive-reload"
+      "id": "03:frontend:toc-pay-items-survive-reload"
     },
     {
       "stream": "04 Pay Item Catalog",
@@ -662,10 +590,16 @@
           "kind": "surface",
           "file": "04-pay-item-catalog.md",
           "path": "src/types/project.ts"
+        },
+        {
+          "kind": "criterion",
+          "file": "04-pay-item-catalog.md",
+          "criterion": "drawable flag",
+          "verdict": "implemented"
         }
       ],
       "note": "`PayItem` interface, `PayItemUnit` enum, `DRAWABLE_UNITS`, `isDrawableUnit()`, `getPayItemSection()`, `UNIT_LABELS`",
-      "verdict": null,
+      "verdict": "implemented",
       "id": "04:frontend:project"
     },
     {
@@ -747,32 +681,11 @@
     {
       "stream": "04 Pay Item Catalog",
       "streamNum": "04",
-      "layer": "Docs",
-      "name": "drawable flag",
-      "fileGlobs": [
-        "types/project.ts",
-        "Toolbar.tsx"
-      ],
-      "sources": [
-        {
-          "kind": "criterion",
-          "file": "04-pay-item-catalog.md",
-          "criterion": "drawable flag",
-          "verdict": "implemented"
-        }
-      ],
-      "verdict": "implemented",
-      "note": "",
-      "id": "04:docs:drawable-flag"
-    },
-    {
-      "stream": "04 Pay Item Catalog",
-      "streamNum": "04",
-      "layer": "Docs",
+      "layer": "Frontend",
       "name": "Delete cascade",
       "fileGlobs": [
-        "ProjectSidebar.tsx",
-        "useProject.ts"
+        "src/components/ProjectSidebar.tsx",
+        "src/hooks/useProject.ts"
       ],
       "sources": [
         {
@@ -796,15 +709,15 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "04:docs:delete-cascade"
+      "id": "04:frontend:delete-cascade"
     },
     {
       "stream": "04 Pay Item Catalog",
       "streamNum": "04",
-      "layer": "Docs",
+      "layer": "Frontend",
       "name": "Section-keyed colors",
       "fileGlobs": [
-        "pdf-utils.ts"
+        "src/lib/pdf-utils.ts"
       ],
       "sources": [
         {
@@ -816,7 +729,7 @@
       ],
       "verdict": "implemented",
       "note": "",
-      "id": "04:docs:section-keyed-colors"
+      "id": "04:frontend:section-keyed-colors"
     },
     {
       "stream": "04 Pay Item Catalog",
@@ -867,10 +780,16 @@
           "kind": "surface",
           "file": "05-field-capture.md",
           "path": "src/pages/Index.tsx"
+        },
+        {
+          "kind": "criterion",
+          "file": "05-field-capture.md",
+          "criterion": "readOnly mode",
+          "verdict": "implemented"
         }
       ],
       "note": "top-level workspace; orchestrates PDF load, tool state, GPS state, mobile vs desktop layout, keyboard shortcuts (Ctrl+Z/Y), and all handler wiring",
-      "verdict": null,
+      "verdict": "implemented",
       "id": "05:frontend:index"
     },
     {
@@ -886,10 +805,34 @@
           "kind": "surface",
           "file": "05-field-capture.md",
           "path": "src/components/PdfCanvas.tsx"
+        },
+        {
+          "kind": "criterion",
+          "file": "05-field-capture.md",
+          "criterion": "Scale calibration",
+          "verdict": "implemented"
+        },
+        {
+          "kind": "criterion",
+          "file": "05-field-capture.md",
+          "criterion": "Polygon with CY depth prompt",
+          "verdict": "implemented"
+        },
+        {
+          "kind": "criterion",
+          "file": "05-field-capture.md",
+          "criterion": "Drag-handle editing",
+          "verdict": "implemented"
+        },
+        {
+          "kind": "criterion",
+          "file": "05-field-capture.md",
+          "criterion": "Manual quantity override",
+          "verdict": "implemented"
         }
       ],
       "note": "dual-canvas (PDF render layer + overlay); implements hit-testing, pointer/touch routing, all drawing modes (`line`, `polygon`, `count`, `label`, `calibrate`, `tocSelect`), drag-handle editing, GPS overlay, live measurement labels",
-      "verdict": null,
+      "verdict": "implemented",
       "id": "05:frontend:pdfcanvas"
     },
     {
@@ -943,10 +886,16 @@
           "kind": "surface",
           "file": "05-field-capture.md",
           "path": "src/components/GpsCalibration.tsx"
+        },
+        {
+          "kind": "criterion",
+          "file": "05-field-capture.md",
+          "criterion": "GPS calibration overlay",
+          "verdict": "implemented"
         }
       ],
       "note": "step wizard capturing 2–3 GPS/plan control-point pairs; calls `buildGeoCalibration`",
-      "verdict": null,
+      "verdict": "implemented",
       "id": "05:frontend:gpscalibration"
     },
     {
@@ -1000,10 +949,22 @@
           "kind": "surface",
           "file": "05-field-capture.md",
           "path": "src/hooks/useProject.ts"
+        },
+        {
+          "kind": "criterion",
+          "file": "05-field-capture.md",
+          "criterion": "Undo/redo with DB sync",
+          "verdict": "implemented"
+        },
+        {
+          "kind": "criterion",
+          "file": "05-field-capture.md",
+          "criterion": "Realtime multi-user sync",
+          "verdict": "implemented"
         }
       ],
       "note": "`addAnnotation`, `removeAnnotation`, `updateAnnotation`, `setCalibration`, `copyCalibrationToPages`, `undo`/`redo`; realtime Supabase subscription for multi-user sync; offline via `offlineMutate`",
-      "verdict": null,
+      "verdict": "implemented",
       "id": "05:frontend:useproject"
     },
     {
@@ -1100,83 +1061,6 @@
       "note": "`project_id`, `page`, `point1`/`point2` JSONB, `real_distance`, `pixels_per_foot`",
       "verdict": null,
       "id": "05:backend:db-calibrations"
-    },
-    {
-      "stream": "05 Field Capture",
-      "streamNum": "05",
-      "layer": "Docs",
-      "name": "Scale calibration",
-      "fileGlobs": [
-        "PdfCanvas.tsx",
-        "Toolbar.tsx"
-      ],
-      "sources": [
-        {
-          "kind": "criterion",
-          "file": "05-field-capture.md",
-          "criterion": "Scale calibration",
-          "verdict": "implemented"
-        },
-        {
-          "kind": "criterion",
-          "file": "05-field-capture.md",
-          "criterion": "Polygon with CY depth prompt",
-          "verdict": "implemented"
-        },
-        {
-          "kind": "criterion",
-          "file": "05-field-capture.md",
-          "criterion": "Drag-handle editing",
-          "verdict": "implemented"
-        },
-        {
-          "kind": "criterion",
-          "file": "05-field-capture.md",
-          "criterion": "GPS calibration overlay",
-          "verdict": "implemented"
-        },
-        {
-          "kind": "criterion",
-          "file": "05-field-capture.md",
-          "criterion": "Manual quantity override",
-          "verdict": "implemented"
-        },
-        {
-          "kind": "criterion",
-          "file": "05-field-capture.md",
-          "criterion": "readOnly mode",
-          "verdict": "implemented"
-        }
-      ],
-      "verdict": "implemented",
-      "note": "",
-      "id": "05:docs:scale-calibration"
-    },
-    {
-      "stream": "05 Field Capture",
-      "streamNum": "05",
-      "layer": "Docs",
-      "name": "Undo/redo with DB sync",
-      "fileGlobs": [
-        "useProject.ts"
-      ],
-      "sources": [
-        {
-          "kind": "criterion",
-          "file": "05-field-capture.md",
-          "criterion": "Undo/redo with DB sync",
-          "verdict": "implemented"
-        },
-        {
-          "kind": "criterion",
-          "file": "05-field-capture.md",
-          "criterion": "Realtime multi-user sync",
-          "verdict": "implemented"
-        }
-      ],
-      "verdict": "implemented",
-      "note": "",
-      "id": "05:docs:undo-redo-with-db-sync"
     },
     {
       "stream": "06 Daily Report Lifecycle",
@@ -1524,7 +1408,7 @@
       "stream": "08 Photo Evidence",
       "streamNum": "08",
       "layer": "Backend",
-      "name": "index",
+      "name": "fn: tag-photo",
       "fileGlobs": [
         "supabase/functions/tag-photo/index.ts"
       ],
@@ -1537,7 +1421,7 @@
       ],
       "note": "Edge function: receives `photoId`, fetches photo + project pay items, calls Gemini 2.5 Flash via Lovable AI Gateway with `suggest_pay_item` tool, writes `ai_suggested_pay_item_id`, `ai_confidence`, `ai_rationale` back to `annotation_photos`",
       "verdict": null,
-      "id": "08:backend:index"
+      "id": "08:backend:fn-tag-photo"
     },
     {
       "stream": "08 Photo Evidence",
@@ -1561,8 +1445,8 @@
     {
       "stream": "08 Photo Evidence",
       "streamNum": "08",
-      "layer": "Docs",
-      "name": "annotation-photos",
+      "layer": "Backend",
+      "name": "bucket: annotation-photos",
       "fileGlobs": [
         "supabase/storage/annotation-photos"
       ],
@@ -1575,7 +1459,7 @@
       ],
       "note": "Storage bucket; paths follow `{projectId}/{userId}/{uuid}-{filename}`",
       "verdict": null,
-      "id": "08:docs:annotation-photos"
+      "id": "08:backend:bucket-annotation-photos"
     },
     {
       "stream": "08 Photo Evidence",
@@ -1656,7 +1540,7 @@
     {
       "stream": "09 Standard Specifications",
       "streamNum": "09",
-      "layer": "Docs",
+      "layer": "Backend",
       "name": "db: projects.specs_storage_path",
       "fileGlobs": [
         "public.projects.specs_storage_path"
@@ -1670,7 +1554,7 @@
       ],
       "note": "Column pointing to a blob in Supabase Storage; loaded by the host page and passed into SpecViewer as `PDFDocumentProxy`",
       "verdict": null,
-      "id": "09:docs:db-projects-specs-storage-path"
+      "id": "09:backend:db-projects-specs-storage-path"
     },
     {
       "stream": "10 Document Management",
@@ -1751,8 +1635,8 @@
     {
       "stream": "10 Document Management",
       "streamNum": "10",
-      "layer": "Docs",
-      "name": "project-documents",
+      "layer": "Backend",
+      "name": "bucket: project-documents",
       "fileGlobs": [
         "supabase/storage/project-documents"
       ],
@@ -1765,7 +1649,7 @@
       ],
       "note": "Storage bucket; paths follow `{projectId}/{docId}.{ext}`",
       "verdict": null,
-      "id": "10:docs:project-documents"
+      "id": "10:backend:bucket-project-documents"
     },
     {
       "stream": "11 Schedule Management",
@@ -3400,7 +3284,7 @@
       "stream": "17 Notifications & Presence",
       "streamNum": "17",
       "layer": "Backend",
-      "name": "index",
+      "name": "fn: send-push",
       "fileGlobs": [
         "supabase/functions/send-push/index.ts"
       ],
@@ -3413,7 +3297,7 @@
       ],
       "note": "edge function: reads `device_tokens`, calls FCM HTTP v1 API; gated on `FCM_SERVER_KEY` secret",
       "verdict": null,
-      "id": "17:backend:index"
+      "id": "17:backend:fn-send-push"
     },
     {
       "stream": "17 Notifications & Presence",
@@ -3428,10 +3312,16 @@
           "kind": "surface",
           "file": "17-notifications-and-presence.md",
           "path": "src/lib/native/push.ts"
+        },
+        {
+          "kind": "criterion",
+          "file": "17-notifications-and-presence.md",
+          "criterion": "Native push registration",
+          "verdict": "implemented"
         }
       ],
       "note": "Capacitor `PushNotifications` shim; registers token to `device_tokens`; foreground Sonner toast; `unregisterPush`",
-      "verdict": null,
+      "verdict": "implemented",
       "id": "17:mobile:push"
     },
     {
@@ -3529,26 +3419,6 @@
     {
       "stream": "17 Notifications & Presence",
       "streamNum": "17",
-      "layer": "Docs",
-      "name": "Native push registration",
-      "fileGlobs": [
-        "lib/native/push.ts"
-      ],
-      "sources": [
-        {
-          "kind": "criterion",
-          "file": "17-notifications-and-presence.md",
-          "criterion": "Native push registration",
-          "verdict": "implemented"
-        }
-      ],
-      "verdict": "implemented",
-      "note": "",
-      "id": "17:docs:native-push-registration"
-    },
-    {
-      "stream": "17 Notifications & Presence",
-      "streamNum": "17",
       "layer": "Frontend",
       "name": "send-push edge function",
       "fileGlobs": [],
@@ -3633,10 +3503,16 @@
           "kind": "surface",
           "file": "18-compliance-and-audit.md",
           "path": "src/lib/schedule/analysis/dcma.ts"
+        },
+        {
+          "kind": "criterion",
+          "file": "18-compliance-and-audit.md",
+          "criterion": "DCMA 14-point",
+          "verdict": "implemented"
         }
       ],
       "note": "`runDcma`, `dcmaSummary`, `DcmaResult`",
-      "verdict": null,
+      "verdict": "implemented",
       "id": "18:frontend:dcma"
     },
     {
@@ -3770,26 +3646,6 @@
       "verdict": "implemented",
       "note": "",
       "id": "18:frontend:negative-lag-m-code-check"
-    },
-    {
-      "stream": "18 Compliance & Audit",
-      "streamNum": "18",
-      "layer": "Docs",
-      "name": "DCMA 14-point",
-      "fileGlobs": [
-        "lib/schedule/analysis/dcma.ts"
-      ],
-      "sources": [
-        {
-          "kind": "criterion",
-          "file": "18-compliance-and-audit.md",
-          "criterion": "DCMA 14-point",
-          "verdict": "implemented"
-        }
-      ],
-      "verdict": "implemented",
-      "note": "",
-      "id": "18:docs:dcma-14-point"
     },
     {
       "stream": "18 Compliance & Audit",

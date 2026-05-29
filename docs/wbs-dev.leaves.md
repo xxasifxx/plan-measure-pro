@@ -1,6 +1,6 @@
 # Dev WBS — Canonical Leaves
 
-Generated 2026-05-29T15:52:25.478Z · **221 leaves** across 20 streams.
+Generated 2026-05-29T15:54:03.678Z · **211 leaves** across 20 streams.
 
 Each leaf has a stable `id` (`<streamNum>:<layer>:<slug>`), a list of `fileGlobs`,
 and the brief sources that produced it. Activities (historical + forward) attach to these leaves.
@@ -12,35 +12,30 @@ and the brief sources that produced it. Activities (historical + forward) attach
 - **Verification** — `src/test/**`, `scripts/**`
 - **Docs** — `docs/**`
 
-## 01 Identity & Access — 13 leaves
+## 01 Identity & Access — 10 leaves
 ### Frontend (5)
 - **App** — `src/App.tsx`
-- **Auth** — `src/pages/Auth.tsx`
-- **ResetPassword** — `src/pages/ResetPassword.tsx`
+- **Auth** _[implemented]_ — `src/pages/Auth.tsx`
+- **ResetPassword** _[implemented]_ — `src/pages/ResetPassword.tsx`
 - **RLS posture** _[partial]_ — 
-- **useAuth** — `src/hooks/useAuth.tsx`
+- **useAuth** _[implemented]_ — `src/hooks/useAuth.tsx`
 
 ### Backend (4)
-- **** — `supabase/functions/invite-user/`
 - **db: invitations** — `public.invitations`
 - **db: profiles** — `public.profiles`
 - **db: user_roles** — `public.user_roles`
+- **fn: invite-user** — `supabase/functions/invite-user/`
 
-### Mobile (2)
-- **Biometric gate** _[implemented]_ — `BiometricGate.tsx`
-- **BiometricGate** — `src/components/BiometricGate.tsx`
+### Mobile (1)
+- **BiometricGate** _[implemented]_ — `src/components/BiometricGate.tsx`
 
-### Docs (2)
-- **Organic signup → admin role** _[implemented]_ — `Auth.tsx`, `useAuth.tsx`
-- **Password reset** _[implemented]_ — `ResetPassword.tsx`
-
-## 02 Portfolio & PM Home — 11 leaves
+## 02 Portfolio & PM Home — 9 leaves
 ### Frontend (6)
 - **approved-quantities.ts:loadPendingReviewCounts** — `src/lib/approved-quantities.ts:loadPendingReviewCounts`
-- **Dashboard** — `src/pages/Dashboard.tsx`
+- **Dashboard** _[implemented]_ — `src/pages/Dashboard.tsx`
 - **GuidedTour** — `src/components/GuidedTour.tsx`
 - **NotificationBell** — `src/components/NotificationBell.tsx`
-- **useProjects** — `src/hooks/useProjects.ts`
+- **useProjects** _[implemented]_ — `src/hooks/useProjects.ts`
 - **WelcomeCarousel** — `src/components/WelcomeCarousel.tsx`
 
 ### Backend (3)
@@ -48,26 +43,24 @@ and the brief sources that produced it. Activities (historical + forward) attach
 - **db: project_members** — `public.project_members`
 - **db: projects** — `public.projects`
 
-### Docs (2)
-- **New Project dialog** _[implemented]_ — `Dashboard.tsx`
-- **Ownership + member union** _[implemented]_ — `useProjects.ts`
-
 ## 03 Project Onboarding — 6 leaves
-### Frontend (2)
+### Frontend (5)
+- **Create project / PDF upload** _[implemented]_ — `src/hooks/useProjects.ts`
+- **Load with offline fallback** _[implemented]_ — `src/pages/Index.tsx`
 - **Pay-item import** _[implemented]_ — 
 - **ProjectSidebar** — `src/components/ProjectSidebar.tsx`
+- **TOC / pay-items survive reload** _[implemented]_ — `src/hooks/useProject.ts`
 
-### Docs (4)
-- **Create project / PDF upload** _[implemented]_ — `useProjects.ts`
+### Backend (1)
 - **db: projects.specs_storage_path** — `public.projects.specs_storage_path`
-- **Load with offline fallback** _[implemented]_ — `Index.tsx`
-- **TOC / pay-items survive reload** _[implemented]_ — `useProject.ts`, `useProject.ts`
 
-## 04 Pay Item Catalog — 10 leaves
-### Frontend (5)
+## 04 Pay Item Catalog — 9 leaves
+### Frontend (7)
 - **Contract modifications** _[missing]_ — 
 - **Contract quantity denominator** _[partial]_ — 
-- **project** — `src/types/project.ts`
+- **Delete cascade** _[implemented]_ — `src/components/ProjectSidebar.tsx`, `src/hooks/useProject.ts`
+- **project** _[implemented]_ — `src/types/project.ts`
+- **Section-keyed colors** _[implemented]_ — `src/lib/pdf-utils.ts`
 - **SummaryPanel** — `src/components/SummaryPanel.tsx`
 - **usePayItemActivityMap** — `src/hooks/usePayItemActivityMap.ts`
 
@@ -77,22 +70,17 @@ and the brief sources that produced it. Activities (historical + forward) attach
 ### Mobile (1)
 - **MobilePayItems** — `src/components/MobilePayItems.tsx`
 
-### Docs (3)
-- **Delete cascade** _[implemented]_ — `ProjectSidebar.tsx`, `useProject.ts`
-- **drawable flag** _[implemented]_ — `types/project.ts`, `Toolbar.tsx`
-- **Section-keyed colors** _[implemented]_ — `pdf-utils.ts`
-
-## 05 Field Capture — 15 leaves
+## 05 Field Capture — 13 leaves
 ### Frontend (9)
 - **geo-transform** — `src/lib/geo-transform.ts`
 - **geometry** — `src/lib/geometry.ts`
-- **GpsCalibration** — `src/components/GpsCalibration.tsx`
+- **GpsCalibration** _[implemented]_ — `src/components/GpsCalibration.tsx`
 - **GpsTraceControls** — `src/components/GpsTraceControls.tsx`
-- **Index** — `src/pages/Index.tsx`
-- **PdfCanvas** — `src/components/PdfCanvas.tsx`
+- **Index** _[implemented]_ — `src/pages/Index.tsx`
+- **PdfCanvas** _[implemented]_ — `src/components/PdfCanvas.tsx`
 - **project** — `src/types/project.ts`
 - **Toolbar** — `src/components/Toolbar.tsx`
-- **useProject** — `src/hooks/useProject.ts`
+- **useProject** _[implemented]_ — `src/hooks/useProject.ts`
 
 ### Backend (2)
 - **db: annotations** — `public.annotations`
@@ -101,10 +89,6 @@ and the brief sources that produced it. Activities (historical + forward) attach
 ### Mobile (2)
 - **MobileAnnotationSheet** — `src/components/MobileAnnotationSheet.tsx`
 - **MobileToolbar** — `src/components/MobileToolbar.tsx`
-
-### Docs (2)
-- **Scale calibration** _[implemented]_ — `PdfCanvas.tsx`, `Toolbar.tsx`
-- **Undo/redo with DB sync** _[implemented]_ — `useProject.ts`
 
 ## 06 Daily Report Lifecycle — 11 leaves
 ### Frontend (7)
@@ -136,24 +120,22 @@ and the brief sources that produced it. Activities (historical + forward) attach
 ### Frontend (1)
 - **ProjectControls** — `src/pages/ProjectControls.tsx`
 
-### Backend (2)
+### Backend (3)
+- **bucket: annotation-photos** — `supabase/storage/annotation-photos`
 - **db: annotation_photos** — `public.annotation_photos`
-- **index** — `supabase/functions/tag-photo/index.ts`
+- **fn: tag-photo** — `supabase/functions/tag-photo/index.ts`
 
 ### Mobile (3)
 - **camera** — `src/lib/native/camera.ts`
 - **db** — `src/lib/offline/db.ts`
 - **mutation-client** — `src/lib/offline/mutation-client.ts`
 
-### Docs (1)
-- **annotation-photos** — `supabase/storage/annotation-photos`
-
 ## 09 Standard Specifications — 3 leaves
 ### Frontend (2)
 - **specs-utils** — `src/lib/specs-utils.ts`
 - **SpecViewer** — `src/components/SpecViewer.tsx`
 
-### Docs (1)
+### Backend (1)
 - **db: projects.specs_storage_path** — `public.projects.specs_storage_path`
 
 ## 10 Document Management — 5 leaves
@@ -161,12 +143,10 @@ and the brief sources that produced it. Activities (historical + forward) attach
 - **Documents** — `src/pages/Documents.tsx`
 - **useDocuments** — `src/hooks/useDocuments.ts`
 
-### Backend (2)
+### Backend (3)
+- **bucket: project-documents** — `supabase/storage/project-documents`
 - **db: document_folders** — `public.document_folders`
 - **db: documents** — `public.documents`
-
-### Docs (1)
-- **project-documents** — `supabase/storage/project-documents`
 
 ## 11 Schedule Management — 25 leaves
 ### Frontend (25)
@@ -278,7 +258,7 @@ and the brief sources that produced it. Activities (historical + forward) attach
 - **MobileTabBar** — `src/components/MobileTabBar.tsx`
 - **MobileToolbar** — `src/components/MobileToolbar.tsx`
 
-## 17 Notifications & Presence — 12 leaves
+## 17 Notifications & Presence — 11 leaves
 ### Frontend (9)
 - **Bell + realtime subscribe** _[implemented]_ — 
 - **Index.tsx:795** — `src/pages/Index.tsx:795`
@@ -291,19 +271,16 @@ and the brief sources that produced it. Activities (historical + forward) attach
 - **useProject.ts:421–448** — `src/hooks/useProject.ts:421–448`
 
 ### Backend (1)
-- **index** — `supabase/functions/send-push/index.ts`
+- **fn: send-push** — `supabase/functions/send-push/index.ts`
 
 ### Mobile (1)
-- **push** — `src/lib/native/push.ts`
+- **push** _[implemented]_ — `src/lib/native/push.ts`
 
-### Docs (1)
-- **Native push registration** _[implemented]_ — `lib/native/push.ts`
-
-## 18 Compliance & Audit — 14 leaves
+## 18 Compliance & Audit — 13 leaves
 ### Frontend (13)
 - **Approve/reject timestamps + reviewer** _[implemented]_ — 
 - **ComplianceStrip** — `src/components/schedule/ComplianceStrip.tsx`
-- **dcma** — `src/lib/schedule/analysis/dcma.ts`
+- **dcma** _[implemented]_ — `src/lib/schedule/analysis/dcma.ts`
 - **DcmaPanel** — `src/components/schedule/DcmaPanel.tsx`
 - **Drift detection** _[implemented]_ — 
 - **Negative lag / M-code check** _[implemented]_ — 
@@ -314,9 +291,6 @@ and the brief sources that produced it. Activities (historical + forward) attach
 - **types** — `src/integrations/supabase/types.ts`
 - **useDailyReport** — `src/hooks/useDailyReport.ts`
 - **useReReviewQueue** — `src/hooks/useReReviewQueue.ts`
-
-### Docs (1)
-- **DCMA 14-point** _[implemented]_ — `lib/schedule/analysis/dcma.ts`
 
 ## 19 Onboarding & Tutorials — 11 leaves
 ### Frontend (10)
