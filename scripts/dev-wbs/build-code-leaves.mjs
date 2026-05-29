@@ -163,7 +163,7 @@ const out = {
     leaves: leaves.length,
     byStream: leaves.reduce((a, l) => (a[l.streamNum] = (a[l.streamNum] || 0) + 1, a), {}),
     byLayer: leaves.reduce((a, l) => (a[l.layer] = (a[l.layer] || 0) + 1, a), {}),
-    tables: tables.size, views: views.size, migrationWeeks: byWeek.size,
+    tables: tables.size, views: views.size, migrations: migrations.length,
   },
   leaves,
 };
@@ -173,4 +173,5 @@ writeFileSync(OUT, JSON.stringify(out, null, 2) + '\n');
 console.log(`Wrote ${OUT}`);
 console.log(`  ${out.totals.leaves} code-derived leaves`);
 console.log(`  byLayer: ${JSON.stringify(out.totals.byLayer)}`);
-console.log(`  ${tables.size} tables, ${views.size} views, ${byWeek.size} migration weeks`);
+console.log(`  ${tables.size} tables, ${views.size} views, ${migrations.length} migrations`);
+
