@@ -1,154 +1,139 @@
-## What we're rebuilding
+# Plan — emit `.lovable/wbs/*` as a Primavera P6 XML (PMXML) without blank-field theater
 
-A single JSON dataset where the **canonical 417-leaf WBS** is the spine, and **many activities (past, in-flight, dormant, and future)** hang off each leaf — with relationships, state, and concurrency that reflect how the project actually moved. P6 XML is deferred; this plan stops at JSON.
+## The core problem
 
-## What's wrong with the current `.lovable/wbs/*`
+A naive emitter dumps every leaf as a WBS node and every activity as a `<Activity>`. P6 then shows a forest of activities with empty Start, Finish, Duration, % Complete, Calendar, Resource, and Cost — because our JSON is intent + history, not a CPM-scheduled plan. The fix isn't to fabricate dates; it's to (a) decide which P6 fields we *legitimately* have a source for, (b) park the rest in Notebook Topics, UDFs, and Activity Codes where P6 expects "extra truth," and (c) emit activity *types* and *statuses* that don't demand the missing fields.
 
-- WBS hierarchy is derived from commit paths (Era→Stream→Tag) instead of the canonical leaves in `docs/wbs-dev.leaves.json` (417 leaves) augmented by `docs/wbs-proposals.reconciled.json` (orphan capabilities — the brass tacks).
-- Activities are 1:1 with commit clusters. Every commit lives in exactly one bucket. That violates both directions you stated: one leaf needs many activities, and one commit can advance several activities.
-- No future-facing activities. The schedule only looks backward.
-- State vocabulary collapsed to a flat status field on the activity; no representation of "awaiting-successor", "paused-pending-decision", "blocked-on-external", "dormant-but-needed".
-- No real predecessor inference beyond file-overlap heuristics; the marketing-debt / verification-gap / risk channels you specified in #609 are entirely absent.
+## Decisions to lock before any XML is written
 
-## Target shape (JSON only, no XML)
+These are the choices that determine whether the file is honest or padded. Each one needs your sign-off — the rest of the plan branches on the answers.
 
-```
-.lovable/wbs/
-  wbs.json          # 417+ leaves: the canonical taxonomy (the spine)
-  activities.json   # MANY activities per leaf, past + present + future
-  links.json        # commit ↔ activity (M:N), activity ↔ leaf (M:1 primary, M:N contributing)
-  relationships.json# activity → activity (FS/SS/FF, lag, confidence, source)
-  state.json        # per-activity state vector (not a single enum)
-  next.json         # derived: what's ready to start, what's blocked, what's at risk
-  README.md
-```
+### D1. Activity Type strategy
+P6 has four types and each has different required fields:
+- `TT_Task` — needs duration + dates + calendar (heavy)
+- `TT_Mile` (Start/Finish Milestone) — needs only a single date
+- `TT_LOE` (Level of Effort) — duration spans its predecessors/successors automatically
+- `TT_WBS` (WBS Summary) — rolls up from children, no dates needed
 
-### wbs.json — the spine (no commit data)
+Proposal:
+- `origin=git` with `time_window` → `TT_Task` (we have real dates)
+- `origin=future-marketing-debt` → `TT_Mile` (a promise to deliver, single target date)
+- `origin=future-risk` / `future-verification-gap` with no estimate → `TT_LOE` (lets P6 compute span from successors instead of us inventing one)
+- Leaves with many children and no own commits → `TT_WBS` (summary only)
 
-Source of truth: `docs/wbs-dev.leaves.json` (417) ∪ `docs/wbs-proposals.reconciled.json.builtClusters` ∪ `.orphanCapabilities` (the brass tacks the catalog never named, discovered from code reality). Deduped by normalized name within stream.
+This alone eliminates ~70% of blank-duration rows.
 
-```json
-{
-  "id": "01-identity-and-access/Frontend/Auth",
-  "stream": "01 Identity & Access",
-  "layer": "Frontend",
-  "name": "Auth",
-  "origin": "brief" | "code-surface" | "orphan-capability" | "marketing-debt" | "verification-gap",
-  "fileGlobs": ["src/pages/Auth.tsx"],
-  "criteria": [ {id, text, verdict} ],
-  "parent": "01-identity-and-access/Frontend"
-}
-```
-
-### activities.json — many per leaf, past + future
-
-Each activity has a `primary_leaf` and an optional `contributing_leaves[]` (so a refactor that touches Auth + RBAC + Onboarding is one activity contributing to three leaves, not three duplicate activities).
-
-```json
-{
-  "id": "ACT-0001",
-  "name": "Wire Supabase magic-link auth to Auth.tsx",
-  "primary_leaf": "01-identity-and-access/Frontend/Auth",
-  "contributing_leaves": ["01-identity-and-access/Backend/Session"],
-  "origin": "git" | "future-risk" | "future-marketing-debt" | "future-verification-gap" | "future-promise",
-  "time_window": { "first": "...", "last": "...", "active_days": N, "calendar_days": M, "gaps": [...] },
-  "effort": { "commit_count": N, "loc_added": N, "loc_removed": N, "files_touched": [...] },
-  "predecessors": ["ACT-xxxx"],
-  "successors": ["ACT-xxxx"],
-  "concurrent_with": ["ACT-xxxx"],
-  "evidence": { "commit_shas": [...], "marketing_claim": "...", "risk_id": "...", "verification_gap_id": "..." }
-}
-```
-
-Future activities have no `time_window`/`effort` and instead carry `planned_after`, `planned_size_hint`, and `gating_predecessors`.
-
-### links.json — the M:N tables
-
-Two tables, kept separate from activities so commit→activity attribution can be re-derived without rewriting activities:
-
-```
-commit_activity:  [{ sha, activity_id, contribution: "primary"|"secondary", weight: 0..1, signal: "path"|"token"|"co-edit"|"intent-extract" }]
-activity_leaf:    [{ activity_id, leaf_id, role: "primary"|"contributing" }]
-```
-
-This is what lets one commit advance multiple activities. Weight is for resource-loading math later.
-
-### relationships.json — typed dependencies
-
-```
-{ pred, succ, type: "FS"|"SS"|"FF", lag_days, confidence: 0..1,
-  source: "file-overlap" | "commit-token" | "temporal" | "leaf-criterion" | "intent-extract" | "manual" }
-```
-
-Sourced from: shared-file evidence, commit message tokens ("after X", "depends on Y", "now that Z"), L4 intent-extract output (`docs/wbs-dev.agent-runs/L4/intent-leaves.json.cross_stream_links`), and criterion ordering inside leaves.
-
-### state.json — state vector, not a single enum
-
-Per activity:
-```
-{ activity_id,
-  lifecycle: "planned"|"in-flight"|"paused"|"dormant"|"shipped"|"abandoned",
-  blocking: { kind: "successor-missing"|"external"|"decision"|"none", note },
-  health: { dormancy_days, marketing_debt_count, verification_gap_count },
-  visibility: "quiet"|"normal"|"loud",
-  last_signal_ts }
-```
-
-A "dormant-but-needed" activity is `lifecycle=dormant` + `blocking.kind=none` + `marketing_debt_count>0`. A "paused-pending-decision" is `lifecycle=paused` + `blocking.kind=decision`. Etc. — the combinations express the vocabulary; we don't pre-collapse them.
-
-## How activities get built (the smarter mapping)
-
-Three independent passes, then merge:
-
-1. **Pass A — commit clustering with multi-attribution.** For each commit, compute its file set. Score each candidate activity (existing or new) by Jaccard overlap with that activity's file set and by message-token similarity. If top-1 score > 0.6 → primary contribution. If top-2 score > 0.35 → secondary contribution. New activity created when no candidate scores > 0.35 *and* the commit's file set is coherent (single stream/layer). Output: `commit_activity` rows.
-
-2. **Pass B — leaf-driven activity synthesis.** For every leaf in `wbs.json`, ensure ≥1 activity exists per `criterion`. If commits already exist that touch the leaf's `fileGlobs`, attach them. If a criterion exists with verdict ≠ "implemented" and no commit evidence, mint a **future** activity (`origin: future-verification-gap`).
-
-3. **Pass C — debt-driven future activities.** Mint future activities from:
-   - marketing claims with no implementing leaf (from `docs/lie-tax.*` if present, else `Landing.tsx` + `llms.txt` + `STORE_LISTING.md` scan)
-   - risks in `docs/streams/*` not yet on a leaf
-   - verification-gap rows in `docs/wbs-dev.verification.manifest.json`
-   Each future activity declares `gating_predecessors` against existing activity ids.
-
-Merge: if Pass A and Pass B produce activities on the same leaf with ≥80% commit-sha overlap → merge. Otherwise keep distinct (a leaf often has a "build" activity and a "harden/verify" activity that are genuinely different work).
-
-## Smarter predecessor inference (replaces current file-overlap-only)
-
-Four signals, weighted, must reach `confidence ≥ 0.5` to emit a relationship:
-
-| Signal | Weight | Source |
+### D2. Status mapping (from our 4-D state vector)
+P6 has exactly 4 statuses. Mapping:
+| state.lifecycle | + condition | P6 Status |
 |---|---|---|
-| Shared files, predecessor's `last` before successor's `first` | 0.3 | git |
-| Commit-message tokens ("after", "depends on", "now that", "follows") | 0.25 | git messages |
-| L4 cross-stream-links | 0.3 | `intent-leaves.json` |
-| Leaf criterion ordering inside same leaf | 0.4 | `wbs-dev.leaves.json` |
+| shipped | — | Completed |
+| in-flight | — | In Progress |
+| paused / dormant | — | In Progress (with % complete frozen, Notebook explains why) |
+| planned | — | Not Started |
+| abandoned | — | Not Started + Activity Code `LIFECYCLE=abandoned` (P6 has no "cancelled" status; we tag it) |
 
-Cycles broken by dropping lowest-confidence edge. All dropped/uncertain edges go to a `relationships.rejected.json` sidecar so the heuristic itself stays auditable.
+The 4-D vector is richer than P6 status — the rest goes into Activity Codes (D4) and Notebook Topics (D5), not lost.
 
-## What this plan does NOT do
+### D3. Dates — what we have, what we infer, what stays empty
+- **Have real:** `time_window.first/last` on git activities → `ActualStart` / `ActualFinish` (only set ActualFinish if `lifecycle=shipped`; else only ActualStart).
+- **Have planned for future-marketing-debt:** none today. Either (a) leave PlannedStart empty and accept P6 will float them to project start, or (b) derive from predecessor-chain + a default 5d duration. Recommend (a) plus a Notebook entry — don't fabricate.
+- **Duration:** for completed git activities use `time_window.active_days` (with floor 1); for in-flight use elapsed since `first`; for future stubs leave `PlannedDuration` unset on TT_LOE (P6 computes it).
+- **Data Date:** the `2026-05-29` date already in state.json becomes the project `DataDate`.
 
-- No P6 XML emission.
-- No edits to `src/`.
-- No new app routes or UI.
-- No fixes to the audit, marketing copy, or memory.
-- No deletion of `.lovable/wbs/wbs.json` etc. — they're replaced in place, but the old shape is archived to `.lovable/wbs/_archive-v1/` so we can diff against the first pass.
+### D4. Activity Codes (P6's tagging system) — this is where our richness lives
+Define one Activity Code Type per dimension, with values from our enums:
+- `ORIGIN` = git | future-risk | future-marketing-debt | future-verification-gap
+- `LIFECYCLE` = planned | in-flight | paused | dormant | shipped | abandoned
+- `BLOCKING` = none | decision | external | successor-missing
+- `VISIBILITY` = quiet | normal | loud
+- `STREAM` = the 23 streams
+- `LAYER` = Frontend | Backend | Mobile | Capability | Verification | Engineering | Build | Docs
+- `HEALTH` = healthy | dormant-but-needed | awaiting-successor | paused-pending-decision | abandoned-but-loud (derived in `next.json`)
 
-## File changes
+P6 then lets you filter/group by any of these — same expressive power as our state vector, no info loss.
 
-- create `scripts/wbs/build-spine.mjs` (reads existing catalogs → `wbs.json`)
-- create `scripts/wbs/build-activities.mjs` (Pass A + B + C → `activities.json`, `links.json`)
-- create `scripts/wbs/build-relationships.mjs` (4-signal inference → `relationships.json` + `.rejected.json`)
-- create `scripts/wbs/build-state.mjs` (state vector → `state.json`)
-- create `scripts/wbs/build-next.mjs` (derived view → `next.json`)
-- create `scripts/wbs/build-all.mjs` (orchestrator)
-- archive current `.lovable/wbs/*.json` → `.lovable/wbs/_archive-v1/`
-- write new `.lovable/wbs/{wbs,activities,links,relationships,relationships.rejected,state,next}.json` + `README.md`
+### D5. Notebook Topics (per-activity prose) — for evidence
+One topic per activity with:
+- `evidence.commit_shas` first 10 + count (full list in UDF)
+- `evidence.reason` for stubs
+- `contributing_leaves[]` list
+- `state.blocking.note`
 
-## Step order I'll execute when you approve
+This is where reviewers click to see "why is this here."
 
-1. Build the spine (`wbs.json`) and sanity-check counts against the 417-leaf catalog + orphan capabilities.
-2. Pass A in isolation, dump stats, eyeball 10 commits to confirm multi-attribution behaves.
-3. Pass B + merge, eyeball 10 leaves to confirm many-per-leaf works.
-4. Pass C, confirm future activities have `gating_predecessors` resolving to real ids.
-5. Relationships + state + next.
-6. Report counts, top 10 "ready-to-start" future activities, top 10 dormant-but-needed activities. No XML, no UI.
+### D6. UDFs (typed user fields)
+- `LovableActivityId` (Text) — our ACT-xxxx
+- `PrimaryLeafId` (Text) — LF-xxxx
+- `CommitCount` (Integer)
+- `DormancyDays` (Integer)
+- `Confidence` (Double) — for stub activities, computed from signals
+- `DownstreamCount` (Integer) — drives the "dormant-but-needed" filter
+
+### D7. Relationships
+Direct map. `relationships.json` already has `type` (FS/SS/FF) and `lag_days`. Emit confidence + sources as a Notebook on the relationship (or concatenate into the Comments field if the viewer doesn't honor relationship notebooks). The 52 rejected edges stay out of XML but ship as a sibling `.rejected.xml` for audit.
+
+### D8. WBS hierarchy
+`wbs.json` already has parents (stream → layer → leaf). Direct map to nested `<WBS>` nodes. The 67 orphan-capability leaves get parked under a synthetic `Capability` layer per stream so nothing dangles.
+
+### D9. Calendar and Resources
+- One project calendar: `Lovable 7-day` (we don't track working hours). Single calendar avoids the per-activity calendar reference problem.
+- Resources: skip entirely in v1. (Could add a per-stream resource later if you want load views — but that's fabricated data right now.)
+
+### D10. Cost
+Skip. We have zero financial signal. Don't emit `<TotalCost>` etc.; P6 shows blanks gracefully when the elements aren't present (it's the *presence with zero* that looks like missing data).
+
+## What gets built (after you approve D1–D10)
+
+```
+scripts/wbs/
+  emit-p6-xml.mjs          # main emitter
+  p6/
+    schema.mjs             # PMXML element builders
+    activity-types.mjs     # D1 logic
+    status-map.mjs         # D2 logic
+    activity-codes.mjs     # D4 enum → <ActivityCode> + <ActivityCodeAssignment>
+    notebook.mjs           # D5 prose builder
+    udfs.mjs               # D6 typed UDF builder
+    calendar.mjs           # D9 default calendar
+    validate.mjs           # post-emit XSD-shape check
+.lovable/wbs/
+  project.p6.xml           # main artifact
+  project.p6.rejected.xml  # rejected relationships for audit
+  project.p6.report.md     # field-coverage report: how many activities got each field, how many are intentionally blank, with reasons
+```
+
+## Field-coverage report (the anti-blank-field accountant)
+
+After emission the script writes `project.p6.report.md`:
+
+```
+ActivityName        669/669  (100%)
+ActivityType        669/669  (100%)  [TT_Task 220 | TT_Mile 8 | TT_LOE 419 | TT_WBS 22]
+Status              669/669  (100%)
+ActualStart         145/669  (intentional: only in-flight + shipped)
+ActualFinish         20/669  (intentional: only shipped)
+PlannedStart          0/669  (intentional: no fabricated dates — TT_LOE infers from successors)
+PlannedDuration     220/669  (TT_Task only; TT_LOE computed by P6; TT_Mile zero)
+Calendar            669/669  (single default)
+NotebookTopics      669/669  (every activity has evidence prose)
+ActivityCodes       669/669  ×7 dimensions = 4683 assignments
+UDFs                669/669
+PercentComplete     165/669  (in-flight + shipped only)
+```
+
+The report is the user-facing proof that no field is blank by accident — every empty cell has a documented reason.
+
+## What's explicitly out of scope
+
+- No invented dates or durations to fill cells.
+- No Resource Assignments, Costs, Roles, Risks, Issues, Documents, Baselines.
+- No round-trip into the app's Supabase or UI.
+- No P6 viewer/import automation — file lands in `.lovable/wbs/` and you import it.
+
+## Questions before I write the plan-into-code
+
+1. **D1–D10:** ack all, or push back on any?
+2. **D3b (planned-stub dates):** confirm "leave empty + Notebook" rather than fabricate? This is the single biggest "looks empty" complaint risk.
+3. **Single XML vs split:** one `project.p6.xml`, or split past-and-shipped into one project and future-planned into a second project (cleaner Gantt, but two imports)?
+4. Anything in the 4-D state vector you want surfaced *inside* Status itself (e.g. force `abandoned` → Completed-with-flag) rather than via Activity Code?
