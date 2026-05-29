@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-05-29T05:58:50.558Z",
+  "generatedAt": "2026-05-29T05:59:15.958Z",
   "project": {
-    "start": "2025-01-01",
+    "start": "2026-03-08",
     "latestCommit": "2026-05-29",
-    "lifespanDays": 514,
+    "lifespanDays": 83,
     "totalCommits": 815
   },
   "thresholds": {
@@ -108,41 +108,48 @@
     {
       "wbs": "1.2",
       "label": "Edge functions"
+    },
+    {
+      "wbs": "1.1",
+      "label": "Takeoff frontend (canvas, annotations, pay items)"
     }
   ],
   "wbsRows": [
     {
       "wbs": "1.1",
       "label": "Takeoff frontend (canvas, annotations, pay items)",
-      "fileCount": 38,
-      "commitCount": 428,
-      "firstCommit": "2025-01-01",
+      "fileCount": 37,
+      "commitCount": 450,
+      "firstCommit": "2026-03-08",
       "lastCommit": "2026-05-28",
-      "lifespanDays": 514,
+      "lifespanDays": 83,
       "build": {
-        "count": 422,
-        "start": "2026-03-08",
-        "end": "2026-05-28",
-        "spanDays": 82
+        "count": 300,
+        "start": "2026-03-12",
+        "end": "2026-03-27",
+        "spanDays": 16
       },
       "refine": {
-        "count": 6,
-        "start": "2025-01-01",
-        "end": "2026-03-08",
-        "spanDays": 432
+        "count": 150,
+        "start": "2026-03-08",
+        "end": "2026-05-28",
+        "spanDays": 83
       },
-      "punchList": null,
+      "punchList": {
+        "count": 114,
+        "latest": "2026-05-28"
+      },
       "sampleSubjects": [
-        "template: new_style_vite_react_shadcn_ts_testing_2026-01-08",
         "Implement TOC auto-parse and polygon-only takeoff",
         "Enhance PDF TOC-driven takeoff",
         "Changes",
-        "Parse INDEX OF SHEETS TOC"
+        "Parse INDEX OF SHEETS TOC",
+        "Preceding changes"
       ],
       "files": [
+        "src/App.tsx",
         "src/components/ConfirmDialog.tsx",
         "src/components/EmptyState.tsx",
-        "src/components/NavLink.tsx",
         "src/components/NotificationBell.tsx",
         "src/components/PdfCanvas.tsx",
         "src/components/ProjectSidebar.tsx",
@@ -153,8 +160,6 @@
         "src/components/SyncPanel.tsx",
         "src/components/TeamManager.tsx",
         "src/components/Toolbar.tsx",
-        "src/hooks/use-mobile.tsx",
-        "src/hooks/use-toast.ts",
         "src/hooks/useDocuments.ts",
         "src/hooks/useNetworkStatus.ts",
         "src/hooks/useNotifications.ts",
@@ -164,6 +169,7 @@
         "src/hooks/useProjects.ts",
         "src/hooks/useReReviewQueue.ts",
         "src/hooks/useTheme.ts",
+        "src/index.css",
         "src/lib/approved-quantities.ts",
         "src/lib/export-utils.ts",
         "src/lib/geo-transform.ts",
@@ -171,13 +177,13 @@
         "src/lib/pdf-utils.ts",
         "src/lib/specs-utils.ts",
         "src/lib/storage.ts",
-        "src/lib/utils.ts",
+        "src/main.tsx",
         "src/pages/Dashboard.tsx",
         "src/pages/Documents.tsx",
         "src/pages/Index.tsx",
-        "src/pages/NotFound.tsx",
         "src/pages/ProjectControls.tsx",
-        "src/pages/Settings.tsx"
+        "src/pages/Settings.tsx",
+        "src/types/project.ts"
       ]
     },
     {
@@ -283,33 +289,27 @@
     {
       "wbs": "1.4",
       "label": "Takeoff QA",
-      "fileCount": 2,
-      "commitCount": 12,
-      "firstCommit": "2025-01-01",
+      "fileCount": 1,
+      "commitCount": 11,
+      "firstCommit": "2026-03-15",
       "lastCommit": "2026-03-15",
-      "lifespanDays": 440,
+      "lifespanDays": 1,
       "build": {
         "count": 11,
         "start": "2026-03-15",
         "end": "2026-03-15",
         "spanDays": 1
       },
-      "refine": {
-        "count": 1,
-        "start": "2025-01-01",
-        "end": "2025-01-01",
-        "spanDays": 1
-      },
+      "refine": null,
       "punchList": null,
       "sampleSubjects": [
-        "template: new_style_vite_react_shadcn_ts_testing_2026-01-08",
         "Add plan & specs test hook",
         "Add specs utils tests",
         "Add spec utils tests",
-        "Add specs tests"
+        "Add specs tests",
+        "Refined TOC filtering for specs"
       ],
       "files": [
-        "src/test/example.test.ts",
         "src/test/specs-utils.test.ts"
       ]
     },
@@ -767,10 +767,10 @@
       "wbs": "7.3",
       "label": "SEO & marketing infra",
       "fileCount": 5,
-      "commitCount": 10,
-      "firstCommit": "2025-01-01",
+      "commitCount": 9,
+      "firstCommit": "2026-03-14",
       "lastCommit": "2026-05-28",
-      "lifespanDays": 514,
+      "lifespanDays": 76,
       "build": {
         "count": 6,
         "start": "2026-05-25",
@@ -778,14 +778,13 @@
         "spanDays": 4
       },
       "refine": {
-        "count": 4,
-        "start": "2025-01-01",
+        "count": 3,
+        "start": "2026-03-14",
         "end": "2026-03-25",
-        "spanDays": 450
+        "spanDays": 12
       },
       "punchList": null,
       "sampleSubjects": [
-        "template: new_style_vite_react_shadcn_ts_testing_2026-01-08",
         "Update site info for publish",
         "Landing page added",
         "Rewrote NJTA/NJDOT landing page",
@@ -813,115 +812,99 @@
     {
       "milestoneId": "H02",
       "date": "2026-03-23",
-      "label": "Fix signup profile conflict / Improve workflows and fixes in SpecViewer and related areas / Implement mobile and data fixes",
+      "label": "Fix signup profile conflict / Refactor: TOC touch fix / Improve workflows and fixes in SpecViewer and related areas",
       "wbsTouched": [
         "1.1",
         "1.2",
         "6.1",
         "7.2"
       ],
-      "commitCount": 14
+      "commitCount": 15
     }
   ],
   "unmappedTopFiles": [
     {
-      "file": ".lovable/plan.md",
-      "count": 66
-    },
-    {
-      "file": "bun.lock",
-      "count": 28
-    },
-    {
-      "file": "src/App.tsx",
-      "count": 25
-    },
-    {
-      "file": "src/integrations/supabase/types.ts",
-      "count": 21
-    },
-    {
-      "file": "package.json",
-      "count": 10
-    },
-    {
-      "file": "src/types/project.ts",
-      "count": 10
-    },
-    {
-      "file": "src/index.css",
-      "count": 5
-    },
-    {
-      "file": "src/main.tsx",
-      "count": 4
-    },
-    {
-      "file": "vite.config.ts",
-      "count": 3
-    },
-    {
-      "file": "vitest.config.ts",
-      "count": 3
+      "file": "scripts/extract-build-history.mjs",
+      "count": 2
     },
     {
       "file": "public/favicon.ico",
-      "count": 2
+      "count": 1
     },
     {
       "file": "src/test/setup.ts",
-      "count": 2
-    },
-    {
-      "file": "tailwind.config.ts",
-      "count": 2
-    },
-    {
-      "file": "tsconfig.app.json",
-      "count": 2
-    },
-    {
-      "file": "tsconfig.json",
-      "count": 2
-    },
-    {
-      "file": "docs/NATIVE_SETUP.md",
-      "count": 2
-    },
-    {
-      "file": "supabase/seed.sql",
-      "count": 2
-    },
-    {
-      "file": ".gitignore",
       "count": 1
     },
     {
-      "file": "README.md",
+      "file": ".env",
       "count": 1
     },
     {
-      "file": "bun.lockb",
+      "file": "src/assets/hero-screenshot.jpg",
       "count": 1
     },
     {
-      "file": "components.json",
+      "file": "src/assets/hero-product-shot.png",
       "count": 1
     },
     {
-      "file": "eslint.config.js",
+      "file": "src/assets/blueprint-plans.jpg",
       "count": 1
     },
     {
-      "file": "package-lock.json",
+      "file": "src/assets/highway-construction-aerial.jpg",
       "count": 1
     },
     {
-      "file": "postcss.config.js",
+      "file": "src/assets/inspector-tablet.jpg",
       "count": 1
     },
     {
-      "file": "public/placeholder.svg",
+      "file": "src/assets/gps-field-measurement.jpg",
+      "count": 1
+    },
+    {
+      "file": "public/fajar/admin.png",
+      "count": 1
+    },
+    {
+      "file": "public/fajar/listing.png",
+      "count": 1
+    },
+    {
+      "file": "public/fajar/machine-detail.png",
+      "count": 1
+    },
+    {
+      "file": "public/fajar/mobile-booking.png",
+      "count": 1
+    },
+    {
+      "file": "public/fajar/serp.png",
+      "count": 1
+    },
+    {
+      "file": "public/pwa-512.png",
+      "count": 1
+    },
+    {
+      "file": "public/apple-touch-icon.png",
+      "count": 1
+    },
+    {
+      "file": "public/favicon-32.png",
+      "count": 1
+    },
+    {
+      "file": "public/pwa-192.png",
+      "count": 1
+    },
+    {
+      "file": "src/assets/app-icon-master.png",
+      "count": 1
+    },
+    {
+      "file": "scripts/build-demo-pdf.mjs",
       "count": 1
     }
   ]
