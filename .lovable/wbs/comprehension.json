@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-29T22:36:04.493Z",
+  "generatedAt": "2026-05-29T23:48:46.639Z",
   "streams": {
     "01-identity-and-access": {
       "key": "01-identity-and-access",
@@ -600,15 +600,16 @@
         "src/components/PdfCanvas.tsx",
         "src/components/Toolbar.tsx",
         "src/components/MobileToolbar.tsx",
-        "src/components/GpsCalibration.tsx",
-        "src/components/GpsTraceControls.tsx",
         "src/components/MobileAnnotationSheet.tsx",
         "src/hooks/useProject.ts",
-        "src/lib/geometry.ts",
-        "src/lib/geo-transform.ts",
         "src/types/project.ts"
       ],
-      "shared_paths": [],
+      "shared_paths": [
+        "src/lib/geometry.ts",
+        "src/lib/geo-transform.ts",
+        "src/components/GpsCalibration.tsx",
+        "src/components/GpsTraceControls.tsx"
+      ],
       "criteria": [
         {
           "id": "05-field-capture#c1",
@@ -1971,11 +1972,12 @@
         "src/lib/geometry.ts",
         "src/lib/geo-transform.ts",
         "src/components/GpsCalibration.tsx",
-        "src/components/GpsTraceControls.tsx",
+        "src/components/GpsTraceControls.tsx"
+      ],
+      "shared_paths": [
         "src/components/PdfCanvas.tsx",
         "src/hooks/useProject.ts"
       ],
-      "shared_paths": [],
       "criteria": [
         {
           "id": "14-measurement-and-geometry-engine#c1",
@@ -3059,7 +3061,7 @@
     "criteria": 147,
     "handoffs": 49,
     "risks": 80,
-    "paths_declared": 170,
+    "paths_declared": 164,
     "verdict_histogram": {
       "implemented": 117,
       "partial": 20,
