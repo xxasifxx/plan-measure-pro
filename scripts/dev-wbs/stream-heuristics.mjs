@@ -2,6 +2,10 @@
 // Order matters: first matching regex wins. Fall through → "97".
 
 export const STREAM_RULES = [
+  // ── 20 Sales & Pitch (landing/marketing assets) ─────────────────────────
+  [/^src\/assets\/(hero-|highway-|inspector-|blueprint-|gps-field-)/, '20'],
+  [/^src\/assets\/app-icon-master\.png$/, '15'],
+
   // ── 11 Schedule ─────────────────────────────────────────────────────────
   [/^src\/components\/schedule\//, '11'],
   [/^src\/lib\/schedule\//, '11'],
