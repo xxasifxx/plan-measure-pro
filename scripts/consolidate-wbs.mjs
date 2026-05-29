@@ -105,7 +105,12 @@ const all = [];
 const fileStats = [];
 for (const src of SOURCES) {
   if (!fs.existsSync(src.file)) { console.warn('skip (missing):', src.file); continue; }
-  const raw = fs.readFileSync(src.file, 'utf8');
+  let raw = fs.readFileSync(src.file, 'utf8');
+  // Fix the wbs-leaves.yaml malformed inline pattern: "- task: X   days: N"
+  raw = raw.replace(
+    /^(\s*)-\s*task:\s*(.+?)\s{2,}days:\s*([\d.]+)\s*$/gm,
+    (_, ind, t, d) => `${ind}- task: ${JSON.stringify(t.trim())}\n${ind}  days: ${d}`
+  );
   const doc = yaml.load(raw);
   const before = all.length;
   walk(doc, src.defaultSurface, all, src.file);
