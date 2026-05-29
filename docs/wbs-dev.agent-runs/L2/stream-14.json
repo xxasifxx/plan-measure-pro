@@ -1,0 +1,326 @@
+{
+  "stream": {
+    "slug": "14-measurement-and-geometry-engine",
+    "num": 14,
+    "title": "Measurement and Geometry Engine"
+  },
+  "leaves": [
+    {
+      "id": "stream-14.distance-px",
+      "name": "Compute pixel distance between two points",
+      "acceptance": [
+        "distancePx(p1, p2) returns Euclidean distance via Math.sqrt((Δx)²+(Δy)²)",
+        "Returns 0 when p1 === p2"
+      ],
+      "anchors": [
+        {
+          "file": "src/lib/geometry.ts",
+          "region": "distancePx",
+          "line": 3
+        }
+      ],
+      "state": "landed",
+      "evidence": "Single-expression Euclidean implementation at geometry.ts:3–5",
+      "gaps": []
+    },
+    {
+      "id": "stream-14.line-length",
+      "name": "Calculate polyline length in real-world feet",
+      "acceptance": [
+        "lineLength sums segment pixel distances then divides by pixelsPerFoot",
+        "Returns 0 for fewer than 2 points",
+        "After two-point calibration, annotation measurement equals pixel length / pixelsPerFoot"
+      ],
+      "anchors": [
+        {
+          "file": "src/lib/geometry.ts",
+          "region": "lineLength",
+          "line": 7
+        }
+      ],
+      "state": "landed",
+      "evidence": "Loop over segments + totalPx/pixelsPerFoot at geometry.ts:7–14",
+      "gaps": []
+    },
+    {
+      "id": "stream-14.polygon-area-sf",
+      "name": "Compute polygon area via shoelace formula (px² → SF)",
+      "acceptance": [
+        "polygonAreaPx returns |shoelace|/2 in pixels²",
+        "polygonAreaSF divides by pixelsPerFoot² to return square feet",
+        "Returns 0 for fewer than 3 points"
+      ],
+      "anchors": [
+        {
+          "file": "src/lib/geometry.ts",
+          "region": "polygonAreaPx",
+          "line": 17
+        },
+        {
+          "file": "src/lib/geometry.ts",
+          "region": "polygonAreaSF",
+          "line": 28
+        }
+      ],
+      "state": "landed",
+      "evidence": "Standard shoelace at geometry.ts:17–30",
+      "gaps": []
+    },
+    {
+      "id": "stream-14.sf-conversions",
+      "name": "Convert SF to SY and CY",
+      "acceptance": [
+        "sfToSY(area) === area / 9",
+        "sfToCY(area, depth) === area * depth / 27"
+      ],
+      "anchors": [
+        {
+          "file": "src/lib/geometry.ts",
+          "region": "sfToCY",
+          "line": 32
+        },
+        {
+          "file": "src/lib/geometry.ts",
+          "region": "sfToSY",
+          "line": 36
+        }
+      ],
+      "state": "landed",
+      "evidence": "Single-expression functions at geometry.ts:32–38; imported by export-utils.ts:3",
+      "gaps": []
+    },
+    {
+      "id": "stream-14.format-measurement",
+      "name": "Format measurement value with unit string and K-abbreviation",
+      "acceptance": [
+        "formatMeasurement(value, unit) returns '1.2K SF' when value >= 1000",
+        "Returns '45.3 LF' format for values < 1000"
+      ],
+      "anchors": [
+        {
+          "file": "src/lib/geometry.ts",
+          "region": "formatMeasurement",
+          "line": 40
+        }
+      ],
+      "state": "landed",
+      "evidence": "Implemented at geometry.ts:40–43",
+      "gaps": [
+        "No unit enum/validation; caller passes arbitrary string — typos silently pass through"
+      ]
+    },
+    {
+      "id": "stream-14.hit-testing",
+      "name": "Hit-test points against polyline segments and polygon fills",
+      "acceptance": [
+        "pointToSegmentDistance returns clamped perpendicular distance from point to segment",
+        "pointInPolygon correctly classifies inside/outside via ray-casting",
+        "pointToMarkerDistance returns Euclidean distance to count-marker center"
+      ],
+      "anchors": [
+        {
+          "file": "src/lib/geometry.ts",
+          "region": "pointToSegmentDistance",
+          "line": 48
+        },
+        {
+          "file": "src/lib/geometry.ts",
+          "region": "pointInPolygon",
+          "line": 59
+        },
+        {
+          "file": "src/lib/geometry.ts",
+          "region": "pointToMarkerDistance",
+          "line": 72
+        }
+      ],
+      "state": "landed",
+      "evidence": "All three functions implemented; ray-casting at geometry.ts:59–69",
+      "gaps": []
+    },
+    {
+      "id": "stream-14.gps-to-local-ft",
+      "name": "Convert GPS lat/lng to local Cartesian feet relative to origin",
+      "acceptance": [
+        "gpsToLocalFt uses spherical approximation with cosLat longitude correction",
+        "Earth radius constant is 20,902,231 ft (mean)"
+      ],
+      "anchors": [
+        {
+          "file": "src/lib/geo-transform.ts",
+          "region": "gpsToLocalFt",
+          "line": 31
+        }
+      ],
+      "state": "landed",
+      "evidence": "Implemented at geo-transform.ts:31–39 with DEG_TO_RAD and EARTH_RADIUS_FT constants",
+      "gaps": [
+        "Flat-earth approximation — valid only for small project extents (<5 mi); no range guard"
+      ]
+    },
+    {
+      "id": "stream-14.affine-2pt",
+      "name": "Solve 2-point similarity transform (scale + rotation + translation)",
+      "acceptance": [
+        "solveAffine2 round-trips each control point's plan coordinate to floating-point precision",
+        "Throws when fewer than 2 points or points are identical"
+      ],
+      "anchors": [
+        {
+          "file": "src/lib/geo-transform.ts",
+          "region": "solveAffine2",
+          "line": 44
+        }
+      ],
+      "state": "landed",
+      "evidence": "Exact 4-DOF similarity transform at geo-transform.ts:44–74",
+      "gaps": []
+    },
+    {
+      "id": "stream-14.affine-3pt",
+      "name": "Solve 3+ point full affine via least-squares normal equations",
+      "acceptance": [
+        "solveAffine3 returns least-squares 6-DOF affine for 3+ control points",
+        "Falls back to solveAffine2 when determinant < 1e-12",
+        "estimateError returns non-zero residual for non-collinear points"
+      ],
+      "anchors": [
+        {
+          "file": "src/lib/geo-transform.ts",
+          "region": "solveAffine3",
+          "line": 77
+        },
+        {
+          "file": "src/lib/geo-transform.ts",
+          "region": "estimateError",
+          "line": 135
+        }
+      ],
+      "state": "landed",
+      "evidence": "Normal equations solved at geo-transform.ts:77–121; fallback guard at line 108",
+      "gaps": [
+        "estimateError returns plan-pixel residual, not feet — docstring and field name estimatedErrorFt are misleading (confirmed risk in stream doc)"
+      ]
+    },
+    {
+      "id": "stream-14.gps-to-plan",
+      "name": "Apply affine calibration to convert live GPS to plan pixel coordinates",
+      "acceptance": [
+        "gpsToplan(cal, gps) converts GPS to local feet then applies stored AffineMatrix",
+        "buildGeoCalibration selects solveAffine3 for 3+ points, solveAffine2 for 2"
+      ],
+      "anchors": [
+        {
+          "file": "src/lib/geo-transform.ts",
+          "region": "gpsToplan",
+          "line": 124
+        },
+        {
+          "file": "src/lib/geo-transform.ts",
+          "region": "buildGeoCalibration",
+          "line": 149
+        }
+      ],
+      "state": "landed",
+      "evidence": "Both functions implemented at geo-transform.ts:124–154",
+      "gaps": []
+    },
+    {
+      "id": "stream-14.kalman-filter",
+      "name": "Kalman filter for GPS trace smoothing (predict + update)",
+      "acceptance": [
+        "initKalman seeds state with lat/lng/accuracy/timestamp and zero velocity",
+        "updateKalman with high-accuracy measurement pulls state toward new reading",
+        "updateKalman with dt <= 0 returns position unchanged (cold-start guard)"
+      ],
+      "anchors": [
+        {
+          "file": "src/lib/geo-transform.ts",
+          "region": "initKalman",
+          "line": 167
+        },
+        {
+          "file": "src/lib/geo-transform.ts",
+          "region": "updateKalman",
+          "line": 171
+        }
+      ],
+      "state": "landed",
+      "evidence": "dt <= 0 guard at line 173; gain = state.accuracy/(state.accuracy+accuracy) at line 180",
+      "gaps": [
+        "KalmanState is never persisted — cold-starts on every GpsTraceControls remount (confirmed debt)"
+      ]
+    },
+    {
+      "id": "stream-14.coordinate-normalization",
+      "name": "Normalize plan coordinates to scale=1 for geo control points",
+      "acceptance": [
+        "GeoControlPoint.plan is stored normalized to scale=1 so transform is scale-independent",
+        "PdfCanvas passes normalized coordinates when building geo calibration"
+      ],
+      "anchors": [
+        {
+          "file": "src/lib/geo-transform.ts",
+          "region": "GeoControlPoint",
+          "line": 11
+        }
+      ],
+      "state": "partial",
+      "evidence": "Interface comment 'normalized to scale=1' at geo-transform.ts:13; no enforcement function exists in geometry lib",
+      "gaps": [
+        "No normalizeToScale1() helper; callers must manually divide by current scale — contract not enforced"
+      ]
+    },
+    {
+      "id": "stream-14.vertex-drag-recalc",
+      "name": "Live measurement recalculation on polygon vertex drag",
+      "acceptance": [
+        "Dragging a polygon vertex updates only that vertex in the points array",
+        "polygonAreaSF / lineLength called immediately after vertex update to refresh measurement"
+      ],
+      "anchors": [
+        {
+          "file": "src/components/PdfCanvas.tsx",
+          "region": "onMouseMove/drag handler",
+          "line": 0
+        }
+      ],
+      "state": "partial",
+      "evidence": "Vertex-drag/recalc wiring not isolated in the geometry library; geometry.ts functions exist and are callable",
+      "gaps": [
+        "Vertex-drag recalculation coupling lives in PdfCanvas, not testable in isolation"
+      ]
+    }
+  ],
+  "docDrift": [
+    {
+      "claim": "estimateError returns non-zero residual in feet (field named estimatedErrorFt)",
+      "actual": "estimateError returns plan-pixel residual divided by control-point count; no scale conversion (geo-transform.ts:143–145)",
+      "severity": "major"
+    },
+    {
+      "claim": "updateKalman: zero-dt update returns position unchanged",
+      "actual": "When dt <= 0, returns state lat/lng replaced by NEW gps.lat/gps.lng (line 173), so it DOES mutate position on zero-dt",
+      "severity": "major"
+    }
+  ],
+  "proposedDocPatch": [
+    {
+      "section": "Current state vs criteria",
+      "addBullet": "6. **Bug** — `updateKalman` zero-dt guard (geo-transform.ts:173) returns `gps.lat/lng` not `state.lat/lng`; acceptance criterion 6 is NOT met."
+    },
+    {
+      "section": "Risks / debt",
+      "addBullet": "5. **`estimateError` unit mismatch** — averages plan-pixel residuals with no feet conversion; stored as `estimatedErrorFt` and labelled 'feet'."
+    },
+    {
+      "section": "Risks / debt",
+      "addBullet": "6. **`updateKalman` zero-dt semantics** — early-return sets lat/lng from new GPS instead of preserving prior state; duplicate-timestamp events silently teleport the trace."
+    }
+  ],
+  "_meta": {
+    "agentId": "sub_cscdtxtm",
+    "model": "capable",
+    "generatedAt": "2026-05-29T17:48:13.839Z"
+  }
+}
