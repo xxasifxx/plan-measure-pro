@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-29T19:45:41.383Z",
+  "generatedAt": "2026-05-29T19:46:11.327Z",
   "streams": {
     "01-identity-and-access": {
       "key": "01-identity-and-access",
@@ -1258,7 +1258,7 @@
           "id": "11-schedule-management#c1",
           "ordinal": 1,
           "text": "Uploading a valid PMXML file imports all WBS nodes, activities, relationships, calendars, resources, and assignments via `replace_project_schedule` with zero data loss for supported fields.",
-          "verdict": "unknown",
+          "verdict": "implemented",
           "evidence": "`importFromPmxml` (import-p6.ts:123); `replace_project_schedule` called from `use-schedule.ts:108`.",
           "raw_state": "**Implemented** — `importFromPmxml` (import-p6.ts:123); `replace_project_schedule` called from `use-schedule.ts:108`."
         },
@@ -1266,7 +1266,7 @@
           "id": "11-schedule-management#c2",
           "ordinal": 2,
           "text": "`runCpm` computes ES/EF/LS/LF/total-float using the activity's assigned calendar, and marks the continuous critical path.",
-          "verdict": "unknown",
+          "verdict": "implemented",
           "evidence": "`runCpm` (cpm.ts:18) full forward/backward pass with per-activity calendars and 8 constraint types.",
           "raw_state": "**Implemented** — `runCpm` (cpm.ts:18) full forward/backward pass with per-activity calendars and 8 constraint types."
         },
@@ -1274,7 +1274,7 @@
           "id": "11-schedule-management#c3",
           "ordinal": 3,
           "text": "`GanttChart` renders all activities as time-proportional bars; dragging a bar calls `onMove` and `onResize`.",
-          "verdict": "unknown",
+          "verdict": "partial",
           "evidence": "Drag-move writes optimistically to `cpm.byId` in-place (GanttChart.tsx:88) rather than through `onMove`/`upsertActivity`; persistence unverified.",
           "raw_state": "**Partial** — Drag-move writes optimistically to `cpm.byId` in-place (GanttChart.tsx:88) rather than through `onMove`/`upsertActivity`; persistence unverified."
         },
@@ -1282,7 +1282,7 @@
           "id": "11-schedule-management#c4",
           "ordinal": 4,
           "text": "`ComplianceStrip` shows correct counts for negative lags, open-ended tasks, CPM cycles, and missing NJDOT M-codes in real time.",
-          "verdict": "unknown",
+          "verdict": "implemented",
           "evidence": "`ComplianceStrip` recomputes via `useMemo` on every change.",
           "raw_state": "**Implemented** — `ComplianceStrip` recomputes via `useMemo` on every change."
         },
@@ -1298,7 +1298,7 @@
           "id": "11-schedule-management#c6",
           "ordinal": 6,
           "text": "`buildReMemo` issues REJECT when any hard-blocker check fails and ACCEPT when all 14 pass.",
-          "verdict": "unknown",
+          "verdict": "implemented",
           "evidence": "`buildReMemo` with hard-blocker set `{leads, negfloat, invaliddates, logic, hard}`.",
           "raw_state": "**Implemented** — `buildReMemo` with hard-blocker set `{leads, negfloat, invaliddates, logic, hard}`."
         },
@@ -1306,7 +1306,7 @@
           "id": "11-schedule-management#c7",
           "ordinal": 7,
           "text": "`captureBaseline` RPC creates a named snapshot; `compareProgress` computes SPI/CPI and slipping activities.",
-          "verdict": "unknown",
+          "verdict": "implemented",
           "evidence": "`captureBaseline` / `loadBaselineActivities` (use-schedule.ts:291–312).",
           "raw_state": "**Implemented** — `captureBaseline` / `loadBaselineActivities` (use-schedule.ts:291–312)."
         },
@@ -1314,7 +1314,7 @@
           "id": "11-schedule-management#c8",
           "ordinal": 8,
           "text": "All analysis functions consume in-memory `ScheduleActivity[]` directly — no file upload required.",
-          "verdict": "unknown",
+          "verdict": "implemented",
           "evidence": "All analysis modules import from `@/lib/schedule/types`, not XER.",
           "raw_state": "**Implemented** — All analysis modules import from `@/lib/schedule/types`, not XER."
         }
@@ -1391,15 +1391,15 @@
         "**RPCs**: `replace_project_schedule`, `capture_baseline`, `delete_baseline`"
       ],
       "counts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "stream_percent": 34,
-      "remaining_work_units": 4
+      "stream_percent": 94,
+      "remaining_work_units": 5
     },
     "12-project-health-and-controls": {
       "key": "12-project-health-and-controls",
@@ -1409,7 +1409,7 @@
           "id": "12-project-health-and-controls#c1",
           "ordinal": 1,
           "text": "Dashboard KPI tiles display Schedule Status %, Milestones On Track/Behind, Critical Issues count, and Reporting Freshness — derived from live Supabase data, no stubs.",
-          "verdict": "unknown",
+          "verdict": "partial",
           "evidence": "Schedule Status tile hardcodes `CPI 1.03 · SPI 0.98` (ProjectControls.tsx:332); other three tiles data-driven.",
           "raw_state": "**Partial** — Schedule Status tile hardcodes `CPI 1.03 · SPI 0.98` (ProjectControls.tsx:332); other three tiles data-driven."
         },
@@ -1417,7 +1417,7 @@
           "id": "12-project-health-and-controls#c2",
           "ordinal": 2,
           "text": "Quantity Variance section shows installed-vs-contract progress bars for every pay item that has a `contract_quantity`.",
-          "verdict": "unknown",
+          "verdict": "implemented",
           "evidence": "`variance` memo (ProjectControls.tsx:177).",
           "raw_state": "**Implemented** — `variance` memo (ProjectControls.tsx:177)."
         },
@@ -1425,7 +1425,7 @@
           "id": "12-project-health-and-controls#c3",
           "ordinal": 3,
           "text": "Inspector Adoption table lists each contributing inspector's 7-day annotation count and staleness status (> 3 days = stale).",
-          "verdict": "unknown",
+          "verdict": "implemented",
           "evidence": "`inspectorActivity` memo (ProjectControls.tsx:162).",
           "raw_state": "**Implemented** — `inspectorActivity` memo (ProjectControls.tsx:162)."
         },
@@ -1433,7 +1433,7 @@
           "id": "12-project-health-and-controls#c4",
           "ordinal": 4,
           "text": "Rocks (quarterly goals) can be created, have their status cycled, and deleted.",
-          "verdict": "unknown",
+          "verdict": "implemented",
           "evidence": "`addRock`, `updateRockStatus`, `deleteRock` (ProjectControls.tsx:220–239).",
           "raw_state": "**Implemented** — `addRock`, `updateRockStatus`, `deleteRock` (ProjectControls.tsx:220–239)."
         },
@@ -1441,7 +1441,7 @@
           "id": "12-project-health-and-controls#c5",
           "ordinal": 5,
           "text": "Scorecard metrics can be upserted per-week for the three fixed `METRIC_KEYS`.",
-          "verdict": "unknown",
+          "verdict": "implemented",
           "evidence": "`upsertMetric` with `onConflict` (ProjectControls.tsx:242).",
           "raw_state": "**Implemented** — `upsertMetric` with `onConflict` (ProjectControls.tsx:242)."
         },
@@ -1449,7 +1449,7 @@
           "id": "12-project-health-and-controls#c6",
           "ordinal": 6,
           "text": "Uploading a photo triggers `tag-photo` and the confirmed pay-item association updates `annotation_photos`.",
-          "verdict": "unknown",
+          "verdict": "implemented",
           "evidence": "`uploadPhoto` invokes `tag-photo` fire-and-forget (ProjectControls.tsx:253).",
           "raw_state": "**Implemented** — `uploadPhoto` invokes `tag-photo` fire-and-forget (ProjectControls.tsx:253)."
         },
@@ -1457,7 +1457,7 @@
           "id": "12-project-health-and-controls#c7",
           "ordinal": 7,
           "text": "The hub requires PM access (`isOwner || isManager`); non-PMs receive access-denied, not a blank screen.",
-          "verdict": "unknown",
+          "verdict": "implemented",
           "evidence": "`canEdit` guard at render time (ProjectControls.tsx:286).",
           "raw_state": "**Implemented** — `canEdit` guard at render time (ProjectControls.tsx:286)."
         }
@@ -1514,15 +1514,15 @@
         "`src/types/project.ts` — `UNIT_LABELS`, `getPayItemSection` used for bid summary"
       ],
       "counts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "stream_percent": 25,
-      "remaining_work_units": 4
+      "stream_percent": 93,
+      "remaining_work_units": 5
     },
     "13-data-export-and-interoperability": {
       "key": "13-data-export-and-interoperability",
@@ -1532,7 +1532,7 @@
           "id": "13-data-export-and-interoperability#c1",
           "ordinal": 1,
           "text": "Uploading a PMXML baseline and clicking \"Apply Approved Progress\" produces a mutated PMXML where each mapped activity's `ActualUnits` and `PhysicalPercentComplete` reflect latest RE-approved cumulative quantities.",
-          "verdict": "unknown",
+          "verdict": "implemented",
           "evidence": "`applyDailyReportsToP6` patches DOM in-place; `P6Export.tsx:102` orchestrates the flow.",
           "raw_state": "**Implemented** — `applyDailyReportsToP6` patches DOM in-place; `P6Export.tsx:102` orchestrates the flow."
         },
@@ -1540,7 +1540,7 @@
           "id": "13-data-export-and-interoperability#c2",
           "ordinal": 2,
           "text": "Downloaded file is accepted by P6 via File → Import → Primavera XML → Update Existing Project without schema errors.",
-          "verdict": "unknown",
+          "verdict": "partial",
           "evidence": "Structural round-trip via serializer preservation, but no automated tests verify P6 import acceptance.",
           "raw_state": "**Partial** — Structural round-trip via serializer preservation, but no automated tests verify P6 import acceptance."
         },
@@ -1548,7 +1548,7 @@
           "id": "13-data-export-and-interoperability#c3",
           "ordinal": 3,
           "text": "Auto-map links pay items whose `item_code` matches an Activity Id; already-mapped items are not overwritten.",
-          "verdict": "unknown",
+          "verdict": "implemented",
           "evidence": "`onAutoMap` (P6Export.tsx:90) skips `!p.p6_activity_id`.",
           "raw_state": "**Implemented** — `onAutoMap` (P6Export.tsx:90) skips `!p.p6_activity_id`."
         },
@@ -1556,7 +1556,7 @@
           "id": "13-data-export-and-interoperability#c4",
           "ordinal": 4,
           "text": "`exportApprovedCsv` / `exportApprovedPdfReport` include only RE-approved quantities (status='approved').",
-          "verdict": "unknown",
+          "verdict": "implemented",
           "evidence": "`loadApprovedDailyReports` queries `status = 'approved'`.",
           "raw_state": "**Implemented** — `loadApprovedDailyReports` queries `status = 'approved'`."
         },
@@ -1564,7 +1564,7 @@
           "id": "13-data-export-and-interoperability#c5",
           "ordinal": 5,
           "text": "`exportInspectorDaily` filters strictly by `userId` and `report_date`; no cross-inspector leak.",
-          "verdict": "unknown",
+          "verdict": "implemented",
           "evidence": "`exportInspectorDaily` double-checks `a.userId !== userId` (export-utils.ts:242).",
           "raw_state": "**Implemented** — `exportInspectorDaily` double-checks `a.userId !== userId` (export-utils.ts:242)."
         },
@@ -1572,7 +1572,7 @@
           "id": "13-data-export-and-interoperability#c6",
           "ordinal": 6,
           "text": "On Capacitor native, exported files land in app Documents via `saveExport` rather than browser download.",
-          "verdict": "unknown",
+          "verdict": "implemented",
           "evidence": "`saveExport` called by all export functions; Capacitor path branched in helper.",
           "raw_state": "**Implemented** — `saveExport` called by all export functions; Capacitor path branched in helper."
         },
@@ -1580,7 +1580,7 @@
           "id": "13-data-export-and-interoperability#c7",
           "ordinal": 7,
           "text": "`buildP6XmlFromProject` produces valid PMXML from live schedule tables without uploaded baseline.",
-          "verdict": "unknown",
+          "verdict": "implemented",
           "evidence": "`buildP6XmlFromProject` constructs full PMXML including calendars and resources.",
           "raw_state": "**Implemented** — `buildP6XmlFromProject` constructs full PMXML including calendars and resources."
         }
@@ -1644,15 +1644,15 @@
         "**View**: `v_approved_pay_item_quantities`"
       ],
       "counts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "stream_percent": 25,
-      "remaining_work_units": 4
+      "stream_percent": 93,
+      "remaining_work_units": 5
     },
     "14-measurement-and-geometry-engine": {
       "key": "14-measurement-and-geometry-engine",
@@ -1662,7 +1662,7 @@
           "id": "14-measurement-and-geometry-engine#c1",
           "ordinal": 1,
           "text": "After two-point calibration, a polyline `measurement` equals pixel length divided by `pixelsPerFoot`.",
-          "verdict": "unknown",
+          "verdict": "implemented",
           "evidence": "`lineLength` (geometry.ts:7) divides by `pixelsPerFoot`.",
           "raw_state": "**Implemented** — `lineLength` (geometry.ts:7) divides by `pixelsPerFoot`."
         },
@@ -1670,7 +1670,7 @@
           "id": "14-measurement-and-geometry-engine#c2",
           "ordinal": 2,
           "text": "`polygonAreaSF` returns shoelace area in SF; `sfToCY(area, depth)` = `area * depth / 27`; `sfToSY(area)` = `area / 9`.",
-          "verdict": "unknown",
+          "verdict": "implemented",
           "evidence": "Single-expression functions (geometry.ts:28–38).",
           "raw_state": "**Implemented** — Single-expression functions (geometry.ts:28–38)."
         },
@@ -1678,7 +1678,7 @@
           "id": "14-measurement-and-geometry-engine#c3",
           "ordinal": 3,
           "text": "`pointInPolygon` correctly classifies inside/outside via ray-casting.",
-          "verdict": "unknown",
+          "verdict": "implemented",
           "evidence": "Standard ray-casting (geometry.ts:59).",
           "raw_state": "**Implemented** — Standard ray-casting (geometry.ts:59)."
         },
@@ -1686,7 +1686,7 @@
           "id": "14-measurement-and-geometry-engine#c4",
           "ordinal": 4,
           "text": "With 2 GPS control points, `solveAffine2` round-trips each control point's `plan` coordinate to floating-point precision.",
-          "verdict": "unknown",
+          "verdict": "implemented",
           "evidence": "`solveAffine2` (geo-transform.ts:44) exact by construction.",
           "raw_state": "**Implemented** — `solveAffine2` (geo-transform.ts:44) exact by construction."
         },
@@ -1694,7 +1694,7 @@
           "id": "14-measurement-and-geometry-engine#c5",
           "ordinal": 5,
           "text": "With 3+ control points, `solveAffine3` returns least-squares affine; `estimateError` returns non-zero residual when points are non-collinear.",
-          "verdict": "unknown",
+          "verdict": "implemented",
           "evidence": "`solveAffine3` uses normal equations (geo-transform.ts:77); falls back to `solveAffine2` when determinant < 1e-12.",
           "raw_state": "**Implemented** — `solveAffine3` uses normal equations (geo-transform.ts:77); falls back to `solveAffine2` when determinant < 1e-12."
         },
@@ -1702,7 +1702,7 @@
           "id": "14-measurement-and-geometry-engine#c6",
           "ordinal": 6,
           "text": "Kalman: `updateKalman` with a high-accuracy measurement pulls state toward new reading; zero-dt update returns position unchanged.",
-          "verdict": "unknown",
+          "verdict": "implemented",
           "evidence": "`updateKalman` (geo-transform.ts:171) handles dt ≤ 0 guard.",
           "raw_state": "**Implemented** — `updateKalman` (geo-transform.ts:171) handles dt ≤ 0 guard."
         },
@@ -1767,14 +1767,14 @@
         "**Tables**: `calibrations` (two-point scale), `geo_calibrations` (GPS↔plan control points), `annotations` (stored with normalized `measurement` in real-world units)"
       ],
       "counts": {
-        "implemented": 0,
+        "implemented": 6,
         "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 6
+        "unknown": 0
       },
-      "stream_percent": 29,
+      "stream_percent": 93,
       "remaining_work_units": 5
     },
     "15-offline-and-native-durability": {
@@ -1785,7 +1785,7 @@
           "id": "15-offline-and-native-durability#c1",
           "ordinal": 1,
           "text": "When offline, app displays offline pill and serves projects, annotations, and PDFs from IDB/CacheStorage without network.",
-          "verdict": "unknown",
+          "verdict": "partial",
           "evidence": "`mirrorProject` snapshots 8 tables; `daily_reports` capped at 30 rows (mirror.ts:27), silently truncating history.",
           "raw_state": "**Partial** — `mirrorProject` snapshots 8 tables; `daily_reports` capped at 30 rows (mirror.ts:27), silently truncating history."
         },
@@ -1793,7 +1793,7 @@
           "id": "15-offline-and-native-durability#c2",
           "ordinal": 2,
           "text": "Offline annotation is written optimistically to IDB with `_pendingSync: true` and syncs when online.",
-          "verdict": "unknown",
+          "verdict": "implemented",
           "evidence": "`mutate` applies IDB mirror before enqueue; `_pendingSync: true` set.",
           "raw_state": "**Implemented** — `mutate` applies IDB mirror before enqueue; `_pendingSync: true` set."
         },
@@ -1801,7 +1801,7 @@
           "id": "15-offline-and-native-durability#c3",
           "ordinal": 3,
           "text": "Outbox drain processes mutations for the same row serially; up to 4 different rows concurrently.",
-          "verdict": "unknown",
+          "verdict": "implemented",
           "evidence": "`drainOnce` groups by `rowId`, processes serially with 4 parallel workers.",
           "raw_state": "**Implemented** — `drainOnce` groups by `rowId`, processes serially with 4 parallel workers."
         },
@@ -1809,7 +1809,7 @@
           "id": "15-offline-and-native-durability#c4",
           "ordinal": 4,
           "text": "Failed mutation retries with exponential backoff up to 5 attempts (1s, 4s, 15s, 60s, 180s) and surfaces in `SyncPanel`.",
-          "verdict": "unknown",
+          "verdict": "implemented",
           "evidence": "`scheduleRetry` uses `BACKOFF_MS = [1000, 4000, 15000, 60000, 180000]`; `SyncPanel.retryItem`.",
           "raw_state": "**Implemented** — `scheduleRetry` uses `BACKOFF_MS = [1000, 4000, 15000, 60000, 180000]`; `SyncPanel.retryItem`."
         },
@@ -1817,7 +1817,7 @@
           "id": "15-offline-and-native-durability#c5",
           "ordinal": 5,
           "text": "On Capacitor iOS/Android, `shouldRegisterSW()` returns `false`; no service worker registered.",
-          "verdict": "unknown",
+          "verdict": "implemented",
           "evidence": "`shouldRegisterSW` checks `Capacitor.isNativePlatform()`.",
           "raw_state": "**Implemented** — `shouldRegisterSW` checks `Capacitor.isNativePlatform()`."
         },
@@ -1825,7 +1825,7 @@
           "id": "15-offline-and-native-durability#c6",
           "ordinal": 6,
           "text": "On web deploy, `PwaShell` registers Workbox SW and shows \"Update available\" prompt on `waiting`.",
-          "verdict": "unknown",
+          "verdict": "implemented",
           "evidence": "`registerSWWithUpdates` uses Workbox; `PwaShell` wires `setReloadFn` on `waiting`.",
           "raw_state": "**Implemented** — `registerSWWithUpdates` uses Workbox; `PwaShell` wires `setReloadFn` on `waiting`."
         },
@@ -1833,7 +1833,7 @@
           "id": "15-offline-and-native-durability#c7",
           "ordinal": 7,
           "text": "`warmPdf` stores PDF in `pdf-cache-v1`; subsequent calls return cached blob within 500 MB cap.",
-          "verdict": "unknown",
+          "verdict": "implemented",
           "evidence": "`warmPdf` opens `pdf-cache-v1`, tracks metadata; `evictIfNeeded` enforces 500 MB cap.",
           "raw_state": "**Implemented** — `warmPdf` opens `pdf-cache-v1`, tracks metadata; `evictIfNeeded` enforces 500 MB cap."
         }
@@ -1895,15 +1895,15 @@
         "`public/manifest.webmanifest` — PWA manifest"
       ],
       "counts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "stream_percent": 25,
-      "remaining_work_units": 4
+      "stream_percent": 93,
+      "remaining_work_units": 5
     },
     "16-mobile-field-ergonomics": {
       "key": "16-mobile-field-ergonomics",
@@ -2517,10 +2517,10 @@
     "handoffs": 49,
     "risks": 80,
     "verdict_histogram": {
-      "implemented": 87,
-      "partial": 16,
+      "implemented": 117,
+      "partial": 20,
       "missing": 9,
-      "unknown": 35
+      "unknown": 1
     },
     "activity_overrides": 669,
     "handoff_edges": 15
@@ -7723,1806 +7723,1806 @@
       "id": "ACT-0109",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 34,
+      "percent_complete": 94,
       "lifecycle": "in-flight",
       "stream_share": 0.048,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0208",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 34,
+      "percent_complete": 94,
       "lifecycle": "in-flight",
       "stream_share": 0.048,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0209",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 34,
+      "percent_complete": 94,
       "lifecycle": "in-flight",
       "stream_share": 0,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0210",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 34,
+      "percent_complete": 94,
       "lifecycle": "in-flight",
       "stream_share": 0.048,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0211",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 34,
+      "percent_complete": 94,
       "lifecycle": "in-flight",
       "stream_share": 0.095,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0212",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 34,
+      "percent_complete": 94,
       "lifecycle": "in-flight",
       "stream_share": 0.048,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0213",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 34,
+      "percent_complete": 94,
       "lifecycle": "in-flight",
       "stream_share": 0,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0214",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 34,
+      "percent_complete": 94,
       "lifecycle": "in-flight",
       "stream_share": 0.095,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0215",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 34,
+      "percent_complete": 94,
       "lifecycle": "in-flight",
       "stream_share": 0,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0216",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 34,
+      "percent_complete": 94,
       "lifecycle": "in-flight",
       "stream_share": 0.143,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0217",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 34,
+      "percent_complete": 94,
       "lifecycle": "in-flight",
       "stream_share": 0.19,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0222",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 34,
+      "percent_complete": 94,
       "lifecycle": "in-flight",
       "stream_share": 0.095,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0223",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 34,
+      "percent_complete": 94,
       "lifecycle": "in-flight",
       "stream_share": 0,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0224",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 34,
+      "percent_complete": 94,
       "lifecycle": "in-flight",
       "stream_share": 0.095,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0225",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 34,
+      "percent_complete": 94,
       "lifecycle": "in-flight",
       "stream_share": 0,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0226",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 34,
+      "percent_complete": 94,
       "lifecycle": "in-flight",
       "stream_share": 0,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0227",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 34,
+      "percent_complete": 94,
       "lifecycle": "in-flight",
       "stream_share": 0.048,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0228",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 34,
+      "percent_complete": 94,
       "lifecycle": "in-flight",
       "stream_share": 0,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0229",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 34,
+      "percent_complete": 94,
       "lifecycle": "in-flight",
       "stream_share": 0.048,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0230",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 34,
+      "percent_complete": 94,
       "lifecycle": "in-flight",
       "stream_share": 0,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0231",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 34,
+      "percent_complete": 94,
       "lifecycle": "in-flight",
       "stream_share": 0,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0232",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 34,
+      "percent_complete": 94,
       "lifecycle": "in-flight",
       "stream_share": 0,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0267",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0268",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0269",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0270",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0271",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0272",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0273",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0274",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0342",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0343",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0344",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0345",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0346",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0351",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0353",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0354",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0355",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0356",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0360",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0372",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0378",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0383",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0384",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0385",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0386",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0387",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0388",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0389",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0390",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0391",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0392",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0393",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0456",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0532",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0533",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0534",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0535",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0604",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0605",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0606",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0607",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0608",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0609",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0610",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0611",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0612",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0613",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0614",
       "stream": "11-schedule-management",
       "criteria_verdicts": {
-        "implemented": 1,
-        "partial": 0,
+        "implemented": 7,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.08,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0110",
       "stream": "12-project-health-and-controls",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 25,
+      "percent_complete": 93,
       "lifecycle": "in-flight",
       "stream_share": 1,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0352",
       "stream": "12-project-health-and-controls",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.22,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.28,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0357",
       "stream": "12-project-health-and-controls",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.22,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.28,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0394",
       "stream": "12-project-health-and-controls",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.22,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.28,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0395",
       "stream": "12-project-health-and-controls",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.22,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.28,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0396",
       "stream": "12-project-health-and-controls",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.22,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.28,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0397",
       "stream": "12-project-health-and-controls",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.22,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.28,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0398",
       "stream": "12-project-health-and-controls",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.22,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.28,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0399",
       "stream": "12-project-health-and-controls",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.22,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.28,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0536",
       "stream": "12-project-health-and-controls",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.22,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.28,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0537",
       "stream": "12-project-health-and-controls",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.22,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.28,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0538",
       "stream": "12-project-health-and-controls",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.22,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.28,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0539",
       "stream": "12-project-health-and-controls",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.22,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.28,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0615",
       "stream": "12-project-health-and-controls",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.22,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.28,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0616",
       "stream": "12-project-health-and-controls",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.22,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.28,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0617",
       "stream": "12-project-health-and-controls",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.22,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.28,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0618",
       "stream": "12-project-health-and-controls",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.22,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.28,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0619",
       "stream": "12-project-health-and-controls",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.22,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.28,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0620",
       "stream": "12-project-health-and-controls",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.22,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.28,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0132",
       "stream": "13-data-export-and-interoperability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 25,
+      "percent_complete": 93,
       "lifecycle": "in-flight",
       "stream_share": 0.333,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0133",
       "stream": "13-data-export-and-interoperability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 25,
+      "percent_complete": 93,
       "lifecycle": "in-flight",
       "stream_share": 0,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0134",
       "stream": "13-data-export-and-interoperability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 25,
+      "percent_complete": 93,
       "lifecycle": "in-flight",
       "stream_share": 0,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0135",
       "stream": "13-data-export-and-interoperability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 25,
+      "percent_complete": 93,
       "lifecycle": "in-flight",
       "stream_share": 0,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0136",
       "stream": "13-data-export-and-interoperability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 25,
+      "percent_complete": 93,
       "lifecycle": "in-flight",
       "stream_share": 0,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0137",
       "stream": "13-data-export-and-interoperability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 25,
+      "percent_complete": 93,
       "lifecycle": "in-flight",
       "stream_share": 0,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0166",
       "stream": "13-data-export-and-interoperability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 25,
+      "percent_complete": 93,
       "lifecycle": "in-flight",
       "stream_share": 0.667,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0167",
       "stream": "13-data-export-and-interoperability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 25,
+      "percent_complete": 93,
       "lifecycle": "in-flight",
       "stream_share": 0,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0332",
       "stream": "13-data-export-and-interoperability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
-      "duration_days": 2,
-      "assigned_remaining_units": 0.8,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "duration_days": 3,
+      "assigned_remaining_units": 1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0540",
       "stream": "13-data-export-and-interoperability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
-      "duration_days": 2,
-      "assigned_remaining_units": 0.8,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "duration_days": 3,
+      "assigned_remaining_units": 1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0541",
       "stream": "13-data-export-and-interoperability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
-      "duration_days": 2,
-      "assigned_remaining_units": 0.8,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "duration_days": 3,
+      "assigned_remaining_units": 1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0542",
       "stream": "13-data-export-and-interoperability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
-      "duration_days": 2,
-      "assigned_remaining_units": 0.8,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "duration_days": 3,
+      "assigned_remaining_units": 1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0543",
       "stream": "13-data-export-and-interoperability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
-      "duration_days": 2,
-      "assigned_remaining_units": 0.8,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "duration_days": 3,
+      "assigned_remaining_units": 1,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0143",
@@ -9826,907 +9826,907 @@
       "id": "ACT-0189",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 25,
+      "percent_complete": 93,
       "lifecycle": "in-flight",
       "stream_share": 0,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0190",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 25,
+      "percent_complete": 93,
       "lifecycle": "in-flight",
       "stream_share": 0,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0192",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 25,
+      "percent_complete": 93,
       "lifecycle": "in-flight",
       "stream_share": 0.333,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0193",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 25,
+      "percent_complete": 93,
       "lifecycle": "in-flight",
       "stream_share": 0,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0194",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 25,
+      "percent_complete": 93,
       "lifecycle": "in-flight",
       "stream_share": 0,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0195",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 25,
+      "percent_complete": 93,
       "lifecycle": "in-flight",
       "stream_share": 0,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0196",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 25,
+      "percent_complete": 93,
       "lifecycle": "in-flight",
       "stream_share": 0,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0197",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 25,
+      "percent_complete": 93,
       "lifecycle": "in-flight",
       "stream_share": 0,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0200",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 25,
+      "percent_complete": 93,
       "lifecycle": "in-flight",
       "stream_share": 0.333,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0201",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 25,
+      "percent_complete": 93,
       "lifecycle": "in-flight",
       "stream_share": 0,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0202",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 25,
+      "percent_complete": 93,
       "lifecycle": "in-flight",
       "stream_share": 0,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0207",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
-      "percent_complete": 25,
+      "percent_complete": 93,
       "lifecycle": "in-flight",
       "stream_share": 0.333,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "past-stream-aggregate"
     },
     {
       "id": "ACT-0375",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0403",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0404",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0405",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0406",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0407",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0408",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0409",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0410",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0411",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0412",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0413",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0414",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0415",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0416",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0417",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0418",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0419",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0548",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0549",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0550",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0551",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0624",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0625",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0626",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0627",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0628",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0629",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0630",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0631",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0632",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0633",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0634",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0635",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0636",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0637",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0638",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0639",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0640",
       "stream": "15-offline-and-native-durability",
       "criteria_verdicts": {
-        "implemented": 0,
-        "partial": 0,
+        "implemented": 6,
+        "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 7
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 1,
-      "assigned_remaining_units": 0.1,
-      "remaining_criteria_count": 7,
-      "reason": "future-share-of-4-remaining-units"
+      "assigned_remaining_units": 0.13,
+      "remaining_criteria_count": 1,
+      "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0275",
@@ -11686,90 +11686,90 @@
       "id": "ACT-0349",
       "stream": "14-measurement-and-geometry-engine",
       "criteria_verdicts": {
-        "implemented": 0,
+        "implemented": 6,
         "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 6
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 3,
       "assigned_remaining_units": 1,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0544",
       "stream": "14-measurement-and-geometry-engine",
       "criteria_verdicts": {
-        "implemented": 0,
+        "implemented": 6,
         "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 6
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 3,
       "assigned_remaining_units": 1,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0545",
       "stream": "14-measurement-and-geometry-engine",
       "criteria_verdicts": {
-        "implemented": 0,
+        "implemented": 6,
         "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 6
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 3,
       "assigned_remaining_units": 1,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0546",
       "stream": "14-measurement-and-geometry-engine",
       "criteria_verdicts": {
-        "implemented": 0,
+        "implemented": 6,
         "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 6
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 3,
       "assigned_remaining_units": 1,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "future-share-of-5-remaining-units"
     },
     {
       "id": "ACT-0547",
       "stream": "14-measurement-and-geometry-engine",
       "criteria_verdicts": {
-        "implemented": 0,
+        "implemented": 6,
         "partial": 1,
         "planned": 0,
         "missing": 0,
         "aspirational": 0,
-        "unknown": 6
+        "unknown": 0
       },
       "percent_complete": 0,
       "lifecycle": "planned",
       "duration_days": 3,
       "assigned_remaining_units": 1,
-      "remaining_criteria_count": 7,
+      "remaining_criteria_count": 1,
       "reason": "future-share-of-5-remaining-units"
     }
   ],
