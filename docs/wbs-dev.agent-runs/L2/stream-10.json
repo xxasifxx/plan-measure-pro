@@ -1,0 +1,242 @@
+{
+  "stream": { "slug": "10-document-management", "num": 10, "title": "Document Management" },
+  "generatedAt": "2026-05-29T20:00:00.000Z",
+  "agent": "L2-comprehender",
+  "leaves": [
+    {
+      "id": "stream-10.documents-page",
+      "name": "Documents page — three-pane layout",
+      "acceptance": [
+        "Three-pane layout: folder tree (left), breadcrumb + document list (centre), no persistent right drawer. Folder tree renders system folders sorted before user-created folders; chevron toggle expands nested children. Selecting a folder loads its non-deleted head documents. Breadcrumb reflects the full path from project root."
+      ],
+      "anchors": [
+        { "file": "src/pages/Documents.tsx", "region": "83-109 (buildTree, pathOf)", "line": 83 },
+        { "file": "src/pages/Documents.tsx", "region": "113-215 (component open, folder-load effect, folder counts)", "line": 113 },
+        { "file": "src/pages/Documents.tsx", "region": "141-154 (auto-select plans folder on first load)", "line": 141 },
+        { "file": "src/hooks/useDocuments.ts", "region": "51-120 (useFolders)", "line": 51 }
+      ],
+      "state": "landed",
+      "evidence": "buildTree groups folders by parent_id and sorts system-first. pathOf walks parent_id chain for breadcrumb. Auto-select on first load picks system_kind='plans' if present. useFolders fetches all document_folders ordered by is_system desc, name asc.",
+      "gaps": [
+        "Folder drag-and-drop is absent; moveFolder mutation exists in useFolders (line 96) but no drag-source or drop-target UI is wired — folder reorganisation requires direct DB access.",
+        "Tree auto-expansion opens ancestors of the auto-selected 'plans' folder (line 148-153) but does not persist expanded state in localStorage — every page reload collapses the tree.",
+        "buildTree does not sort user-created child folders independently by name; they are sorted by the same comparator as top-level folders, so a user folder inserted between two system folders can appear out-of-order if its name sorts earlier than a sibling system folder name."
+      ]
+    },
+    {
+      "id": "stream-10.folder-tree",
+      "name": "Folder tree — recursive render, counts, create/rename/delete",
+      "acceptance": [
+        "Folder tree correctly renders nested hierarchy from parent_id. System folders sort before user folders alphabetically. Folder file counts reflect only non-deleted, non-superseded (head) documents. PM/admin can create, rename, delete (empty) folders; inspectors cannot."
+      ],
+      "anchors": [
+        { "file": "src/pages/Documents.tsx", "region": "83-96 (buildTree)", "line": 83 },
+        { "file": "src/pages/Documents.tsx", "region": "172-193 (folderCountsQuery)", "line": 172 },
+        { "file": "src/hooks/useDocuments.ts", "region": "72-113 (createFolder, renameFolder, deleteFolder)", "line": 72 }
+      ],
+      "state": "landed",
+      "evidence": "buildTree produces a Map<parentId, FolderRow[]> with sorted arrays. folderCountsQuery loads all non-deleted project documents once, computes head set by subtracting replaced IDs, and counts by folder_id. createFolder/renameFolder/deleteFolder mutations call Supabase and invalidate the folders query key.",
+      "gaps": [
+        "folderCountsQuery fetches the entire project documents table (all columns) to compute counts — a SELECT * equivalent. A COUNT(*) group-by query would be significantly lighter for projects with large document sets.",
+        "deleteFolder on the client calls supabase.from('document_folders').delete() without a prior empty-check in the hook — the server-side block-nonempty trigger (trg_document_folders_block_nonempty) prevents the delete, but the client receives a PostgreSQL RAISE EXCEPTION error message, which is surfaced as a destructive toast with the raw SQL message rather than a friendlier UI-level guard.",
+        "System folders can be renamed via the same useFolders.renameFolder mutation; no guard in the mutation or RLS prevents a PM from renaming 'Plans' to an arbitrary name, breaking the system_kind visual hint in KIND_HINTS."
+      ]
+    },
+    {
+      "id": "stream-10.seeded-folders",
+      "name": "10 standard seeded folders auto-created on project insert",
+      "acceptance": [
+        "Every new project automatically receives 10 system folders: Plans, Specs, RFIs, Submittals, Shop Drawings, Change Orders, Daily Reports, Photos, As-Builts, Correspondence. Existing projects are backfilled. seed_project_standard_folders is idempotent (ON CONFLICT DO NOTHING)."
+      ],
+      "anchors": [
+        { "file": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql", "region": "198-243 (seed_project_standard_folders, projects_seed_folders trigger, trg_projects_seed_folders)", "line": 198 },
+        { "file": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql", "region": "248-277 (DO $$ backfill loop)", "line": 248 }
+      ],
+      "state": "landed",
+      "evidence": "seed_project_standard_folders inserts 10 rows (is_system=true) with system_kind values mapping each folder name. trg_projects_seed_folders fires AFTER INSERT ON projects. Backfill DO block iterates all existing projects and calls the same function.",
+      "gaps": [
+        "The backfill block also inserts legacy PDF rows into plans/specs folders — if projects.pdf_storage_path or specs_storage_path references a blob that was already deleted from storage, the inserted document row becomes a dangling reference with no storage object.",
+        "ON CONFLICT DO NOTHING relies on the partial unique indexes uq_document_folders_top_name and uq_document_folders_child_name. The seed inserts all 10 folders at the top level (parent_id=NULL), so the top-level unique index covers them — correct. However if a user manually created a folder named 'Plans' before the migration ran, the conflict suppresses the system-folder insert and that folder remains non-system with no system_kind, breaking role-gating.",
+        "No AFTER INSERT trigger on document_folders validates that exactly 10 system folders exist post-seed; drift from the expected set is not detected at runtime."
+      ]
+    },
+    {
+      "id": "stream-10.upload",
+      "name": "File upload with per-file progress queue and same-name versioning",
+      "acceptance": [
+        "Uploading a file with the same name as an existing document in the same folder automatically creates a new version (version + 1) linked via replaces_document_id. Upload queue shows per-file pending/uploading/done/error status. Completed items auto-clear after 5 s; failures persist until dismissed."
+      ],
+      "anchors": [
+        { "file": "src/pages/Documents.tsx", "region": "325-391 (runUploads)", "line": 325 },
+        { "file": "src/hooks/useDocuments.ts", "region": "150-203 (uploadFiles mutation)", "line": 150 },
+        { "file": "src/pages/Documents.tsx", "region": "234-240 (uploadQueue state, file input refs)", "line": 234 }
+      ],
+      "state": "landed",
+      "evidence": "runUploads in Documents.tsx performs a folder-scoped query for existing documents, builds a latestByName Map filtering replaced IDs, then uploads to project-documents storage and inserts a documents row with replaces_document_id set if a prior version exists. uploadFiles in useDocuments.ts is a parallel implementation with the same logic. Per-file UploadItem state drives the queue UI. setTimeout auto-clears done items at 5000 ms.",
+      "gaps": [
+        "runUploads in Documents.tsx and uploadFiles in useDocuments.ts are duplicate upload implementations with slightly different error paths — the page-level runUploads propagates per-file error status to the queue UI; the hook-level uploadFiles surfaces a single toast on first error and aborts remaining files. Both code paths can be triggered; only runUploads is used for the main upload drag/drop/button flow, but uploadFiles is exported and could be called inconsistently.",
+        "The same-name version check queries deleted_at-filtered documents implicitly (it does not filter .is('deleted_at', null)). A soft-deleted document with the same name is still considered a prior version, so uploading a file whose name matches a trashed document will link a new v2 to a deleted v1 without user awareness.",
+        "Folder upload (folderInputRef) reads webkitRelativePath but only the flat file list is passed to runUploads — sub-directory structure inside the uploaded folder is ignored and all files land in the current folder.",
+        "No MIME-type validation occurs before upload; any file type can be placed in any folder, including placing executable files in the Specs or Plans folders."
+      ]
+    },
+    {
+      "id": "stream-10.system-kind",
+      "name": "system_kind enum on document_folders controls role-gated upload",
+      "acceptance": [
+        "system_kind column is a CHECK-constrained text column accepting 10 values: plans, specs, rfis, submittals, shop_drawings, change_orders, daily_reports, photos, as_builts, correspondence. Inspectors may only upload to photos or daily_reports system folders; managers/admins can upload anywhere."
+      ],
+      "anchors": [
+        { "file": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql", "region": "15-20 (document_folders_system_kind_chk)", "line": 15 },
+        { "file": "src/hooks/useDocuments.ts", "region": "8-10 (SystemKind TypeScript type)", "line": 8 },
+        { "file": "src/pages/Documents.tsx", "region": "55-66 (KIND_HINTS)", "line": 55 },
+        { "file": "src/pages/Documents.tsx", "region": "168-170 (inspectorCanUploadHere)", "line": 168 },
+        { "file": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql", "region": "123-137 (Inspectors upload to photos and daily_reports RLS policy)", "line": 123 }
+      ],
+      "state": "landed",
+      "evidence": "DB enforces system_kind via CHECK constraint. TypeScript SystemKind union type mirrors the 10 allowed values. inspectorCanUploadHere checks selectedFolder.system_kind against 'photos'|'daily_reports'. RLS policy 'Inspectors upload to photos and daily_reports' enforces the same constraint server-side.",
+      "gaps": [
+        "system_kind is stored as text not a Postgres enum; the CHECK constraint enforces valid values but the Supabase-generated TypeScript types in integrations/supabase/types.ts may use string rather than the narrower SystemKind union — silent widening if the generated types are not kept in sync with useDocuments.ts.",
+        "The inspector upload RLS policy grants INSERT to any authenticated project member when the target folder's system_kind is in ('photos','daily_reports'). It does not restrict UPDATE or DELETE for inspectors — an inspector who can insert can also soft-delete their own uploads only if deleted_by=auth.uid(), but the policy only covers INSERT; no explicit DENY exists for inspectors attempting DELETE on their own rows.",
+        "KIND_HINTS is a UI-only constant in Documents.tsx with no server-side backing; if a future system_kind is added to the DB constraint, it will silently display no hint tooltip in the folder tree sidebar."
+      ]
+    },
+    {
+      "id": "stream-10.block-nonempty-delete-trigger",
+      "name": "block-nonempty-delete trigger prevents deleting non-empty folders",
+      "acceptance": [
+        "DELETE on document_folders raises an exception if the folder contains any documents (any deleted_at status) or any subfolders. Trigger name: trg_document_folders_block_nonempty. Function: document_folders_block_nonempty_delete."
+      ],
+      "anchors": [
+        { "file": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql", "region": "65-80 (document_folders_block_nonempty_delete function and trigger)", "line": 65 }
+      ],
+      "state": "landed",
+      "evidence": "document_folders_block_nonempty_delete is a BEFORE DELETE trigger that checks documents.folder_id = OLD.id (no deleted_at filter — includes soft-deleted) and document_folders.parent_id = OLD.id. RAISE EXCEPTION on either condition. Trigger is DROP-then-CREATE idempotent.",
+      "gaps": [
+        "The trigger checks documents WHERE folder_id = OLD.id with no deleted_at filter, meaning a folder containing only soft-deleted (trashed) documents cannot be deleted even after the user considers those documents 'gone'. The user must empty trash or hard-delete the trashed documents in the folder before the folder can be removed.",
+        "The exception message includes the folder name via OLD.name concatenation. If the folder name contains a percent sign or single quote it could cause unexpected string formatting — though RAISE EXCEPTION with %% quoting is handled by plpgsql, not raw SQL interpolation, so SQL injection is not a risk; the message may appear mangled in edge cases.",
+        "No client-side pre-flight check in deleteFolder (useFolders) warns the user before the DB round-trip fails; the error only surfaces after the mutation call returns the raw PostgreSQL exception as a destructive toast."
+      ]
+    },
+    {
+      "id": "stream-10.soft-delete-trash",
+      "name": "Soft-delete to Trash with Undo toast and Empty Trash",
+      "acceptance": [
+        "Soft-deleting a document sets deleted_at; an Undo toast within the session restores it. 'Empty Trash' permanently removes DB rows and storage blobs. Trash view shows all deleted documents for the project."
+      ],
+      "anchors": [
+        { "file": "src/pages/Documents.tsx", "region": "255-280 (softDeleteWithUndo)", "line": 255 },
+        { "file": "src/pages/Documents.tsx", "region": "289-300 (runEmptyTrash)", "line": 289 },
+        { "file": "src/hooks/useDocuments.ts", "region": "223-252 (deleteDocument, restoreDocument)", "line": 223 },
+        { "file": "supabase/migrations/20260524182507_aa3b520a-cfe2-4510-b710-0caf0809bc7f.sql", "region": "1-7 (deleted_at, deleted_by columns + index)", "line": 1 }
+      ],
+      "state": "landed",
+      "evidence": "softDeleteWithUndo bulk-updates deleted_at and deleted_by then shows a ToastAction 'Undo' that nulls both columns. runEmptyTrash DELETEs all project trash rows then calls storage.remove() on collected paths. useTrash queries documents where deleted_at IS NOT NULL.",
+      "gaps": [
+        "softDeleteWithUndo in Documents.tsx bypasses the deleteDocument mutation in useDocuments.ts (which invalidates trash/folder-count query keys) and directly calls supabase.from('documents').update() — the Undo path similarly calls supabase directly. The hook mutation is therefore only partially used; two delete code paths exist with slightly different query invalidation patterns.",
+        "runEmptyTrash collects storage_path values from the in-memory trash array — if the trash query is stale when Empty Trash is triggered, recently trashed files whose trash query hasn't refreshed will have their DB rows deleted but their blobs orphaned.",
+        "The Undo toast has no timeout guard beyond the default toast duration (~5 s). If the user undoes after the toast has visually disappeared but before it is fully dismissed, the undo click handler still fires — correct behaviour — but if the page navigates away in that window the undo is silently lost."
+      ]
+    },
+    {
+      "id": "stream-10.version-history",
+      "name": "Version history drawer and restore",
+      "acceptance": [
+        "Version history drawer shows the full chain of replaces_document_id links in descending order. Clicking 'Restore' creates a new head version (source_kind='restore') pointing at the older blob."
+      ],
+      "anchors": [
+        { "file": "src/pages/Documents.tsx", "region": "302-322 (restoreVersion)", "line": 302 },
+        { "file": "src/hooks/useDocuments.ts", "region": "359-375 (fetchDocumentVersions)", "line": 359 }
+      ],
+      "state": "landed",
+      "evidence": "fetchDocumentVersions selects all project documents (no folder filter) and walks the replaces_document_id chain from currentDocId backwards. restoreVersion inserts a new row with version=head.version+1, replaces_document_id=head.id, source_kind='restore'.",
+      "gaps": [
+        "fetchDocumentVersions fetches ALL documents for a project (line 362: .eq('project_id', projectId) with no folder filter) and walks the chain in JS. For large projects this is O(N) rows transferred on every version drawer open.",
+        "Circular replaces_document_id chains (possible if DB rows are manipulated outside the app) would cause fetchDocumentVersions to loop infinitely — no cycle detection guard.",
+        "restoreVersion inserts a new row pointing to older.storage_path. It does not check whether that storage path still exists in the bucket — a restore of a version whose blob was deleted (e.g., empty-trash then DB rows still exist because only DB delete ran) will succeed at the DB level but produce a broken document entry."
+      ]
+    },
+    {
+      "id": "stream-10.pdf-image-preview",
+      "name": "Inline PDF and image preview modal via signed URL",
+      "acceptance": [
+        "PDF and image documents open in a signed-URL preview modal without downloading. Non-previewable types trigger browser download. Signed URLs have 1-hour TTL."
+      ],
+      "anchors": [
+        { "file": "src/pages/Documents.tsx", "region": "79 (isPreviewable)", "line": 79 },
+        { "file": "src/hooks/useDocuments.ts", "region": "300-304 (getDownloadUrl — createSignedUrl 3600s)", "line": 300 }
+      ],
+      "state": "landed",
+      "evidence": "isPreviewable returns true for image/* MIME or application/pdf or .pdf extension. getDownloadUrl calls createSignedUrl with 3600 s TTL. Preview modal renders an <iframe> for PDFs and <img> for images.",
+      "gaps": [
+        "PDF preview uses <iframe src=signedUrl>. Safari on iOS does not support inline PDF rendering in iframes — the PDF triggers a download instead of rendering, silently degrading to the same behaviour as a non-previewable file.",
+        "Signed URL TTL is 3600 s. If a user keeps the preview modal open for >1 hour the iframe src silently expires; no refresh mechanism exists. On a page reload the URL is regenerated, but mid-session expiry is not handled.",
+        "isPreviewable gates on mime_type starting with 'image/' but HEIC files (common on iOS) have mime_type 'image/heic'; browser <img> cannot render HEIC natively on non-Safari browsers — the preview will display a broken image."
+      ]
+    },
+    {
+      "id": "stream-10.bulk-operations",
+      "name": "Multi-select bulk download and bulk soft-delete",
+      "acceptance": [
+        "Multi-select checkboxes allow select-all and per-row selection. Bulk download opens each file in a new tab staggered by 250 ms. Bulk soft-delete moves all selected to Trash with a single Undo toast."
+      ],
+      "anchors": [
+        { "file": "src/pages/Documents.tsx", "region": "223-231 (selectedIds, toggleSel, allSelected, toggleAll)", "line": 223 },
+        { "file": "src/pages/Documents.tsx", "region": "243-252 (bulkDownload)", "line": 243 },
+        { "file": "src/pages/Documents.tsx", "region": "282-286 (runBulkDelete)", "line": 282 }
+      ],
+      "state": "landed",
+      "evidence": "selectedIds Set tracks selection. toggleAll selects/deselects all filteredDocs. bulkDownload iterates selectedDocs and opens window.open() with 250 ms stagger. runBulkDelete delegates to softDeleteWithUndo(selectedDocs).",
+      "gaps": [
+        "bulkDownload uses window.open() per file — browsers with popup blockers will suppress all but the first window.open() call even with the 250 ms stagger, silently failing to download most files in a bulk selection.",
+        "selectedIds is cleared when selectedFolderId changes (line 225 effect) but not when filteredDocs changes due to search — a user can search, select results, clear the search, and still have invisible (now off-screen) IDs in selectedIds that get bulk-deleted.",
+        "No size cap on bulk download; selecting and downloading thousands of files calls window.open N times with no cap or warning."
+      ]
+    }
+  ],
+  "docDrift": [
+    {
+      "claim": "Stream doc §Surfaces lists documents table with 'deleted_at / deleted_by (soft delete)' as part of the initial CREATE TABLE.",
+      "actual": "deleted_at and deleted_by were added in a separate migration (20260524182507) as ALTER TABLE ADD COLUMN. The initial CREATE TABLE in 20260524174837 does not include these columns.",
+      "severity": "minor",
+      "recommendation": "Note in stream doc that soft-delete columns arrived in a follow-up migration."
+    },
+    {
+      "claim": "Stream doc §Current state — 'Folder tree correctly renders nested hierarchy from parent_id; system folders sort before user folders alphabetically.'",
+      "actual": "Confirmed correct. buildTree sorts by is_system desc then name asc within each parent group. useFolders query orders by is_system desc, name asc.",
+      "severity": "info",
+      "recommendation": "No correction required."
+    },
+    {
+      "claim": "Stream doc §Risks #2 — 'Blob orphan risk on insert failure — runUploads does a best-effort remove on insert failure, but the useDocuments.uploadFiles mutation does the same; the duplicate path means two slightly different cleanup paths could diverge.'",
+      "actual": "Confirmed accurate. Both runUploads (Documents.tsx:376-378) and uploadFiles (useDocuments.ts:192-194) independently catch insert errors and call storage.remove(). They are called in different contexts so they do not double-execute for the same upload, but divergence remains possible.",
+      "severity": "info",
+      "recommendation": "No correction required; risk is accurately stated."
+    },
+    {
+      "claim": "Stream doc §Surfaces — 'public/project-documents — Storage bucket; paths follow {projectId}/{docId}.{ext}'",
+      "actual": "Confirmed: runUploads line 357 and uploadFiles line 171 both construct path as `${projectId}/${id}.${extOf(file.name)}` where id is a fresh UUID. Path convention matches.",
+      "severity": "info",
+      "recommendation": "No correction required."
+    },
+    {
+      "claim": "Stream doc §Current state — 'Folder move — moveFolder mutation present in useFolders but drag-and-drop UI is absent; move is available only for documents via a modal.'",
+      "actual": "Confirmed: moveFolder mutation exists (useDocuments.ts:96-104) and is exported, but no drag-source, drop-target, or modal in Documents.tsx invokes moveFolder. Document move-to-folder modal (moveDocModal) calls moveDocument, not moveFolder.",
+      "severity": "info",
+      "recommendation": "No correction required."
+    },
+    {
+      "claim": "Stream doc §Acceptance criteria — 'Folder file counts in the sidebar reflect only non-deleted, non-superseded (head) documents.'",
+      "actual": "Confirmed: folderCountsQuery (Documents.tsx:173-192) filters .is('deleted_at', null), computes replaced IDs set, and excludes non-head rows from counts.",
+      "severity": "info",
+      "recommendation": "No correction required."
+    },
+    {
+      "claim": "Stream doc does not mention the backfill behaviour for legacy pdf_storage_path / specs_storage_path in the seeding migration.",
+      "actual": "Migration 20260524174837 §5 includes a DO $$ block that inserts document rows for existing projects' pdf_storage_path (into Plans folder, source_kind='legacy_plan_pdf') and specs_storage_path (into Specs folder, source_kind='legacy_specs_pdf'). This creates cross-stream coupling with stream-09 (standard-specifications) noted in cross-stream §Feeds into.",
+      "severity": "minor",
+      "recommendation": "Add a note to §Current state: 'Migration backfill surfaces legacy pdf_storage_path and specs_storage_path as document rows with source_kind legacy_plan_pdf / legacy_specs_pdf.'"
+    }
+  ],
+  "_meta": { "agentId": "L2-sub", "model": "capable", "generatedAt": "2026-05-29T20:00:00.000Z" }
+}
