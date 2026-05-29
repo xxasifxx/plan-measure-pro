@@ -119,8 +119,21 @@ for (const src of SOURCES) {
   });
   // Quote inline scalar values for common keys where the value contains a colon.
   raw = raw.replace(
-    /^(\s*(?:-\s+)?)(name|task|title|notes|rationale|description):\s+([^"'\|\>\[\{\n][^\n]*:[^\n]*)$/gm,
-    (m, lead, key, val) => `${lead}${key}: ${JSON.stringify(val.trim())}`
+    /^(\s*(?:-\s+)?)(name|task|title|notes|rationale|description):[ \t]+(.+)$/gm,
+    (m, lead, key, val) => {
+      const v = val.trim();
+      if (!v) return m;
+      // Block scalars and pure flow values: leave alone
+      if (/^[\|\>]/.test(v)) return m;
+      if (/^\[.*\]$/.test(v) || /^\{.*\}$/.test(v)) return m;
+      // Fully quoted single scalar with nothing trailing
+      if (/^"([^"\\]|\\.)*"$/.test(v) || /^'([^'\\]|'')*'$/.test(v)) return m;
+      // If contains a colon or starts with a quote (partial quoting), force-quote.
+      if (/:\s/.test(v) || /["']/.test(v) || /^[&*!]/.test(v)) {
+        return `${lead}${key}: ${JSON.stringify(v)}`;
+      }
+      return m;
+    }
   );
   const doc = yaml.load(raw);
   const before = all.length;
