@@ -10,6 +10,7 @@ import { ImportP6Panel } from './ImportP6Panel';
 import { CalendarManager } from './CalendarManager';
 import { ResourceManager } from './ResourceManager';
 import { BaselineManager } from './BaselineManager';
+import { DcmaPanel } from './DcmaPanel';
 import { Input } from '@/components/ui/input';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -31,6 +32,7 @@ export function ScheduleWorkspace({ projectId }: Props) {
   const [calOpen, setCalOpen] = useState(false);
   const [resOpen, setResOpen] = useState(false);
   const [blOpen, setBlOpen] = useState(false);
+  const [dcmaOpen, setDcmaOpen] = useState(false);
   const pxPerDay = ZOOM_STEPS[zoomIdx];
 
   const allLeaves = useMemo(
@@ -146,6 +148,7 @@ export function ScheduleWorkspace({ projectId }: Props) {
         onOpenCalendars={() => setCalOpen(true)}
         onOpenResources={() => setResOpen(true)}
         onOpenBaselines={() => setBlOpen(true)}
+        onOpenDcma={() => setDcmaOpen(true)}
         selectedCount={selected.length}
         canLink={selected.length >= 2}
         meta={sch.meta}
@@ -267,6 +270,13 @@ export function ScheduleWorkspace({ projectId }: Props) {
       <CalendarManager open={calOpen} onOpenChange={setCalOpen} sch={sch} />
       <ResourceManager open={resOpen} onOpenChange={setResOpen} sch={sch} />
       <BaselineManager open={blOpen} onOpenChange={setBlOpen} sch={sch} />
+      <DcmaPanel
+        open={dcmaOpen}
+        onOpenChange={setDcmaOpen}
+        activities={sch.activities}
+        relationships={sch.relationships}
+        meta={sch.meta}
+      />
     </div>
   );
 }
