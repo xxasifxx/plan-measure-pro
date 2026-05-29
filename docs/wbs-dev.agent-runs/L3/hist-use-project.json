@@ -1,0 +1,177 @@
+{
+  "file": "src/hooks/useProject.ts",
+  "totalCommits": 32,
+  "generatedAt": "2026-05-26T00:00:00Z",
+  "note": "No daily-report, schedule-wiring, or GPS-specific logic detected in this file. 'calibrations' refers to PDF scale calibration (point1/point2 rulers), not GPS. Offline mutations are routed through @/lib/offline/mutation-client. Presence/online-users tracking is included.",
+  "events": [
+    {
+      "sha": "a57c8cdba1ad35b7bede30d4582f811044bac5a1",
+      "date": "2026-03-08T02:10:53Z",
+      "kind": "capability-add",
+      "capability": "initial-hook: annotations CRUD, pay-items state, calibration storage (PDF scale), local-storage persistence, project create/load",
+      "anchor": "createProject / addAnnotation / removeAnnotation / updateAnnotation / setCalibration / updatePayItems / persist",
+      "delta": { "insertions": 110, "deletions": 0 }
+    },
+    {
+      "sha": "0f69c6604b1168b6fc5e3277b2fd0681d8d1be02",
+      "date": "2026-03-08T18:58:19Z",
+      "kind": "capability-add",
+      "capability": "closeProject / clearActiveProject (project session teardown)",
+      "anchor": "closeProject",
+      "delta": { "insertions": 11, "deletions": 0 }
+    },
+    {
+      "sha": "17df4149bb0abdd372a0f264a03b0d2118f59ecf",
+      "date": "2026-03-08T19:00:56Z",
+      "kind": "capability-edit",
+      "capability": "clear local-storage state on load (start clean, no stale project auto-restore)",
+      "anchor": "useEffect mount",
+      "delta": { "insertions": 1, "deletions": 9 }
+    },
+    {
+      "sha": "3881b94da528f91a67788d2962b45d3e3a3ccc12",
+      "date": "2026-03-12T21:51:23Z",
+      "kind": "capability-edit",
+      "capability": "reset payItems + activePayItemId on project clear",
+      "anchor": "closeProject / updatePayItems",
+      "delta": { "insertions": 3, "deletions": 0 }
+    },
+    {
+      "sha": "f72df252094f44831c2174da30e3a4fd084caebf",
+      "date": "2026-03-13T14:00:19Z",
+      "kind": "capability-add",
+      "capability": "undo/redo stack (add/remove annotation history) + copyCalibrationToPages (bulk calibration propagation)",
+      "anchor": "undoStack / redoStack / undo / redo / copyCalibrationToPages",
+      "delta": { "insertions": 68, "deletions": 2 }
+    },
+    {
+      "sha": "bd1bb12aa9942778fb22e899b01eb5799a87f6a6",
+      "date": "2026-03-13T16:26:35Z",
+      "kind": "capability-edit",
+      "capability": "guard payItems local-storage load behind active-project check",
+      "anchor": "useState initialiser for payItems",
+      "delta": { "insertions": 5, "deletions": 1 }
+    },
+    {
+      "sha": "6aeb63ead460a6e7bc54b989d64e013d89f24b41",
+      "date": "2026-03-13T16:41:01Z",
+      "kind": "capability-edit",
+      "capability": "always clear active project on mount (PDF can't survive page refresh)",
+      "anchor": "storage.clearActiveProject() on mount",
+      "delta": { "insertions": 3, "deletions": 3 }
+    },
+    {
+      "sha": "064880b1c2183000c4a01c1c83fe0fb594fddf24",
+      "date": "2026-03-14T12:31:48Z",
+      "kind": "capability-add",
+      "capability": "removeAnnotationsForPayItem – cascade-delete annotations when a pay item is removed",
+      "anchor": "removeAnnotationsForPayItem",
+      "delta": { "insertions": 9, "deletions": 0 }
+    },
+    {
+      "sha": "9d4f9df54079df0f164d4aa8c6819c905213c230",
+      "date": "2026-03-21T16:30:28Z",
+      "kind": "capability-add",
+      "capability": "Supabase cloud persistence: async upsert/insert/delete for annotations, calibrations, pay-items; UseProjectOptions(supabaseProjectId, userId); dbSync guard; initProject replaces createProject",
+      "anchor": "supabase / dbSync / initProject / setCalibration (async) / addAnnotation (async)",
+      "delta": { "insertions": 196, "deletions": 58 }
+    },
+    {
+      "sha": "da8413aa06c47c7c68685a8cc0ca5f86e31b0e1c",
+      "date": "2026-03-21T16:43:37Z",
+      "kind": "capability-add",
+      "capability": "real-time sync: Supabase postgres_changes subscription on annotations table (INSERT/UPDATE/DELETE from other users)",
+      "anchor": "supabase.channel(`annotations:${supabaseProjectId}`)",
+      "delta": { "insertions": 67, "deletions": 0 }
+    },
+    {
+      "sha": "00bfbf6ac3bb71556f81dd8758edd0e47e63020f",
+      "date": "2026-03-21T17:03:30Z",
+      "kind": "capability-add",
+      "capability": "annotation override fields: manualQuantity, location, notes (mapped to DB columns manual_quantity / location / notes)",
+      "anchor": "record.manual_quantity / record.location / record.notes in realtime handler",
+      "delta": { "insertions": 4, "deletions": 1 }
+    },
+    {
+      "sha": "d7faff9b68c399ef1bb3dca8a1bbd98b77e8c152",
+      "date": "2026-03-23T15:13:39Z",
+      "kind": "capability-add",
+      "capability": "debounced updated_at timestamp sync to projects table on annotation change (5 s debounce)",
+      "anchor": "touchUpdatedAt / updateTimestampTimer",
+      "delta": { "insertions": 12, "deletions": 1 }
+    },
+    {
+      "sha": "0104a85d70119e3851b1ba9b4f4972ce6b905c05",
+      "date": "2026-03-23T15:13:20Z",
+      "kind": "capability-edit",
+      "capability": "undo/redo counter state (undoCount/redoCount) for reactive canUndo/canRedo",
+      "anchor": "undoCount / redoCount useState",
+      "delta": { "insertions": 1, "deletions": 0 }
+    },
+    {
+      "sha": "ea03b02461c1c4f699be1b8f9d080b0c41fb22a1",
+      "date": "2026-03-23T15:12:31Z",
+      "kind": "capability-edit",
+      "capability": "reset undo/redo counters on initProject",
+      "anchor": "setUndoCount(0) / setRedoCount(0) in initProject",
+      "delta": { "insertions": 2, "deletions": 0 }
+    },
+    {
+      "sha": "fd21f84c6cea4c63de142643900ef307bcaf60ad",
+      "date": "2026-03-23T21:57:23Z",
+      "kind": "capability-add",
+      "capability": "manual annotation support: dedup guard in real-time INSERT handler (prevent race-condition duplicates)",
+      "anchor": "prev.annotations.some(a => a.id === ann.id) dedup check",
+      "delta": { "insertions": 6, "deletions": 1 }
+    },
+    {
+      "sha": "17d27bbcca28ee2820d3410f650d4066bc880899",
+      "date": "2026-03-24T13:07:19Z",
+      "kind": "capability-add",
+      "capability": "presence/online-users tracking: Supabase Presence channel per project, exposes onlineUsers[]",
+      "anchor": "presenceChannel / onlineUsers / presenceChannel.track()",
+      "delta": { "insertions": 33, "deletions": 0 }
+    },
+    {
+      "sha": "992f6f9a232b2f9e917aaaf9ae5837852300f0eb",
+      "date": "2026-04-07T15:10:08Z",
+      "kind": "capability-edit",
+      "capability": "mobile UX demo tweak (minor param/return adjustment)",
+      "anchor": "misc",
+      "delta": { "insertions": 2, "deletions": 2 }
+    },
+    {
+      "sha": "5db95f17d0b50a0a68fe6eb8a74f1671902c0317",
+      "date": "2026-05-26T01:47:50Z",
+      "kind": "capability-add",
+      "capability": "offline mutations: all annotation writes (add/remove/update/bulk-remove) routed through offlineMutate (@/lib/offline/mutation-client) for offline-first queue support",
+      "anchor": "offlineMutate({ entity:'annotations', op:'insert'|'delete'|'update', ... })",
+      "delta": { "insertions": 22, "deletions": 11 }
+    },
+    {
+      "sha": "3d1867ea948820e32aabc913040a560333e8806e",
+      "date": "2026-05-26T01:48:14Z",
+      "kind": "capability-add",
+      "capability": "undo/redo remote sync via offlineMutate: reinsertAnnotation + deleteAnnotationRemote helpers used in undo/redo paths so remote state tracks local history",
+      "anchor": "reinsertAnnotation / deleteAnnotationRemote / undo / redo (async offlineMutate calls)",
+      "delta": { "insertions": 30, "deletions": 22 }
+    }
+  ],
+  "pivots": [
+    {
+      "sha": "9d4f9df54079df0f164d4aa8c6819c905213c230",
+      "date": "2026-03-21T16:30:28Z",
+      "what": "Architecture pivot: local-storage-only hook → cloud-first hook. Introduced UseProjectOptions(supabaseProjectId, userId), replaced createProject with initProject accepting existing DB rows, all mutations became async with Supabase upsert paths behind dbSync() guard."
+    },
+    {
+      "sha": "5db95f17d0b50a0a68fe6eb8a74f1671902c0317",
+      "date": "2026-05-26T01:47:50Z",
+      "what": "Persistence pivot: direct Supabase writes → offline-first queue. All annotation mutations wrapped in offlineMutate, enabling operation queueing when network is unavailable."
+    }
+  ],
+  "capabilityAbsent": [
+    "daily-report integration (not in this file)",
+    "schedule wiring (not in this file)",
+    "GPS calibration storage (calibrations here are PDF-scale rulers, not GPS coordinates)"
+  ]
+}

@@ -1,0 +1,145 @@
+{
+  "stream": "06-daily-report-lifecycle",
+  "doc": "docs/streams/06-daily-report-lifecycle.md",
+  "intent_leaves": [
+    {
+      "id": "06-L2-01",
+      "area": "draft_creation",
+      "anchor": "useDailyReport.ts:54-101",
+      "intent": "Inspector selects a work date; useDailyReport fetches or lazily creates a daily_reports row (status='draft'). buildDailyReportSnapshot groups annotations by pay_item_id, applies unit conversion, and joins prior_cumulative from v_approved_pay_item_quantities. The result is returned as SnapshotItem[] and displayed as a live preview without persisting.",
+      "key_facts": [
+        "Row is only written on submit, not on preview render.",
+        "If no row exists yet, insert with status='draft' and the snapshot payload.",
+        "previewQuery is disabled once status='approved' to avoid unnecessary fetches."
+      ]
+    },
+    {
+      "id": "06-L2-02",
+      "area": "submit",
+      "anchor": "useDailyReport.ts:54-101",
+      "intent": "On submit: (1) buildDailyReportSnapshot is called fresh to produce the frozen snapshot; (2) if no row exists it is inserted as draft+snapshot then immediately updated to submitted; (3) if a rejected/submitted row already exists it is first reset to draft+snapshot, then flipped to submitted; (4) a single update sets status='submitted'. The frozen snapshot JSONB is the source of truth for RE review.",
+      "key_facts": [
+        "Two sequential updates (draft→snapshot, then →submitted) instead of a single atomic upsert — a partial failure leaves status='draft' with the new snapshot.",
+        "Empty snapshots (zero annotations) are intentionally allowed.",
+        "submitted_at is not explicitly set client-side; expected to be set by DB default or trigger."
+      ]
+    },
+    {
+      "id": "06-L2-03",
+      "area": "drift_detection_resubmit",
+      "anchor": "useDailyReport.ts:119-133",
+      "intent": "After submit, previewQuery continues running. isStale compares frozen snapshot vs live preview: length mismatch or any per-item delta_quantity diff > 0.005 triggers stale=true. Inspector sees an 'out of date' alert with a Resubmit button, which calls submit() again and replaces the snapshot atomically.",
+      "key_facts": [
+        "Comparison is quantity-only — unit/name changes do not flag stale.",
+        "Resubmit path reuses the same submit mutation; it resets to draft then re-submits."
+      ]
+    },
+    {
+      "id": "06-L2-04",
+      "area": "re_approve",
+      "anchor": "useReReviewQueue.ts:153-185",
+      "intent": "RE calls useApproveReport(reportId) which issues update({status:'approved'}) on daily_reports. Approved rows are excluded from the submitted queue and their snapshot.delta_quantity values become visible through v_approved_pay_item_quantities to downstream quantity-to-payment rollups. useBulkApproveReports handles multiple IDs in a single .in() update.",
+      "key_facts": [
+        "approved_by and approved_at are NOT set client-side — no code in useApproveReport populates these columns.",
+        "Role enforcement is client-only (isResidentEngineer check in UI); no server-side RLS prevents any authenticated user from approving.",
+        "Bulk approve uses a single .in(ids) update, correct for atomicity."
+      ]
+    },
+    {
+      "id": "06-L2-05",
+      "area": "re_reject",
+      "anchor": "useReReviewQueue.ts:187-212",
+      "intent": "RE opens ReRejectDialog which enforces a non-empty reason before calling useRejectReport. The mutation: (1) updates daily_reports with status='rejected' and reject_reason; (2) auto-inserts a daily_report_comments row with body='Rejected: <reason>' attributed to the RE user. The inspector sees the rejection reason on their DailyReport page.",
+      "key_facts": [
+        "rejected_at and rejected_by columns are NOT set client-side in the reject mutation; only status and reject_reason are written.",
+        "Comment insert is fire-and-forget after the main update — failure is swallowed.",
+        "No push notification is sent to the inspector at rejection time."
+      ]
+    },
+    {
+      "id": "06-L2-06",
+      "area": "reopen",
+      "anchor": "useDailyReport.ts:103-117",
+      "intent": "Inspector calls reopen() on a rejected report. Mutation issues update({status:'draft'}) only. Inspector can then edit annotations and resubmit.",
+      "key_facts": [
+        "BUG: rejected_at and rejected_by are NOT cleared on reopen, leaving stale timestamps visible in audit trails.",
+        "reject_reason is also not cleared — could confuse downstream readers if they check reason without checking status.",
+        "Snapshot is not refreshed on reopen; the frozen snapshot remains until the next submit."
+      ]
+    },
+    {
+      "id": "06-L2-07",
+      "area": "snapshot_archival",
+      "anchor": "useReReviewQueue.ts:111-128",
+      "intent": "useReportArchives queries the daily_report_snapshots table (cast as `any` due to missing generated types) and returns historical snapshots with archived_at, archived_reason, and reject_reason. The RE review card renders a diff column comparing current snapshot to prior archive entries.",
+      "key_facts": [
+        "Table daily_report_snapshots is absent from generated Supabase types — queried with `from('daily_report_snapshots' as any)`.",
+        "If the table does not exist in production the query silently returns [] with no user-facing error.",
+        "No client code explicitly writes to daily_report_snapshots — archival is expected to happen via DB trigger or the (undocumented) daily_reports_status_side_effects function."
+      ]
+    },
+    {
+      "id": "06-L2-08",
+      "area": "notification_side_effects",
+      "anchor": "docs/streams/06-daily-report-lifecycle.md#risks, send-push/index.ts",
+      "intent": "The daily_reports_status_side_effects DB function is referenced in the stream spec as the notification seam but is NOT present in any migration file found in supabase/migrations/. The send-push edge function exists and accepts {user_id, title, body} with service-role auth, dispatching FCM push via device_tokens table. However, no wiring between daily_report status changes and send-push calls exists in the current codebase.",
+      "key_facts": [
+        "send-push requires FCM_SERVER_KEY env var; returns {ok:true,skipped:true} if missing.",
+        "DB trigger / daily_reports_status_side_effects function: NOT FOUND in migrations — either not yet implemented or lives outside version-controlled migrations.",
+        "Inspector receives no real-time signal on RE approve or reject; React Query invalidation only affects the RE's own cache.",
+        "Gap: no subscribe/webhook path from Supabase Realtime or DB trigger to push inspector notifications on status transitions."
+      ]
+    },
+    {
+      "id": "06-L2-09",
+      "area": "state_machine_summary",
+      "anchor": "useDailyReport.ts, useReReviewQueue.ts",
+      "intent": "Four-state FSM: draft → submitted (inspector submit) → approved (RE approve) or rejected (RE reject) → draft (inspector reopen). Approved is a terminal state from the inspector's perspective; no reopen path exists for approved reports.",
+      "transitions": [
+        {"from": "none",      "to": "draft",     "actor": "inspector", "mechanism": "insert on first submit"},
+        {"from": "draft",     "to": "submitted",  "actor": "inspector", "mechanism": "submit mutation"},
+        {"from": "submitted", "to": "submitted",  "actor": "inspector", "mechanism": "resubmit (drift detected)"},
+        {"from": "submitted", "to": "approved",   "actor": "RE",        "mechanism": "useApproveReport / useBulkApproveReports"},
+        {"from": "submitted", "to": "rejected",   "actor": "RE",        "mechanism": "useRejectReport"},
+        {"from": "rejected",  "to": "draft",      "actor": "inspector", "mechanism": "reopen mutation"}
+      ]
+    },
+    {
+      "id": "06-L2-10",
+      "area": "open_risks",
+      "intent": "Consolidated debt items requiring action before production.",
+      "items": [
+        {
+          "risk_id": "R1",
+          "severity": "high",
+          "description": "daily_report_snapshots missing from generated types — archive panel silently broken if table absent.",
+          "fix": "Add table to schema, regenerate types, remove `as any` cast."
+        },
+        {
+          "risk_id": "R2",
+          "severity": "high",
+          "description": "No server-side RLS on approve/reject — any authenticated user can approve reports.",
+          "fix": "Add RLS policy: UPDATE on daily_reports WHERE new.status IN ('approved','rejected') requires role='resident_engineer' via JWT claim or profiles lookup."
+        },
+        {
+          "risk_id": "R3",
+          "severity": "medium",
+          "description": "rejected_at / rejected_by not cleared on reopen; approved_by / approved_at not set on approve; rejected_by / rejected_at not set on reject.",
+          "fix": "Extend client mutations or implement daily_reports_status_side_effects DB trigger to maintain all audit timestamp/actor columns."
+        },
+        {
+          "risk_id": "R4",
+          "severity": "medium",
+          "description": "No push notification to inspector on RE decision.",
+          "fix": "Implement daily_reports_status_side_effects as a DB trigger (or pg_net call) that invokes send-push edge function with the inspector's user_id when status changes to approved or rejected."
+        },
+        {
+          "risk_id": "R5",
+          "severity": "low",
+          "description": "submit() uses two sequential updates (draft then submitted) — partial failure risk.",
+          "fix": "Consolidate into a single upsert or wrap in a DB RPC."
+        }
+      ]
+    }
+  ]
+}

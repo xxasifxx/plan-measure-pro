@@ -1,0 +1,32 @@
+{
+  "agent": "hist-pdf-canvas",
+  "generatedAt": "2026-05-29T00:00:00.000Z",
+  "file": "src/components/PdfCanvas.tsx",
+  "totalCommits": 67,
+  "events": [
+    { "sha": "a57c8cdba1ad35b7bede30d4582f811044bac5a1", "date": "2026-03-08", "kind": "capability-add", "capability": "initial component: line tool, polygon tool, calibrate tool, pan tool, PDF render layer", "anchor": "PdfCanvas", "delta": { "insertions": 373, "deletions": 0 } },
+    { "sha": "03ab1e1d5672d92ece58273ef0ff0d696fc084a6", "date": "2026-03-08", "kind": "capability-add", "capability": "tocSelect toolMode with drag-rect + import prompt", "anchor": "drawTocRect / handleImportToc", "delta": { "insertions": 116, "deletions": 13 } },
+    { "sha": "0532e428f49bae9095630a7854e9d93fec0abbd1", "date": "2026-03-10", "kind": "capability-edit", "capability": "TOC data model minor adjustment", "anchor": "handleImportToc", "delta": { "insertions": 1, "deletions": 1 } },
+    { "sha": "f815fa5da25514a2a170ee2c16038f95a59f3b4a", "date": "2026-03-13", "kind": "capability-edit", "capability": "sticky canvas toolbar layout", "anchor": "PdfCanvas JSX", "delta": { "insertions": 3, "deletions": 3 } },
+    { "sha": "7c85aced4eb1061b7445685e7fb3bd72c93818ee", "date": "2026-03-13", "kind": "rewrite", "capability": "coordinate system decoupled: scale-aware getCanvasPos + s() helper", "anchor": "getCanvasPos / s", "delta": { "insertions": 36, "deletions": 37 } },
+    { "sha": "f72df252094f44831c2174da30e3a4fd084caebf", "date": "2026-03-13", "kind": "capability-add", "capability": "select tool (hitTestAnnotations, annotation info popup), count tool, depth prompt (submitDepth), keyboard delete shortcut", "anchor": "hitTestAnnotations / submitDepth / handleClickAtPos", "delta": { "insertions": 213, "deletions": 16 } },
+    { "sha": "6ef0211f08c6b815017197b106b6d91d1f70eaaf", "date": "2026-03-14", "kind": "capability-add", "capability": "reassign annotation to different pay item (Select dropdown in info popup)", "anchor": "PdfCanvas JSX annotation info popup", "delta": { "insertions": 32, "deletions": 1 } },
+    { "sha": "105f19a111287d1e5c1553330b25b16bfbacbfcb", "date": "2026-03-21", "kind": "capability-add", "capability": "mobile pinch-to-zoom and two-finger pan touch handlers", "anchor": "handleOverlayTouchStart / handleOverlayTouchMove / handleOverlayTouchEnd", "delta": { "insertions": 67, "deletions": 1 } },
+    { "sha": "00bfbf6ac3bb71556f81dd8758edd0e47e63020f", "date": "2026-03-21", "kind": "capability-add", "capability": "manual quantity override, location, and notes fields in annotation info popup", "anchor": "PdfCanvas JSX annotation info popup", "delta": { "insertions": 55, "deletions": 6 } },
+    { "sha": "4d55107e5d265e0b6939c99f28d56d366b5e701f", "date": "2026-03-23", "kind": "rewrite", "capability": "touch interaction overhaul: renamed to handleOverlayTouchStart/Move/End, suppressClick guard, single-finger drawing support", "anchor": "handleOverlayTouchStart / handleOverlayTouchMove / handleOverlayTouchEnd", "delta": { "insertions": 1, "deletions": 1 } },
+    { "sha": "1d251d500c709a3d50c6058a8b7b839d289104d9", "date": "2026-03-23", "kind": "capability-add", "capability": "tocSelect drag mode via single-finger touch", "anchor": "handleOverlayTouchMove tocSelect branch", "delta": { "insertions": 1, "deletions": 1 } },
+    { "sha": "8859ae5767d9de34a8442578caefd3392685672b", "date": "2026-03-23", "kind": "capability-edit", "capability": "edge-swipe prevention for mobile browser nav gestures", "anchor": "preventMove / preventStart", "delta": { "insertions": 1, "deletions": 1 } },
+    { "sha": "736bec4d7b8c8d6b0001753822c4f60ed30f344e", "date": "2026-03-23", "kind": "capability-edit", "capability": "undo/redo state made reactive", "anchor": "PdfCanvas props", "delta": { "insertions": 1, "deletions": 1 } },
+    { "sha": "fd21f84c6cea4c63de142643900ef307bcaf60ad", "date": "2026-03-23", "kind": "capability-add", "capability": "manual annotation type exclusion from overlay render", "anchor": "pageAnnotations filter", "delta": { "insertions": 1, "deletions": 1 } },
+    { "sha": "d46bf056e25b4016417e79e806a7fa7387ef66d1", "date": "2026-03-26", "kind": "capability-add", "capability": "draggable line and polygon endpoint handles (hitTestHandles, draggingHandle state)", "anchor": "hitTestHandles / handleMouseDown / handleMouseUp / handleOverlayTouchStart", "delta": { "insertions": 2, "deletions": 0 } },
+    { "sha": "ebbbbb4b379284ce34c91b3afc22b5c3c06162ad", "date": "2026-03-26", "kind": "capability-edit", "capability": "drag-endpoint handle: fix manual quantity preserved during drag", "anchor": "handleMouseUp / handleOverlayTouchEnd", "delta": { "insertions": 1, "deletions": 1 } },
+    { "sha": "4bbb10b9c961c7fbddb5f4cd874823eb4b8cea71", "date": "2026-03-27", "kind": "capability-add", "capability": "GPS position dot and trace polyline rendered on overlay canvas", "anchor": "overlay draw useEffect — GPS trace section", "delta": { "insertions": 45, "deletions": 1 } },
+    { "sha": "ce7519f82f6602f3f7199bc46df7e82bc5664814", "date": "2026-03-27", "kind": "capability-add", "capability": "onGpsPlanTap intercept in handleClickAtPos for GPS plan-point tap", "anchor": "handleClickAtPos", "delta": { "insertions": 1, "deletions": 1 } },
+    { "sha": "88301626cb3956f9b269dea3b3ee61ef135ef30c", "date": "2026-03-29", "kind": "capability-add", "capability": "label toolMode: leader-line annotation with drag handles, labelPoints state, submitLabel, showLabelPrompt dialog", "anchor": "submitLabel / handleClickAtPos label branch / overlay label render", "delta": { "insertions": 108, "deletions": 3 } },
+    { "sha": "f176712ce2085397ba8ec052da468514e51dee9f", "date": "2026-03-29", "kind": "capability-edit", "capability": "label annotation tool: render and hit-test refinements", "anchor": "hitTestAnnotations label branch / overlay label render", "delta": { "insertions": 33, "deletions": 2 } }
+  ],
+  "pivots": [
+    { "sha": "7c85aced4eb1061b7445685e7fb3bd72c93818ee", "date": "2026-03-13", "what": "Coordinate system pivot: canvas positions switched from raw pixel values to scale-divided normalized coords with a dedicated s() helper, affecting all drawing and hit-test math." },
+    { "sha": "4d55107e5d265e0b6939c99f28d56d366b5e701f", "date": "2026-03-23", "what": "Touch-handler overhaul: pinch-only handlers replaced by handleOverlayTouch* state-machine supporting single-finger drawing, suppressClick guard, and multi-mode routing." }
+  ]
+}

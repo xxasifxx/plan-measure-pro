@@ -1,0 +1,159 @@
+{
+  "stream": "01-identity-and-access",
+  "generatedAt": "2026-05-29T18:00:00.000Z",
+  "agent": "L2-comprehender",
+  "intentLeaves": [
+    {
+      "name": "signup-login",
+      "acceptance": "A new organic signup creates an account via email/password, receives admin role via assign_owner_role, and is redirected to Dashboard on first login. Sign-in flow also calls assign_owner_role (idempotent). Forgot-password mode sends reset email with correct redirectTo.",
+      "anchors": [
+        { "file": "src/pages/Auth.tsx", "region": "1-215" },
+        { "file": "src/hooks/useAuth.tsx", "region": "49-62" }
+      ],
+      "state": "implemented",
+      "gaps": [
+        "assign_owner_role is called in BOTH Auth.tsx:103 (after signInWithPassword) and useAuth.tsx:~55 (on SIGNED_IN event) — one is always a redundant no-op DB round-trip; no retry/error surfacing on the RPC call in Auth.tsx.",
+        "No automated test coverage for signup or sign-in flows.",
+        "App brand name shown as 'Quantity Takeoff' in Auth.tsx JSX but BiometricGate.tsx JSX shows 'TakeoffPro' — inconsistent product name between auth surfaces."
+      ]
+    },
+    {
+      "name": "password-reset",
+      "acceptance": "Forgot-password sends email with redirectTo=/reset-password. ResetPassword.tsx detects PASSWORD_RECOVERY event and allows supabase.auth.updateUser. Invalid direct navigation shows loading state.",
+      "anchors": [
+        { "file": "src/pages/Auth.tsx", "region": "70-77" },
+        { "file": "src/pages/ResetPassword.tsx", "region": "1-84" }
+      ],
+      "state": "partial",
+      "gaps": [
+        "ResetPassword.tsx shows 'Loading recovery session...' spinner indefinitely (line 50) if PASSWORD_RECOVERY never fires — no timeout, no auto-redirect back to /auth. Fragile on direct navigation or slow hash parsing (documented as Risk #4 in stream doc).",
+        "No automated test for the PASSWORD_RECOVERY event path."
+      ]
+    },
+    {
+      "name": "profile-creation",
+      "acceptance": "A profiles row (id, full_name, email) is created for every new auth.users insert. useAuth fetches profile after session and exposes it via AuthContextType.profile. RLS allows only own-row read/update/insert.",
+      "anchors": [
+        { "file": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql", "region": "profiles table, on_auth_user_created trigger, RLS policies" },
+        { "file": "supabase/migrations/20260321162349_089b7eac-a691-474e-96f4-b97ab4d2581d.sql", "region": "on_auth_user_created_profile trigger" },
+        { "file": "src/hooks/useAuth.tsx", "region": "36-44" }
+      ],
+      "state": "implemented",
+      "gaps": [
+        "profiles table lacks avatar_url or phone fields — no user-editable extended profile beyond full_name/email; downstream surfaces (Admin panel, project member lists) may show incomplete info.",
+        "has_seen_welcome column was added in a later migration (20260321164809) but is not surfaced in AuthContextType — onboarding flag is unused in auth context."
+      ]
+    },
+    {
+      "name": "role-assignment",
+      "acceptance": "All four roles (admin, project_manager, inspector, resident_engineer) are members of the app_role enum. assign_owner_role grants admin to organic signups. useAuth exposes isAdmin, isManager, isInspector, isResidentEngineer booleans derived from user_roles rows.",
+      "anchors": [
+        { "file": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql", "region": "app_role type, user_roles table, Admins can manage roles policy" },
+        { "file": "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql", "region": "assign_owner_role, accept_invitation functions" },
+        { "file": "src/hooks/useAuth.tsx", "region": "4-5, 97-107" }
+      ],
+      "state": "implemented",
+      "gaps": [
+        "Doc-drift (critical): stream doc claims resident_engineer was added in migration 20260524015102, but L1 parser reports that migration as 1 LOC / 71 bytes with zero createTypes/alterTypes entries — the ALTER TYPE ADD VALUE may be in a DO $$ block that the L1 SQL parser did not detect. Actual enum membership in prod cannot be confirmed from L1 output alone.",
+        "isManager is true for both admin AND project_manager — this conflation means admins inherit all PM-gated UI without an explicit PM role, which may be intentional but is not stated in acceptance criteria.",
+        "No UI in Admin page to demote/remove a role once assigned (only additive role assignment confirmed from migrations)."
+      ]
+    },
+    {
+      "name": "invitations",
+      "acceptance": "Admin calls invite-user edge function with email+role; function inserts invitations row and emails token link. Invited user lands on /auth?invitation=<token>, token is persisted to localStorage through email confirmation redirect, accept_invitation RPC is called after session established, role is applied, invitation marked accepted_at.",
+      "anchors": [
+        { "file": "supabase/functions/invite-user/index.ts", "region": "1-153" },
+        { "file": "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql", "region": "invitations table, accept_invitation fn, RLS policies" },
+        { "file": "src/pages/Auth.tsx", "region": "26-63" }
+      ],
+      "state": "implemented",
+      "gaps": [
+        "invite-user edge function accepts any string value for role (requestFields: [email, role]) with no server-side enum validation against app_role — a caller could inject an invalid role string that silently fails at DB constraint.",
+        "Stream doc Risk #3: resident_engineer is not exposed as an option in the invite-user frontend UI (confirmed: edge function accepts it generically but no UI control surfaces it). Invited RE cannot be invited without manual API call.",
+        "accept_invitation is called twice on sign-in when token is present: once in the useEffect (line ~39) and again inside handleSubmit (line ~108) — both paths fire if session already exists on mount.",
+        "No expiry timestamp on invitations table visible in L1 output — accept_invitation RPC claims to return 'expired' but expiry logic is entirely inside the function body (not verifiable from migration metadata alone).",
+        "No automated tests for invitation acceptance flow."
+      ]
+    },
+    {
+      "name": "biometric-gate",
+      "acceptance": "On cold start (native only), BiometricGate checks stored credential via lib/native/biometric.getStatus; if enrolled, renders fingerprint unlock UI and blocks app tree until successful unlock. Web path is skipped via isNative() check.",
+      "anchors": [
+        { "file": "src/components/BiometricGate.tsx", "region": "1-96" },
+        { "file": "src/App.tsx", "region": "~118-135 (BiometricGate mount)" }
+      ],
+      "state": "partial",
+      "gaps": [
+        "Web sessions have no equivalent MFA, idle timeout, or re-auth challenge — browser sessions remain valid indefinitely after initial login (documented Risk #2).",
+        "BiometricGate imports from @/lib/native/biometric but no lib/native/biometric file is visible in L1 frontend AST file list — if this is a platform-shim not in src/, it may be absent from AST coverage.",
+        "No automated tests for biometric unlock or bypass paths.",
+        "Unenroll path (lib/native/biometric.unenroll) is referenced in stream doc but no UI surface for unenrolling biometric is visible in BiometricGate JSX strings ('Unlock', 'Use a different account' only)."
+      ]
+    },
+    {
+      "name": "project-membership",
+      "acceptance": "project_members table stores user_id + project_id. is_project_member() SQL function gates RLS policies for pay_items, calibrations, annotations, and project-scoped storage buckets. Members can view assigned projects; creators can manage members.",
+      "anchors": [
+        { "file": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql", "region": "project_members table, is_project_member fn, Project creators can manage members, Members can view own membership" },
+        { "file": "supabase/migrations/20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql", "region": "Admins can view all project members, Admins can manage all project members" }
+      ],
+      "state": "implemented",
+      "gaps": [
+        "project_members table has no role column — membership is binary (in/out); PM-vs-inspector distinctions inside a project are derived from user_roles (global), not per-project membership role. This makes it impossible to have someone be a PM on project A but inspector on project B.",
+        "No migration or policy covers removing a user from a project (DELETE on project_members) except via 'Project creators can manage members' which uses a broad manage policy — no audit log or cascade for removed members' annotations/pay_items.",
+        "No realtime subscription on project_members — membership changes require page reload to take effect in the client."
+      ]
+    },
+    {
+      "name": "rls-coverage",
+      "acceptance": "Supabase RLS is enabled on profiles, user_roles, projects, project_members, pay_items, calibrations, annotations, invitations. No row from pay_items, annotations, or projects is readable without valid session and appropriate project_members or ownership check. Storage buckets enforce equivalent policies.",
+      "anchors": [
+        { "file": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql", "region": "enableRls, all createPolicies, storage bucket policies" },
+        { "file": "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql", "region": "invitations enableRls" },
+        { "file": "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql", "region": "storage bucket policies overhaul" }
+      ],
+      "state": "partial",
+      "gaps": [
+        "No migration audits cross-table join correctness — e.g., is_project_member() correctness under concurrent role changes is not tested at the DB level.",
+        "Storage bucket policies were initially set as 'Authenticated users can upload/read' (broad) in migration 20260321160419 and then tightened in migration 20260526121114 — any rows/objects inserted in the window between these migrations may have been created under the permissive policy without retroactive access control.",
+        "daily_report_snapshots, notifications, document_folders, documents tables (added in later migrations) have RLS enabled but their policies rely on is_project_member() — no explicit audit confirms has_role('admin') bypass exists for all new tables as it does for the original set.",
+        "No row-level policy on pay_items or annotations for DELETE by inspectors — 'Users can manage own annotations' covers INSERT/UPDATE/DELETE for annotations but pay_items only has view (members) and manage (creators); inspector DELETE path is undefined.",
+        "Stream doc acceptance criteria mentions 'appropriate project_members or ownership check' but storage bucket policies in migration 20260526121114 show 'PMs delete project documents storage' which gates on role not membership — inconsistency with stated RLS model.",
+        "No automated RLS integration tests found in tests.json for any identity or access policy."
+      ]
+    }
+  ],
+  "docDrift": [
+    {
+      "location": "stream doc §Current state — Role booleans correct: 'resident_engineer added in migration 20260524015102'",
+      "finding": "Migration 20260524015102 is recorded in L1 sql-migrations.json as 1 LOC / 71 bytes with no createTypes or alterTypes entries. The L1 SQL parser did not detect an ALTER TYPE ADD VALUE statement, likely because it is wrapped in a DO $$ procedural block. The claim may be correct in prod but is unverifiable from L1 output — the migration metadata is misleading.",
+      "severity": "warning",
+      "recommendation": "Re-parse migration 20260524015102 raw SQL to confirm resident_engineer is present in app_role; add a supabase/migrations audit test that queries pg_enum."
+    },
+    {
+      "location": "stream doc §Current state — Password reset: 'ResetPassword.tsx:46 shows spinner'",
+      "finding": "L1 ast-frontend.json records the JSX string 'Loading recovery session...' at line 50, not line 46. Minor line-number drift, likely from a subsequent edit that inserted lines above.",
+      "severity": "info",
+      "recommendation": "Update stream doc line reference from :46 to :50."
+    },
+    {
+      "location": "stream doc §Surfaces — BiometricGate.tsx:23 short-circuits on web via isNative() check",
+      "finding": "L1 ast-frontend.json records BiometricGate.tsx as 96 LOC. The line reference is plausible but the @/lib/native/biometric import target is not present in the frontend AST file list, suggesting it may be a non-src/ shim or generated file. Stream doc presents the implementation as complete; the actual native shim existence cannot be confirmed from L1.",
+      "severity": "warning",
+      "recommendation": "Add lib/native/biometric.ts to stream §Surfaces; verify file exists and is covered by L1 AST scan."
+    },
+    {
+      "location": "stream doc §Risks #3 — invite-user does not expose resident_engineer option",
+      "finding": "The edge function itself is role-agnostic (accepts any role string from the caller). The gap is in the frontend Admin UI that calls invite-user, not in the function. Stream doc incorrectly attributes the limitation to the function rather than the calling UI.",
+      "severity": "info",
+      "recommendation": "Restate Risk #3 as: 'Admin invite UI does not surface resident_engineer as an option; the invite-user function itself is role-agnostic.'"
+    },
+    {
+      "location": "stream doc §Current state — Invitation flow: 'Auth.tsx:39–63 runs accept_invitation'",
+      "finding": "Actual code shows accept_invitation is also called a second time inside handleSubmit (around line 108) for the sign-in branch when a token is present in localStorage. The stream doc documents only the useEffect path, missing the handleSubmit double-fire.",
+      "severity": "warning",
+      "recommendation": "Update Current state to note both call sites; consolidate into a single utility function to prevent double-acceptance attempts."
+    }
+  ]
+}
