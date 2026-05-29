@@ -39,9 +39,11 @@ const calendarsDb = imp.calendars.map((c) => ({
   id: uuidFor(c.ext_id), project_id: PROJ, name: c.name, is_default: c.is_default,
   hours_per_day: c.hours_per_day, workweek: c.workweek, exceptions: c.exceptions,
 }));
+const uuidToActId = new Map<string, string | null>();
 const activitiesDb: any[] = imp.activities.map((a) => {
   const id = uuidFor(a.ext_id);
   extByUuid.set(id, a.ext_id);
+  uuidToActId.set(id, a.activity_id ?? null);
   return {
     id, project_id: PROJ,
     parent_wbs_id: a.parent_ext_id ? uuidFor(a.parent_ext_id) : null,
