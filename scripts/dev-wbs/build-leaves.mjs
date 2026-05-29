@@ -25,12 +25,12 @@ function streamIdFromFile(f) {
 
 function layerFor(path) {
   if (!path) return 'Docs';
-  if (/^public\.[a-z_]+$/.test(path))                return 'Backend';
-  if (/^supabase\/(migrations|functions)\//.test(path)) return 'Backend';
+  if (/^public\.[a-z_]+(?:\.[a-z_]+)?$/.test(path))   return 'Backend';
+  if (/^supabase\/(migrations|functions|storage)\//.test(path)) return 'Backend';
   if (/\.sql$/.test(path))                            return 'Backend';
   if (/^src\/lib\/native\//.test(path))               return 'Mobile';
   if (/^src\/lib\/offline\//.test(path))              return 'Mobile';
-  if (/Mobile|Biometric|Native|Pwa|Capacitor/.test(path)) return 'Mobile';
+  if (/(Mobile|Biometric|Native|Pwa|Capacitor)/.test(path)) return 'Mobile';
   if (/^src\/test\//.test(path))                      return 'Verification';
   if (/^docs\//.test(path))                           return 'Docs';
   if (/^scripts\//.test(path))                        return 'Verification';
@@ -40,8 +40,13 @@ function layerFor(path) {
 
 function nameFromPath(p) {
   if (/^public\./.test(p)) return p.replace(/^public\./, 'db: ');
-  const base = p.split('/').pop().replace(/\.[a-z]+$/, '');
-  return base;
+  if (/^supabase\/functions\/([^/]+)/.test(p))
+    return 'fn: ' + p.match(/^supabase\/functions\/([^/]+)/)[1];
+  if (/^supabase\/storage\/([^/]+)/.test(p))
+    return 'bucket: ' + p.match(/^supabase\/storage\/([^/]+)/)[1];
+  const trimmed = p.replace(/\/+$/, '');
+  const base = trimmed.split('/').pop().replace(/\.[a-z]+$/, '');
+  return base || trimmed;
 }
 
 function slugify(s) {
