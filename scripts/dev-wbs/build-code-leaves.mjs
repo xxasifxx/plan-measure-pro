@@ -6,12 +6,15 @@
 //   - Backend surface leaves: edge functions, migrations (weekly clusters),
 //     public.<table> from types.ts.
 //   - Build/infra leaves under stream "98".
+//   - Per-migration leaves (one per supabase/migrations/*.sql file).
+//   - Public asset leaves from public/**.
 //   - Everything that doesn't match a heuristic falls to "97 Plumbing".
 //
 // Output: docs/wbs-dev.code-leaves.json
 import { readFileSync, writeFileSync, readdirSync, statSync, existsSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { streamForPath, TABLE_TO_STREAM, STREAM_NAMES } from './stream-heuristics.mjs';
+import { streamForPath, streamForPublicPath, TABLE_TO_STREAM, STREAM_NAMES } from './stream-heuristics.mjs';
+
 
 const OUT = 'docs/wbs-dev.code-leaves.json';
 
