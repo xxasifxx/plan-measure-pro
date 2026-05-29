@@ -27,6 +27,12 @@ const relsDoc       = read("relationships.json");
 const stateDoc      = read("state.json");
 const linksDoc      = read("links.json");
 const nextDoc       = read("next.json");
+// Phase 2 comprehension layer (stream-doc-grounded). Optional — older runs
+// without comprehension.json fall back to commit-recency-only heuristics.
+const compDoc       = fs.existsSync(path.join(ROOT, "comprehension.json"))
+  ? read("comprehension.json") : null;
+const compByAct = new Map((compDoc?.activity_overrides || []).map(o => [o.id, o]));
+const compHandoffs = compDoc?.handoff_edges || [];
 
 // ─── lookups ───────────────────────────────────────────────────────────────
 const stateById = new Map(stateDoc.states.map(s => [s.activity_id, s]));
