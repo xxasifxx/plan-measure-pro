@@ -1,6 +1,6 @@
 # P6 XML field-coverage report
 
-Generated: 2026-05-29T19:47:23.973Z
+Generated: 2026-05-29T19:53:48.452Z
 Source: `.lovable/wbs/{wbs,activities,relationships,state,links,next}.json`
 Output: `.lovable/wbs/project.p6.xml` (+ `.rejected.xml`)
 
@@ -20,7 +20,7 @@ Output: `.lovable/wbs/project.p6.xml` (+ `.rejected.xml`)
 | NotebookTopics      | 669/669 (100.0%) | Every activity has evidence prose (D5) |
 | ActivityCodes       | 4683 assignments across 7 dimensions (D4) | ORIGIN, LIFECYCLE, BLOCKING, VISIBILITY, STREAM, LAYER, HEALTH |
 | UDFs                | 669/669 (100.0%) × 6 fields (D6) | LovableActivityId, PrimaryLeafId, CommitCount, DormancyDays, Confidence, DownstreamCount |
-| Relationships       | 169 accepted, 0 rejected (audit) | D7 |
+| Relationships       | 472 accepted, 0 rejected (audit) | D7 |
 | Resources / Costs   | 0 | Skipped — no source signal (D9, D10) |
 
 ## What's blank, and why (the anti-blank-field accountant)
