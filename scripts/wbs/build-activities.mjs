@@ -263,11 +263,35 @@ for (const a of activities) {
   a.primary_leaf = primaryLeaf;
   activityLeaf.push({ activity_id: a.id, leaf_id: primaryLeaf, role: 'primary' });
   for (const [lid, n] of hits) {
-    if (lid !== primaryLeaf && n >= 2) {
+    if (lid !== primaryLeaf && n >= 1) {
       a.contributing_leaves = a.contributing_leaves || [];
       a.contributing_leaves.push(lid);
       activityLeaf.push({ activity_id: a.id, leaf_id: lid, role: 'contributing' });
     }
+  }
+}
+
+// Stub activity for any leaf still empty after git pass — so every WBS entry
+// has ≥1 activity. These represent "leaf is on the catalog but no commit has
+// touched it" — work that exists in name only.
+{
+  const stubLeafIds = new Set();
+  for (const al of activityLeaf) stubLeafIds.add(al.leaf_id);
+  for (const l of leaves) {
+    if (stubLeafIds.has(l.id)) continue;
+    const a = {
+      id: padId('ACT-', activities.length + 1),
+      name: `[stub] ${l.name}`.slice(0, 140),
+      origin: 'future-risk',
+      primary_leaf: l.id,
+      planned_after: null,
+      planned_size_hint: 'unknown',
+      gating_predecessors: [],
+      evidence: { reason: 'leaf-unattributed', leaf_id: l.id, leaf_origins: l.origins },
+      commitCount: 0,
+    };
+    activities.push(a);
+    activityLeaf.push({ activity_id: a.id, leaf_id: l.id, role: 'primary' });
   }
 }
 
