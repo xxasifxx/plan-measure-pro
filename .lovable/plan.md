@@ -1,88 +1,75 @@
-## Reset
+## Phase C (revised) — Full-Scope WBS Emergence
 
-You're right on both counts. The 19-leaf WBS I started with is a top-down guess dressed up as ground truth. The honest move is: **let the commits tell us what the activities are**, then group those activities into WBS. Depth will likely land at 40–80 leaves, not 19.
+The bottom-up clustering of 103 work items only describes **what has been built**. The P6 schedule must represent the **whole project**: built work, in-flight work, and unbuilt-but-promised scope from the requirements document and marketing roadmap memories. Phase C now has two tracks that converge into a single frozen WBS.
 
-Duration rule for refine/minor-change clusters is locked in: **span of the acceptance cluster, split into Refine-1/2/… when there's a gap > 7 days**.
+### Track 1 — Built scope (commit-derived, as previously planned)
 
-## Phase A — Enrich the raw data (one pass, all in `build-history.json`)
+1. `scripts/cluster-work-items.mjs` — read-only co-occurrence graph over `docs/work-items.json`. Edge weight = shared-commit count normalized by smaller item's `buildCommitCount`. Items in disjoint time windows (no overlap and gap > 30d) are not connected.
+2. Emit `docs/wbs-proposals.built.json` — one proposal per connected component with member work items, combined commit count, total span, top shared subject tokens. Singletons listed separately. Low-signal tags considered for folding in as evidence.
 
-Per commit, capture:
+### Track 2 — Planned scope (top-down from authoritative sources)
 
-- `sha`, `date`, `kind` (build / acceptance / bootstrap) — already there
-- `subject` — full first line
-- `files`: `[{path, insertions, deletions, status}]` from `git log --numstat --name-status`
-- `pathTags`: deterministic labels derived from path (`pages/Landing` → `page:landing`, `src/lib/p6xml/*` → `lib:p6xml`, `supabase/functions/invite-user/*` → `edge:invite-user`, `src/components/schedule/*` → `ui:schedule`, etc.). Mapping table lives in the script, exhaustive over the actual file tree, no "unclassified" fallback — anything unmatched is a script bug to fix.
-- `subjectTokens`: lowercased noun/verb tokens after stop-word strip ("fix", "add", "round", "polish", "tour", "pwa", "biometric", "gps", …)
+3. `scripts/extract-planned-scope.mjs` — parses two sources into a normalized list of capability candidates:
+   - `docs/TakeoffPro_Requirements_Document.md` — headings and bullet leaves become candidates with `source: "requirements"`, carrying their section path.
+   - Memory files under `mem://marketing/*`, `mem://features/*`, and any `mem://*roadmap*` — each rule becomes a candidate with `source: "marketing"` or `source: "memory:<file>"`. Aspirational/future-facing language ("will", "roadmap", "planned", "vision") flagged.
+4. Emit `docs/wbs-proposals.planned.json` — each candidate carries `{ name, source, sourceRef, evidenceText }` and no commits.
 
-No WBS assignment yet. Just facts.
+### Track 3 — Reconciliation (the new core of Phase C)
 
-## Phase B — Discover work items bottom-up
+5. `scripts/reconcile-scope.mjs` — for each built proposal, attempt to match one or more planned candidates by:
+   - keyword overlap between proposal's shared subject tokens and candidate name/evidence
+   - path-tag → requirements-section heuristic table (e.g. `lib:p6xml` → "Scheduling / P6 XML round-trip"; `page:field-report` → "Field Reporting / Daily reports")
+   Output `docs/wbs-proposals.reconciled.json` with three buckets per top-level surface:
+   - **built** — has commits, matched to a planned candidate (status will be `built` or `in-progress` depending on last-commit recency vs. today)
+   - **partial** — has commits but planned candidate lists sub-capabilities none of the commits touch (status `in-progress`, with unbuilt sub-leaves listed)
+   - **planned** — planned candidate with no commit match (status `planned`)
+6. Top-level surfaces are derived, not pre-declared. Candidates: `Takeoff`, `Scheduling`, `Field Operations`, `Native / Offline`, `Marketing & Sales`, `Auth & Admin`, `Backend & Infra`, `Project Bootstrap`, plus any surface that emerges from requirements sections with no built counterpart (e.g. an unbuilt "Integrations" surface).
 
-Two clustering passes over the enriched commits, both written into `docs/work-items.json` for hand-review:
+### Hand-review checkpoint
 
-1. **Path-cohort clusters** — connected components over commits that share ≥1 path-tag, then split a component when the inter-commit gap inside it exceeds 7 days. Each resulting cluster is a candidate "work item" with: lifespan, commit count, dominant path-tags, sample subjects, build vs acceptance counts.
-2. **Subject-theme overlay** — within each path-cohort, detect sub-themes by recurring subject tokens (e.g. inside `ui:schedule`, separate "import P6 panel" from "Gantt chart" from "baseline manager"). This catches the case where one folder hosts multiple distinct features built in different weeks.
+7. You and I walk `wbs-proposals.reconciled.json` together — decide names, keep/split/merge, confirm which planned items make the cut for this schedule vs. defer. Specifically for each `planned` leaf, you confirm or override the rough duration (see step 8).
 
-Output: ~40–80 candidate work items, each with hard evidence (commits + files + dates). No WBS yet.
+### Freeze WBS
 
-## Phase C — Hand-review + WBS emergence
+8. Write `docs/wbs.json`. Every leaf carries:
+   - `id`, `name`, `parentSurface`
+   - `status`: `built` | `in-progress` | `planned`
+   - `workItemIds[]` (empty for `planned`)
+   - `commitWindow` (null for `planned`)
+   - `plannedDuration` (only for `planned` / unbuilt sub-leaves of `in-progress`) — proposed by `scripts/propose-planned-durations.mjs` using analogous built leaves: median build-burst span + median refine count, scaled by a complexity factor inferred from how many sub-bullets the requirements doc gives the candidate. You override during the hand-review.
+   - `sources[]`: `["commits"]`, `["requirements:<section>"]`, `["memory:<file>"]`, or a combination.
+   - Every `built` leaf is still backed by ≥3 commits.
 
-You and I walk `docs/work-items.json` together. For each candidate work item we decide:
+### Sanity report
 
-- Keep / merge / split
-- Name (real noun phrase, not a folder name)
-- Which top-level product surface it belongs to
+9. Print: built leaf count, in-progress count, planned count, coverage of requirements-doc sections (% with a matched leaf), orphan commits, orphan planned candidates (rejected during reconciliation), cross-leaf commits (future hardening milestone candidates).
 
-WBS emerges from the grouping, not the other way around. Top branches will probably still be roughly: Takeoff & Measurement, Schedule & P6, Field/Mobile, RE Workflow, Reporting, Admin/Org, Marketing/Onboarding, Pilot — but leaves are dictated by what got built.
+### Phase D implication (preview, not executed yet)
 
-Result: `docs/wbs.json` — frozen WBS tree with each leaf pointing to its work-item IDs.
+- `built` leaves → activities generated from commits (build burst + Refine-N, gap > 7d rule).
+- `in-progress` leaves → same, plus one `Build-Remaining` activity per unbuilt sub-leaf with proposed duration, scheduled after last commit.
+- `planned` leaves → single `Build` activity with proposed duration, no predecessor from commits; logic ties are added during the schedule-fixture step.
 
-## Phase D — Activities per leaf
+### Explicitly NOT doing in Phase C
 
-For each leaf, derive activities mechanically from its commits:
+- No activities, no Build/Refine split, no durations on built leaves, no audit subagents.
+- No app code, no exporter edits, no back-projected baselines.
+- No pre-declared top-down surfaces — surfaces emerge from reconciliation.
+- No commitment that every requirements-doc bullet becomes a leaf — you cull during hand-review.
 
-- **Build burst** — first dense cluster of build commits (≥60% in ≤20% of leaf lifespan). Start = first build commit, finish = last build commit in the burst.
-- **Refine-N** — every subsequent acceptance/build cluster, split whenever inter-commit gap > 7 days. Min duration 1d.
-- **Hardening cross-leaf milestone** — commits matching `/round \d|hardening|polish|cleanup/i` that span ≥3 leaves on the same day become a fan-in milestone.
-- **Lone late singletons** — punch list, in-progress, 1d each.
+### Deliverables
 
-Acceptance merges attach to whichever leaf the build commits between this merge and the prior merge touched. Multi-leaf merges fan out.
+- `scripts/cluster-work-items.mjs` (new, read-only)
+- `scripts/extract-planned-scope.mjs` (new, read-only)
+- `scripts/reconcile-scope.mjs` (new, read-only)
+- `scripts/propose-planned-durations.mjs` (new, read-only)
+- `docs/wbs-proposals.built.json` (new)
+- `docs/wbs-proposals.planned.json` (new)
+- `docs/wbs-proposals.reconciled.json` (new)
+- `docs/wbs.json` (new — written only after hand-review)
+- `.lovable/plan.md` (edited)
 
-## Phase E — Audit (the thing you stopped me from starting prematurely)
+### Checkpoints where I stop and wait
 
-Only after C+D do I spawn per-leaf audit subagents. Each gets: its leaf's commits, files, work-item description, and the strict E2E rubric. Writes `docs/audit/<leaf-code>.md`. Then `docs/AUDIT_2026Q2.md` synthesizes.
-
-## Phase F — Schedule fixture + PMXML
-
-Translate audited leaves into `takeoffpro-build.def.ts` → exporter → `takeoffpro-build.xml` → XSD validate → round-trip test. Unchanged from the earlier plan.
-
-## File-level change set
-
-```text
-scripts/extract-build-history.mjs    EDIT  add numstat+name-status, pathTags, subjectTokens, drop top-down WBS mapping
-scripts/discover-work-items.mjs      NEW   path-cohort + subject-theme clustering → docs/work-items.json
-docs/build-history.json              REGEN enriched commit records, no WBS field
-docs/work-items.json                 NEW   candidate work items for hand-review (Phase B output)
-docs/wbs.json                        NEW   frozen WBS tree after Phase C review
-docs/audit/<leaf>.md                 NEW   per-leaf strict E2E audit (Phase E)
-docs/AUDIT_2026Q2.md                 NEW   synthesis (Phase E)
-src/lib/p6xml/fixtures/takeoffpro-build.def.ts   NEW   Phase F
-src/lib/p6xml/fixtures/takeoffpro-build.xml      NEW   Phase F
-src/test/p6xml-build-roundtrip.test.ts           NEW   Phase F
-.lovable/plan.md                     EDIT  thin pointer (last)
-```
-
-## Checkpoints where I stop and wait for you
-
-1. End of Phase A — you eyeball `build-history.json` to confirm enrichment looks right.
-2. End of Phase B — you eyeball `work-items.json`. **This is the critical review.** Adjusting clustering here is cheap; adjusting after WBS is frozen is expensive.
-3. End of Phase C — you sign off on `wbs.json` before any activity generation.
-4. End of Phase D — you sign off on the activity list before audit subagents are spawned.
-
-I will not spawn the audit subagents until checkpoint 4.
-
-## What I am explicitly not doing this round
-
-- No edits to app code, DB, marketing, or exporter
-- No assumed WBS, no guessed activity names, no back-projected baselines yet (baselines come after audit when we know actual span)
-- No subagents until Phase E
+- After step 5 (reconciled proposals emitted) — full review before any naming/cull decisions.
+- After step 7 (your decisions captured) — before I write `wbs.json`.
