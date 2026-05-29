@@ -447,21 +447,31 @@ for (const b of activities) {
 // 7. Status classification
 // -----------------------------------------------------------------------------
 
-const pivotByTag = {}; // tag -> { pivot, abandoned: bool }
+// Pivot abandonment lookup. To avoid false-positive over-flagging, we only
+// claim a tag is "abandoned" when its distinctive segment (the part after the
+// colon — e.g. "PdfCanvas" in "component:PdfCanvas") appears as a literal
+// path component inside a capability-removal pivot's blast radius. Generic
+// tokens like "components", "schedule", "lib" are ignored.
+const PIVOT_STOPWORDS = new Set([
+  "src", "components", "component", "lib", "schedule", "test", "tests",
+  "page", "pages", "hook", "hooks", "tsx", "ts", "json", "md", "deleted",
+  "new", "analysis", "build", "from", "project", "import", "export",
+]);
+
+const pivotRemovalTokens = []; // [{ token, pivot, date }]
 for (const piv of pivotsFile.pivots) {
-  const isRemoval = piv.kind === "capability-removal";
+  if (piv.kind !== "capability-removal") continue;
+  const seen = new Set();
   for (const br of piv.blastRadius ?? []) {
-    // Heuristic: extract any "tag-like" pieces from blastRadius descriptors.
-    const m = br.match(/([A-Za-z][A-Za-z0-9]+)(?:Tour|Demo|Panel|Page|tsx)?/g);
-    if (!m) continue;
-    for (const tok of m) {
-      const lower = tok.toLowerCase();
-      // Match against known tags
-      pivotByTag[lower] = pivotByTag[lower] || {
-        pivot: piv.title,
-        date: piv.date,
-        abandoned: isRemoval,
-      };
+    // Strip leading paths, take the leaf, drop extension.
+    const parts = br.split(/[/.\s()]+/).filter(Boolean);
+    for (const p of parts) {
+      const lower = p.toLowerCase();
+      if (PIVOT_STOPWORDS.has(lower)) continue;
+      if (lower.length < 4) continue;
+      if (seen.has(lower)) continue;
+      seen.add(lower);
+      pivotRemovalTokens.push({ token: lower, pivot: piv.title, date: piv.date });
     }
   }
 }
