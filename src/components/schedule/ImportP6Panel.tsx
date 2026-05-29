@@ -66,11 +66,11 @@ export function ImportP6Panel({ open, onOpenChange, onImport }: Props) {
         {!parsed && (
           <label className="block border-2 border-dashed border-border rounded-lg p-8 text-center cursor-pointer hover:border-primary">
             {parsing ? <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2" /> : <Upload className="h-6 w-6 mx-auto mb-2" />}
-            <div className="text-sm font-mono">{parsing ? 'Parsing…' : 'Drop or click to select a .xer / .xml file'}</div>
-            <div className="text-[11px] text-muted-foreground mt-1">Primavera P6 native exports. All WBS, activities, dependencies, lags and actuals are mapped.</div>
+            <div className="text-sm font-mono">{parsing ? 'Parsing…' : 'Drop or click to select a Primavera P6 XML file'}</div>
+            <div className="text-[11px] text-muted-foreground mt-1">Primavera P6 XML (PMXML) exports. WBS, activities, dependencies, lags, calendars, resources and actuals are mapped.</div>
             <input
               type="file"
-              accept=".xer,.xml,application/xml,text/xml"
+              accept=".xml,application/xml,text/xml"
               className="hidden"
               disabled={parsing}
               onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); e.currentTarget.value = ''; }}

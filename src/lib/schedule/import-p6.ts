@@ -279,8 +279,8 @@ export function importFromPmxml(text: string): ImportedSchedule {
   };
 }
 
-export function detectAndImport(filename: string, text: string): ImportedSchedule {
-  const lower = filename.toLowerCase();
-  if (lower.endsWith('.xml') || text.trimStart().startsWith('<')) return importFromPmxml(text);
-  return importFromXer(text);
+/** PMXML is the sole ingest format. Filename is accepted for legacy callers. */
+export function detectAndImport(_filename: string, text: string): ImportedSchedule {
+  return importFromPmxml(text);
 }
+
