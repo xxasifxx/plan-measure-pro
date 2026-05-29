@@ -1,0 +1,53 @@
+[
+  {
+    "id": "gps-panel-ui",
+    "stream": "09",
+    "intent": "Implement GPS panel and trace controls for field measurement",
+    "evidence": "GpsTraceControls.tsx provides UI for starting, pausing, and finishing GPS traces, with live stats for distance and area.",
+    "status": "completed",
+    "confidence": 1.0
+  },
+  {
+    "id": "geo-transform-logic",
+    "stream": "09",
+    "intent": "Develop georeferencing and Kalman filter for coordinate transformation",
+    "evidence": "geo-transform.ts contains solveAffine algorithms and updateKalman for smoothing GPS noise and mapping to plan XY.",
+    "status": "completed",
+    "confidence": 1.0
+  },
+  {
+    "id": "location-accuracy-mgmt",
+    "stream": "09",
+    "intent": "Handle geolocation permissions and accuracy monitoring",
+    "evidence": "geolocation.ts shim handles high-accuracy mode and permissions across native/web; GpsTraceControls displays accuracy alerts.",
+    "status": "completed",
+    "confidence": 1.0
+  },
+  {
+    "id": "gps-calibration-wizard",
+    "stream": "09",
+    "intent": "Implement multi-point GPS-to-plan calibration wizard",
+    "evidence": "GpsCalibration.tsx manages the workflow of benchmarking physical site locations against PDF plan coordinates.",
+    "status": "completed",
+    "confidence": 1.0
+  },
+  {
+    "id": "field-mode-ui",
+    "stream": "09",
+    "intent": "Optimize mobile UI for field usage",
+    "evidence": "Index.tsx includes a mobile-specific layout with MobileTabBar, MobilePayItems, and MobileAnnotationSheet for touch-first operation.",
+    "status": "completed",
+    "confidence": 1.0
+  },
+  {
+    "id": "photo-capture-gps",
+    "stream": "09",
+    "intent": "Integrate camera capture with GPS metadata capability",
+    "evidence": "camera.ts provides native/web capture; ProjectControls.tsx handles photo uploads with hooks for AI tagging and geolocation association.",
+    "status": "completed",
+    "confidence": 0.9,
+    "gaps": [
+      "Explicit GPS metadata embedding in photo blobs before upload is not fully visible in the current capture shim."
+    ]
+  }
+]
