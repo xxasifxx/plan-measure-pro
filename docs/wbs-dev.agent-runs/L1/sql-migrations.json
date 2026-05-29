@@ -1,0 +1,1134 @@
+{
+  "agent": "sql-migrations",
+  "generatedAt": "2026-05-29T17:45:04.814Z",
+  "migrationCount": 36,
+  "migrations": [
+    {
+      "file": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+      "loc": 295,
+      "bytes": 9737,
+      "createTables": [
+        "profiles",
+        "user_roles",
+        "projects",
+        "project_members",
+        "pay_items",
+        "calibrations",
+        "annotations"
+      ],
+      "alterTables": [
+        "profiles",
+        "user_roles",
+        "projects",
+        "project_members",
+        "pay_items",
+        "calibrations",
+        "annotations"
+      ],
+      "dropTables": [],
+      "createFunctions": [
+        "has_role",
+        "is_project_member",
+        "handle_new_user",
+        "update_updated_at_column"
+      ],
+      "dropFunctions": [],
+      "createTriggers": [
+        "on_auth_user_created",
+        "update_projects_updated_at"
+      ],
+      "createTypes": [
+        "app_role"
+      ],
+      "createPolicies": [
+        "Users can view own profile",
+        "Users can update own profile",
+        "Users can insert own profile",
+        "Users can view own roles",
+        "Admins can manage roles",
+        "Creators can manage own projects",
+        "Members can view assigned projects",
+        "Project creators can manage members",
+        "Members can view own membership",
+        "Project members can view pay items",
+        "Project creators can manage pay items",
+        "Project members can view calibrations",
+        "Project creators can manage calibrations",
+        "Users can manage own annotations",
+        "Project members can view all annotations",
+        "Authenticated users can upload project PDFs",
+        "Authenticated users can read project PDFs",
+        "Authenticated users can upload specs PDFs",
+        "Authenticated users can read specs PDFs"
+      ],
+      "enableRls": [
+        "profiles",
+        "user_roles",
+        "projects",
+        "project_members",
+        "pay_items",
+        "calibrations",
+        "annotations"
+      ],
+      "grants": [],
+      "addColumns": [],
+      "dropColumns": [],
+      "storageBuckets": [
+        "project-pdfs",
+        "specs-pdfs"
+      ],
+      "hasIndex": false,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260321162325_749c9dcd-0ffa-430d-bf20-422872294f47.sql",
+      "loc": 17,
+      "bytes": 448,
+      "createTables": [],
+      "alterTables": [],
+      "dropTables": [],
+      "createFunctions": [
+        "handle_new_user_role"
+      ],
+      "dropFunctions": [],
+      "createTriggers": [
+        "on_auth_user_created_role"
+      ],
+      "createTypes": [],
+      "createPolicies": [],
+      "enableRls": [],
+      "grants": [],
+      "addColumns": [],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": false,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260321162349_089b7eac-a691-474e-96f4-b97ab4d2581d.sql",
+      "loc": 3,
+      "bytes": 130,
+      "createTables": [],
+      "alterTables": [],
+      "dropTables": [],
+      "createFunctions": [],
+      "dropFunctions": [],
+      "createTriggers": [
+        "on_auth_user_created_profile"
+      ],
+      "createTypes": [],
+      "createPolicies": [],
+      "enableRls": [],
+      "grants": [],
+      "addColumns": [],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": false,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260321162408_22a25531-f789-4f47-b2d5-ec7d40196497.sql",
+      "loc": 28,
+      "bytes": 858,
+      "createTables": [],
+      "alterTables": [],
+      "dropTables": [],
+      "createFunctions": [],
+      "dropFunctions": [],
+      "createTriggers": [],
+      "createTypes": [],
+      "createPolicies": [
+        "Users can upload PDFs",
+        "Users can read PDFs",
+        "Users can delete own PDFs",
+        "Users can upload specs",
+        "Users can read specs"
+      ],
+      "enableRls": [],
+      "grants": [],
+      "addColumns": [],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": false,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql",
+      "loc": 24,
+      "bytes": 775,
+      "createTables": [],
+      "alterTables": [],
+      "dropTables": [],
+      "createFunctions": [],
+      "dropFunctions": [],
+      "createTriggers": [],
+      "createTypes": [],
+      "createPolicies": [
+        "Admins can view all profiles",
+        "Admins can view all project members",
+        "Admins can manage all project members",
+        "Admins can view all projects"
+      ],
+      "enableRls": [],
+      "grants": [],
+      "addColumns": [],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": false,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260321164313_fadd3bba-4f5e-4ac1-b47b-3887bdd98769.sql",
+      "loc": 1,
+      "bytes": 65,
+      "createTables": [],
+      "alterTables": [],
+      "dropTables": [],
+      "createFunctions": [],
+      "dropFunctions": [],
+      "createTriggers": [],
+      "createTypes": [],
+      "createPolicies": [],
+      "enableRls": [],
+      "grants": [],
+      "addColumns": [],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": false,
+      "hasRealtime": true
+    },
+    {
+      "file": "supabase/migrations/20260321164809_127eb40b-40a6-4814-b6cc-ed2f3acd27f2.sql",
+      "loc": 1,
+      "bytes": 101,
+      "createTables": [],
+      "alterTables": [
+        "profiles"
+      ],
+      "dropTables": [],
+      "createFunctions": [],
+      "dropFunctions": [],
+      "createTriggers": [],
+      "createTypes": [],
+      "createPolicies": [],
+      "enableRls": [],
+      "grants": [],
+      "addColumns": [
+        "has_seen_welcome"
+      ],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": false,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260321170227_75de1f7c-2825-40a9-b86e-f031966b835e.sql",
+      "loc": 3,
+      "bytes": 212,
+      "createTables": [],
+      "alterTables": [
+        "annotations"
+      ],
+      "dropTables": [],
+      "createFunctions": [],
+      "dropFunctions": [],
+      "createTriggers": [],
+      "createTypes": [],
+      "createPolicies": [],
+      "enableRls": [],
+      "grants": [],
+      "addColumns": [
+        "manual_quantity",
+        "location",
+        "notes"
+      ],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": false,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260323121718_947e033e-ded7-4dae-9824-5ff155f34faf.sql",
+      "loc": 22,
+      "bytes": 600,
+      "createTables": [],
+      "alterTables": [],
+      "dropTables": [],
+      "createFunctions": [
+        "handle_new_user"
+      ],
+      "dropFunctions": [],
+      "createTriggers": [
+        "on_auth_user_created"
+      ],
+      "createTypes": [],
+      "createPolicies": [],
+      "enableRls": [],
+      "grants": [],
+      "addColumns": [],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": false,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql",
+      "loc": 85,
+      "bytes": 2602,
+      "createTables": [
+        "invitations"
+      ],
+      "alterTables": [
+        "invitations"
+      ],
+      "dropTables": [],
+      "createFunctions": [
+        "assign_owner_role",
+        "accept_invitation"
+      ],
+      "dropFunctions": [
+        "handle_new_user_role"
+      ],
+      "createTriggers": [],
+      "createTypes": [],
+      "createPolicies": [
+        "Admins can manage invitations",
+        "Users can view own invitations"
+      ],
+      "enableRls": [
+        "invitations"
+      ],
+      "grants": [],
+      "addColumns": [],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": false,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260323184019_702975d9-3680-45b2-9a82-8587db5f26e5.sql",
+      "loc": 10,
+      "bytes": 268,
+      "createTables": [],
+      "alterTables": [],
+      "dropTables": [],
+      "createFunctions": [],
+      "dropFunctions": [],
+      "createTriggers": [],
+      "createTypes": [],
+      "createPolicies": [
+        "Project creators can search profiles"
+      ],
+      "enableRls": [],
+      "grants": [],
+      "addColumns": [],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": false,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260327122843_6f261706-ce0b-4c8a-b707-c3c8b0648540.sql",
+      "loc": 27,
+      "bytes": 1141,
+      "createTables": [
+        "geo_calibrations"
+      ],
+      "alterTables": [
+        "geo_calibrations"
+      ],
+      "dropTables": [],
+      "createFunctions": [],
+      "dropFunctions": [],
+      "createTriggers": [],
+      "createTypes": [],
+      "createPolicies": [
+        "Project members can view geo calibrations",
+        "Project creators can manage geo calibrations",
+        "Users can manage own geo calibrations"
+      ],
+      "enableRls": [
+        "geo_calibrations"
+      ],
+      "grants": [],
+      "addColumns": [],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": false,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260328182512_208ba41b-5292-403a-baf4-9b9b2d158879.sql",
+      "loc": 23,
+      "bytes": 596,
+      "createTables": [
+        "demo_requests"
+      ],
+      "alterTables": [
+        "demo_requests"
+      ],
+      "dropTables": [],
+      "createFunctions": [],
+      "dropFunctions": [],
+      "createTriggers": [],
+      "createTypes": [],
+      "createPolicies": [
+        "Anyone can submit demo requests",
+        "Admins can view demo requests"
+      ],
+      "enableRls": [
+        "demo_requests"
+      ],
+      "grants": [],
+      "addColumns": [],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": false,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
+      "loc": 80,
+      "bytes": 4594,
+      "createTables": [
+        "schedule_activities",
+        "rocks",
+        "scorecard_metrics",
+        "annotation_photos"
+      ],
+      "alterTables": [
+        "projects",
+        "schedule_activities",
+        "rocks",
+        "scorecard_metrics",
+        "annotation_photos"
+      ],
+      "dropTables": [],
+      "createFunctions": [],
+      "dropFunctions": [],
+      "createTriggers": [
+        "trg_sched_act_updated",
+        "trg_rocks_updated"
+      ],
+      "createTypes": [],
+      "createPolicies": [
+        "Members view activities",
+        "Project creators manage activities",
+        "Members view rocks",
+        "Project creators manage rocks",
+        "Members view scorecard",
+        "Project creators manage scorecard",
+        "Members view photos",
+        "Members upload photos",
+        "Project creators manage photos",
+        "Uploaders update own",
+        "Members read annotation photos",
+        "Members upload annotation photos"
+      ],
+      "enableRls": [
+        "schedule_activities",
+        "rocks",
+        "scorecard_metrics",
+        "annotation_photos"
+      ],
+      "grants": [],
+      "addColumns": [
+        "is_bid"
+      ],
+      "dropColumns": [],
+      "storageBuckets": [
+        "annotation-photos"
+      ],
+      "hasIndex": false,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql",
+      "loc": 45,
+      "bytes": 2981,
+      "createTables": [
+        "activity_assignments",
+        "activity_pay_items",
+        "daily_reports"
+      ],
+      "alterTables": [
+        "activity_assignments",
+        "activity_pay_items",
+        "daily_reports"
+      ],
+      "dropTables": [],
+      "createFunctions": [],
+      "dropFunctions": [],
+      "createTriggers": [
+        "update_daily_reports_updated_at"
+      ],
+      "createTypes": [],
+      "createPolicies": [
+        "Members view assignments",
+        "Project creators manage assignments",
+        "Members view activity pay items",
+        "Project creators manage activity pay items",
+        "Members view project reports",
+        "Users manage own reports"
+      ],
+      "enableRls": [
+        "activity_assignments",
+        "activity_pay_items",
+        "daily_reports"
+      ],
+      "grants": [],
+      "addColumns": [],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": true,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260524015102_6a9de603-5b28-4109-98fe-7e343194da37.sql",
+      "loc": 1,
+      "bytes": 71,
+      "createTables": [],
+      "alterTables": [],
+      "dropTables": [],
+      "createFunctions": [],
+      "dropFunctions": [],
+      "createTriggers": [],
+      "createTypes": [],
+      "createPolicies": [],
+      "enableRls": [],
+      "grants": [],
+      "addColumns": [],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": false,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
+      "loc": 148,
+      "bytes": 6066,
+      "createTables": [
+        "daily_report_comments"
+      ],
+      "alterTables": [
+        "daily_reports",
+        "daily_report_comments"
+      ],
+      "dropTables": [],
+      "createFunctions": [
+        "daily_reports_status_transition"
+      ],
+      "dropFunctions": [],
+      "createTriggers": [
+        "trg_daily_reports_status_transition"
+      ],
+      "createTypes": [],
+      "createPolicies": [
+        "Members view report comments",
+        "Members add comments on accessible reports",
+        "Owner inserts own draft report",
+        "Owner updates own draft report",
+        "Owner deletes own draft report",
+        "RE updates submitted report",
+        "Project creator updates report"
+      ],
+      "enableRls": [
+        "daily_report_comments"
+      ],
+      "grants": [],
+      "addColumns": [
+        "status",
+        "approved_at",
+        "approved_by",
+        "rejected_at",
+        "rejected_by",
+        "reject_reason",
+        "snapshot"
+      ],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": true,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260524015158_bd7b1203-22ec-46f0-8c88-3c4208a05c7d.sql",
+      "loc": 1,
+      "bytes": 77,
+      "createTables": [],
+      "alterTables": [],
+      "dropTables": [],
+      "createFunctions": [],
+      "dropFunctions": [],
+      "createTriggers": [],
+      "createTypes": [],
+      "createPolicies": [],
+      "enableRls": [],
+      "grants": [],
+      "addColumns": [],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": false,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql",
+      "loc": 112,
+      "bytes": 4307,
+      "createTables": [
+        "daily_report_snapshots",
+        "notifications"
+      ],
+      "alterTables": [
+        "daily_report_snapshots",
+        "notifications"
+      ],
+      "dropTables": [],
+      "createFunctions": [
+        "daily_reports_status_side_effects"
+      ],
+      "dropFunctions": [],
+      "createTriggers": [
+        "trg_daily_reports_status_transition",
+        "trg_daily_reports_status_side_effects"
+      ],
+      "createTypes": [],
+      "createPolicies": [
+        "Members view snapshots",
+        "Users view own notifications",
+        "Users mark own notifications read",
+        "Users delete own notifications"
+      ],
+      "enableRls": [
+        "daily_report_snapshots",
+        "notifications"
+      ],
+      "grants": [],
+      "addColumns": [],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": true,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260524172951_27a28235-ea50-4c3c-be4a-528f35665ed2.sql",
+      "loc": 3,
+      "bytes": 374,
+      "createTables": [],
+      "alterTables": [
+        "pay_items"
+      ],
+      "dropTables": [],
+      "createFunctions": [],
+      "dropFunctions": [],
+      "createTriggers": [],
+      "createTypes": [],
+      "createPolicies": [],
+      "enableRls": [],
+      "grants": [],
+      "addColumns": [
+        "p6_activity_id"
+      ],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": true,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260524173747_cd76e27d-fda9-4f8b-aac8-c875aa100937.sql",
+      "loc": 76,
+      "bytes": 3006,
+      "createTables": [],
+      "alterTables": [
+        "annotations"
+      ],
+      "dropTables": [],
+      "createFunctions": [
+        "daily_reports_status_transition"
+      ],
+      "dropFunctions": [],
+      "createTriggers": [],
+      "createTypes": [],
+      "createPolicies": [],
+      "enableRls": [],
+      "grants": [],
+      "addColumns": [
+        "work_date"
+      ],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": true,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260524173937_345bb077-7543-4a05-9ef8-c474d5276b1f.sql",
+      "loc": 64,
+      "bytes": 2524,
+      "createTables": [],
+      "alterTables": [],
+      "dropTables": [],
+      "createFunctions": [
+        "daily_reports_status_transition"
+      ],
+      "dropFunctions": [],
+      "createTriggers": [],
+      "createTypes": [],
+      "createPolicies": [
+        "Owner withdraws own submitted report"
+      ],
+      "enableRls": [],
+      "grants": [],
+      "addColumns": [],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": false,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+      "loc": 278,
+      "bytes": 11505,
+      "createTables": [
+        "document_folders",
+        "documents"
+      ],
+      "alterTables": [
+        "document_folders",
+        "documents"
+      ],
+      "dropTables": [],
+      "createFunctions": [
+        "document_folders_block_nonempty_delete",
+        "seed_project_standard_folders",
+        "projects_seed_folders"
+      ],
+      "dropFunctions": [],
+      "createTriggers": [
+        "trg_document_folders_updated",
+        "trg_documents_updated",
+        "trg_document_folders_block_nonempty",
+        "trg_projects_seed_folders"
+      ],
+      "createTypes": [],
+      "createPolicies": [
+        "Members view folders",
+        "PMs manage folders",
+        "Members view documents",
+        "PMs manage documents",
+        "Inspectors upload to photos and daily_reports",
+        "Members read project documents",
+        "Members upload project documents",
+        "PMs manage project documents storage",
+        "PMs update project documents storage"
+      ],
+      "enableRls": [
+        "document_folders",
+        "documents"
+      ],
+      "grants": [],
+      "addColumns": [],
+      "dropColumns": [],
+      "storageBuckets": [
+        "project-documents"
+      ],
+      "hasIndex": true,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260524182507_aa3b520a-cfe2-4510-b710-0caf0809bc7f.sql",
+      "loc": 8,
+      "bytes": 213,
+      "createTables": [],
+      "alterTables": [
+        "documents"
+      ],
+      "dropTables": [],
+      "createFunctions": [],
+      "dropFunctions": [],
+      "createTriggers": [],
+      "createTypes": [],
+      "createPolicies": [],
+      "enableRls": [],
+      "grants": [],
+      "addColumns": [
+        "deleted_at",
+        "deleted_by"
+      ],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": true,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260524230947_197a36b0-b223-4c6d-a3b6-73dd795f14de.sql",
+      "loc": 2,
+      "bytes": 267,
+      "createTables": [],
+      "alterTables": [],
+      "dropTables": [],
+      "createFunctions": [],
+      "dropFunctions": [],
+      "createTriggers": [],
+      "createTypes": [],
+      "createPolicies": [
+        "Authors update own comments",
+        "Authors delete own comments"
+      ],
+      "enableRls": [],
+      "grants": [],
+      "addColumns": [],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": false,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260525163245_e34bfccb-6eb4-4a47-b075-1f9c628559da.sql",
+      "loc": 62,
+      "bytes": 3993,
+      "createTables": [],
+      "alterTables": [],
+      "dropTables": [],
+      "createFunctions": [],
+      "dropFunctions": [],
+      "createTriggers": [],
+      "createTypes": [],
+      "createPolicies": [],
+      "enableRls": [],
+      "grants": [],
+      "addColumns": [],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": false,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260526015440_e7d9bc81-0db3-4acd-88f7-ff486798a2b2.sql",
+      "loc": 30,
+      "bytes": 952,
+      "createTables": [
+        "device_tokens"
+      ],
+      "alterTables": [
+        "device_tokens"
+      ],
+      "dropTables": [],
+      "createFunctions": [],
+      "dropFunctions": [],
+      "createTriggers": [],
+      "createTypes": [],
+      "createPolicies": [
+        "Users view own device tokens",
+        "Users insert own device tokens",
+        "Users update own device tokens",
+        "Users delete own device tokens"
+      ],
+      "enableRls": [
+        "device_tokens"
+      ],
+      "grants": [],
+      "addColumns": [],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": true,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260526021443_4709d075-1bb1-44b9-ae5f-3edc62bcd171.sql",
+      "loc": 3,
+      "bytes": 363,
+      "createTables": [],
+      "alterTables": [],
+      "dropTables": [],
+      "createFunctions": [],
+      "dropFunctions": [],
+      "createTriggers": [],
+      "createTypes": [],
+      "createPolicies": [],
+      "enableRls": [],
+      "grants": [],
+      "addColumns": [],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": false,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260526105432_7d5d3850-b410-4d77-ad92-1f2f0e524b65.sql",
+      "loc": 68,
+      "bytes": 3454,
+      "createTables": [
+        "activity_relationships",
+        "project_schedule_meta"
+      ],
+      "alterTables": [
+        "schedule_activities",
+        "activity_relationships",
+        "project_schedule_meta"
+      ],
+      "dropTables": [],
+      "createFunctions": [],
+      "dropFunctions": [],
+      "createTriggers": [
+        "update_project_schedule_meta_updated_at"
+      ],
+      "createTypes": [],
+      "createPolicies": [
+        "Members view relationships",
+        "Project creators manage relationships",
+        "Members view schedule meta",
+        "Project creators manage schedule meta"
+      ],
+      "enableRls": [
+        "activity_relationships",
+        "project_schedule_meta"
+      ],
+      "grants": [],
+      "addColumns": [
+        "parent_wbs_id",
+        "activity_id",
+        "activity_type",
+        "duration_days",
+        "actual_start",
+        "actual_finish",
+        "early_start",
+        "early_finish",
+        "late_start",
+        "late_finish",
+        "total_float_days",
+        "is_critical",
+        "sort_order"
+      ],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": true,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260526114744_9262b81e-12b7-4ca4-a3c8-d39802232caf.sql",
+      "loc": 113,
+      "bytes": 3850,
+      "createTables": [],
+      "alterTables": [
+        "schedule_activities"
+      ],
+      "dropTables": [],
+      "createFunctions": [
+        "replace_project_schedule"
+      ],
+      "dropFunctions": [],
+      "createTriggers": [],
+      "createTypes": [],
+      "createPolicies": [],
+      "enableRls": [],
+      "grants": [],
+      "addColumns": [
+        "manual_finish",
+        "remaining_duration_days"
+      ],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": false,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260526114820_e82b22fa-1dac-434e-942a-e18387a3c065.sql",
+      "loc": 4,
+      "bytes": 209,
+      "createTables": [],
+      "alterTables": [],
+      "dropTables": [],
+      "createFunctions": [],
+      "dropFunctions": [],
+      "createTriggers": [],
+      "createTypes": [],
+      "createPolicies": [],
+      "enableRls": [],
+      "grants": [
+        "GRANT EXECUTE ON FUNCTION public.replace_project_schedule(uuid, jsonb, jsonb, jsonb) TO authenticated;"
+      ],
+      "addColumns": [],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": false,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+      "loc": 413,
+      "bytes": 17273,
+      "createTables": [
+        "schedule_calendars",
+        "schedule_resources",
+        "activity_resource_assignments",
+        "schedule_baselines",
+        "baseline_activities"
+      ],
+      "alterTables": [
+        "schedule_calendars",
+        "schedule_resources",
+        "activity_resource_assignments",
+        "schedule_baselines",
+        "baseline_activities",
+        "schedule_activities"
+      ],
+      "dropTables": [],
+      "createFunctions": [
+        "schedule_activities_validate_constraint",
+        "capture_baseline",
+        "delete_baseline",
+        "replace_project_schedule"
+      ],
+      "dropFunctions": [],
+      "createTriggers": [
+        "trg_schedule_calendars_updated",
+        "trg_schedule_resources_updated",
+        "trg_ara_updated",
+        "trg_schedule_activities_validate_constraint"
+      ],
+      "createTypes": [
+        "resource_type"
+      ],
+      "createPolicies": [
+        "Members view calendars",
+        "Project creators manage calendars",
+        "Members view resources",
+        "Project creators manage resources",
+        "Members view assignments",
+        "Project creators manage assignments",
+        "Members view baselines",
+        "Project creators manage baselines",
+        "Members view baseline activities",
+        "Project creators manage baseline activities"
+      ],
+      "enableRls": [
+        "schedule_calendars",
+        "schedule_resources",
+        "activity_resource_assignments",
+        "schedule_baselines",
+        "baseline_activities"
+      ],
+      "grants": [],
+      "addColumns": [
+        "calendar_id",
+        "constraint_type",
+        "constraint_date",
+        "primary_resource_id"
+      ],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": true,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql",
+      "loc": 195,
+      "bytes": 6424,
+      "createTables": [],
+      "alterTables": [
+        "IF"
+      ],
+      "dropTables": [],
+      "createFunctions": [],
+      "dropFunctions": [],
+      "createTriggers": [],
+      "createTypes": [],
+      "createPolicies": [
+        "Members read project PDFs",
+        "Users upload own project PDFs",
+        "Project creators delete project PDFs",
+        "Members read specs PDFs",
+        "Project creators upload specs PDFs",
+        "Project creators delete specs PDFs",
+        "Members read annotation photos",
+        "Members upload annotation photos",
+        "PMs delete project documents storage",
+        "PMs update project documents storage",
+        "Project creators view member profiles",
+        "Anyone can submit demo requests",
+        "Members subscribe to project channels"
+      ],
+      "enableRls": [],
+      "grants": [
+        "GRANT EXECUTE ON FUNCTION %s TO authenticated', r.sig);"
+      ],
+      "addColumns": [],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": false,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260528155528_44c52ae9-d9c8-4390-8dde-0367583b44ef.sql",
+      "loc": 27,
+      "bytes": 1327,
+      "createTables": [],
+      "alterTables": [],
+      "dropTables": [],
+      "createFunctions": [],
+      "dropFunctions": [],
+      "createTriggers": [],
+      "createTypes": [],
+      "createPolicies": [
+        "Members view geo calibrations",
+        "Creators manage geo calibrations"
+      ],
+      "enableRls": [],
+      "grants": [
+        "GRANT EXECUTE ON FUNCTION public.replace_project_schedule(uuid, jsonb, jsonb, jsonb, jsonb, jsonb, jsonb) TO authenticated;"
+      ],
+      "addColumns": [],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": false,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260528155928_1fea17ca-9deb-4078-8173-ee3e52b6eab6.sql",
+      "loc": 28,
+      "bytes": 759,
+      "createTables": [],
+      "alterTables": [],
+      "dropTables": [],
+      "createFunctions": [],
+      "dropFunctions": [],
+      "createTriggers": [],
+      "createTypes": [],
+      "createPolicies": [
+        "Members view co-member profiles"
+      ],
+      "enableRls": [],
+      "grants": [],
+      "addColumns": [],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": false,
+      "hasRealtime": false
+    },
+    {
+      "file": "supabase/migrations/20260529041918_637a0229-3683-4419-9838-890b4e588b31.sql",
+      "loc": 296,
+      "bytes": 12874,
+      "createTables": [],
+      "alterTables": [],
+      "dropTables": [],
+      "createFunctions": [
+        "seed_demo_users",
+        "replace_project_schedule"
+      ],
+      "dropFunctions": [],
+      "createTriggers": [],
+      "createTypes": [],
+      "createPolicies": [],
+      "enableRls": [],
+      "grants": [
+        "GRANT EXECUTE ON FUNCTION public.seed_demo_users() TO service_role;",
+        "GRANT EXECUTE ON FUNCTION public.replace_project_schedule(uuid, jsonb, jsonb, jsonb, jsonb, jsonb, jsonb) TO authenticated;"
+      ],
+      "addColumns": [],
+      "dropColumns": [],
+      "storageBuckets": [],
+      "hasIndex": false,
+      "hasRealtime": false
+    }
+  ]
+}

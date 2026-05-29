@@ -1,0 +1,546 @@
+{
+  "agent": "tests",
+  "generatedAt": "2026-05-29T17:45:04.835Z",
+  "fileCount": 13,
+  "files": [
+    {
+      "file": "src/test/analysis-dcma.test.ts",
+      "loc": 65,
+      "intents": [
+        {
+          "title": "passes Leads when no negative lags exist",
+          "line": 22,
+          "describe": [
+            "runDcma"
+          ]
+        },
+        {
+          "title": "fails Leads when a negative lag is present",
+          "line": 32,
+          "describe": [
+            "runDcma"
+          ]
+        },
+        {
+          "title": "flags negative-float activities",
+          "line": 41,
+          "describe": [
+            "runDcma"
+          ]
+        },
+        {
+          "title": "flags high-duration tasks > 44 days",
+          "line": 50,
+          "describe": [
+            "runDcma"
+          ]
+        },
+        {
+          "title": "summary contains a line per check",
+          "line": 59,
+          "describe": [
+            "runDcma"
+          ]
+        },
+        {
+          "title": "\\n",
+          "line": 62,
+          "describe": [
+            "runDcma"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "src/test/analysis-tia.test.ts",
+      "loc": 58,
+      "intents": [
+        {
+          "title": "returns not-found message for unknown activity",
+          "line": 25,
+          "describe": [
+            "buildTia"
+          ]
+        },
+        {
+          "title": "produces fragnet, narrative, and CSV for a valid activity",
+          "line": 33,
+          "describe": [
+            "buildTia"
+          ]
+        },
+        {
+          "title": "\\n",
+          "line": 43,
+          "describe": [
+            "buildTia"
+          ]
+        },
+        {
+          "title": "singular day phrasing for 1-day delays",
+          "line": 49,
+          "describe": [
+            "buildTia"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "src/test/baseline-end.test.ts",
+      "loc": 53,
+      "intents": [
+        {
+          "title": "derives baseline_end when duration changes",
+          "line": 7,
+          "describe": [
+            "normalizeActivityPatch"
+          ]
+        },
+        {
+          "title": "honors manual_finish lock",
+          "line": 16,
+          "describe": [
+            "normalizeActivityPatch"
+          ]
+        },
+        {
+          "title": "forces milestone duration to 0",
+          "line": 25,
+          "describe": [
+            "normalizeActivityPatch"
+          ]
+        },
+        {
+          "title": "actual_finish sets percent to 100 and remaining to 0",
+          "line": 34,
+          "describe": [
+            "normalizeActivityPatch"
+          ]
+        },
+        {
+          "title": "percent_complete recomputes remaining",
+          "line": 44,
+          "describe": [
+            "normalizeActivityPatch"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "src/test/cpm.test.ts",
+      "loc": 81,
+      "intents": [
+        {
+          "title": "marks the longer parallel chain critical",
+          "line": 22,
+          "describe": [
+            "CPM"
+          ]
+        },
+        {
+          "title": "detects cycles and marks involved activities non-critical",
+          "line": 33,
+          "describe": [
+            "CPM"
+          ]
+        },
+        {
+          "title": "actual_start locks ES even when predecessor finishes later",
+          "line": 42,
+          "describe": [
+            "CPM"
+          ]
+        },
+        {
+          "title": "actual_finish forces float to 0 and not critical",
+          "line": 51,
+          "describe": [
+            "CPM"
+          ]
+        },
+        {
+          "title": "data_date pushes ES forward for not-started activities",
+          "line": 58,
+          "describe": [
+            "CPM"
+          ]
+        },
+        {
+          "title": "finish_milestone EF equals ES (zero-duration)",
+          "line": 64,
+          "describe": [
+            "CPM"
+          ]
+        },
+        {
+          "title": "SS+lag advances successor ES correctly",
+          "line": 74,
+          "describe": [
+            "CPM"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "src/test/daily-report-snapshot.test.ts",
+      "loc": 117,
+      "intents": [
+        {
+          "title": "returns manual_quantity when provided regardless of type/depth",
+          "line": 27,
+          "describe": [
+            "annotationQty"
+          ]
+        },
+        {
+          "title": "counts as 1 for count type",
+          "line": 30,
+          "describe": [
+            "annotationQty"
+          ]
+        },
+        {
+          "title": "converts SF × depth → CY when depth present",
+          "line": 33,
+          "describe": [
+            "annotationQty"
+          ]
+        },
+        {
+          "title": "converts SF → SY for SY unit",
+          "line": 37,
+          "describe": [
+            "annotationQty"
+          ]
+        },
+        {
+          "title": "returns raw measurement otherwise",
+          "line": 41,
+          "describe": [
+            "annotationQty"
+          ]
+        },
+        {
+          "title": "returns empty when no annotations",
+          "line": 47,
+          "describe": [
+            "buildSnapshotFromInputs"
+          ]
+        },
+        {
+          "title": "ignores annotations without a pay_item_id or with unknown pay_item_id",
+          "line": 51,
+          "describe": [
+            "buildSnapshotFromInputs"
+          ]
+        },
+        {
+          "title": "groups multiple annotations by pay item, sums quantities, joins notes",
+          "line": 59,
+          "describe": [
+            "buildSnapshotFromInputs"
+          ]
+        },
+        {
+          "title": "mixes manual_quantity overrides into the same pay item total",
+          "line": 75,
+          "describe": [
+            "buildSnapshotFromInputs"
+          ]
+        },
+        {
+          "title": "attaches prior cumulative and computes new_cumulative",
+          "line": 86,
+          "describe": [
+            "buildSnapshotFromInputs"
+          ]
+        },
+        {
+          "title": "handles missing prior approved cumulative as zero",
+          "line": 96,
+          "describe": [
+            "buildSnapshotFromInputs"
+          ]
+        },
+        {
+          "title": "sorts by item_code for deterministic output",
+          "line": 105,
+          "describe": [
+            "buildSnapshotFromInputs"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "src/test/date-utils.test.ts",
+      "loc": 27,
+      "intents": [
+        {
+          "title": "advances whole workdays skipping weekends",
+          "line": 9,
+          "describe": [
+            "addWorkdays"
+          ]
+        },
+        {
+          "title": "rounds fractional lag up (P6-conservative)",
+          "line": 14,
+          "describe": [
+            "addWorkdays"
+          ]
+        },
+        {
+          "title": "returns same date for 0 workdays",
+          "line": 19,
+          "describe": [
+            "addWorkdays"
+          ]
+        },
+        {
+          "title": "throws on a calendar with no working days",
+          "line": 23,
+          "describe": [
+            "addWorkdays"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "src/test/dev-pmxml.test.ts",
+      "loc": 48,
+      "intents": [
+        {
+          "title": "parses with our parser",
+          "line": 14,
+          "describe": [
+            "takeoffpro-dev.xml (PMXML self-proof)"
+          ]
+        },
+        {
+          "title": "round-trips every activity in the JSON",
+          "line": 20,
+          "describe": [
+            "takeoffpro-dev.xml (PMXML self-proof)"
+          ]
+        },
+        {
+          "title": "preserves status distribution from the strict scorer",
+          "line": 24,
+          "describe": [
+            "takeoffpro-dev.xml (PMXML self-proof)"
+          ]
+        },
+        {
+          "title": "every Completed activity carries an ActualFinishDate",
+          "line": 34,
+          "describe": [
+            "takeoffpro-dev.xml (PMXML self-proof)"
+          ]
+        },
+        {
+          "title": "serializes back to a byte-stable form (idempotent)",
+          "line": 41,
+          "describe": [
+            "takeoffpro-dev.xml (PMXML self-proof)"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "src/test/example.test.ts",
+      "loc": 8,
+      "intents": [
+        {
+          "title": "should pass",
+          "line": 4,
+          "describe": [
+            "example"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "src/test/geometry.test.ts",
+      "loc": 50,
+      "intents": [
+        {
+          "title": "returns 0 for fewer than 2 points",
+          "line": 8,
+          "describe": [
+            "lineLength"
+          ]
+        },
+        {
+          "title": "measures a single straight segment",
+          "line": 13,
+          "describe": [
+            "lineLength"
+          ]
+        },
+        {
+          "title": "sums every segment of a multi-vertex polyline (regression for C-1)",
+          "line": 19,
+          "describe": [
+            "lineLength"
+          ]
+        },
+        {
+          "title": "polygonAreaSF computes 10x10 ft square as 100 sf",
+          "line": 34,
+          "describe": [
+            "area conversions"
+          ]
+        },
+        {
+          "title": "sfToCY: 100 sf x 1 ft depth = 100/27 cy",
+          "line": 42,
+          "describe": [
+            "area conversions"
+          ]
+        },
+        {
+          "title": "sfToSY: 9 sf = 1 sy",
+          "line": 46,
+          "describe": [
+            "area conversions"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "src/test/import-p6.test.ts",
+      "loc": 21,
+      "intents": [
+        {
+          "title": "parses activities and converts hours to days",
+          "line": 8,
+          "describe": [
+            "importFromPmxml"
+          ]
+        },
+        {
+          "title": "exposes counts + data_date",
+          "line": 16,
+          "describe": [
+            "importFromPmxml"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "src/test/p6xml.test.ts",
+      "loc": 64,
+      "intents": [
+        {
+          "title": "parses sample APIBusinessObjects with project + activities",
+          "line": 8,
+          "describe": [
+            "p6xml parser"
+          ]
+        },
+        {
+          "title": "round-trips semantically when no edits applied",
+          "line": 17,
+          "describe": [
+            "p6xml parser"
+          ]
+        },
+        {
+          "title": "marks Not-Started → In Progress and sets ActualStart from first report",
+          "line": 27,
+          "describe": [
+            "applyDailyReportsToP6"
+          ]
+        },
+        {
+          "title": "marks isComplete → Completed with ActualFinish + zero remaining",
+          "line": 38,
+          "describe": [
+            "applyDailyReportsToP6"
+          ]
+        },
+        {
+          "title": "is idempotent on re-apply",
+          "line": 48,
+          "describe": [
+            "applyDailyReportsToP6"
+          ]
+        },
+        {
+          "title": "bumps project DataDate to latest report date",
+          "line": 58,
+          "describe": [
+            "applyDailyReportsToP6"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "src/test/setup.ts",
+      "loc": 18,
+      "intents": []
+    },
+    {
+      "file": "src/test/specs-utils.test.ts",
+      "loc": 68,
+      "intents": [
+        {
+          "title": "extracts 3-digit section from standard codes",
+          "line": 6,
+          "describe": [
+            "getSectionFromItemCode"
+          ]
+        },
+        {
+          "title": "returns null for invalid codes",
+          "line": 12,
+          "describe": [
+            "getSectionFromItemCode"
+          ]
+        },
+        {
+          "title": "indexes pages with SECTION NNN heading and NNN.01 subsection",
+          "line": 19,
+          "describe": [
+            "buildSectionPageIndex"
+          ]
+        },
+        {
+          "title": "skips cross-references without NNN.01 on the same page",
+          "line": 26,
+          "describe": [
+            "buildSectionPageIndex"
+          ]
+        },
+        {
+          "title": "skips prose-only cross-references",
+          "line": 37,
+          "describe": [
+            "buildSectionPageIndex"
+          ]
+        },
+        {
+          "title": "skips TOC pages with 5+ distinct section prefixes",
+          "line": 46,
+          "describe": [
+            "buildSectionPageIndex"
+          ]
+        },
+        {
+          "title": "skips pages with too few words",
+          "line": 53,
+          "describe": [
+            "buildSectionPageIndex"
+          ]
+        },
+        {
+          "title": "picks first valid occurrence for a section",
+          "line": 60,
+          "describe": [
+            "buildSectionPageIndex"
+          ]
+        }
+      ]
+    }
+  ]
+}

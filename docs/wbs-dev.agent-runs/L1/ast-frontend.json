@@ -1,0 +1,6981 @@
+{
+  "agent": "ast-frontend",
+  "generatedAt": "2026-05-29T17:45:05.500Z",
+  "fileCount": 118,
+  "files": [
+    {
+      "file": "src/App.tsx",
+      "loc": 146,
+      "exports": [],
+      "components": [],
+      "routes": [
+        {
+          "path": "/landing",
+          "line": 118
+        },
+        {
+          "path": "/demo",
+          "line": 119
+        },
+        {
+          "path": "/mcfa",
+          "line": 120
+        },
+        {
+          "path": "/fajar",
+          "line": 121
+        },
+        {
+          "path": "/p6-xml",
+          "line": 122
+        },
+        {
+          "path": "/mcfa/p6-xml",
+          "line": 123
+        },
+        {
+          "path": "/auth",
+          "line": 124
+        },
+        {
+          "path": "/reset-password",
+          "line": 125
+        },
+        {
+          "path": "/",
+          "line": 126
+        },
+        {
+          "path": "/settings",
+          "line": 127
+        },
+        {
+          "path": "/project/:projectId",
+          "line": 128
+        },
+        {
+          "path": "/project/:projectId/controls",
+          "line": 129
+        },
+        {
+          "path": "/admin",
+          "line": 130
+        },
+        {
+          "path": "/re-review",
+          "line": 131
+        },
+        {
+          "path": "/project/:projectId/daily-report",
+          "line": 132
+        },
+        {
+          "path": "/project/:projectId/p6-export",
+          "line": 133
+        },
+        {
+          "path": "/project/:projectId/documents",
+          "line": 134
+        },
+        {
+          "path": "*",
+          "line": 135
+        }
+      ],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "@/components/ui/toaster",
+        "@/components/ui/sonner",
+        "@/components/ui/tooltip",
+        "@tanstack/react-query",
+        "@tanstack/react-query-persist-client",
+        "react-router-dom",
+        "@/hooks/useAuth",
+        "react",
+        "./pages/Admin",
+        "./pages/Dashboard",
+        "./pages/Index",
+        "./pages/ProjectControls",
+        "./pages/Demo",
+        "./pages/McfaPitch",
+        "./pages/FajarPitch",
+        "./pages/P6XmlDemo",
+        "./pages/P6Export",
+        "./pages/ReReview",
+        "./pages/DailyReport",
+        "./pages/Auth",
+        "./pages/ResetPassword",
+        "./pages/Landing",
+        "./pages/NotFound",
+        "./pages/Documents",
+        "./pages/Settings",
+        "@/components/PwaShell",
+        "@/components/BiometricGate",
+        "@/components/NativeFirstRun",
+        "@/lib/offline/idb-persister"
+      ]
+    },
+    {
+      "file": "src/components/BiometricGate.tsx",
+      "loc": 96,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "BiometricGate",
+          "line": 16
+        }
+      ],
+      "components": [
+        {
+          "name": "BiometricGate",
+          "line": 16
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "TakeoffPro",
+          "line": 78
+        },
+        {
+          "text": "Unlock to continue",
+          "line": 79
+        },
+        {
+          "text": "Unlock",
+          "line": 84
+        },
+        {
+          "text": "Use a different account",
+          "line": 87
+        }
+      ],
+      "imports": [
+        "react",
+        "lucide-react",
+        "@/components/ui/button",
+        "@/integrations/supabase/client",
+        "@/hooks/useAuth",
+        "@/lib/native/platform",
+        "@/lib/native/biometric",
+        "sonner"
+      ]
+    },
+    {
+      "file": "src/components/ConfirmDialog.tsx",
+      "loc": 71,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "useConfirm",
+          "line": 24
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@/components/ui/alert-dialog",
+        "@/components/ui/button",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/EmptyState.tsx",
+      "loc": 78,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "EmptyState",
+          "line": 16
+        }
+      ],
+      "components": [
+        {
+          "name": "EmptyState",
+          "line": 16
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "Drop your plan set here",
+          "line": 50
+        },
+        {
+          "text": "NJTA & NJDOT construction PDFs supported",
+          "line": 53
+        },
+        {
+          "text": "Choose File",
+          "line": 57
+        }
+      ],
+      "imports": [
+        "lucide-react",
+        "react",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/GanttUploader.tsx",
+      "loc": 144,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "GanttUploader",
+          "line": 21
+        }
+      ],
+      "components": [
+        {
+          "name": "GanttUploader",
+          "line": 21
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "No activities found",
+          "line": 41,
+          "kind": "toast"
+        },
+        {
+          "text": "Try a clearer image of the Gantt chart.",
+          "line": 41,
+          "kind": "toast"
+        },
+        {
+          "text": "AI parse failed",
+          "line": 46,
+          "kind": "toast"
+        },
+        {
+          "text": "Insert failed",
+          "line": 72,
+          "kind": "toast"
+        },
+        {
+          "text": "Import schedule from Gantt photo",
+          "line": 83
+        },
+        {
+          "text": "Upload a screenshot or photo (P6, MS Project, Excel) — AI extracts WBS rows for review.",
+          "line": 86
+        },
+        {
+          "text": "AI extracted",
+          "line": 111
+        },
+        {
+          "text": "activities — review then import",
+          "line": 111
+        },
+        {
+          "text": "Discard",
+          "line": 131
+        },
+        {
+          "text": "Import",
+          "line": 133
+        }
+      ],
+      "imports": [
+        "react",
+        "@/integrations/supabase/client",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/hooks/use-toast",
+        "lucide-react",
+        "@tanstack/react-query"
+      ]
+    },
+    {
+      "file": "src/components/GpsCalibration.tsx",
+      "loc": 223,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "GpsCalibration",
+          "line": 20
+        }
+      ],
+      "components": [
+        {
+          "name": "GpsCalibration",
+          "line": 20
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "GPS CALIBRATION",
+          "line": 98
+        },
+        {
+          "text": "Control Points",
+          "line": 108
+        },
+        {
+          "text": "Capture GPS Position",
+          "line": 133
+        },
+        {
+          "text": "Lat:",
+          "line": 150
+        },
+        {
+          "text": "Lng:",
+          "line": 154
+        },
+        {
+          "text": "Accuracy:",
+          "line": 158
+        },
+        {
+          "text": "ft",
+          "line": 160
+        },
+        {
+          "text": "Poor GPS accuracy. Move to open sky if possible.",
+          "line": 167
+        },
+        {
+          "text": "Use This Position",
+          "line": 172
+        },
+        {
+          "text": "Acquiring GPS signal…",
+          "line": 178
+        },
+        {
+          "text": "Cancel",
+          "line": 182
+        },
+        {
+          "text": "Now tap the matching point on the plan sheet.",
+          "line": 192
+        },
+        {
+          "text": "Cancel",
+          "line": 195
+        },
+        {
+          "text": "control points set.",
+          "line": 204
+        },
+        {
+          "text": "Add Point",
+          "line": 210
+        },
+        {
+          "text": "Calibrate",
+          "line": 214
+        }
+      ],
+      "imports": [
+        "react",
+        "lucide-react",
+        "@/components/ui/button",
+        "@/lib/utils",
+        "@/types/project",
+        "@/lib/geo-transform",
+        "@/lib/native/geolocation"
+      ]
+    },
+    {
+      "file": "src/components/GpsTraceControls.tsx",
+      "loc": 235,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "GpsTraceControls",
+          "line": 24
+        }
+      ],
+      "components": [
+        {
+          "name": "GpsTraceControls",
+          "line": 24
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "GPS Trace",
+          "line": 183
+        },
+        {
+          "text": "pts",
+          "line": 198
+        },
+        {
+          "text": "LF",
+          "line": 201
+        },
+        {
+          "text": "SF",
+          "line": 202
+        },
+        {
+          "text": "ft",
+          "line": 208
+        },
+        {
+          "text": "Finish",
+          "line": 226
+        },
+        {
+          "text": "Cancel",
+          "line": 229
+        }
+      ],
+      "imports": [
+        "react",
+        "lucide-react",
+        "@/components/ui/button",
+        "@/lib/utils",
+        "@/types/project",
+        "@/lib/geo-transform",
+        "@/lib/geometry",
+        "@/lib/native/geolocation"
+      ]
+    },
+    {
+      "file": "src/components/GuidedTour.tsx",
+      "loc": 127,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "GuidedTour",
+          "line": 17
+        }
+      ],
+      "components": [
+        {
+          "name": "GuidedTour",
+          "line": 17
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "Back",
+          "line": 114
+        }
+      ],
+      "imports": [
+        "react",
+        "react-dom",
+        "@/components/ui/button",
+        "lucide-react",
+        "@/lib/utils",
+        "@/hooks/useTour"
+      ]
+    },
+    {
+      "file": "src/components/MobileAnnotationSheet.tsx",
+      "loc": 152,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "MobileAnnotationSheet",
+          "line": 19
+        }
+      ],
+      "components": [
+        {
+          "name": "MobileAnnotationSheet",
+          "line": 19
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "Type",
+          "line": 36
+        },
+        {
+          "text": "Calc'd Qty",
+          "line": 40
+        },
+        {
+          "text": "Depth",
+          "line": 45
+        },
+        {
+          "text": "ft",
+          "line": 46
+        },
+        {
+          "text": "Page",
+          "line": 50
+        },
+        {
+          "text": "Override Quantity",
+          "line": 57
+        },
+        {
+          "text": "Reset",
+          "line": 77
+        },
+        {
+          "text": "Location",
+          "line": 85
+        },
+        {
+          "text": "Notes",
+          "line": 96
+        },
+        {
+          "text": "Reassign Pay Item",
+          "line": 107
+        },
+        {
+          "text": "Delete",
+          "line": 136
+        },
+        {
+          "text": "Done",
+          "line": 144
+        }
+      ],
+      "imports": [
+        "lucide-react",
+        "@/components/ui/sheet",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/label",
+        "@/components/ui/select",
+        "@/types/project"
+      ]
+    },
+    {
+      "file": "src/components/MobilePayItems.tsx",
+      "loc": 272,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "MobilePayItems",
+          "line": 30
+        }
+      ],
+      "components": [
+        {
+          "name": "MobilePayItems",
+          "line": 30
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "Pay Items",
+          "line": 73
+        },
+        {
+          "text": "Import",
+          "line": 77
+        },
+        {
+          "text": "Add",
+          "line": 99
+        },
+        {
+          "text": "No pay items yet",
+          "line": 131
+        },
+        {
+          "text": "Import from the plans or add manually",
+          "line": 132
+        },
+        {
+          "text": "Section",
+          "line": 138
+        },
+        {
+          "text": "Pay Item",
+          "line": 205
+        },
+        {
+          "text": "Item Code",
+          "line": 226
+        },
+        {
+          "text": "Name",
+          "line": 230
+        },
+        {
+          "text": "Unit",
+          "line": 235
+        },
+        {
+          "text": "Unit Price ($)",
+          "line": 246
+        },
+        {
+          "text": "Color",
+          "line": 251
+        },
+        {
+          "text": "Cancel",
+          "line": 266
+        },
+        {
+          "text": "Save",
+          "line": 267
+        }
+      ],
+      "imports": [
+        "lucide-react",
+        "react",
+        "@/types/project",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/select",
+        "@/components/ui/label",
+        "@/components/ui/sheet"
+      ]
+    },
+    {
+      "file": "src/components/MobileSections.tsx",
+      "loc": 95,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "MobileSections",
+          "line": 16
+        }
+      ],
+      "components": [
+        {
+          "name": "MobileSections",
+          "line": 16
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "Sections & Pages",
+          "line": 32
+        },
+        {
+          "text": "Import TOC",
+          "line": 36
+        },
+        {
+          "text": "No PDF loaded",
+          "line": 47
+        },
+        {
+          "text": "Upload plans to see sections",
+          "line": 48
+        },
+        {
+          "text": "Upload PDF",
+          "line": 51
+        },
+        {
+          "text": "Sheet",
+          "line": 69
+        },
+        {
+          "text": "· Page",
+          "line": 69
+        },
+        {
+          "text": "Page",
+          "line": 86
+        }
+      ],
+      "imports": [
+        "lucide-react",
+        "@/types/project",
+        "@/components/ui/button"
+      ]
+    },
+    {
+      "file": "src/components/MobileTabBar.tsx",
+      "loc": 65,
+      "exports": [
+        {
+          "kind": "type",
+          "name": "MobileTab",
+          "line": 4
+        },
+        {
+          "kind": "function",
+          "name": "MobileTabBar",
+          "line": 23
+        }
+      ],
+      "components": [
+        {
+          "name": "MobileTabBar",
+          "line": 23
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "Theme",
+          "line": 59
+        }
+      ],
+      "imports": [
+        "lucide-react",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/NativeFirstRun.tsx",
+      "loc": 162,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "NativeFirstRun",
+          "line": 15
+        }
+      ],
+      "components": [
+        {
+          "name": "NativeFirstRun",
+          "line": 15
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "Welcome to TakeoffPro",
+          "line": 74
+        },
+        {
+          "text": "Quick setup to enable camera, GPS, and notifications for field work. Takes about 30 seconds.",
+          "line": 76
+        },
+        {
+          "text": "Get started",
+          "line": 79
+        },
+        {
+          "text": "Skip setup",
+          "line": 82
+        },
+        {
+          "text": "You're ready",
+          "line": 134
+        },
+        {
+          "text": "You can change any of these any time from Settings.",
+          "line": 136
+        },
+        {
+          "text": "Get to work",
+          "line": 138
+        },
+        {
+          "text": "Not now",
+          "line": 157
+        }
+      ],
+      "imports": [
+        "react",
+        "@/components/ui/button",
+        "lucide-react",
+        "@/lib/native/platform",
+        "@/lib/native/push",
+        "@/lib/native/biometric",
+        "@/hooks/useAuth",
+        "sonner"
+      ]
+    },
+    {
+      "file": "src/components/NavLink.tsx",
+      "loc": 29,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react-router-dom",
+        "react",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/NotificationBell.tsx",
+      "loc": 100,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "NotificationBell",
+          "line": 36
+        }
+      ],
+      "components": [
+        {
+          "name": "NotificationBell",
+          "line": 36
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "Notifications",
+          "line": 54
+        },
+        {
+          "text": "Mark all read",
+          "line": 57
+        },
+        {
+          "text": "No notifications yet.",
+          "line": 63
+        }
+      ],
+      "imports": [
+        "react-router-dom",
+        "lucide-react",
+        "@/components/ui/button",
+        "@/components/ui/popover",
+        "@/hooks/useNotifications",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ProjectSidebar.tsx",
+      "loc": 588,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "ProjectSidebar",
+          "line": 50
+        }
+      ],
+      "components": [
+        {
+          "name": "ProjectSidebar",
+          "line": 50
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "TakeoffPro",
+          "line": 88
+        },
+        {
+          "text": "Project",
+          "line": 100
+        },
+        {
+          "text": "Close Project",
+          "line": 117
+        },
+        {
+          "text": "Import Table of Contents",
+          "line": 159
+        },
+        {
+          "text": "Sections",
+          "line": 173
+        },
+        {
+          "text": "Pages",
+          "line": 197
+        },
+        {
+          "text": "Page",
+          "line": 209
+        },
+        {
+          "text": "Pay Items",
+          "line": 223
+        },
+        {
+          "text": "Import Pay Items",
+          "line": 235
+        },
+        {
+          "text": "Add Item",
+          "line": 269
+        },
+        {
+          "text": "Pay Item",
+          "line": 274
+        },
+        {
+          "text": "Item Code",
+          "line": 304
+        },
+        {
+          "text": "Name",
+          "line": 313
+        },
+        {
+          "text": "Unit",
+          "line": 323
+        },
+        {
+          "text": "Unit Price ($)",
+          "line": 336
+        },
+        {
+          "text": "Contract Quantity",
+          "line": 346
+        },
+        {
+          "text": "Color",
+          "line": 356
+        },
+        {
+          "text": "Non-drawable item — quantity must be entered manually.",
+          "line": 372
+        },
+        {
+          "text": "Cancel",
+          "line": 376
+        },
+        {
+          "text": "Save",
+          "line": 377
+        },
+        {
+          "text": "Page",
+          "line": 424
+        },
+        {
+          "text": "ann ·",
+          "line": 559
+        }
+      ],
+      "imports": [
+        "lucide-react",
+        "react",
+        "@/types/project",
+        "@/components/ui/sidebar",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/select",
+        "@/components/ui/dialog",
+        "@/components/ui/label"
+      ]
+    },
+    {
+      "file": "src/components/PwaShell.tsx",
+      "loc": 172,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "PwaShell",
+          "line": 34
+        }
+      ],
+      "components": [
+        {
+          "name": "PwaShell",
+          "line": 34
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "Offline — viewing cached data",
+          "line": 98
+        },
+        {
+          "text": "Install TakeoffPro",
+          "line": 109
+        },
+        {
+          "text": "Add it to your home screen for full-screen access and faster loads in the field.",
+          "line": 111
+        },
+        {
+          "text": "Install",
+          "line": 115
+        },
+        {
+          "text": "Not now",
+          "line": 118
+        },
+        {
+          "text": "Install on iPhone / iPad",
+          "line": 136
+        },
+        {
+          "text": "Tap the Share button in Safari, then",
+          "line": 138
+        },
+        {
+          "text": "Add to Home Screen",
+          "line": 138
+        },
+        {
+          "text": "to install TakeoffPro.",
+          "line": 138
+        },
+        {
+          "text": "Got it",
+          "line": 142
+        },
+        {
+          "text": "Update available",
+          "line": 156
+        },
+        {
+          "text": "A new version of TakeoffPro is ready.",
+          "line": 157
+        },
+        {
+          "text": "Reload",
+          "line": 160
+        },
+        {
+          "text": "Later",
+          "line": 163
+        }
+      ],
+      "imports": [
+        "react",
+        "lucide-react",
+        "@/components/ui/button",
+        "@/lib/pwa",
+        "@/hooks/useNetworkStatus",
+        "@/lib/offline/db",
+        "@/components/SyncPanel"
+      ]
+    },
+    {
+      "file": "src/components/ReRejectDialog.tsx",
+      "loc": 61,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "ReRejectDialog",
+          "line": 18
+        }
+      ],
+      "components": [
+        {
+          "name": "ReRejectDialog",
+          "line": 18
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "Reject report",
+          "line": 33
+        },
+        {
+          "text": "Reason (required)",
+          "line": 38
+        },
+        {
+          "text": "The inspector will see this and can edit the report and resubmit.",
+          "line": 48
+        },
+        {
+          "text": "Cancel",
+          "line": 52
+        }
+      ],
+      "imports": [
+        "react",
+        "@/components/ui/button",
+        "@/components/ui/dialog",
+        "@/components/ui/textarea",
+        "@/components/ui/label",
+        "lucide-react"
+      ]
+    },
+    {
+      "file": "src/components/ReReviewCard.tsx",
+      "loc": 239,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "ReReviewCard",
+          "line": 30
+        }
+      ],
+      "components": [
+        {
+          "name": "ReReviewCard",
+          "line": 30
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "SUBMITTED",
+          "line": 56
+        },
+        {
+          "text": "APPROVED",
+          "line": 57
+        },
+        {
+          "text": "REJECTED",
+          "line": 58
+        },
+        {
+          "text": "DRAFT",
+          "line": 59
+        },
+        {
+          "text": "submitted",
+          "line": 72
+        },
+        {
+          "text": "No pay-item quantities in this report.",
+          "line": 82
+        },
+        {
+          "text": "Pay item",
+          "line": 88
+        },
+        {
+          "text": "Today",
+          "line": 89
+        },
+        {
+          "text": "Δ vs prior",
+          "line": 90
+        },
+        {
+          "text": "Prior cumul.",
+          "line": 91
+        },
+        {
+          "text": "New cumul.",
+          "line": 92
+        },
+        {
+          "text": "vs Contract",
+          "line": 93
+        },
+        {
+          "text": "History & comments",
+          "line": 135
+        },
+        {
+          "text": "Prior submissions",
+          "line": 145
+        },
+        {
+          "text": "line(s)",
+          "line": 149
+        },
+        {
+          "text": "Comments",
+          "line": 159
+        },
+        {
+          "text": "Loading…",
+          "line": 161
+        },
+        {
+          "text": "No comments yet.",
+          "line": 163
+        },
+        {
+          "text": "Reject",
+          "line": 205
+        },
+        {
+          "text": "Approved by",
+          "line": 219
+        },
+        {
+          "text": "Rejected by",
+          "line": 224
+        }
+      ],
+      "imports": [
+        "react",
+        "@/components/ui/button",
+        "@/components/ui/badge",
+        "@/components/ui/textarea",
+        "lucide-react",
+        "./ReRejectDialog",
+        "@/hooks/useReReviewQueue",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/SpecViewer.tsx",
+      "loc": 697,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "SpecViewer",
+          "line": 38
+        }
+      ],
+      "components": [
+        {
+          "name": "SpecViewer",
+          "line": 38
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "Section",
+          "line": 482
+        },
+        {
+          "text": "Viewing standard specifications for",
+          "line": 486
+        },
+        {
+          "text": "Starts on page",
+          "line": 494
+        },
+        {
+          "text": "Go to start",
+          "line": 559
+        },
+        {
+          "text": "No specs PDF loaded.",
+          "line": 619
+        },
+        {
+          "text": "Section",
+          "line": 628
+        },
+        {
+          "text": "not found automatically — use search to locate it.",
+          "line": 628
+        }
+      ],
+      "imports": [
+        "react",
+        "pdfjs-dist",
+        "@/components/ui/sheet",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/badge",
+        "@/components/ui/alert",
+        "lucide-react",
+        "@/hooks/use-mobile"
+      ]
+    },
+    {
+      "file": "src/components/SummaryPanel.tsx",
+      "loc": 279,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "SummaryPanel",
+          "line": 38
+        }
+      ],
+      "components": [
+        {
+          "name": "SummaryPanel",
+          "line": 38
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "Quantity Takeoff Summary",
+          "line": 127
+        },
+        {
+          "text": "CSV",
+          "line": 134
+        },
+        {
+          "text": "PDF",
+          "line": 137
+        },
+        {
+          "text": "Daily",
+          "line": 159
+        },
+        {
+          "text": "No measurements yet. Draw annotations on the plans to see quantities here.",
+          "line": 175
+        },
+        {
+          "text": "Item #",
+          "line": 182
+        },
+        {
+          "text": "Description",
+          "line": 183
+        },
+        {
+          "text": "Unit",
+          "line": 184
+        },
+        {
+          "text": "Measured",
+          "line": 185
+        },
+        {
+          "text": "Contract",
+          "line": 186
+        },
+        {
+          "text": "Var %",
+          "line": 187
+        },
+        {
+          "text": "Price",
+          "line": 188
+        },
+        {
+          "text": "Extended",
+          "line": 189
+        },
+        {
+          "text": "Section",
+          "line": 206
+        },
+        {
+          "text": "Grand Total",
+          "line": 254
+        }
+      ],
+      "imports": [
+        "lucide-react",
+        "react",
+        "date-fns",
+        "@/types/project",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/popover",
+        "@/components/ui/calendar",
+        "@/lib/geometry",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/SyncPanel.tsx",
+      "loc": 107,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "SyncPanel",
+          "line": 16
+        }
+      ],
+      "components": [
+        {
+          "name": "SyncPanel",
+          "line": 16
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "pending",
+          "line": 30
+        },
+        {
+          "text": "Sync queue",
+          "line": 49
+        },
+        {
+          "text": "pending",
+          "line": 54
+        },
+        {
+          "text": "failed",
+          "line": 55
+        },
+        {
+          "text": "conflict",
+          "line": 56
+        },
+        {
+          "text": "Sync now",
+          "line": 61
+        },
+        {
+          "text": "All changes synced.",
+          "line": 68
+        },
+        {
+          "text": "id:",
+          "line": 84
+        },
+        {
+          "text": "Retry",
+          "line": 91
+        },
+        {
+          "text": "Discard",
+          "line": 96
+        }
+      ],
+      "imports": [
+        "react",
+        "@/components/ui/sheet",
+        "@/components/ui/button",
+        "@/components/ui/badge",
+        "lucide-react",
+        "@/hooks/useOutbox",
+        "@/lib/offline/sync",
+        "@/lib/offline/outbox",
+        "@/hooks/useNetworkStatus"
+      ]
+    },
+    {
+      "file": "src/components/TeamManager.tsx",
+      "loc": 256,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "TeamManager",
+          "line": 37
+        }
+      ],
+      "components": [
+        {
+          "name": "TeamManager",
+          "line": 37
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "Error",
+          "line": 81,
+          "kind": "toast"
+        },
+        {
+          "text": "Already a member",
+          "line": 124,
+          "kind": "toast"
+        },
+        {
+          "text": "Member added",
+          "line": 130,
+          "kind": "toast"
+        },
+        {
+          "text": "Error",
+          "line": 135,
+          "kind": "toast"
+        },
+        {
+          "text": "Member removed",
+          "line": 149,
+          "kind": "toast"
+        },
+        {
+          "text": "Error",
+          "line": 152,
+          "kind": "toast"
+        },
+        {
+          "text": "Team —",
+          "line": 162
+        },
+        {
+          "text": "Add Member",
+          "line": 169
+        },
+        {
+          "text": "Inspector",
+          "line": 185
+        },
+        {
+          "text": "Manager",
+          "line": 186
+        },
+        {
+          "text": "Resident Engineer",
+          "line": 187
+        },
+        {
+          "text": "Searching…",
+          "line": 194
+        },
+        {
+          "text": "Add",
+          "line": 207
+        },
+        {
+          "text": "No users found. They need to be invited to the organization first.",
+          "line": 215
+        },
+        {
+          "text": "Current Members (",
+          "line": 221
+        },
+        {
+          "text": "No team members assigned yet.",
+          "line": 227
+        }
+      ],
+      "imports": [
+        "react",
+        "@/integrations/supabase/client",
+        "@/hooks/use-toast",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/badge",
+        "@/components/ui/sheet",
+        "@/components/ui/select",
+        "lucide-react",
+        "@/components/ConfirmDialog"
+      ]
+    },
+    {
+      "file": "src/components/WelcomeCarousel.tsx",
+      "loc": 161,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "WelcomeCarousel",
+          "line": 60
+        }
+      ],
+      "components": [
+        {
+          "name": "WelcomeCarousel",
+          "line": 60
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "Skip",
+          "line": 123
+        },
+        {
+          "text": "Get Started",
+          "line": 142
+        }
+      ],
+      "imports": [
+        "react",
+        "@/components/ui/button",
+        "@/components/ui/dialog",
+        "lucide-react",
+        "@/lib/utils",
+        "@/integrations/supabase/client"
+      ]
+    },
+    {
+      "file": "src/components/ui/accordion.tsx",
+      "loc": 53,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@radix-ui/react-accordion",
+        "lucide-react",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/alert-dialog.tsx",
+      "loc": 105,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@radix-ui/react-alert-dialog",
+        "@/lib/utils",
+        "@/components/ui/button"
+      ]
+    },
+    {
+      "file": "src/components/ui/alert.tsx",
+      "loc": 44,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "class-variance-authority",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/aspect-ratio.tsx",
+      "loc": 6,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "@radix-ui/react-aspect-ratio"
+      ]
+    },
+    {
+      "file": "src/components/ui/avatar.tsx",
+      "loc": 39,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@radix-ui/react-avatar",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/badge.tsx",
+      "loc": 30,
+      "exports": [
+        {
+          "kind": "interface",
+          "name": "BadgeProps",
+          "line": 23
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "class-variance-authority",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/breadcrumb.tsx",
+      "loc": 91,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "More",
+          "line": 77
+        }
+      ],
+      "imports": [
+        "react",
+        "@radix-ui/react-slot",
+        "lucide-react",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/button.tsx",
+      "loc": 48,
+      "exports": [
+        {
+          "kind": "interface",
+          "name": "ButtonProps",
+          "line": 33
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@radix-ui/react-slot",
+        "class-variance-authority",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/calendar.tsx",
+      "loc": 55,
+      "exports": [
+        {
+          "kind": "type",
+          "name": "CalendarProps",
+          "line": 8
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "lucide-react",
+        "react-day-picker",
+        "@/lib/utils",
+        "@/components/ui/button"
+      ]
+    },
+    {
+      "file": "src/components/ui/card.tsx",
+      "loc": 44,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/carousel.tsx",
+      "loc": 225,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "Previous slide",
+          "line": 189
+        },
+        {
+          "text": "Next slide",
+          "line": 217
+        }
+      ],
+      "imports": [
+        "react",
+        "embla-carousel-react",
+        "lucide-react",
+        "@/lib/utils",
+        "@/components/ui/button"
+      ]
+    },
+    {
+      "file": "src/components/ui/chart.tsx",
+      "loc": 304,
+      "exports": [
+        {
+          "kind": "type",
+          "name": "ChartConfig",
+          "line": 9
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "recharts",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/checkbox.tsx",
+      "loc": 27,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@radix-ui/react-checkbox",
+        "lucide-react",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/collapsible.tsx",
+      "loc": 10,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "@radix-ui/react-collapsible"
+      ]
+    },
+    {
+      "file": "src/components/ui/command.tsx",
+      "loc": 133,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@radix-ui/react-dialog",
+        "cmdk",
+        "lucide-react",
+        "@/lib/utils",
+        "@/components/ui/dialog"
+      ]
+    },
+    {
+      "file": "src/components/ui/context-menu.tsx",
+      "loc": 179,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@radix-ui/react-context-menu",
+        "lucide-react",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/dialog.tsx",
+      "loc": 96,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "Close",
+          "line": 47
+        }
+      ],
+      "imports": [
+        "react",
+        "@radix-ui/react-dialog",
+        "lucide-react",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/drawer.tsx",
+      "loc": 88,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "vaul",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/dropdown-menu.tsx",
+      "loc": 180,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@radix-ui/react-dropdown-menu",
+        "lucide-react",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/form.tsx",
+      "loc": 130,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@radix-ui/react-label",
+        "@radix-ui/react-slot",
+        "react-hook-form",
+        "@/lib/utils",
+        "@/components/ui/label"
+      ]
+    },
+    {
+      "file": "src/components/ui/hover-card.tsx",
+      "loc": 28,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@radix-ui/react-hover-card",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/input-otp.tsx",
+      "loc": 62,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "input-otp",
+        "lucide-react",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/input.tsx",
+      "loc": 23,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/label.tsx",
+      "loc": 18,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@radix-ui/react-label",
+        "class-variance-authority",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/menubar.tsx",
+      "loc": 208,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@radix-ui/react-menubar",
+        "lucide-react",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/navigation-menu.tsx",
+      "loc": 121,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@radix-ui/react-navigation-menu",
+        "class-variance-authority",
+        "lucide-react",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/pagination.tsx",
+      "loc": 82,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "Previous",
+          "line": 52
+        },
+        {
+          "text": "Next",
+          "line": 59
+        },
+        {
+          "text": "More pages",
+          "line": 68
+        }
+      ],
+      "imports": [
+        "react",
+        "lucide-react",
+        "@/lib/utils",
+        "@/components/ui/button"
+      ]
+    },
+    {
+      "file": "src/components/ui/popover.tsx",
+      "loc": 30,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@radix-ui/react-popover",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/progress.tsx",
+      "loc": 24,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@radix-ui/react-progress",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/radio-group.tsx",
+      "loc": 37,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@radix-ui/react-radio-group",
+        "lucide-react",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/resizable.tsx",
+      "loc": 38,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "lucide-react",
+        "react-resizable-panels",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/scroll-area.tsx",
+      "loc": 39,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@radix-ui/react-scroll-area",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/select.tsx",
+      "loc": 144,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@radix-ui/react-select",
+        "lucide-react",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/separator.tsx",
+      "loc": 21,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@radix-ui/react-separator",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/sheet.tsx",
+      "loc": 108,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "Close",
+          "line": 62
+        }
+      ],
+      "imports": [
+        "@radix-ui/react-dialog",
+        "class-variance-authority",
+        "lucide-react",
+        "react",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/sidebar.tsx",
+      "loc": 638,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "Toggle Sidebar",
+          "line": 237
+        }
+      ],
+      "imports": [
+        "react",
+        "@radix-ui/react-slot",
+        "class-variance-authority",
+        "lucide-react",
+        "@/hooks/use-mobile",
+        "@/lib/utils",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/separator",
+        "@/components/ui/sheet",
+        "@/components/ui/skeleton",
+        "@/components/ui/tooltip"
+      ]
+    },
+    {
+      "file": "src/components/ui/skeleton.tsx",
+      "loc": 8,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/slider.tsx",
+      "loc": 24,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@radix-ui/react-slider",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/sonner.tsx",
+      "loc": 28,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "next-themes",
+        "sonner"
+      ]
+    },
+    {
+      "file": "src/components/ui/switch.tsx",
+      "loc": 28,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@radix-ui/react-switch",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/table.tsx",
+      "loc": 73,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/tabs.tsx",
+      "loc": 54,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@radix-ui/react-tabs",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/textarea.tsx",
+      "loc": 22,
+      "exports": [
+        {
+          "kind": "interface",
+          "name": "TextareaProps",
+          "line": 5
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/toast.tsx",
+      "loc": 112,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@radix-ui/react-toast",
+        "class-variance-authority",
+        "lucide-react",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/toaster.tsx",
+      "loc": 25,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "Toaster",
+          "line": 4
+        }
+      ],
+      "components": [
+        {
+          "name": "Toaster",
+          "line": 4
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "@/hooks/use-toast",
+        "@/components/ui/toast"
+      ]
+    },
+    {
+      "file": "src/components/ui/toggle-group.tsx",
+      "loc": 50,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@radix-ui/react-toggle-group",
+        "class-variance-authority",
+        "@/lib/utils",
+        "@/components/ui/toggle"
+      ]
+    },
+    {
+      "file": "src/components/ui/toggle.tsx",
+      "loc": 38,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@radix-ui/react-toggle",
+        "class-variance-authority",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/tooltip.tsx",
+      "loc": 29,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@radix-ui/react-tooltip",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/components/ui/use-toast.ts",
+      "loc": 4,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "@/hooks/use-toast"
+      ]
+    },
+    {
+      "file": "src/hooks/use-mobile.tsx",
+      "loc": 20,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "useIsMobile",
+          "line": 5
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react"
+      ]
+    },
+    {
+      "file": "src/hooks/use-toast.ts",
+      "loc": 187,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "reducer",
+          "line": 71
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [
+        {
+          "discriminator": "action.type",
+          "arms": [
+            "\"ADD_TOAST\"",
+            "\"UPDATE_TOAST\"",
+            "\"DISMISS_TOAST\"",
+            "\"REMOVE_TOAST\""
+          ],
+          "line": 72
+        }
+      ],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@/components/ui/toast"
+      ]
+    },
+    {
+      "file": "src/hooks/useAuth.tsx",
+      "loc": 118,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "AuthProvider",
+          "line": 23
+        },
+        {
+          "kind": "function",
+          "name": "useAuth",
+          "line": 113
+        }
+      ],
+      "components": [
+        {
+          "name": "AuthProvider",
+          "line": 23
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@/integrations/supabase/client",
+        "@supabase/supabase-js"
+      ]
+    },
+    {
+      "file": "src/hooks/useNetworkStatus.ts",
+      "loc": 27,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "useNetworkStatus",
+          "line": 8
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react"
+      ]
+    },
+    {
+      "file": "src/hooks/useNotifications.ts",
+      "loc": 75,
+      "exports": [
+        {
+          "kind": "type",
+          "name": "NotificationKind",
+          "line": 6
+        },
+        {
+          "kind": "interface",
+          "name": "NotificationRow",
+          "line": 8
+        },
+        {
+          "kind": "function",
+          "name": "useNotifications",
+          "line": 18
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "@tanstack/react-query",
+        "react",
+        "@/integrations/supabase/client",
+        "@/hooks/useAuth"
+      ]
+    },
+    {
+      "file": "src/hooks/useOutbox.ts",
+      "loc": 21,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "useOutbox",
+          "line": 5
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react",
+        "@/lib/offline/outbox"
+      ]
+    },
+    {
+      "file": "src/hooks/usePayItemActivityMap.ts",
+      "loc": 72,
+      "exports": [
+        {
+          "kind": "interface",
+          "name": "PayItemRow",
+          "line": 5
+        },
+        {
+          "kind": "function",
+          "name": "usePayItemActivityMap",
+          "line": 15
+        },
+        {
+          "kind": "function",
+          "name": "useUpdatePayItemMapping",
+          "line": 32
+        },
+        {
+          "kind": "function",
+          "name": "useBulkAutoMap",
+          "line": 50
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "Save failed",
+          "line": 45,
+          "kind": "toast"
+        },
+        {
+          "text": "Auto-map failed",
+          "line": 69,
+          "kind": "toast"
+        }
+      ],
+      "imports": [
+        "@tanstack/react-query",
+        "@/integrations/supabase/client",
+        "@/hooks/use-toast"
+      ]
+    },
+    {
+      "file": "src/hooks/useTheme.ts",
+      "loc": 20,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "useTheme",
+          "line": 3
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react"
+      ]
+    },
+    {
+      "file": "src/hooks/useTour.ts",
+      "loc": 46,
+      "exports": [
+        {
+          "kind": "interface",
+          "name": "TourStep",
+          "line": 3
+        },
+        {
+          "kind": "function",
+          "name": "useTour",
+          "line": 10
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react"
+      ]
+    },
+    {
+      "file": "src/integrations/supabase/client.ts",
+      "loc": 17,
+      "exports": [
+        {
+          "kind": "const",
+          "name": "supabase",
+          "line": 11
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "@supabase/supabase-js",
+        "./types"
+      ]
+    },
+    {
+      "file": "src/integrations/supabase/types.ts",
+      "loc": 1451,
+      "exports": [
+        {
+          "kind": "type",
+          "name": "Json",
+          "line": 1
+        },
+        {
+          "kind": "type",
+          "name": "Database",
+          "line": 9
+        },
+        {
+          "kind": "type",
+          "name": "Tables",
+          "line": 1330
+        },
+        {
+          "kind": "type",
+          "name": "TablesInsert",
+          "line": 1359
+        },
+        {
+          "kind": "type",
+          "name": "TablesUpdate",
+          "line": 1384
+        },
+        {
+          "kind": "type",
+          "name": "Enums",
+          "line": 1409
+        },
+        {
+          "kind": "type",
+          "name": "CompositeTypes",
+          "line": 1426
+        },
+        {
+          "kind": "const",
+          "name": "Constants",
+          "line": 1443
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": []
+    },
+    {
+      "file": "src/lib/approved-quantities.ts",
+      "loc": 70,
+      "exports": [
+        {
+          "kind": "interface",
+          "name": "ApprovedTotal",
+          "line": 8
+        },
+        {
+          "kind": "function",
+          "name": "loadApprovedTotalsByPayItem",
+          "line": 20
+        },
+        {
+          "kind": "function",
+          "name": "loadPendingReviewCounts",
+          "line": 55
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "@/integrations/supabase/client"
+      ]
+    },
+    {
+      "file": "src/lib/daily-report-snapshot.ts",
+      "loc": 140,
+      "exports": [
+        {
+          "kind": "interface",
+          "name": "SnapshotItem",
+          "line": 4
+        },
+        {
+          "kind": "interface",
+          "name": "RawAnnotationInput",
+          "line": 17
+        },
+        {
+          "kind": "interface",
+          "name": "RawPayItemInput",
+          "line": 27
+        },
+        {
+          "kind": "function",
+          "name": "annotationQty",
+          "line": 36
+        },
+        {
+          "kind": "function",
+          "name": "buildSnapshotFromInputs",
+          "line": 54
+        },
+        {
+          "kind": "function",
+          "name": "buildDailyReportSnapshot",
+          "line": 98
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "@/integrations/supabase/client",
+        "@/lib/geometry"
+      ]
+    },
+    {
+      "file": "src/lib/export-utils.ts",
+      "loc": 403,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "exportCsv",
+          "line": 93
+        },
+        {
+          "kind": "function",
+          "name": "exportApprovedCsv",
+          "line": 101
+        },
+        {
+          "kind": "function",
+          "name": "exportPdfReport",
+          "line": 194
+        },
+        {
+          "kind": "function",
+          "name": "exportApprovedPdfReport",
+          "line": 207
+        },
+        {
+          "kind": "function",
+          "name": "exportInspectorDaily",
+          "line": 229
+        },
+        {
+          "kind": "function",
+          "name": "exportApprovedInspectorDaily",
+          "line": 318
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "@/types/project",
+        "xlsx",
+        "@/lib/geometry",
+        "@/integrations/supabase/client",
+        "@/lib/approved-quantities",
+        "@/lib/native/filesystem"
+      ]
+    },
+    {
+      "file": "src/lib/p6xml/apply-progress.ts",
+      "loc": 124,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "applyDailyReportsToP6",
+          "line": 36
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "./types"
+      ]
+    },
+    {
+      "file": "src/lib/p6xml/build-from-project.ts",
+      "loc": 174,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "buildPmxmlFromProject",
+          "line": 97
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "@/lib/schedule/types"
+      ]
+    },
+    {
+      "file": "src/lib/p6xml/load-approved.ts",
+      "loc": 69,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "loadApprovedDailyReports",
+          "line": 21
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "@/integrations/supabase/client",
+        "./types"
+      ]
+    },
+    {
+      "file": "src/lib/p6xml/parser.ts",
+      "loc": 70,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "parseP6Xml",
+          "line": 21
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "./types"
+      ]
+    },
+    {
+      "file": "src/lib/p6xml/sample.ts",
+      "loc": 99,
+      "exports": [
+        {
+          "kind": "const",
+          "name": "SAMPLE_P6_XML",
+          "line": 6
+        },
+        {
+          "kind": "const",
+          "name": "SAMPLE_DAILY_REPORTS",
+          "line": 91
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "./types"
+      ]
+    },
+    {
+      "file": "src/lib/p6xml/serializer.ts",
+      "loc": 27,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "serializeP6Xml",
+          "line": 6
+        },
+        {
+          "kind": "function",
+          "name": "downloadP6Xml",
+          "line": 15
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "./types"
+      ]
+    },
+    {
+      "file": "src/lib/p6xml/types.ts",
+      "loc": 82,
+      "exports": [
+        {
+          "kind": "type",
+          "name": "P6Status",
+          "line": 5
+        },
+        {
+          "kind": "type",
+          "name": "P6PctType",
+          "line": 6
+        },
+        {
+          "kind": "interface",
+          "name": "P6ProjectMeta",
+          "line": 8
+        },
+        {
+          "kind": "interface",
+          "name": "P6Activity",
+          "line": 17
+        },
+        {
+          "kind": "interface",
+          "name": "P6Tables",
+          "line": 34
+        },
+        {
+          "kind": "interface",
+          "name": "ApprovedDailyReport",
+          "line": 46
+        },
+        {
+          "kind": "interface",
+          "name": "ActivityChange",
+          "line": 63
+        },
+        {
+          "kind": "interface",
+          "name": "ApplyResult",
+          "line": 77
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": []
+    },
+    {
+      "file": "src/lib/pdf-utils.ts",
+      "loc": 591,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "loadPdf",
+          "line": 8
+        },
+        {
+          "kind": "function",
+          "name": "loadPdfFromUrl",
+          "line": 14
+        },
+        {
+          "kind": "function",
+          "name": "loadPdfFromBlob",
+          "line": 19
+        },
+        {
+          "kind": "function",
+          "name": "renderPage",
+          "line": 25
+        },
+        {
+          "kind": "function",
+          "name": "extractTextFromRegion",
+          "line": 43
+        },
+        {
+          "kind": "function",
+          "name": "getPageDimensions",
+          "line": 195
+        },
+        {
+          "kind": "function",
+          "name": "extractPayItemsFromPage",
+          "line": 278
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [
+        {
+          "discriminator": "assignedCol",
+          "arms": [
+            "'itemNo'",
+            "'unitCode'",
+            "'description'",
+            "'unit'",
+            "'quantity'"
+          ],
+          "line": 514
+        }
+      ],
+      "jsxStrings": [],
+      "imports": [
+        "pdfjs-dist",
+        "@/types/project"
+      ]
+    },
+    {
+      "file": "src/lib/pwa.ts",
+      "loc": 80,
+      "exports": [
+        {
+          "kind": "interface",
+          "name": "SwHandles",
+          "line": 9
+        },
+        {
+          "kind": "function",
+          "name": "shouldRegisterSW",
+          "line": 32
+        },
+        {
+          "kind": "function",
+          "name": "unregisterAllSW",
+          "line": 47
+        },
+        {
+          "kind": "function",
+          "name": "registerSWWithUpdates",
+          "line": 53
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": []
+    },
+    {
+      "file": "src/lib/specs-utils.ts",
+      "loc": 180,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "extractAllText",
+          "line": 7
+        },
+        {
+          "kind": "function",
+          "name": "buildSectionPageIndex",
+          "line": 56
+        },
+        {
+          "kind": "function",
+          "name": "getSectionFromItemCode",
+          "line": 175
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "pdfjs-dist"
+      ]
+    },
+    {
+      "file": "src/lib/storage.ts",
+      "loc": 51,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "getProjects",
+          "line": 8
+        },
+        {
+          "kind": "function",
+          "name": "saveProject",
+          "line": 15
+        },
+        {
+          "kind": "function",
+          "name": "deleteProject",
+          "line": 24
+        },
+        {
+          "kind": "function",
+          "name": "getPayItems",
+          "line": 29
+        },
+        {
+          "kind": "function",
+          "name": "savePayItems",
+          "line": 36
+        },
+        {
+          "kind": "function",
+          "name": "getActiveProjectId",
+          "line": 40
+        },
+        {
+          "kind": "function",
+          "name": "setActiveProjectId",
+          "line": 44
+        },
+        {
+          "kind": "function",
+          "name": "clearActiveProject",
+          "line": 48
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "@/types/project"
+      ]
+    },
+    {
+      "file": "src/lib/utils.ts",
+      "loc": 7,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "cn",
+          "line": 4
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "file": "src/main.tsx",
+      "loc": 13,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": [
+        "react-dom/client",
+        "./App.tsx",
+        "./index.css",
+        "@/lib/offline/sync",
+        "@/lib/native/app-state",
+        "@/lib/native/background-sync"
+      ]
+    },
+    {
+      "file": "src/pages/Admin.tsx",
+      "loc": 532,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "Admin",
+          "line": 54
+        }
+      ],
+      "components": [
+        {
+          "name": "Admin",
+          "line": 54
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "Error loading data",
+          "line": 105,
+          "kind": "toast"
+        },
+        {
+          "text": "Invitation sent",
+          "line": 128,
+          "kind": "toast"
+        },
+        {
+          "text": "Error",
+          "line": 134,
+          "kind": "toast"
+        },
+        {
+          "text": "Role already assigned",
+          "line": 144,
+          "kind": "toast"
+        },
+        {
+          "text": "Error",
+          "line": 146,
+          "kind": "toast"
+        },
+        {
+          "text": "Role added",
+          "line": 150,
+          "kind": "toast"
+        },
+        {
+          "text": "Error",
+          "line": 161,
+          "kind": "toast"
+        },
+        {
+          "text": "Role removed",
+          "line": 164,
+          "kind": "toast"
+        },
+        {
+          "text": "Already assigned",
+          "line": 177,
+          "kind": "toast"
+        },
+        {
+          "text": "Error",
+          "line": 179,
+          "kind": "toast"
+        },
+        {
+          "text": "Inspector assigned",
+          "line": 183,
+          "kind": "toast"
+        },
+        {
+          "text": "Error",
+          "line": 192,
+          "kind": "toast"
+        },
+        {
+          "text": "Member removed",
+          "line": 195,
+          "kind": "toast"
+        },
+        {
+          "text": "Admin Panel",
+          "line": 226
+        },
+        {
+          "text": "Invite Member",
+          "line": 229
+        },
+        {
+          "text": "Invitations",
+          "line": 243
+        },
+        {
+          "text": "pending",
+          "line": 246
+        },
+        {
+          "text": "Invited as",
+          "line": 257
+        },
+        {
+          "text": "Accepted",
+          "line": 262
+        },
+        {
+          "text": "Pending",
+          "line": 267
+        },
+        {
+          "text": "Invitation resent",
+          "line": 281,
+          "kind": "toast"
+        },
+        {
+          "text": "Error",
+          "line": 283,
+          "kind": "toast"
+        },
+        {
+          "text": "Error",
+          "line": 303,
+          "kind": "toast"
+        },
+        {
+          "text": "Invitation deleted",
+          "line": 305,
+          "kind": "toast"
+        },
+        {
+          "text": "Users & Roles",
+          "line": 324
+        },
+        {
+          "text": "No roles",
+          "line": 359
+        },
+        {
+          "text": "Project Assignments",
+          "line": 387
+        },
+        {
+          "text": "No projects yet.",
+          "line": 392
+        },
+        {
+          "text": "Assign",
+          "line": 413
+        },
+        {
+          "text": "No members assigned",
+          "line": 439
+        },
+        {
+          "text": "Invite Team Member",
+          "line": 453
+        },
+        {
+          "text": "Email Address",
+          "line": 457
+        },
+        {
+          "text": "Role",
+          "line": 467
+        },
+        {
+          "text": "Inspector",
+          "line": 473
+        },
+        {
+          "text": "Project Manager",
+          "line": 474
+        },
+        {
+          "text": "Admin",
+          "line": 475
+        },
+        {
+          "text": "Cancel",
+          "line": 486
+        },
+        {
+          "text": "Send Invite",
+          "line": 489
+        },
+        {
+          "text": "Assign to",
+          "line": 499
+        },
+        {
+          "text": "Cancel",
+          "line": 520
+        },
+        {
+          "text": "Assign",
+          "line": 523
+        }
+      ],
+      "imports": [
+        "react",
+        "react-router-dom",
+        "@/integrations/supabase/client",
+        "@/hooks/useAuth",
+        "@/hooks/useTheme",
+        "@/hooks/use-toast",
+        "@/components/ui/button",
+        "@/components/ui/badge",
+        "@/components/ui/input",
+        "@/components/ui/label",
+        "@/components/ui/select",
+        "@/components/ui/dialog",
+        "lucide-react",
+        "@/lib/utils",
+        "@/components/ConfirmDialog"
+      ]
+    },
+    {
+      "file": "src/pages/Auth.tsx",
+      "loc": 215,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "Auth",
+          "line": 12
+        }
+      ],
+      "components": [
+        {
+          "name": "Auth",
+          "line": 12
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "Welcome!",
+          "line": 48,
+          "kind": "toast"
+        },
+        {
+          "text": "Your role has been assigned.",
+          "line": 48,
+          "kind": "toast"
+        },
+        {
+          "text": "Email mismatch",
+          "line": 51,
+          "kind": "toast"
+        },
+        {
+          "text": "This invitation was sent to a different email.",
+          "line": 51,
+          "kind": "toast"
+        },
+        {
+          "text": "Invalid invitation",
+          "line": 53,
+          "kind": "toast"
+        },
+        {
+          "text": "This invitation link has expired or already been used.",
+          "line": 53,
+          "kind": "toast"
+        },
+        {
+          "text": "Error",
+          "line": 56,
+          "kind": "toast"
+        },
+        {
+          "text": "Check your email",
+          "line": 75,
+          "kind": "toast"
+        },
+        {
+          "text": "We sent you a password reset link.",
+          "line": 75,
+          "kind": "toast"
+        },
+        {
+          "text": "Account created",
+          "line": 96,
+          "kind": "toast"
+        },
+        {
+          "text": "Check your email to confirm your account.",
+          "line": 96,
+          "kind": "toast"
+        },
+        {
+          "text": "Invitation accepted!",
+          "line": 111,
+          "kind": "toast"
+        },
+        {
+          "text": "Error",
+          "line": 117,
+          "kind": "toast"
+        },
+        {
+          "text": "Quantity Takeoff",
+          "line": 130
+        },
+        {
+          "text": "Full Name",
+          "line": 146
+        },
+        {
+          "text": "Organization Name",
+          "line": 151
+        },
+        {
+          "text": "Email",
+          "line": 158
+        },
+        {
+          "text": "Password",
+          "line": 163
+        },
+        {
+          "text": "Send Reset Link",
+          "line": 172
+        },
+        {
+          "text": "Sign In",
+          "line": 174
+        },
+        {
+          "text": "Don't have an account?",
+          "line": 182
+        },
+        {
+          "text": "Sign up",
+          "line": 184
+        },
+        {
+          "text": "Forgot password?",
+          "line": 189
+        },
+        {
+          "text": "Already have an account?",
+          "line": 196
+        },
+        {
+          "text": "Sign in",
+          "line": 198
+        },
+        {
+          "text": "Back to sign in",
+          "line": 205
+        }
+      ],
+      "imports": [
+        "react",
+        "react-router-dom",
+        "@/integrations/supabase/client",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/label",
+        "@/hooks/use-toast",
+        "lucide-react"
+      ]
+    },
+    {
+      "file": "src/pages/DailyReport.tsx",
+      "loc": 220,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "DailyReport",
+          "line": 16
+        }
+      ],
+      "components": [
+        {
+          "name": "DailyReport",
+          "line": 16
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "DRAFT",
+          "line": 36
+        },
+        {
+          "text": "SUBMITTED — PENDING RE",
+          "line": 37
+        },
+        {
+          "text": "APPROVED",
+          "line": 38
+        },
+        {
+          "text": "REJECTED — REOPEN TO EDIT",
+          "line": 39
+        },
+        {
+          "text": "Sign in",
+          "line": 45
+        },
+        {
+          "text": "Back",
+          "line": 55
+        },
+        {
+          "text": "Daily Report",
+          "line": 59
+        },
+        {
+          "text": "Date",
+          "line": 64
+        },
+        {
+          "text": "Rejected by RE",
+          "line": 83
+        },
+        {
+          "text": "Reopen & Edit",
+          "line": 89
+        },
+        {
+          "text": "Awaiting RE approval",
+          "line": 99
+        },
+        {
+          "text": "Submitted",
+          "line": 101
+        },
+        {
+          "text": ". Edits to annotations after this point will not change the submitted snapshot.",
+          "line": 101
+        },
+        {
+          "text": "Snapshot is out of date",
+          "line": 111
+        },
+        {
+          "text": "Your annotations for",
+          "line": 113
+        },
+        {
+          "text": "changed after you submitted. Resubmit to send the current quantities to the RE.",
+          "line": 113
+        },
+        {
+          "text": "Approved",
+          "line": 128
+        },
+        {
+          "text": "Approved",
+          "line": 129
+        },
+        {
+          "text": ". These quantities are now in official totals.",
+          "line": 129
+        },
+        {
+          "text": "line",
+          "line": 138
+        },
+        {
+          "text": "over contract",
+          "line": 142
+        },
+        {
+          "text": "No annotations recorded for",
+          "line": 151
+        },
+        {
+          "text": "Open takeoff tool",
+          "line": 154
+        },
+        {
+          "text": "Pay item",
+          "line": 163
+        },
+        {
+          "text": "Today",
+          "line": 164
+        },
+        {
+          "text": "Prior cumul.",
+          "line": 165
+        },
+        {
+          "text": "New cumul.",
+          "line": 166
+        },
+        {
+          "text": "vs Contract",
+          "line": 167
+        },
+        {
+          "text": "Once submitted, these quantities are frozen and sent to the RE.",
+          "line": 203
+        },
+        {
+          "text": "Inspector:",
+          "line": 214
+        }
+      ],
+      "imports": [
+        "react",
+        "react-router-dom",
+        "@/hooks/useAuth",
+        "@/hooks/useDailyReport",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/badge",
+        "lucide-react",
+        "@/lib/utils",
+        "@/lib/daily-report-snapshot"
+      ]
+    },
+    {
+      "file": "src/pages/Dashboard.tsx",
+      "loc": 508,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "Dashboard",
+          "line": 38
+        }
+      ],
+      "components": [
+        {
+          "name": "Dashboard",
+          "line": 38
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "Missing info",
+          "line": 56,
+          "kind": "toast"
+        },
+        {
+          "text": "Name and PDF are required.",
+          "line": 56,
+          "kind": "toast"
+        },
+        {
+          "text": "Project created",
+          "line": 69,
+          "kind": "toast"
+        },
+        {
+          "text": "Error",
+          "line": 72,
+          "kind": "toast"
+        },
+        {
+          "text": "Project deleted",
+          "line": 86,
+          "kind": "toast"
+        },
+        {
+          "text": "Error",
+          "line": 88,
+          "kind": "toast"
+        },
+        {
+          "text": "TakeoffPro",
+          "line": 206
+        },
+        {
+          "text": "Projects",
+          "line": 247
+        },
+        {
+          "text": "NJTA & NJDOT Construction Takeoffs",
+          "line": 248
+        },
+        {
+          "text": "New Project",
+          "line": 253
+        },
+        {
+          "text": "No projects yet",
+          "line": 271
+        },
+        {
+          "text": "You haven't been assigned to any projects yet.",
+          "line": 279
+        },
+        {
+          "text": "Share your email with your project manager:",
+          "line": 281
+        },
+        {
+          "text": "Create Your First Project",
+          "line": 289
+        },
+        {
+          "text": "Progress",
+          "line": 341
+        },
+        {
+          "text": "annotations",
+          "line": 342
+        },
+        {
+          "text": "pending",
+          "line": 377
+        },
+        {
+          "text": "Controls",
+          "line": 402
+        },
+        {
+          "text": "Details",
+          "line": 409
+        },
+        {
+          "text": "pages with annotations",
+          "line": 424
+        },
+        {
+          "text": "ann ·",
+          "line": 432
+        },
+        {
+          "text": "No annotations yet",
+          "line": 438
+        },
+        {
+          "text": "New Project",
+          "line": 454
+        },
+        {
+          "text": "Project Name",
+          "line": 458
+        },
+        {
+          "text": "Contract Number (optional)",
+          "line": 462
+        },
+        {
+          "text": "Plan PDF",
+          "line": 466
+        },
+        {
+          "text": "Cancel",
+          "line": 484
+        },
+        {
+          "text": "Create",
+          "line": 487
+        }
+      ],
+      "imports": [
+        "react",
+        "react-router-dom",
+        "@/hooks/useAuth",
+        "@/hooks/useProjects",
+        "@/hooks/useTheme",
+        "@/hooks/use-toast",
+        "@/hooks/useTour",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/label",
+        "@/components/ui/progress",
+        "@/components/ui/dialog",
+        "lucide-react",
+        "@/integrations/supabase/client",
+        "@/lib/utils",
+        "@/components/WelcomeCarousel",
+        "@/components/GuidedTour",
+        "@/components/NotificationBell",
+        "@tanstack/react-query",
+        "@/lib/approved-quantities",
+        "@/components/ConfirmDialog"
+      ]
+    },
+    {
+      "file": "src/pages/Demo.tsx",
+      "loc": 931,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "Demo",
+          "line": 143
+        }
+      ],
+      "components": [
+        {
+          "name": "Demo",
+          "line": 143
+        }
+      ],
+      "routes": [],
+      "switches": [
+        {
+          "discriminator": "item.unit",
+          "arms": [
+            "'LF'",
+            "'SF'",
+            "'SY'",
+            "'CY'",
+            "'EA'"
+          ],
+          "line": 356
+        },
+        {
+          "discriminator": "step",
+          "arms": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "8",
+            "10"
+          ],
+          "line": 399
+        }
+      ],
+      "jsxStrings": [
+        {
+          "text": "Sections",
+          "line": 99
+        },
+        {
+          "text": "Items",
+          "line": 110
+        },
+        {
+          "text": "PDF Loaded",
+          "line": 223,
+          "kind": "toast"
+        },
+        {
+          "text": "Error loading PDF",
+          "line": 225,
+          "kind": "toast"
+        },
+        {
+          "text": "Select TOC Region",
+          "line": 253,
+          "kind": "toast"
+        },
+        {
+          "text": "Drag a rectangle around the sheet list on the plan.",
+          "line": 253,
+          "kind": "toast"
+        },
+        {
+          "text": "TOC Imported",
+          "line": 263,
+          "kind": "toast"
+        },
+        {
+          "text": "No sections found",
+          "line": 266,
+          "kind": "toast"
+        },
+        {
+          "text": "Try selecting a wider area around the sheet list.",
+          "line": 266,
+          "kind": "toast"
+        },
+        {
+          "text": "TOC Import Failed",
+          "line": 269,
+          "kind": "toast"
+        },
+        {
+          "text": "Pay Items Imported",
+          "line": 303,
+          "kind": "toast"
+        },
+        {
+          "text": "No items found",
+          "line": 305,
+          "kind": "toast"
+        },
+        {
+          "text": "Navigate to the Estimate of Quantities page and try again.",
+          "line": 305,
+          "kind": "toast"
+        },
+        {
+          "text": "Import Failed",
+          "line": 308,
+          "kind": "toast"
+        },
+        {
+          "text": "Scale Applied",
+          "line": 321,
+          "kind": "toast"
+        },
+        {
+          "text": "Scale Applied",
+          "line": 347,
+          "kind": "toast"
+        },
+        {
+          "text": "TakeoffPro Demo",
+          "line": 427
+        },
+        {
+          "text": "Step",
+          "line": 430
+        },
+        {
+          "text": "Sign Up",
+          "line": 441
+        },
+        {
+          "text": "No scale",
+          "line": 513
+        },
+        {
+          "text": "GPS Cal",
+          "line": 537
+        },
+        {
+          "text": "Import TOC",
+          "line": 583
+        },
+        {
+          "text": "Upload Construction Plans",
+          "line": 723
+        },
+        {
+          "text": "Your file stays in your browser — nothing is uploaded to a server",
+          "line": 728
+        },
+        {
+          "text": "GPS Calibrated",
+          "line": 749,
+          "kind": "toast"
+        },
+        {
+          "text": "Start Using Demo",
+          "line": 841
+        },
+        {
+          "text": "Next",
+          "line": 845
+        },
+        {
+          "text": "Step",
+          "line": 849
+        },
+        {
+          "text": "Apply Scale to Other Sheets",
+          "line": 888
+        },
+        {
+          "text": "Copy this calibration (",
+          "line": 890
+        },
+        {
+          "text": ") to other pages.",
+          "line": 893
+        },
+        {
+          "text": "Apply to All",
+          "line": 898
+        },
+        {
+          "text": "Sheets",
+          "line": 898
+        },
+        {
+          "text": "or",
+          "line": 905
+        },
+        {
+          "text": "Apply",
+          "line": 916
+        },
+        {
+          "text": "Skip for Now",
+          "line": 923
+        }
+      ],
+      "imports": [
+        "react",
+        "react-router-dom",
+        "pdfjs-dist",
+        "@/components/PdfCanvas",
+        "@/components/MobileTabBar",
+        "@/components/MobileToolbar",
+        "@/components/MobileSections",
+        "@/components/MobilePayItems",
+        "@/components/SummaryPanel",
+        "@/components/GpsCalibration",
+        "@/components/GpsTraceControls",
+        "@/components/MobileAnnotationSheet",
+        "@/hooks/useProject",
+        "@/hooks/use-mobile",
+        "@/hooks/useTheme",
+        "@/lib/pdf-utils",
+        "@/hooks/use-toast",
+        "@/components/ui/button",
+        "@/lib/utils",
+        "@/types/project",
+        "@/lib/geo-transform",
+        "@/lib/export-utils",
+        "lucide-react",
+        "@/components/ui/dialog",
+        "@/components/ui/input",
+        "@/components/ui/label"
+      ]
+    },
+    {
+      "file": "src/pages/Documents.tsx",
+      "loc": 1313,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "Documents",
+          "line": 113
+        }
+      ],
+      "components": [
+        {
+          "name": "Documents",
+          "line": 113
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "Move to Trash failed",
+          "line": 262,
+          "kind": "toast"
+        },
+        {
+          "text": "Undo",
+          "line": 277
+        },
+        {
+          "text": "Empty Trash failed",
+          "line": 295,
+          "kind": "toast"
+        },
+        {
+          "text": "Restore failed",
+          "line": 318,
+          "kind": "toast"
+        },
+        {
+          "text": "Preview failed",
+          "line": 412,
+          "kind": "toast"
+        },
+        {
+          "text": "Download failed",
+          "line": 425,
+          "kind": "toast"
+        },
+        {
+          "text": "Download failed",
+          "line": 434,
+          "kind": "toast"
+        },
+        {
+          "text": "Failed",
+          "line": 455,
+          "kind": "toast"
+        },
+        {
+          "text": "Move failed",
+          "line": 502,
+          "kind": "toast"
+        },
+        {
+          "text": "Sign in",
+          "line": 573
+        },
+        {
+          "text": "Back",
+          "line": 583
+        },
+        {
+          "text": "Documents",
+          "line": 587
+        },
+        {
+          "text": "Takeoff",
+          "line": 595
+        },
+        {
+          "text": "Daily Report",
+          "line": 598
+        },
+        {
+          "text": "Folders",
+          "line": 610
+        },
+        {
+          "text": "No folders yet.",
+          "line": 623
+        },
+        {
+          "text": "Create one to start organizing project documents.",
+          "line": 624
+        },
+        {
+          "text": "Trash",
+          "line": 644
+        },
+        {
+          "text": "Trash",
+          "line": 691
+        },
+        {
+          "text": "Trash",
+          "line": 705
+        },
+        {
+          "text": "Select a folder",
+          "line": 706
+        },
+        {
+          "text": "Empty Trash",
+          "line": 735
+        },
+        {
+          "text": "Upload",
+          "line": 755
+        },
+        {
+          "text": "Folder",
+          "line": 759
+        },
+        {
+          "text": "New folder",
+          "line": 766
+        },
+        {
+          "text": "Rename folder",
+          "line": 776
+        },
+        {
+          "text": "Delete folder",
+          "line": 779
+        },
+        {
+          "text": "selected",
+          "line": 792
+        },
+        {
+          "text": "Clear",
+          "line": 794
+        },
+        {
+          "text": "Download",
+          "line": 798
+        },
+        {
+          "text": "Restore",
+          "line": 806
+        },
+        {
+          "text": "Delete forever",
+          "line": 820
+        },
+        {
+          "text": "Move to Trash",
+          "line": 826
+        },
+        {
+          "text": "Viewing Trash",
+          "line": 836
+        },
+        {
+          "text": "— items can be restored or permanently deleted.",
+          "line": 837
+        },
+        {
+          "text": "Read-only for your role",
+          "line": 847
+        },
+        {
+          "text": "Select a folder to see its contents.",
+          "line": 872
+        },
+        {
+          "text": "No files match \"",
+          "line": 880
+        },
+        {
+          "text": "Clear search",
+          "line": 881
+        },
+        {
+          "text": "Trash is empty.",
+          "line": 886
+        },
+        {
+          "text": "Deleted files appear here until restored or permanently removed.",
+          "line": 887
+        },
+        {
+          "text": "This folder is read-only for your role.",
+          "line": 892
+        },
+        {
+          "text": "Inspectors can upload only to Photos and Daily Reports.",
+          "line": 893
+        },
+        {
+          "text": "No files in this folder.",
+          "line": 898
+        },
+        {
+          "text": "Drag files here or tap Upload.",
+          "line": 899
+        },
+        {
+          "text": "Name",
+          "line": 912
+        },
+        {
+          "text": "Size",
+          "line": 917
+        },
+        {
+          "text": "Uploaded",
+          "line": 922
+        },
+        {
+          "text": "Active plan",
+          "line": 962
+        },
+        {
+          "text": "Active specs",
+          "line": 963
+        },
+        {
+          "text": "from",
+          "line": 966
+        },
+        {
+          "text": "Preview",
+          "line": 991
+        },
+        {
+          "text": "Download",
+          "line": 995
+        },
+        {
+          "text": "Restore",
+          "line": 1002
+        },
+        {
+          "text": "Delete forever",
+          "line": 1012
+        },
+        {
+          "text": "Versions",
+          "line": 1019
+        },
+        {
+          "text": "Upload new version",
+          "line": 1025
+        },
+        {
+          "text": "Set as active plan",
+          "line": 1029
+        },
+        {
+          "text": "Set as active specs",
+          "line": 1034
+        },
+        {
+          "text": "Rename",
+          "line": 1038
+        },
+        {
+          "text": "Move",
+          "line": 1041
+        },
+        {
+          "text": "Move to Trash",
+          "line": 1044
+        },
+        {
+          "text": "Uploads ·",
+          "line": 1083
+        },
+        {
+          "text": "Download",
+          "line": 1110
+        },
+        {
+          "text": "New folder",
+          "line": 1131
+        },
+        {
+          "text": "Inside",
+          "line": 1133
+        },
+        {
+          "text": "Cancel",
+          "line": 1138
+        },
+        {
+          "text": "Create",
+          "line": 1147
+        },
+        {
+          "text": "Rename",
+          "line": 1156
+        },
+        {
+          "text": "Cancel",
+          "line": 1160
+        },
+        {
+          "text": "Save",
+          "line": 1168
+        },
+        {
+          "text": "Move file",
+          "line": 1177
+        },
+        {
+          "text": "Pick a destination folder.",
+          "line": 1178
+        },
+        {
+          "text": "Cancel",
+          "line": 1190
+        },
+        {
+          "text": "Move",
+          "line": 1200
+        },
+        {
+          "text": "Versions of",
+          "line": 1209
+        },
+        {
+          "text": "Loading…",
+          "line": 1212
+        },
+        {
+          "text": "Cancel",
+          "line": 1256
+        },
+        {
+          "text": "Move",
+          "line": 1281
+        },
+        {
+          "text": "file",
+          "line": 1281
+        },
+        {
+          "text": "to Trash?",
+          "line": 1281
+        },
+        {
+          "text": "These files will be moved to Trash and can be restored from the Trash folder until permanently removed.",
+          "line": 1283
+        },
+        {
+          "text": "Cancel",
+          "line": 1287
+        },
+        {
+          "text": "Move",
+          "line": 1288
+        },
+        {
+          "text": "to Trash",
+          "line": 1288
+        },
+        {
+          "text": "Empty Trash?",
+          "line": 1297
+        },
+        {
+          "text": "file",
+          "line": 1299
+        },
+        {
+          "text": "will be permanently deleted. This action cannot be undone.",
+          "line": 1299
+        },
+        {
+          "text": "Cancel",
+          "line": 1303
+        },
+        {
+          "text": "Delete forever",
+          "line": 1304
+        }
+      ],
+      "imports": [
+        "react",
+        "@tanstack/react-query",
+        "react-router-dom",
+        "lucide-react",
+        "@/components/ui/checkbox",
+        "@/components/ui/avatar",
+        "@/components/ui/toast",
+        "@/hooks/useAuth",
+        "@/hooks/useDocuments",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/badge",
+        "@/components/ui/dialog",
+        "@/components/ui/dropdown-menu",
+        "@/components/ui/select",
+        "@/lib/utils",
+        "@/integrations/supabase/client",
+        "@/hooks/use-toast",
+        "@/components/ConfirmDialog"
+      ]
+    },
+    {
+      "file": "src/pages/FajarPitch.tsx",
+      "loc": 809,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "FajarPitch",
+          "line": 281
+        }
+      ],
+      "components": [
+        {
+          "name": "FajarPitch",
+          "line": 281
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "FLEET · LIVE",
+          "line": 84
+        },
+        {
+          "text": "synced",
+          "line": 87
+        },
+        {
+          "text": "Available",
+          "line": 108
+        },
+        {
+          "text": "Reserved",
+          "line": 109
+        },
+        {
+          "text": "Maintenance",
+          "line": 110
+        },
+        {
+          "text": "RESERVE",
+          "line": 170
+        },
+        {
+          "text": "2-hour soft hold · payment link sent via WhatsApp · cancel free for 24h",
+          "line": 172
+        },
+        {
+          "text": "What your customers see — synced with your WhatsApp agent in real time. Click any green cell to preview the reservation flow.",
+          "line": 179
+        },
+        {
+          "text": "google.ae",
+          "line": 256
+        },
+        {
+          "text": "excavator rental dubai",
+          "line": 258
+        },
+        {
+          "text": "fajaralmustaqbal.ae › earthmoving › cat-320",
+          "line": 261
+        },
+        {
+          "text": "CAT 320 Excavator Rental Dubai · From AED 1,800/day",
+          "line": 262
+        },
+        {
+          "text": "Live availability · Same-day delivery across UAE · Operator included.\n          Book online or via WhatsApp. Trusted by 200+ contractors since 2008.",
+          "line": 264
+        },
+        {
+          "text": "Available today",
+          "line": 269
+        },
+        {
+          "text": "AED 1,800–2,400/day",
+          "line": 270
+        },
+        {
+          "text": "Rich snippet · Product schema · Local pack",
+          "line": 274
+        },
+        {
+          "text": "FA",
+          "line": 329
+        },
+        {
+          "text": "Prepared for Fajar Al Mustaqbal Equipment Rental · UAE",
+          "line": 331
+        },
+        {
+          "text": "Book intro call",
+          "line": 336
+        },
+        {
+          "text": "EQUIPMENT RENTAL · UAE",
+          "line": 348
+        },
+        {
+          "text": "Cut fleet vacancy. Win the",
+          "line": 351
+        },
+        {
+          "text": "Google search",
+          "line": 351
+        },
+        {
+          "text": "before the phone rings.",
+          "line": 351
+        },
+        {
+          "text": "UAE rental customers",
+          "line": 357
+        },
+        {
+          "text": "Google → tap WhatsApp → decide in under 5 minutes",
+          "line": 357
+        },
+        {
+          "text": ".\n              Most equipment rental sites lose them at step one — no live availability, no daily rate, no way to reserve.\n              We build the site, the",
+          "line": 357
+        },
+        {
+          "text": "WhatsApp agent",
+          "line": 359
+        },
+        {
+          "text": ", and the SEO that turn vacant\n              machine-days into bookings. Priced for an SMB on margin, not a SaaS budget.",
+          "line": 359
+        },
+        {
+          "text": "See the live demo",
+          "line": 365
+        },
+        {
+          "text": "WhatsApp us",
+          "line": 370
+        },
+        {
+          "text": "STEP",
+          "line": 428
+        },
+        {
+          "text": "Every step you lose a customer is a vacant machine-day. Our job is zero drop-off between Google and your fleet calendar.",
+          "line": 440
+        },
+        {
+          "text": "Maintenance flow",
+          "line": 467
+        },
+        {
+          "text": "Operator group chat → auto fleet lock",
+          "line": 469
+        },
+        {
+          "text": "Booking flow",
+          "line": 476
+        },
+        {
+          "text": "Customer DM → soft-hold reservation",
+          "line": 478
+        },
+        {
+          "text": "Safe by default",
+          "line": 506
+        },
+        {
+          "text": "Maintenance locks auto-expire after",
+          "line": 508
+        },
+        {
+          "text": "7 days max",
+          "line": 508
+        },
+        {
+          "text": "unless your team confirms — no machine ever stays\n                invisible because someone forgot to message. Customer holds are",
+          "line": 508
+        },
+        {
+          "text": "2-hour soft reservations",
+          "line": 509
+        },
+        {
+          "text": ", never\n                auto-charged. Every action is reversible from the admin dashboard with full audit log.",
+          "line": 509
+        },
+        {
+          "text": "fajaralmustaqbal.ae / equipment",
+          "line": 532
+        },
+        {
+          "text": "Customers see exactly what is free, with daily AED rates and a one-tap WhatsApp reservation. No phone tag.",
+          "line": 537
+        },
+        {
+          "text": "… / earthmoving / cat-320",
+          "line": 548
+        },
+        {
+          "text": "One landing page per machine — exactly the kind of page Google rewards for \"CAT 320 rental Dubai\".",
+          "line": 553
+        },
+        {
+          "text": "Most UAE rental searches happen on mobile. Date picker, AED total, WhatsApp button — that's the whole flow.",
+          "line": 565
+        },
+        {
+          "text": "admin.fajaralmustaqbal.ae",
+          "line": 576
+        },
+        {
+          "text": "Vacancy, today's bookings, and the maintenance queue at a glance — same view on phone or laptop.",
+          "line": 581
+        },
+        {
+          "text": "google.ae / search?q=excavator+rental+dubai",
+          "line": 592
+        },
+        {
+          "text": "Rich snippet with price, availability, rating, and your Google Business Profile — tuned to how UAE renters actually search.",
+          "line": 597
+        },
+        {
+          "text": "Each cluster gets a dedicated EN + AR landing page tied to live fleet data.",
+          "line": 628
+        },
+        {
+          "text": "one-time",
+          "line": 739
+        },
+        {
+          "text": "/ month",
+          "line": 743
+        },
+        {
+          "text": "Pays for itself fast.",
+          "line": 759
+        },
+        {
+          "text": "At an average AED 1,800/day rental, the Growth plan\n              breaks even at",
+          "line": 759
+        },
+        {
+          "text": "~1.5 extra rental-days per month",
+          "line": 760
+        },
+        {
+          "text": ". Pay monthly, cancel any\n              time after month 6. Source code and data are yours from day one.",
+          "line": 760
+        },
+        {
+          "text": "Ready to see your fleet",
+          "line": 784
+        },
+        {
+          "text": "online",
+          "line": 784
+        },
+        {
+          "text": "30-minute discovery call. No slides — we open the demo, walk through your current site, and sketch the rollout against your fleet.",
+          "line": 787
+        },
+        {
+          "text": "Book discovery call",
+          "line": 792
+        },
+        {
+          "text": "WhatsApp us",
+          "line": 797
+        },
+        {
+          "text": "Prepared for Fajar Al Mustaqbal General Trading & Cont. LLC · UAE",
+          "line": 802
+        }
+      ],
+      "imports": [
+        "react",
+        "framer-motion",
+        "@/components/ui/button",
+        "@/components/ui/card",
+        "@/components/ui/badge",
+        "@/components/ui/tabs",
+        "@/components/ui/accordion",
+        "lucide-react"
+      ]
+    },
+    {
+      "file": "src/pages/Index.tsx",
+      "loc": 989,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [
+        {
+          "discriminator": "item.unit",
+          "arms": [
+            "'LF'",
+            "'SF'",
+            "'SY'",
+            "'CY'",
+            "'EA'"
+          ],
+          "line": 515
+        },
+        {
+          "discriminator": "activePayItem.unit",
+          "arms": [
+            "'LF'",
+            "'SF'",
+            "'SY'",
+            "'CY'",
+            "'EA'"
+          ],
+          "line": 696
+        }
+      ],
+      "jsxStrings": [
+        {
+          "text": "Offline mode",
+          "line": 142,
+          "kind": "toast"
+        },
+        {
+          "text": "Viewing cached project data.",
+          "line": 142,
+          "kind": "toast"
+        },
+        {
+          "text": "Error loading project",
+          "line": 257,
+          "kind": "toast"
+        },
+        {
+          "text": "PDF Loaded",
+          "line": 317,
+          "kind": "toast"
+        },
+        {
+          "text": "Error loading PDF",
+          "line": 319,
+          "kind": "toast"
+        },
+        {
+          "text": "Loading Standard Specs…",
+          "line": 336,
+          "kind": "toast"
+        },
+        {
+          "text": "This may take a moment.",
+          "line": 336,
+          "kind": "toast"
+        },
+        {
+          "text": "Indexing…",
+          "line": 339,
+          "kind": "toast"
+        },
+        {
+          "text": "Specs Loaded",
+          "line": 347,
+          "kind": "toast"
+        },
+        {
+          "text": "Error loading specs",
+          "line": 357,
+          "kind": "toast"
+        },
+        {
+          "text": "No specs loaded",
+          "line": 362,
+          "kind": "toast"
+        },
+        {
+          "text": "Extracting TOC...",
+          "line": 373,
+          "kind": "toast"
+        },
+        {
+          "text": "No entries found",
+          "line": 377,
+          "kind": "toast"
+        },
+        {
+          "text": "TOC Imported",
+          "line": 382,
+          "kind": "toast"
+        },
+        {
+          "text": "Error extracting TOC",
+          "line": 384,
+          "kind": "toast"
+        },
+        {
+          "text": "Extracting Pay Items...",
+          "line": 391,
+          "kind": "toast"
+        },
+        {
+          "text": "No pay items found",
+          "line": 400,
+          "kind": "toast"
+        },
+        {
+          "text": "All items already imported",
+          "line": 414,
+          "kind": "toast"
+        },
+        {
+          "text": "Pay Items Imported",
+          "line": 419,
+          "kind": "toast"
+        },
+        {
+          "text": "Error",
+          "line": 421,
+          "kind": "toast"
+        },
+        {
+          "text": "No valid pages selected",
+          "line": 456,
+          "kind": "toast"
+        },
+        {
+          "text": "Calibration copied",
+          "line": 460,
+          "kind": "toast"
+        },
+        {
+          "text": "GPS Calibrated",
+          "line": 468,
+          "kind": "toast"
+        },
+        {
+          "text": "Loading project…",
+          "line": 530
+        },
+        {
+          "text": "GPS",
+          "line": 628
+        },
+        {
+          "text": "Load a project first",
+          "line": 685
+        },
+        {
+          "text": "online",
+          "line": 797
+        },
+        {
+          "text": "Documents",
+          "line": 803
+        },
+        {
+          "text": "Daily Report",
+          "line": 809
+        },
+        {
+          "text": "P6 Export",
+          "line": 815
+        },
+        {
+          "text": "GPS Setup",
+          "line": 918
+        },
+        {
+          "text": "GPS ✓",
+          "line": 933
+        }
+      ],
+      "imports": [
+        "react",
+        "react-router-dom",
+        "pdfjs-dist",
+        "@/components/ui/sidebar",
+        "@/components/ProjectSidebar",
+        "@/components/Toolbar",
+        "@/components/PdfCanvas",
+        "@/components/SummaryPanel",
+        "@/components/SpecViewer",
+        "@/components/MobileTabBar",
+        "@/components/MobileToolbar",
+        "@/components/MobilePayItems",
+        "@/components/MobileSections",
+        "@/components/EmptyState",
+        "@/components/GuidedTour",
+        "@/components/GpsCalibration",
+        "@/components/GpsTraceControls",
+        "@/hooks/useProject",
+        "@/hooks/useAuth",
+        "@/hooks/use-mobile",
+        "@/hooks/useTheme",
+        "@/hooks/useTour",
+        "@/lib/pdf-utils",
+        "@/lib/offline/db",
+        "@/lib/offline/pdf-cache",
+        "@/lib/specs-utils",
+        "@/lib/export-utils",
+        "@/hooks/use-toast",
+        "@/integrations/supabase/client",
+        "@/types/project",
+        "@/lib/geo-transform",
+        "lucide-react",
+        "@/components/ui/button",
+        "@/lib/utils",
+        "@/components/TeamManager",
+        "@/components/MobileAnnotationSheet"
+      ]
+    },
+    {
+      "file": "src/pages/Landing.tsx",
+      "loc": 962,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "Landing",
+          "line": 238
+        }
+      ],
+      "components": [
+        {
+          "name": "Landing",
+          "line": 238
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "TakeoffPro",
+          "line": 330
+        },
+        {
+          "text": "Features",
+          "line": 334
+        },
+        {
+          "text": "How It Works",
+          "line": 337
+        },
+        {
+          "text": "For NJTA / DOT",
+          "line": 340
+        },
+        {
+          "text": "Log In",
+          "line": 343
+        },
+        {
+          "text": "Request a Demo",
+          "line": 346
+        },
+        {
+          "text": "Purpose-Built for NJ Turnpike Authority & NJDOT Projects",
+          "line": 363
+        },
+        {
+          "text": "Stop Disputing Quantities.",
+          "line": 366
+        },
+        {
+          "text": "Start Proving Them.",
+          "line": 367
+        },
+        {
+          "text": "TakeoffPro gives your RE team digital measurement tools that produce audit-ready quantity\n              records — directly from contract plan PDFs. Built around NJTA Standard Specifications and\n      ",
+          "line": 370
+        },
+        {
+          "text": "Try the Demo",
+          "line": 376
+        },
+        {
+          "text": "Request a Demo",
+          "line": 379
+        },
+        {
+          "text": "Start Free Trial",
+          "line": 382
+        },
+        {
+          "text": "NJTA Pay Item Compatible",
+          "line": 386
+        },
+        {
+          "text": "NJDOT Spec Format",
+          "line": 387
+        },
+        {
+          "text": "Zero Install",
+          "line": 388
+        },
+        {
+          "text": "Field-Ready on Any Tablet",
+          "line": 389
+        },
+        {
+          "text": "app.takeoffpro.com",
+          "line": 409
+        },
+        {
+          "text": "THE PROBLEM",
+          "line": 466
+        },
+        {
+          "text": "Paper takeoffs are costing you money and time",
+          "line": 468
+        },
+        {
+          "text": "Every manual step between plan measurement and monthly estimate is an opportunity for error,\n            delay, and dispute.",
+          "line": 471
+        },
+        {
+          "text": "CAPABILITIES",
+          "line": 491
+        },
+        {
+          "text": "Built for NJTA & NJDOT workflows",
+          "line": 493
+        },
+        {
+          "text": "Every feature is designed around how NJ Turnpike and NJDOT teams actually manage\n              construction quantities — from bid schedule to monthly estimate.",
+          "line": 496
+        },
+        {
+          "text": "New Feature",
+          "line": 576
+        },
+        {
+          "text": "Walk the site. Measure automatically.",
+          "line": 579
+        },
+        {
+          "text": "GPS-to-Plan georeferencing lets inspectors physically walk a perimeter or line on the job site\n              while the app traces their path directly on the contract plan sheet — computing LF, SF, and",
+          "line": 582
+        },
+        {
+          "text": "Best for large-area measurements — paving, embankments, guardrail runs. Phone GPS accuracy is typically ±10–15 ft;\n              the app displays real-time accuracy and warns when signal is poor.",
+          "line": 606
+        },
+        {
+          "text": "HOW IT WORKS",
+          "line": 622
+        },
+        {
+          "text": "Four steps from plan set to payment",
+          "line": 624
+        },
+        {
+          "text": "BUILT FOR",
+          "line": 651
+        },
+        {
+          "text": "Every role in the inspection chain",
+          "line": 653
+        },
+        {
+          "text": "From the Resident Engineer's office to the active travel lane — TakeoffPro fits the way\n              NJTA and NJDOT teams already work.",
+          "line": 656
+        },
+        {
+          "text": "COMPARISON",
+          "line": 700
+        },
+        {
+          "text": "TakeoffPro vs. your current process",
+          "line": 702
+        },
+        {
+          "text": "FAQ",
+          "line": 738
+        },
+        {
+          "text": "Common questions",
+          "line": 740
+        },
+        {
+          "text": "ROADMAP",
+          "line": 768
+        },
+        {
+          "text": "What's coming next",
+          "line": 770
+        },
+        {
+          "text": "We're building the platform NJTA and NJDOT teams have been asking for.",
+          "line": 773
+        },
+        {
+          "text": "Coming Soon",
+          "line": 787
+        },
+        {
+          "text": "Ready to modernize your quantity tracking?",
+          "line": 819
+        },
+        {
+          "text": "Tell us about your project and we'll show you how TakeoffPro fits your workflow.\n                Per-project pricing — configured to your contract scope, pay items, and team size.",
+          "line": 822
+        },
+        {
+          "text": "Start Free Trial",
+          "line": 834
+        },
+        {
+          "text": "or fill out the form →",
+          "line": 836
+        },
+        {
+          "text": "Questions? Reach us at",
+          "line": 839
+        },
+        {
+          "text": "sales@takeoffpro.com",
+          "line": 841
+        },
+        {
+          "text": "Request received",
+          "line": 853
+        },
+        {
+          "text": "We'll reach out within 24 hours to schedule a walkthrough tailored to your project.",
+          "line": 854
+        },
+        {
+          "text": "Request a Demo",
+          "line": 858
+        },
+        {
+          "text": "We'll configure a walkthrough around your contract.",
+          "line": 859
+        },
+        {
+          "text": "TakeoffPro",
+          "line": 924
+        },
+        {
+          "text": "Purpose-built digital quantity takeoff for New Jersey infrastructure projects.",
+          "line": 927
+        },
+        {
+          "text": "Product",
+          "line": 932
+        },
+        {
+          "text": "Features",
+          "line": 934
+        },
+        {
+          "text": "How It Works",
+          "line": 935
+        },
+        {
+          "text": "For NJTA / DOT",
+          "line": 936
+        },
+        {
+          "text": "FAQ",
+          "line": 937
+        },
+        {
+          "text": "Contact",
+          "line": 942
+        },
+        {
+          "text": "sales@takeoffpro.com",
+          "line": 944
+        },
+        {
+          "text": "Request a Demo",
+          "line": 945
+        },
+        {
+          "text": "TakeoffPro. All rights reserved.",
+          "line": 951
+        },
+        {
+          "text": "Purpose-built for New Jersey infrastructure.",
+          "line": 954
+        }
+      ],
+      "imports": [
+        "react",
+        "react-router-dom",
+        "framer-motion",
+        "@/assets/hero-screenshot.jpg",
+        "@/assets/highway-construction-aerial.jpg",
+        "@/assets/inspector-tablet.jpg",
+        "@/assets/blueprint-plans.jpg",
+        "@/assets/gps-field-measurement.jpg",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/textarea",
+        "@/components/ui/accordion",
+        "@/integrations/supabase/client",
+        "sonner",
+        "lucide-react"
+      ]
+    },
+    {
+      "file": "src/pages/McfaPitch.tsx",
+      "loc": 1090,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "BYOR PROPOSAL · CONFIDENTIAL · MCFA T&amp;I DIVISION",
+          "line": 314
+        },
+        {
+          "text": "v1.0",
+          "line": 317
+        },
+        {
+          "text": "Newark Airport · North Jersey · On-site / Remote",
+          "line": 319
+        },
+        {
+          "text": "BUILD YOUR OWN ROLE · EVERGREEN POSTING · REFERRED BY SAQEEB MUHAMMAD",
+          "line": 344
+        },
+        {
+          "text": "Systems-Enabled",
+          "line": 348
+        },
+        {
+          "text": "CPM Scheduler / Estimator",
+          "line": 349
+        },
+        {
+          "text": "for MCFA Transportation &amp; Infrastructure · Newark Airport / PANYNJ portfolio",
+          "line": 351
+        },
+        {
+          "text": "PMP-certified",
+          "line": 356
+        },
+        {
+          "text": "· disciplined Primavera P6 + AACE\n                estimating · auth-agnostic",
+          "line": 356
+        },
+        {
+          "text": "XER tooling",
+          "line": 357
+        },
+        {
+          "text": "for NJDOT\n                &amp; NYSDOT compliance. Reliable, audit-ready data so PMs can lead their projects successfully —\n                MCFA's mission of",
+          "line": 357
+        },
+        {
+          "text": "Inspiring People and Places",
+          "line": 359
+        },
+        {
+          "text": ", applied to\n                project controls.",
+          "line": 359
+        },
+        {
+          "text": "DCMA-14 LOGIC TARGET",
+          "line": 366
+        },
+        {
+          "text": "≤ 72 h",
+          "line": 369
+        },
+        {
+          "text": "UPDATE DISTRIBUTION SLA",
+          "line": 370
+        },
+        {
+          "text": "AACE CLASS 1 ACCURACY",
+          "line": 374
+        },
+        {
+          "text": "Open the weekly scheduler demo",
+          "line": 381
+        },
+        {
+          "text": "30-min walkthrough",
+          "line": 385
+        },
+        {
+          "text": "Asif Muhammad, PMP",
+          "line": 390
+        },
+        {
+          "text": "· NICET HCI Level I (exams complete) ·\n                BSET, NJIT · Reports to the Project Controls Director · Garden State Parkway repairs (Colonia, Churchill / Trilon)",
+          "line": 390
+        },
+        {
+          "text": "PMXML · LIVE — /p6-xml",
+          "line": 408
+        },
+        {
+          "text": "WORKING DEMO · /p6-xml",
+          "line": 413
+        },
+        {
+          "text": "MCFA's Evergreen CPM Scheduler/Estimator posting calls for disciplined Primavera P6 work, AACE-compliant\n                estimating, and DOT-grade compliance — with a clear opening for an \"Entrepreneu",
+          "line": 431
+        },
+        {
+          "text": "Saqeeb Muhammad",
+          "line": 433
+        },
+        {
+          "text": ",\n                this proposal answers that call directly.",
+          "line": 433
+        },
+        {
+          "text": "The role reports to the",
+          "line": 437
+        },
+        {
+          "text": "Project Controls Director",
+          "line": 437
+        },
+        {
+          "text": ", supports\n                Resident Engineers on contractor schedule reviews, and feeds the L10 Scorecard with two predictive numbers\n                every week. The Entrepreneurial value-add is the i",
+          "line": 437
+        },
+        {
+          "text": "PMXML",
+          "line": 439
+        },
+        {
+          "text": "tooling\n                shown at",
+          "line": 439
+        },
+        {
+          "text": "/p6-xml",
+          "line": 440
+        },
+        {
+          "text": "—\n                accelerators that make the scheduler faster, not a separate role.",
+          "line": 440
+        },
+        {
+          "text": "The end-state vision aligns to MCFA's mission of",
+          "line": 444
+        },
+        {
+          "text": "Inspiring People and Places",
+          "line": 444
+        },
+        {
+          "text": ":\n                give every PM the most reliable, up-to-date schedule data on the program, so they can lead their projects\n                successfully across the Newark Airport / PANYNJ portfolio.",
+          "line": 444
+        },
+        {
+          "text": "The role collapses into a five-day rhythm. Each day produces a deliverable the Project Controls Director and\n            Resident Engineers can act on — and the live demo at",
+          "line": 472
+        },
+        {
+          "text": "/p6-xml",
+          "line": 473
+        },
+        {
+          "text": "walks every step on a dummy NJTA project.",
+          "line": 473
+        },
+        {
+          "text": "Walk through the live weekly demo",
+          "line": 492
+        },
+        {
+          "text": "The role consolidates traditional CPM scheduling, AACE-compliant estimating, and bespoke software tooling into a single\n            project-controls function. Every activity below maps to a measurable",
+          "line": 505
+        },
+        {
+          "text": "Today, an inspector's daily report ends in Excel; the PM still hand-keys ~40 activity\n            actuals into Primavera P6 each month. With",
+          "line": 535
+        },
+        {
+          "text": "PMXML round-trip",
+          "line": 536
+        },
+        {
+          "text": ",\n            once the Resident Engineer approves the day's quantities the schedule update writes itself\n            — one upload in, one P6-ready file out, and the scheduler reviews a diff before any",
+          "line": 536
+        },
+        {
+          "text": "P6 XML",
+          "line": 539
+        },
+        {
+          "text": "format\n            Oracle ships across P6 Professional 22.x, EPPM, and Primavera Cloud.",
+          "line": 539
+        },
+        {
+          "text": "01 · IN",
+          "line": 545
+        },
+        {
+          "text": "Contractor PMXML baseline",
+          "line": 546
+        },
+        {
+          "text": "Single-file drop. Namespace + schema version detected (e.g.\n                Business_Objects_22_12). Every element we don't touch is preserved verbatim so\n                Oracle accepts the re-import.",
+          "line": 548
+        },
+        {
+          "text": "02 · APPLY",
+          "line": 554
+        },
+        {
+          "text": "Auto-translate field data → P6 fields",
+          "line": 555
+        },
+        {
+          "text": "· First approved report →",
+          "line": 557
+        },
+        {
+          "text": "ActualStartDate",
+          "line": 557
+        },
+        {
+          "text": "+ status",
+          "line": 557
+        },
+        {
+          "text": "In Progress",
+          "line": 557
+        },
+        {
+          "text": "· Cumulative qty ÷ contract qty →",
+          "line": 558
+        },
+        {
+          "text": "PhysicalPercentComplete",
+          "line": 558
+        },
+        {
+          "text": "· Inspector marks complete →",
+          "line": 559
+        },
+        {
+          "text": "ActualFinishDate",
+          "line": 559
+        },
+        {
+          "text": "+ 0 remaining",
+          "line": 559
+        },
+        {
+          "text": "· Project",
+          "line": 560
+        },
+        {
+          "text": "DataDate",
+          "line": 560
+        },
+        {
+          "text": "bumps to latest approved date",
+          "line": 560
+        },
+        {
+          "text": "03 · OUT",
+          "line": 564
+        },
+        {
+          "text": "P6-ready update file + diff",
+          "line": 565
+        },
+        {
+          "text": "Download",
+          "line": 567
+        },
+        {
+          "text": "_update.xml",
+          "line": 567
+        },
+        {
+          "text": ", import\n                with",
+          "line": 567
+        },
+        {
+          "text": "Update existing project",
+          "line": 568
+        },
+        {
+          "text": ", and let P6's scheduler recalc. We don't\n                fight the CPM engine — we just stop asking the PM to retype actuals.",
+          "line": 568
+        },
+        {
+          "text": "Try the live PMXML round-trip",
+          "line": 576
+        },
+        {
+          "text": "PMXML DCMA-14 demo",
+          "line": 579
+        },
+        {
+          "text": "Traditional scheduling KPIs are lagging. The weekly L10 scorecard below tracks",
+          "line": 596
+        },
+        {
+          "text": "predictive",
+          "line": 596
+        },
+        {
+          "text": "measurables —\n            problems surface early enough for IDS resolution before they become claims.",
+          "line": 596
+        },
+        {
+          "text": "WEEKLY L10 SCORECARD · LEADING INDICATORS",
+          "line": 602
+        },
+        {
+          "text": "QUARTERLY / ANNUAL · LAGGING INDICATORS",
+          "line": 615
+        },
+        {
+          "text": "90-DAY ROCKS",
+          "line": 626
+        },
+        {
+          "text": "The Integrator adds",
+          "line": 647
+        },
+        {
+          "text": "repeatability, governance, and automation",
+          "line": 647
+        },
+        {
+          "text": "to controls —\n            without abandoning the foundational scheduling work.",
+          "line": 647
+        },
+        {
+          "text": "Capability",
+          "line": 655
+        },
+        {
+          "text": "TRADITIONAL",
+          "line": 657
+        },
+        {
+          "text": "Scheduler",
+          "line": 658
+        },
+        {
+          "text": "TRADITIONAL",
+          "line": 661
+        },
+        {
+          "text": "Estimator",
+          "line": 662
+        },
+        {
+          "text": "SYSTEMS-ENABLED",
+          "line": 665
+        },
+        {
+          "text": "CPM (you)",
+          "line": 666
+        },
+        {
+          "text": "Full",
+          "line": 682
+        },
+        {
+          "text": "Partial",
+          "line": 683
+        },
+        {
+          "text": "Not in scope",
+          "line": 684
+        },
+        {
+          "text": "Traceable transformations · stable metric definitions · audit-ready outputs.",
+          "line": 697
+        },
+        {
+          "text": "LAYER",
+          "line": 706
+        },
+        {
+          "text": "The PDF cites the conservative floor:",
+          "line": 734
+        },
+        {
+          "text": "$180K",
+          "line": 734
+        },
+        {
+          "text": "across 3 projects in Year 1.\n            That number assumes",
+          "line": 734
+        },
+        {
+          "text": "partial",
+          "line": 735
+        },
+        {
+          "text": "adoption. Toggle the scenarios below to see what happens when the platform\n            scales across the T&amp;I division and Phase 3 P6 telemetry comes online.",
+          "line": 735
+        },
+        {
+          "text": "NET VALUE",
+          "line": 790
+        },
+        {
+          "text": "ANNUAL",
+          "line": 796
+        },
+        {
+          "text": "Net",
+          "line": 798
+        },
+        {
+          "text": "Above &amp; beyond billable salary recovery",
+          "line": 799
+        },
+        {
+          "text": "Revenue + Overhead Avoidance",
+          "line": 827
+        },
+        {
+          "text": "1,600 hrs cover base salary via standard contract billing. The 600 flex hours circumvent part-time admin hires\n                and prevent reallocating Senior Schedulers to manual IDR cross-checks.",
+          "line": 829
+        },
+        {
+          "text": "Software Cost Avoidance",
+          "line": 835
+        },
+        {
+          "text": "Internally operated PMXML tooling bypasses traditional SaaS. MCFA pays only the raw external footprint — hosting,\n                DB transit, AI API calls. Internal tooling budget scales fluidly.",
+          "line": 837
+        },
+        {
+          "text": "Proposal Competitiveness",
+          "line": 843
+        },
+        {
+          "text": "Rapid, accurate quantity extraction from bid documents directly supports BD Managers — increasing proposal\n                volume without additional estimating headcount.",
+          "line": 845
+        },
+        {
+          "text": "L10 Meeting Integration",
+          "line": 863
+        },
+        {
+          "text": "Weekly Level 10 meetings with scorecard reporting on Schedule Health (DCMA-14), Reporting Latency\n                (≤ 72 hr), and L10 Scorecard contribution.",
+          "line": 865
+        },
+        {
+          "text": "\"The Rock\" Ownership",
+          "line": 871
+        },
+        {
+          "text": "Every 90 days, ownership of one measurable Rock: Q1 PMXML DCMA-14 GA · Q2 Automated TIA fragnet ·\n                Q3 Portfolio EVM telemetry on the L10 scorecard.",
+          "line": 873
+        },
+        {
+          "text": "Scheduler Evaluation",
+          "line": 879
+        },
+        {
+          "text": "Schedule-health and reporting-velocity metrics alongside efficiency contributions — fewer rejected\n                baselines, faster RE response, lower per-project controls overhead.",
+          "line": 881
+        },
+        {
+          "text": "ANCHOR · NJ MARKET BENCHMARKS (2025)",
+          "line": 912
+        },
+        {
+          "text": "The roles being absorbed.",
+          "line": 914
+        },
+        {
+          "text": "A traditional MCFA hire to cover even",
+          "line": 916
+        },
+        {
+          "text": "two",
+          "line": 916
+        },
+        {
+          "text": "of these costs ~$200K+ in\n                base alone — and still doesn't ship the AI/P6 platform.",
+          "line": 916
+        },
+        {
+          "text": "Role being consolidated",
+          "line": 924
+        },
+        {
+          "text": "NJ Base (2025)",
+          "line": 925
+        },
+        {
+          "text": "Cost of three siloed seats (Scheduler + Estimator + Analyst)",
+          "line": 943
+        },
+        {
+          "text": "$310K – $390K",
+          "line": 944
+        },
+        {
+          "text": "BYOR Ask · Experienced Senior Scheduler",
+          "line": 948
+        },
+        {
+          "text": "PMP · NJDOT/AACE · PMXML tooling included",
+          "line": 949
+        },
+        {
+          "text": "$130K – $140K",
+          "line": 952
+        },
+        {
+          "text": "+ 10 Growth Units · quarterly profit-share (PDF §6)",
+          "line": 953
+        },
+        {
+          "text": "Net savings to MCFA on Day 1:",
+          "line": 963
+        },
+        {
+          "text": "$55K – $80K vs. two siloed hires",
+          "line": 963
+        },
+        {
+          "text": ",\n                  before counting the platform value or the 10% bonus.",
+          "line": 963
+        },
+        {
+          "text": "RECRUITER Q&amp;A · READY-TO-READ",
+          "line": 973
+        },
+        {
+          "text": "Likely objections, answered.",
+          "line": 975
+        },
+        {
+          "text": "Tap a question to reveal the response. Each answer is &lt;30 seconds spoken — short enough to deliver in\n                a screening call without losing the room.",
+          "line": 977
+        },
+        {
+          "text": "IF PUSHED LOWER",
+          "line": 1005
+        },
+        {
+          "text": "Hold base at minimum",
+          "line": 1007
+        },
+        {
+          "text": "$130K",
+          "line": 1007
+        },
+        {
+          "text": ". Trade flex by\n                  expanding the Value-Add cap from 10% → 15%, or by carving out a fixed milestone bonus when Phase 3\n                  (P6 telemetry) goes live in Q3.",
+          "line": 1007
+        },
+        {
+          "text": "CLOSING",
+          "line": 1031
+        },
+        {
+          "text": "Bring scheduler depth and practical workflow tooling —",
+          "line": 1033
+        },
+        {
+          "text": "at MCFA.",
+          "line": 1034
+        },
+        {
+          "text": "A working prototype of the weekly scheduler workflow already exists at /p6-xml. The next step is a 30-minute conversation about how this maps to the Project Controls Director's immediate Newark / PANY",
+          "line": 1037
+        },
+        {
+          "text": "Open PMXML Live Demo",
+          "line": 1041
+        },
+        {
+          "text": "Book the live walkthrough",
+          "line": 1044
+        },
+        {
+          "text": "Asif Muhammad, PMP",
+          "line": 1048
+        },
+        {
+          "text": "Senior CPM Scheduler / Estimator · PMP · NJDOT / AACE.",
+          "line": 1049
+        },
+        {
+          "text": "LinkedIn",
+          "line": 1051
+        },
+        {
+          "text": "GitHub",
+          "line": 1052
+        },
+        {
+          "text": "Live App",
+          "line": 1053
+        },
+        {
+          "text": "BUILT WITH THE SAME STACK PROPOSED FOR MCFA · REACT · TYPESCRIPT · SUPABASE · AI",
+          "line": 1056
+        }
+      ],
+      "imports": [
+        "react",
+        "react-router-dom",
+        "framer-motion",
+        "@/components/ui/button",
+        "@/components/ui/card",
+        "@/components/ui/accordion",
+        "@/assets/hero-screenshot.jpg",
+        "lucide-react"
+      ]
+    },
+    {
+      "file": "src/pages/NotFound.tsx",
+      "loc": 25,
+      "exports": [],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "Oops! Page not found",
+          "line": 15
+        },
+        {
+          "text": "Return to Home",
+          "line": 17
+        }
+      ],
+      "imports": [
+        "react-router-dom",
+        "react"
+      ]
+    },
+    {
+      "file": "src/pages/P6Export.tsx",
+      "loc": 429,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "P6Export",
+          "line": 22
+        }
+      ],
+      "components": [
+        {
+          "name": "P6Export",
+          "line": 22
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "Nothing to auto-map",
+          "line": 96,
+          "kind": "toast"
+        },
+        {
+          "text": "No unmapped pay items match an Activity Id in this PMXML.",
+          "line": 96,
+          "kind": "toast"
+        },
+        {
+          "text": "Progress applied",
+          "line": 115,
+          "kind": "toast"
+        },
+        {
+          "text": "Apply failed",
+          "line": 121,
+          "kind": "toast"
+        },
+        {
+          "text": "Sign in",
+          "line": 136
+        },
+        {
+          "text": "Back to takeoff",
+          "line": 146
+        },
+        {
+          "text": "P6 XML Export",
+          "line": 150
+        },
+        {
+          "text": "As of",
+          "line": 155
+        },
+        {
+          "text": "01 · BASELINE PMXML",
+          "line": 173
+        },
+        {
+          "text": "Upload the contractor's PMXML export from P6",
+          "line": 178
+        },
+        {
+          "text": "File:",
+          "line": 186
+        },
+        {
+          "text": "Project Id:",
+          "line": 187
+        },
+        {
+          "text": "Data date:",
+          "line": 189
+        },
+        {
+          "text": "Activities:",
+          "line": 190
+        },
+        {
+          "text": "Drop a .xml file to see project + activity counts.",
+          "line": 194
+        },
+        {
+          "text": "02 · PAY ITEM → ACTIVITY MAPPING",
+          "line": 203
+        },
+        {
+          "text": "Pay items",
+          "line": 213
+        },
+        {
+          "text": "Mapped",
+          "line": 217
+        },
+        {
+          "text": "In this PMXML",
+          "line": 223
+        },
+        {
+          "text": "AUTO-MAP BY ITEM CODE",
+          "line": 232
+        },
+        {
+          "text": "Auto-map fills in unmapped pay items where the item code (e.g.",
+          "line": 235
+        },
+        {
+          "text": ")\n                  literally matches an Activity Id in the uploaded PMXML. Override manually in the table below.",
+          "line": 235
+        },
+        {
+          "text": "03 · APPLY & DOWNLOAD",
+          "line": 245
+        },
+        {
+          "text": "APPLY APPROVED PROGRESS",
+          "line": 255
+        },
+        {
+          "text": "DOWNLOAD UPDATED PMXML",
+          "line": 259
+        },
+        {
+          "text": "updated · DataDate",
+          "line": 271
+        },
+        {
+          "text": "unmatched",
+          "line": 272
+        },
+        {
+          "text": "Import into P6 →",
+          "line": 277
+        },
+        {
+          "text": "File · Import · Primavera XML",
+          "line": 277
+        },
+        {
+          "text": "→\n                match Project Id →",
+          "line": 277
+        },
+        {
+          "text": "Update Existing Project",
+          "line": 278
+        },
+        {
+          "text": "Pay items & approved totals",
+          "line": 287
+        },
+        {
+          "text": "item",
+          "line": 289
+        },
+        {
+          "text": "with approved quantities",
+          "line": 289
+        },
+        {
+          "text": "Pay item",
+          "line": 296
+        },
+        {
+          "text": "P6 Activity Id",
+          "line": 297
+        },
+        {
+          "text": "Approved cumul.",
+          "line": 298
+        },
+        {
+          "text": "Contract",
+          "line": 299
+        },
+        {
+          "text": "Last approved",
+          "line": 300
+        },
+        {
+          "text": "No pay items in this project yet.",
+          "line": 307
+        },
+        {
+          "text": "Change log · what P6 will see (",
+          "line": 374
+        },
+        {
+          "text": "Activity",
+          "line": 380
+        },
+        {
+          "text": "Status",
+          "line": 381
+        },
+        {
+          "text": "% Complete",
+          "line": 382
+        },
+        {
+          "text": "Remaining (hr)",
+          "line": 383
+        },
+        {
+          "text": "Actuals set",
+          "line": 384
+        },
+        {
+          "text": "approved report",
+          "line": 393
+        },
+        {
+          "text": "+ Start",
+          "line": 408
+        },
+        {
+          "text": "+ Finish",
+          "line": 409
+        },
+        {
+          "text": "Skipped",
+          "line": 419
+        },
+        {
+          "text": "approved activit",
+          "line": 419
+        },
+        {
+          "text": "not present in this PMXML:&nbsp;",
+          "line": 419
+        }
+      ],
+      "imports": [
+        "react",
+        "react-router-dom",
+        "@tanstack/react-query",
+        "@/components/ui/button",
+        "@/components/ui/card",
+        "@/components/ui/badge",
+        "@/components/ui/input",
+        "lucide-react",
+        "@/lib/p6xml/parser",
+        "@/lib/p6xml/apply-progress",
+        "@/lib/p6xml/serializer",
+        "@/lib/p6xml/types",
+        "@/hooks/useAuth",
+        "@/hooks/usePayItemActivityMap",
+        "@/hooks/use-toast",
+        "@/integrations/supabase/client",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "file": "src/pages/P6XmlDemo.tsx",
+      "loc": 251,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "P6XmlDemo",
+          "line": 13
+        }
+      ],
+      "components": [
+        {
+          "name": "P6XmlDemo",
+          "line": 13
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "BACK TO MCFA PITCH",
+          "line": 55
+        },
+        {
+          "text": "P6 XML ROUND-TRIP · LIVE",
+          "line": 58
+        },
+        {
+          "text": "MODULE · INSPECTOR REPORTS → P6 UPDATE",
+          "line": 64
+        },
+        {
+          "text": "One upload replaces ~40 P6 keystrokes per project per month.",
+          "line": 66
+        },
+        {
+          "text": "Drop a Primavera",
+          "line": 69
+        },
+        {
+          "text": "PMXML",
+          "line": 69
+        },
+        {
+          "text": "baseline. Pull in the",
+          "line": 69
+        },
+        {
+          "text": "RE-approved daily reports",
+          "line": 70
+        },
+        {
+          "text": ". Download an\n            updated PMXML that re-imports cleanly into P6 Professional, EPPM, or Primavera Cloud\n            with",
+          "line": 70
+        },
+        {
+          "text": "Update existing project",
+          "line": 72
+        },
+        {
+          "text": ". The scheduler's CPM recalc happens in P6 — we just stop\n            asking the PM to retype Actual Start, Actual Finish, and %.",
+          "line": 72
+        },
+        {
+          "text": "P6 Professional 22.x",
+          "line": 76
+        },
+        {
+          "text": "P6 EPPM",
+          "line": 77
+        },
+        {
+          "text": "Primavera Cloud",
+          "line": 78
+        },
+        {
+          "text": "No IT integration",
+          "line": 79
+        },
+        {
+          "text": "Browser-only",
+          "line": 80
+        },
+        {
+          "text": "01 · BASELINE PMXML",
+          "line": 88
+        },
+        {
+          "text": "Drop your contractor's PMXML export",
+          "line": 93
+        },
+        {
+          "text": "USE SAMPLE NJTA-104-0001",
+          "line": 99
+        },
+        {
+          "text": "Project:",
+          "line": 103
+        },
+        {
+          "text": "Data date:",
+          "line": 105
+        },
+        {
+          "text": "Activities:",
+          "line": 106
+        },
+        {
+          "text": "Schema:",
+          "line": 107
+        },
+        {
+          "text": "Business_Objects_",
+          "line": 107
+        },
+        {
+          "text": "02 · RE-APPROVED DAILY REPORTS",
+          "line": 121
+        },
+        {
+          "text": "approved rows · today these become ~40 manual P6 edits per project per month",
+          "line": 125
+        },
+        {
+          "text": "Date",
+          "line": 131
+        },
+        {
+          "text": "Activity",
+          "line": 132
+        },
+        {
+          "text": "Cum / Total",
+          "line": 133
+        },
+        {
+          "text": "Done?",
+          "line": 134
+        },
+        {
+          "text": "APPLY APPROVED PROGRESS →",
+          "line": 150
+        },
+        {
+          "text": "03 · UPDATED PMXML",
+          "line": 157
+        },
+        {
+          "text": "Apply progress to see the change log and download the P6-ready file.",
+          "line": 162
+        },
+        {
+          "text": "activities updated · DataDate bumped to",
+          "line": 168
+        },
+        {
+          "text": "DOWNLOAD",
+          "line": 171
+        },
+        {
+          "text": "_update.xml",
+          "line": 171
+        },
+        {
+          "text": "Import into P6 →",
+          "line": 174
+        },
+        {
+          "text": "File · Import · Primavera XML",
+          "line": 174
+        },
+        {
+          "text": "→\n                  match Project Id →",
+          "line": 174
+        },
+        {
+          "text": "Update Existing Project",
+          "line": 175
+        },
+        {
+          "text": "CHANGE LOG · WHAT P6 WILL SEE",
+          "line": 186
+        },
+        {
+          "text": "Activity",
+          "line": 191
+        },
+        {
+          "text": "Status",
+          "line": 192
+        },
+        {
+          "text": "% Complete",
+          "line": 193
+        },
+        {
+          "text": "Remain (hr)",
+          "line": 194
+        },
+        {
+          "text": "Actual",
+          "line": 195
+        },
+        {
+          "text": "+ Start",
+          "line": 218
+        },
+        {
+          "text": "+ Finish",
+          "line": 219
+        },
+        {
+          "text": "OUTBOUND PMXML · PREVIEW",
+          "line": 230
+        },
+        {
+          "text": "first 1.8 kB",
+          "line": 231
+        },
+        {
+          "text": "Why this matters for MCFA T&amp;I:",
+          "line": 241
+        },
+        {
+          "text": "the takeoff/inspection product already\n          captures field quantities the RE has to sign off on. Until today that approval ended in\n          Excel; the PM still hand-keyed every activity's actua",
+          "line": 241
+        }
+      ],
+      "imports": [
+        "react",
+        "react-router-dom",
+        "@/components/ui/button",
+        "@/components/ui/card",
+        "@/components/ui/badge",
+        "lucide-react",
+        "@/lib/p6xml/parser",
+        "@/lib/p6xml/apply-progress",
+        "@/lib/p6xml/serializer",
+        "@/lib/p6xml/sample",
+        "@/lib/p6xml/types"
+      ]
+    },
+    {
+      "file": "src/pages/ProjectControls.tsx",
+      "loc": 693,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "ProjectControls",
+          "line": 58
+        }
+      ],
+      "components": [
+        {
+          "name": "ProjectControls",
+          "line": 58
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "Project not found",
+          "line": 284
+        },
+        {
+          "text": "PM access required.",
+          "line": 287
+        },
+        {
+          "text": "Project Controls Hub",
+          "line": 298
+        },
+        {
+          "text": "BID",
+          "line": 305
+        },
+        {
+          "text": "Open Field View",
+          "line": 310
+        },
+        {
+          "text": "Dashboard",
+          "line": 318
+        },
+        {
+          "text": "Activities",
+          "line": 319
+        },
+        {
+          "text": "Scorecard",
+          "line": 320
+        },
+        {
+          "text": "AI Photos",
+          "line": 321
+        },
+        {
+          "text": "Bid",
+          "line": 322
+        },
+        {
+          "text": "No pay items have a contract quantity set.",
+          "line": 361
+        },
+        {
+          "text": "No annotations yet.",
+          "line": 381
+        },
+        {
+          "text": "this week",
+          "line": 389
+        },
+        {
+          "text": "Target:",
+          "line": 422
+        },
+        {
+          "text": "Delete",
+          "line": 435
+        },
+        {
+          "text": "No Rocks defined yet.",
+          "line": 439
+        },
+        {
+          "text": "Tagging via Lovable AI (Gemini Flash)",
+          "line": 473
+        },
+        {
+          "text": "No photos uploaded yet.",
+          "line": 476
+        },
+        {
+          "text": "Estimated Bid Value",
+          "line": 496
+        },
+        {
+          "text": "pay items",
+          "line": 498
+        },
+        {
+          "text": "Export CSV",
+          "line": 515
+        },
+        {
+          "text": "WBS",
+          "line": 595
+        },
+        {
+          "text": "Activity",
+          "line": 596
+        },
+        {
+          "text": "Start",
+          "line": 597
+        },
+        {
+          "text": "End",
+          "line": 598
+        },
+        {
+          "text": "Qty",
+          "line": 599
+        },
+        {
+          "text": "Add",
+          "line": 605
+        },
+        {
+          "text": "Quarter",
+          "line": 619
+        },
+        {
+          "text": "Rock Title",
+          "line": 620
+        },
+        {
+          "text": "Target",
+          "line": 621
+        },
+        {
+          "text": "Due",
+          "line": 622
+        },
+        {
+          "text": "Save",
+          "line": 648
+        },
+        {
+          "text": "AI:",
+          "line": 672
+        },
+        {
+          "text": "Tagging…",
+          "line": 675
+        },
+        {
+          "text": "Confirmed",
+          "line": 685
+        },
+        {
+          "text": "Confirm",
+          "line": 687
+        }
+      ],
+      "imports": [
+        "react",
+        "react-router-dom",
+        "@tanstack/react-query",
+        "@/integrations/supabase/client",
+        "@/hooks/useAuth",
+        "@/components/ui/tabs",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/label",
+        "@/components/ui/progress",
+        "@/components/ui/dialog",
+        "@/components/ui/select",
+        "@/hooks/use-toast",
+        "lucide-react",
+        "@/lib/utils",
+        "@/components/GanttUploader",
+        "@/components/schedule/ScheduleWorkspace"
+      ]
+    },
+    {
+      "file": "src/pages/ReReview.tsx",
+      "loc": 232,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "ReReview",
+          "line": 20
+        }
+      ],
+      "components": [
+        {
+          "name": "ReReview",
+          "line": 20
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "Loading…",
+          "line": 68
+        },
+        {
+          "text": "Sign in to access the RE review queue.",
+          "line": 75
+        },
+        {
+          "text": "Sign in",
+          "line": 76
+        },
+        {
+          "text": "Projects",
+          "line": 87
+        },
+        {
+          "text": "RE Review",
+          "line": 91
+        },
+        {
+          "text": "READ ONLY",
+          "line": 94
+        },
+        {
+          "text": "No projects",
+          "line": 107
+        },
+        {
+          "text": "Pending",
+          "line": 118
+        },
+        {
+          "text": "Approved",
+          "line": 119
+        },
+        {
+          "text": "Rejected",
+          "line": 120
+        },
+        {
+          "text": "All inspectors",
+          "line": 128
+        },
+        {
+          "text": "Clear",
+          "line": 147
+        },
+        {
+          "text": "Approve all visible (",
+          "line": 156
+        },
+        {
+          "text": "Approve",
+          "line": 161
+        },
+        {
+          "text": "reports?",
+          "line": 161
+        },
+        {
+          "text": "Every visible pending report will be approved and counted toward contract totals. This cannot be undone.",
+          "line": 163
+        },
+        {
+          "text": "Cancel",
+          "line": 167
+        },
+        {
+          "text": "Approve all",
+          "line": 172
+        },
+        {
+          "text": "You need the",
+          "line": 187
+        },
+        {
+          "text": "resident_engineer",
+          "line": 187
+        },
+        {
+          "text": "role or to be the project creator to access this queue.",
+          "line": 187
+        },
+        {
+          "text": "Select a project to view its review queue.",
+          "line": 191
+        },
+        {
+          "text": "Loading reports…",
+          "line": 193
+        },
+        {
+          "text": "Error:",
+          "line": 195
+        },
+        {
+          "text": "report",
+          "line": 210
+        },
+        {
+          "text": "total",
+          "line": 212
+        }
+      ],
+      "imports": [
+        "react",
+        "react-router-dom",
+        "@/hooks/useAuth",
+        "@/hooks/useProjects",
+        "@/hooks/useReReviewQueue",
+        "@/components/ReReviewCard",
+        "@/components/ui/select",
+        "@/components/ui/button",
+        "@/components/ui/badge",
+        "@/components/ui/input",
+        "@/components/ui/alert-dialog",
+        "lucide-react"
+      ]
+    },
+    {
+      "file": "src/pages/ResetPassword.tsx",
+      "loc": 84,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "ResetPassword",
+          "line": 10
+        }
+      ],
+      "components": [
+        {
+          "name": "ResetPassword",
+          "line": 10
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "Password updated",
+          "line": 37,
+          "kind": "toast"
+        },
+        {
+          "text": "You can now sign in with your new password.",
+          "line": 37,
+          "kind": "toast"
+        },
+        {
+          "text": "Error",
+          "line": 40,
+          "kind": "toast"
+        },
+        {
+          "text": "Loading recovery session...",
+          "line": 50
+        },
+        {
+          "text": "Back to Sign In",
+          "line": 52
+        },
+        {
+          "text": "Set New Password",
+          "line": 66
+        },
+        {
+          "text": "Enter your new password below",
+          "line": 67
+        },
+        {
+          "text": "New Password",
+          "line": 72
+        }
+      ],
+      "imports": [
+        "react",
+        "react-router-dom",
+        "@/integrations/supabase/client",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/label",
+        "@/hooks/use-toast",
+        "lucide-react"
+      ]
+    },
+    {
+      "file": "src/pages/Settings.tsx",
+      "loc": 179,
+      "exports": [
+        {
+          "kind": "function",
+          "name": "Settings",
+          "line": 14
+        }
+      ],
+      "components": [
+        {
+          "name": "Settings",
+          "line": 14
+        }
+      ],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [
+        {
+          "text": "Back",
+          "line": 88
+        },
+        {
+          "text": "Settings",
+          "line": 89
+        },
+        {
+          "text": "Account",
+          "line": 96
+        },
+        {
+          "text": "Security",
+          "line": 103
+        },
+        {
+          "text": "Notifications",
+          "line": 128
+        },
+        {
+          "text": "Get alerted on report submission, approval, and rejection. Native push only — web users see in-app notifications.",
+          "line": 130
+        },
+        {
+          "text": "Background sync",
+          "line": 150
+        },
+        {
+          "text": "Drain the offline outbox automatically every ~15 min while the app is suspended.",
+          "line": 152
+        }
+      ],
+      "imports": [
+        "react",
+        "react-router-dom",
+        "lucide-react",
+        "@/components/ui/button",
+        "@/components/ui/switch",
+        "@/components/ui/card",
+        "@/hooks/useAuth",
+        "@/lib/native/platform",
+        "@/lib/native/biometric",
+        "@/lib/native/push",
+        "@/lib/native/background-sync",
+        "sonner"
+      ]
+    },
+    {
+      "file": "src/types/project.ts",
+      "loc": 95,
+      "exports": [
+        {
+          "kind": "interface",
+          "name": "TocEntry",
+          "line": 1
+        },
+        {
+          "kind": "type",
+          "name": "PayItemUnit",
+          "line": 8
+        },
+        {
+          "kind": "const",
+          "name": "DRAWABLE_UNITS",
+          "line": 10
+        },
+        {
+          "kind": "function",
+          "name": "isDrawableUnit",
+          "line": 12
+        },
+        {
+          "kind": "const",
+          "name": "UNIT_LABELS",
+          "line": 16
+        },
+        {
+          "kind": "interface",
+          "name": "PayItem",
+          "line": 28
+        },
+        {
+          "kind": "function",
+          "name": "getPayItemSection",
+          "line": 44
+        },
+        {
+          "kind": "interface",
+          "name": "PointXY",
+          "line": 50
+        },
+        {
+          "kind": "interface",
+          "name": "Calibration",
+          "line": 55
+        },
+        {
+          "kind": "interface",
+          "name": "Annotation",
+          "line": 62
+        },
+        {
+          "kind": "interface",
+          "name": "Project",
+          "line": 79
+        },
+        {
+          "kind": "type",
+          "name": "ToolMode",
+          "line": 92
+        },
+        {
+          "kind": "const",
+          "name": "DEFAULT_PAY_ITEMS",
+          "line": 94
+        }
+      ],
+      "components": [],
+      "routes": [],
+      "switches": [],
+      "jsxStrings": [],
+      "imports": []
+    }
+  ]
+}

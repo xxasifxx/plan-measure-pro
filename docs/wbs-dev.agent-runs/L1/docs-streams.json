@@ -1,0 +1,505 @@
+{
+  "agent": "docs-streams",
+  "generatedAt": "2026-05-29T17:45:04.830Z",
+  "streamCount": 20,
+  "streams": [
+    {
+      "file": "docs/streams/01-identity-and-access.md",
+      "slug": "01-identity-and-access",
+      "streamNum": 1,
+      "title": "Identity & Access",
+      "purpose": "Manages every authentication touchpoint and the role model that gates all downstream operations. It exists distinct from other streams because it owns the trust boundary: who can enter the app (email/password signup, invited flow, biometric cold-start unlock), which capabilities each user has (`admin`, `project_manager`, `inspector`, `resident_engineer`), and how Supabase RLS policies enforce those capabilities server-side.",
+      "surfaces": [],
+      "acceptance": [
+        "A new organic signup receives `admin` role (via `assign_owner_role`) and is redirected to Dashboard on first login.",
+        "An invited user who follows the emailed link sees the \"Join Team\" variant of Auth and, after confirming email, has their target role applied via `accept_invitation`.",
+        "`useAuth.roles` is populated with the correct roles within one render cycle of a valid session.",
+        "`isManager`, `isAdmin`, `isResidentEngineer`, `isInspector` reflect the user's DB roles without page reload.",
+        "A device with a stored biometric credential shows the fingerprint gate on cold start and bypasses it only on successful unlock.",
+        "Password-reset email redirects to `/reset-password`, detects `PASSWORD_RECOVERY` event, and allows password change.",
+        "Supabase RLS prevents any row from `pay_items`, `annotations`, or `projects` being read without a valid session and appropriate `project_members` or ownership check."
+      ],
+      "currentState": [],
+      "risks": [],
+      "sections": [
+        "Purpose",
+        "Surfaces (files)",
+        "Acceptance criteria",
+        "Current state vs criteria",
+        "Cross-stream handoffs",
+        "Risks / debt"
+      ]
+    },
+    {
+      "file": "docs/streams/02-portfolio-and-pm-home.md",
+      "slug": "02-portfolio-and-pm-home",
+      "streamNum": 2,
+      "title": "Portfolio & PM Home",
+      "purpose": "Provides the top-level project list and the entry point for project management oversight. Owners/admins create, open, and delete projects here; managers see per-project annotation activity and pending RE review counts across all projects. This stream is distinct from per-project work: it operates without a loaded PDF and is the only surface that shows cross-project KPIs.",
+      "surfaces": [],
+      "acceptance": [
+        "An admin/manager user sees all projects they own plus all projects where they appear in `project_members`.",
+        "Each project card shows annotation count, latest activity date, member count (owners only), and a pending-RE badge when `loadPendingReviewCounts` > 0.",
+        "\"New Project\" dialog requires name + PDF; contract number is optional; on success the user is navigated to `/project/:id`.",
+        "Only the project `owner` sees the delete trash icon; clicking it shows a destructive confirmation dialog.",
+        "Expanding a project card shows a ranked list of inspectors and the pages-annotated count.",
+        "Role badge in the header reflects the user's first role from `useAuth.roles`.",
+        "An inspector with no project assignments sees an empty state containing their email address."
+      ],
+      "currentState": [],
+      "risks": [],
+      "sections": [
+        "Purpose",
+        "Surfaces (files)",
+        "Acceptance criteria",
+        "Current state vs criteria",
+        "Cross-stream handoffs",
+        "Risks / debt"
+      ]
+    },
+    {
+      "file": "docs/streams/03-project-onboarding.md",
+      "slug": "03-project-onboarding",
+      "streamNum": 3,
+      "title": "Project Onboarding",
+      "purpose": "Covers everything that happens between \"project row created\" and \"inspector can start drawing\": uploading the plan PDF, optionally uploading standard specs, parsing the Index of Sheets (TOC) to map section labels to page ranges, and importing the pay-item schedule from the contract document. Distinct from field-capture because no measurement work can happen until calibration and pay items are in place, and distinct from the pay-item-catalog because it handles one-time bootstrapping, not ongoing lifecycle.",
+      "surfaces": [],
+      "acceptance": [
+        "Creating a project requires a name and a plan PDF; on success the user lands at `/project/:id` with the PDF rendered.",
+        "On `/project/:id` load, calibrations and annotations from `public.calibrations` and `public.annotations` are fetched and applied; if offline, IDB cache is used with a toast.",
+        "Selecting the `tocSelect` tool and drag-selecting the \"INDEX OF SHEETS\" region produces one `TocEntry` per row.",
+        "\"Import Pay Items\" on the current page (or up to 4 subsequent pages) populates the pay-item list with `itemCode`, `name`, `unit`, `unitPrice`, and a section-keyed color.",
+        "Uploading a Standard Specs PDF fully indexes it and sets `specs_storage_path`.",
+        "TOC and pay-item state survives a page reload."
+      ],
+      "currentState": [],
+      "risks": [],
+      "sections": [
+        "Purpose",
+        "Surfaces (files)",
+        "Acceptance criteria",
+        "Current state vs criteria",
+        "Cross-stream handoffs",
+        "Risks / debt"
+      ]
+    },
+    {
+      "file": "docs/streams/04-pay-item-catalog.md",
+      "slug": "04-pay-item-catalog",
+      "streamNum": 4,
+      "title": "Pay Item Catalog",
+      "purpose": "Manages the lifecycle of pay items within a single project: initial import from the contract PDF, manual add/edit/delete via the sidebar dialog, unit-code grouping for visual distinction, the `drawable` flag that splits measurable items (SF/LF/CY/SY/EA) from manual-entry items (LS/TON/USD/MNTH), cascade deletion of associated annotations when an item is removed, and persistence to `public.pay_items`. This is the authoritative lookup table that field-capture, summary export, and RE review all query against.",
+      "surfaces": [],
+      "acceptance": [
+        "Adding a pay item with a drawable unit (SF/LF/CY/SY/EA) sets `drawable: true` and makes line/polygon/count tools available.",
+        "Adding a pay item with a non-drawable unit (LS/TON/USD/MNTH) sets `drawable: false`; appears with a \"manual\" badge in Toolbar.",
+        "Deleting a pay item removes all its annotations from both local state and `public.annotations`.",
+        "Editing a pay item is reflected immediately in summary panel without page reload.",
+        "Pay items survive a reload (fetched from `public.pay_items` in `Index.tsx:119–124`).",
+        "Items imported from PDF are assigned section-keyed colors matching NJDOT unit code prefix.",
+        "Contract quantity stored and displayed in SummaryPanel as comparison denominator."
+      ],
+      "currentState": [],
+      "risks": [],
+      "sections": [
+        "Purpose",
+        "Surfaces (files)",
+        "Acceptance criteria",
+        "Current state vs criteria",
+        "Cross-stream handoffs",
+        "Risks / debt"
+      ]
+    },
+    {
+      "file": "docs/streams/05-field-capture.md",
+      "slug": "05-field-capture",
+      "streamNum": 5,
+      "title": "Field Capture",
+      "purpose": "The core on-site measurement workflow: rendering contract plan PDFs on a canvas, placing geometric annotations (line, polygon, count, label) keyed to pay items, calibrating the drawing scale, editing placed shapes, viewing GPS position overlaid on the plan, and capturing notes and location strings. This is the stream inspectors spend the most time in and the one that produces all raw measurement data consumed by export and RE review.",
+      "surfaces": [],
+      "acceptance": [
+        "Setting calibration by clicking two points and entering a known distance produces a `pixelsPerFoot`; line measurements match real scale.",
+        "Placing a polygon on calibrated page shows live SF running total; completing it prompts for depth (CY items) and stores result.",
+        "Selecting an existing annotation shows drag handles; dragging a vertex updates the measurement label in real time.",
+        "Undo (Ctrl+Z) removes the last-placed annotation from both local state and Supabase; redo restores it.",
+        "An annotation created by another user appears on the canvas without page reload (realtime).",
+        "GPS calibration with ≥ 2 control points renders a position dot and trace polyline at the correct location.",
+        "A `manual` or non-drawable pay item accepts a manual quantity override.",
+        "The `readOnly` flag disables the calibrate tool and hides pay-item edit controls."
+      ],
+      "currentState": [],
+      "risks": [],
+      "sections": [
+        "Purpose",
+        "Surfaces (files)",
+        "Acceptance criteria",
+        "Current state vs criteria",
+        "Cross-stream handoffs",
+        "Risks / debt"
+      ]
+    },
+    {
+      "file": "docs/streams/06-daily-report-lifecycle.md",
+      "slug": "06-daily-report-lifecycle",
+      "streamNum": 6,
+      "title": "Daily Report Lifecycle",
+      "purpose": "Enables inspectors to compose a frozen daily quantity summary and submit it to a Resident Engineer (RE) for approval or rejection. The stream implements a four-state workflow (draft → submitted → approved/rejected) that provides auditability and separation of duties required for NJDOT/NJTA contract administration. It is distinct from quantity-to-payment: this stream owns the *gating* (approval decision) while that stream owns the *rollup* (approved totals).",
+      "surfaces": [],
+      "acceptance": [
+        "Inspector can navigate to `/project/:id/daily-report`, select any past date, and see a live preview of their annotations for that date.",
+        "Submitting transitions status from `draft` → `submitted`, freezes the `snapshot` JSONB column, and shows an amber \"awaiting RE\" banner.",
+        "If annotations change after submission, an \"out of date\" alert appears with a Resubmit button; resubmitting replaces the snapshot atomically.",
+        "Rejected report shows RE's reason; \"Reopen & Edit\" returns status to `draft` without data loss.",
+        "RE queue at `/re-review` lists only `submitted` reports for the selected project; RE can filter by inspector and date range.",
+        "RE approving a report sets `status = 'approved'`; the report no longer appears in the pending queue and the quantities become visible to `v_approved_pay_item_quantities`.",
+        "Bulk approve correctly transitions all visible pending IDs in a single `update … in (ids)` call.",
+        "Rejection requires a non-empty reason; the reason is stored in `reject_reason` and auto-posted as a comment."
+      ],
+      "currentState": [],
+      "risks": [],
+      "sections": [
+        "Purpose",
+        "Surfaces (files)",
+        "Acceptance criteria",
+        "Current state vs criteria",
+        "Cross-stream handoffs",
+        "Risks / debt"
+      ]
+    },
+    {
+      "file": "docs/streams/07-quantity-to-payment.md",
+      "slug": "07-quantity-to-payment",
+      "streamNum": 7,
+      "title": "Quantity to Payment",
+      "purpose": "Aggregates RE-approved daily-report quantities into official contract totals and surfaces them as variance-coded exports (CSV, PDF, Excel). This stream answers the question \"how much has been installed vs the contract?\" and produces the payment-period deliverables that feed NJDOT/NJTA pay estimate submissions. It is intentionally downstream of daily-report-lifecycle: it only ever reads `approved` status rows.",
+      "surfaces": [],
+      "acceptance": [
+        "`loadApprovedTotalsByPayItem` returns a map containing only pay items with at least one approved report; draft/submitted/rejected deltas must not appear.",
+        "`exportApprovedCsv` produces a file where each row's quantity equals the approved sum (not raw annotation measurement), labeled `_approved_summary.csv`.",
+        "`exportApprovedPdfReport` title reads \"RE-Approved Quantity Report\" and `fileSuffix` is `approved_report`.",
+        "`SummaryPanel` variance column shows green for ≤ 0 %, amber for 1–10 %, red for > 10 %, and `—` when `contract_quantity` is absent.",
+        "`exportApprovedInspectorDaily` marks the export \"RE-Approved Daily\" when `status = 'approved'`; uses \"PENDING\" prefix otherwise.",
+        "`loadPendingReviewCounts` returns a count only for `status = 'submitted'` rows."
+      ],
+      "currentState": [],
+      "risks": [],
+      "sections": [
+        "Purpose",
+        "Surfaces (files)",
+        "Acceptance criteria",
+        "Current state vs criteria",
+        "Cross-stream handoffs",
+        "Risks / debt"
+      ]
+    },
+    {
+      "file": "docs/streams/08-photo-evidence.md",
+      "slug": "08-photo-evidence",
+      "streamNum": 8,
+      "title": "Photo Evidence",
+      "purpose": "Allows inspectors to capture field photos (native camera or browser file input), store them in Supabase Storage, and have an AI model suggest the pay item the photo most likely documents. Confirmed photo–pay-item associations link photographic evidence to contract line items, supporting dispute resolution and RE review. This is distinct from document-management (which handles plan PDFs and formal submittals) — photo-evidence is annotation-centric and AI-assisted.",
+      "surfaces": [],
+      "acceptance": [
+        "On native (iOS/Android), tapping \"Take Photo\" opens the device camera via Capacitor; on web it opens a camera-preferred file picker.",
+        "The uploaded file is stored in the `annotation-photos` bucket at `{projectId}/{userId}/{uuid}-{name}` and an `annotation_photos` row is inserted synchronously before the AI call.",
+        "After upload, `tag-photo` is invoked; within a few seconds the photo card updates to show `ai_suggested_pay_item_id`, confidence score, and rationale without a manual refresh.",
+        "An inspector can confirm or override the AI suggestion; confirming sets `confirmed = true` and the chosen `ai_suggested_pay_item_id`.",
+        "The edge function enforces project membership via `is_project_member` RPC before spending AI credits.",
+        "Offline-captured photos queue in IndexedDB and sync when connectivity is restored."
+      ],
+      "currentState": [],
+      "risks": [],
+      "sections": [
+        "Purpose",
+        "Surfaces (files)",
+        "Acceptance criteria",
+        "Current state vs criteria",
+        "Cross-stream handoffs",
+        "Risks / debt"
+      ]
+    },
+    {
+      "file": "docs/streams/09-standard-specifications.md",
+      "slug": "09-standard-specifications",
+      "streamNum": 9,
+      "title": "Standard Specifications",
+      "purpose": "Lets inspectors and REs look up NJDOT/NJTA standard specification sections directly from the takeoff tool by clicking a pay item, without leaving the application or hunting through a multi-hundred-page PDF. The stream owns PDF loading, full-text extraction, section-page index building, virtualized continuous-scroll rendering, and instant in-document search.",
+      "surfaces": [],
+      "acceptance": [
+        "Clicking a pay item opens `SpecViewer` at the first page of its three-digit section (e.g., item `202-0002` → Section 202).",
+        "`buildSectionPageIndex` resolves at least the nine standard top-level sections (100–900) for a well-formed NJDOT spec PDF; a warning appears when a section is not found.",
+        "Text extraction of a 900-page PDF completes without blocking the UI (batched with `setTimeout(0)` yields between chunks).",
+        "Ctrl+F / ⌘+F opens the search bar; typing ≥ 2 characters highlights matches on the visible page canvas with amber/orange overlay; active match is orange, others are yellow.",
+        "Pinch-to-zoom (two-finger touch) and scroll-wheel zoom (Ctrl+scroll) work on both mobile and desktop.",
+        "Panel width is persisted in `localStorage` under `specViewerPanelWidth` and restored on next open.",
+        "When `startPage` is null (section not found), the viewer opens at page 1 and auto-populates the search bar with \"SECTION NNN\"."
+      ],
+      "currentState": [],
+      "risks": [],
+      "sections": [
+        "Purpose",
+        "Surfaces (files)",
+        "Acceptance criteria",
+        "Current state vs criteria",
+        "Cross-stream handoffs",
+        "Risks / debt"
+      ]
+    },
+    {
+      "file": "docs/streams/10-document-management.md",
+      "slug": "10-document-management",
+      "streamNum": 10,
+      "title": "Document Management",
+      "purpose": "Provides a full project file repository — folder tree, versioned document upload, inline preview (PDF and images), soft-delete trash with undo, and bulk operations — for all formal construction documents (plans, specs, RFIs, submittals, shop drawings, change orders, daily reports, photos, as-builts, correspondence). It is the \"filing cabinet\" layer; distinct from photo-evidence (which is annotation-centric) and standard-specifications (which parses a single spec PDF for in-app lookup).",
+      "surfaces": [],
+      "acceptance": [
+        "Uploading a file with the same name as an existing document in the same folder automatically creates a new version (`version + 1`) linked via `replaces_document_id`; only the latest version is shown in the list.",
+        "Soft-deleting a document moves it to Trash (sets `deleted_at`); an Undo toast within the session restores it; \"Empty Trash\" permanently removes DB rows and storage blobs.",
+        "Inspectors may only upload to `photos` or `daily_reports` system folders; managers/admins can upload anywhere.",
+        "Folder tree correctly renders nested hierarchy from `parent_id`; system folders sort before user folders alphabetically.",
+        "PDF and image documents open in a signed-URL preview modal without downloading; non-previewable types trigger download.",
+        "Version history drawer shows the full chain of `replaces_document_id` links in descending order; clicking \"Restore\" creates a new head version pointing at the older blob.",
+        "Folder file counts in the sidebar reflect only non-deleted, non-superseded (head) documents."
+      ],
+      "currentState": [],
+      "risks": [],
+      "sections": [
+        "Purpose",
+        "Surfaces (files)",
+        "Acceptance criteria",
+        "Current state vs criteria",
+        "Cross-stream handoffs",
+        "Risks / debt"
+      ]
+    },
+    {
+      "file": "docs/streams/11-schedule-management.md",
+      "slug": "11-schedule-management",
+      "streamNum": 11,
+      "title": "Schedule Management",
+      "purpose": "Enables NJDOT/NJTA project schedulers and Resident Engineers to ingest contractor-submitted P6 PMXML schedules, run calendar-aware CPM, visualize the plan as an interactive Gantt, manage WBS hierarchies, track baselines, assign resources, and perform regulatory compliance analysis (DCMA-14, TIA, AACE classification, SPI/CPI progress, chart export, and RE feedback memo generation). Distinct from data-export (which writes PMXML back to P6) and from Project Controls (which presents aggregated KPIs).",
+      "surfaces": [],
+      "acceptance": [],
+      "currentState": [],
+      "risks": [],
+      "sections": [
+        "Purpose",
+        "Surfaces (files)",
+        "Acceptance criteria",
+        "Current state vs criteria",
+        "Cross-stream handoffs",
+        "Risks / debt"
+      ]
+    },
+    {
+      "file": "docs/streams/12-project-health-and-controls.md",
+      "slug": "12-project-health-and-controls",
+      "streamNum": 12,
+      "title": "Project Health and Controls",
+      "purpose": "Gives project managers and owners a unified PM dashboard to track schedule milestone health, quantity-variance vs contract, weekly scorecard KPIs (billable hours, adoption %, on-time reporting), inspector activity/freshness, AI-tagged site photos, and bid summary — all scoped to a single project. Distinct from Schedule Management (raw CPM analysis) and from the field-view takeoff experience.",
+      "surfaces": [],
+      "acceptance": [],
+      "currentState": [],
+      "risks": [],
+      "sections": [
+        "Purpose",
+        "Surfaces (files)",
+        "Acceptance criteria",
+        "Current state vs criteria",
+        "Cross-stream handoffs",
+        "Risks / debt"
+      ]
+    },
+    {
+      "file": "docs/streams/13-data-export-and-interoperability.md",
+      "slug": "13-data-export-and-interoperability",
+      "streamNum": 13,
+      "title": "Data Export and Interoperability",
+      "purpose": "Enables contractors and REs to move quantity and schedule data in and out of TakeoffPro in external formats: writing progress back into P6 PMXML for contractor re-import, producing Excel/XLSX daily inspector reports, generating PDF and CSV quantity summaries, and maintaining a clean pay-item ↔ P6-activity mapping. The official \"output gate\" — only RE-approved quantities flow into export artifacts.",
+      "surfaces": [],
+      "acceptance": [],
+      "currentState": [],
+      "risks": [],
+      "sections": [
+        "Purpose",
+        "Surfaces (files)",
+        "Acceptance criteria",
+        "Current state vs criteria",
+        "Cross-stream handoffs",
+        "Risks / debt"
+      ]
+    },
+    {
+      "file": "docs/streams/14-measurement-and-geometry-engine.md",
+      "slug": "14-measurement-and-geometry-engine",
+      "streamNum": 14,
+      "title": "Measurement and Geometry Engine",
+      "purpose": "Provides all mathematical primitives that convert inspector-drawn annotations on PDF plan sheets into real-world quantities: pixel-distance to linear feet, pixel-polygon area to SF/SY/CY, point-in-polygon hit testing, GPS↔plan georeferencing via affine transform with Kalman smoothing, and scale calibration. The computational core every annotation, export, and KPI number flows through.",
+      "surfaces": [],
+      "acceptance": [],
+      "currentState": [],
+      "risks": [],
+      "sections": [
+        "Purpose",
+        "Surfaces (files)",
+        "Acceptance criteria",
+        "Current state vs criteria",
+        "Cross-stream handoffs",
+        "Risks / debt"
+      ]
+    },
+    {
+      "file": "docs/streams/15-offline-and-native-durability.md",
+      "slug": "15-offline-and-native-durability",
+      "streamNum": 15,
+      "title": "Offline and Native Durability",
+      "purpose": "Makes TakeoffPro usable on construction sites with intermittent or absent connectivity by caching project data in IndexedDB, queueing writes in a durable outbox, syncing to Supabase when back online, caching plan PDFs in CacheStorage for offline viewing, and wrapping the app in a PWA shell and Capacitor native shell (iOS/Android) with biometric auth, device filesystem, camera, push, and background sync.",
+      "surfaces": [],
+      "acceptance": [],
+      "currentState": [],
+      "risks": [],
+      "sections": [
+        "Purpose",
+        "Surfaces (files)",
+        "Acceptance criteria",
+        "Current state vs criteria",
+        "Cross-stream handoffs",
+        "Risks / debt"
+      ]
+    },
+    {
+      "file": "docs/streams/16-mobile-field-ergonomics.md",
+      "slug": "16-mobile-field-ergonomics",
+      "streamNum": 16,
+      "title": "Mobile Field Ergonomics",
+      "purpose": "Enables field inspectors to perform the full quantity takeoff workflow — uploading plans, navigating sheets, measuring, and reviewing annotations — from a phone or tablet. Distinct from the desktop workspace because it replaces sidebar/toolbar chrome with touch-native patterns: a fixed bottom tab bar, a two-row contextual toolbar with chip shortcuts, bottom-sheet detail views, and a scrollable plan canvas optimised for pinch-zoom.",
+      "surfaces": [],
+      "acceptance": [
+        "On viewport < 768 px, `MobileTabBar` renders at the bottom and desktop `ProjectSidebar` is hidden.",
+        "Tapping any tab switches the visible panel without reloading the PDF canvas.",
+        "Active pay item chip and calibration chip visible in contextual toolbar; tapping calibration chip triggers calibration mode.",
+        "Badge counts on Items and Sections tabs reflect live `payItems.length` / `toc.length`.",
+        "Zoom in/out clamps scale between 0.5× and 4×.",
+        "`MobileAnnotationSheet` opens on annotation selection; allows edit and delete.",
+        "`MobileSections` rows on tap navigate canvas and switch to Plans tab."
+      ],
+      "currentState": [],
+      "risks": [],
+      "sections": [
+        "Purpose",
+        "Surfaces (files)",
+        "Acceptance criteria",
+        "Current state vs criteria",
+        "Cross-stream handoffs",
+        "Risks / debt"
+      ]
+    },
+    {
+      "file": "docs/streams/17-notifications-and-presence.md",
+      "slug": "17-notifications-and-presence",
+      "streamNum": 17,
+      "title": "Notifications & Presence",
+      "purpose": "Closes the feedback loop between field inspectors and Resident Engineers: when a daily report is submitted, approved, or rejected the right person is alerted immediately — via in-app bell or native push — rather than polling dashboards. The presence layer shows who is currently co-editing a project canvas in real time.",
+      "surfaces": [],
+      "acceptance": [
+        "Submitting a daily report creates a `report_submitted` notification row; RE's bell badge increments within 60s (or immediately via realtime).",
+        "Approving/rejecting creates `report_approved`/`report_rejected` rows visible to inspector.",
+        "Clicking a notification navigates to the correct route and marks it read.",
+        "On Capacitor build, push token is written to `device_tokens` after permission granted.",
+        "`send-push` delivers an FCM push when a notification is created.",
+        "Two users with same project open show each other's name in the online-users badge."
+      ],
+      "currentState": [],
+      "risks": [],
+      "sections": [
+        "Purpose",
+        "Surfaces (files)",
+        "Acceptance criteria",
+        "Current state vs criteria",
+        "Cross-stream handoffs",
+        "Risks / debt"
+      ]
+    },
+    {
+      "file": "docs/streams/18-compliance-and-audit.md",
+      "slug": "18-compliance-and-audit",
+      "streamNum": 18,
+      "title": "Compliance & Audit",
+      "purpose": "Provides NJDOT-mandated schedule quality checks (DCMA 14-point, M-code milestones, negative lag, open-ended activities) and an approval-chain record for daily quantity reports that can withstand FHWA or OIG audit. Distinct from general schedule editing because it produces artefacts — compliance badges, exportable audit reports, approval timestamps with reviewer identity — that are contract requirements, not productivity features.",
+      "surfaces": [],
+      "acceptance": [
+        "`ComplianceStrip` shows non-zero negative-lag count when any relationship has `lag_days < 0`.",
+        "`ComplianceStrip` flags missing M-codes (M100/M200/M300/M400/M500/M600/M700/M800/M950).",
+        "DCMA passes check #1 (logic) when all tasks have ≥ 1 predecessor and ≥ 1 successor.",
+        "Exported `.txt` contains all 14 check names, metrics, and targets.",
+        "Approved `daily_reports` row carries `approved_at` + `approved_by`.",
+        "Rejected report carries `rejected_at`, `rejected_by`, non-null `reject_reason`.",
+        "Inspector cannot approve their own report (role separation at UI and RLS level).",
+        "Snapshot JSONB on an approved report matches quantities at moment of approval."
+      ],
+      "currentState": [],
+      "risks": [],
+      "sections": [
+        "Purpose",
+        "Surfaces (files)",
+        "Acceptance criteria",
+        "Current state vs criteria",
+        "Cross-stream handoffs",
+        "Risks / debt"
+      ]
+    },
+    {
+      "file": "docs/streams/19-onboarding-and-tutorials.md",
+      "slug": "19-onboarding-and-tutorials",
+      "streamNum": 19,
+      "title": "Onboarding & Tutorials",
+      "purpose": "Reduces time-to-first-measurement for new users — whether a seasoned RE opening TakeoffPro for the first time or a field inspector on a tablet unfamiliar with digital takeoff. Provides role-filtered welcome slides, a DOM-highlight guided tour inside the workspace, a full interactive demo mode for unauthenticated prospects, and a native first-run walkthrough for the Capacitor app.",
+      "surfaces": [],
+      "acceptance": [
+        "First authenticated login triggers `WelcomeCarousel`; closing sets `profiles.has_seen_welcome = true`.",
+        "`WelcomeCarousel` shows only slides tagged for the user's role.",
+        "Workspace guided tour auto-starts on first project+PDF load; `[data-tour=\"sidebar\"]` is highlighted with cutout mask.",
+        "`useTour` skip/done writes to `localStorage`; restart does not replay.",
+        "`/demo` accessible without auth; 12-step walkthrough progresses step-by-step.",
+        "On Capacitor build, `NativeFirstRun` appears before main UI on first launch."
+      ],
+      "currentState": [],
+      "risks": [],
+      "sections": [
+        "Purpose",
+        "Surfaces (files)",
+        "Acceptance criteria",
+        "Current state vs criteria",
+        "Cross-stream handoffs",
+        "Risks / debt"
+      ]
+    },
+    {
+      "file": "docs/streams/20-sales-and-pitch.md",
+      "slug": "20-sales-and-pitch",
+      "streamNum": 20,
+      "title": "Sales & Pitch",
+      "purpose": "Converts external stakeholders — NJTA/NJDOT construction management firms, potential partner consultants, and enterprise prospects — into demo requests and eventual customers. Distinct from the product itself because these pages are unauthenticated, marketing-copy-driven surfaces that communicate value, establish credibility, and route visitors toward a trial or direct contact.",
+      "surfaces": [],
+      "acceptance": [
+        "`/landing` renders without auth; demo-request form submits to `demo_requests` with email, name, message.",
+        "Pain-point stats, workflow steps, persona cards visible above the fold on desktop and mobile.",
+        "`/mcfa` and `/fajar` render their partner content without login.",
+        "`/demo` reachable from Landing CTA; begins interactive walkthrough.",
+        "`/p6-xml` demonstrates PMXML parsing and DCMA scoring with sample data.",
+        "`sitemap.xml` includes all six public routes.",
+        "`llms.txt` accurately describes product and links correct routes."
+      ],
+      "currentState": [],
+      "risks": [],
+      "sections": [
+        "Purpose",
+        "Surfaces (files)",
+        "Acceptance criteria",
+        "Current state vs criteria",
+        "Cross-stream handoffs",
+        "Risks / debt"
+      ]
+    }
+  ]
+}
