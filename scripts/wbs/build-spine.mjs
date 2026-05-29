@@ -1,175 +1,202 @@
-// Build the canonical WBS spine (wbs.json).
-// Source: docs/wbs-dev.leaves.json (417 brief+code leaves)
-//       ∪ docs/wbs-proposals.reconciled.json.builtClusters (32 code-surface clusters)
-//       ∪ docs/wbs-proposals.reconciled.json.orphanCapabilities (67 brass-tacks gaps)
-// Dedup: normalized name within stream.
-import { readJson, writeJson, slug, streamKey } from './util.mjs';
+#!/usr/bin/env node
+// Build .lovable/wbs/spine.json and .lovable/wbs/wbs.json
+//
+// WBS = files-by-stream, joined via `paths:` globs declared in each
+// docs/streams/NN-*.md front-matter (consumed via comprehension.json).
+// Files matching no stream → `00-program-management` overhead bucket so
+// nothing is silently homeless.
+//
+// Emits two artifacts:
+//   spine.json  — path_to_stream lookup, declared globs per stream (consumed
+//                 by import-graph + activities + audit)
+//   wbs.json    — full hierarchy (stream → layer → file leaf) consumed by
+//                 PMXML emit
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { writeJson, slug, streamKey } from './util.mjs';
 
-const leaves = readJson('docs/wbs-dev.leaves.json').leaves;
-const reconciled = readJson('docs/wbs-proposals.reconciled.json');
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
+const COMP = JSON.parse(fs.readFileSync(path.join(root, '.lovable/wbs/comprehension.json'), 'utf8'));
+const HIST = JSON.parse(fs.readFileSync(path.join(root, '.lovable/wbs/file-history.json'), 'utf8'));
 
-// Surface→stream mapping. Reconciled clusters use coarse surface names; leaves
-// use numbered streams. Map surfaces back to the dominant numbered stream.
-const SURFACE_TO_STREAM = {
-  'Takeoff': '05 Field Capture',
-  'Scheduling': '11 Schedule Management',
-  'Field Ops': '05 Field Capture',
-  'Marketing & Sales': '20 Sales & Pitch',
-  'Documents': '10 Document Management',
-  'Reporting': '06 Daily Report Lifecycle',
-  'Notifications': '17 Notifications & Presence',
-  'Native & Offline': '15 Offline & Native Durability',
-  'Project Controls': '12 Project Health & Controls',
-  'UNASSIGNED': '99 Cross-cutting',
-};
-
-const normalizeStream = (s) => {
-  // collapse "& / and" variants and pad number
-  const m = String(s || '').match(/^(\d+)\s+(.*)$/);
-  if (!m) return s || '99 Cross-cutting';
-  const num = m[1].padStart(2, '0');
-  const name = m[2].replace(/\band\b/gi, '&');
-  return `${num} ${name}`;
-};
-
-const byId = new Map();
-const dedupKey = (stream, layer, name) =>
-  `${streamKey(normalizeStream(stream))}::${slug(layer)}::${slug(name)}`;
-
-let leafSeq = 0;
-const upsert = (rec) => {
-  const k = dedupKey(rec.stream, rec.layer, rec.name);
-  if (byId.has(k)) {
-    const existing = byId.get(k);
-    existing.origins = [...new Set([...existing.origins, ...rec.origins])];
-    existing.fileGlobs = [...new Set([...(existing.fileGlobs || []), ...(rec.fileGlobs || [])])];
-    existing.criteria = [...(existing.criteria || []), ...(rec.criteria || [])];
-    existing.notes = [existing.notes, rec.notes].filter(Boolean).join(' | ').slice(0, 500);
-    existing.sourceRefs.push(...rec.sourceRefs);
-    return existing;
+// ---------- glob → regex ----------
+// Minimal glob: ** matches across segments, * within a segment.
+function globToRegex(g) {
+  let r = '';
+  for (let i = 0; i < g.length; i++) {
+    const c = g[i];
+    if (c === '*') {
+      if (g[i + 1] === '*') { r += '.*'; i++; }
+      else r += '[^/]*';
+    } else if ('.^$+?{}()|[]\\'.includes(c)) r += '\\' + c;
+    else r += c;
   }
-  leafSeq++;
-  const stream = normalizeStream(rec.stream);
-  const id = `LF-${String(leafSeq).padStart(4, '0')}`;
-  const node = {
-    id,
-    stream,
-    streamKey: streamKey(stream),
-    layer: rec.layer || 'Unspecified',
-    name: rec.name,
-    origins: rec.origins,
-    fileGlobs: rec.fileGlobs || [],
-    criteria: rec.criteria || [],
-    notes: rec.notes || '',
-    sourceRefs: rec.sourceRefs,
-    parentId: null, // wired below
+  return new RegExp('^' + r + '$');
+}
+
+// Build owners: { stream_key: { paths: [regex], shared: [regex] } }
+const owners = {};
+for (const s of Object.values(COMP.streams)) {
+  owners[s.key] = {
+    paths: (s.paths || []).map(globToRegex),
+    shared: (s.shared_paths || []).map(globToRegex),
+    declared_paths: s.paths || [],
+    declared_shared: s.shared_paths || [],
   };
-  byId.set(k, node);
-  return node;
-};
+}
 
-// 1. Brief+code leaves (the 417). Pull existing id into sourceRefs.
-for (const l of leaves) {
-  upsert({
-    stream: l.stream,
-    layer: l.layer,
-    name: l.name,
-    origins: [l.provenance || 'brief'],
-    fileGlobs: l.fileGlobs || [],
-    criteria: (l.sources || [])
-      .filter((s) => s.kind === 'criterion')
-      .map((s, i) => ({
-        id: `${l.id}#c${i + 1}`,
-        text: s.criterion,
-        verdict: s.verdict || 'unspecified',
-      })),
-    notes: l.note || '',
-    sourceRefs: [{ kind: 'leaf-catalog', id: l.id }],
+const OVERHEAD_KEY = '00-program-management';
+
+function classifyFile(filePath) {
+  // Try primary ownership first
+  const primary = [];
+  for (const [key, o] of Object.entries(owners)) {
+    if (o.paths.some(rx => rx.test(filePath))) primary.push(key);
+  }
+  if (primary.length === 1) return { primary: primary[0], shared: [] };
+  if (primary.length > 1) {
+    // Ambiguous primary: longest-prefix-wins among the matching streams,
+    // by counting matched literal characters in the glob.
+    const best = primary
+      .map(k => {
+        const matchedGlob = owners[k].declared_paths.find(g => globToRegex(g).test(filePath)) || '';
+        return { k, score: matchedGlob.replace(/\*/g, '').length };
+      })
+      .sort((a, b) => b.score - a.score);
+    const rest = best.slice(1).map(x => x.k);
+    return { primary: best[0].k, shared: rest };
+  }
+  // No primary — check shared claims (file gets parked in overhead but tagged)
+  const sharedClaims = [];
+  for (const [key, o] of Object.entries(owners)) {
+    if (o.shared.some(rx => rx.test(filePath))) sharedClaims.push(key);
+  }
+  return { primary: OVERHEAD_KEY, shared: sharedClaims };
+}
+
+// ---------- layer derivation from path ----------
+function layerOf(p) {
+  if (p.startsWith('supabase/migrations/')) return 'Backend-DB';
+  if (p.startsWith('supabase/functions/')) return 'Backend-Edge';
+  if (p.startsWith('supabase/')) return 'Backend';
+  if (p.startsWith('src/lib/native/')) return 'Mobile';
+  if (p.startsWith('src/lib/offline/')) return 'Offline';
+  if (p.startsWith('src/lib/p6xml/') || p.startsWith('src/lib/schedule/')) return 'Schedule';
+  if (p.startsWith('src/components/schedule/')) return 'Schedule-UI';
+  if (p.startsWith('src/components/')) return 'Frontend';
+  if (p.startsWith('src/hooks/')) return 'Hooks';
+  if (p.startsWith('src/pages/')) return 'Pages';
+  if (p.startsWith('src/lib/')) return 'Libs';
+  if (p.startsWith('src/test/')) return 'Tests';
+  if (p.startsWith('src/types/')) return 'Types';
+  if (p.startsWith('src/')) return 'Frontend';
+  if (p.startsWith('scripts/wbs/')) return 'WBS-pipeline';
+  if (p.startsWith('scripts/')) return 'Scripts';
+  if (p.startsWith('docs/')) return 'Docs';
+  if (p.startsWith('public/')) return 'Public-assets';
+  return 'Config';
+}
+
+// ---------- build leaves ----------
+const path_to_stream = {};
+const path_to_shared = {};
+const leaves = [];
+let seq = 0;
+
+for (const f of HIST.files) {
+  const cls = classifyFile(f.path);
+  path_to_stream[f.path] = cls.primary;
+  if (cls.shared.length) path_to_shared[f.path] = cls.shared;
+  seq++;
+  const lyr = layerOf(f.path);
+  leaves.push({
+    id: `LF-${String(seq).padStart(4, '0')}`,
+    path: f.path,
+    name: f.path.split('/').pop(),
+    stream_key: cls.primary,
+    shared_streams: cls.shared,
+    layer: lyr,
+    created_at: f.created_at,
+    last_modified_at: f.last_modified_at,
+    deleted_at: f.deleted_at,
+    active_days: f.active_days,
+    calendar_days: f.calendar_days,
+    touch_count: f.touch_count,
+    loc_added: f.loc_added,
+    loc_removed: f.loc_removed,
+    contributors: f.contributors,
+    parentId: null, // wired below
   });
 }
 
-// 2. Code-surface clusters (builtClusters). Each becomes a leaf in Engineering
-// layer keyed by proposedName. These represent build work the brief catalog
-// didn't name explicitly.
-for (const c of reconciled.builtClusters) {
-  const stream = SURFACE_TO_STREAM[c.proposedSurface] || '99 Cross-cutting';
-  upsert({
-    stream,
-    layer: 'Engineering',
-    name: c.proposedName || `Cluster ${c.clusterId}`,
-    origins: ['code-surface'],
-    fileGlobs: [],
-    criteria: [],
-    notes: (c.sampleSubjects || []).slice(0, 3).join(' / '),
-    sourceRefs: [
-      {
-        kind: 'built-cluster',
-        id: c.clusterId,
-        firstCommit: c.firstCommit,
-        lastCommit: c.lastCommit,
-        topTags: (c.topTags || []).slice(0, 5).map((t) => t.tag),
-      },
-    ],
-  });
-}
-
-// 3. Orphan capabilities (brass tacks: things claimed/needed but never named).
-for (const o of reconciled.orphanCapabilities) {
-  const stream = SURFACE_TO_STREAM[o.surface] || '99 Cross-cutting';
-  upsert({
-    stream,
-    layer: 'Capability',
-    name: o.name,
-    origins: ['orphan-capability'],
-    fileGlobs: [],
-    criteria: [{ id: `${o.capId}#claim`, text: o.notes || o.name, verdict: o.status }],
-    notes: `[${o.status}] ${o.notes || ''}`.slice(0, 500),
-    sourceRefs: [{ kind: 'orphan-capability', id: o.capId, keywords: o.keywords }],
-  });
-}
-
-// Compute parents: each leaf parents to a synthetic stream-level node and a
-// stream/layer node, written as part of the same flat collection.
-const leavesOut = [...byId.values()];
-
-// Build parent nodes (stream, stream/layer) and link.
-const parentMap = new Map();
-const ensureParent = (id, name, kind, parentId) => {
-  if (parentMap.has(id)) return parentMap.get(id);
+// Build parent nodes: stream → layer → leaves
+const parents = new Map();
+function ensure(id, name, kind, parentId) {
+  if (parents.has(id)) return parents.get(id);
   const node = { id, name, kind, parentId, isParent: true };
-  parentMap.set(id, node);
+  parents.set(id, node);
   return node;
-};
-
-for (const l of leavesOut) {
-  const streamId = `ST-${l.streamKey}`;
-  ensureParent(streamId, l.stream, 'stream', null);
-  const layerId = `${streamId}--${slug(l.layer)}`;
-  ensureParent(layerId, l.layer, 'layer', streamId);
-  l.parentId = layerId;
 }
 
-const out = {
+// Make sure every declared stream has a node, even if no files matched (audit signal)
+const allStreamKeys = new Set([...Object.keys(COMP.streams), OVERHEAD_KEY]);
+for (const k of allStreamKeys) {
+  const title = COMP.streams[k]?.title || (k === OVERHEAD_KEY ? '00 Program Management' : k);
+  ensure(`ST-${k}`, title, 'stream', null);
+}
+
+for (const l of leaves) {
+  const sid = `ST-${l.stream_key}`;
+  ensure(sid, COMP.streams[l.stream_key]?.title || (l.stream_key === OVERHEAD_KEY ? '00 Program Management' : l.stream_key), 'stream', null);
+  const lid = `${sid}--${slug(l.layer)}`;
+  ensure(lid, l.layer, 'layer', sid);
+  l.parentId = lid;
+}
+
+// ---------- coverage report ----------
+const coverage = {};
+for (const k of allStreamKeys) {
+  coverage[k] = { declared_paths: owners[k]?.declared_paths.length || 0, files_matched: 0, files_shared: 0 };
+}
+for (const l of leaves) {
+  coverage[l.stream_key].files_matched++;
+  for (const sk of l.shared_streams) coverage[sk].files_shared++;
+}
+
+// ---------- write ----------
+const spine = {
   generatedAt: new Date().toISOString(),
   totals: {
-    leaves: leavesOut.length,
-    streams: [...new Set(leavesOut.map((l) => l.stream))].length,
-    byOrigin: leavesOut.reduce((a, l) => {
-      for (const o of l.origins) a[o] = (a[o] || 0) + 1;
-      return a;
-    }, {}),
-    byLayer: leavesOut.reduce((a, l) => {
-      a[l.layer] = (a[l.layer] || 0) + 1;
-      return a;
-    }, {}),
+    files: leaves.length,
+    streams: allStreamKeys.size,
+    overhead_files: coverage[OVERHEAD_KEY].files_matched,
   },
-  parents: [...parentMap.values()],
-  leaves: leavesOut,
+  path_to_stream,
+  path_to_shared,
+  coverage,
 };
-writeJson('.lovable/wbs/wbs.json', out);
-console.log(
-  `[spine] ${out.totals.leaves} leaves across ${out.totals.streams} streams ` +
-    `(${out.parents.length} parents)`,
-);
-console.log('[spine] by origin:', out.totals.byOrigin);
-console.log('[spine] by layer:', out.totals.byLayer);
+writeJson('.lovable/wbs/spine.json', spine);
+
+const wbs = {
+  generatedAt: new Date().toISOString(),
+  totals: {
+    leaves: leaves.length,
+    streams: allStreamKeys.size,
+    overhead_files: coverage[OVERHEAD_KEY].files_matched,
+    byLayer: leaves.reduce((acc, l) => { acc[l.layer] = (acc[l.layer] || 0) + 1; return acc; }, {}),
+  },
+  parents: [...parents.values()],
+  leaves,
+};
+writeJson('.lovable/wbs/wbs.json', wbs);
+
+console.log(`[spine] ${leaves.length} files across ${allStreamKeys.size} streams (${coverage[OVERHEAD_KEY].files_matched} overhead)`);
+console.log(`[spine] by layer:`, wbs.totals.byLayer);
+const sorted = Object.entries(coverage).sort((a, b) => b[1].files_matched - a[1].files_matched);
+console.log(`[spine] coverage (top 10):`);
+for (const [k, c] of sorted.slice(0, 10)) {
+  console.log(`         ${k.padEnd(45)} declared=${c.declared_paths}  matched=${c.files_matched}  shared=${c.files_shared}`);
+}
+const empty = sorted.filter(([k, c]) => k !== OVERHEAD_KEY && c.files_matched === 0);
+if (empty.length) console.log(`[spine] WARNING streams with zero file coverage:`, empty.map(([k]) => k));

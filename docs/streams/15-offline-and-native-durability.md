@@ -1,3 +1,32 @@
+---
+stream_key: 15-offline-and-native-durability
+paths:
+  - src/lib/offline/db.ts
+  - src/lib/offline/mirror.ts
+  - src/lib/offline/outbox.ts
+  - src/lib/offline/mutation-client.ts
+  - src/lib/offline/sync.ts
+  - src/lib/offline/pdf-cache.ts
+  - src/lib/offline/idb-persister.ts
+  - src/lib/pwa.ts
+  - src/components/PwaShell.tsx
+  - src/components/SyncPanel.tsx
+  - src/lib/native/platform.ts
+  - src/lib/native/filesystem.ts
+  - src/lib/native/camera.ts
+  - src/lib/native/biometric.ts
+  - src/lib/native/background-sync.ts
+  - src/lib/native/push.ts
+  - src/lib/native/geolocation.ts
+  - src/lib/native/app-state.ts
+  - src/components/BiometricGate.tsx
+  - src/components/NativeFirstRun.tsx
+  - src/hooks/useNetworkStatus.ts
+  - src/hooks/useOutbox.ts
+  - capacitor.config.ts
+  - public/manifest.webmanifest
+shared_paths: []
+---
 # Offline and Native Durability
 
 ## Purpose

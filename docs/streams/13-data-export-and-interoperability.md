@@ -1,3 +1,20 @@
+---
+stream_key: 13-data-export-and-interoperability
+paths:
+  - src/lib/p6xml/parser.ts
+  - src/lib/p6xml/serializer.ts
+  - src/lib/p6xml/apply-progress.ts
+  - src/lib/p6xml/load-approved.ts
+  - src/lib/p6xml/build-from-project.ts
+  - src/lib/p6xml/types.ts
+  - src/lib/export-utils.ts
+  - src/lib/pdf-utils.ts
+  - src/lib/approved-quantities.ts
+  - src/lib/native/filesystem.ts
+  - src/pages/P6Export.tsx
+  - src/hooks/usePayItemActivityMap.ts
+shared_paths: []
+---
 # Data Export and Interoperability
 
 ## Purpose

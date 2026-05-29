@@ -1,3 +1,17 @@
+---
+stream_key: 18-compliance-and-audit
+paths:
+  - src/components/schedule/ComplianceStrip.tsx
+  - src/components/schedule/DcmaPanel.tsx
+  - src/lib/schedule/analysis/dcma.ts
+  - src/components/ReReviewCard.tsx
+  - src/components/ReRejectDialog.tsx
+  - src/hooks/useDailyReport.ts
+  - src/hooks/useReReviewQueue.ts
+  - src/pages/ReReview.tsx
+  - src/integrations/supabase/types.ts
+shared_paths: []
+---
 # Compliance & Audit
 
 ## Purpose

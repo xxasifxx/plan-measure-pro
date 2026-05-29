@@ -1,3 +1,14 @@
+---
+stream_key: 19-onboarding-and-tutorials
+paths:
+  - src/components/GuidedTour.tsx
+  - src/hooks/useTour.ts
+  - src/components/WelcomeCarousel.tsx
+  - src/components/NativeFirstRun.tsx
+  - src/pages/Demo.tsx
+  - src/pages/Index.tsx:~80–100
+shared_paths: []
+---
 # Onboarding & Tutorials
 
 ## Purpose

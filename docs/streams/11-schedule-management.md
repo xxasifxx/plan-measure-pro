@@ -1,3 +1,33 @@
+---
+stream_key: 11-schedule-management
+paths:
+  - src/lib/p6xml/parser.ts
+  - src/lib/schedule/import-p6.ts
+  - src/lib/schedule/cpm.ts
+  - src/lib/schedule/calendars.ts
+  - src/lib/schedule/baseline.ts
+  - src/lib/schedule/use-schedule.ts
+  - src/lib/schedule/types.ts
+  - src/lib/schedule/analysis/dcma.ts
+  - src/lib/schedule/analysis/tia.ts
+  - src/lib/schedule/analysis/aace.ts
+  - src/lib/schedule/analysis/feedback.ts
+  - src/lib/schedule/analysis/progress.ts
+  - src/lib/schedule/analysis/chart-export.ts
+  - src/lib/schedule/analysis/memo-export.ts
+  - src/components/schedule/ScheduleWorkspace.tsx
+  - src/components/schedule/GanttChart.tsx
+  - src/components/schedule/WbsTree.tsx
+  - src/components/schedule/ImportP6Panel.tsx
+  - src/components/schedule/DcmaPanel.tsx
+  - src/components/schedule/ComplianceStrip.tsx
+  - src/components/schedule/BaselineManager.tsx
+  - src/components/schedule/CalendarManager.tsx
+  - src/components/schedule/ResourceManager.tsx
+  - src/components/schedule/ActivityInspector.tsx
+  - src/components/schedule/MetaControls.tsx
+shared_paths: []
+---
 # Schedule Management
 
 ## Purpose

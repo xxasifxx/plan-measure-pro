@@ -1,154 +1,124 @@
-# Plan — emit `.lovable/wbs/*` as a Primavera P6 XML (PMXML) without blank-field theater
+# Plan — file-grounded WBS with goal/artifact reconciliation
 
-## The core problem
+## Model in one paragraph
 
-A naive emitter dumps every leaf as a WBS node and every activity as a `<Activity>`. P6 then shows a forest of activities with empty Start, Finish, Duration, % Complete, Calendar, Resource, and Cost — because our JSON is intent + history, not a CPM-scheduled plan. The fix isn't to fabricate dates; it's to (a) decide which P6 fields we *legitimately* have a source for, (b) park the rest in Notebook Topics, UDFs, and Activity Codes where P6 expects "extra truth," and (c) emit activity *types* and *statuses* that don't demand the missing fields.
+Each file in the repo is a WBS leaf with a real creation date, modification timeline, and author set from git. Each `docs/streams/NN-*.md` gains a `paths:` front-matter block listing the globs that belong to that stream. Joining the two yields the WBS automatically: leaves group by stream, each stream's criteria/risks attach to the leaves their evidence cites, commits become daily reports that post touch-quantity across the leaves they hit, and discrepancies between intent (goals) and artifact (files) become the to-do list. Past work is actuals on file leaves; future work is criterion/risk activities targeting predicted file leaves; CPM runs over real edges only (doc handoffs + TS import graph + risk/file overlap).
 
-## Decisions to lock before any XML is written
+## Inputs
 
-These are the choices that determine whether the file is honest or padded. Each one needs your sign-off — the rest of the plan branches on the answers.
+- **A. Journey goals** — `docs/streams/01..20-*.md` parsed by existing `build-comprehension.mjs`. 20 streams, 147 criteria, 80 risks, 49 handoff sentences (15 of which already extract cleanly into edges).
+- **B. File artifacts** — every tracked file in the repo, with `git log --follow --format=%aI %an` per file → creation date, modification dates, authors, touch count. LOC delta available via `git log --numstat` when needed.
+- **Join key** — `paths:` block in each stream doc's front-matter (option 1, chosen). Globs are reviewable per stream, edited where the rest of the stream's intent lives.
 
-### D1. Activity Type strategy
-P6 has four types and each has different required fields:
-- `TT_Task` — needs duration + dates + calendar (heavy)
-- `TT_Mile` (Start/Finish Milestone) — needs only a single date
-- `TT_LOE` (Level of Effort) — duration spans its predecessors/successors automatically
-- `TT_WBS` (WBS Summary) — rolls up from children, no dates needed
+## Pipeline
 
-Proposal:
-- `origin=git` with `time_window` → `TT_Task` (we have real dates)
-- `origin=future-marketing-debt` → `TT_Mile` (a promise to deliver, single target date)
-- `origin=future-risk` / `future-verification-gap` with no estimate → `TT_LOE` (lets P6 compute span from successors instead of us inventing one)
-- Leaves with many children and no own commits → `TT_WBS` (summary only)
+```text
+docs/streams/*.md ──┐
+                    ├── join by path globs ──► WBS leaves (files grouped by stream)
+git log per file ───┘                          │
+                                               ├── past activities = file lifetimes
+                                               ├── future activities = unmet criteria + risks → predicted leaves
+                                               ├── relationships = doc handoffs + TS imports + risk/file overlap
+                                               ├── daily reports = commits, allocated across hit leaves
+                                               └── audit report = orphan files + forward-only goals
+                                               
+                                               ▼
+                                       PMXML emit ──► app import + Primavera P6
+```
 
-This alone eliminates ~70% of blank-duration rows.
+## Three reconciliation quadrants (the audit)
 
-### D2. Status mapping (from our 4-D state vector)
-P6 has exactly 4 statuses. Mapping:
-| state.lifecycle | + condition | P6 Status |
+| | Files exist | No files |
 |---|---|---|
-| shipped | — | Completed |
-| in-flight | — | In Progress |
-| paused / dormant | — | In Progress (with % complete frozen, Notebook explains why) |
-| planned | — | Not Started |
-| abandoned | — | Not Started + Activity Code `LIFECYCLE=abandoned` (P6 has no "cancelled" status; we tag it) |
+| **Goal exists** | **Delivered/Partial** — past actuals from file history; `% complete` from Implemented-criterion share; remaining = Partial criteria still demanding work | **Missing** — forward activity targeting predicted globs; reconciles when files appear |
+| **No goal** | **Orphan** — emits a one-per-cluster audit activity "document or remove" | n/a |
 
-The 4-D vector is richer than P6 status — the rest goes into Activity Codes (D4) and Notebook Topics (D5), not lost.
+Numbers we expect on first run:
+- Delivered/Partial: ~140 criteria covered by ~400-600 file leaves
+- Missing: ~10 criteria with no current files
+- Orphan: TBD — likely a few clusters (dotfiles, abandoned scripts)
 
-### D3. Dates — what we have, what we infer, what stays empty
-- **Have real:** `time_window.first/last` on git activities → `ActualStart` / `ActualFinish` (only set ActualFinish if `lifecycle=shipped`; else only ActualStart).
-- **Have planned for future-marketing-debt:** none today. Either (a) leave PlannedStart empty and accept P6 will float them to project start, or (b) derive from predecessor-chain + a default 5d duration. Recommend (a) plus a Notebook entry — don't fabricate.
-- **Duration:** for completed git activities use `time_window.active_days` (with floor 1); for in-flight use elapsed since `first`; for future stubs leave `PlannedDuration` unset on TT_LOE (P6 computes it).
-- **Data Date:** the `2026-05-29` date already in state.json becomes the project `DataDate`.
+## Activities
 
-### D4. Activity Codes (P6's tagging system) — this is where our richness lives
-Define one Activity Code Type per dimension, with values from our enums:
-- `ORIGIN` = git | future-risk | future-marketing-debt | future-verification-gap
-- `LIFECYCLE` = planned | in-flight | paused | dormant | shipped | abandoned
-- `BLOCKING` = none | decision | external | successor-missing
-- `VISIBILITY` = quiet | normal | loud
-- `STREAM` = the 23 streams
-- `LAYER` = Frontend | Backend | Mobile | Capability | Verification | Engineering | Build | Docs
-- `HEALTH` = healthy | dormant-but-needed | awaiting-successor | paused-pending-decision | abandoned-but-loud (derived in `next.json`)
+Three kinds, each with honest provenance:
 
-P6 then lets you filter/group by any of these — same expressive power as our state vector, no info loss.
+1. **Past — file-lifetime activities** (one per non-trivial leaf): `actualStart` = first commit adding the file; `actualFinish` = last commit touching it if untouched for ≥14d, else null with `pctComplete` derived from touch decay; `name` = file path; WBS = `{stream}/{layer}`; `actualUnits` = active-day count.
+2. **Future — criterion activities** (one per Partial/Missing/Unknown criterion, ~30 total): name = criterion text; WBS = stream's `Remaining`; duration estimated from comparable past leaves' active-days; predecessors = real handoff/import edges only.
+3. **Future — risk activities** (one per risk, ~80 total): name = risk text; severity → duration (high 3d / med 2d / low 1d); risk-to-criterion FS edge added when their file paths intersect.
 
-### D5. Notebook Topics (per-activity prose) — for evidence
-One topic per activity with:
-- `evidence.commit_shas` first 10 + count (full list in UDF)
-- `evidence.reason` for stubs
-- `contributing_leaves[]` list
-- `state.blocking.note`
+Plus one **overhead bucket** stream `00-program-management` to hold leaves that match no stream's `paths:` (`.lovable/plan.md`, lockfiles, top-level configs). These get file-lifetime activities too, just rolled up under planning/build-infra parents — not silently homeless.
 
-This is where reviewers click to see "why is this here."
+## Daily reports (commits as resource consumption, not progress)
 
-### D6. UDFs (typed user fields)
-- `LovableActivityId` (Text) — our ACT-xxxx
-- `PrimaryLeafId` (Text) — LF-xxxx
-- `CommitCount` (Integer)
-- `DormancyDays` (Integer)
-- `Confidence` (Double) — for stub activities, computed from signals
-- `DownstreamCount` (Integer) — drives the "dormant-but-needed" filter
+For each commit, write one entry per file it touched: `{ sha, date, author, leaf_path, loc_added, loc_removed }`. Aggregations the rest of the system reads:
 
-### D7. Relationships
-Direct map. `relationships.json` already has `type` (FS/SS/FF) and `lag_days`. Emit confidence + sources as a Notebook on the relationship (or concatenate into the Comments field if the viewer doesn't honor relationship notebooks). The 52 rejected edges stay out of XML but ship as a sibling `.rejected.xml` for audit.
+- per-leaf: `active_days`, `touch_count`, `loc_total`, `contributors[]` → drives `actualUnits` and duration estimates
+- per-stream-per-day: `author_days_consumed` → reads as the daily-report cost ledger
+- per-author-per-day: one author-day, fanned out across leaves by LOC share
 
-### D8. WBS hierarchy
-`wbs.json` already has parents (stream → layer → leaf). Direct map to nested `<WBS>` nodes. The 67 orphan-capability leaves get parked under a synthetic `Capability` layer per stream so nothing dangles.
+No commit is force-pinned to a single leaf; cost is distributed proportionally, and the `unallocated` slice (lockfile-only commits, etc.) rolls to overhead.
 
-### D9. Calendar and Resources
-- One project calendar: `Lovable 7-day` (we don't track working hours). Single calendar avoids the per-activity calendar reference problem.
-- Resources: skip entirely in v1. (Could add a per-stream resource later if you want load views — but that's fabricated data right now.)
+## Relationships (real edges only)
 
-### D10. Cost
-Skip. We have zero financial signal. Don't emit `<TotalCost>` etc.; P6 shows blanks gracefully when the elements aren't present (it's the *presence with zero* that looks like missing data).
+Three sources, all empirical:
 
-## What gets built (after you approve D1–D10)
+1. **Doc handoffs** — 15 edges already in `comprehension.json.handoff_edges`, verbatim.
+2. **TS import graph** — derived once from `tsc --traceResolution`-equivalent or a lightweight AST pass: if file A imports file B and they live in different streams, emit a cross-stream FS edge between their stream parents (deduplicated). Within a stream, only emit edges where the prose explicitly chains criteria.
+3. **Risk → criterion** — FS edge when risk text and a Partial criterion's evidence cite the same file path.
 
-```
-scripts/wbs/
-  emit-p6-xml.mjs          # main emitter
-  p6/
-    schema.mjs             # PMXML element builders
-    activity-types.mjs     # D1 logic
-    status-map.mjs         # D2 logic
-    activity-codes.mjs     # D4 enum → <ActivityCode> + <ActivityCodeAssignment>
-    notebook.mjs           # D5 prose builder
-    udfs.mjs               # D6 typed UDF builder
-    calendar.mjs           # D9 default calendar
-    validate.mjs           # post-emit XSD-shape check
-.lovable/wbs/
-  project.p6.xml           # main artifact
-  project.p6.rejected.xml  # rejected relationships for audit
-  project.p6.report.md     # field-coverage report: how many activities got each field, how many are intentionally blank, with reasons
+Throw out: `shared-leaf-time`, all `narrative-*` sources. Expected total: 30-60 real edges (vs. 474 today).
+
+## Stream front-matter format
+
+Each `docs/streams/NN-*.md` gains:
+
+```yaml
+---
+stream_key: 04-pay-item-catalog
+paths:
+  - src/components/ProjectSidebar.tsx
+  - src/components/MobilePayItems.tsx
+  - src/hooks/usePayItemActivityMap.ts
+  - src/lib/pdf-utils.ts  # also touched by 03 — primary owner here
+  - supabase/migrations/*pay_items*
+  - src/test/*pay-items*
+shared_paths:  # touched by this stream but owned elsewhere
+  - src/hooks/useProject.ts  # owned by 05
+---
 ```
 
-## Field-coverage report (the anti-blank-field accountant)
+The `paths:` rule: a file is primarily owned by exactly one stream (where its activities roll up). `shared_paths:` lets a stream claim partial coverage of a foreign-owned leaf for `% complete` calculations without double-counting.
 
-After emission the script writes `project.p6.report.md`:
+## Pipeline scripts
 
-```
-ActivityName        669/669  (100%)
-ActivityType        669/669  (100%)  [TT_Task 220 | TT_Mile 8 | TT_LOE 419 | TT_WBS 22]
-Status              669/669  (100%)
-ActualStart         145/669  (intentional: only in-flight + shipped)
-ActualFinish         20/669  (intentional: only shipped)
-PlannedStart          0/669  (intentional: no fabricated dates — TT_LOE infers from successors)
-PlannedDuration     220/669  (TT_Task only; TT_LOE computed by P6; TT_Mile zero)
-Calendar            669/669  (single default)
-NotebookTopics      669/669  (every activity has evidence prose)
-ActivityCodes       669/669  ×7 dimensions = 4683 assignments
-UDFs                669/669
-PercentComplete     165/669  (in-flight + shipped only)
-```
+- `scripts/wbs/build-spine.mjs` — rewritten: WBS leaves = files-by-stream from front-matter joins, not the old leaf-catalog scoring system. Overhead bucket for unmapped.
+- `scripts/wbs/build-comprehension.mjs` — extended: parse the new `paths:`/`shared_paths:` front-matter; risks parser already exists.
+- `scripts/wbs/build-file-history.mjs` — **new**: one `git log` pass per leaf, emits `.lovable/wbs/file-history.json` (leaf → events[]).
+- `scripts/wbs/build-import-graph.mjs` — **new**: AST pass over `src/**/*.{ts,tsx}` emitting cross-stream FS edges.
+- `scripts/wbs/build-activities.mjs` — rewritten per "three kinds" above.
+- `scripts/wbs/build-relationships.mjs` — rewritten: three real sources only.
+- `scripts/wbs/build-daily-reports.mjs` — **new**: commit → leaf-allocation ledger.
+- `scripts/wbs/build-audit.mjs` — **new**: emits `.lovable/wbs/audit.md` with the three quadrants — orphan clusters, forward-only goals, partial-coverage warnings.
+- `scripts/wbs/emit-p6-xml.mjs` — unchanged interface; gets cleaner inputs.
+- `scripts/wbs/roundtrip-p6.ts` — unchanged.
 
-The report is the user-facing proof that no field is blank by accident — every empty cell has a documented reason.
+Deleted: `scripts/wbs/build-narrative-arcs.mjs`, `scripts/wbs/build-state.mjs` / `build-next.mjs` if they have no other consumer, `scripts/build-dev-wbs.mjs` (older parallel pipeline).
 
-## What's explicitly out of scope
+## Verification
 
-- No invented dates or durations to fill cells.
-- No Resource Assignments, Costs, Roles, Risks, Issues, Documents, Baselines.
-- ~~No round-trip into the app's Supabase or UI.~~ Done — see Phase 2.
-- No P6 viewer/import automation — file lands in `.lovable/wbs/` and you import it.
+1. **Audit report** before any P6 round-trip. The quadrant counts should match common sense — if any stream shows 0 file coverage, its front-matter globs are wrong.
+2. **App import** via `roundtrip-p6.ts` → open `/schedule`. Expect ~500 file-leaf actuals + ~110 forward activities + ~40 edges. Critical path should be a real Missing/Partial chain, not synthetic verifies.
+3. **Primavera P6** opens the same XML. WBS branches = 21 (20 streams + overhead). Activity counts per branch match the file-coverage report. ActivityCodes filter by stream / kind / severity.
 
-## Phase 2 — comprehension + narrative arcs (added after round-trip)
+## What this plan does not do
 
-The naive emit produced a structurally clean PMXML that round-tripped through the app's CPM with 0 warnings but finished only 4 weeks past the data date (2026-06-24). Diagnosis was weak comprehension: 419 of 669 activities were `TT_LOE` with zero duration and only 169 of 669 had any predecessor at all, so CPM saw mostly disparate parallel work collapsed onto the data date. Two passes added:
+- Doesn't add tables. Schedule tables already accept activities + relationships + actuals.
+- Doesn't add UI. Existing Schedule workspace renders the cleaner data.
+- Doesn't touch the takeoff side (PDF, calibration, geometry, GPS).
+- Doesn't auto-watch commits — the pipeline is run on demand.
 
-1. **`build-comprehension.mjs`** parses `docs/streams/*.md` "Current state vs criteria" sections and reconciles them against activities — 146/147 criteria classified, durations seeded on 572/669 activities, lifecycle and `% complete` overridden from documentation truth instead of commit recency, 15 cross-stream handoff edges promoted from prose.
+## Decisions still open (do not block writing the scripts)
 
-2. **`build-narrative-arcs.mjs`** distinguishes *disparate progress* (many independent surfaces moving in parallel) from *dependent progress* (one criterion enabling the next). Two signals:
-   - **Verify chain (within stream, by criterion ordinal):** the team works through remaining criteria sequentially, so `[verify]` activities chain FS in ordinal order — 121 edges.
-   - **Stubs-before-verify (parallel across leaves, serial within a leaf):** within a leaf one developer builds serially; across leaves a stream runs parallel; each leaf-tail converges into the stream's first verify activity — 184 edges.
-   - Result: future-side dependent share rose ~2% → **43%**, CPM finish moved 2026-06-24 → **2026-07-02**.
-
-### Narrative-arc honesty check
-
-The modest 8-day shift is the finding, not a failure: median stream health is ~85% Implemented, so there genuinely isn't much chainable remaining work. Where the schedule would extend if comprehension were tightened: stream 11 (schedule-management, 43 serialized stubs) and stream 15 (offline-and-native-durability, 35 stubs) — the stub-chain dominates and is probably under-estimated. 102 future-side activities remain orphan-parallel (mostly marketing promises + 99-cross-cutting); chaining them would be theater.
-
-### What this changes about reading the PMXML
-
-- "Critical path" now means the longest chain through verify activities and stub serializations, not whichever activity happened to inherit an old git timestamp.
-- A wide stream finishing fast = real parallelism, not missing edges.
-- A narrow stream with many stubs finishing slowly = real serialization, not over-constraint.
-- The 102 orphan-parallel future activities mark where comprehension is still thin.
+- **D1.** Cost unit for the daily-report ledger: active-day-share (recommended), LOC, or commit count.
+- **D2.** Whether to include `docs/`, `public/`, and root configs as their own stream parents under overhead, or fold them all into one bucket.
+- **D3.** Treatment of files deleted before today: surface as actuals with `actualFinish` = deletion date and `pctComplete = 100`, or hide them. Default: surface — they're real consumption.

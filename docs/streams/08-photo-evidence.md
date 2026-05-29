@@ -1,3 +1,14 @@
+---
+stream_key: 08-photo-evidence
+paths:
+  - src/lib/native/camera.ts
+  - src/pages/ProjectControls.tsx
+  - supabase/functions/tag-photo/index.ts
+  - supabase/storage/annotation-photos
+  - src/lib/offline/db.ts
+  - src/lib/offline/mutation-client.ts
+shared_paths: []
+---
 # Photo Evidence
 
 ## Purpose

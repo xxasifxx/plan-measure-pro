@@ -1,3 +1,14 @@
+---
+stream_key: 02-portfolio-and-pm-home
+paths:
+  - src/pages/Dashboard.tsx
+  - src/hooks/useProjects.ts
+  - src/components/WelcomeCarousel.tsx
+  - src/components/GuidedTour.tsx
+  - src/components/NotificationBell.tsx
+  - src/lib/approved-quantities.ts:loadPendingReviewCounts
+shared_paths: []
+---
 # Portfolio & PM Home
 
 ## Purpose

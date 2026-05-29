@@ -1,3 +1,15 @@
+---
+stream_key: 06-daily-report-lifecycle
+paths:
+  - src/pages/DailyReport.tsx
+  - src/hooks/useDailyReport.ts
+  - src/lib/daily-report-snapshot.ts
+  - src/pages/ReReview.tsx
+  - src/components/ReReviewCard.tsx
+  - src/components/ReRejectDialog.tsx
+  - src/hooks/useReReviewQueue.ts
+shared_paths: []
+---
 # Daily Report Lifecycle
 
 ## Purpose

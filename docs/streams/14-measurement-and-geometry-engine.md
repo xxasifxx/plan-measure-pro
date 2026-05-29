@@ -1,3 +1,14 @@
+---
+stream_key: 14-measurement-and-geometry-engine
+paths:
+  - src/lib/geometry.ts
+  - src/lib/geo-transform.ts
+  - src/components/GpsCalibration.tsx
+  - src/components/GpsTraceControls.tsx
+  - src/components/PdfCanvas.tsx
+  - src/hooks/useProject.ts
+shared_paths: []
+---
 # Measurement and Geometry Engine
 
 ## Purpose

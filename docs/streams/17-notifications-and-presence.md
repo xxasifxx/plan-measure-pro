@@ -1,3 +1,14 @@
+---
+stream_key: 17-notifications-and-presence
+paths:
+  - src/components/NotificationBell.tsx
+  - src/hooks/useNotifications.ts
+  - supabase/functions/send-push/index.ts
+  - src/lib/native/push.ts
+  - src/hooks/useProject.ts:421–448
+  - src/pages/Index.tsx:795
+shared_paths: []
+---
 # Notifications & Presence
 
 ## Purpose
