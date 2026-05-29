@@ -5,9 +5,9 @@ paths:
   - src/lib/geo-transform.ts
   - src/components/GpsCalibration.tsx
   - src/components/GpsTraceControls.tsx
+shared_paths:
   - src/components/PdfCanvas.tsx
   - src/hooks/useProject.ts
-shared_paths: []
 ---
 # Measurement and Geometry Engine
 

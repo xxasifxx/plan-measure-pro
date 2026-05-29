@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-29T22:36:04.612Z",
+  "generatedAt": "2026-05-29T23:48:46.753Z",
   "totals": {
     "files": 444,
     "streams": 21,
@@ -207,8 +207,8 @@
     "src/components/ConfirmDialog.tsx": "00-program-management",
     "src/components/EmptyState.tsx": "00-program-management",
     "src/components/GanttUploader.tsx": "12-project-health-and-controls",
-    "src/components/GpsCalibration.tsx": "05-field-capture",
-    "src/components/GpsTraceControls.tsx": "05-field-capture",
+    "src/components/GpsCalibration.tsx": "14-measurement-and-geometry-engine",
+    "src/components/GpsTraceControls.tsx": "14-measurement-and-geometry-engine",
     "src/components/GuidedTour.tsx": "02-portfolio-and-pm-home",
     "src/components/MobileAnnotationSheet.tsx": "05-field-capture",
     "src/components/MobilePayItems.tsx": "04-pay-item-catalog",
@@ -311,8 +311,8 @@
     "src/lib/approved-quantities.ts": "07-quantity-to-payment",
     "src/lib/daily-report-snapshot.ts": "06-daily-report-lifecycle",
     "src/lib/export-utils.ts": "07-quantity-to-payment",
-    "src/lib/geo-transform.ts": "05-field-capture",
-    "src/lib/geometry.ts": "05-field-capture",
+    "src/lib/geo-transform.ts": "14-measurement-and-geometry-engine",
+    "src/lib/geometry.ts": "14-measurement-and-geometry-engine",
     "src/lib/native/app-state.ts": "15-offline-and-native-durability",
     "src/lib/native/background-sync.ts": "15-offline-and-native-durability",
     "src/lib/native/biometric.ts": "15-offline-and-native-durability",
@@ -458,12 +458,6 @@
     "src/components/BiometricGate.tsx": [
       "15-offline-and-native-durability"
     ],
-    "src/components/GpsCalibration.tsx": [
-      "14-measurement-and-geometry-engine"
-    ],
-    "src/components/GpsTraceControls.tsx": [
-      "14-measurement-and-geometry-engine"
-    ],
     "src/components/GuidedTour.tsx": [
       "19-onboarding-and-tutorials"
     ],
@@ -481,9 +475,6 @@
     ],
     "src/components/NotificationBell.tsx": [
       "17-notifications-and-presence"
-    ],
-    "src/components/PdfCanvas.tsx": [
-      "14-measurement-and-geometry-engine"
     ],
     "src/components/ProjectSidebar.tsx": [
       "04-pay-item-catalog"
@@ -517,8 +508,7 @@
     ],
     "src/hooks/useProject.ts": [
       "04-pay-item-catalog",
-      "05-field-capture",
-      "14-measurement-and-geometry-engine"
+      "05-field-capture"
     ],
     "src/hooks/useProjects.ts": [
       "03-project-onboarding"
@@ -531,12 +521,6 @@
     ],
     "src/lib/export-utils.ts": [
       "13-data-export-and-interoperability"
-    ],
-    "src/lib/geo-transform.ts": [
-      "14-measurement-and-geometry-engine"
-    ],
-    "src/lib/geometry.ts": [
-      "14-measurement-and-geometry-engine"
     ],
     "src/lib/native/camera.ts": [
       "15-offline-and-native-durability"
@@ -611,8 +595,8 @@
       "files_shared": 5
     },
     "05-field-capture": {
-      "declared_paths": 11,
-      "files_matched": 8,
+      "declared_paths": 7,
+      "files_matched": 4,
       "files_shared": 3
     },
     "06-daily-report-lifecycle": {
@@ -656,9 +640,9 @@
       "files_shared": 5
     },
     "14-measurement-and-geometry-engine": {
-      "declared_paths": 6,
-      "files_matched": 0,
-      "files_shared": 6
+      "declared_paths": 4,
+      "files_matched": 4,
+      "files_shared": 0
     },
     "15-offline-and-native-durability": {
       "declared_paths": 24,

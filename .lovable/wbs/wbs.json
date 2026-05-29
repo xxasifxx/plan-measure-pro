@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-29T22:36:04.613Z",
+  "generatedAt": "2026-05-29T23:48:46.754Z",
   "totals": {
     "leaves": 444,
     "streams": 21,
@@ -251,10 +251,10 @@
       "isParent": true
     },
     {
-      "id": "ST-05-field-capture--frontend",
+      "id": "ST-14-measurement-and-geometry-engine--frontend",
       "name": "Frontend",
       "kind": "layer",
-      "parentId": "ST-05-field-capture",
+      "parentId": "ST-14-measurement-and-geometry-engine",
       "isParent": true
     },
     {
@@ -262,6 +262,13 @@
       "name": "Frontend",
       "kind": "layer",
       "parentId": "ST-02-portfolio-and-pm-home",
+      "isParent": true
+    },
+    {
+      "id": "ST-05-field-capture--frontend",
+      "name": "Frontend",
+      "kind": "layer",
+      "parentId": "ST-05-field-capture",
       "isParent": true
     },
     {
@@ -419,10 +426,10 @@
       "isParent": true
     },
     {
-      "id": "ST-05-field-capture--libs",
+      "id": "ST-14-measurement-and-geometry-engine--libs",
       "name": "Libs",
       "kind": "layer",
-      "parentId": "ST-05-field-capture",
+      "parentId": "ST-14-measurement-and-geometry-engine",
       "isParent": true
     },
     {
@@ -4663,10 +4670,8 @@
       "id": "LF-0202",
       "path": "src/components/GpsCalibration.tsx",
       "name": "GpsCalibration.tsx",
-      "stream_key": "05-field-capture",
-      "shared_streams": [
-        "14-measurement-and-geometry-engine"
-      ],
+      "stream_key": "14-measurement-and-geometry-engine",
+      "shared_streams": [],
       "layer": "Frontend",
       "created_at": "2026-03-27T12:28:26Z",
       "last_modified_at": "2026-05-26T01:54:24Z",
@@ -4679,16 +4684,14 @@
       "contributors": [
         "gpt-engineer-app[bot]"
       ],
-      "parentId": "ST-05-field-capture--frontend"
+      "parentId": "ST-14-measurement-and-geometry-engine--frontend"
     },
     {
       "id": "LF-0203",
       "path": "src/components/GpsTraceControls.tsx",
       "name": "GpsTraceControls.tsx",
-      "stream_key": "05-field-capture",
-      "shared_streams": [
-        "14-measurement-and-geometry-engine"
-      ],
+      "stream_key": "14-measurement-and-geometry-engine",
+      "shared_streams": [],
       "layer": "Frontend",
       "created_at": "2026-03-27T12:28:26Z",
       "last_modified_at": "2026-05-26T01:54:03Z",
@@ -4701,7 +4704,7 @@
       "contributors": [
         "gpt-engineer-app[bot]"
       ],
-      "parentId": "ST-05-field-capture--frontend"
+      "parentId": "ST-14-measurement-and-geometry-engine--frontend"
     },
     {
       "id": "LF-0204",
@@ -4900,9 +4903,7 @@
       "path": "src/components/PdfCanvas.tsx",
       "name": "PdfCanvas.tsx",
       "stream_key": "05-field-capture",
-      "shared_streams": [
-        "14-measurement-and-geometry-engine"
-      ],
+      "shared_streams": [],
       "layer": "Frontend",
       "created_at": "2026-03-08T02:10:53Z",
       "last_modified_at": "2026-03-29T14:18:44Z",
@@ -6564,8 +6565,7 @@
       "stream_key": "03-project-onboarding",
       "shared_streams": [
         "04-pay-item-catalog",
-        "05-field-capture",
-        "14-measurement-and-geometry-engine"
+        "05-field-capture"
       ],
       "layer": "Hooks",
       "created_at": "2026-03-08T02:10:53Z",
@@ -6794,10 +6794,8 @@
       "id": "LF-0306",
       "path": "src/lib/geo-transform.ts",
       "name": "geo-transform.ts",
-      "stream_key": "05-field-capture",
-      "shared_streams": [
-        "14-measurement-and-geometry-engine"
-      ],
+      "stream_key": "14-measurement-and-geometry-engine",
+      "shared_streams": [],
       "layer": "Libs",
       "created_at": "2026-03-27T12:27:06Z",
       "last_modified_at": "2026-03-27T12:27:06Z",
@@ -6810,16 +6808,14 @@
       "contributors": [
         "gpt-engineer-app[bot]"
       ],
-      "parentId": "ST-05-field-capture--libs"
+      "parentId": "ST-14-measurement-and-geometry-engine--libs"
     },
     {
       "id": "LF-0307",
       "path": "src/lib/geometry.ts",
       "name": "geometry.ts",
-      "stream_key": "05-field-capture",
-      "shared_streams": [
-        "14-measurement-and-geometry-engine"
-      ],
+      "stream_key": "14-measurement-and-geometry-engine",
+      "shared_streams": [],
       "layer": "Libs",
       "created_at": "2026-03-08T02:10:53Z",
       "last_modified_at": "2026-05-28T15:56:44Z",
@@ -6832,7 +6828,7 @@
       "contributors": [
         "gpt-engineer-app[bot]"
       ],
-      "parentId": "ST-05-field-capture--libs"
+      "parentId": "ST-14-measurement-and-geometry-engine--libs"
     },
     {
       "id": "LF-0308",
