@@ -52,21 +52,22 @@ function bullets(section) {
 }
 
 // ---------- verdict classifier ----------
-// Stream docs use two interchangeable formats:
+// Stream docs use three interchangeable formats:
 //   **Title**: Implemented — evidence
 //   **Title** — implemented; evidence
-// We scan the first ~120 chars after the bold prefix for status keywords.
-// Negation ("not implemented", "no longer") takes precedence over the bare verb.
+//   **Implemented** — evidence              (bold IS the verdict — common in 11-15)
+// We scan both the bold prefix and the first ~160 body chars for status keywords.
 function classify(stateLine) {
   if (!stateLine) return 'unknown';
+  const bold = (stateLine.match(/^\*\*([^*]+)\*\*/) || [, ''])[1].toLowerCase();
   const body = stateLine.replace(/^\*\*[^*]+\*\*\s*[:—-]\s*/, '').slice(0, 160).toLowerCase();
+  const scan = bold + ' ' + body;
   // Negative first
-  if (/\b(not implemented|never implemented|no longer|not started|missing\b|absent|stubbed only)\b/.test(body)) return 'missing';
-  if (/\b(partial|partly|in[- ]flight|in progress|fragile|leaky|but\b.*(?:not|never|missing)|implemented but)\b/.test(body)) return 'partial';
-  // Two-word combos
-  if (/\b(implemented|shipped|done|complete|wired|landed)\b/.test(body)) return 'implemented';
-  if (/\b(planned|scheduled|queued|todo|to[- ]do)\b/.test(body)) return 'planned';
-  if (/\b(aspirational|future|vision|roadmap)\b/.test(body)) return 'aspirational';
+  if (/\b(not implemented|never implemented|no longer|not started|missing\b|absent|stubbed only)\b/.test(scan)) return 'missing';
+  if (/\b(partial|partly|in[- ]flight|in progress|fragile|leaky|but\b.*(?:not|never|missing)|implemented but)\b/.test(scan)) return 'partial';
+  if (/\b(implemented|shipped|done|complete|wired|landed)\b/.test(scan)) return 'implemented';
+  if (/\b(planned|scheduled|queued|todo|to[- ]do)\b/.test(scan)) return 'planned';
+  if (/\b(aspirational|future|vision|roadmap)\b/.test(scan)) return 'aspirational';
   return 'unknown';
 }
 
