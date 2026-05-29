@@ -1,0 +1,2925 @@
+{
+  "generatedAt": "2026-05-29T12:30:14.189Z",
+  "fileCount": 244,
+  "surfaceList": [
+    "AI",
+    "Auth & Admin",
+    "Backend & Infra",
+    "Bootstrap & Shell",
+    "Claims & Delay Analysis",
+    "Cost Management",
+    "Cross-Cutting",
+    "Documents",
+    "Earned Value",
+    "Fajar / Equipment Rental",
+    "Field Operations",
+    "Integrations",
+    "Marketing & Sales",
+    "Native & Offline",
+    "Notifications",
+    "Project Controls",
+    "Project Lifecycle",
+    "Reporting",
+    "Reporting & Exports",
+    "Resource Management",
+    "Risk & Contingency",
+    "Scenarios & Reflections",
+    "Scheduling",
+    "Scheduling Extras",
+    "Takeoff"
+  ],
+  "files": [
+    {
+      "path": "src/App.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [
+        "BS-001"
+      ],
+      "citedSurfaces": [
+        "Bootstrap & Shell"
+      ],
+      "imports": [
+        "@/components/ui/toaster",
+        "@/components/ui/sonner",
+        "@/components/ui/tooltip",
+        "@/hooks/useAuth",
+        "./pages/Admin",
+        "./pages/Dashboard",
+        "./pages/Index",
+        "./pages/ProjectControls",
+        "./pages/Demo",
+        "./pages/McfaPitch",
+        "./pages/FajarPitch",
+        "./pages/XerDemo",
+        "./pages/P6XmlDemo",
+        "./pages/P6Export",
+        "./pages/ReReview",
+        "./pages/DailyReport",
+        "./pages/Auth",
+        "./pages/ResetPassword",
+        "./pages/Landing",
+        "./pages/NotFound",
+        "./pages/Documents",
+        "./pages/Settings",
+        "@/components/PwaShell",
+        "@/components/BiometricGate",
+        "@/components/NativeFirstRun",
+        "@/lib/offline/idb-persister"
+      ]
+    },
+    {
+      "path": "src/components/BiometricGate.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/components/ui/button",
+        "@/integrations/supabase/client",
+        "@/hooks/useAuth",
+        "@/lib/native/platform",
+        "@/lib/native/biometric"
+      ]
+    },
+    {
+      "path": "src/components/ConfirmDialog.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/components/ui/alert-dialog",
+        "@/components/ui/button",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/EmptyState.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/GanttUploader.tsx",
+      "pathGuess": [
+        "Scheduling"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/integrations/supabase/client",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/hooks/use-toast"
+      ]
+    },
+    {
+      "path": "src/components/GpsCalibration.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/components/ui/button",
+        "@/lib/utils",
+        "@/types/project",
+        "@/lib/geo-transform",
+        "@/lib/native/geolocation"
+      ]
+    },
+    {
+      "path": "src/components/GpsTraceControls.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/components/ui/button",
+        "@/lib/utils",
+        "@/types/project",
+        "@/lib/geo-transform",
+        "@/lib/geometry",
+        "@/lib/native/geolocation"
+      ]
+    },
+    {
+      "path": "src/components/GuidedTour.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/components/ui/button",
+        "@/lib/utils",
+        "@/hooks/useTour"
+      ]
+    },
+    {
+      "path": "src/components/MobileAnnotationSheet.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/components/ui/sheet",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/label",
+        "@/components/ui/select",
+        "@/types/project"
+      ]
+    },
+    {
+      "path": "src/components/MobilePayItems.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/types/project",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/select",
+        "@/components/ui/label",
+        "@/components/ui/sheet"
+      ]
+    },
+    {
+      "path": "src/components/MobileSections.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/types/project",
+        "@/components/ui/button"
+      ]
+    },
+    {
+      "path": "src/components/MobileTabBar.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/MobileToolbar.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/types/project",
+        "@/components/ui/button",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/NativeFirstRun.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/components/ui/button",
+        "@/lib/native/platform",
+        "@/lib/native/push",
+        "@/lib/native/biometric",
+        "@/hooks/useAuth"
+      ]
+    },
+    {
+      "path": "src/components/NavLink.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/NotificationBell.tsx",
+      "pathGuess": [
+        "Notifications"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/components/ui/button",
+        "@/components/ui/popover",
+        "@/hooks/useNotifications",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/PdfCanvas.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/pdf-utils",
+        "@/lib/geometry",
+        "@/types/project",
+        "@/hooks/use-toast",
+        "@/components/ui/select"
+      ]
+    },
+    {
+      "path": "src/components/ProjectSidebar.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/types/project",
+        "@/components/ui/sidebar",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/select",
+        "@/components/ui/dialog",
+        "@/components/ui/label"
+      ]
+    },
+    {
+      "path": "src/components/PwaShell.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/components/ui/button",
+        "@/lib/pwa",
+        "@/hooks/useNetworkStatus",
+        "@/lib/offline/db",
+        "@/components/SyncPanel"
+      ]
+    },
+    {
+      "path": "src/components/ReRejectDialog.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/components/ui/button",
+        "@/components/ui/dialog",
+        "@/components/ui/textarea",
+        "@/components/ui/label"
+      ]
+    },
+    {
+      "path": "src/components/ReReviewCard.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/components/ui/button",
+        "@/components/ui/badge",
+        "@/components/ui/textarea",
+        "./ReRejectDialog",
+        "@/hooks/useReReviewQueue",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/SpecViewer.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/components/ui/sheet",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/badge",
+        "@/components/ui/alert",
+        "@/hooks/use-mobile"
+      ]
+    },
+    {
+      "path": "src/components/SummaryPanel.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/types/project",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/popover",
+        "@/components/ui/calendar",
+        "@/lib/geometry",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/SyncPanel.tsx",
+      "pathGuess": [
+        "Native & Offline"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/components/ui/sheet",
+        "@/components/ui/button",
+        "@/components/ui/badge",
+        "@/hooks/useOutbox",
+        "@/lib/offline/sync",
+        "@/lib/offline/outbox",
+        "@/hooks/useNetworkStatus"
+      ]
+    },
+    {
+      "path": "src/components/TeamManager.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/integrations/supabase/client",
+        "@/hooks/use-toast",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/badge",
+        "@/components/ui/sheet",
+        "@/components/ui/select",
+        "@/components/ConfirmDialog"
+      ]
+    },
+    {
+      "path": "src/components/Toolbar.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/types/project",
+        "@/components/ui/button",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/WelcomeCarousel.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/components/ui/button",
+        "@/components/ui/dialog",
+        "@/lib/utils",
+        "@/integrations/supabase/client"
+      ]
+    },
+    {
+      "path": "src/components/XerLensTour.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/components/ui/button"
+      ]
+    },
+    {
+      "path": "src/components/schedule/ActivityInspector.tsx",
+      "pathGuess": [
+        "Scheduling"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/components/ui/sheet",
+        "@/components/ui/input",
+        "@/components/ui/label",
+        "@/components/ui/select",
+        "@/components/ui/slider",
+        "@/components/ui/switch",
+        "@/components/ui/button",
+        "@/components/ui/badge",
+        "@/integrations/supabase/client",
+        "@/lib/schedule/types",
+        "@/lib/schedule/use-schedule"
+      ]
+    },
+    {
+      "path": "src/components/schedule/BaselineManager.tsx",
+      "pathGuess": [
+        "Scheduling"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/components/ui/dialog",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/textarea",
+        "@/lib/schedule/use-schedule",
+        "@/hooks/use-toast"
+      ]
+    },
+    {
+      "path": "src/components/schedule/CalendarManager.tsx",
+      "pathGuess": [
+        "Scheduling"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/components/ui/dialog",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/label",
+        "@/components/ui/switch",
+        "@/lib/schedule/use-schedule",
+        "@/lib/schedule/types",
+        "@/lib/schedule/calendars"
+      ]
+    },
+    {
+      "path": "src/components/schedule/ComplianceStrip.tsx",
+      "pathGuess": [
+        "Scheduling"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/schedule/types",
+        "@/lib/xer/wbs",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/schedule/GanttChart.tsx",
+      "pathGuess": [
+        "Scheduling"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/schedule/types",
+        "@/lib/schedule/date-utils",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/schedule/ImportP6Panel.tsx",
+      "pathGuess": [
+        "Scheduling"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/components/ui/button",
+        "@/components/ui/dialog",
+        "@/components/ui/checkbox",
+        "@/lib/schedule/import-p6",
+        "@/hooks/use-toast"
+      ]
+    },
+    {
+      "path": "src/components/schedule/MetaControls.tsx",
+      "pathGuess": [
+        "Scheduling"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/components/ui/popover",
+        "@/components/ui/button",
+        "@/components/ui/checkbox",
+        "@/components/ui/input",
+        "@/lib/schedule/types"
+      ]
+    },
+    {
+      "path": "src/components/schedule/ResourceManager.tsx",
+      "pathGuess": [
+        "Scheduling"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/components/ui/dialog",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/select",
+        "@/lib/schedule/use-schedule",
+        "@/lib/schedule/types"
+      ]
+    },
+    {
+      "path": "src/components/schedule/ScheduleToolbar.tsx",
+      "pathGuess": [
+        "Scheduling"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/components/ui/button",
+        "@/components/ui/select",
+        "@/lib/schedule/types",
+        "./MetaControls"
+      ]
+    },
+    {
+      "path": "src/components/schedule/ScheduleWorkspace.tsx",
+      "pathGuess": [
+        "Scheduling"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/schedule/use-schedule",
+        "@/lib/schedule/types",
+        "./WbsTree",
+        "./GanttChart",
+        "./ScheduleToolbar",
+        "./ComplianceStrip",
+        "./ActivityInspector",
+        "./ImportP6Panel",
+        "./CalendarManager",
+        "./ResourceManager",
+        "./BaselineManager",
+        "@/components/ui/input",
+        "@/lib/utils",
+        "@/hooks/use-toast",
+        "@/lib/p6xml/build-from-project"
+      ]
+    },
+    {
+      "path": "src/components/schedule/WbsTree.tsx",
+      "pathGuess": [
+        "Scheduling"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/schedule/types",
+        "@/lib/utils",
+        "@/components/ui/button"
+      ]
+    },
+    {
+      "path": "src/components/ui/accordion.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/alert-dialog.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils",
+        "@/components/ui/button"
+      ]
+    },
+    {
+      "path": "src/components/ui/alert.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/aspect-ratio.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "src/components/ui/avatar.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/badge.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/breadcrumb.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/button.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/calendar.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils",
+        "@/components/ui/button"
+      ]
+    },
+    {
+      "path": "src/components/ui/card.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/carousel.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils",
+        "@/components/ui/button"
+      ]
+    },
+    {
+      "path": "src/components/ui/chart.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/checkbox.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/collapsible.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "src/components/ui/command.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils",
+        "@/components/ui/dialog"
+      ]
+    },
+    {
+      "path": "src/components/ui/context-menu.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/dialog.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/drawer.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/dropdown-menu.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/form.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils",
+        "@/components/ui/label"
+      ]
+    },
+    {
+      "path": "src/components/ui/hover-card.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/input-otp.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/input.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/label.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/menubar.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/navigation-menu.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/pagination.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils",
+        "@/components/ui/button"
+      ]
+    },
+    {
+      "path": "src/components/ui/popover.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/progress.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/radio-group.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/resizable.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/scroll-area.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/select.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/separator.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/sheet.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/sidebar.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/hooks/use-mobile",
+        "@/lib/utils",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/separator",
+        "@/components/ui/sheet",
+        "@/components/ui/skeleton",
+        "@/components/ui/tooltip"
+      ]
+    },
+    {
+      "path": "src/components/ui/skeleton.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/slider.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/sonner.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "src/components/ui/switch.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/table.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/tabs.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/textarea.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/toast.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/toaster.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/hooks/use-toast",
+        "@/components/ui/toast"
+      ]
+    },
+    {
+      "path": "src/components/ui/toggle-group.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils",
+        "@/components/ui/toggle"
+      ]
+    },
+    {
+      "path": "src/components/ui/toggle.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/tooltip.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/components/ui/use-toast.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/hooks/use-toast"
+      ]
+    },
+    {
+      "path": "src/hooks/use-mobile.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "src/hooks/use-toast.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/components/ui/toast"
+      ]
+    },
+    {
+      "path": "src/hooks/useAuth.tsx",
+      "pathGuess": [
+        "Auth & Admin"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/integrations/supabase/client"
+      ]
+    },
+    {
+      "path": "src/hooks/useDailyReport.ts",
+      "pathGuess": [
+        "Field Operations"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/integrations/supabase/client",
+        "@/hooks/use-toast",
+        "@/lib/daily-report-snapshot"
+      ]
+    },
+    {
+      "path": "src/hooks/useDocuments.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/integrations/supabase/client",
+        "@/hooks/use-toast",
+        "@/hooks/useAuth"
+      ]
+    },
+    {
+      "path": "src/hooks/useNetworkStatus.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "src/hooks/useNotifications.ts",
+      "pathGuess": [
+        "Notifications"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/integrations/supabase/client",
+        "@/hooks/useAuth"
+      ]
+    },
+    {
+      "path": "src/hooks/useOutbox.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/offline/outbox"
+      ]
+    },
+    {
+      "path": "src/hooks/usePayItemActivityMap.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/integrations/supabase/client",
+        "@/hooks/use-toast"
+      ]
+    },
+    {
+      "path": "src/hooks/useProject.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/types/project",
+        "@/integrations/supabase/client",
+        "@/lib/offline/mutation-client"
+      ]
+    },
+    {
+      "path": "src/hooks/useProjects.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/integrations/supabase/client",
+        "@/hooks/useAuth"
+      ]
+    },
+    {
+      "path": "src/hooks/useReReviewQueue.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/integrations/supabase/client",
+        "@/hooks/use-toast"
+      ]
+    },
+    {
+      "path": "src/hooks/useTheme.ts",
+      "pathGuess": [],
+      "citedByLeaves": [
+        "BS-002"
+      ],
+      "citedSurfaces": [
+        "Bootstrap & Shell"
+      ],
+      "imports": []
+    },
+    {
+      "path": "src/hooks/useTour.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "src/integrations/supabase/client.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "./types",
+        "@/integrations/supabase/client"
+      ]
+    },
+    {
+      "path": "src/integrations/supabase/types.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "src/lib/approved-quantities.ts",
+      "pathGuess": [],
+      "citedByLeaves": [
+        "SCH-017",
+        "PC-002"
+      ],
+      "citedSurfaces": [
+        "Scheduling",
+        "Project Controls"
+      ],
+      "imports": [
+        "@/integrations/supabase/client"
+      ]
+    },
+    {
+      "path": "src/lib/daily-report-snapshot.ts",
+      "pathGuess": [
+        "Field Operations"
+      ],
+      "citedByLeaves": [
+        "FO-001",
+        "RPT-002"
+      ],
+      "citedSurfaces": [
+        "Field Operations",
+        "Reporting"
+      ],
+      "imports": [
+        "@/integrations/supabase/client",
+        "@/lib/geometry"
+      ]
+    },
+    {
+      "path": "src/lib/export-utils.ts",
+      "pathGuess": [
+        "Reporting"
+      ],
+      "citedByLeaves": [
+        "TK-011",
+        "RE-001",
+        "RPT-001"
+      ],
+      "citedSurfaces": [
+        "Takeoff",
+        "Reporting & Exports",
+        "Reporting"
+      ],
+      "imports": [
+        "@/types/project",
+        "@/lib/geometry",
+        "@/integrations/supabase/client",
+        "@/lib/approved-quantities",
+        "@/lib/native/filesystem"
+      ]
+    },
+    {
+      "path": "src/lib/geo-transform.ts",
+      "pathGuess": [],
+      "citedByLeaves": [
+        "FO-006",
+        "FO-007"
+      ],
+      "citedSurfaces": [
+        "Field Operations"
+      ],
+      "imports": [
+        "@/types/project"
+      ]
+    },
+    {
+      "path": "src/lib/geometry.ts",
+      "pathGuess": [],
+      "citedByLeaves": [
+        "TK-004",
+        "TK-006"
+      ],
+      "citedSurfaces": [
+        "Takeoff"
+      ],
+      "imports": [
+        "@/types/project"
+      ]
+    },
+    {
+      "path": "src/lib/native/app-state.ts",
+      "pathGuess": [
+        "Native & Offline"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "./platform",
+        "@/lib/offline/sync",
+        "@/integrations/supabase/client"
+      ]
+    },
+    {
+      "path": "src/lib/native/background-sync.ts",
+      "pathGuess": [
+        "Native & Offline"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "./platform",
+        "@/lib/offline/sync"
+      ]
+    },
+    {
+      "path": "src/lib/native/biometric.ts",
+      "pathGuess": [
+        "Native & Offline"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "./platform"
+      ]
+    },
+    {
+      "path": "src/lib/native/camera.ts",
+      "pathGuess": [
+        "Native & Offline"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "./platform"
+      ]
+    },
+    {
+      "path": "src/lib/native/filesystem.ts",
+      "pathGuess": [
+        "Native & Offline"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "./platform"
+      ]
+    },
+    {
+      "path": "src/lib/native/geolocation.ts",
+      "pathGuess": [
+        "Native & Offline"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "./platform"
+      ]
+    },
+    {
+      "path": "src/lib/native/platform.ts",
+      "pathGuess": [
+        "Native & Offline"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "src/lib/native/push.ts",
+      "pathGuess": [
+        "Native & Offline"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "./platform",
+        "@/integrations/supabase/client"
+      ]
+    },
+    {
+      "path": "src/lib/offline/db.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "src/lib/offline/idb-persister.ts",
+      "pathGuess": [],
+      "citedByLeaves": [
+        "BS-001"
+      ],
+      "citedSurfaces": [
+        "Bootstrap & Shell"
+      ],
+      "imports": [
+        "./db"
+      ]
+    },
+    {
+      "path": "src/lib/offline/mirror.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/integrations/supabase/client",
+        "./db"
+      ]
+    },
+    {
+      "path": "src/lib/offline/mutation-client.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/integrations/supabase/client",
+        "./outbox",
+        "./db",
+        "./sync"
+      ]
+    },
+    {
+      "path": "src/lib/offline/outbox.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "./db"
+      ]
+    },
+    {
+      "path": "src/lib/offline/pdf-cache.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "./db"
+      ]
+    },
+    {
+      "path": "src/lib/offline/sync.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "./outbox",
+        "./mutation-client"
+      ]
+    },
+    {
+      "path": "src/lib/p6xml/apply-progress.ts",
+      "pathGuess": [],
+      "citedByLeaves": [
+        "RE-004",
+        "SCH-008",
+        "SCH-017"
+      ],
+      "citedSurfaces": [
+        "Reporting & Exports",
+        "Scheduling"
+      ],
+      "imports": [
+        "./types"
+      ]
+    },
+    {
+      "path": "src/lib/p6xml/build-from-project.ts",
+      "pathGuess": [],
+      "citedByLeaves": [
+        "SCH-008"
+      ],
+      "citedSurfaces": [
+        "Scheduling"
+      ],
+      "imports": [
+        "@/lib/schedule/types"
+      ]
+    },
+    {
+      "path": "src/lib/p6xml/load-approved.ts",
+      "pathGuess": [],
+      "citedByLeaves": [
+        "SCH-008",
+        "SCH-017"
+      ],
+      "citedSurfaces": [
+        "Scheduling"
+      ],
+      "imports": [
+        "@/integrations/supabase/client",
+        "./types"
+      ]
+    },
+    {
+      "path": "src/lib/p6xml/parser.ts",
+      "pathGuess": [],
+      "citedByLeaves": [
+        "SCH-008"
+      ],
+      "citedSurfaces": [
+        "Scheduling"
+      ],
+      "imports": [
+        "./types"
+      ]
+    },
+    {
+      "path": "src/lib/p6xml/sample.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "./types"
+      ]
+    },
+    {
+      "path": "src/lib/p6xml/serializer.ts",
+      "pathGuess": [],
+      "citedByLeaves": [
+        "SCH-008"
+      ],
+      "citedSurfaces": [
+        "Scheduling"
+      ],
+      "imports": [
+        "./types"
+      ]
+    },
+    {
+      "path": "src/lib/p6xml/types.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "src/lib/pdf-utils.ts",
+      "pathGuess": [],
+      "citedByLeaves": [
+        "TK-001",
+        "TK-009"
+      ],
+      "citedSurfaces": [
+        "Takeoff"
+      ],
+      "imports": [
+        "@/types/project"
+      ]
+    },
+    {
+      "path": "src/lib/pwa.ts",
+      "pathGuess": [],
+      "citedByLeaves": [
+        "BS-001",
+        "BS-004"
+      ],
+      "citedSurfaces": [
+        "Bootstrap & Shell"
+      ],
+      "imports": []
+    },
+    {
+      "path": "src/lib/schedule/baseline.ts",
+      "pathGuess": [
+        "Scheduling"
+      ],
+      "citedByLeaves": [
+        "SCH-004"
+      ],
+      "citedSurfaces": [
+        "Scheduling"
+      ],
+      "imports": [
+        "./types",
+        "./date-utils"
+      ]
+    },
+    {
+      "path": "src/lib/schedule/calendars.ts",
+      "pathGuess": [
+        "Scheduling"
+      ],
+      "citedByLeaves": [
+        "SCH-003"
+      ],
+      "citedSurfaces": [
+        "Scheduling"
+      ],
+      "imports": [
+        "./types"
+      ]
+    },
+    {
+      "path": "src/lib/schedule/cpm.ts",
+      "pathGuess": [
+        "Scheduling"
+      ],
+      "citedByLeaves": [
+        "SCH-001",
+        "SCH-002"
+      ],
+      "citedSurfaces": [
+        "Scheduling"
+      ],
+      "imports": [
+        "./types",
+        "./date-utils",
+        "./calendars"
+      ]
+    },
+    {
+      "path": "src/lib/schedule/date-utils.ts",
+      "pathGuess": [
+        "Scheduling"
+      ],
+      "citedByLeaves": [
+        "SCH-001"
+      ],
+      "citedSurfaces": [
+        "Scheduling"
+      ],
+      "imports": []
+    },
+    {
+      "path": "src/lib/schedule/import-p6.ts",
+      "pathGuess": [
+        "Scheduling"
+      ],
+      "citedByLeaves": [
+        "SCH-003",
+        "SCH-007"
+      ],
+      "citedSurfaces": [
+        "Scheduling"
+      ],
+      "imports": [
+        "@/lib/xer/parser",
+        "@/lib/p6xml/parser",
+        "@/lib/xer/types",
+        "./types",
+        "./calendars"
+      ]
+    },
+    {
+      "path": "src/lib/schedule/types.ts",
+      "pathGuess": [
+        "Scheduling"
+      ],
+      "citedByLeaves": [
+        "SCH-001"
+      ],
+      "citedSurfaces": [
+        "Scheduling"
+      ],
+      "imports": []
+    },
+    {
+      "path": "src/lib/schedule/use-schedule.ts",
+      "pathGuess": [
+        "Scheduling"
+      ],
+      "citedByLeaves": [
+        "SCH-005"
+      ],
+      "citedSurfaces": [
+        "Scheduling"
+      ],
+      "imports": [
+        "@/integrations/supabase/client",
+        "./types",
+        "./cpm",
+        "./baseline",
+        "./import-p6"
+      ]
+    },
+    {
+      "path": "src/lib/specs-utils.ts",
+      "pathGuess": [],
+      "citedByLeaves": [
+        "TK-010"
+      ],
+      "citedSurfaces": [
+        "Takeoff"
+      ],
+      "imports": []
+    },
+    {
+      "path": "src/lib/storage.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/types/project"
+      ]
+    },
+    {
+      "path": "src/lib/utils.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "src/lib/xer/aace.ts",
+      "pathGuess": [],
+      "citedByLeaves": [
+        "SCH-014",
+        "SCH-015"
+      ],
+      "citedSurfaces": [
+        "Scheduling"
+      ],
+      "imports": []
+    },
+    {
+      "path": "src/lib/xer/chart-export.ts",
+      "pathGuess": [
+        "Reporting"
+      ],
+      "citedByLeaves": [
+        "RPT-004",
+        "RPT-008"
+      ],
+      "citedSurfaces": [
+        "Reporting"
+      ],
+      "imports": []
+    },
+    {
+      "path": "src/lib/xer/dcma.ts",
+      "pathGuess": [],
+      "citedByLeaves": [
+        "SCH-010"
+      ],
+      "citedSurfaces": [
+        "Scheduling"
+      ],
+      "imports": [
+        "./types"
+      ]
+    },
+    {
+      "path": "src/lib/xer/feedback.ts",
+      "pathGuess": [],
+      "citedByLeaves": [
+        "RPT-003"
+      ],
+      "citedSurfaces": [
+        "Reporting"
+      ],
+      "imports": [
+        "./dcma",
+        "./types"
+      ]
+    },
+    {
+      "path": "src/lib/xer/memo-export.ts",
+      "pathGuess": [
+        "Reporting"
+      ],
+      "citedByLeaves": [
+        "RPT-003",
+        "RPT-009"
+      ],
+      "citedSurfaces": [
+        "Reporting"
+      ],
+      "imports": []
+    },
+    {
+      "path": "src/lib/xer/parser.ts",
+      "pathGuess": [],
+      "citedByLeaves": [
+        "SCH-007"
+      ],
+      "citedSurfaces": [
+        "Scheduling"
+      ],
+      "imports": [
+        "./types"
+      ]
+    },
+    {
+      "path": "src/lib/xer/progress.ts",
+      "pathGuess": [],
+      "citedByLeaves": [
+        "SCH-012"
+      ],
+      "citedSurfaces": [
+        "Scheduling"
+      ],
+      "imports": [
+        "./types"
+      ]
+    },
+    {
+      "path": "src/lib/xer/sample-update.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "src/lib/xer/sample.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "src/lib/xer/tia.ts",
+      "pathGuess": [],
+      "citedByLeaves": [
+        "SCH-011",
+        "RPT-009"
+      ],
+      "citedSurfaces": [
+        "Scheduling",
+        "Reporting"
+      ],
+      "imports": [
+        "./types"
+      ]
+    },
+    {
+      "path": "src/lib/xer/types.ts",
+      "pathGuess": [],
+      "citedByLeaves": [
+        "SCH-007"
+      ],
+      "citedSurfaces": [
+        "Scheduling"
+      ],
+      "imports": []
+    },
+    {
+      "path": "src/lib/xer/wbs.ts",
+      "pathGuess": [],
+      "citedByLeaves": [
+        "SCH-005",
+        "SCH-013"
+      ],
+      "citedSurfaces": [
+        "Scheduling"
+      ],
+      "imports": [
+        "./types"
+      ]
+    },
+    {
+      "path": "src/main.tsx",
+      "pathGuess": [
+        "AI"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "./App.tsx",
+        "@/lib/offline/sync",
+        "@/lib/native/app-state",
+        "@/lib/native/background-sync"
+      ]
+    },
+    {
+      "path": "src/pages/Admin.tsx",
+      "pathGuess": [
+        "Auth & Admin"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/integrations/supabase/client",
+        "@/hooks/useAuth",
+        "@/hooks/useTheme",
+        "@/hooks/use-toast",
+        "@/components/ui/button",
+        "@/components/ui/badge",
+        "@/components/ui/input",
+        "@/components/ui/label",
+        "@/components/ui/select",
+        "@/components/ui/dialog",
+        "@/lib/utils",
+        "@/components/ConfirmDialog"
+      ]
+    },
+    {
+      "path": "src/pages/Auth.tsx",
+      "pathGuess": [
+        "Auth & Admin"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/integrations/supabase/client",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/label",
+        "@/hooks/use-toast"
+      ]
+    },
+    {
+      "path": "src/pages/DailyReport.tsx",
+      "pathGuess": [
+        "Field Operations"
+      ],
+      "citedByLeaves": [
+        "RPT-002"
+      ],
+      "citedSurfaces": [
+        "Reporting"
+      ],
+      "imports": [
+        "@/hooks/useAuth",
+        "@/hooks/useDailyReport",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/badge",
+        "@/lib/utils",
+        "@/lib/daily-report-snapshot"
+      ]
+    },
+    {
+      "path": "src/pages/Dashboard.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/hooks/useAuth",
+        "@/hooks/useProjects",
+        "@/hooks/useTheme",
+        "@/hooks/use-toast",
+        "@/hooks/useTour",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/label",
+        "@/components/ui/progress",
+        "@/components/ui/dialog",
+        "@/integrations/supabase/client",
+        "@/lib/utils",
+        "@/components/WelcomeCarousel",
+        "@/components/GuidedTour",
+        "@/components/NotificationBell",
+        "@/lib/approved-quantities",
+        "@/components/ConfirmDialog"
+      ]
+    },
+    {
+      "path": "src/pages/Demo.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/components/PdfCanvas",
+        "@/components/MobileTabBar",
+        "@/components/MobileToolbar",
+        "@/components/MobileSections",
+        "@/components/MobilePayItems",
+        "@/components/SummaryPanel",
+        "@/components/GpsCalibration",
+        "@/components/GpsTraceControls",
+        "@/components/MobileAnnotationSheet",
+        "@/hooks/useProject",
+        "@/hooks/use-mobile",
+        "@/hooks/useTheme",
+        "@/lib/pdf-utils",
+        "@/hooks/use-toast",
+        "@/components/ui/button",
+        "@/lib/utils",
+        "@/types/project",
+        "@/lib/geo-transform",
+        "@/lib/export-utils",
+        "@/components/ui/dialog",
+        "@/components/ui/input",
+        "@/components/ui/label"
+      ]
+    },
+    {
+      "path": "src/pages/Documents.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/components/ui/checkbox",
+        "@/components/ui/avatar",
+        "@/components/ui/toast",
+        "@/hooks/useAuth",
+        "@/hooks/useDocuments",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/badge",
+        "@/components/ui/dialog",
+        "@/components/ui/dropdown-menu",
+        "@/components/ui/select",
+        "@/lib/utils",
+        "@/integrations/supabase/client",
+        "@/hooks/use-toast",
+        "@/components/ConfirmDialog"
+      ]
+    },
+    {
+      "path": "src/pages/FajarPitch.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/components/ui/button",
+        "@/components/ui/card",
+        "@/components/ui/badge",
+        "@/components/ui/tabs",
+        "@/components/ui/accordion"
+      ]
+    },
+    {
+      "path": "src/pages/Index.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/components/ui/sidebar",
+        "@/components/ProjectSidebar",
+        "@/components/Toolbar",
+        "@/components/PdfCanvas",
+        "@/components/SummaryPanel",
+        "@/components/SpecViewer",
+        "@/components/MobileTabBar",
+        "@/components/MobileToolbar",
+        "@/components/MobilePayItems",
+        "@/components/MobileSections",
+        "@/components/EmptyState",
+        "@/components/GuidedTour",
+        "@/components/GpsCalibration",
+        "@/components/GpsTraceControls",
+        "@/hooks/useProject",
+        "@/hooks/useAuth",
+        "@/hooks/use-mobile",
+        "@/hooks/useTheme",
+        "@/hooks/useTour",
+        "@/lib/pdf-utils",
+        "@/lib/offline/db",
+        "@/lib/offline/pdf-cache",
+        "@/lib/specs-utils",
+        "@/lib/export-utils",
+        "@/hooks/use-toast",
+        "@/integrations/supabase/client",
+        "@/types/project",
+        "@/lib/geo-transform",
+        "@/components/ui/button",
+        "@/lib/utils",
+        "@/components/TeamManager",
+        "@/components/MobileAnnotationSheet"
+      ]
+    },
+    {
+      "path": "src/pages/Landing.tsx",
+      "pathGuess": [
+        "Marketing & Sales"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/assets/hero-screenshot.jpg",
+        "@/assets/highway-construction-aerial.jpg",
+        "@/assets/inspector-tablet.jpg",
+        "@/assets/blueprint-plans.jpg",
+        "@/assets/gps-field-measurement.jpg",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/textarea",
+        "@/components/ui/accordion",
+        "@/integrations/supabase/client"
+      ]
+    },
+    {
+      "path": "src/pages/McfaPitch.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [
+        "SCH-015",
+        "SCH-021",
+        "RPT-010"
+      ],
+      "citedSurfaces": [
+        "Scheduling",
+        "Reporting"
+      ],
+      "imports": [
+        "@/components/ui/button",
+        "@/components/ui/card",
+        "@/components/ui/accordion",
+        "@/assets/hero-screenshot.jpg"
+      ]
+    },
+    {
+      "path": "src/pages/NotFound.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "src/pages/P6Export.tsx",
+      "pathGuess": [
+        "Reporting"
+      ],
+      "citedByLeaves": [
+        "SCH-008",
+        "SCH-017"
+      ],
+      "citedSurfaces": [
+        "Scheduling"
+      ],
+      "imports": [
+        "@/components/ui/button",
+        "@/components/ui/card",
+        "@/components/ui/badge",
+        "@/components/ui/input",
+        "@/lib/p6xml/parser",
+        "@/lib/p6xml/apply-progress",
+        "@/lib/p6xml/serializer",
+        "@/lib/p6xml/types",
+        "@/hooks/useAuth",
+        "@/hooks/usePayItemActivityMap",
+        "@/hooks/use-toast",
+        "@/integrations/supabase/client",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "path": "src/pages/P6XmlDemo.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/components/ui/button",
+        "@/components/ui/card",
+        "@/components/ui/badge",
+        "@/lib/p6xml/parser",
+        "@/lib/p6xml/apply-progress",
+        "@/lib/p6xml/serializer",
+        "@/lib/p6xml/sample",
+        "@/lib/p6xml/types"
+      ]
+    },
+    {
+      "path": "src/pages/ProjectControls.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [
+        "SCH-005",
+        "SCH-006",
+        "SCH-009",
+        "PC-002",
+        "PC-003",
+        "PC-004",
+        "PC-005",
+        "PC-007",
+        "PC-013"
+      ],
+      "citedSurfaces": [
+        "Scheduling",
+        "Project Controls"
+      ],
+      "imports": [
+        "@/integrations/supabase/client",
+        "@/hooks/useAuth",
+        "@/components/ui/tabs",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/label",
+        "@/components/ui/progress",
+        "@/components/ui/dialog",
+        "@/components/ui/select",
+        "@/hooks/use-toast",
+        "@/lib/utils",
+        "@/components/GanttUploader",
+        "@/components/schedule/ScheduleWorkspace"
+      ]
+    },
+    {
+      "path": "src/pages/ReReview.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/hooks/useAuth",
+        "@/hooks/useProjects",
+        "@/hooks/useReReviewQueue",
+        "@/components/ReReviewCard",
+        "@/components/ui/select",
+        "@/components/ui/button",
+        "@/components/ui/badge",
+        "@/components/ui/input",
+        "@/components/ui/alert-dialog"
+      ]
+    },
+    {
+      "path": "src/pages/ResetPassword.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/integrations/supabase/client",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/label",
+        "@/hooks/use-toast"
+      ]
+    },
+    {
+      "path": "src/pages/Settings.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/components/ui/button",
+        "@/components/ui/switch",
+        "@/components/ui/card",
+        "@/hooks/useAuth",
+        "@/lib/native/platform",
+        "@/lib/native/biometric",
+        "@/lib/native/push",
+        "@/lib/native/background-sync"
+      ]
+    },
+    {
+      "path": "src/pages/XerDemo.tsx",
+      "pathGuess": [],
+      "citedByLeaves": [
+        "SCH-010",
+        "SCH-011",
+        "SCH-012",
+        "SCH-013",
+        "SCH-014",
+        "RPT-003",
+        "RPT-004",
+        "RPT-008",
+        "RPT-009"
+      ],
+      "citedSurfaces": [
+        "Scheduling",
+        "Reporting"
+      ],
+      "imports": [
+        "@/components/ui/button",
+        "@/components/ui/card",
+        "@/components/ui/tabs",
+        "@/components/ui/input",
+        "@/components/ui/textarea",
+        "@/components/ui/label",
+        "@/components/ui/badge",
+        "@/components/ui/select",
+        "@/components/XerLensTour",
+        "@/hooks/use-toast",
+        "@/lib/xer/parser",
+        "@/lib/xer/dcma",
+        "@/lib/xer/tia",
+        "@/lib/xer/wbs",
+        "@/lib/xer/feedback",
+        "@/lib/xer/memo-export",
+        "@/lib/xer/progress",
+        "@/lib/xer/chart-export",
+        "@/lib/xer/aace",
+        "@/lib/xer/sample",
+        "@/lib/xer/sample-update",
+        "@/lib/xer/types"
+      ]
+    },
+    {
+      "path": "src/test/baseline-end.test.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/schedule/baseline"
+      ]
+    },
+    {
+      "path": "src/test/cpm.test.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/schedule/cpm",
+        "@/lib/schedule/types"
+      ]
+    },
+    {
+      "path": "src/test/daily-report-snapshot.test.ts",
+      "pathGuess": [
+        "Field Operations"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/daily-report-snapshot"
+      ]
+    },
+    {
+      "path": "src/test/date-utils.test.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/schedule/date-utils"
+      ]
+    },
+    {
+      "path": "src/test/example.test.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "src/test/geometry.test.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/geometry",
+        "@/types/project"
+      ]
+    },
+    {
+      "path": "src/test/import-p6.test.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/schedule/import-p6",
+        "@/lib/xer/sample",
+        "@/lib/p6xml/sample"
+      ]
+    },
+    {
+      "path": "src/test/p6xml.test.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/p6xml/parser",
+        "@/lib/p6xml/serializer",
+        "@/lib/p6xml/apply-progress",
+        "@/lib/p6xml/sample"
+      ]
+    },
+    {
+      "path": "src/test/setup.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "src/test/specs-utils.test.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/specs-utils"
+      ]
+    },
+    {
+      "path": "src/test/tia.test.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/xer/tia",
+        "@/lib/xer/sample",
+        "@/lib/xer/parser"
+      ]
+    },
+    {
+      "path": "src/test/xer-parser.test.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": [
+        "@/lib/xer/parser",
+        "@/lib/xer/sample",
+        "@/lib/xer/sample-update"
+      ]
+    },
+    {
+      "path": "src/types/project.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "src/vite-env.d.ts",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/functions/invite-user/index.ts",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/functions/parse-schedule/index.ts",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/functions/send-push/index.ts",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/functions/tag-photo/index.ts",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260321162325_749c9dcd-0ffa-430d-bf20-422872294f47.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260321162349_089b7eac-a691-474e-96f4-b97ab4d2581d.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260321162408_22a25531-f789-4f47-b2d5-ec7d40196497.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260321164313_fadd3bba-4f5e-4ac1-b47b-3887bdd98769.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260321164809_127eb40b-40a6-4814-b6cc-ed2f3acd27f2.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260321170227_75de1f7c-2825-40a9-b86e-f031966b835e.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260323121718_947e033e-ded7-4dae-9824-5ff155f34faf.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260323184019_702975d9-3680-45b2-9a82-8587db5f26e5.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260327122843_6f261706-ce0b-4c8a-b707-c3c8b0648540.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260328182512_208ba41b-5292-403a-baf4-9b9b2d158879.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260524015102_6a9de603-5b28-4109-98fe-7e343194da37.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260524015158_bd7b1203-22ec-46f0-8c88-3c4208a05c7d.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260524172951_27a28235-ea50-4c3c-be4a-528f35665ed2.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260524173747_cd76e27d-fda9-4f8b-aac8-c875aa100937.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260524173937_345bb077-7543-4a05-9ef8-c474d5276b1f.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260524182507_aa3b520a-cfe2-4510-b710-0caf0809bc7f.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260524230947_197a36b0-b223-4c6d-a3b6-73dd795f14de.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260525163245_e34bfccb-6eb4-4a47-b075-1f9c628559da.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260526015440_e7d9bc81-0db3-4acd-88f7-ff486798a2b2.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260526021443_4709d075-1bb1-44b9-ae5f-3edc62bcd171.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260526105432_7d5d3850-b410-4d77-ad92-1f2f0e524b65.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260526114744_9262b81e-12b7-4ca4-a3c8-d39802232caf.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260526114820_e82b22fa-1dac-434e-942a-e18387a3c065.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260528155528_44c52ae9-d9c8-4390-8dde-0367583b44ef.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260528155928_1fea17ca-9deb-4078-8173-ee3e52b6eab6.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/migrations/20260529041918_637a0229-3683-4419-9838-890b4e588b31.sql",
+      "pathGuess": [
+        "Backend & Infra"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "supabase/seed.sql",
+      "pathGuess": [],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "scripts/apply-depth-patches.mjs",
+      "pathGuess": [
+        "Cross-Cutting"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "scripts/build-demo-pdf.mjs",
+      "pathGuess": [
+        "Cross-Cutting"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "scripts/consolidate-wbs.mjs",
+      "pathGuess": [
+        "Cross-Cutting"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "scripts/derive-file-surface.mjs",
+      "pathGuess": [
+        "Cross-Cutting"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "scripts/discover-work-items.mjs",
+      "pathGuess": [
+        "Cross-Cutting"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "scripts/extract-build-history.mjs",
+      "pathGuess": [
+        "Cross-Cutting"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "scripts/reconcile-scope.mjs",
+      "pathGuess": [
+        "Cross-Cutting"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "docs/NATIVE_SETUP.md",
+      "pathGuess": [
+        "Cross-Cutting"
+      ],
+      "citedByLeaves": [
+        "NO-02",
+        "NO-06",
+        "NO-10",
+        "NO-11",
+        "NO-17",
+        "NO-25",
+        "NO-29",
+        "NO-30",
+        "NT-02"
+      ],
+      "citedSurfaces": [
+        "Native & Offline",
+        "Notifications"
+      ],
+      "imports": []
+    },
+    {
+      "path": "docs/STORE_LISTING.md",
+      "pathGuess": [
+        "Cross-Cutting"
+      ],
+      "citedByLeaves": [
+        "MS-007",
+        "NO-22",
+        "NO-25",
+        "NO-27",
+        "NO-28",
+        "NO-29",
+        "NO-30",
+        "NO-31",
+        "NO-32",
+        "NT-02",
+        "NT-03"
+      ],
+      "citedSurfaces": [
+        "Marketing & Sales",
+        "Native & Offline",
+        "Notifications"
+      ],
+      "imports": []
+    },
+    {
+      "path": "docs/scope-inventory/backend.md",
+      "pathGuess": [
+        "Cross-Cutting"
+      ],
+      "citedByLeaves": [
+        "aa.org-bootstrap"
+      ],
+      "citedSurfaces": [
+        "Auth & Admin"
+      ],
+      "imports": []
+    },
+    {
+      "path": "docs/scope-inventory/libs-and-hooks.md",
+      "pathGuess": [
+        "Cross-Cutting"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "docs/scope-inventory/marketing-promises.md",
+      "pathGuess": [
+        "Cross-Cutting"
+      ],
+      "citedByLeaves": [
+        "NT-07"
+      ],
+      "citedSurfaces": [
+        "Notifications"
+      ],
+      "imports": []
+    },
+    {
+      "path": "docs/scope-inventory/native-and-offline.md",
+      "pathGuess": [
+        "Cross-Cutting"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "docs/scope-inventory/pages.md",
+      "pathGuess": [
+        "Cross-Cutting"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    },
+    {
+      "path": "docs/wbs.md",
+      "pathGuess": [
+        "Cross-Cutting"
+      ],
+      "citedByLeaves": [],
+      "citedSurfaces": [],
+      "imports": []
+    }
+  ]
+}
