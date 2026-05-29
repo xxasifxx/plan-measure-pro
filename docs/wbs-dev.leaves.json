@@ -1,20 +1,20 @@
 {
-  "generatedAt": "2026-05-29T16:10:34.993Z",
+  "generatedAt": "2026-05-29T17:07:01.160Z",
   "totals": {
     "streams": 23,
-    "leaves": 298,
+    "leaves": 417,
     "byLayer": {
-      "Frontend": 175,
+      "Frontend": 187,
       "Mobile": 33,
-      "Backend": 46,
+      "Backend": 152,
       "Docs": 5,
-      "Verification": 30,
+      "Verification": 31,
       "Build": 9
     },
     "byProvenance": {
-      "brief+code": 123,
-      "brief-only": 88,
-      "code-only": 87,
+      "brief+code": 129,
+      "brief-only": 82,
+      "code-only": 206,
       "inventory": 0
     }
   },
@@ -1676,19 +1676,25 @@
       "layer": "Backend",
       "name": "bucket: annotation-photos",
       "fileGlobs": [
-        "supabase/storage/annotation-photos"
+        "supabase/storage/annotation-photos",
+        "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql"
       ],
       "sources": [
         {
           "kind": "surface",
           "file": "08-photo-evidence.md",
           "path": "supabase/storage/annotation-photos"
+        },
+        {
+          "kind": "storage-bucket",
+          "path": "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
+          "name": "annotation-photos"
         }
       ],
       "note": "Storage bucket; paths follow `{projectId}/{userId}/{uuid}-{filename}`",
       "verdict": null,
       "id": "08:backend:bucket-annotation-photos",
-      "provenance": "brief-only"
+      "provenance": "brief+code"
     },
     {
       "stream": "08 Photo Evidence",
@@ -1900,19 +1906,25 @@
       "layer": "Backend",
       "name": "bucket: project-documents",
       "fileGlobs": [
-        "supabase/storage/project-documents"
+        "supabase/storage/project-documents",
+        "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql"
       ],
       "sources": [
         {
           "kind": "surface",
           "file": "10-document-management.md",
           "path": "supabase/storage/project-documents"
+        },
+        {
+          "kind": "storage-bucket",
+          "path": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+          "name": "project-documents"
         }
       ],
       "note": "Storage bucket; paths follow `{projectId}/{docId}.{ext}`",
       "verdict": null,
       "id": "10:backend:bucket-project-documents",
-      "provenance": "brief-only"
+      "provenance": "brief+code"
     },
     {
       "stream": "11 Schedule Management",
@@ -3571,12 +3583,16 @@
           "kind": "surface",
           "file": "15-offline-and-native-durability.md",
           "path": "public/manifest.webmanifest"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "public/manifest.webmanifest"
         }
       ],
       "note": "PWA manifest",
       "verdict": null,
       "id": "15:docs:manifest",
-      "provenance": "brief-only"
+      "provenance": "brief+code"
     },
     {
       "stream": "16 Mobile Field Ergonomics",
@@ -4722,12 +4738,16 @@
           "kind": "surface",
           "file": "20-sales-and-pitch.md",
           "path": "public/llms.txt"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "public/llms.txt"
         }
       ],
       "note": "LLM-readable site description",
       "verdict": null,
       "id": "20:docs:llms",
-      "provenance": "brief-only"
+      "provenance": "brief+code"
     },
     {
       "stream": "20 Sales & Pitch",
@@ -4742,12 +4762,16 @@
           "kind": "surface",
           "file": "20-sales-and-pitch.md",
           "path": "public/sitemap.xml"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "public/sitemap.xml"
         }
       ],
       "note": "SEO sitemap: landing, demo, mcfa, fajar, p6-xml, mcfa/p6-xml",
       "verdict": null,
       "id": "20:docs:sitemap",
-      "provenance": "brief-only"
+      "provenance": "brief+code"
     },
     {
       "stream": "20 Sales & Pitch",
@@ -4762,12 +4786,16 @@
           "kind": "surface",
           "file": "20-sales-and-pitch.md",
           "path": "public/robots.txt"
+        },
+        {
+          "kind": "file-cluster",
+          "path": "public/robots.txt"
         }
       ],
       "note": "crawl permissions",
       "verdict": null,
       "id": "20:docs:robots",
-      "provenance": "brief-only"
+      "provenance": "brief+code"
     },
     {
       "stream": "20 Sales & Pitch",
@@ -4950,7 +4978,7 @@
       "id": "99:frontend:shadcn-ui-primitives"
     },
     {
-      "streamNum": "97",
+      "streamNum": "15",
       "layer": "Frontend",
       "name": "app-icon-master",
       "fileGlobs": [
@@ -4963,11 +4991,11 @@
           "path": "src/assets/app-icon-master.png"
         }
       ],
-      "stream": "97 Plumbing",
-      "id": "97:frontend:app-icon-master"
+      "stream": "15 Offline & Native Durability",
+      "id": "15:frontend:app-icon-master"
     },
     {
-      "streamNum": "97",
+      "streamNum": "20",
       "layer": "Frontend",
       "name": "blueprint-plans",
       "fileGlobs": [
@@ -4980,11 +5008,11 @@
           "path": "src/assets/blueprint-plans.jpg"
         }
       ],
-      "stream": "97 Plumbing",
-      "id": "97:frontend:blueprint-plans"
+      "stream": "20 Sales & Pitch",
+      "id": "20:frontend:blueprint-plans"
     },
     {
-      "streamNum": "97",
+      "streamNum": "20",
       "layer": "Frontend",
       "name": "gps-field-measurement",
       "fileGlobs": [
@@ -4997,11 +5025,11 @@
           "path": "src/assets/gps-field-measurement.jpg"
         }
       ],
-      "stream": "97 Plumbing",
-      "id": "97:frontend:gps-field-measurement"
+      "stream": "20 Sales & Pitch",
+      "id": "20:frontend:gps-field-measurement"
     },
     {
-      "streamNum": "97",
+      "streamNum": "20",
       "layer": "Frontend",
       "name": "hero-product-shot",
       "fileGlobs": [
@@ -5014,11 +5042,11 @@
           "path": "src/assets/hero-product-shot.png"
         }
       ],
-      "stream": "97 Plumbing",
-      "id": "97:frontend:hero-product-shot"
+      "stream": "20 Sales & Pitch",
+      "id": "20:frontend:hero-product-shot"
     },
     {
-      "streamNum": "97",
+      "streamNum": "20",
       "layer": "Frontend",
       "name": "hero-screenshot",
       "fileGlobs": [
@@ -5031,11 +5059,11 @@
           "path": "src/assets/hero-screenshot.jpg"
         }
       ],
-      "stream": "97 Plumbing",
-      "id": "97:frontend:hero-screenshot"
+      "stream": "20 Sales & Pitch",
+      "id": "20:frontend:hero-screenshot"
     },
     {
-      "streamNum": "97",
+      "streamNum": "20",
       "layer": "Frontend",
       "name": "highway-construction-aerial",
       "fileGlobs": [
@@ -5048,11 +5076,11 @@
           "path": "src/assets/highway-construction-aerial.jpg"
         }
       ],
-      "stream": "97 Plumbing",
-      "id": "97:frontend:highway-construction-aerial"
+      "stream": "20 Sales & Pitch",
+      "id": "20:frontend:highway-construction-aerial"
     },
     {
-      "streamNum": "97",
+      "streamNum": "20",
       "layer": "Frontend",
       "name": "inspector-tablet",
       "fileGlobs": [
@@ -5065,8 +5093,8 @@
           "path": "src/assets/inspector-tablet.jpg"
         }
       ],
-      "stream": "97 Plumbing",
-      "id": "97:frontend:inspector-tablet"
+      "stream": "20 Sales & Pitch",
+      "id": "20:frontend:inspector-tablet"
     },
     {
       "streamNum": "97",
@@ -5734,6 +5762,23 @@
     {
       "streamNum": "98",
       "layer": "Verification",
+      "name": "build-db-surface-leaves",
+      "fileGlobs": [
+        "scripts/dev-wbs/build-db-surface-leaves.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/dev-wbs/build-db-surface-leaves.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:build-db-surface-leaves"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
       "name": "build-leaves",
       "fileGlobs": [
         "scripts/dev-wbs/build-leaves.mjs"
@@ -5900,6 +5945,210 @@
       ],
       "stream": "98 Build & Infra",
       "id": "98:verification:verify-e2e"
+    },
+    {
+      "streamNum": "15",
+      "layer": "Frontend",
+      "name": "apple-touch-icon",
+      "fileGlobs": [
+        "public/apple-touch-icon.png"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "public/apple-touch-icon.png"
+        }
+      ],
+      "stream": "15 Offline & Native Durability",
+      "id": "15:frontend:apple-touch-icon"
+    },
+    {
+      "streamNum": "13",
+      "layer": "Frontend",
+      "name": "takeoffpro-dev",
+      "fileGlobs": [
+        "public/exports/takeoffpro-dev.xml"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "public/exports/takeoffpro-dev.xml"
+        }
+      ],
+      "stream": "13 Data Export & Interoperability",
+      "id": "13:frontend:takeoffpro-dev"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "admin",
+      "fileGlobs": [
+        "public/fajar/admin.png"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "public/fajar/admin.png"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:admin"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "listing",
+      "fileGlobs": [
+        "public/fajar/listing.png"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "public/fajar/listing.png"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:listing"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "machine-detail",
+      "fileGlobs": [
+        "public/fajar/machine-detail.png"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "public/fajar/machine-detail.png"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:machine-detail"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "mobile-booking",
+      "fileGlobs": [
+        "public/fajar/mobile-booking.png"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "public/fajar/mobile-booking.png"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:mobile-booking"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "serp",
+      "fileGlobs": [
+        "public/fajar/serp.png"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "public/fajar/serp.png"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:serp"
+    },
+    {
+      "streamNum": "15",
+      "layer": "Frontend",
+      "name": "favicon-32",
+      "fileGlobs": [
+        "public/favicon-32.png"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "public/favicon-32.png"
+        }
+      ],
+      "stream": "15 Offline & Native Durability",
+      "id": "15:frontend:favicon-32"
+    },
+    {
+      "streamNum": "15",
+      "layer": "Frontend",
+      "name": "favicon",
+      "fileGlobs": [
+        "public/favicon.ico"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "public/favicon.ico"
+        }
+      ],
+      "stream": "15 Offline & Native Durability",
+      "id": "15:frontend:favicon"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "placeholder",
+      "fileGlobs": [
+        "public/placeholder.svg"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "public/placeholder.svg"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:placeholder"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "pwa-192",
+      "fileGlobs": [
+        "public/pwa-192.png"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "public/pwa-192.png"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:pwa-192"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "pwa-512",
+      "fileGlobs": [
+        "public/pwa-512.png"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "public/pwa-512.png"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:pwa-512"
     },
     {
       "streamNum": "98",
@@ -6072,232 +6321,669 @@
       "id": "98:backend:config"
     },
     {
+      "streamNum": "97",
+      "layer": "Backend",
+      "name": "seed",
+      "fileGlobs": [
+        "supabase/seed.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "supabase/seed.sql"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:backend:seed"
+    },
+    {
       "streamNum": "98",
       "layer": "Backend",
-      "name": "Migrations 2026-w12",
+      "name": "migration: 2026-03-21 88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550",
       "fileGlobs": [
-        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
-        "supabase/migrations/20260321162325_749c9dcd-0ffa-430d-bf20-422872294f47.sql",
-        "supabase/migrations/20260321162349_089b7eac-a691-474e-96f4-b97ab4d2581d.sql",
-        "supabase/migrations/20260321162408_22a25531-f789-4f47-b2d5-ec7d40196497.sql",
-        "supabase/migrations/20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql",
-        "supabase/migrations/20260321164313_fadd3bba-4f5e-4ac1-b47b-3887bdd98769.sql",
-        "supabase/migrations/20260321164809_127eb40b-40a6-4814-b6cc-ed2f3acd27f2.sql",
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "iso": "2026-03-21"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-03-21-88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-03-21 749c9dcd-0ffa-430d-bf20-422872294f47",
+      "fileGlobs": [
+        "supabase/migrations/20260321162325_749c9dcd-0ffa-430d-bf20-422872294f47.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260321162325_749c9dcd-0ffa-430d-bf20-422872294f47.sql",
+          "iso": "2026-03-21"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-03-21-749c9dcd-0ffa-430d-bf20-422872294f47"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-03-21 089b7eac-a691-474e-96f4-b97ab4d2581d",
+      "fileGlobs": [
+        "supabase/migrations/20260321162349_089b7eac-a691-474e-96f4-b97ab4d2581d.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260321162349_089b7eac-a691-474e-96f4-b97ab4d2581d.sql",
+          "iso": "2026-03-21"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-03-21-089b7eac-a691-474e-96f4-b97ab4d2581d"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-03-21 22a25531-f789-4f47-b2d5-ec7d40196497",
+      "fileGlobs": [
+        "supabase/migrations/20260321162408_22a25531-f789-4f47-b2d5-ec7d40196497.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260321162408_22a25531-f789-4f47-b2d5-ec7d40196497.sql",
+          "iso": "2026-03-21"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-03-21-22a25531-f789-4f47-b2d5-ec7d40196497"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-03-21 c4804e7a-cb2d-4898-be1d-27ba7694c893",
+      "fileGlobs": [
+        "supabase/migrations/20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql",
+          "iso": "2026-03-21"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-03-21-c4804e7a-cb2d-4898-be1d-27ba7694c893"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-03-21 fadd3bba-4f5e-4ac1-b47b-3887bdd98769",
+      "fileGlobs": [
+        "supabase/migrations/20260321164313_fadd3bba-4f5e-4ac1-b47b-3887bdd98769.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260321164313_fadd3bba-4f5e-4ac1-b47b-3887bdd98769.sql",
+          "iso": "2026-03-21"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-03-21-fadd3bba-4f5e-4ac1-b47b-3887bdd98769"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-03-21 127eb40b-40a6-4814-b6cc-ed2f3acd27f2",
+      "fileGlobs": [
+        "supabase/migrations/20260321164809_127eb40b-40a6-4814-b6cc-ed2f3acd27f2.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260321164809_127eb40b-40a6-4814-b6cc-ed2f3acd27f2.sql",
+          "iso": "2026-03-21"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-03-21-127eb40b-40a6-4814-b6cc-ed2f3acd27f2"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-03-21 75de1f7c-2825-40a9-b86e-f031966b835e",
+      "fileGlobs": [
         "supabase/migrations/20260321170227_75de1f7c-2825-40a9-b86e-f031966b835e.sql"
       ],
       "provenance": "code-only",
       "sources": [
         {
           "kind": "migration",
-          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260321162325_749c9dcd-0ffa-430d-bf20-422872294f47.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260321162349_089b7eac-a691-474e-96f4-b97ab4d2581d.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260321162408_22a25531-f789-4f47-b2d5-ec7d40196497.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260321164313_fadd3bba-4f5e-4ac1-b47b-3887bdd98769.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260321164809_127eb40b-40a6-4814-b6cc-ed2f3acd27f2.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260321170227_75de1f7c-2825-40a9-b86e-f031966b835e.sql"
+          "path": "supabase/migrations/20260321170227_75de1f7c-2825-40a9-b86e-f031966b835e.sql",
+          "iso": "2026-03-21"
         }
       ],
       "stream": "98 Build & Infra",
-      "id": "98:backend:migrations-2026-w12"
+      "id": "98:backend:migration-2026-03-21-75de1f7c-2825-40a9-b86e-f031966b835e"
     },
     {
       "streamNum": "98",
       "layer": "Backend",
-      "name": "Migrations 2026-w13",
+      "name": "migration: 2026-03-23 947e033e-ded7-4dae-9824-5ff155f34faf",
       "fileGlobs": [
-        "supabase/migrations/20260323121718_947e033e-ded7-4dae-9824-5ff155f34faf.sql",
-        "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql",
-        "supabase/migrations/20260323184019_702975d9-3680-45b2-9a82-8587db5f26e5.sql",
-        "supabase/migrations/20260327122843_6f261706-ce0b-4c8a-b707-c3c8b0648540.sql",
+        "supabase/migrations/20260323121718_947e033e-ded7-4dae-9824-5ff155f34faf.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260323121718_947e033e-ded7-4dae-9824-5ff155f34faf.sql",
+          "iso": "2026-03-23"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-03-23-947e033e-ded7-4dae-9824-5ff155f34faf"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-03-23 a351e076-b680-476d-b06d-1b2165092b26",
+      "fileGlobs": [
+        "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql",
+          "iso": "2026-03-23"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-03-23-a351e076-b680-476d-b06d-1b2165092b26"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-03-23 702975d9-3680-45b2-9a82-8587db5f26e5",
+      "fileGlobs": [
+        "supabase/migrations/20260323184019_702975d9-3680-45b2-9a82-8587db5f26e5.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260323184019_702975d9-3680-45b2-9a82-8587db5f26e5.sql",
+          "iso": "2026-03-23"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-03-23-702975d9-3680-45b2-9a82-8587db5f26e5"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-03-27 6f261706-ce0b-4c8a-b707-c3c8b0648540",
+      "fileGlobs": [
+        "supabase/migrations/20260327122843_6f261706-ce0b-4c8a-b707-c3c8b0648540.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260327122843_6f261706-ce0b-4c8a-b707-c3c8b0648540.sql",
+          "iso": "2026-03-27"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-03-27-6f261706-ce0b-4c8a-b707-c3c8b0648540"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-03-28 208ba41b-5292-403a-baf4-9b9b2d158879",
+      "fileGlobs": [
         "supabase/migrations/20260328182512_208ba41b-5292-403a-baf4-9b9b2d158879.sql"
       ],
       "provenance": "code-only",
       "sources": [
         {
           "kind": "migration",
-          "path": "supabase/migrations/20260323121718_947e033e-ded7-4dae-9824-5ff155f34faf.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260323184019_702975d9-3680-45b2-9a82-8587db5f26e5.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260327122843_6f261706-ce0b-4c8a-b707-c3c8b0648540.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260328182512_208ba41b-5292-403a-baf4-9b9b2d158879.sql"
+          "path": "supabase/migrations/20260328182512_208ba41b-5292-403a-baf4-9b9b2d158879.sql",
+          "iso": "2026-03-28"
         }
       ],
       "stream": "98 Build & Infra",
-      "id": "98:backend:migrations-2026-w13"
+      "id": "98:backend:migration-2026-03-28-208ba41b-5292-403a-baf4-9b9b2d158879"
     },
     {
       "streamNum": "98",
       "layer": "Backend",
-      "name": "Migrations 2026-w19",
+      "name": "migration: 2026-05-04 3462a0a5-a4a5-4f17-8272-83c40fa4e039",
       "fileGlobs": [
-        "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
+        "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
+          "iso": "2026-05-04"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-04-3462a0a5-a4a5-4f17-8272-83c40fa4e039"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-05 f50b6c32-d0b3-42dd-9336-494143f5a389",
+      "fileGlobs": [
         "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql"
       ],
       "provenance": "code-only",
       "sources": [
         {
           "kind": "migration",
-          "path": "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql"
+          "path": "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql",
+          "iso": "2026-05-05"
         }
       ],
       "stream": "98 Build & Infra",
-      "id": "98:backend:migrations-2026-w19"
+      "id": "98:backend:migration-2026-05-05-f50b6c32-d0b3-42dd-9336-494143f5a389"
     },
     {
       "streamNum": "98",
       "layer": "Backend",
-      "name": "Migrations 2026-w22",
+      "name": "migration: 2026-05-24 6a9de603-5b28-4109-98fe-7e343194da37",
       "fileGlobs": [
-        "supabase/migrations/20260524015102_6a9de603-5b28-4109-98fe-7e343194da37.sql",
-        "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
-        "supabase/migrations/20260524015158_bd7b1203-22ec-46f0-8c88-3c4208a05c7d.sql",
-        "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql",
-        "supabase/migrations/20260524172951_27a28235-ea50-4c3c-be4a-528f35665ed2.sql",
-        "supabase/migrations/20260524173747_cd76e27d-fda9-4f8b-aac8-c875aa100937.sql",
-        "supabase/migrations/20260524173937_345bb077-7543-4a05-9ef8-c474d5276b1f.sql",
-        "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
-        "supabase/migrations/20260524182507_aa3b520a-cfe2-4510-b710-0caf0809bc7f.sql",
-        "supabase/migrations/20260524230947_197a36b0-b223-4c6d-a3b6-73dd795f14de.sql",
-        "supabase/migrations/20260525163245_e34bfccb-6eb4-4a47-b075-1f9c628559da.sql",
-        "supabase/migrations/20260526015440_e7d9bc81-0db3-4acd-88f7-ff486798a2b2.sql",
-        "supabase/migrations/20260526021443_4709d075-1bb1-44b9-ae5f-3edc62bcd171.sql",
-        "supabase/migrations/20260526105432_7d5d3850-b410-4d77-ad92-1f2f0e524b65.sql",
-        "supabase/migrations/20260526114744_9262b81e-12b7-4ca4-a3c8-d39802232caf.sql",
-        "supabase/migrations/20260526114820_e82b22fa-1dac-434e-942a-e18387a3c065.sql",
-        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
-        "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql",
-        "supabase/migrations/20260528155528_44c52ae9-d9c8-4390-8dde-0367583b44ef.sql",
-        "supabase/migrations/20260528155928_1fea17ca-9deb-4078-8173-ee3e52b6eab6.sql",
+        "supabase/migrations/20260524015102_6a9de603-5b28-4109-98fe-7e343194da37.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524015102_6a9de603-5b28-4109-98fe-7e343194da37.sql",
+          "iso": "2026-05-24"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-24-6a9de603-5b28-4109-98fe-7e343194da37"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-24 75af5978-5463-48f0-894d-a5ff9931868e",
+      "fileGlobs": [
+        "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
+          "iso": "2026-05-24"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-24-75af5978-5463-48f0-894d-a5ff9931868e"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-24 bd7b1203-22ec-46f0-8c88-3c4208a05c7d",
+      "fileGlobs": [
+        "supabase/migrations/20260524015158_bd7b1203-22ec-46f0-8c88-3c4208a05c7d.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524015158_bd7b1203-22ec-46f0-8c88-3c4208a05c7d.sql",
+          "iso": "2026-05-24"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-24-bd7b1203-22ec-46f0-8c88-3c4208a05c7d"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-24 5034e85e-37ad-4471-bb00-017b17d673ee",
+      "fileGlobs": [
+        "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql",
+          "iso": "2026-05-24"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-24-5034e85e-37ad-4471-bb00-017b17d673ee"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-24 27a28235-ea50-4c3c-be4a-528f35665ed2",
+      "fileGlobs": [
+        "supabase/migrations/20260524172951_27a28235-ea50-4c3c-be4a-528f35665ed2.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524172951_27a28235-ea50-4c3c-be4a-528f35665ed2.sql",
+          "iso": "2026-05-24"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-24-27a28235-ea50-4c3c-be4a-528f35665ed2"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-24 cd76e27d-fda9-4f8b-aac8-c875aa100937",
+      "fileGlobs": [
+        "supabase/migrations/20260524173747_cd76e27d-fda9-4f8b-aac8-c875aa100937.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524173747_cd76e27d-fda9-4f8b-aac8-c875aa100937.sql",
+          "iso": "2026-05-24"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-24-cd76e27d-fda9-4f8b-aac8-c875aa100937"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-24 345bb077-7543-4a05-9ef8-c474d5276b1f",
+      "fileGlobs": [
+        "supabase/migrations/20260524173937_345bb077-7543-4a05-9ef8-c474d5276b1f.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524173937_345bb077-7543-4a05-9ef8-c474d5276b1f.sql",
+          "iso": "2026-05-24"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-24-345bb077-7543-4a05-9ef8-c474d5276b1f"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-24 68108104-7e60-4587-a574-eeef24c30253",
+      "fileGlobs": [
+        "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+          "iso": "2026-05-24"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-24-68108104-7e60-4587-a574-eeef24c30253"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-24 aa3b520a-cfe2-4510-b710-0caf0809bc7f",
+      "fileGlobs": [
+        "supabase/migrations/20260524182507_aa3b520a-cfe2-4510-b710-0caf0809bc7f.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524182507_aa3b520a-cfe2-4510-b710-0caf0809bc7f.sql",
+          "iso": "2026-05-24"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-24-aa3b520a-cfe2-4510-b710-0caf0809bc7f"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-24 197a36b0-b223-4c6d-a3b6-73dd795f14de",
+      "fileGlobs": [
+        "supabase/migrations/20260524230947_197a36b0-b223-4c6d-a3b6-73dd795f14de.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524230947_197a36b0-b223-4c6d-a3b6-73dd795f14de.sql",
+          "iso": "2026-05-24"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-24-197a36b0-b223-4c6d-a3b6-73dd795f14de"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-25 e34bfccb-6eb4-4a47-b075-1f9c628559da",
+      "fileGlobs": [
+        "supabase/migrations/20260525163245_e34bfccb-6eb4-4a47-b075-1f9c628559da.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260525163245_e34bfccb-6eb4-4a47-b075-1f9c628559da.sql",
+          "iso": "2026-05-25"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-25-e34bfccb-6eb4-4a47-b075-1f9c628559da"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-26 e7d9bc81-0db3-4acd-88f7-ff486798a2b2",
+      "fileGlobs": [
+        "supabase/migrations/20260526015440_e7d9bc81-0db3-4acd-88f7-ff486798a2b2.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260526015440_e7d9bc81-0db3-4acd-88f7-ff486798a2b2.sql",
+          "iso": "2026-05-26"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-26-e7d9bc81-0db3-4acd-88f7-ff486798a2b2"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-26 4709d075-1bb1-44b9-ae5f-3edc62bcd171",
+      "fileGlobs": [
+        "supabase/migrations/20260526021443_4709d075-1bb1-44b9-ae5f-3edc62bcd171.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260526021443_4709d075-1bb1-44b9-ae5f-3edc62bcd171.sql",
+          "iso": "2026-05-26"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-26-4709d075-1bb1-44b9-ae5f-3edc62bcd171"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-26 7d5d3850-b410-4d77-ad92-1f2f0e524b65",
+      "fileGlobs": [
+        "supabase/migrations/20260526105432_7d5d3850-b410-4d77-ad92-1f2f0e524b65.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260526105432_7d5d3850-b410-4d77-ad92-1f2f0e524b65.sql",
+          "iso": "2026-05-26"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-26-7d5d3850-b410-4d77-ad92-1f2f0e524b65"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-26 9262b81e-12b7-4ca4-a3c8-d39802232caf",
+      "fileGlobs": [
+        "supabase/migrations/20260526114744_9262b81e-12b7-4ca4-a3c8-d39802232caf.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260526114744_9262b81e-12b7-4ca4-a3c8-d39802232caf.sql",
+          "iso": "2026-05-26"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-26-9262b81e-12b7-4ca4-a3c8-d39802232caf"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-26 e82b22fa-1dac-434e-942a-e18387a3c065",
+      "fileGlobs": [
+        "supabase/migrations/20260526114820_e82b22fa-1dac-434e-942a-e18387a3c065.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260526114820_e82b22fa-1dac-434e-942a-e18387a3c065.sql",
+          "iso": "2026-05-26"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-26-e82b22fa-1dac-434e-942a-e18387a3c065"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-26 dea32198-fe8d-4add-89e7-7aca7ad513b7",
+      "fileGlobs": [
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+          "iso": "2026-05-26"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-26-dea32198-fe8d-4add-89e7-7aca7ad513b7"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-26 08c40dcb-7912-41d8-bc1d-3668026265ac",
+      "fileGlobs": [
+        "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql",
+          "iso": "2026-05-26"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-26-08c40dcb-7912-41d8-bc1d-3668026265ac"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-28 44c52ae9-d9c8-4390-8dde-0367583b44ef",
+      "fileGlobs": [
+        "supabase/migrations/20260528155528_44c52ae9-d9c8-4390-8dde-0367583b44ef.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260528155528_44c52ae9-d9c8-4390-8dde-0367583b44ef.sql",
+          "iso": "2026-05-28"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-28-44c52ae9-d9c8-4390-8dde-0367583b44ef"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-28 1fea17ca-9deb-4078-8173-ee3e52b6eab6",
+      "fileGlobs": [
+        "supabase/migrations/20260528155928_1fea17ca-9deb-4078-8173-ee3e52b6eab6.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260528155928_1fea17ca-9deb-4078-8173-ee3e52b6eab6.sql",
+          "iso": "2026-05-28"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-28-1fea17ca-9deb-4078-8173-ee3e52b6eab6"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-29 637a0229-3683-4419-9838-890b4e588b31",
+      "fileGlobs": [
         "supabase/migrations/20260529041918_637a0229-3683-4419-9838-890b4e588b31.sql"
       ],
       "provenance": "code-only",
       "sources": [
         {
           "kind": "migration",
-          "path": "supabase/migrations/20260524015102_6a9de603-5b28-4109-98fe-7e343194da37.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260524015158_bd7b1203-22ec-46f0-8c88-3c4208a05c7d.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260524172951_27a28235-ea50-4c3c-be4a-528f35665ed2.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260524173747_cd76e27d-fda9-4f8b-aac8-c875aa100937.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260524173937_345bb077-7543-4a05-9ef8-c474d5276b1f.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260524182507_aa3b520a-cfe2-4510-b710-0caf0809bc7f.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260524230947_197a36b0-b223-4c6d-a3b6-73dd795f14de.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260525163245_e34bfccb-6eb4-4a47-b075-1f9c628559da.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260526015440_e7d9bc81-0db3-4acd-88f7-ff486798a2b2.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260526021443_4709d075-1bb1-44b9-ae5f-3edc62bcd171.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260526105432_7d5d3850-b410-4d77-ad92-1f2f0e524b65.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260526114744_9262b81e-12b7-4ca4-a3c8-d39802232caf.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260526114820_e82b22fa-1dac-434e-942a-e18387a3c065.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260528155528_44c52ae9-d9c8-4390-8dde-0367583b44ef.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260528155928_1fea17ca-9deb-4078-8173-ee3e52b6eab6.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260529041918_637a0229-3683-4419-9838-890b4e588b31.sql"
+          "path": "supabase/migrations/20260529041918_637a0229-3683-4419-9838-890b4e588b31.sql",
+          "iso": "2026-05-29"
         }
       ],
       "stream": "98 Build & Infra",
-      "id": "98:backend:migrations-2026-w22"
+      "id": "98:backend:migration-2026-05-29-637a0229-3683-4419-9838-890b4e588b31"
     },
     {
       "streamNum": "11",
@@ -6570,6 +7256,1472 @@
       ],
       "stream": "12 Project Health & Controls",
       "id": "12:backend:db-scorecard-metrics"
+    },
+    {
+      "streamNum": "01",
+      "stream": "01 Identity & Access",
+      "layer": "Backend",
+      "name": "fn(db): has_role",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "name": "has_role"
+        }
+      ],
+      "id": "01:backend:fn-db-has-role"
+    },
+    {
+      "streamNum": "02",
+      "stream": "02 Portfolio & PM Home",
+      "layer": "Backend",
+      "name": "fn(db): is_project_member",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "name": "is_project_member"
+        }
+      ],
+      "id": "02:backend:fn-db-is-project-member"
+    },
+    {
+      "streamNum": "01",
+      "stream": "01 Identity & Access",
+      "layer": "Backend",
+      "name": "fn(db): handle_new_user",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+        "supabase/migrations/20260323121718_947e033e-ded7-4dae-9824-5ff155f34faf.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "name": "handle_new_user"
+        },
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260323121718_947e033e-ded7-4dae-9824-5ff155f34faf.sql",
+          "name": "handle_new_user"
+        }
+      ],
+      "id": "01:backend:fn-db-handle-new-user"
+    },
+    {
+      "streamNum": "97",
+      "stream": "97 Plumbing",
+      "layer": "Backend",
+      "name": "fn(db): update_updated_at_column",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "name": "update_updated_at_column"
+        }
+      ],
+      "id": "97:backend:fn-db-update-updated-at-column"
+    },
+    {
+      "streamNum": "97",
+      "stream": "97 Plumbing",
+      "layer": "Backend",
+      "name": "fn(db): handle_new_user_role",
+      "fileGlobs": [
+        "supabase/migrations/20260321162325_749c9dcd-0ffa-430d-bf20-422872294f47.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260321162325_749c9dcd-0ffa-430d-bf20-422872294f47.sql",
+          "name": "handle_new_user_role"
+        }
+      ],
+      "id": "97:backend:fn-db-handle-new-user-role"
+    },
+    {
+      "streamNum": "01",
+      "stream": "01 Identity & Access",
+      "layer": "Backend",
+      "name": "fn(db): assign_owner_role",
+      "fileGlobs": [
+        "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql",
+          "name": "assign_owner_role"
+        }
+      ],
+      "id": "01:backend:fn-db-assign-owner-role"
+    },
+    {
+      "streamNum": "01",
+      "stream": "01 Identity & Access",
+      "layer": "Backend",
+      "name": "fn(db): accept_invitation",
+      "fileGlobs": [
+        "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql",
+          "name": "accept_invitation"
+        }
+      ],
+      "id": "01:backend:fn-db-accept-invitation"
+    },
+    {
+      "streamNum": "06",
+      "stream": "06 Daily Report Lifecycle",
+      "layer": "Backend",
+      "name": "fn(db): daily_reports_status_transition",
+      "fileGlobs": [
+        "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
+        "supabase/migrations/20260524173747_cd76e27d-fda9-4f8b-aac8-c875aa100937.sql",
+        "supabase/migrations/20260524173937_345bb077-7543-4a05-9ef8-c474d5276b1f.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
+          "name": "daily_reports_status_transition"
+        },
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260524173747_cd76e27d-fda9-4f8b-aac8-c875aa100937.sql",
+          "name": "daily_reports_status_transition"
+        },
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260524173937_345bb077-7543-4a05-9ef8-c474d5276b1f.sql",
+          "name": "daily_reports_status_transition"
+        }
+      ],
+      "id": "06:backend:fn-db-daily-reports-status-transition"
+    },
+    {
+      "streamNum": "06",
+      "stream": "06 Daily Report Lifecycle",
+      "layer": "Backend",
+      "name": "fn(db): daily_reports_status_side_effects",
+      "fileGlobs": [
+        "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql",
+          "name": "daily_reports_status_side_effects"
+        }
+      ],
+      "id": "06:backend:fn-db-daily-reports-status-side-effects"
+    },
+    {
+      "streamNum": "10",
+      "stream": "10 Document Management",
+      "layer": "Backend",
+      "name": "fn(db): document_folders_block_nonempty_delete",
+      "fileGlobs": [
+        "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+          "name": "document_folders_block_nonempty_delete"
+        }
+      ],
+      "id": "10:backend:fn-db-document-folders-block-nonempty-delete"
+    },
+    {
+      "streamNum": "03",
+      "stream": "03 Project Onboarding",
+      "layer": "Backend",
+      "name": "fn(db): seed_project_standard_folders",
+      "fileGlobs": [
+        "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+          "name": "seed_project_standard_folders"
+        }
+      ],
+      "id": "03:backend:fn-db-seed-project-standard-folders"
+    },
+    {
+      "streamNum": "03",
+      "stream": "03 Project Onboarding",
+      "layer": "Backend",
+      "name": "fn(db): projects_seed_folders",
+      "fileGlobs": [
+        "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+          "name": "projects_seed_folders"
+        }
+      ],
+      "id": "03:backend:fn-db-projects-seed-folders"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "fn(db): replace_project_schedule",
+      "fileGlobs": [
+        "supabase/migrations/20260526114744_9262b81e-12b7-4ca4-a3c8-d39802232caf.sql",
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+        "supabase/migrations/20260529041918_637a0229-3683-4419-9838-890b4e588b31.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260526114744_9262b81e-12b7-4ca4-a3c8-d39802232caf.sql",
+          "name": "replace_project_schedule"
+        },
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+          "name": "replace_project_schedule"
+        },
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260529041918_637a0229-3683-4419-9838-890b4e588b31.sql",
+          "name": "replace_project_schedule"
+        }
+      ],
+      "id": "11:backend:fn-db-replace-project-schedule"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "fn(db): schedule_activities_validate_constraint",
+      "fileGlobs": [
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+          "name": "schedule_activities_validate_constraint"
+        }
+      ],
+      "id": "11:backend:fn-db-schedule-activities-validate-constraint"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "fn(db): capture_baseline",
+      "fileGlobs": [
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+          "name": "capture_baseline"
+        }
+      ],
+      "id": "11:backend:fn-db-capture-baseline"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "fn(db): delete_baseline",
+      "fileGlobs": [
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+          "name": "delete_baseline"
+        }
+      ],
+      "id": "11:backend:fn-db-delete-baseline"
+    },
+    {
+      "streamNum": "01",
+      "stream": "01 Identity & Access",
+      "layer": "Backend",
+      "name": "fn(db): seed_demo_users",
+      "fileGlobs": [
+        "supabase/migrations/20260529041918_637a0229-3683-4419-9838-890b4e588b31.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260529041918_637a0229-3683-4419-9838-890b4e588b31.sql",
+          "name": "seed_demo_users"
+        }
+      ],
+      "id": "01:backend:fn-db-seed-demo-users"
+    },
+    {
+      "streamNum": "01",
+      "stream": "01 Identity & Access",
+      "layer": "Backend",
+      "name": "enum: app_role",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-enum",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "name": "app_role"
+        }
+      ],
+      "id": "01:backend:enum-app-role"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "enum: resource_type",
+      "fileGlobs": [
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-enum",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+          "name": "resource_type"
+        }
+      ],
+      "id": "11:backend:enum-resource-type"
+    },
+    {
+      "streamNum": "97",
+      "stream": "97 Plumbing",
+      "layer": "Backend",
+      "name": "trg: auth.on_auth_user_created",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+        "supabase/migrations/20260323121718_947e033e-ded7-4dae-9824-5ff155f34faf.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "table": "auth",
+          "trigger": "on_auth_user_created"
+        },
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260323121718_947e033e-ded7-4dae-9824-5ff155f34faf.sql",
+          "table": "auth",
+          "trigger": "on_auth_user_created"
+        }
+      ],
+      "id": "97:backend:trg-auth-on-auth-user-created"
+    },
+    {
+      "streamNum": "02",
+      "stream": "02 Portfolio & PM Home",
+      "layer": "Backend",
+      "name": "trg: projects.update_projects_updated_at",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "table": "projects",
+          "trigger": "update_projects_updated_at"
+        }
+      ],
+      "id": "02:backend:trg-projects-update-projects-updated-at"
+    },
+    {
+      "streamNum": "97",
+      "stream": "97 Plumbing",
+      "layer": "Backend",
+      "name": "trg: auth.on_auth_user_created_role",
+      "fileGlobs": [
+        "supabase/migrations/20260321162325_749c9dcd-0ffa-430d-bf20-422872294f47.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260321162325_749c9dcd-0ffa-430d-bf20-422872294f47.sql",
+          "table": "auth",
+          "trigger": "on_auth_user_created_role"
+        }
+      ],
+      "id": "97:backend:trg-auth-on-auth-user-created-role"
+    },
+    {
+      "streamNum": "97",
+      "stream": "97 Plumbing",
+      "layer": "Backend",
+      "name": "trg: auth.on_auth_user_created_profile",
+      "fileGlobs": [
+        "supabase/migrations/20260321162349_089b7eac-a691-474e-96f4-b97ab4d2581d.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260321162349_089b7eac-a691-474e-96f4-b97ab4d2581d.sql",
+          "table": "auth",
+          "trigger": "on_auth_user_created_profile"
+        }
+      ],
+      "id": "97:backend:trg-auth-on-auth-user-created-profile"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "trg: schedule_activities.trg_sched_act_updated",
+      "fileGlobs": [
+        "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
+          "table": "schedule_activities",
+          "trigger": "trg_sched_act_updated"
+        }
+      ],
+      "id": "11:backend:trg-schedule-activities-trg-sched-act-updated"
+    },
+    {
+      "streamNum": "12",
+      "stream": "12 Project Health & Controls",
+      "layer": "Backend",
+      "name": "trg: rocks.trg_rocks_updated",
+      "fileGlobs": [
+        "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
+          "table": "rocks",
+          "trigger": "trg_rocks_updated"
+        }
+      ],
+      "id": "12:backend:trg-rocks-trg-rocks-updated"
+    },
+    {
+      "streamNum": "06",
+      "stream": "06 Daily Report Lifecycle",
+      "layer": "Backend",
+      "name": "trg: daily_reports.update_daily_reports_updated_at",
+      "fileGlobs": [
+        "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql",
+          "table": "daily_reports",
+          "trigger": "update_daily_reports_updated_at"
+        }
+      ],
+      "id": "06:backend:trg-daily-reports-update-daily-reports-updated-at"
+    },
+    {
+      "streamNum": "06",
+      "stream": "06 Daily Report Lifecycle",
+      "layer": "Backend",
+      "name": "trg: daily_reports.trg_daily_reports_status_transition",
+      "fileGlobs": [
+        "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
+        "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
+          "table": "daily_reports",
+          "trigger": "trg_daily_reports_status_transition"
+        },
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql",
+          "table": "daily_reports",
+          "trigger": "trg_daily_reports_status_transition"
+        }
+      ],
+      "id": "06:backend:trg-daily-reports-trg-daily-reports-status-transition"
+    },
+    {
+      "streamNum": "06",
+      "stream": "06 Daily Report Lifecycle",
+      "layer": "Backend",
+      "name": "trg: daily_reports.trg_daily_reports_status_side_effects",
+      "fileGlobs": [
+        "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql",
+          "table": "daily_reports",
+          "trigger": "trg_daily_reports_status_side_effects"
+        }
+      ],
+      "id": "06:backend:trg-daily-reports-trg-daily-reports-status-side-effects"
+    },
+    {
+      "streamNum": "10",
+      "stream": "10 Document Management",
+      "layer": "Backend",
+      "name": "trg: document_folders.trg_document_folders_updated",
+      "fileGlobs": [
+        "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+          "table": "document_folders",
+          "trigger": "trg_document_folders_updated"
+        }
+      ],
+      "id": "10:backend:trg-document-folders-trg-document-folders-updated"
+    },
+    {
+      "streamNum": "10",
+      "stream": "10 Document Management",
+      "layer": "Backend",
+      "name": "trg: documents.trg_documents_updated",
+      "fileGlobs": [
+        "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+          "table": "documents",
+          "trigger": "trg_documents_updated"
+        }
+      ],
+      "id": "10:backend:trg-documents-trg-documents-updated"
+    },
+    {
+      "streamNum": "10",
+      "stream": "10 Document Management",
+      "layer": "Backend",
+      "name": "trg: document_folders.trg_document_folders_block_nonempty",
+      "fileGlobs": [
+        "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+          "table": "document_folders",
+          "trigger": "trg_document_folders_block_nonempty"
+        }
+      ],
+      "id": "10:backend:trg-document-folders-trg-document-folders-block-nonempty"
+    },
+    {
+      "streamNum": "02",
+      "stream": "02 Portfolio & PM Home",
+      "layer": "Backend",
+      "name": "trg: projects.trg_projects_seed_folders",
+      "fileGlobs": [
+        "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+          "table": "projects",
+          "trigger": "trg_projects_seed_folders"
+        }
+      ],
+      "id": "02:backend:trg-projects-trg-projects-seed-folders"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "trg: project_schedule_meta.update_project_schedule_meta_updated_at",
+      "fileGlobs": [
+        "supabase/migrations/20260526105432_7d5d3850-b410-4d77-ad92-1f2f0e524b65.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260526105432_7d5d3850-b410-4d77-ad92-1f2f0e524b65.sql",
+          "table": "project_schedule_meta",
+          "trigger": "update_project_schedule_meta_updated_at"
+        }
+      ],
+      "id": "11:backend:trg-project-schedule-meta-update-project-schedule-meta-updat"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "trg: schedule_calendars.trg_schedule_calendars_updated",
+      "fileGlobs": [
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+          "table": "schedule_calendars",
+          "trigger": "trg_schedule_calendars_updated"
+        }
+      ],
+      "id": "11:backend:trg-schedule-calendars-trg-schedule-calendars-updated"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "trg: schedule_resources.trg_schedule_resources_updated",
+      "fileGlobs": [
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+          "table": "schedule_resources",
+          "trigger": "trg_schedule_resources_updated"
+        }
+      ],
+      "id": "11:backend:trg-schedule-resources-trg-schedule-resources-updated"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "trg: activity_resource_assignments.trg_ara_updated",
+      "fileGlobs": [
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+          "table": "activity_resource_assignments",
+          "trigger": "trg_ara_updated"
+        }
+      ],
+      "id": "11:backend:trg-activity-resource-assignments-trg-ara-updated"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "trg: schedule_activities.trg_schedule_activities_validate_constraint",
+      "fileGlobs": [
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+          "table": "schedule_activities",
+          "trigger": "trg_schedule_activities_validate_constraint"
+        }
+      ],
+      "id": "11:backend:trg-schedule-activities-trg-schedule-activities-validate-con"
+    },
+    {
+      "streamNum": "05",
+      "stream": "05 Field Capture",
+      "layer": "Backend",
+      "name": "bucket: project-pdfs",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "storage-bucket",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "name": "project-pdfs"
+        }
+      ],
+      "id": "05:backend:bucket-project-pdfs"
+    },
+    {
+      "streamNum": "09",
+      "stream": "09 Standard Specifications",
+      "layer": "Backend",
+      "name": "bucket: specs-pdfs",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "storage-bucket",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "name": "specs-pdfs"
+        }
+      ],
+      "id": "09:backend:bucket-specs-pdfs"
+    },
+    {
+      "streamNum": "01",
+      "stream": "01 Identity & Access",
+      "layer": "Backend",
+      "name": "rls: profiles",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+        "supabase/migrations/20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql",
+        "supabase/migrations/20260323184019_702975d9-3680-45b2-9a82-8587db5f26e5.sql",
+        "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql",
+        "supabase/migrations/20260528155928_1fea17ca-9deb-4078-8173-ee3e52b6eab6.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "table": "profiles"
+        },
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql",
+          "table": "profiles"
+        },
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260323184019_702975d9-3680-45b2-9a82-8587db5f26e5.sql",
+          "table": "profiles"
+        },
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql",
+          "table": "profiles"
+        },
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260528155928_1fea17ca-9deb-4078-8173-ee3e52b6eab6.sql",
+          "table": "profiles"
+        }
+      ],
+      "id": "01:backend:rls-profiles"
+    },
+    {
+      "streamNum": "01",
+      "stream": "01 Identity & Access",
+      "layer": "Backend",
+      "name": "rls: user_roles",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "table": "user_roles"
+        }
+      ],
+      "id": "01:backend:rls-user-roles"
+    },
+    {
+      "streamNum": "02",
+      "stream": "02 Portfolio & PM Home",
+      "layer": "Backend",
+      "name": "rls: projects",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+        "supabase/migrations/20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "table": "projects"
+        },
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql",
+          "table": "projects"
+        }
+      ],
+      "id": "02:backend:rls-projects"
+    },
+    {
+      "streamNum": "02",
+      "stream": "02 Portfolio & PM Home",
+      "layer": "Backend",
+      "name": "rls: project_members",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+        "supabase/migrations/20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "table": "project_members"
+        },
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql",
+          "table": "project_members"
+        }
+      ],
+      "id": "02:backend:rls-project-members"
+    },
+    {
+      "streamNum": "04",
+      "stream": "04 Pay Item Catalog",
+      "layer": "Backend",
+      "name": "rls: pay_items",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "table": "pay_items"
+        }
+      ],
+      "id": "04:backend:rls-pay-items"
+    },
+    {
+      "streamNum": "05",
+      "stream": "05 Field Capture",
+      "layer": "Backend",
+      "name": "rls: calibrations",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "table": "calibrations"
+        }
+      ],
+      "id": "05:backend:rls-calibrations"
+    },
+    {
+      "streamNum": "05",
+      "stream": "05 Field Capture",
+      "layer": "Backend",
+      "name": "rls: annotations",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "table": "annotations"
+        }
+      ],
+      "id": "05:backend:rls-annotations"
+    },
+    {
+      "streamNum": "97",
+      "stream": "97 Plumbing",
+      "layer": "Backend",
+      "name": "rls: storage",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+        "supabase/migrations/20260321162408_22a25531-f789-4f47-b2d5-ec7d40196497.sql",
+        "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+        "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "table": "storage"
+        },
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260321162408_22a25531-f789-4f47-b2d5-ec7d40196497.sql",
+          "table": "storage"
+        },
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+          "table": "storage"
+        },
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql",
+          "table": "storage"
+        }
+      ],
+      "id": "97:backend:rls-storage"
+    },
+    {
+      "streamNum": "01",
+      "stream": "01 Identity & Access",
+      "layer": "Backend",
+      "name": "rls: invitations",
+      "fileGlobs": [
+        "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql",
+          "table": "invitations"
+        }
+      ],
+      "id": "01:backend:rls-invitations"
+    },
+    {
+      "streamNum": "14",
+      "stream": "14 Measurement & Geometry Engine",
+      "layer": "Backend",
+      "name": "rls: geo_calibrations",
+      "fileGlobs": [
+        "supabase/migrations/20260327122843_6f261706-ce0b-4c8a-b707-c3c8b0648540.sql",
+        "supabase/migrations/20260528155528_44c52ae9-d9c8-4390-8dde-0367583b44ef.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260327122843_6f261706-ce0b-4c8a-b707-c3c8b0648540.sql",
+          "table": "geo_calibrations"
+        },
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260528155528_44c52ae9-d9c8-4390-8dde-0367583b44ef.sql",
+          "table": "geo_calibrations"
+        }
+      ],
+      "id": "14:backend:rls-geo-calibrations"
+    },
+    {
+      "streamNum": "20",
+      "stream": "20 Sales & Pitch",
+      "layer": "Backend",
+      "name": "rls: demo_requests",
+      "fileGlobs": [
+        "supabase/migrations/20260328182512_208ba41b-5292-403a-baf4-9b9b2d158879.sql",
+        "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260328182512_208ba41b-5292-403a-baf4-9b9b2d158879.sql",
+          "table": "demo_requests"
+        },
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql",
+          "table": "demo_requests"
+        }
+      ],
+      "id": "20:backend:rls-demo-requests"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "rls: schedule_activities",
+      "fileGlobs": [
+        "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
+          "table": "schedule_activities"
+        }
+      ],
+      "id": "11:backend:rls-schedule-activities"
+    },
+    {
+      "streamNum": "12",
+      "stream": "12 Project Health & Controls",
+      "layer": "Backend",
+      "name": "rls: rocks",
+      "fileGlobs": [
+        "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
+          "table": "rocks"
+        }
+      ],
+      "id": "12:backend:rls-rocks"
+    },
+    {
+      "streamNum": "12",
+      "stream": "12 Project Health & Controls",
+      "layer": "Backend",
+      "name": "rls: scorecard_metrics",
+      "fileGlobs": [
+        "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
+          "table": "scorecard_metrics"
+        }
+      ],
+      "id": "12:backend:rls-scorecard-metrics"
+    },
+    {
+      "streamNum": "08",
+      "stream": "08 Photo Evidence",
+      "layer": "Backend",
+      "name": "rls: annotation_photos",
+      "fileGlobs": [
+        "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
+          "table": "annotation_photos"
+        }
+      ],
+      "id": "08:backend:rls-annotation-photos"
+    },
+    {
+      "streamNum": "97",
+      "stream": "97 Plumbing",
+      "layer": "Backend",
+      "name": "rls: photos",
+      "fileGlobs": [
+        "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
+        "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
+          "table": "photos"
+        },
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql",
+          "table": "photos"
+        }
+      ],
+      "id": "97:backend:rls-photos"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "rls: activity_assignments",
+      "fileGlobs": [
+        "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql",
+          "table": "activity_assignments"
+        }
+      ],
+      "id": "11:backend:rls-activity-assignments"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "rls: activity_pay_items",
+      "fileGlobs": [
+        "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql",
+          "table": "activity_pay_items"
+        }
+      ],
+      "id": "11:backend:rls-activity-pay-items"
+    },
+    {
+      "streamNum": "06",
+      "stream": "06 Daily Report Lifecycle",
+      "layer": "Backend",
+      "name": "rls: daily_reports",
+      "fileGlobs": [
+        "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql",
+        "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
+        "supabase/migrations/20260524173937_345bb077-7543-4a05-9ef8-c474d5276b1f.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql",
+          "table": "daily_reports"
+        },
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
+          "table": "daily_reports"
+        },
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260524173937_345bb077-7543-4a05-9ef8-c474d5276b1f.sql",
+          "table": "daily_reports"
+        }
+      ],
+      "id": "06:backend:rls-daily-reports"
+    },
+    {
+      "streamNum": "06",
+      "stream": "06 Daily Report Lifecycle",
+      "layer": "Backend",
+      "name": "rls: daily_report_comments",
+      "fileGlobs": [
+        "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
+        "supabase/migrations/20260524230947_197a36b0-b223-4c6d-a3b6-73dd795f14de.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
+          "table": "daily_report_comments"
+        },
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260524230947_197a36b0-b223-4c6d-a3b6-73dd795f14de.sql",
+          "table": "daily_report_comments"
+        }
+      ],
+      "id": "06:backend:rls-daily-report-comments"
+    },
+    {
+      "streamNum": "97",
+      "stream": "97 Plumbing",
+      "layer": "Backend",
+      "name": "rls: accessible",
+      "fileGlobs": [
+        "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
+          "table": "accessible"
+        }
+      ],
+      "id": "97:backend:rls-accessible"
+    },
+    {
+      "streamNum": "06",
+      "stream": "06 Daily Report Lifecycle",
+      "layer": "Backend",
+      "name": "rls: daily_report_snapshots",
+      "fileGlobs": [
+        "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql",
+          "table": "daily_report_snapshots"
+        }
+      ],
+      "id": "06:backend:rls-daily-report-snapshots"
+    },
+    {
+      "streamNum": "17",
+      "stream": "17 Notifications & Presence",
+      "layer": "Backend",
+      "name": "rls: notifications",
+      "fileGlobs": [
+        "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql",
+          "table": "notifications"
+        }
+      ],
+      "id": "17:backend:rls-notifications"
+    },
+    {
+      "streamNum": "10",
+      "stream": "10 Document Management",
+      "layer": "Backend",
+      "name": "rls: document_folders",
+      "fileGlobs": [
+        "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+          "table": "document_folders"
+        }
+      ],
+      "id": "10:backend:rls-document-folders"
+    },
+    {
+      "streamNum": "10",
+      "stream": "10 Document Management",
+      "layer": "Backend",
+      "name": "rls: documents",
+      "fileGlobs": [
+        "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+          "table": "documents"
+        }
+      ],
+      "id": "10:backend:rls-documents"
+    },
+    {
+      "streamNum": "17",
+      "stream": "17 Notifications & Presence",
+      "layer": "Backend",
+      "name": "rls: device_tokens",
+      "fileGlobs": [
+        "supabase/migrations/20260526015440_e7d9bc81-0db3-4acd-88f7-ff486798a2b2.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260526015440_e7d9bc81-0db3-4acd-88f7-ff486798a2b2.sql",
+          "table": "device_tokens"
+        }
+      ],
+      "id": "17:backend:rls-device-tokens"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "rls: activity_relationships",
+      "fileGlobs": [
+        "supabase/migrations/20260526105432_7d5d3850-b410-4d77-ad92-1f2f0e524b65.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260526105432_7d5d3850-b410-4d77-ad92-1f2f0e524b65.sql",
+          "table": "activity_relationships"
+        }
+      ],
+      "id": "11:backend:rls-activity-relationships"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "rls: project_schedule_meta",
+      "fileGlobs": [
+        "supabase/migrations/20260526105432_7d5d3850-b410-4d77-ad92-1f2f0e524b65.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260526105432_7d5d3850-b410-4d77-ad92-1f2f0e524b65.sql",
+          "table": "project_schedule_meta"
+        }
+      ],
+      "id": "11:backend:rls-project-schedule-meta"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "rls: schedule_calendars",
+      "fileGlobs": [
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+          "table": "schedule_calendars"
+        }
+      ],
+      "id": "11:backend:rls-schedule-calendars"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "rls: schedule_resources",
+      "fileGlobs": [
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+          "table": "schedule_resources"
+        }
+      ],
+      "id": "11:backend:rls-schedule-resources"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "rls: activity_resource_assignments",
+      "fileGlobs": [
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+          "table": "activity_resource_assignments"
+        }
+      ],
+      "id": "11:backend:rls-activity-resource-assignments"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "rls: schedule_baselines",
+      "fileGlobs": [
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+          "table": "schedule_baselines"
+        }
+      ],
+      "id": "11:backend:rls-schedule-baselines"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "rls: baseline_activities",
+      "fileGlobs": [
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+          "table": "baseline_activities"
+        }
+      ],
+      "id": "11:backend:rls-baseline-activities"
+    },
+    {
+      "streamNum": "97",
+      "stream": "97 Plumbing",
+      "layer": "Backend",
+      "name": "rls: realtime",
+      "fileGlobs": [
+        "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql",
+          "table": "realtime"
+        }
+      ],
+      "id": "97:backend:rls-realtime"
     }
   ]
 }

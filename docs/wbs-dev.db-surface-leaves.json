@@ -1,0 +1,1515 @@
+{
+  "generatedAt": "2026-05-29T17:07:01.091Z",
+  "totals": {
+    "leaves": 75,
+    "functions": 17,
+    "enums": 2,
+    "triggers": 18,
+    "buckets": 4,
+    "rlsTables": 34
+  },
+  "leaves": [
+    {
+      "streamNum": "01",
+      "stream": "01 Identity & Access",
+      "layer": "Backend",
+      "name": "fn(db): has_role",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "name": "has_role"
+        }
+      ],
+      "id": "01:backend:fn-db-has-role"
+    },
+    {
+      "streamNum": "02",
+      "stream": "02 Portfolio & PM Home",
+      "layer": "Backend",
+      "name": "fn(db): is_project_member",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "name": "is_project_member"
+        }
+      ],
+      "id": "02:backend:fn-db-is-project-member"
+    },
+    {
+      "streamNum": "01",
+      "stream": "01 Identity & Access",
+      "layer": "Backend",
+      "name": "fn(db): handle_new_user",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+        "supabase/migrations/20260323121718_947e033e-ded7-4dae-9824-5ff155f34faf.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "name": "handle_new_user"
+        },
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260323121718_947e033e-ded7-4dae-9824-5ff155f34faf.sql",
+          "name": "handle_new_user"
+        }
+      ],
+      "id": "01:backend:fn-db-handle-new-user"
+    },
+    {
+      "streamNum": "97",
+      "stream": "97 Plumbing",
+      "layer": "Backend",
+      "name": "fn(db): update_updated_at_column",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "name": "update_updated_at_column"
+        }
+      ],
+      "id": "97:backend:fn-db-update-updated-at-column"
+    },
+    {
+      "streamNum": "97",
+      "stream": "97 Plumbing",
+      "layer": "Backend",
+      "name": "fn(db): handle_new_user_role",
+      "fileGlobs": [
+        "supabase/migrations/20260321162325_749c9dcd-0ffa-430d-bf20-422872294f47.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260321162325_749c9dcd-0ffa-430d-bf20-422872294f47.sql",
+          "name": "handle_new_user_role"
+        }
+      ],
+      "id": "97:backend:fn-db-handle-new-user-role"
+    },
+    {
+      "streamNum": "01",
+      "stream": "01 Identity & Access",
+      "layer": "Backend",
+      "name": "fn(db): assign_owner_role",
+      "fileGlobs": [
+        "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql",
+          "name": "assign_owner_role"
+        }
+      ],
+      "id": "01:backend:fn-db-assign-owner-role"
+    },
+    {
+      "streamNum": "01",
+      "stream": "01 Identity & Access",
+      "layer": "Backend",
+      "name": "fn(db): accept_invitation",
+      "fileGlobs": [
+        "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql",
+          "name": "accept_invitation"
+        }
+      ],
+      "id": "01:backend:fn-db-accept-invitation"
+    },
+    {
+      "streamNum": "06",
+      "stream": "06 Daily Report Lifecycle",
+      "layer": "Backend",
+      "name": "fn(db): daily_reports_status_transition",
+      "fileGlobs": [
+        "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
+        "supabase/migrations/20260524173747_cd76e27d-fda9-4f8b-aac8-c875aa100937.sql",
+        "supabase/migrations/20260524173937_345bb077-7543-4a05-9ef8-c474d5276b1f.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
+          "name": "daily_reports_status_transition"
+        },
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260524173747_cd76e27d-fda9-4f8b-aac8-c875aa100937.sql",
+          "name": "daily_reports_status_transition"
+        },
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260524173937_345bb077-7543-4a05-9ef8-c474d5276b1f.sql",
+          "name": "daily_reports_status_transition"
+        }
+      ],
+      "id": "06:backend:fn-db-daily-reports-status-transition"
+    },
+    {
+      "streamNum": "06",
+      "stream": "06 Daily Report Lifecycle",
+      "layer": "Backend",
+      "name": "fn(db): daily_reports_status_side_effects",
+      "fileGlobs": [
+        "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql",
+          "name": "daily_reports_status_side_effects"
+        }
+      ],
+      "id": "06:backend:fn-db-daily-reports-status-side-effects"
+    },
+    {
+      "streamNum": "10",
+      "stream": "10 Document Management",
+      "layer": "Backend",
+      "name": "fn(db): document_folders_block_nonempty_delete",
+      "fileGlobs": [
+        "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+          "name": "document_folders_block_nonempty_delete"
+        }
+      ],
+      "id": "10:backend:fn-db-document-folders-block-nonempty-delete"
+    },
+    {
+      "streamNum": "03",
+      "stream": "03 Project Onboarding",
+      "layer": "Backend",
+      "name": "fn(db): seed_project_standard_folders",
+      "fileGlobs": [
+        "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+          "name": "seed_project_standard_folders"
+        }
+      ],
+      "id": "03:backend:fn-db-seed-project-standard-folders"
+    },
+    {
+      "streamNum": "03",
+      "stream": "03 Project Onboarding",
+      "layer": "Backend",
+      "name": "fn(db): projects_seed_folders",
+      "fileGlobs": [
+        "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+          "name": "projects_seed_folders"
+        }
+      ],
+      "id": "03:backend:fn-db-projects-seed-folders"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "fn(db): replace_project_schedule",
+      "fileGlobs": [
+        "supabase/migrations/20260526114744_9262b81e-12b7-4ca4-a3c8-d39802232caf.sql",
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+        "supabase/migrations/20260529041918_637a0229-3683-4419-9838-890b4e588b31.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260526114744_9262b81e-12b7-4ca4-a3c8-d39802232caf.sql",
+          "name": "replace_project_schedule"
+        },
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+          "name": "replace_project_schedule"
+        },
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260529041918_637a0229-3683-4419-9838-890b4e588b31.sql",
+          "name": "replace_project_schedule"
+        }
+      ],
+      "id": "11:backend:fn-db-replace-project-schedule"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "fn(db): schedule_activities_validate_constraint",
+      "fileGlobs": [
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+          "name": "schedule_activities_validate_constraint"
+        }
+      ],
+      "id": "11:backend:fn-db-schedule-activities-validate-constraint"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "fn(db): capture_baseline",
+      "fileGlobs": [
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+          "name": "capture_baseline"
+        }
+      ],
+      "id": "11:backend:fn-db-capture-baseline"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "fn(db): delete_baseline",
+      "fileGlobs": [
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+          "name": "delete_baseline"
+        }
+      ],
+      "id": "11:backend:fn-db-delete-baseline"
+    },
+    {
+      "streamNum": "01",
+      "stream": "01 Identity & Access",
+      "layer": "Backend",
+      "name": "fn(db): seed_demo_users",
+      "fileGlobs": [
+        "supabase/migrations/20260529041918_637a0229-3683-4419-9838-890b4e588b31.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-function",
+          "path": "supabase/migrations/20260529041918_637a0229-3683-4419-9838-890b4e588b31.sql",
+          "name": "seed_demo_users"
+        }
+      ],
+      "id": "01:backend:fn-db-seed-demo-users"
+    },
+    {
+      "streamNum": "01",
+      "stream": "01 Identity & Access",
+      "layer": "Backend",
+      "name": "enum: app_role",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-enum",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "name": "app_role"
+        }
+      ],
+      "id": "01:backend:enum-app-role"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "enum: resource_type",
+      "fileGlobs": [
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-enum",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+          "name": "resource_type"
+        }
+      ],
+      "id": "11:backend:enum-resource-type"
+    },
+    {
+      "streamNum": "97",
+      "stream": "97 Plumbing",
+      "layer": "Backend",
+      "name": "trg: auth.on_auth_user_created",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+        "supabase/migrations/20260323121718_947e033e-ded7-4dae-9824-5ff155f34faf.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "table": "auth",
+          "trigger": "on_auth_user_created"
+        },
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260323121718_947e033e-ded7-4dae-9824-5ff155f34faf.sql",
+          "table": "auth",
+          "trigger": "on_auth_user_created"
+        }
+      ],
+      "id": "97:backend:trg-auth-on-auth-user-created"
+    },
+    {
+      "streamNum": "02",
+      "stream": "02 Portfolio & PM Home",
+      "layer": "Backend",
+      "name": "trg: projects.update_projects_updated_at",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "table": "projects",
+          "trigger": "update_projects_updated_at"
+        }
+      ],
+      "id": "02:backend:trg-projects-update-projects-updated-at"
+    },
+    {
+      "streamNum": "97",
+      "stream": "97 Plumbing",
+      "layer": "Backend",
+      "name": "trg: auth.on_auth_user_created_role",
+      "fileGlobs": [
+        "supabase/migrations/20260321162325_749c9dcd-0ffa-430d-bf20-422872294f47.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260321162325_749c9dcd-0ffa-430d-bf20-422872294f47.sql",
+          "table": "auth",
+          "trigger": "on_auth_user_created_role"
+        }
+      ],
+      "id": "97:backend:trg-auth-on-auth-user-created-role"
+    },
+    {
+      "streamNum": "97",
+      "stream": "97 Plumbing",
+      "layer": "Backend",
+      "name": "trg: auth.on_auth_user_created_profile",
+      "fileGlobs": [
+        "supabase/migrations/20260321162349_089b7eac-a691-474e-96f4-b97ab4d2581d.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260321162349_089b7eac-a691-474e-96f4-b97ab4d2581d.sql",
+          "table": "auth",
+          "trigger": "on_auth_user_created_profile"
+        }
+      ],
+      "id": "97:backend:trg-auth-on-auth-user-created-profile"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "trg: schedule_activities.trg_sched_act_updated",
+      "fileGlobs": [
+        "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
+          "table": "schedule_activities",
+          "trigger": "trg_sched_act_updated"
+        }
+      ],
+      "id": "11:backend:trg-schedule-activities-trg-sched-act-updated"
+    },
+    {
+      "streamNum": "12",
+      "stream": "12 Project Health & Controls",
+      "layer": "Backend",
+      "name": "trg: rocks.trg_rocks_updated",
+      "fileGlobs": [
+        "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
+          "table": "rocks",
+          "trigger": "trg_rocks_updated"
+        }
+      ],
+      "id": "12:backend:trg-rocks-trg-rocks-updated"
+    },
+    {
+      "streamNum": "06",
+      "stream": "06 Daily Report Lifecycle",
+      "layer": "Backend",
+      "name": "trg: daily_reports.update_daily_reports_updated_at",
+      "fileGlobs": [
+        "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql",
+          "table": "daily_reports",
+          "trigger": "update_daily_reports_updated_at"
+        }
+      ],
+      "id": "06:backend:trg-daily-reports-update-daily-reports-updated-at"
+    },
+    {
+      "streamNum": "06",
+      "stream": "06 Daily Report Lifecycle",
+      "layer": "Backend",
+      "name": "trg: daily_reports.trg_daily_reports_status_transition",
+      "fileGlobs": [
+        "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
+        "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
+          "table": "daily_reports",
+          "trigger": "trg_daily_reports_status_transition"
+        },
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql",
+          "table": "daily_reports",
+          "trigger": "trg_daily_reports_status_transition"
+        }
+      ],
+      "id": "06:backend:trg-daily-reports-trg-daily-reports-status-transition"
+    },
+    {
+      "streamNum": "06",
+      "stream": "06 Daily Report Lifecycle",
+      "layer": "Backend",
+      "name": "trg: daily_reports.trg_daily_reports_status_side_effects",
+      "fileGlobs": [
+        "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql",
+          "table": "daily_reports",
+          "trigger": "trg_daily_reports_status_side_effects"
+        }
+      ],
+      "id": "06:backend:trg-daily-reports-trg-daily-reports-status-side-effects"
+    },
+    {
+      "streamNum": "10",
+      "stream": "10 Document Management",
+      "layer": "Backend",
+      "name": "trg: document_folders.trg_document_folders_updated",
+      "fileGlobs": [
+        "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+          "table": "document_folders",
+          "trigger": "trg_document_folders_updated"
+        }
+      ],
+      "id": "10:backend:trg-document-folders-trg-document-folders-updated"
+    },
+    {
+      "streamNum": "10",
+      "stream": "10 Document Management",
+      "layer": "Backend",
+      "name": "trg: documents.trg_documents_updated",
+      "fileGlobs": [
+        "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+          "table": "documents",
+          "trigger": "trg_documents_updated"
+        }
+      ],
+      "id": "10:backend:trg-documents-trg-documents-updated"
+    },
+    {
+      "streamNum": "10",
+      "stream": "10 Document Management",
+      "layer": "Backend",
+      "name": "trg: document_folders.trg_document_folders_block_nonempty",
+      "fileGlobs": [
+        "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+          "table": "document_folders",
+          "trigger": "trg_document_folders_block_nonempty"
+        }
+      ],
+      "id": "10:backend:trg-document-folders-trg-document-folders-block-nonempty"
+    },
+    {
+      "streamNum": "02",
+      "stream": "02 Portfolio & PM Home",
+      "layer": "Backend",
+      "name": "trg: projects.trg_projects_seed_folders",
+      "fileGlobs": [
+        "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+          "table": "projects",
+          "trigger": "trg_projects_seed_folders"
+        }
+      ],
+      "id": "02:backend:trg-projects-trg-projects-seed-folders"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "trg: project_schedule_meta.update_project_schedule_meta_updated_at",
+      "fileGlobs": [
+        "supabase/migrations/20260526105432_7d5d3850-b410-4d77-ad92-1f2f0e524b65.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260526105432_7d5d3850-b410-4d77-ad92-1f2f0e524b65.sql",
+          "table": "project_schedule_meta",
+          "trigger": "update_project_schedule_meta_updated_at"
+        }
+      ],
+      "id": "11:backend:trg-project-schedule-meta-update-project-schedule-meta-updat"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "trg: schedule_calendars.trg_schedule_calendars_updated",
+      "fileGlobs": [
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+          "table": "schedule_calendars",
+          "trigger": "trg_schedule_calendars_updated"
+        }
+      ],
+      "id": "11:backend:trg-schedule-calendars-trg-schedule-calendars-updated"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "trg: schedule_resources.trg_schedule_resources_updated",
+      "fileGlobs": [
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+          "table": "schedule_resources",
+          "trigger": "trg_schedule_resources_updated"
+        }
+      ],
+      "id": "11:backend:trg-schedule-resources-trg-schedule-resources-updated"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "trg: activity_resource_assignments.trg_ara_updated",
+      "fileGlobs": [
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+          "table": "activity_resource_assignments",
+          "trigger": "trg_ara_updated"
+        }
+      ],
+      "id": "11:backend:trg-activity-resource-assignments-trg-ara-updated"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "trg: schedule_activities.trg_schedule_activities_validate_constraint",
+      "fileGlobs": [
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "db-trigger",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+          "table": "schedule_activities",
+          "trigger": "trg_schedule_activities_validate_constraint"
+        }
+      ],
+      "id": "11:backend:trg-schedule-activities-trg-schedule-activities-validate-con"
+    },
+    {
+      "streamNum": "05",
+      "stream": "05 Field Capture",
+      "layer": "Backend",
+      "name": "bucket: project-pdfs",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "storage-bucket",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "name": "project-pdfs"
+        }
+      ],
+      "id": "05:backend:bucket-project-pdfs"
+    },
+    {
+      "streamNum": "09",
+      "stream": "09 Standard Specifications",
+      "layer": "Backend",
+      "name": "bucket: specs-pdfs",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "storage-bucket",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "name": "specs-pdfs"
+        }
+      ],
+      "id": "09:backend:bucket-specs-pdfs"
+    },
+    {
+      "streamNum": "08",
+      "stream": "08 Photo Evidence",
+      "layer": "Backend",
+      "name": "bucket: annotation-photos",
+      "fileGlobs": [
+        "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "storage-bucket",
+          "path": "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
+          "name": "annotation-photos"
+        }
+      ],
+      "id": "08:backend:bucket-annotation-photos"
+    },
+    {
+      "streamNum": "10",
+      "stream": "10 Document Management",
+      "layer": "Backend",
+      "name": "bucket: project-documents",
+      "fileGlobs": [
+        "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "storage-bucket",
+          "path": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+          "name": "project-documents"
+        }
+      ],
+      "id": "10:backend:bucket-project-documents"
+    },
+    {
+      "streamNum": "01",
+      "stream": "01 Identity & Access",
+      "layer": "Backend",
+      "name": "rls: profiles",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+        "supabase/migrations/20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql",
+        "supabase/migrations/20260323184019_702975d9-3680-45b2-9a82-8587db5f26e5.sql",
+        "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql",
+        "supabase/migrations/20260528155928_1fea17ca-9deb-4078-8173-ee3e52b6eab6.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "table": "profiles"
+        },
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql",
+          "table": "profiles"
+        },
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260323184019_702975d9-3680-45b2-9a82-8587db5f26e5.sql",
+          "table": "profiles"
+        },
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql",
+          "table": "profiles"
+        },
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260528155928_1fea17ca-9deb-4078-8173-ee3e52b6eab6.sql",
+          "table": "profiles"
+        }
+      ],
+      "id": "01:backend:rls-profiles"
+    },
+    {
+      "streamNum": "01",
+      "stream": "01 Identity & Access",
+      "layer": "Backend",
+      "name": "rls: user_roles",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "table": "user_roles"
+        }
+      ],
+      "id": "01:backend:rls-user-roles"
+    },
+    {
+      "streamNum": "02",
+      "stream": "02 Portfolio & PM Home",
+      "layer": "Backend",
+      "name": "rls: projects",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+        "supabase/migrations/20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "table": "projects"
+        },
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql",
+          "table": "projects"
+        }
+      ],
+      "id": "02:backend:rls-projects"
+    },
+    {
+      "streamNum": "02",
+      "stream": "02 Portfolio & PM Home",
+      "layer": "Backend",
+      "name": "rls: project_members",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+        "supabase/migrations/20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "table": "project_members"
+        },
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql",
+          "table": "project_members"
+        }
+      ],
+      "id": "02:backend:rls-project-members"
+    },
+    {
+      "streamNum": "04",
+      "stream": "04 Pay Item Catalog",
+      "layer": "Backend",
+      "name": "rls: pay_items",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "table": "pay_items"
+        }
+      ],
+      "id": "04:backend:rls-pay-items"
+    },
+    {
+      "streamNum": "05",
+      "stream": "05 Field Capture",
+      "layer": "Backend",
+      "name": "rls: calibrations",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "table": "calibrations"
+        }
+      ],
+      "id": "05:backend:rls-calibrations"
+    },
+    {
+      "streamNum": "05",
+      "stream": "05 Field Capture",
+      "layer": "Backend",
+      "name": "rls: annotations",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "table": "annotations"
+        }
+      ],
+      "id": "05:backend:rls-annotations"
+    },
+    {
+      "streamNum": "97",
+      "stream": "97 Plumbing",
+      "layer": "Backend",
+      "name": "rls: storage",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+        "supabase/migrations/20260321162408_22a25531-f789-4f47-b2d5-ec7d40196497.sql",
+        "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+        "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "table": "storage"
+        },
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260321162408_22a25531-f789-4f47-b2d5-ec7d40196497.sql",
+          "table": "storage"
+        },
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+          "table": "storage"
+        },
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql",
+          "table": "storage"
+        }
+      ],
+      "id": "97:backend:rls-storage"
+    },
+    {
+      "streamNum": "01",
+      "stream": "01 Identity & Access",
+      "layer": "Backend",
+      "name": "rls: invitations",
+      "fileGlobs": [
+        "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql",
+          "table": "invitations"
+        }
+      ],
+      "id": "01:backend:rls-invitations"
+    },
+    {
+      "streamNum": "14",
+      "stream": "14 Measurement & Geometry Engine",
+      "layer": "Backend",
+      "name": "rls: geo_calibrations",
+      "fileGlobs": [
+        "supabase/migrations/20260327122843_6f261706-ce0b-4c8a-b707-c3c8b0648540.sql",
+        "supabase/migrations/20260528155528_44c52ae9-d9c8-4390-8dde-0367583b44ef.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260327122843_6f261706-ce0b-4c8a-b707-c3c8b0648540.sql",
+          "table": "geo_calibrations"
+        },
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260528155528_44c52ae9-d9c8-4390-8dde-0367583b44ef.sql",
+          "table": "geo_calibrations"
+        }
+      ],
+      "id": "14:backend:rls-geo-calibrations"
+    },
+    {
+      "streamNum": "20",
+      "stream": "20 Sales & Pitch",
+      "layer": "Backend",
+      "name": "rls: demo_requests",
+      "fileGlobs": [
+        "supabase/migrations/20260328182512_208ba41b-5292-403a-baf4-9b9b2d158879.sql",
+        "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260328182512_208ba41b-5292-403a-baf4-9b9b2d158879.sql",
+          "table": "demo_requests"
+        },
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql",
+          "table": "demo_requests"
+        }
+      ],
+      "id": "20:backend:rls-demo-requests"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "rls: schedule_activities",
+      "fileGlobs": [
+        "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
+          "table": "schedule_activities"
+        }
+      ],
+      "id": "11:backend:rls-schedule-activities"
+    },
+    {
+      "streamNum": "12",
+      "stream": "12 Project Health & Controls",
+      "layer": "Backend",
+      "name": "rls: rocks",
+      "fileGlobs": [
+        "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
+          "table": "rocks"
+        }
+      ],
+      "id": "12:backend:rls-rocks"
+    },
+    {
+      "streamNum": "12",
+      "stream": "12 Project Health & Controls",
+      "layer": "Backend",
+      "name": "rls: scorecard_metrics",
+      "fileGlobs": [
+        "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
+          "table": "scorecard_metrics"
+        }
+      ],
+      "id": "12:backend:rls-scorecard-metrics"
+    },
+    {
+      "streamNum": "08",
+      "stream": "08 Photo Evidence",
+      "layer": "Backend",
+      "name": "rls: annotation_photos",
+      "fileGlobs": [
+        "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
+          "table": "annotation_photos"
+        }
+      ],
+      "id": "08:backend:rls-annotation-photos"
+    },
+    {
+      "streamNum": "97",
+      "stream": "97 Plumbing",
+      "layer": "Backend",
+      "name": "rls: photos",
+      "fileGlobs": [
+        "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
+        "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
+          "table": "photos"
+        },
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql",
+          "table": "photos"
+        }
+      ],
+      "id": "97:backend:rls-photos"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "rls: activity_assignments",
+      "fileGlobs": [
+        "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql",
+          "table": "activity_assignments"
+        }
+      ],
+      "id": "11:backend:rls-activity-assignments"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "rls: activity_pay_items",
+      "fileGlobs": [
+        "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql",
+          "table": "activity_pay_items"
+        }
+      ],
+      "id": "11:backend:rls-activity-pay-items"
+    },
+    {
+      "streamNum": "06",
+      "stream": "06 Daily Report Lifecycle",
+      "layer": "Backend",
+      "name": "rls: daily_reports",
+      "fileGlobs": [
+        "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql",
+        "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
+        "supabase/migrations/20260524173937_345bb077-7543-4a05-9ef8-c474d5276b1f.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql",
+          "table": "daily_reports"
+        },
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
+          "table": "daily_reports"
+        },
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260524173937_345bb077-7543-4a05-9ef8-c474d5276b1f.sql",
+          "table": "daily_reports"
+        }
+      ],
+      "id": "06:backend:rls-daily-reports"
+    },
+    {
+      "streamNum": "06",
+      "stream": "06 Daily Report Lifecycle",
+      "layer": "Backend",
+      "name": "rls: daily_report_comments",
+      "fileGlobs": [
+        "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
+        "supabase/migrations/20260524230947_197a36b0-b223-4c6d-a3b6-73dd795f14de.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
+          "table": "daily_report_comments"
+        },
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260524230947_197a36b0-b223-4c6d-a3b6-73dd795f14de.sql",
+          "table": "daily_report_comments"
+        }
+      ],
+      "id": "06:backend:rls-daily-report-comments"
+    },
+    {
+      "streamNum": "97",
+      "stream": "97 Plumbing",
+      "layer": "Backend",
+      "name": "rls: accessible",
+      "fileGlobs": [
+        "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
+          "table": "accessible"
+        }
+      ],
+      "id": "97:backend:rls-accessible"
+    },
+    {
+      "streamNum": "06",
+      "stream": "06 Daily Report Lifecycle",
+      "layer": "Backend",
+      "name": "rls: daily_report_snapshots",
+      "fileGlobs": [
+        "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql",
+          "table": "daily_report_snapshots"
+        }
+      ],
+      "id": "06:backend:rls-daily-report-snapshots"
+    },
+    {
+      "streamNum": "17",
+      "stream": "17 Notifications & Presence",
+      "layer": "Backend",
+      "name": "rls: notifications",
+      "fileGlobs": [
+        "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql",
+          "table": "notifications"
+        }
+      ],
+      "id": "17:backend:rls-notifications"
+    },
+    {
+      "streamNum": "10",
+      "stream": "10 Document Management",
+      "layer": "Backend",
+      "name": "rls: document_folders",
+      "fileGlobs": [
+        "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+          "table": "document_folders"
+        }
+      ],
+      "id": "10:backend:rls-document-folders"
+    },
+    {
+      "streamNum": "10",
+      "stream": "10 Document Management",
+      "layer": "Backend",
+      "name": "rls: documents",
+      "fileGlobs": [
+        "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+          "table": "documents"
+        }
+      ],
+      "id": "10:backend:rls-documents"
+    },
+    {
+      "streamNum": "17",
+      "stream": "17 Notifications & Presence",
+      "layer": "Backend",
+      "name": "rls: device_tokens",
+      "fileGlobs": [
+        "supabase/migrations/20260526015440_e7d9bc81-0db3-4acd-88f7-ff486798a2b2.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260526015440_e7d9bc81-0db3-4acd-88f7-ff486798a2b2.sql",
+          "table": "device_tokens"
+        }
+      ],
+      "id": "17:backend:rls-device-tokens"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "rls: activity_relationships",
+      "fileGlobs": [
+        "supabase/migrations/20260526105432_7d5d3850-b410-4d77-ad92-1f2f0e524b65.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260526105432_7d5d3850-b410-4d77-ad92-1f2f0e524b65.sql",
+          "table": "activity_relationships"
+        }
+      ],
+      "id": "11:backend:rls-activity-relationships"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "rls: project_schedule_meta",
+      "fileGlobs": [
+        "supabase/migrations/20260526105432_7d5d3850-b410-4d77-ad92-1f2f0e524b65.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260526105432_7d5d3850-b410-4d77-ad92-1f2f0e524b65.sql",
+          "table": "project_schedule_meta"
+        }
+      ],
+      "id": "11:backend:rls-project-schedule-meta"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "rls: schedule_calendars",
+      "fileGlobs": [
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+          "table": "schedule_calendars"
+        }
+      ],
+      "id": "11:backend:rls-schedule-calendars"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "rls: schedule_resources",
+      "fileGlobs": [
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+          "table": "schedule_resources"
+        }
+      ],
+      "id": "11:backend:rls-schedule-resources"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "rls: activity_resource_assignments",
+      "fileGlobs": [
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+          "table": "activity_resource_assignments"
+        }
+      ],
+      "id": "11:backend:rls-activity-resource-assignments"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "rls: schedule_baselines",
+      "fileGlobs": [
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+          "table": "schedule_baselines"
+        }
+      ],
+      "id": "11:backend:rls-schedule-baselines"
+    },
+    {
+      "streamNum": "11",
+      "stream": "11 Schedule Management",
+      "layer": "Backend",
+      "name": "rls: baseline_activities",
+      "fileGlobs": [
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+          "table": "baseline_activities"
+        }
+      ],
+      "id": "11:backend:rls-baseline-activities"
+    },
+    {
+      "streamNum": "97",
+      "stream": "97 Plumbing",
+      "layer": "Backend",
+      "name": "rls: realtime",
+      "fileGlobs": [
+        "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "rls-policies",
+          "path": "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql",
+          "table": "realtime"
+        }
+      ],
+      "id": "97:backend:rls-realtime"
+    }
+  ]
+}
