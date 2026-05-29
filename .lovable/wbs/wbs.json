@@ -1,0 +1,2084 @@
+{
+  "id": "ROOT",
+  "name": "draw-quantify-dash (project-as-schedule)",
+  "generatedAt": "2026-05-29T18:56:06.140Z",
+  "meta": {
+    "sourceCommits": 967,
+    "activities": 156,
+    "eras": 7,
+    "streams": 27,
+    "pivots": 8,
+    "lieTaxRows": 17,
+    "snapshots": [
+      "2026-03-08-local-first-prototype.md",
+      "2026-03-15-pdfjs-specviewer.md",
+      "2026-03-21-supabase-backend.md",
+      "2026-03-23-invitation-rbac.md",
+      "2026-03-27-gps-era.md",
+      "2026-05-05-brand-sweep-daily-reports.md",
+      "2026-05-26-pmxml-schedule-engine.md",
+      "2026-05-29-pmxml-only-value-streams.md"
+    ]
+  },
+  "children": [
+    {
+      "id": "era-01",
+      "name": "Era 1: bootstrap",
+      "start": "2026-03-08",
+      "endExclusive": "2026-03-15",
+      "boundaryPivot": null,
+      "children": [
+        {
+          "id": "era-01:_unattributed_",
+          "name": "(unattributed)",
+          "activityCount": 1,
+          "children": [
+            {
+              "id": "era-01:_unattributed_:_misc",
+              "name": "_misc",
+              "activityCount": 1,
+              "activityIds": [
+                "A0001"
+              ],
+              "totalCommits": 39,
+              "totalLoc": 0
+            }
+          ]
+        },
+        {
+          "id": "era-01:03_Project_Onboarding",
+          "name": "03 Project Onboarding",
+          "activityCount": 3,
+          "children": [
+            {
+              "id": "era-01:03_Project_Onboarding:component:ProjectSidebar",
+              "name": "component:ProjectSidebar",
+              "activityCount": 1,
+              "activityIds": [
+                "A0003"
+              ],
+              "totalCommits": 27,
+              "totalLoc": 962
+            },
+            {
+              "id": "era-01:03_Project_Onboarding:hook:useProject",
+              "name": "hook:useProject",
+              "activityCount": 1,
+              "activityIds": [
+                "A0006"
+              ],
+              "totalCommits": 7,
+              "totalLoc": 47
+            },
+            {
+              "id": "era-01:03_Project_Onboarding:page:index",
+              "name": "page:index",
+              "activityCount": 1,
+              "activityIds": [
+                "A0007"
+              ],
+              "totalCommits": 13,
+              "totalLoc": 45
+            }
+          ]
+        },
+        {
+          "id": "era-01:04_Pay_Item_Catalog",
+          "name": "04 Pay Item Catalog",
+          "activityCount": 2,
+          "children": [
+            {
+              "id": "era-01:04_Pay_Item_Catalog:component:SummaryPanel",
+              "name": "component:SummaryPanel",
+              "activityCount": 1,
+              "activityIds": [
+                "A0009"
+              ],
+              "totalCommits": 8,
+              "totalLoc": 57
+            },
+            {
+              "id": "era-01:04_Pay_Item_Catalog:lib:pdf-utils",
+              "name": "lib:pdf-utils",
+              "activityCount": 1,
+              "activityIds": [
+                "A0004"
+              ],
+              "totalCommits": 12,
+              "totalLoc": 1064
+            }
+          ]
+        },
+        {
+          "id": "era-01:05_Field_Capture",
+          "name": "05 Field Capture",
+          "activityCount": 3,
+          "children": [
+            {
+              "id": "era-01:05_Field_Capture:app-shell",
+              "name": "app-shell",
+              "activityCount": 1,
+              "activityIds": [
+                "A0002"
+              ],
+              "totalCommits": 6,
+              "totalLoc": 2634
+            },
+            {
+              "id": "era-01:05_Field_Capture:component:PdfCanvas",
+              "name": "component:PdfCanvas",
+              "activityCount": 1,
+              "activityIds": [
+                "A0008"
+              ],
+              "totalCommits": 15,
+              "totalLoc": 183
+            },
+            {
+              "id": "era-01:05_Field_Capture:component:Toolbar",
+              "name": "component:Toolbar",
+              "activityCount": 1,
+              "activityIds": [
+                "A0010"
+              ],
+              "totalCommits": 5,
+              "totalLoc": 95
+            }
+          ]
+        },
+        {
+          "id": "era-01:10_Document_Management",
+          "name": "10 Document Management",
+          "activityCount": 1,
+          "children": [
+            {
+              "id": "era-01:10_Document_Management:lib:storage",
+              "name": "lib:storage",
+              "activityCount": 1,
+              "activityIds": [
+                "A0005"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 4
+            }
+          ]
+        },
+        {
+          "id": "era-01:98_Build_Infra",
+          "name": "98 Build & Infra",
+          "activityCount": 1,
+          "children": [
+            {
+              "id": "era-01:98_Build_Infra:html",
+              "name": "html",
+              "activityCount": 1,
+              "activityIds": [
+                "A0011"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 18
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "era-02",
+      "name": "Era 2: post-pivot — SpecViewer: text-dump approach replaced by PDF.js render pip",
+      "start": "2026-03-15",
+      "endExclusive": "2026-03-21",
+      "boundaryPivot": {
+        "sha": "cb06eeba",
+        "kind": "library-swap",
+        "title": "SpecViewer: text-dump approach replaced by PDF.js render pipeline"
+      },
+      "children": [
+        {
+          "id": "era-02:_unattributed_",
+          "name": "(unattributed)",
+          "activityCount": 1,
+          "children": [
+            {
+              "id": "era-02:_unattributed_:_misc",
+              "name": "_misc",
+              "activityCount": 1,
+              "activityIds": [
+                "A0012"
+              ],
+              "totalCommits": 20,
+              "totalLoc": 0
+            }
+          ]
+        },
+        {
+          "id": "era-02:03_Project_Onboarding",
+          "name": "03 Project Onboarding",
+          "activityCount": 2,
+          "children": [
+            {
+              "id": "era-02:03_Project_Onboarding:component:ProjectSidebar",
+              "name": "component:ProjectSidebar",
+              "activityCount": 1,
+              "activityIds": [
+                "A0015"
+              ],
+              "totalCommits": 8,
+              "totalLoc": 34
+            },
+            {
+              "id": "era-02:03_Project_Onboarding:page:index",
+              "name": "page:index",
+              "activityCount": 1,
+              "activityIds": [
+                "A0014"
+              ],
+              "totalCommits": 15,
+              "totalLoc": 212
+            }
+          ]
+        },
+        {
+          "id": "era-02:04_Pay_Item_Catalog",
+          "name": "04 Pay Item Catalog",
+          "activityCount": 1,
+          "children": [
+            {
+              "id": "era-02:04_Pay_Item_Catalog:component:SummaryPanel",
+              "name": "component:SummaryPanel",
+              "activityCount": 1,
+              "activityIds": [
+                "A0020"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 456
+            }
+          ]
+        },
+        {
+          "id": "era-02:09_Standard_Specifications",
+          "name": "09 Standard Specifications",
+          "activityCount": 2,
+          "children": [
+            {
+              "id": "era-02:09_Standard_Specifications:component:SpecViewer",
+              "name": "component:SpecViewer",
+              "activityCount": 1,
+              "activityIds": [
+                "A0013"
+              ],
+              "totalCommits": 7,
+              "totalLoc": 1242
+            },
+            {
+              "id": "era-02:09_Standard_Specifications:lib:specs-utils",
+              "name": "lib:specs-utils",
+              "activityCount": 1,
+              "activityIds": [
+                "A0016"
+              ],
+              "totalCommits": 10,
+              "totalLoc": 324
+            }
+          ]
+        },
+        {
+          "id": "era-02:18_Compliance_Audit",
+          "name": "18 Compliance & Audit",
+          "activityCount": 2,
+          "children": [
+            {
+              "id": "era-02:18_Compliance_Audit:test:setup",
+              "name": "test:setup",
+              "activityCount": 1,
+              "activityIds": [
+                "A0018"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 28
+            },
+            {
+              "id": "era-02:18_Compliance_Audit:test:specs-utils",
+              "name": "test:specs-utils",
+              "activityCount": 1,
+              "activityIds": [
+                "A0017"
+              ],
+              "totalCommits": 11,
+              "totalLoc": 931
+            }
+          ]
+        },
+        {
+          "id": "era-02:97_Plumbing",
+          "name": "97 Plumbing",
+          "activityCount": 1,
+          "children": [
+            {
+              "id": "era-02:97_Plumbing:component:EmptyState",
+              "name": "component:EmptyState",
+              "activityCount": 1,
+              "activityIds": [
+                "A0019"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 652
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "era-03",
+      "name": "Era 3: post-pivot — Pivot to Supabase-backed projects; full schema established",
+      "start": "2026-03-21",
+      "endExclusive": "2026-03-23",
+      "boundaryPivot": {
+        "sha": "33ded792",
+        "kind": "schema-rebuild",
+        "title": "Pivot to Supabase-backed projects; full schema established"
+      },
+      "children": [
+        {
+          "id": "era-03:_unattributed_",
+          "name": "(unattributed)",
+          "activityCount": 1,
+          "children": [
+            {
+              "id": "era-03:_unattributed_:_misc",
+              "name": "_misc",
+              "activityCount": 1,
+              "activityIds": [
+                "A0023"
+              ],
+              "totalCommits": 14,
+              "totalLoc": 0
+            }
+          ]
+        },
+        {
+          "id": "era-03:01_Identity_Access",
+          "name": "01 Identity & Access",
+          "activityCount": 2,
+          "children": [
+            {
+              "id": "era-03:01_Identity_Access:app-shell",
+              "name": "app-shell",
+              "activityCount": 1,
+              "activityIds": [
+                "A0026"
+              ],
+              "totalCommits": 8,
+              "totalLoc": 998
+            },
+            {
+              "id": "era-03:01_Identity_Access:page:admin",
+              "name": "page:admin",
+              "activityCount": 1,
+              "activityIds": [
+                "A0028"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 348
+            }
+          ]
+        },
+        {
+          "id": "era-03:02_Portfolio_PM_Home",
+          "name": "02 Portfolio & PM Home",
+          "activityCount": 2,
+          "children": [
+            {
+              "id": "era-03:02_Portfolio_PM_Home:component:GuidedTour",
+              "name": "component:GuidedTour",
+              "activityCount": 1,
+              "activityIds": [
+                "A0035"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 319
+            },
+            {
+              "id": "era-03:02_Portfolio_PM_Home:page:dashboard",
+              "name": "page:dashboard",
+              "activityCount": 1,
+              "activityIds": [
+                "A0029"
+              ],
+              "totalCommits": 9,
+              "totalLoc": 75
+            }
+          ]
+        },
+        {
+          "id": "era-03:03_Project_Onboarding",
+          "name": "03 Project Onboarding",
+          "activityCount": 3,
+          "children": [
+            {
+              "id": "era-03:03_Project_Onboarding:component:ProjectSidebar",
+              "name": "component:ProjectSidebar",
+              "activityCount": 1,
+              "activityIds": [
+                "A0031"
+              ],
+              "totalCommits": 5,
+              "totalLoc": 201
+            },
+            {
+              "id": "era-03:03_Project_Onboarding:hook:useProject",
+              "name": "hook:useProject",
+              "activityCount": 1,
+              "activityIds": [
+                "A0030"
+              ],
+              "totalCommits": 6,
+              "totalLoc": 333
+            },
+            {
+              "id": "era-03:03_Project_Onboarding:page:index",
+              "name": "page:index",
+              "activityCount": 1,
+              "activityIds": [
+                "A0022"
+              ],
+              "totalCommits": 28,
+              "totalLoc": 219
+            }
+          ]
+        },
+        {
+          "id": "era-03:04_Pay_Item_Catalog",
+          "name": "04 Pay Item Catalog",
+          "activityCount": 3,
+          "children": [
+            {
+              "id": "era-03:04_Pay_Item_Catalog:component:MobilePayItems",
+              "name": "component:MobilePayItems",
+              "activityCount": 1,
+              "activityIds": [
+                "A0032"
+              ],
+              "totalCommits": 3,
+              "totalLoc": 87
+            },
+            {
+              "id": "era-03:04_Pay_Item_Catalog:component:SummaryPanel",
+              "name": "component:SummaryPanel",
+              "activityCount": 1,
+              "activityIds": [
+                "A0037"
+              ],
+              "totalCommits": 4,
+              "totalLoc": 29
+            },
+            {
+              "id": "era-03:04_Pay_Item_Catalog:lib:pdf-utils",
+              "name": "lib:pdf-utils",
+              "activityCount": 1,
+              "activityIds": [
+                "A0027"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 5
+            }
+          ]
+        },
+        {
+          "id": "era-03:05_Field_Capture",
+          "name": "05 Field Capture",
+          "activityCount": 3,
+          "children": [
+            {
+              "id": "era-03:05_Field_Capture:component:MobileToolbar",
+              "name": "component:MobileToolbar",
+              "activityCount": 1,
+              "activityIds": [
+                "A0034"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 8
+            },
+            {
+              "id": "era-03:05_Field_Capture:component:PdfCanvas",
+              "name": "component:PdfCanvas",
+              "activityCount": 1,
+              "activityIds": [
+                "A0021"
+              ],
+              "totalCommits": 5,
+              "totalLoc": 81
+            },
+            {
+              "id": "era-03:05_Field_Capture:component:Toolbar",
+              "name": "component:Toolbar",
+              "activityCount": 1,
+              "activityIds": [
+                "A0033"
+              ],
+              "totalCommits": 2,
+              "totalLoc": 8
+            }
+          ]
+        },
+        {
+          "id": "era-03:07_Quantity_to_Payment",
+          "name": "07 Quantity to Payment",
+          "activityCount": 1,
+          "children": [
+            {
+              "id": "era-03:07_Quantity_to_Payment:lib:export-utils",
+              "name": "lib:export-utils",
+              "activityCount": 1,
+              "activityIds": [
+                "A0036"
+              ],
+              "totalCommits": 2,
+              "totalLoc": 98
+            }
+          ]
+        },
+        {
+          "id": "era-03:98_Build_Infra",
+          "name": "98 Build & Infra",
+          "activityCount": 3,
+          "children": [
+            {
+              "id": "era-03:98_Build_Infra:html",
+              "name": "html",
+              "activityCount": 1,
+              "activityIds": [
+                "A0038"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 4
+            },
+            {
+              "id": "era-03:98_Build_Infra:migration",
+              "name": "migration",
+              "activityCount": 1,
+              "activityIds": [
+                "A0025"
+              ],
+              "totalCommits": 7,
+              "totalLoc": 370
+            },
+            {
+              "id": "era-03:98_Build_Infra:supabase:config",
+              "name": "supabase:config",
+              "activityCount": 1,
+              "activityIds": [
+                "A0024"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "era-04",
+      "name": "Era 4: post-pivot — Auth model expanded: org-based signup with invitation RBAC",
+      "start": "2026-03-23",
+      "endExclusive": "2026-05-05",
+      "boundaryPivot": {
+        "sha": "052abde5",
+        "kind": "schema-rebuild",
+        "title": "Auth model expanded: org-based signup with invitation RBAC"
+      },
+      "children": [
+        {
+          "id": "era-04:_unattributed_",
+          "name": "(unattributed)",
+          "activityCount": 1,
+          "children": [
+            {
+              "id": "era-04:_unattributed_:_misc",
+              "name": "_misc",
+              "activityCount": 1,
+              "activityIds": [
+                "A0039"
+              ],
+              "totalCommits": 80,
+              "totalLoc": 0
+            }
+          ]
+        },
+        {
+          "id": "era-04:01_Identity_Access",
+          "name": "01 Identity & Access",
+          "activityCount": 7,
+          "children": [
+            {
+              "id": "era-04:01_Identity_Access:app-shell",
+              "name": "app-shell",
+              "activityCount": 2,
+              "activityIds": [
+                "A0047",
+                "A0048"
+              ],
+              "totalCommits": 7,
+              "totalLoc": 722
+            },
+            {
+              "id": "era-04:01_Identity_Access:component:TeamManager",
+              "name": "component:TeamManager",
+              "activityCount": 1,
+              "activityIds": [
+                "A0053"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 336
+            },
+            {
+              "id": "era-04:01_Identity_Access:hook:useAuth",
+              "name": "hook:useAuth",
+              "activityCount": 1,
+              "activityIds": [
+                "A0052"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 2
+            },
+            {
+              "id": "era-04:01_Identity_Access:page:admin",
+              "name": "page:admin",
+              "activityCount": 1,
+              "activityIds": [
+                "A0055"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 48
+            },
+            {
+              "id": "era-04:01_Identity_Access:route:auth",
+              "name": "route:auth",
+              "activityCount": 1,
+              "activityIds": [
+                "A0051"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 379
+            },
+            {
+              "id": "era-04:01_Identity_Access:route:marketing",
+              "name": "route:marketing",
+              "activityCount": 1,
+              "activityIds": [
+                "A0067"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 569
+            }
+          ]
+        },
+        {
+          "id": "era-04:02_Portfolio_PM_Home",
+          "name": "02 Portfolio & PM Home",
+          "activityCount": 2,
+          "children": [
+            {
+              "id": "era-04:02_Portfolio_PM_Home:hook:useProjects",
+              "name": "hook:useProjects",
+              "activityCount": 1,
+              "activityIds": [
+                "A0057"
+              ],
+              "totalCommits": 2,
+              "totalLoc": 29
+            },
+            {
+              "id": "era-04:02_Portfolio_PM_Home:page:dashboard",
+              "name": "page:dashboard",
+              "activityCount": 1,
+              "activityIds": [
+                "A0054"
+              ],
+              "totalCommits": 3,
+              "totalLoc": 18
+            }
+          ]
+        },
+        {
+          "id": "era-04:03_Project_Onboarding",
+          "name": "03 Project Onboarding",
+          "activityCount": 5,
+          "children": [
+            {
+              "id": "era-04:03_Project_Onboarding:component:ProjectSidebar",
+              "name": "component:ProjectSidebar",
+              "activityCount": 1,
+              "activityIds": [
+                "A0064"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 50
+            },
+            {
+              "id": "era-04:03_Project_Onboarding:hook:useProject",
+              "name": "hook:useProject",
+              "activityCount": 2,
+              "activityIds": [
+                "A0045",
+                "A0046"
+              ],
+              "totalCommits": 11,
+              "totalLoc": 48
+            },
+            {
+              "id": "era-04:03_Project_Onboarding:page:index",
+              "name": "page:index",
+              "activityCount": 1,
+              "activityIds": [
+                "A0049"
+              ],
+              "totalCommits": 31,
+              "totalLoc": 330
+            },
+            {
+              "id": "era-04:03_Project_Onboarding:route:takeoff",
+              "name": "route:takeoff",
+              "activityCount": 1,
+              "activityIds": [
+                "A0058"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 166
+            }
+          ]
+        },
+        {
+          "id": "era-04:04_Pay_Item_Catalog",
+          "name": "04 Pay Item Catalog",
+          "activityCount": 1,
+          "children": [
+            {
+              "id": "era-04:04_Pay_Item_Catalog:component:SummaryPanel",
+              "name": "component:SummaryPanel",
+              "activityCount": 1,
+              "activityIds": [
+                "A0050"
+              ],
+              "totalCommits": 6,
+              "totalLoc": 291
+            }
+          ]
+        },
+        {
+          "id": "era-04:05_Field_Capture",
+          "name": "05 Field Capture",
+          "activityCount": 6,
+          "children": [
+            {
+              "id": "era-04:05_Field_Capture:component:EmptyState",
+              "name": "component:EmptyState",
+              "activityCount": 1,
+              "activityIds": [
+                "A0063"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 536
+            },
+            {
+              "id": "era-04:05_Field_Capture:component:GpsCalibration",
+              "name": "component:GpsCalibration",
+              "activityCount": 1,
+              "activityIds": [
+                "A0066"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 540
+            },
+            {
+              "id": "era-04:05_Field_Capture:component:MobileAnnotationSheet",
+              "name": "component:MobileAnnotationSheet",
+              "activityCount": 1,
+              "activityIds": [
+                "A0056"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 151
+            },
+            {
+              "id": "era-04:05_Field_Capture:component:MobileToolbar",
+              "name": "component:MobileToolbar",
+              "activityCount": 1,
+              "activityIds": [
+                "A0069"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 26
+            },
+            {
+              "id": "era-04:05_Field_Capture:component:PdfCanvas",
+              "name": "component:PdfCanvas",
+              "activityCount": 1,
+              "activityIds": [
+                "A0042"
+              ],
+              "totalCommits": 41,
+              "totalLoc": 752
+            },
+            {
+              "id": "era-04:05_Field_Capture:lib:geo-transform",
+              "name": "lib:geo-transform",
+              "activityCount": 1,
+              "activityIds": [
+                "A0065"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 194
+            }
+          ]
+        },
+        {
+          "id": "era-04:07_Quantity_to_Payment",
+          "name": "07 Quantity to Payment",
+          "activityCount": 1,
+          "children": [
+            {
+              "id": "era-04:07_Quantity_to_Payment:page:projectcontrols",
+              "name": "page:projectcontrols",
+              "activityCount": 1,
+              "activityIds": [
+                "A0072"
+              ],
+              "totalCommits": 2,
+              "totalLoc": 739
+            }
+          ]
+        },
+        {
+          "id": "era-04:08_Photo_Evidence",
+          "name": "08 Photo Evidence",
+          "activityCount": 1,
+          "children": [
+            {
+              "id": "era-04:08_Photo_Evidence:edge:tag-photo",
+              "name": "edge:tag-photo",
+              "activityCount": 1,
+              "activityIds": [
+                "A0071"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 134
+            }
+          ]
+        },
+        {
+          "id": "era-04:09_Standard_Specifications",
+          "name": "09 Standard Specifications",
+          "activityCount": 2,
+          "children": [
+            {
+              "id": "era-04:09_Standard_Specifications:component:SpecViewer",
+              "name": "component:SpecViewer",
+              "activityCount": 1,
+              "activityIds": [
+                "A0044"
+              ],
+              "totalCommits": 21,
+              "totalLoc": 691
+            },
+            {
+              "id": "era-04:09_Standard_Specifications:lib:specs-utils",
+              "name": "lib:specs-utils",
+              "activityCount": 1,
+              "activityIds": [
+                "A0043"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 84
+            }
+          ]
+        },
+        {
+          "id": "era-04:12_Project_Health_Controls",
+          "name": "12 Project Health & Controls",
+          "activityCount": 1,
+          "children": [
+            {
+              "id": "era-04:12_Project_Health_Controls:migration",
+              "name": "migration",
+              "activityCount": 1,
+              "activityIds": [
+                "A0041"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 79
+            }
+          ]
+        },
+        {
+          "id": "era-04:16_Mobile_Field_Ergonomics",
+          "name": "16 Mobile Field Ergonomics",
+          "activityCount": 1,
+          "children": [
+            {
+              "id": "era-04:16_Mobile_Field_Ergonomics:page:demo",
+              "name": "page:demo",
+              "activityCount": 1,
+              "activityIds": [
+                "A0068"
+              ],
+              "totalCommits": 12,
+              "totalLoc": 1644
+            }
+          ]
+        },
+        {
+          "id": "era-04:20_Sales_Pitch",
+          "name": "20 Sales & Pitch",
+          "activityCount": 3,
+          "children": [
+            {
+              "id": "era-04:20_Sales_Pitch:asset",
+              "name": "asset",
+              "activityCount": 1,
+              "activityIds": [
+                "A0060"
+              ],
+              "totalCommits": 4,
+              "totalLoc": 0
+            },
+            {
+              "id": "era-04:20_Sales_Pitch:page:landing",
+              "name": "page:landing",
+              "activityCount": 1,
+              "activityIds": [
+                "A0061"
+              ],
+              "totalCommits": 7,
+              "totalLoc": 1218
+            },
+            {
+              "id": "era-04:20_Sales_Pitch:page:mcfapitch",
+              "name": "page:mcfapitch",
+              "activityCount": 1,
+              "activityIds": [
+                "A0070"
+              ],
+              "totalCommits": 12,
+              "totalLoc": 1406
+            }
+          ]
+        },
+        {
+          "id": "era-04:98_Build_Infra",
+          "name": "98 Build & Infra",
+          "activityCount": 3,
+          "children": [
+            {
+              "id": "era-04:98_Build_Infra:html",
+              "name": "html",
+              "activityCount": 1,
+              "activityIds": [
+                "A0059"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 496
+            },
+            {
+              "id": "era-04:98_Build_Infra:migration",
+              "name": "migration",
+              "activityCount": 1,
+              "activityIds": [
+                "A0040"
+              ],
+              "totalCommits": 5,
+              "totalLoc": 168
+            },
+            {
+              "id": "era-04:98_Build_Infra:styles",
+              "name": "styles",
+              "activityCount": 1,
+              "activityIds": [
+                "A0062"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 26
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "era-05",
+      "name": "Era 5: post-pivot — TakeoffPro brand and GPS field-measurement page swept out",
+      "start": "2026-05-05",
+      "endExclusive": "2026-05-26",
+      "boundaryPivot": {
+        "sha": "c1559f62",
+        "kind": "capability-removal",
+        "title": "TakeoffPro brand and GPS field-measurement page swept out"
+      },
+      "children": [
+        {
+          "id": "era-05:_unattributed_",
+          "name": "(unattributed)",
+          "activityCount": 12,
+          "children": [
+            {
+              "id": "era-05:_unattributed_:_misc",
+              "name": "_misc",
+              "activityCount": 2,
+              "activityIds": [
+                "A0073",
+                "A0074"
+              ],
+              "totalCommits": 52,
+              "totalLoc": 0
+            },
+            {
+              "id": "era-05:_unattributed_:component:XerLensTour",
+              "name": "component:XerLensTour",
+              "activityCount": 1,
+              "activityIds": [
+                "A0087"
+              ],
+              "totalCommits": 13,
+              "totalLoc": 759
+            },
+            {
+              "id": "era-05:_unattributed_:lib:xer:aace",
+              "name": "lib:xer:aace",
+              "activityCount": 1,
+              "activityIds": [
+                "A0088"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 274
+            },
+            {
+              "id": "era-05:_unattributed_:lib:xer:chart-export",
+              "name": "lib:xer:chart-export",
+              "activityCount": 1,
+              "activityIds": [
+                "A0092"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 60
+            },
+            {
+              "id": "era-05:_unattributed_:lib:xer:dcma",
+              "name": "lib:xer:dcma",
+              "activityCount": 1,
+              "activityIds": [
+                "A0083"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 594
+            },
+            {
+              "id": "era-05:_unattributed_:lib:xer:memo-export",
+              "name": "lib:xer:memo-export",
+              "activityCount": 1,
+              "activityIds": [
+                "A0090"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 47
+            },
+            {
+              "id": "era-05:_unattributed_:lib:xer:parser",
+              "name": "lib:xer:parser",
+              "activityCount": 1,
+              "activityIds": [
+                "A0093"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 5
+            },
+            {
+              "id": "era-05:_unattributed_:lib:xer:progress",
+              "name": "lib:xer:progress",
+              "activityCount": 1,
+              "activityIds": [
+                "A0091"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 29
+            },
+            {
+              "id": "era-05:_unattributed_:lib:xer:sample-update",
+              "name": "lib:xer:sample-update",
+              "activityCount": 1,
+              "activityIds": [
+                "A0089"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 48
+            },
+            {
+              "id": "era-05:_unattributed_:page:xerdemo",
+              "name": "page:xerdemo",
+              "activityCount": 1,
+              "activityIds": [
+                "A0084"
+              ],
+              "totalCommits": 38,
+              "totalLoc": 1822
+            },
+            {
+              "id": "era-05:_unattributed_:test:xer-parser",
+              "name": "test:xer-parser",
+              "activityCount": 1,
+              "activityIds": [
+                "A0094"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 25
+            }
+          ]
+        },
+        {
+          "id": "era-05:01_Identity_Access",
+          "name": "01 Identity & Access",
+          "activityCount": 5,
+          "children": [
+            {
+              "id": "era-05:01_Identity_Access:app-shell",
+              "name": "app-shell",
+              "activityCount": 1,
+              "activityIds": [
+                "A0085"
+              ],
+              "totalCommits": 2,
+              "totalLoc": 4
+            },
+            {
+              "id": "era-05:01_Identity_Access:component:TeamManager",
+              "name": "component:TeamManager",
+              "activityCount": 1,
+              "activityIds": [
+                "A0117"
+              ],
+              "totalCommits": 2,
+              "totalLoc": 10
+            },
+            {
+              "id": "era-05:01_Identity_Access:hook:useAuth",
+              "name": "hook:useAuth",
+              "activityCount": 1,
+              "activityIds": [
+                "A0098"
+              ],
+              "totalCommits": 2,
+              "totalLoc": 4
+            },
+            {
+              "id": "era-05:01_Identity_Access:page:admin",
+              "name": "page:admin",
+              "activityCount": 1,
+              "activityIds": [
+                "A0116"
+              ],
+              "totalCommits": 2,
+              "totalLoc": 32
+            },
+            {
+              "id": "era-05:01_Identity_Access:route:takeoff",
+              "name": "route:takeoff",
+              "activityCount": 1,
+              "activityIds": [
+                "A0105"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 17
+            }
+          ]
+        },
+        {
+          "id": "era-05:02_Portfolio_PM_Home",
+          "name": "02 Portfolio & PM Home",
+          "activityCount": 1,
+          "children": [
+            {
+              "id": "era-05:02_Portfolio_PM_Home:page:dashboard",
+              "name": "page:dashboard",
+              "activityCount": 1,
+              "activityIds": [
+                "A0102"
+              ],
+              "totalCommits": 9,
+              "totalLoc": 50
+            }
+          ]
+        },
+        {
+          "id": "era-05:03_Project_Onboarding",
+          "name": "03 Project Onboarding",
+          "activityCount": 2,
+          "children": [
+            {
+              "id": "era-05:03_Project_Onboarding:component:ProjectSidebar",
+              "name": "component:ProjectSidebar",
+              "activityCount": 1,
+              "activityIds": [
+                "A0080"
+              ],
+              "totalCommits": 3,
+              "totalLoc": 69
+            },
+            {
+              "id": "era-05:03_Project_Onboarding:page:index",
+              "name": "page:index",
+              "activityCount": 1,
+              "activityIds": [
+                "A0108"
+              ],
+              "totalCommits": 6,
+              "totalLoc": 141
+            }
+          ]
+        },
+        {
+          "id": "era-05:04_Pay_Item_Catalog",
+          "name": "04 Pay Item Catalog",
+          "activityCount": 2,
+          "children": [
+            {
+              "id": "era-05:04_Pay_Item_Catalog:hook:usePayItemActivityMap",
+              "name": "hook:usePayItemActivityMap",
+              "activityCount": 1,
+              "activityIds": [
+                "A0109"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 124
+            },
+            {
+              "id": "era-05:04_Pay_Item_Catalog:lib:pdf-utils",
+              "name": "lib:pdf-utils",
+              "activityCount": 1,
+              "activityIds": [
+                "A0120"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 10
+            }
+          ]
+        },
+        {
+          "id": "era-05:06_Daily_Report_Lifecycle",
+          "name": "06 Daily Report Lifecycle",
+          "activityCount": 8,
+          "children": [
+            {
+              "id": "era-05:06_Daily_Report_Lifecycle:component:NotificationBell",
+              "name": "component:NotificationBell",
+              "activityCount": 1,
+              "activityIds": [
+                "A0103"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 921
+            },
+            {
+              "id": "era-05:06_Daily_Report_Lifecycle:component:ReRejectDialog",
+              "name": "component:ReRejectDialog",
+              "activityCount": 1,
+              "activityIds": [
+                "A0100"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 207
+            },
+            {
+              "id": "era-05:06_Daily_Report_Lifecycle:hook:useDailyReport",
+              "name": "hook:useDailyReport",
+              "activityCount": 1,
+              "activityIds": [
+                "A0104"
+              ],
+              "totalCommits": 4,
+              "totalLoc": 39
+            },
+            {
+              "id": "era-05:06_Daily_Report_Lifecycle:hook:useReReviewQueue",
+              "name": "hook:useReReviewQueue",
+              "activityCount": 1,
+              "activityIds": [
+                "A0099"
+              ],
+              "totalCommits": 2,
+              "totalLoc": 137
+            },
+            {
+              "id": "era-05:06_Daily_Report_Lifecycle:lib:daily-report-snapshot",
+              "name": "lib:daily-report-snapshot",
+              "activityCount": 1,
+              "activityIds": [
+                "A0111"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 10
+            },
+            {
+              "id": "era-05:06_Daily_Report_Lifecycle:migration",
+              "name": "migration",
+              "activityCount": 1,
+              "activityIds": [
+                "A0075"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 44
+            },
+            {
+              "id": "era-05:06_Daily_Report_Lifecycle:page:dailyreport",
+              "name": "page:dailyreport",
+              "activityCount": 1,
+              "activityIds": [
+                "A0112"
+              ],
+              "totalCommits": 2,
+              "totalLoc": 21
+            },
+            {
+              "id": "era-05:06_Daily_Report_Lifecycle:page:rereview",
+              "name": "page:rereview",
+              "activityCount": 1,
+              "activityIds": [
+                "A0101"
+              ],
+              "totalCommits": 2,
+              "totalLoc": 299
+            }
+          ]
+        },
+        {
+          "id": "era-05:07_Quantity_to_Payment",
+          "name": "07 Quantity to Payment",
+          "activityCount": 3,
+          "children": [
+            {
+              "id": "era-05:07_Quantity_to_Payment:lib:approved-quantities",
+              "name": "lib:approved-quantities",
+              "activityCount": 1,
+              "activityIds": [
+                "A0106"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 317
+            },
+            {
+              "id": "era-05:07_Quantity_to_Payment:lib:export-utils",
+              "name": "lib:export-utils",
+              "activityCount": 1,
+              "activityIds": [
+                "A0107"
+              ],
+              "totalCommits": 6,
+              "totalLoc": 223
+            },
+            {
+              "id": "era-05:07_Quantity_to_Payment:page:projectcontrols",
+              "name": "page:projectcontrols",
+              "activityCount": 1,
+              "activityIds": [
+                "A0079"
+              ],
+              "totalCommits": 2,
+              "totalLoc": 2
+            }
+          ]
+        },
+        {
+          "id": "era-05:10_Document_Management",
+          "name": "10 Document Management",
+          "activityCount": 2,
+          "children": [
+            {
+              "id": "era-05:10_Document_Management:hook:useDocuments",
+              "name": "hook:useDocuments",
+              "activityCount": 1,
+              "activityIds": [
+                "A0113"
+              ],
+              "totalCommits": 8,
+              "totalLoc": 387
+            },
+            {
+              "id": "era-05:10_Document_Management:page:documents",
+              "name": "page:documents",
+              "activityCount": 1,
+              "activityIds": [
+                "A0114"
+              ],
+              "totalCommits": 46,
+              "totalLoc": 1784
+            }
+          ]
+        },
+        {
+          "id": "era-05:11_Schedule_Management",
+          "name": "11 Schedule Management",
+          "activityCount": 1,
+          "children": [
+            {
+              "id": "era-05:11_Schedule_Management:edge:parse-schedule",
+              "name": "edge:parse-schedule",
+              "activityCount": 1,
+              "activityIds": [
+                "A0077"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 109
+            }
+          ]
+        },
+        {
+          "id": "era-05:12_Project_Health_and_Controls",
+          "name": "12 Project Health and Controls",
+          "activityCount": 1,
+          "children": [
+            {
+              "id": "era-05:12_Project_Health_and_Controls:component:GanttUploader",
+              "name": "component:GanttUploader",
+              "activityCount": 1,
+              "activityIds": [
+                "A0078"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 143
+            }
+          ]
+        },
+        {
+          "id": "era-05:13_Data_Export_and_Interoperability",
+          "name": "13 Data Export and Interoperability",
+          "activityCount": 2,
+          "children": [
+            {
+              "id": "era-05:13_Data_Export_and_Interoperability:lib:p6xml:apply-progress",
+              "name": "lib:p6xml:apply-progress",
+              "activityCount": 1,
+              "activityIds": [
+                "A0097"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 457
+            },
+            {
+              "id": "era-05:13_Data_Export_and_Interoperability:page:p6export",
+              "name": "page:p6export",
+              "activityCount": 1,
+              "activityIds": [
+                "A0110"
+              ],
+              "totalCommits": 2,
+              "totalLoc": 432
+            }
+          ]
+        },
+        {
+          "id": "era-05:15_Offline_Native_Durability",
+          "name": "15 Offline & Native Durability",
+          "activityCount": 1,
+          "children": [
+            {
+              "id": "era-05:15_Offline_Native_Durability:public:icons",
+              "name": "public:icons",
+              "activityCount": 1,
+              "activityIds": [
+                "A0118"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 0
+            }
+          ]
+        },
+        {
+          "id": "era-05:15_Offline_and_Native_Durability",
+          "name": "15 Offline and Native Durability",
+          "activityCount": 3,
+          "children": [
+            {
+              "id": "era-05:15_Offline_and_Native_Durability:app-shell",
+              "name": "app-shell",
+              "activityCount": 1,
+              "activityIds": [
+                "A0086"
+              ],
+              "totalCommits": 7,
+              "totalLoc": 676
+            },
+            {
+              "id": "era-05:15_Offline_and_Native_Durability:component:PwaShell",
+              "name": "component:PwaShell",
+              "activityCount": 1,
+              "activityIds": [
+                "A0121"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 18
+            },
+            {
+              "id": "era-05:15_Offline_and_Native_Durability:lib:offline:db",
+              "name": "lib:offline:db",
+              "activityCount": 1,
+              "activityIds": [
+                "A0119"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 284
+            }
+          ]
+        },
+        {
+          "id": "era-05:20_Sales_Pitch",
+          "name": "20 Sales & Pitch",
+          "activityCount": 3,
+          "children": [
+            {
+              "id": "era-05:20_Sales_Pitch:page:fajarpitch",
+              "name": "page:fajarpitch",
+              "activityCount": 1,
+              "activityIds": [
+                "A0095"
+              ],
+              "totalCommits": 9,
+              "totalLoc": 880
+            },
+            {
+              "id": "era-05:20_Sales_Pitch:page:mcfapitch",
+              "name": "page:mcfapitch",
+              "activityCount": 2,
+              "activityIds": [
+                "A0081",
+                "A0082"
+              ],
+              "totalCommits": 47,
+              "totalLoc": 981
+            }
+          ]
+        },
+        {
+          "id": "era-05:97_Plumbing",
+          "name": "97 Plumbing",
+          "activityCount": 2,
+          "children": [
+            {
+              "id": "era-05:97_Plumbing:component:ConfirmDialog",
+              "name": "component:ConfirmDialog",
+              "activityCount": 1,
+              "activityIds": [
+                "A0115"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 70
+            },
+            {
+              "id": "era-05:97_Plumbing:public:fajar-mockups",
+              "name": "public:fajar-mockups",
+              "activityCount": 1,
+              "activityIds": [
+                "A0096"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 0
+            }
+          ]
+        },
+        {
+          "id": "era-05:98_Build_Infra",
+          "name": "98 Build & Infra",
+          "activityCount": 1,
+          "children": [
+            {
+              "id": "era-05:98_Build_Infra:migration",
+              "name": "migration",
+              "activityCount": 1,
+              "activityIds": [
+                "A0076"
+              ],
+              "totalCommits": 11,
+              "totalLoc": 748
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "era-06",
+      "name": "Era 6: post-pivot — XER flat-file import replaced by P6 XML (PMXML) pipeline",
+      "start": "2026-05-26",
+      "endExclusive": "2026-05-29",
+      "boundaryPivot": {
+        "sha": "6d325711",
+        "kind": "library-swap",
+        "title": "XER flat-file import replaced by P6 XML (PMXML) pipeline"
+      },
+      "children": [
+        {
+          "id": "era-06:_unattributed_",
+          "name": "(unattributed)",
+          "activityCount": 1,
+          "children": [
+            {
+              "id": "era-06:_unattributed_:_misc",
+              "name": "_misc",
+              "activityCount": 1,
+              "activityIds": [
+                "A0122"
+              ],
+              "totalCommits": 20,
+              "totalLoc": 0
+            }
+          ]
+        },
+        {
+          "id": "era-06:01_Identity_Access",
+          "name": "01 Identity & Access",
+          "activityCount": 1,
+          "children": [
+            {
+              "id": "era-06:01_Identity_Access:component:BiometricGate",
+              "name": "component:BiometricGate",
+              "activityCount": 1,
+              "activityIds": [
+                "A0133"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 256
+            }
+          ]
+        },
+        {
+          "id": "era-06:03_Project_Onboarding",
+          "name": "03 Project Onboarding",
+          "activityCount": 1,
+          "children": [
+            {
+              "id": "era-06:03_Project_Onboarding:hook:useProject",
+              "name": "hook:useProject",
+              "activityCount": 1,
+              "activityIds": [
+                "A0126"
+              ],
+              "totalCommits": 3,
+              "totalLoc": 86
+            }
+          ]
+        },
+        {
+          "id": "era-06:05_Field_Capture",
+          "name": "05 Field Capture",
+          "activityCount": 2,
+          "children": [
+            {
+              "id": "era-06:05_Field_Capture:component:GpsCalibration",
+              "name": "component:GpsCalibration",
+              "activityCount": 1,
+              "activityIds": [
+                "A0130"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 42
+            },
+            {
+              "id": "era-06:05_Field_Capture:component:GpsTraceControls",
+              "name": "component:GpsTraceControls",
+              "activityCount": 1,
+              "activityIds": [
+                "A0129"
+              ],
+              "totalCommits": 3,
+              "totalLoc": 160
+            }
+          ]
+        },
+        {
+          "id": "era-06:07_Quantity_to_Payment",
+          "name": "07 Quantity to Payment",
+          "activityCount": 2,
+          "children": [
+            {
+              "id": "era-06:07_Quantity_to_Payment:lib:export-utils",
+              "name": "lib:export-utils",
+              "activityCount": 1,
+              "activityIds": [
+                "A0128"
+              ],
+              "totalCommits": 2,
+              "totalLoc": 15
+            },
+            {
+              "id": "era-06:07_Quantity_to_Payment:page:projectcontrols",
+              "name": "page:projectcontrols",
+              "activityCount": 1,
+              "activityIds": [
+                "A0138"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 53
+            }
+          ]
+        },
+        {
+          "id": "era-06:08_Photo_Evidence",
+          "name": "08 Photo Evidence",
+          "activityCount": 1,
+          "children": [
+            {
+              "id": "era-06:08_Photo_Evidence:lib:offline:db",
+              "name": "lib:offline:db",
+              "activityCount": 1,
+              "activityIds": [
+                "A0123"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 426
+            }
+          ]
+        },
+        {
+          "id": "era-06:11_Schedule_Management",
+          "name": "11 Schedule Management",
+          "activityCount": 11,
+          "children": [
+            {
+              "id": "era-06:11_Schedule_Management:edge:send-push",
+              "name": "edge:send-push",
+              "activityCount": 1,
+              "activityIds": [
+                "A0151"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 168
+            },
+            {
+              "id": "era-06:11_Schedule_Management:lib:p6xml:build-from-project",
+              "name": "lib:p6xml:build-from-project",
+              "activityCount": 1,
+              "activityIds": [
+                "A0137"
+              ],
+              "totalCommits": 3,
+              "totalLoc": 1440
+            },
+            {
+              "id": "era-06:11_Schedule_Management:lib:schedule:baseline",
+              "name": "lib:schedule:baseline",
+              "activityCount": 1,
+              "activityIds": [
+                "A0140"
+              ],
+              "totalCommits": 2,
+              "totalLoc": 476
+            },
+            {
+              "id": "era-06:11_Schedule_Management:lib:schedule:calendars",
+              "name": "lib:schedule:calendars",
+              "activityCount": 1,
+              "activityIds": [
+                "A0143"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 286
+            },
+            {
+              "id": "era-06:11_Schedule_Management:lib:schedule:cpm",
+              "name": "lib:schedule:cpm",
+              "activityCount": 1,
+              "activityIds": [
+                "A0135"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 422
+            },
+            {
+              "id": "era-06:11_Schedule_Management:lib:schedule:types",
+              "name": "lib:schedule:types",
+              "activityCount": 1,
+              "activityIds": [
+                "A0141"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 2
+            },
+            {
+              "id": "era-06:11_Schedule_Management:lib:schedule:use-schedule",
+              "name": "lib:schedule:use-schedule",
+              "activityCount": 1,
+              "activityIds": [
+                "A0144"
+              ],
+              "totalCommits": 2,
+              "totalLoc": 459
+            },
+            {
+              "id": "era-06:11_Schedule_Management:ui:schedule:ActivityInspector",
+              "name": "ui:schedule:ActivityInspector",
+              "activityCount": 1,
+              "activityIds": [
+                "A0145"
+              ],
+              "totalCommits": 2,
+              "totalLoc": 122
+            },
+            {
+              "id": "era-06:11_Schedule_Management:ui:schedule:ComplianceStrip",
+              "name": "ui:schedule:ComplianceStrip",
+              "activityCount": 1,
+              "activityIds": [
+                "A0136"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 461
+            },
+            {
+              "id": "era-06:11_Schedule_Management:ui:schedule:ScheduleToolbar",
+              "name": "ui:schedule:ScheduleToolbar",
+              "activityCount": 1,
+              "activityIds": [
+                "A0146"
+              ],
+              "totalCommits": 2,
+              "totalLoc": 16
+            },
+            {
+              "id": "era-06:11_Schedule_Management:ui:schedule:ScheduleWorkspace",
+              "name": "ui:schedule:ScheduleWorkspace",
+              "activityCount": 1,
+              "activityIds": [
+                "A0147"
+              ],
+              "totalCommits": 4,
+              "totalLoc": 12
+            }
+          ]
+        },
+        {
+          "id": "era-06:15_Offline_Native_Durability",
+          "name": "15 Offline & Native Durability",
+          "activityCount": 1,
+          "children": [
+            {
+              "id": "era-06:15_Offline_Native_Durability:asset",
+              "name": "asset",
+              "activityCount": 1,
+              "activityIds": [
+                "A0134"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 0
+            }
+          ]
+        },
+        {
+          "id": "era-06:15_Offline_and_Native_Durability",
+          "name": "15 Offline and Native Durability",
+          "activityCount": 4,
+          "children": [
+            {
+              "id": "era-06:15_Offline_and_Native_Durability:app-shell",
+              "name": "app-shell",
+              "activityCount": 1,
+              "activityIds": [
+                "A0124"
+              ],
+              "totalCommits": 4,
+              "totalLoc": 637
+            },
+            {
+              "id": "era-06:15_Offline_and_Native_Durability:component:PwaShell",
+              "name": "component:PwaShell",
+              "activityCount": 1,
+              "activityIds": [
+                "A0125"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 4
+            },
+            {
+              "id": "era-06:15_Offline_and_Native_Durability:lib:native:app-state",
+              "name": "lib:native:app-state",
+              "activityCount": 1,
+              "activityIds": [
+                "A0127"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 228
+            },
+            {
+              "id": "era-06:15_Offline_and_Native_Durability:lib:native:background-sync",
+              "name": "lib:native:background-sync",
+              "activityCount": 1,
+              "activityIds": [
+                "A0132"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 193
+            }
+          ]
+        },
+        {
+          "id": "era-06:18_Compliance_Audit",
+          "name": "18 Compliance & Audit",
+          "activityCount": 2,
+          "children": [
+            {
+              "id": "era-06:18_Compliance_Audit:test:baseline-end",
+              "name": "test:baseline-end",
+              "activityCount": 1,
+              "activityIds": [
+                "A0142"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 384
+            },
+            {
+              "id": "era-06:18_Compliance_Audit:test:cpm",
+              "name": "test:cpm",
+              "activityCount": 1,
+              "activityIds": [
+                "A0139"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 42
+            }
+          ]
+        },
+        {
+          "id": "era-06:20_Sales_Pitch",
+          "name": "20 Sales & Pitch",
+          "activityCount": 2,
+          "children": [
+            {
+              "id": "era-06:20_Sales_Pitch:page:landing",
+              "name": "page:landing",
+              "activityCount": 1,
+              "activityIds": [
+                "A0150"
+              ],
+              "totalCommits": 2,
+              "totalLoc": 53
+            },
+            {
+              "id": "era-06:20_Sales_Pitch:public:seo",
+              "name": "public:seo",
+              "activityCount": 1,
+              "activityIds": [
+                "A0149"
+              ],
+              "totalCommits": 4,
+              "totalLoc": 61
+            }
+          ]
+        },
+        {
+          "id": "era-06:98_Build_Infra",
+          "name": "98 Build & Infra",
+          "activityCount": 2,
+          "children": [
+            {
+              "id": "era-06:98_Build_Infra:html",
+              "name": "html",
+              "activityCount": 1,
+              "activityIds": [
+                "A0148"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 46
+            },
+            {
+              "id": "era-06:98_Build_Infra:migration",
+              "name": "migration",
+              "activityCount": 1,
+              "activityIds": [
+                "A0131"
+              ],
+              "totalCommits": 9,
+              "totalLoc": 875
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "era-07",
+      "name": "Era 7: post-pivot — Drop XER format and demo; analysis modules relocated under s",
+      "start": "2026-05-29",
+      "endExclusive": "9999-12-31",
+      "boundaryPivot": {
+        "sha": "d3a455d7",
+        "kind": "capability-removal",
+        "title": "Drop XER format and demo; analysis modules relocated under schedule/"
+      },
+      "children": [
+        {
+          "id": "era-07:_unattributed_",
+          "name": "(unattributed)",
+          "activityCount": 1,
+          "children": [
+            {
+              "id": "era-07:_unattributed_:_misc",
+              "name": "_misc",
+              "activityCount": 1,
+              "activityIds": [
+                "A0152"
+              ],
+              "totalCommits": 10,
+              "totalLoc": 0
+            }
+          ]
+        },
+        {
+          "id": "era-07:18_Compliance_Audit",
+          "name": "18 Compliance & Audit",
+          "activityCount": 1,
+          "children": [
+            {
+              "id": "era-07:18_Compliance_Audit:test:date-utils",
+              "name": "test:date-utils",
+              "activityCount": 1,
+              "activityIds": [
+                "A0155"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 92
+            }
+          ]
+        },
+        {
+          "id": "era-07:98_Build_Infra",
+          "name": "98 Build & Infra",
+          "activityCount": 3,
+          "children": [
+            {
+              "id": "era-07:98_Build_Infra:migration",
+              "name": "migration",
+              "activityCount": 1,
+              "activityIds": [
+                "A0153"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 295
+            },
+            {
+              "id": "era-07:98_Build_Infra:scripts:build-demo-pdf",
+              "name": "scripts:build-demo-pdf",
+              "activityCount": 1,
+              "activityIds": [
+                "A0154"
+              ],
+              "totalCommits": 1,
+              "totalLoc": 545
+            },
+            {
+              "id": "era-07:98_Build_Infra:scripts:extract-build-history",
+              "name": "scripts:extract-build-history",
+              "activityCount": 1,
+              "activityIds": [
+                "A0156"
+              ],
+              "totalCommits": 7,
+              "totalLoc": 1058
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
