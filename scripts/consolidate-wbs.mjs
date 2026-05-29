@@ -108,7 +108,7 @@ for (const src of SOURCES) {
   let raw = fs.readFileSync(src.file, 'utf8');
   // Fix the wbs-leaves.yaml malformed inline pattern: "- task: X   days: N"
   raw = raw.replace(
-    /^(\s*)-\s*task:\s*(.+?)\s{2,}days:\s*([\d.]+)\s*$/gm,
+    /^(\s*)-\s*task:\s*(.+?)\s+days:\s*([\d.]+)\s*$/gm,
     (_, ind, t, d) => `${ind}- task: ${JSON.stringify(t.trim())}\n${ind}  days: ${d}`
   );
   const doc = yaml.load(raw);
