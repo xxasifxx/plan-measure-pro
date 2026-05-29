@@ -1,7 +1,6 @@
 // AACE International 98R-18 cost estimate classification.
-// The CPM Scheduler/Estimator role progresses estimates from Class 5 (concept)
-// down to Class 1 (bid check) as the design matures. This module visualizes
-// that progression so a reviewer immediately understands the estimating cadence.
+// Pure reference data — no schedule dependency. Used by Schedule Management
+// to communicate where an estimate sits on the maturity curve.
 export interface AaceClass {
   cls: 5 | 4 | 3 | 2 | 1;
   name: string;

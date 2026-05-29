@@ -1,80 +1,105 @@
-# Phase D — Reset, v2: solve the allowlist problem first
+## Why this revision
 
-You caught the recursion: if I hand each subagent a curated file list, I'm just laundering the same broken tags through a different name. An auth agent that only sees `useAuth.tsx` + `Auth.tsx` will miss that auth touches `Admin.tsx`, every page guard, every RLS-aware hook, and half the edge functions. Same disease.
+Previous plan treated "drop XerDemo" as deleting one page. Your correction: the *reason* is that PMXML is the import/export format, so the XER format itself is going away — the demo was just its only remaining visible surface. That means the entire `src/lib/xer/*` engine has to be reckoned with, not preserved. You also confirmed the engine's analytical capabilities (DCMA-14, TIA, AACE, RE memo) are real product value that should survive — just on PMXML rails.
 
-So the allowlist itself has to be **derived, broad, and verified**, not curated by me up front.
+You also approved 5 additional value streams. Total goes from 15 → 20.
 
-## Step −1 (NEW) — Build a defensible file→surface map
+---
 
-Three passes, each independent, results merged with disagreement flagged for human review. **Nothing else runs until this passes.**
+## Track 1 — XER demolition + engine rehome onto PMXML
 
-### Pass A — Static derivation (cheap, mechanical, wrong on purpose)
+**Delete outright**
+- `src/pages/XerDemo.tsx`, `src/components/XerLensTour.tsx`
+- `/mcfa/demo` route in `src/App.tsx`, XerDemo CTA in `src/pages/McfaPitch.tsx`
+- `src/lib/xer/parser.ts`, `sample.ts`, `sample-update.ts`, `types.ts`, `wbs.ts` (after extracting one constant)
+- `.xer` file support in `src/components/schedule/ImportP6Panel.tsx` and `src/lib/schedule/import-p6.ts` — XML only
+- `src/test/xer-parser.test.ts`, `src/test/tia.test.ts` (rewritten under PMXML)
 
-Script `scripts/derive-file-surface.mjs`:
-- For each file under `src/`, `supabase/`, `scripts/`, `docs/`: record path, top-level imports, top-level exports, and the leaf IDs that mention it in their `sources[]`.
-- Emit `docs/file-surface-a.json` — naive path-based guess + reverse index from `wbs.json sources[]`.
+**Inline trivial leftovers**
+- Lift `NJDOT_REQUIRED_MILESTONES` from `lib/xer/wbs.ts` into `src/components/schedule/ComplianceStrip.tsx` (the only consumer)
 
-This gives a baseline + exposes every file the WBS already claims to cover.
+**Rehome the engine onto PMXML** — move into `src/lib/schedule/analysis/`, refactored to consume the parsed PMXML tables (`P6Tables` from `src/lib/p6xml/parser.ts`) or the project's `ScheduleActivity[]`/`ActivityRelationship[]` shape (already normalized), not XER tables:
+- `dcma.ts` → DCMA-14 schedule quality checks
+- `tia.ts` → Time Impact Analysis
+- `aace.ts` → AACE estimate-class bands
+- `feedback.ts` + `memo-export.ts` → RE feedback memo (PDF/DOC)
+- `progress.ts` → period-over-period progress comparison
+- `chart-export.ts` → SVG-to-PNG chart export
 
-### Pass B — Semantic survey (one subagent, capable model)
+These become first-class capabilities of the **Schedule Management** stream, surfaced inside `ProjectControls.tsx`'s Schedule workspace (not in a standalone demo). Tests rewritten against PMXML samples in `src/lib/p6xml/sample.ts`.
 
-One agent, read-only, gets **the entire `src/` tree** (it's ~250 files — fits) plus `supabase/functions/` and `docs/scope-inventory/*.md`. Task:
+**Sanity check**
+- Zero hits for `lib/xer`, `XerDemo`, `XerLensTour`, `.xer` after demolition (except possibly in `docs/` historical files, which is fine)
+- `bun test` green
+- `/mcfa/demo` returns 404; sitemap/llms.txt updated
 
-> For each file, in one sentence, say what user-facing capability it implements. Then assign it to one **or more** surfaces from this list: [13 surfaces]. A file can belong to N surfaces. Cite the import graph or the JSX it renders as justification. Flag files where no surface fits.
+---
 
-Output: `docs/file-surface-b.json` — `{ path, summary, surfaces[], confidence, justification }`.
+## Track 2 — 20 value streams
 
-This is the only pass that actually reads code to make the call. The capable model is worth it here.
+Original 15 stand, with four splits and one addition. Reorganized:
 
-### Pass C — Reverse derivation from leaves (capable model, one agent)
+**Operational value streams (deliver participant value)**
+1. **Identity & Access** — auth, RLS, invite, reset, role membership
+2. **Portfolio & PM Home** *(new)* — Dashboard, project list, cross-project switching, "where you land after login"
+3. **Project Onboarding** *(narrowed)* — first-run setup wizard: org → project → plans → initial calibration → team → ready. Stops the moment ongoing operation begins.
+4. **Pay Item Catalog** *(split from Onboarding)* — ongoing lifecycle: import from plans, manual add, contract mods, unit-code grouping, cascade deletes, measurable vs manual-entry
+5. **Field Capture** *(narrowed)* — inspector on site: annotate, GPS-trace, capture quantities, offline-durable submission
+6. **Daily Report Lifecycle** *(split from Q2P)* — inspector compose → submit → RE re-review queue → approve/reject. Surfaces: `DailyReport.tsx`, `ReReview.tsx`, snapshot library, useReReviewQueue
+7. **Quantity-to-Payment** *(narrowed)* — payment-side: approved-quantity cumulation, contract-vs-measured variance, payment-period rollups
+8. **Photo Evidence** — capture, AI-tag (tag-photo edge fn), link to pay item
+9. **Standard Specifications** — upload, index, instant search, per-pay-item lookup
+10. **Document Management** — folders, versions, trash, preview, search, star
+11. **Schedule Management** *(expanded scope)* — PMXML ingest/export, CPM, Gantt, baselines, calendars, resources + the **rehomed engine** (DCMA-14, TIA, AACE, RE feedback memo)
+12. **Project Health & Controls** — KPI tiles, quantity variance, inspector adoption, EOS scorecard (per-project scope only; portfolio scope is stream #2)
+13. **Data Export & Interoperability** — CSV, approved-PDF, Excel daily report, PMXML round-trip, NJDOT format conformance. Its acceptance criteria are format-fidelity, not upstream content.
 
-Different angle. Same agent type, different task:
+**Enabling streams (substrate with own acceptance criteria)**
+14. **Measurement & Geometry Engine** *(split from Field Capture)* — scale calibration, geometric editing, SY/CY formulas, GPS georef + Kalman, annotation labels with leader lines, zoom-independence, manual-override preservation
+15. **Offline & Native Durability** — IndexedDB, outbox, mirror, sync, PWA, biometric gate, background sync, push, first-run wizard
+16. **Mobile Field Ergonomics** *(new)* — MobileTabBar, MobileToolbar, MobileAnnotationSheet, MobilePayItems, MobileSections, status chips, touch selection constraints. Distinct from #15: that's data durability, this is interaction design.
+17. **Notifications & Presence** — NotificationBell, realtime channels, online users, push delivery
+18. **Compliance & Audit** — traceable captures, spec citation per quantity, DC-84 conformance, immutability of approved snapshots
 
-> Here are 276 WBS leaves with names + sub-tasks. For each leaf, list every file in `src/` or `supabase/` whose code is *necessary to implement* this leaf. Do not use the leaf's `sources[]` field — derive from leaf semantics.
+**Cross-cutting streams**
+19. **Onboarding & Tutorials** — GuidedTour, useTour, WelcomeCarousel, NativeFirstRun, the 12-step interactive demo at `/demo`
+20. **Sales & Pitch** — Landing, McfaPitch, FajarPitch, P6XmlDemo (kept as standalone PMXML pitch). Marketing stream.
 
-Output: `docs/file-surface-c.json` — `{ leafId, requiredFiles[], rationale }`.
+---
 
-### Merge + disagreement report
+## Track 3 — Comprehension pass (unchanged shape, new stream count)
 
-`scripts/merge-file-surface.mjs`:
-- For each file, compare Pass A's guess, Pass B's assignment, Pass C's reverse map.
-- **Agreement (all three concur on at least one surface):** lock it in.
-- **Disagreement (B and C disagree, or either disagrees with A):** emit to `docs/file-surface-disputed.md` for you and me to resolve manually.
-- **Orphan files (no leaf in C claims them):** emit separately — these are either dead code, missed leaves, or genuinely cross-cutting (`lib/utils.ts`).
+**Phase 1** *(AI only)* — write one-page brief per stream in `docs/streams/<id>.md`: purpose, value delivered, primary persona + secondary/tertiary, jobs list, handoffs in/out, success metrics, format-fidelity criteria (for #13), audit criteria (for #18). Plus `docs/streams/00-overview.md` with the stream map and handoff graph.
 
-You and I walk the disputed list together. Probably <30 files. After that, the allowlist is grounded in three independent passes plus human adjudication on the contested edges.
+**Phase 2** *(capable subagents in parallel, ~40–55 jobs total across 20 streams)* — one subagent per job, each reconstructing from code + the stream brief only. Output `docs/jobs/<stream-id>-<job-id>.md` with trigger, preconditions, steps (with surface/file evidence), acceptance criteria, current state (built / partial / planned), gaps, failure modes. Forbidden inputs: `wbs.json`, `wbs-leaves.yaml`, `wbs-proposals.reconciled.json`, `scope-inventory*`, old `commit-tag` artifacts, old `scripts/*.mjs` outputs.
 
-## Why this fixes the recursion you spotted
+**Phase 3** *(one capable subagent)* — `docs/functional-requirements.md`: cross-cutting requirements (RLS posture, offline guarantees, format-fidelity matrix, audit chain, NJTA 7th Ed. citation rules) that every stream must satisfy.
 
-- The mapping isn't authored by me from priors. It's derived three ways and the contradictions are the deliverable.
-- Pass B reads code without seeing the WBS, so it can't be biased by existing leaf assignments.
-- Pass C reads the WBS without seeing the import graph, so it can't be biased by file paths.
-- Where they agree, we trust it. Where they disagree, *you* see the disagreement before I act on it.
-- Orphan files surface dead code and missed leaves automatically.
+**Phase 4** *(AI synthesis)* — `docs/comprehension-report.md` as the presentation artifact: meta-pitch framing ("we're using TakeoffPro to comprehend TakeoffPro"), per-stream status, live handoffs, broken handoffs, headline gaps, cross-cutting requirements. Plus `docs/wbs-v2.json` mechanically derived from job files: status from acceptance-criteria satisfaction, durations estimated per unsatisfied criterion, dependencies from handoffs.
 
-## Sequence (revised)
+**Phase 5** *(AI only)* — `docs/wbs-diff.md`: old `wbs.json` kept as "before" baseline, diff'd against `wbs-v2.json`. Notes what's newly visible, newly retired, and what changed status.
 
-```text
-Step −1   File→surface mapping (3 passes + merge + dispute resolution)  ← we are here
-Step  0   Per-surface ground-truth audit using the locked allowlist
-Step 0.5  Apply ground-truth to wbs.json
-Step  1   Spot-fill thin leaves (mostly moot)
-Step  2   Commit reconciliation as evidence layer
-Step  3   Critical path
-```
+---
 
-## Cost estimate
+## Files touched
 
-- Pass A: one script, <1 min, no LLM.
-- Pass B: one capable subagent, ~250 files, one pass. Big context, single result.
-- Pass C: one capable subagent, 276 leaves, one pass.
-- Merge: one script.
-- Dispute resolution: depends on disagreement rate — my guess is 20-40 files needing your call.
+**Deleted:** `XerDemo.tsx`, `XerLensTour.tsx`, `lib/xer/*` (all 13 files), `test/xer-parser.test.ts`, `test/tia.test.ts`
+**Modified:** `App.tsx`, `McfaPitch.tsx`, `ImportP6Panel.tsx`, `lib/schedule/import-p6.ts`, `ComplianceStrip.tsx`, `public/sitemap.xml`, `public/llms.txt`, `ProjectControls.tsx` (mount engine panels)
+**Created (engine rehome):** `src/lib/schedule/analysis/{dcma,tia,aace,feedback,memo-export,progress,chart-export}.ts`, `src/test/{dcma,tia-pmxml,aace}.test.ts`
+**Created (comprehension):** `docs/streams/00-overview.md` + 20 stream briefs, `docs/jobs/*.md` (~40–55), `docs/functional-requirements.md`, `docs/comprehension-report.md`, `docs/wbs-v2.json`, `docs/wbs-diff.md`
+**Untouched:** old `wbs.json`, `wbs-leaves.yaml`, `wbs-proposals.reconciled.json`, `scope-inventory*`, old `scripts/*.mjs` (kept as historical baseline for Phase 5 diff)
 
-Total before Step 0 even starts: roughly the work of two subagents + a script + a review session. Cheap relative to redoing the whole WBS on a bad foundation.
+---
 
-## What I need from you
+## Cost shape
 
-1. **Green-light Step −1** as written, or push back on the structure.
-2. **Confirm the 13 surfaces** are the right vocabulary for Pass B to assign to. If you want to split (e.g. "Auth" vs "Admin", "Native" vs "Offline") or merge any, now's the time — Pass B's output is only as good as the label set.
-3. **Decide who adjudicates disputes.** I'll propose for each, you decide? Or you want to see all of them raw and call them yourself?
+- Track 1: small but real — engine rehome is a refactor with test rewrites, not a delete
+- Track 3 Phase 1: AI only
+- Track 3 Phase 2: dominant cost — ~40–55 capable subagents in parallel
+- Track 3 Phases 3–5: AI only
+
+## Out of scope (explicitly)
+
+- Re-deriving file surfaces, recomputing critical path, estimating durations from git history, depth-audit of old artifacts
+- Building any new product feature beyond the engine rehome required by Track 1
+- Touching `src/lib/p6xml/*` beyond what the engine rehome needs to consume it

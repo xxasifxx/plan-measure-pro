@@ -65,8 +65,8 @@ const phases = [
   {
     n: '01',
     icon: Activity,
-    title: 'XerLens DCMA-14 + RE Memo Auto-Generation',
-    body: 'In-browser auditor runs all 14 DCMA checks against contractor XER submissions and emits a plain-English memo to the Resident Engineer with accept / accept-with-conditions / reject recommendation, NJDOT spec citations, and offending activity codes. Already shipped — see Module A on /mcfa/demo.',
+    title: 'PMXML DCMA-14 + RE Memo Auto-Generation',
+    body: 'In-browser auditor runs all 14 DCMA checks against contractor XER submissions and emits a plain-English memo to the Resident Engineer with accept / accept-with-conditions / reject recommendation, NJDOT spec citations, and offending activity codes. Already shipped — see the live PMXML demo at /p6-xml.',
     accent: 'border-emerald-500/40 bg-emerald-500/5',
     pill: 'Q1 ROCK · 90 DAYS',
   },
@@ -183,7 +183,7 @@ const laggingKpis = [
 ];
 // Quarterly Rocks (90-day execution priorities) — PDF §5 manager-led model
 const rocks = [
-  { quarter: 'Q1', text: 'XerLens DCMA-14 auditor — GA across all active T&I projects (PM-approved Rock).' },
+  { quarter: 'Q1', text: 'PMXML DCMA-14 auditor — GA across all active T&I projects (PM-approved Rock).' },
   { quarter: 'Q2', text: 'Automated TIA fragnet workflow — reduce delay-letter turnaround from 5 days to 1.' },
   { quarter: 'Q3', text: 'Portfolio EVM telemetry — live SPI/CPI feed into the L10 scorecard.' },
 ];
@@ -201,12 +201,12 @@ const compensation = [
   {
     icon: DollarSign,
     title: 'Base Salary',
-    body: 'Competitive base reflecting PMP, engineering background, and cross-discipline scheduler depth — CPM, AACE estimating, NJDOT controls — covered in one seat. Compensates 1,600 billable hours plus the in-role time spent maintaining the XerLens workflow tooling.',
+    body: 'Competitive base reflecting PMP, engineering background, and cross-discipline scheduler depth — CPM, AACE estimating, NJDOT controls — covered in one seat. Compensates 1,600 billable hours plus the in-role time spent maintaining the PMXML workflow tooling.',
   },
   {
     icon: Layers,
     title: 'Internal Tool Agreement',
-    body: 'MCFA granted full internal use of XerLens across its project portfolio. To preserve the cost-avoidance model, MCFA assumes responsibility for the external digital footprint costs (hosting, storage, API usage).',
+    body: 'MCFA granted full internal use of the analyzer across its project portfolio. To preserve the cost-avoidance model, MCFA assumes responsibility for the external digital footprint costs (hosting, storage, API usage).',
   },
   {
     icon: Award,
@@ -233,12 +233,12 @@ const recruiterQA: { q: string; a: string; tag?: string }[] = [
   },
   {
     q: 'How will you handle Resident Engineer communication on contractor schedule reviews?',
-    a: "Plain-English memos, not screenshots of P6. The /mcfa/demo Module A turns every DCMA-14 audit into a one-page memo addressed to the RE — recommendation (accept / accept-with-conditions / reject), hard blockers, advisory flags, and next steps. The RE never has to interpret a Gantt to act on the review.",
+    a: "Plain-English memos, not screenshots of P6. The /p6-xml demo turns every DCMA-14 audit into a one-page memo addressed to the RE — recommendation (accept / accept-with-conditions / reject), hard blockers, advisory flags, and next steps. The RE never has to interpret a Gantt to act on the review.",
     tag: 'RE COMMS',
   },
   {
     q: 'How does this scale across the Newark / PANYNJ portfolio?',
-    a: "Module B in the demo computes SPI/CPI and slip from a baseline + monthly update XER pair. Roll that across every active project, plug the scores into the L10 scorecard, and the Project Controls Director sees the entire portfolio's health on one strip. That's the Section 3 'Integrated Reporting' deliverable, productized.",
+    a: "The /p6-xml demo computes SPI/CPI and slip from a baseline + monthly update XER pair. Roll that across every active project, plug the scores into the L10 scorecard, and the Project Controls Director sees the entire portfolio's health on one strip. That's the Section 3 'Integrated Reporting' deliverable, productized.",
     tag: 'PORTFOLIO',
   },
   {
@@ -248,12 +248,12 @@ const recruiterQA: { q: string; a: string; tag?: string }[] = [
   },
   {
     q: "How do you satisfy NJDOT's no-negative-lag rule on contractor submissions?",
-    a: "The XerLens demo flags every negative lag and open-ended activity before MCFA accepts the submission. Section 5.1 of the NJDOT Scheduling Manual prohibits both. Catching them at submission instead of at month-end is the difference between one email and a re-baseline.",
+    a: "The PMXML demo flags every negative lag and open-ended activity before MCFA accepts the submission. Section 5.1 of the NJDOT Scheduling Manual prohibits both. Catching them at submission instead of at month-end is the difference between one email and a re-baseline.",
     tag: 'NJDOT COMPLIANT',
   },
   {
     q: "What if MCFA already licenses Acumen Fuse or a similar analytics tool?",
-    a: "Then we use it. XerLens isn't a Fuse replacement — it's the auth-agnostic, in-browser layer that PMs and REs run themselves without bothering the scheduler. Fuse stays for deep forensic work; XerLens covers the daily 'is this submission acceptable?' question that today consumes an hour per project per week.",
+    a: "Then we use it. The PMXML demo isn't a Fuse replacement — it's the auth-agnostic, in-browser layer that PMs and REs run themselves without bothering the scheduler. Fuse stays for deep forensic work; The PMXML demo covers the daily 'is this submission acceptable?' question that today consumes an hour per project per week.",
     tag: 'COEXISTS',
   },
   {
@@ -262,13 +262,13 @@ const recruiterQA: { q: string; a: string; tag?: string }[] = [
     tag: 'EOS L10',
   },
   {
-    q: "Who owns the XerLens tooling?",
+    q: "Who owns the PMXML tooling?",
     a: "MCFA gets full internal use across its project portfolio under the employment agreement — no per-seat fees, no SaaS contract. MCFA covers the basic cloud hosting (estimated <$100/mo per the PDF) to keep the tools running for the team. Standard 'Shop Tool' arrangement.",
     tag: 'IP CLEAN',
   },
   {
     q: "How will you reduce administrative time by 30% (PDF long-term KPI)?",
-    a: "By collapsing the four manual scheduler passes — XER review, monthly update report, variance roll-up, executive snapshot — into one in-browser pipeline. XerLens Module A collapses the contractor-review pass; Module B collapses the monthly update pass. The 30% target is a documented before/after, not a promise.",
+    a: "By collapsing the four manual scheduler passes — XER review, monthly update report, variance roll-up, executive snapshot — into one in-browser pipeline. the PMXML demo collapses both passes. The 30% target is a documented before/after, not a promise.",
     tag: 'EFFICIENCY',
   },
 ];
@@ -377,7 +377,7 @@ const McfaPitch = () => {
 
               <motion.div variants={fadeUp} className="flex flex-wrap gap-3 pt-2">
                 <Button asChild size="lg" className="font-mono">
-                  <Link to="/mcfa/demo">
+                  <Link to="/p6-xml">
                     Open the weekly scheduler demo <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
@@ -405,12 +405,12 @@ const McfaPitch = () => {
                     <span className="h-2.5 w-2.5 rounded-full bg-red-500/60" />
                     <span className="h-2.5 w-2.5 rounded-full bg-amber-500/60" />
                     <span className="h-2.5 w-2.5 rounded-full bg-emerald-500/60" />
-                    <span className="ml-auto text-[10px] tracking-widest text-muted-foreground">XERLENS · LIVE — /mcfa/demo</span>
+                    <span className="ml-auto text-[10px] tracking-widest text-muted-foreground">PMXML · LIVE — /p6-xml</span>
                   </div>
-                  <img src={heroScreenshot} alt="XerLens weekly scheduler workflow" className="w-full h-auto" />
+                  <img src={heroScreenshot} alt="PMXML weekly scheduler workflow" className="w-full h-auto" />
                 </div>
                 <div className="absolute -bottom-4 -right-4 hidden md:block bg-primary text-primary-foreground text-xs font-bold px-3 py-2 rounded-sm shadow-xl">
-                  WORKING DEMO · /mcfa/demo
+                  WORKING DEMO · /p6-xml
                 </div>
               </div>
             </motion.div>
@@ -436,8 +436,8 @@ const McfaPitch = () => {
               <p>
                 The role reports to the <span className="text-foreground">Project Controls Director</span>, supports
                 Resident Engineers on contractor schedule reviews, and feeds the L10 Scorecard with two predictive numbers
-                every week. The Entrepreneurial value-add is the in-browser <span className="text-primary font-semibold">XerLens</span> tooling
-                shown at <Link to="/mcfa/demo" className="text-foreground underline underline-offset-4">/mcfa/demo</Link> —
+                every week. The Entrepreneurial value-add is the in-browser <span className="text-primary font-semibold">PMXML</span> tooling
+                shown at <Link to="/p6-xml" className="text-foreground underline underline-offset-4">/p6-xml</Link> —
                 accelerators that make the scheduler faster, not a separate role.
               </p>
               <p>
@@ -470,7 +470,7 @@ const McfaPitch = () => {
           <SectionHeader number="02" eyebrow="WEEKLY CADENCE" title="A Week in the Role" />
           <p className="text-muted-foreground max-w-3xl mt-4">
             The role collapses into a five-day rhythm. Each day produces a deliverable the Project Controls Director and
-            Resident Engineers can act on — and the live demo at <Link to="/mcfa/demo" className="text-primary underline underline-offset-4">/mcfa/demo</Link> walks every step on a dummy NJTA project.
+            Resident Engineers can act on — and the live demo at <Link to="/p6-xml" className="text-primary underline underline-offset-4">/p6-xml</Link> walks every step on a dummy NJTA project.
           </p>
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}
             className="grid md:grid-cols-2 lg:grid-cols-5 gap-3 mt-10">
@@ -489,7 +489,7 @@ const McfaPitch = () => {
           </motion.div>
           <div className="mt-10 flex flex-wrap gap-3 justify-center">
             <Button asChild size="lg" className="font-mono">
-              <Link to="/mcfa/demo">Walk through the live weekly demo <ArrowRight className="h-4 w-4" /></Link>
+              <Link to="/p6-xml">Walk through the live weekly demo <ArrowRight className="h-4 w-4" /></Link>
             </Button>
           </div>
         </div>
@@ -576,7 +576,7 @@ const McfaPitch = () => {
               <Link to="/mcfa/p6-xml">Try the live PMXML round-trip <ArrowRight className="h-4 w-4" /></Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="font-mono">
-              <Link to="/mcfa/demo">XerLens DCMA-14 demo <ArrowRight className="h-4 w-4" /></Link>
+              <Link to="/p6-xml">PMXML DCMA-14 demo <ArrowRight className="h-4 w-4" /></Link>
             </Button>
           </div>
         </div>
@@ -834,7 +834,7 @@ const McfaPitch = () => {
               <Layers className="h-5 w-5 text-primary mb-2" />
               <div className="font-semibold mb-1">Software Cost Avoidance</div>
               <div className="text-xs text-muted-foreground leading-relaxed">
-                Internally operated XerLens bypasses traditional SaaS. MCFA pays only the raw external footprint — hosting,
+                Internally operated PMXML tooling bypasses traditional SaaS. MCFA pays only the raw external footprint — hosting,
                 DB transit, AI API calls. Internal tooling budget scales fluidly.
               </div>
             </Card>
@@ -870,7 +870,7 @@ const McfaPitch = () => {
               <Target className="h-6 w-6 text-emerald-400 mb-3" />
               <div className="font-semibold mb-2">"The Rock" Ownership</div>
               <div className="text-sm text-muted-foreground leading-relaxed">
-                Every 90 days, ownership of one measurable Rock: Q1 XerLens DCMA-14 GA · Q2 Automated TIA fragnet ·
+                Every 90 days, ownership of one measurable Rock: Q1 PMXML DCMA-14 GA · Q2 Automated TIA fragnet ·
                 Q3 Portfolio EVM telemetry on the L10 scorecard.
               </div>
             </Card>
@@ -946,7 +946,7 @@ const McfaPitch = () => {
                     <tr className="bg-emerald-500/10 border-t border-emerald-500/30">
                       <td className="p-3">
                         <div className="font-bold text-foreground">BYOR Ask · Experienced Senior Scheduler</div>
-                        <div className="text-[11px] text-emerald-400/90 mt-0.5">PMP · NJDOT/AACE · XerLens tooling included</div>
+                        <div className="text-[11px] text-emerald-400/90 mt-0.5">PMP · NJDOT/AACE · PMXML tooling included</div>
                       </td>
                       <td className="p-3 text-right">
                         <div className="font-mono font-bold text-emerald-400 text-base">$130K – $140K</div>
@@ -1034,11 +1034,11 @@ const McfaPitch = () => {
               <span className="text-primary">at MCFA.</span>
             </h2>
             <p className="text-muted-foreground mt-6 leading-relaxed max-w-2xl mx-auto">
-              A working prototype of the weekly scheduler workflow already exists at /mcfa/demo. The next step is a 30-minute conversation about how this maps to the Project Controls Director's immediate Newark / PANYNJ priorities.
+              A working prototype of the weekly scheduler workflow already exists at /p6-xml. The next step is a 30-minute conversation about how this maps to the Project Controls Director's immediate Newark / PANYNJ priorities.
             </p>
             <div className="flex flex-wrap gap-3 justify-center mt-10">
               <Button asChild size="lg" className="font-mono">
-                <Link to="/mcfa/demo">Open XER Live Demo <ArrowRight className="h-4 w-4" /></Link>
+                <Link to="/p6-xml">Open PMXML Live Demo <ArrowRight className="h-4 w-4" /></Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="font-mono">
                 <a href={mailto}><Mail className="h-4 w-4" /> Book the live walkthrough</a>

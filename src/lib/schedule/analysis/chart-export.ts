@@ -1,9 +1,8 @@
 // Convert a Recharts SVG (inside a container) to a PNG data URL.
-// No external deps — relies on the browser's SVG → <canvas> path.
+// Pure browser utility — no schedule dependency.
 export async function svgContainerToPng(container: HTMLElement, scale = 2): Promise<string> {
   const svg = container.querySelector('svg');
   if (!svg) throw new Error('No SVG found in container');
-  // Clone so we can inline computed colors (CSS variables don't survive serialization)
   const clone = svg.cloneNode(true) as SVGSVGElement;
   const rect = svg.getBoundingClientRect();
   const w = Math.ceil(rect.width);
@@ -12,7 +11,6 @@ export async function svgContainerToPng(container: HTMLElement, scale = 2): Prom
   clone.setAttribute('height', String(h));
   clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
 
-  // Inline computed fill/stroke for every element so CSS vars resolve in the snapshot
   const srcNodes = svg.querySelectorAll<SVGElement>('*');
   const dstNodes = clone.querySelectorAll<SVGElement>('*');
   srcNodes.forEach((src, i) => {
@@ -27,7 +25,6 @@ export async function svgContainerToPng(container: HTMLElement, scale = 2): Prom
     if (cs.fontSize) dst.setAttribute('font-size', cs.fontSize);
   });
 
-  // Solid background so the PNG isn't transparent over a dark UI
   const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
   bg.setAttribute('width', '100%');
   bg.setAttribute('height', '100%');

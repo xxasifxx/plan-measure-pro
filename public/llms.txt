@@ -14,3 +14,4 @@ TakeoffPro replaces paper DC forms with audit-ready digital records. It supports
 
 - [MCFA Pitch](/mcfa): Partner-specific overview for MCFA.
 - [Fajar Pitch](/fajar): Partner-specific overview for Fajar.
+- [PMXML Demo](/p6-xml): Primavera P6 XML round-trip demo (DCMA, progress, RE memo).

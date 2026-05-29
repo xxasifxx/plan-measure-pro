@@ -1,4 +1,5 @@
 // Export the RE feedback memo as PDF (jspdf) or Word-openable HTML doc.
+// Pure string-in, file-out — no schedule dependency.
 import { jsPDF } from 'jspdf';
 
 export function downloadMemoPdf(memo: string, filename: string) {
