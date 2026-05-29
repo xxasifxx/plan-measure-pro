@@ -1,0 +1,61 @@
+{
+  "stream": { "slug": "20-sales-and-pitch", "num": 20, "title": "Sales & Pitch" },
+  "leaves": [
+    {"id":"stream-20.landing-page","name":"Landing Page (marketing surface)","acceptance":["/landing renders without auth","Pain-point stats, workflow steps, persona cards visible above the fold","Demo-request form submits to demo_requests with email, name, message"],"anchors":[{"file":"src/pages/Landing.tsx","region":"full file","line":1}],"state":"partial","evidence":"Landing.tsx implemented with framer-motion, contact form, FAQ, comparison table. demo_requests insert present in code but NO migration creating the table exists.","gaps":["demo_requests table migration missing — contact form silently fails in production.","Mobile framer-motion staggerContainer may cause layout shift."]},
+    {"id":"stream-20.demo-cta-linkage","name":"Landing → /demo CTA linkage","acceptance":["/demo reachable from Landing CTA; begins interactive walkthrough"],"anchors":[{"file":"src/pages/Landing.tsx","region":"CTA button","line":0}],"state":"landed","evidence":"Landing.tsx navigates to /demo; Demo.tsx present with 12-step walkthrough.","gaps":[]},
+    {"id":"stream-20.interactive-demo","name":"Interactive /demo mode (unauthenticated 12-step walkthrough)","acceptance":["/demo accessible without auth","12-step guided walkthrough progresses step-by-step","Covers upload, TOC import, pay item import, scale calibration, drawing, labeling"],"anchors":[{"file":"src/pages/Demo.tsx","region":"steps array lines 53-64","line":53}],"state":"landed","evidence":"Demo.tsx implements 12-step walkthrough.","gaps":[]},
+    {"id":"stream-20.mcfa-pitch","name":"McfaPitch partner page (/mcfa)","acceptance":["/mcfa renders partner content without login","Dark engineering theme; pricing calculator present"],"anchors":[{"file":"src/pages/McfaPitch.tsx","region":"full file","line":1}],"state":"landed","evidence":"McfaPitch.tsx implemented with DCMA-14, SPI/CPI, TIA, AACE estimating, pricing ROI calculator.","gaps":["Pricing hard-coded in source — no CMS."]},
+    {"id":"stream-20.fajar-pitch","name":"FajarPitch partner page (/fajar)","acceptance":["/fajar renders partner content without login","Availability grid, WhatsApp CTA, seed-based pseudo-random data"],"anchors":[{"file":"src/pages/FajarPitch.tsx","region":"full file","line":1}],"state":"landed","evidence":"FajarPitch.tsx renders availability grid with deterministic seed-based data, WhatsApp booking CTA.","gaps":["Seed-based fake fleet data may mislead during live demos.","Pricing hard-coded."]},
+    {"id":"stream-20.p6xml-demo","name":"P6XmlDemo (/p6-xml and /mcfa/p6-xml)","acceptance":["Live PMXML round-trip demo: parse sample, show DCMA, export RE memo","Linked from /mcfa/p6-xml"],"anchors":[{"file":"src/pages/P6XmlDemo.tsx","region":"full file","line":1}],"state":"landed","evidence":"P6XmlDemo.tsx uses lib/p6xml/ parser with sample data; DCMA panel integration visible.","gaps":[]},
+    {"id":"stream-20.sitemap-robots","name":"sitemap.xml and robots.txt SEO assets","acceptance":["sitemap.xml includes all six public routes","robots.txt allows crawling"],"anchors":[{"file":"public/sitemap.xml","region":"full file","line":1},{"file":"public/robots.txt","region":"full file","line":1}],"state":"landed","evidence":"Sitemap includes 6 URLs: /landing, /demo, /mcfa, /fajar, /p6-xml, /mcfa/p6-xml.","gaps":["Hard-coded production domain — staging serves incorrect canonical URLs."]},
+    {"id":"stream-20.llms-txt","name":"llms.txt LLM-readable site description","acceptance":["llms.txt accurately describes product and links correct routes"],"anchors":[{"file":"public/llms.txt","region":"full file","line":1}],"state":"landed","evidence":"public/llms.txt describes TakeoffPro with pages, pitch routes, PMXML demo link.","gaps":["Hard-coded domain incorrect on staging."]},
+    {"id":"stream-20.roi-calculator","name":"ROI / Pricing Calculator (McfaPitch)","acceptance":["McfaPitch pricing calculator present with phase-based ROI projection"],"anchors":[{"file":"src/pages/McfaPitch.tsx","region":"pricing/ROI table lines 135-165","line":135}],"state":"landed","evidence":"Three-phase ROI calculator with hours reclaimed, revenue impact, investment rows.","gaps":["Values hard-coded."]},
+    {"id":"stream-20.demo-requests-table","name":"demo_requests Supabase table (contact form backend)","acceptance":["Demo-request form submits to demo_requests with email, name, message"],"anchors":[{"file":"src/pages/Landing.tsx","region":"form submit handler","line":0}],"state":"missing","evidence":"Landing.tsx calls supabase.from('demo_requests').insert() but NO migration creating this table exists. Insert silently fails.","gaps":["Missing DB migration.","Contact form silently broken in production."]}
+  ],
+  "marketingClaims": [
+    {"claim":"TakeoffPro gives your RE team digital measurement tools that produce audit-ready quantity records.","source":"src/pages/Landing.tsx:370","status":"supported"},
+    {"claim":"Replace paper DC forms with audit-ready digital records.","source":"public/llms.txt:5","status":"supported"},
+    {"claim":"It supports the NJTA 7th Edition 2016 Standard Specifications.","source":"public/llms.txt:5","status":"supported"},
+    {"claim":"GPS-to-Plan georeferencing lets inspectors physically walk a perimeter or line on the job site.","source":"src/pages/Landing.tsx:582","status":"supported"},
+    {"claim":"AI-Powered Quantity Extraction — Auto-detect quantities from spec tables and plan notes.","source":"src/pages/Landing.tsx:179","status":"overstated"},
+    {"claim":"Automated Monthly Estimate Generation — Format quantities into NJDOT DC-84 payment estimate format.","source":"src/pages/Landing.tsx:181","status":"overstated"},
+    {"claim":"SiteManager / AASHTOWare Integration — Sync quantities with NJDOT's official construction management system.","source":"src/pages/Landing.tsx:183","status":"missing-from-product"},
+    {"claim":"Pull plan sets directly from your NJTA / NJDOT document management system.","source":"src/pages/Landing.tsx:180","status":"missing-from-product"},
+    {"claim":"Give contractors read-only access to measured quantities before payment disputes arise.","source":"src/pages/Landing.tsx:184","status":"missing-from-product"},
+    {"claim":"A contractor portal [is available].","source":"src/pages/Landing.tsx:216","status":"missing-from-product"},
+    {"claim":"API access is available for enterprise integrations — SiteManager, AASHTOWare, or internal reporting.","source":"src/pages/Landing.tsx:232","status":"missing-from-product"},
+    {"claim":"Dedicated onboarding for NJTA teams.","source":"src/pages/Landing.tsx:191","status":"overstated"},
+    {"claim":"Per-project pricing tailored to your contract scope.","source":"src/pages/Landing.tsx:228","status":"overstated"},
+    {"claim":"We'll reach out within 24 hours to schedule a walkthrough tailored to your project.","source":"src/pages/Landing.tsx:854","status":"overstated","note":"demo_requests table missing"},
+    {"claim":"Automated Time Impact Analysis (TIA) — PMs type a plain-text delay note → the system drafts the fragnet and TIA narrative.","source":"src/pages/McfaPitch.tsx:45","status":"overstated"},
+    {"claim":"AACE-Compliant Cost Estimating — Deterministic and probabilistic estimates per AACE International 98R-18.","source":"src/pages/McfaPitch.tsx:39","status":"missing-from-product"},
+    {"claim":"Multi-Project Portfolio Integration — Independent project schedules rolled into a master program view.","source":"src/pages/McfaPitch.tsx:49","status":"overstated"},
+    {"claim":"Portfolio Roll-Up + TIA Fragnet Workflow — Active-project schedule health on a single Newark/PANYNJ portfolio strip.","source":"src/pages/McfaPitch.tsx:84","status":"overstated"},
+    {"claim":"Bid Scheduling & Proposal Support — Rapid quantity extraction and high-level CPM logic for prospective bids.","source":"src/pages/McfaPitch.tsx:51","status":"overstated"},
+    {"claim":"Cross-Disciplinary Coordination & L10 Integration — Schedule deviations drop straight to the L10 scorecard.","source":"src/pages/McfaPitch.tsx:43","status":"missing-from-product"},
+    {"claim":"Live availability calendar — synced with your WhatsApp agent in real time.","source":"src/pages/FajarPitch.tsx:179","status":"overstated"},
+    {"claim":"2-hour soft hold · payment link sent via WhatsApp · cancel free for 24h.","source":"src/pages/FajarPitch.tsx:172","status":"overstated"},
+    {"claim":"CAT 320 Excavator Rental Dubai · From AED 1,800/day · Live availability · Same-day delivery across UAE.","source":"src/pages/FajarPitch.tsx:262","status":"overstated"},
+    {"claim":"UAE-region hosting (AWS me-central-1 or equivalent). Database backups daily.","source":"src/pages/FajarPitch.tsx:318","status":"missing-from-product"},
+    {"claim":"WhatsApp Business API approval: typically 5–10 business days through Meta's BSP. We handle the application.","source":"src/pages/FajarPitch.tsx:316","status":"missing-from-product"},
+    {"claim":"Any message containing pricing negotiation, complaints, or unrecognised intent is silently forwarded to your sales WhatsApp.","source":"src/pages/FajarPitch.tsx:320","status":"missing-from-product"},
+    {"claim":"Offline-captured photos queue in IndexedDB and sync when connectivity is restored.","source":"docs/streams/08-photo-evidence.md","status":"shipped-not-marketed"},
+    {"claim":"Bulk approve correctly transitions all visible pending IDs — RE queue at /re-review.","source":"docs/streams/06-daily-report-lifecycle.md","status":"shipped-not-marketed"},
+    {"claim":"Rejection requires a non-empty reason; reason is stored in reject_reason and auto-posted as a comment.","source":"docs/streams/06-daily-report-lifecycle.md","status":"shipped-not-marketed"}
+  ],
+  "docDrift": [
+    {"item":"demo_requests table","severity":"high","description":"Stream doc notes 'no migration found' but does not flag that the Landing CTA is broken in production as a result."},
+    {"item":"FajarPitch fake fleet data","severity":"medium","description":"Pitch page presents seed-based pseudo-random data as live availability without disclaimer."},
+    {"item":"AASHTOWare/SiteManager integration claimed on Landing","severity":"high","description":"No stream doc covers this; stream-13 scoped to CSV/PDF/Excel/PMXML only."},
+    {"item":"AACE cost estimating claimed in McfaPitch","severity":"high","description":"No stream doc covers probabilistic cost estimating."},
+    {"item":"Contractor portal claimed on Landing FAQ","severity":"medium","description":"No stream documents a contractor-facing portal."},
+    {"item":"llms.txt domain hard-coded","severity":"low","description":"Staging previews serve incorrect canonical URLs."}
+  ],
+  "proposedDocPatch": [
+    {"section":"Current state vs criteria","addBullet":"**demo_requests table: missing** — no migration found; contact form insert fails silently until table is created."},
+    {"section":"Risks / debt","addBullet":"Landing.tsx markets SiteManager/AASHTOWare integration, AI quantity extraction, DC-84 formatting, and a contractor portal — none implemented; aspirational claims overstate product."},
+    {"section":"Risks / debt","addBullet":"McfaPitch.tsx markets AACE 98R-18 probabilistic cost estimating and L10 integration as shipped; neither in stream-11 or any other stream."},
+    {"section":"Risks / debt","addBullet":"FajarPitch.tsx live availability grid is seed-based; backend WhatsApp Business API, UAE hosting, and payment-link flows are not implemented."}
+  ],
+  "_meta": {"agentId":"sub_29c1b7yj","model":"capable","generatedAt":"2026-05-29"}
+}

@@ -1,0 +1,86 @@
+{
+  "agent": "pivot-detector",
+  "_meta": {"agentId":"sub_pnaym2hc","model":"capable","generatedAt":"2026-05-29"},
+  "pivots": [
+    {
+      "date": "2026-05-29",
+      "sha": "d3a455d7",
+      "kind": "capability-removal",
+      "title": "Drop XER format and demo; analysis modules relocated under schedule/",
+      "before": "Dedicated XER parser (src/lib/xer/parser.ts, types.ts, wbs.ts, dcma.ts, progress.ts, sample.ts, sample-update.ts), XerLensTour component, XerDemo page (1302 LOC), XER-focused tests. XER was primary schedule format.",
+      "after": "All analysis modules (aace, tia, dcma, chart-export, feedback, memo-export, progress) moved to src/lib/schedule/analysis/. Import retargeted to PMXML via src/lib/schedule/import-p6.ts. XerDemo deleted. No XER parser remains.",
+      "blastRadius": ["src/lib/xer/ (deleted)","src/components/XerLensTour.tsx","src/pages/XerDemo.tsx","src/lib/schedule/analysis/ (new)","src/lib/schedule/import-p6.ts","src/components/schedule/ImportP6Panel.tsx","src/test/tia.test.ts","src/test/xer-parser.test.ts"],
+      "evidence": "Commit d3a455d 'Dropped XER format and demo': 27 files, 603+/2897-."
+    },
+    {
+      "date": "2026-05-26",
+      "sha": "6d325711",
+      "kind": "library-swap",
+      "title": "XER flat-file import replaced by P6 XML (PMXML) pipeline",
+      "before": "Schedule data entered manually or via ad-hoc XER parsing. No structured P6 XML import path.",
+      "after": "src/lib/schedule/import-p6.ts (281 LOC) parses PMXML. New ImportP6Panel, ActivityInspector, CPM engine, baselines, calendars all wired to PMXML as canonical source.",
+      "blastRadius": ["src/lib/schedule/import-p6.ts","src/lib/schedule/cpm.ts","src/lib/schedule/baseline.ts","src/lib/schedule/calendars.ts","src/lib/p6xml/build-from-project.ts","src/components/schedule/*"],
+      "evidence": "Commits 6d325711 + 1161d080: +1390 lines, new DB tables (schedule_activities, calendars, resources) in migration 9262b81e."
+    },
+    {
+      "date": "2026-05-05",
+      "sha": "c1559f62",
+      "kind": "capability-removal",
+      "title": "TakeoffPro brand and GPS field-measurement page swept out",
+      "before": "Product branded 'TakeoffPro'. GPS georeferencing workflow added 2026-03-27 (calibration UI, GPS-to-plan tracing, GPS field-measurement hero, 20 commits). Calibration table in Supabase.",
+      "after": "Commit 'Swept TakeoffPro mentions' removes branding. GPS field-capture UI references removed from McfaPitch and plan.md. No dedicated GPS capture page remains.",
+      "blastRadius": ["src/pages/McfaPitch.tsx",".lovable/plan.md"],
+      "evidence": "Commit c1559f62. Prior art: 20 commits 2026-03-27 to 2026-04-11 all referencing GPS calibration/TakeoffPro."
+    },
+    {
+      "date": "2026-03-21",
+      "sha": "33ded792",
+      "kind": "schema-rebuild",
+      "title": "Pivot to Supabase-backed projects; full schema established",
+      "before": "Local/in-memory state only. No backend persistence. No auth roles.",
+      "after": "Migration 20260321160419 creates app_role ENUM, user_roles, has_role() security-definer, profiles, projects, project_members, pay_items, calibrations, annotations, RLS, storage buckets, signup trigger.",
+      "blastRadius": ["supabase/migrations/2026032116*","src/integrations/supabase/types.ts","src/pages/Index.tsx"],
+      "evidence": "Commits 33ded79, db4661d, c40dc279."
+    },
+    {
+      "date": "2026-03-23",
+      "sha": "052abde5",
+      "kind": "schema-rebuild",
+      "title": "Auth model expanded: org-based signup with invitation RBAC",
+      "before": "Single user_roles table with role enum. No invitation flow.",
+      "after": "invitations table (migration 20260323173825). Org-based signup; admins invite by email+role. handle_new_user_role() trigger auto-assigns project_manager on signup.",
+      "blastRadius": ["supabase/migrations/20260323173825*","supabase/migrations/20260323184019*","src/components/TeamManager"],
+      "evidence": "Commits 052abde5, 86074e4b, 4d4a8177."
+    },
+    {
+      "date": "2026-03-15",
+      "sha": "cb06eeba",
+      "kind": "library-swap",
+      "title": "SpecViewer: text-dump approach replaced by PDF.js render pipeline",
+      "before": "SpecViewer used text-dump / pre-parsed approach (specs-utils.ts extracted text statically). 276 LOC of text-parsing tests.",
+      "after": "SpecViewer replaced with PDF.js rendering pages directly from stored PDF at TOC start page. specs-utils.ts stripped 209→shell; tests cut 276→~40. pdfjs-dist 4.4.168 added.",
+      "blastRadius": ["src/components/SpecViewer.tsx","src/lib/specs-utils.ts","src/pages/Index.tsx","src/test/specs-utils.test.ts"],
+      "evidence": "Commit cb06eeba: 4 files, 211+/586-. pdfjs-dist added at 600ec82c."
+    },
+    {
+      "date": "2026-03-21",
+      "sha": "263bded1",
+      "kind": "library-swap",
+      "title": "PdfCanvas: Fabric.js layer added for annotation drawing over PDF.js",
+      "before": "PDF pages rendered via PDF.js to plain canvas. No interactive drawing layer.",
+      "after": "Fabric.js (^7.2.0) layered on PDF.js canvas to handle polygon/line/count annotations, zoom, pan, touch.",
+      "blastRadius": ["src/components/PdfCanvas.tsx","package.json"],
+      "evidence": "Commits 263bded1, a201b36d, c54f1acd, 7c85aced. fabric ^7.2.0 first at f1922c42."
+    },
+    {
+      "date": "2026-05-05",
+      "sha": "35031a4b",
+      "kind": "dep-change",
+      "title": "jsPDF added for PNG export and PDF summary generation",
+      "before": "No client-side PDF generation; only PDF.js for reading.",
+      "after": "jspdf 2.5.2 added. 'Added PNG export & PDF summary' wires jsPDF to generate summary PDFs.",
+      "blastRadius": ["package.json","src/ (PDF export)"],
+      "evidence": "Commit 35031a4b. jspdf 2.5.2 first at 600ec82c."
+    }
+  ]
+}
