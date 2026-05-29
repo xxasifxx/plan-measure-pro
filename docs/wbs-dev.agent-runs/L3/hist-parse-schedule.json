@@ -1,0 +1,28 @@
+{
+  "file": "supabase/functions/parse-schedule/index.ts",
+  "commits": [
+    {
+      "sha": "eda8efafabe194fd89ac99db44038980b3616bc5",
+      "date": "2026-05-05",
+      "intent": "feature-add",
+      "summary": "Initial implementation of AI-powered Gantt chart image extraction using Gemini-2.5-Pro via Lovable AI Gateway."
+    },
+    {
+      "sha": "8d7570718407228474e7673c0963afb898c5d32a",
+      "date": "2026-05-28",
+      "intent": "refactor",
+      "summary": "Added authentication layer (Supabase auth.getUser) and enhanced error handling for rate limits (429) and credit exhaustion (402)."
+    }
+  ],
+  "pivots": [
+    {
+      "date": "2026-05-29",
+      "description": "XER→PMXML Pivot (System-wide)",
+      "evidence": "While this edge function remained image-based, the surrounding schedule system (src/lib/schedule/import-p6.ts) explicitly deleted XER support in favor of PMXML. This function shifted from being a 'nice-to-have' alternative to the primary path for ad-hoc schedule entry without a formal P6 XML file."
+    }
+  ],
+  "analysis": {
+    "parser_evolution": "The function uses LLM-based extraction (JSON mode via tool_calls) rather than a rigid library parser. The schema (SCHEMA constant) defines the target structure for activities.",
+    "error_handling": "Evolved from basic try-catch to specific HTTP status code handling (401 Unauthorized, 402 Credits Exhausted, 429 Rate Limit) to improve client-side UX during AI gateway failures."
+  }
+}
