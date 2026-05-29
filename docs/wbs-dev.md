@@ -93,3 +93,16 @@ The pipeline is idempotent. Edit a brief, re-run, the fixture updates. Fill a ve
 - Executing any backlog item as code from inside this artefact.
 - Cost loading / earned value.
 - Re-scoring `wbs-v2.json` — kept as the lenient code-presence baseline for contrast.
+
+## Phase 1.6 — DB surface + per-migration split (2026-05-29)
+
+Added a fourth leaf source: `scripts/dev-wbs/build-db-surface-leaves.mjs` parses every SQL migration for `CREATE FUNCTION public.*`, `CREATE TYPE … AS ENUM`, `CREATE TRIGGER … ON public.*`, `INSERT INTO storage.buckets`, and `CREATE POLICY … ON public.*`, emitting one leaf per function / enum / trigger / bucket / table-RLS-aggregate. Migrations are also now per-file (no more weekly collapse). Landing/marketing assets re-route from `97 Plumbing` to `20 Sales & Pitch`, and `public/**` is walked with routing for `llms.txt` / `sitemap.xml` / `manifest.webmanifest` / `exports/*`.
+
+Result: **298 → 417 leaves** (+17 db functions, +2 enums, +18 triggers, +4 buckets, +34 RLS aggregates, +32 per-migration, +6 public/**, misc). Catalog gaps narrowed to 1 phantom-unclaimed file (`src/App.css` — already in a leaf, double-counting artefact in the gaps report) and 4 stale brief-only leaves that are line-range fragments already absorbed into their parent file leaves.
+
+Pipeline order:
+1. `node scripts/dev-wbs/build-leaves.mjs`           — brief-derived leaves
+2. `node scripts/dev-wbs/build-code-leaves.mjs`      — file/table/migration leaves
+3. `node scripts/dev-wbs/build-db-surface-leaves.mjs` — SQL surface leaves
+4. `node scripts/dev-wbs/reconcile-leaves.mjs`       — merge by file overlap
+5. `node scripts/build-dev-wbs.mjs`                  — activities
