@@ -191,13 +191,15 @@ function buildStreamLeaves(streamInfo, brief) {
 
   // (1) surfaces
   for (const s of brief.surfaces) {
-    const layer = layerFor(s.path);
+    const resolved = resolvePath(s.path);
+    const canonical = resolved[0] || s.path;
+    const layer = layerFor(canonical);
     upsert({
       stream: `${streamNum} ${streamName}`,
       streamNum,
       layer,
-      name: nameFromPath(s.path),
-      fileGlobs: [s.path],
+      name: nameFromPath(canonical),
+      fileGlobs: resolved.length ? resolved : [s.path],
       sources: [{ kind: 'surface', file: streamInfo.file, path: s.path }],
       note: s.note || '',
       verdict: null,
