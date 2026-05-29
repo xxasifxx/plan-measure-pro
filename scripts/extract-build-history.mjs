@@ -98,7 +98,20 @@ const WBS_MAP = [
   // Edge functions / config (folded into backend foundation) -----------------
   { wbs: '1.2', label: 'Edge functions',
     test: f => /^supabase\/functions\//.test(f) },
+
+  // Catch-all frontend shell (App routing, root styles, root types) ----------
+  { wbs: '1.1', label: 'Takeoff frontend (canvas, annotations, pay items)',
+    test: f => /^src\/(App\.(tsx|css)|main\.tsx|index\.css|vite-env\.d\.ts|types\/project\.ts)$/.test(f) },
 ];
+
+// Files we deliberately ignore (project meta, lockfiles, generated, planning).
+const IGNORE_FILE = f =>
+  /^(bun\.lock|package(-lock)?\.json|\.lovable\/|README\.md|\.gitignore|tsconfig|tailwind\.config|postcss\.config|vite\.config|vitest\.config|eslint\.config|components\.json|supabase\/(config|seed)\.|src\/integrations\/supabase\/(client|types)\.ts|docs\/)/.test(f);
+
+// First commit hash to consider as "project start" — anything earlier is the
+// upstream Lovable template that ships with every project.
+const TEMPLATE_SUBJECT_RE = /^template:/i;
+
 
 const CLUSTER = {
   BURST_MIN_FRAC: 0.6,     // burst must hold >=60% of commits
@@ -118,7 +131,7 @@ function classifyFile(file) {
 }
 
 function loadAllCommits() {
-  // Format: hash|ISO date|subject\0NUL\0\nfile1\nfile2\n\n...
+  // Format: __C__hash|ISO date|subject\nfile1\nfile2\n\n...
   const raw = sh("git log --reverse --no-merges --name-only --format='__C__%H|%aI|%s'");
   const commits = [];
   for (const block of raw.split('__C__')) {
@@ -126,7 +139,10 @@ function loadAllCommits() {
     const [header, ...rest] = block.split('\n');
     const [hash, iso, ...subjParts] = header.split('|');
     const subject = subjParts.join('|').trim();
-    const files = rest.map(s => s.trim()).filter(Boolean);
+    const files = rest.map(s => s.trim()).filter(Boolean).filter(f => !IGNORE_FILE(f));
+    // Skip upstream Lovable template commits (always have date 2025-01-01 and
+    // a `template:` subject). They precede the real project start.
+    if (TEMPLATE_SUBJECT_RE.test(subject)) continue;
     commits.push({ hash, iso, date: iso.slice(0, 10), subject, files });
   }
   return commits;
