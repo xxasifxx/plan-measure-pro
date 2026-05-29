@@ -60,11 +60,13 @@ const ALL = [
   ...walk('src'),
   ...walk('supabase/functions'),
   ...walk('scripts'),
+  ...walk('public'),
   'capacitor.config.ts', 'vite.config.ts', 'tailwind.config.ts',
   'postcss.config.js', 'eslint.config.js', 'components.json',
   'index.html', 'tsconfig.json', 'tsconfig.app.json', 'tsconfig.node.json',
-  'supabase/config.toml',
+  'supabase/config.toml', 'supabase/seed.sql',
 ].filter(p => existsSync(p));
+
 
 const leaves = [];
 
