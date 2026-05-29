@@ -1307,6 +1307,7 @@ export type Database = {
             }
             Returns: Json
           }
+      seed_demo_users: { Args: never; Returns: Json }
       seed_project_standard_folders: {
         Args: { _project_id: string; _user: string }
         Returns: undefined
