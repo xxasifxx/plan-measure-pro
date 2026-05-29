@@ -137,7 +137,9 @@ function parseBrief(file) {
     const evidence = [];
     let em;
     EVIDENCE_RE.lastIndex = 0;
-    while ((em = EVIDENCE_RE.exec(line)) !== null) evidence.push(em[1]);
+    while ((em = EVIDENCE_RE.exec(line)) !== null) {
+      for (const rp of resolvePath(em[1])) if (!evidence.includes(rp)) evidence.push(rp);
+    }
     const verdictRaw = m.groups.verdict.toLowerCase().trim();
     const verdict =
       verdictRaw.startsWith('implement') ? 'implemented' :
