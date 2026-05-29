@@ -1,0 +1,154 @@
+{
+  "stream": "02 authentication-and-membership",
+  "generatedAt": "2026-05-29T18:13:52Z",
+  "intents": [
+    {
+      "id": "signup-organic",
+      "stream": "02",
+      "intent": "Handle organic user signups and assign the initial 'admin' role automatically.",
+      "evidence": [
+        {
+          "file": "src/pages/Auth.tsx",
+          "lines": "79-96",
+          "snippet": "if (mode === 'signup') { ... const { error } = await supabase.auth.signUp({ ... }); }"
+        },
+        {
+          "file": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "lines": "264-280",
+          "snippet": "CREATE TRIGGER on_auth_user_created AFTER INSERT ON auth.users FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();"
+        },
+        {
+          "file": "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql",
+          "lines": "33-47",
+          "snippet": "CREATE OR REPLACE FUNCTION public.assign_owner_role(_user_id uuid) ... INSERT INTO public.user_roles (user_id, role) VALUES (_user_id, 'admin');"
+        }
+      ],
+      "status": "shipped",
+      "confidence": 1.0,
+      "gaps": []
+    },
+    {
+      "id": "invitation-acceptance",
+      "stream": "02",
+      "intent": "Allow users to join a team via a tokenized invitation link, applying target roles.",
+      "evidence": [
+        {
+          "file": "src/pages/Auth.tsx",
+          "lines": "35-63",
+          "snippet": "const { data, error } = await supabase.rpc('accept_invitation', { _token: token });"
+        },
+        {
+          "file": "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql",
+          "lines": "50-84",
+          "snippet": "CREATE OR REPLACE FUNCTION public.accept_invitation(_token text) ... INSERT INTO public.user_roles (user_id, role) VALUES (calling_user_id, inv.role)"
+        },
+        {
+          "file": "supabase/functions/invite-user/index.ts",
+          "lines": "1-153",
+          "snippet": "Edge function that validates inviter role and inserts into public.invitations"
+        }
+      ],
+      "status": "shipped",
+      "confidence": 1.0,
+      "gaps": [
+        "New user invitations do not expose a resident_engineer invite option in invite-user function"
+      ]
+    },
+    {
+      "id": "rbac-model",
+      "stream": "02",
+      "intent": "Enforce application-wide capabilities based on user roles (admin, manager, inspector, resident_engineer).",
+      "evidence": [
+        {
+          "file": "src/hooks/useAuth.tsx",
+          "lines": "102-105",
+          "snippet": "isManager: hasRole('project_manager') || hasRole('admin'), isInspector: hasRole('inspector'), isAdmin: hasRole('admin'), isResidentEngineer: hasRole('resident_engineer')"
+        },
+        {
+          "file": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "lines": "46-57",
+          "snippet": "CREATE OR REPLACE FUNCTION public.has_role(_user_id UUID, _role app_role) RETURNS BOOLEAN"
+        }
+      ],
+      "status": "shipped",
+      "confidence": 1.0,
+      "gaps": []
+    },
+    {
+      "id": "project-membership",
+      "stream": "02",
+      "intent": "Define and manage the mapping between users and projects via explicit membership table.",
+      "evidence": [
+        {
+          "file": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "lines": "88-98",
+          "snippet": "CREATE TABLE public.project_members ( project_id UUID, user_id UUID, role TEXT ... )"
+        },
+        {
+          "file": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "lines": "157-171",
+          "snippet": "CREATE OR REPLACE FUNCTION public.is_project_member(_user_id UUID, _project_id UUID) RETURNS BOOLEAN"
+        }
+      ],
+      "status": "shipped",
+      "confidence": 1.0,
+      "gaps": []
+    },
+    {
+      "id": "rls-enforcement",
+      "stream": "02",
+      "intent": "Secure data access by enforcing ownership and membership checks at the database level using RLS.",
+      "evidence": [
+        {
+          "file": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "lines": "176-234",
+          "snippet": "CREATE POLICY \"Creators can manage own projects\" ... CREATE POLICY \"Project members can view all annotations\" ..."
+        }
+      ],
+      "status": "shipped",
+      "confidence": 1.0,
+      "gaps": [
+        "No migration audits cross-table joins or storage bucket policies"
+      ]
+    },
+    {
+      "id": "auth-double-fire-fix",
+      "stream": "02",
+      "intent": "Prevent race conditions and redundant network/database calls during the authentication lifecycle.",
+      "evidence": [
+        {
+          "file": "src/hooks/useAuth.tsx",
+          "lines": "30-36",
+          "snippet": "const fetchedForRef = ... if (fetchedForRef.current === userId) return; fetchedForRef.current = userId;"
+        },
+        {
+          "file": "docs/streams/01-identity-and-access.md",
+          "lines": "44",
+          "snippet": "assign_owner_role is called in both Auth.tsx:103 and useAuth.tsx:55 — one of these will always be a redundant no-op DB call"
+        }
+      ],
+      "status": "partial",
+      "confidence": 0.9,
+      "gaps": [
+        "assign_owner_role redundant call persists in both Auth.tsx and useAuth.tsx"
+      ]
+    },
+    {
+      "id": "biometric-gate",
+      "stream": "02",
+      "intent": "Protect stored sessions on native devices using biometric (fingerprint/FaceID) cold-start gate.",
+      "evidence": [
+        {
+          "file": "src/components/BiometricGate.tsx",
+          "lines": "16-96",
+          "snippet": "export function BiometricGate({ children }: { children: ReactNode }) { ... if (!isNative()) return children; ... }"
+        }
+      ],
+      "status": "shipped",
+      "confidence": 1.0,
+      "gaps": [
+        "Native only; no web-equivalent MFA or session idle timeout"
+      ]
+    }
+  ]
+}

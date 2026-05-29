@@ -1,0 +1,107 @@
+[
+  {
+    "id": "08:takeoff:measurement-tools",
+    "stream": "08 takeoff-and-quantities",
+    "intent": "Implement geometric measurement tools for area (polygon), length (line), and count markers with live quantity calculation.",
+    "evidence": [
+      {
+        "file": "src/lib/geometry.ts",
+        "lines": "3-30",
+        "snippet": "export function lineLength(points: PointXY[], pixelsPerFoot: number): number { ... }\\nexport function polygonAreaSF(points: PointXY[], pixelsPerFoot: number): number { ... }"
+      },
+      {
+        "file": "src/components/SummaryPanel.tsx",
+        "lines": "64-75",
+        "snippet": "const itemAnns = annotations.filter(a => a.payItemId === item.id && a.type !== 'manual');\\nfor (const ann of itemAnns) {\\n  const qty = ann.manualQuantity != null ? ann.manualQuantity : (() => {\\n    if (ann.type === 'count') return 1;\\n    if (ann.depth && ann.depth > 0) return sfToCY(ann.measurement, ann.depth);\\n    if (item.unit === 'SY') return sfToSY(ann.measurement);\\n    return ann.measurement;\\n  })();\\n  totalQuantity += qty;\\n}"
+      }
+    ],
+    "status": "implemented",
+    "confidence": 1.0,
+    "gaps": []
+  },
+  {
+    "id": "08:takeoff:unit-conversion",
+    "stream": "08 takeoff-and-quantities",
+    "intent": "Apply unit conversion logic to derive cubic yardage (CY) from area/depth and square yardage (SY) from SF.",
+    "evidence": [
+      {
+        "file": "src/lib/geometry.ts",
+        "lines": "32-38",
+        "snippet": "export function sfToCY(sf: number, depthFeet: number): number { return (sf * depthFeet) / 27; }\\nexport function sfToSY(sf: number): number { return sf / 9; }"
+      }
+    ],
+    "status": "implemented",
+    "confidence": 1.0,
+    "gaps": []
+  },
+  {
+    "id": "08:takeoff:geo-transform",
+    "stream": "08 takeoff-and-quantities",
+    "intent": "Provide georeferencing via affine transforms to map GPS coordinates to plan pixels using control points.",
+    "evidence": [
+      {
+        "file": "src/lib/geo-transform.ts",
+        "lines": "44-132",
+        "snippet": "export function solveAffine2(pts: GeoControlPoint[]): AffineMatrix { ... }\\nexport function solveAffine3(pts: GeoControlPoint[]): AffineMatrix { ... }\\nexport function gpsToplan(cal: GeoCalibration, gps: GpsCoord): PointXY { ... }"
+      },
+      {
+        "file": "src/components/GpsCalibration.tsx",
+        "lines": "72-80",
+        "snippet": "const finalize = useCallback(() => {\\n  if (controlPoints.length < 2) return;\\n  try {\\n    const cal = buildGeoCalibration(controlPoints);\\n    onComplete(cal);\\n  } catch (err) {\\n    setGpsError(String(err));\\n  }\\n}, [controlPoints, onComplete]);"
+      }
+    ],
+    "status": "implemented",
+    "confidence": 1.0,
+    "gaps": []
+  },
+  {
+    "id": "08:takeoff:estimate-error",
+    "stream": "08 takeoff-and-quantities",
+    "intent": "Calculate estimated georeferencing error in feet by back-projecting control points through the solved transform.",
+    "evidence": [
+      {
+        "file": "src/lib/geo-transform.ts",
+        "lines": "135-146",
+        "snippet": "export function estimateError(cal: GeoCalibration): number {\\n  let totalErr = 0;\\n  for (const cp of cal.controlPoints) {\\n    const projected = gpsToplan(cal, cp.gps);\\n    const dx = projected.x - cp.plan.x;\\n    const dy = projected.y - cp.plan.y;\\n    totalErr += Math.sqrt(dx * dx + dy * dy);\\n  }\\n  return totalErr / cal.controlPoints.length;\\n}"
+      }
+    ],
+    "status": "implemented",
+    "confidence": 1.0,
+    "gaps": []
+  },
+  {
+    "id": "08:takeoff:aace-classes",
+    "stream": "08 takeoff-and-quantities",
+    "intent": "Integrate AACE International cost estimate classification reference data for maturity curve communication.",
+    "evidence": [
+      {
+        "file": "src/lib/schedule/analysis/aace.ts",
+        "lines": "16-67",
+        "snippet": "export const AACE_CLASSES: AaceClass[] = [ ... ]"
+      }
+    ],
+    "status": "implemented",
+    "confidence": 1.0,
+    "gaps": []
+  },
+  {
+    "id": "08:takeoff:export",
+    "stream": "08 takeoff-and-quantities",
+    "intent": "Export takeoff quantities and progress to CSV, PDF, and P6 XML (PMXML) formats.",
+    "evidence": [
+      {
+        "file": "src/components/SummaryPanel.tsx",
+        "lines": "133-162",
+        "snippet": "onExportCsv, onExportPdf, onExportDaily"
+      },
+      {
+        "file": "src/pages/P6Export.tsx",
+        "lines": "102-131",
+        "snippet": "const onRun = async () => { ... applyDailyReportsToP6(tables, reports) ... }\\nconst onDownload = () => { downloadP6Xml(result.tables, ... ) }"
+      }
+    ],
+    "status": "implemented",
+    "confidence": 1.0,
+    "gaps": []
+  }
+]

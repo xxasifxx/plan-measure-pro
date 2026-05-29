@@ -1,0 +1,91 @@
+[
+  {
+    "id": "cpm-engine",
+    "stream": 12,
+    "intent": "Robust CPM engine with forward/backward pass, calendar awareness, and constraint support",
+    "evidence": [
+      "src/lib/schedule/cpm.ts",
+      "src/test/cpm.test.ts"
+    ],
+    "status": "complete",
+    "confidence": 1.0,
+    "gaps": []
+  },
+  {
+    "id": "p6-pmxml-import",
+    "stream": 12,
+    "intent": "Import schedule data from Oracle P6 PMXML files with high fidelity",
+    "evidence": [
+      "src/lib/schedule/import-p6.ts",
+      "src/lib/p6xml/parser.ts",
+      "src/components/GanttUploader.tsx"
+    ],
+    "status": "complete",
+    "confidence": 1.0,
+    "gaps": [
+      "XER support explicitly removed in favor of PMXML for better round-tripping reliability"
+    ]
+  },
+  {
+    "id": "parse-schedule-ai",
+    "stream": 12,
+    "intent": "AI-powered extraction of schedule activities from Gantt chart images/screenshots",
+    "evidence": [
+      "supabase/functions/parse-schedule/index.ts"
+    ],
+    "status": "complete",
+    "confidence": 1.0,
+    "gaps": []
+  },
+  {
+    "id": "baseline-manager",
+    "stream": 12,
+    "intent": "Manage project baselines, including setting, comparing, and tracking variances",
+    "evidence": [
+      "src/components/schedule/BaselineManager.tsx",
+      "src/lib/schedule/baseline.ts",
+      "src/test/baseline-end.test.ts"
+    ],
+    "status": "complete",
+    "confidence": 1.0,
+    "gaps": []
+  },
+  {
+    "id": "calendar-management",
+    "stream": 12,
+    "intent": "Define and manage work calendars, including workweeks and exceptions (holidays)",
+    "evidence": [
+      "src/components/schedule/CalendarManager.tsx",
+      "src/lib/schedule/calendars.ts"
+    ],
+    "status": "complete",
+    "confidence": 1.0,
+    "gaps": []
+  },
+  {
+    "id": "resource-management",
+    "stream": 12,
+    "intent": "Manage labor, material, and equipment resources assigned to schedule activities",
+    "evidence": [
+      "src/components/schedule/ResourceManager.tsx",
+      "src/lib/schedule/import-p6.ts"
+    ],
+    "status": "complete",
+    "confidence": 0.9,
+    "gaps": [
+      "Resource leveling (automated CPM adjustments based on resource availability) is not explicitly implemented in runCpm"
+    ]
+  },
+  {
+    "id": "gantt-visualization",
+    "stream": 12,
+    "intent": "Interactive Gantt chart for visualizing and editing the project schedule",
+    "evidence": [
+      "src/components/schedule/GanttChart.tsx",
+      "src/components/schedule/ScheduleWorkspace.tsx"
+    ],
+    "status": "complete",
+    "confidence": 1.0,
+    "gaps": []
+  }
+]

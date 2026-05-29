@@ -1,0 +1,93 @@
+{
+  "stream": {
+    "slug": "13-dcma-and-schedule-quality",
+    "num": 13,
+    "title": "DCMA and Schedule Quality"
+  },
+  "leaves": [
+    {
+      "id": "stream-13.dcma-14-audit",
+      "name": "DCMA 14-Point Schedule Health Audit",
+      "acceptance": [
+        "Calculates 14 industry-standard metrics (logic, leads, lags, float, etc.) against current schedule.",
+        "Generates a downloadable .txt summary of audit results."
+      ],
+      "anchors": [
+        { "file": "src/lib/schedule/analysis/dcma.ts", "region": "runDcma", "line": 31 },
+        { "file": "src/components/schedule/DcmaPanel.tsx", "region": "DcmaPanel", "line": 23 }
+      ],
+      "state": "landed",
+      "evidence": "runDcma implements all 14 checks. DcmaPanel provides UI and download function.",
+      "gaps": ["No unit tests for the complex check logic."]
+    },
+    {
+      "id": "stream-13.tia-generator",
+      "name": "Time Impact Analysis (TIA) Frag-net Generator",
+      "acceptance": [
+        "Produces ASCII frag-net, narrative (NJDOT 108-03), and CSV fragment for P6 import."
+      ],
+      "anchors": [
+        { "file": "src/lib/schedule/analysis/tia.ts", "region": "buildTia", "line": 23 }
+      ],
+      "state": "partial",
+      "evidence": "buildTia exists and generates the requested artifacts but lacks a UI entry point in ScheduleWorkspace.",
+      "gaps": ["No UI surface to invoke buildTia.", "Only first direct successor traced."]
+    },
+    {
+      "id": "stream-13.schedule-health-panel",
+      "name": "NJDOT Compliance & Health Strip",
+      "acceptance": [
+        "Real-time display of negative lags, open-ended tasks, CPM cycles, and missing NJDOT M-codes."
+      ],
+      "anchors": [
+        { "file": "src/components/schedule/ComplianceStrip.tsx", "region": "ComplianceStrip", "line": 26 }
+      ],
+      "state": "landed",
+      "evidence": "ComplianceStrip calculates and displays these metrics in real-time at the bottom of the workspace.",
+      "gaps": ["Milestone detection depends on exact prefix match (starts with M###)."]
+    },
+    {
+      "id": "stream-13.progress-variance",
+      "name": "Baseline vs Forecast Variance Analysis (compareProgress)",
+      "acceptance": [
+        "Compares current schedule against a captured baseline.",
+        "Calculates SPI, CPI (duration proxy), and finish variance."
+      ],
+      "anchors": [
+        { "file": "src/lib/schedule/analysis/progress.ts", "region": "compareProgress", "line": 42 }
+      ],
+      "state": "partial",
+      "evidence": "compareProgress logic is implemented but not exposed in any UI panel.",
+      "gaps": ["No UI surface exposing SPI/CPI or slipping activities table."]
+    },
+    {
+      "id": "stream-13.re-memo-generation",
+      "name": "Resident Engineer (RE) Feedback Memo",
+      "acceptance": [
+        "Generates a structured plain-text memo recommending ACCEPT, ACCEPT WITH CONDITIONS, or REJECT based on DCMA results."
+      ],
+      "anchors": [
+        { "file": "src/lib/schedule/analysis/feedback.ts", "region": "buildReMemo", "line": 13 }
+      ],
+      "state": "landed",
+      "evidence": "buildReMemo generates a detailed memorandum with hard-blocker vs advisory categorization.",
+      "gaps": ["Unwired to the 'Download Memo' button in the UI (DcmaPanel currently only exports raw results)."]
+    }
+  ],
+  "docDrift": [
+    {
+      "claim": "Stream 13 is Data Export & Interoperability.",
+      "actual": "The user requested Stream 13 to cover DCMA and Schedule Quality; the existing markdown doc 13-data-export-and-interoperability.md conflicts with this numbering.",
+      "severity": "minor"
+    },
+    {
+      "claim": "TIA generator and Progress variance are listed as capabilities.",
+      "actual": "Both are implemented in the analysis library but lack UI surfaces in the production app.",
+      "severity": "major"
+    }
+  ],
+  "_meta": {
+    "agentId": "comprehender-l2",
+    "generatedAt": "2026-05-29"
+  }
+}

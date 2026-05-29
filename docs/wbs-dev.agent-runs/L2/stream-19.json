@@ -1,0 +1,54 @@
+[
+  {
+    "id": "landing-page-implementation",
+    "stream": 19,
+    "intent": "Professional landing page with NJTA-specific messaging and lead capture",
+    "evidence": "src/pages/Landing.tsx",
+    "status": "complete",
+    "confidence": 1.0,
+    "gaps": []
+  },
+  {
+    "id": "llms-txt-context",
+    "stream": 19,
+    "intent": "Provide machine-readable project context for LLM assistants",
+    "evidence": "public/llms.txt",
+    "status": "complete",
+    "confidence": 1.0,
+    "gaps": []
+  },
+  {
+    "id": "demo-requests-form",
+    "stream": 19,
+    "intent": "Capture potential customer data for sales follow-up",
+    "evidence": "src/pages/Landing.tsx (handleDemoSubmit), supabase/migrations/20260328182512_208ba41b-5292-403a-baf4-9b9b2d158879.sql",
+    "status": "partial",
+    "confidence": 0.8,
+    "gaps": [
+      "User reports 'missing migration' for demo_requests table despite existence in migration files",
+      "No Admin UI for viewing or managing submitted demo requests"
+    ]
+  },
+  {
+    "id": "pricing-communication",
+    "stream": 19,
+    "intent": "Convey value-based, per-project pricing model",
+    "evidence": "src/pages/Landing.tsx (FAQ section and hero pricing mentions)",
+    "status": "complete",
+    "confidence": 1.0,
+    "gaps": [
+      "No self-service pricing calculator or tier selection"
+    ]
+  },
+  {
+    "id": "public-claims-alignment",
+    "stream": 19,
+    "intent": "Verify that marketing claims (Landing.tsx) match technical capabilities (Demo.tsx, Index.tsx)",
+    "evidence": "src/pages/Landing.tsx vs src/pages/Demo.tsx",
+    "status": "complete",
+    "confidence": 0.9,
+    "gaps": [
+      "ProjectWise and SiteManager integrations are claimed as roadmap items but not yet implemented"
+    ]
+  }
+]

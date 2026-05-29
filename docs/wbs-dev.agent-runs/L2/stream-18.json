@@ -1,0 +1,393 @@
+{
+  "stream": 18,
+  "title": "Compliance & Audit",
+  "status": "in_progress",
+  "generated_at": "2025-06-01T00:00:00Z",
+  "agent": "L2-comprehender",
+  "summary": "Stream 18 implements the full compliance and audit surface for daily report review workflows: snapshot archiving, reject_reason enforcement, a DB-enforced status FSM, the RE queue UI, DCMA 14-point schedule compliance, and the audit trail. Core DB schema and triggers are complete. The ReReview queue UI and DCMA panel are fully implemented. Audit trail gaps (missing direct INSERT policies, no per-column change log, snapshot archive only fires on reopen-after-reject) remain open.",
+  "deliverables": [
+    {
+      "id": "S18-1",
+      "name": "daily-report-snapshot library",
+      "file": "src/lib/daily-report-snapshot.ts",
+      "status": "complete",
+      "description": "Pure-function snapshot builder that converts inspector annotations for a given (project, inspector, work_date) triple into a sorted SnapshotItem[] array. annotationQty() applies unit conversions (count → 1, depth → CY, unit=SY → SY, else raw SF). buildSnapshotFromInputs() is side-effect-free and takes pre-fetched arrays so it is fully unit-testable. buildDailyReportSnapshot() is the async I/O shell: fetches pay_items, annotations filtered to work_date (America/New_York via DB default), and prior approved quantities from v_approved_pay_item_quantities (report_date < today), builds the prior-cumulative map, then calls the pure function. Rounds all quantities to 2 decimal places.",
+      "exports": [
+        "SnapshotItem (interface)",
+        "RawAnnotationInput (interface)",
+        "RawPayItemInput (interface)",
+        "annotationQty(annotation, unit): number",
+        "buildSnapshotFromInputs(annotations, payItems, priorApprovedByItem): SnapshotItem[]",
+        "buildDailyReportSnapshot(projectId, inspectorId, reportDateISO, excludeDailyReportId?): Promise<SnapshotItem[]>"
+      ],
+      "key_decisions": [
+        "work_date bucketing is done in the DB (America/New_York default) to prevent evening edits leaking into the next UTC day.",
+        "Prior cumulative is computed from v_approved_pay_item_quantities (approved-only view) — rejected snapshots never contaminate the running total.",
+        "annotationQty precedence: manual_quantity > count=1 > depth*SF → CY > SY → SF. This matches contractor field practice."
+      ],
+      "gaps": [
+        "_excludeDailyReportId parameter is accepted but never used in the query — its original intent (exclude the being-edited report's own approved quantities from the prior-cumulative sum) is silently dropped, causing potential double-counting if a report is re-approved.",
+        "v_approved_pay_item_quantities is cast `as any` due to Supabase generated-type lag — once types are regenerated the cast should be removed and the view added to the types file.",
+        "No test coverage for annotationQty or buildSnapshotFromInputs. The pure-function surface is ideal for vitest unit tests.",
+        "sfToCY and sfToSY are imported from @/lib/geometry but geometry.ts is not covered in stream-18 — unit-conversion edge cases (negative depth, NaN measurement) are not guarded here.",
+        "Prior cumulative includes all projects' approved quantities for the same pay_item_id without re-filtering to projectId — the .eq('project_id', projectId) is on daily_reports via the view, but a pay_item_id collision across projects (impossible by FK, but worth asserting) would silently over-count."
+      ]
+    },
+    {
+      "id": "S18-2",
+      "name": "daily_reports status FSM (DB trigger)",
+      "file": "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
+      "status": "complete",
+      "description": "BEFORE UPDATE trigger `trg_daily_reports_status_transition` enforces the legal FSM transitions: draft→submitted, submitted→approved, submitted→rejected, rejected→draft. Any other transition raises EXCEPTION 'Illegal daily_report status transition'. On submitted: sets submitted_at=now(), clears all review fields. On approved: sets approved_at=now(), approved_by=auth.uid(). On rejected: enforces reject_reason IS NOT NULL AND NOT empty (RAISE EXCEPTION if violated), sets rejected_at=now(), rejected_by=auth.uid(). On draft (reopen): clears all timestamps.",
+      "fsm_transitions": {
+        "draft → submitted": "Inspector submits. Sets submitted_at, clears prior review fields.",
+        "submitted → approved": "RE approves. Sets approved_at, approved_by=auth.uid().",
+        "submitted → rejected": "RE rejects. REQUIRES non-empty reject_reason. Sets rejected_at, rejected_by.",
+        "rejected → draft": "Inspector reopens. Clears all timestamps. Side-effect trigger archives old snapshot.",
+        "all others": "RAISE EXCEPTION — hard block at DB layer."
+      },
+      "key_decisions": [
+        "SECURITY DEFINER with search_path=public so auth.uid() resolves inside the trigger body.",
+        "reject_reason enforcement is at the DB layer — the client cannot bypass it by omitting the field.",
+        "submitted_at uses COALESCE(NEW.submitted_at, now()) so a client that pre-sets submitted_at keeps its value."
+      ],
+      "gaps": [
+        "approved_by = auth.uid() inside a trigger assumes the caller is the approving RE. If a server-side function using service-role key ever approves a report programmatically, auth.uid() returns NULL and approved_by is set to NULL silently — no guard exists.",
+        "The trigger fires on ANY UPDATE, not just status changes. The IS DISTINCT FROM OLD.status guard avoids false positives, but if a concurrent UPDATE touches only non-status columns while a status change is in flight, the trigger re-executes the IF block unnecessarily.",
+        "No audit log is written by this trigger — status transitions are visible only if old row versions are preserved via a separate CDC mechanism (which does not currently exist)."
+      ]
+    },
+    {
+      "id": "S18-3",
+      "name": "daily_report_snapshots archive table + side-effects trigger",
+      "file": "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql",
+      "status": "complete",
+      "description": "Table `daily_report_snapshots` stores frozen copies of daily_reports.snapshot jsonb before destructive status transitions. Columns: id, daily_report_id (FK → daily_reports CASCADE), project_id, snapshot jsonb, archived_at timestamptz default now(), archived_reason text, reject_reason text. AFTER UPDATE trigger `trg_daily_reports_status_side_effects` fires on status change: (1) on rejected→draft: INSERT INTO daily_report_snapshots with archived_reason='reopen_after_reject' and the OLD.reject_reason. (2) on submitted: notifies all RE users in the project. (3) on approved/rejected: notifies the report's inspector. Index on (daily_report_id, archived_at DESC).",
+      "archived_reason_values": {
+        "reopen_after_reject": "Snapshot archived because inspector reopened a rejected report. Captures the state at time of rejection."
+      },
+      "key_decisions": [
+        "Snapshot is archived from the AFTER trigger (OLD.snapshot from the completed row) not the BEFORE trigger, ensuring the final state before reopen is captured.",
+        "No INSERT/UPDATE/DELETE RLS policies on daily_report_snapshots — only the SECURITY DEFINER trigger may write. SELECT via 'Members view snapshots' policy (is_project_member).",
+        "Notifications are inserted inline in the trigger body using a FOR LOOP over user_roles for the RE notification fan-out."
+      ],
+      "gaps": [
+        "Archive only fires on rejected→draft (reopen). A submitted→approved transition does NOT archive the submitted snapshot — if an RE approves a report with incorrect quantities, there is no immutable record of what was approved before any later corrections.",
+        "archived_reason is free-text, not a CHECK constraint enum — nothing prevents a programmatic caller from inserting an unrecognised reason value.",
+        "reject_reason is stored redundantly in both daily_reports and daily_report_snapshots. If reject_reason is later corrected on the live row without triggering the archive path, the two records diverge.",
+        "The RE notification fan-out uses a FOR LOOP with individual INSERTs — for projects with many REs this is N round-trips inside the trigger. A single INSERT … SELECT would be more efficient.",
+        "daily_report_snapshots has no FK back to projects — project_id is a denormalised copy. If the project is deleted (CASCADE from daily_reports), orphaned snapshot rows for the project_id remain unless daily_reports CASCADE removes them first.",
+        "No snapshot is archived when a draft is deleted — a deleted draft leaves no trace in the audit table."
+      ]
+    },
+    {
+      "id": "S18-4",
+      "name": "useReReviewQueue hook",
+      "file": "src/hooks/useReReviewQueue.ts",
+      "status": "complete",
+      "description": "React Query hooks for the RE review workflow. useReReviewQueue(projectId, statusFilter) fetches daily_reports filtered by project_id + status (default 'submitted'), ordered by submitted_at DESC then report_date DESC. Hydrates inspector_name and reviewer_name by batch-fetching profiles. useReportComments(reportId) fetches daily_report_comments ordered ascending with author hydration. useReportArchives(reportId) fetches daily_report_snapshots ordered archived_at DESC (casts table name as any due to type lag). useAddComment / useApproveReport / useRejectReport are mutations with cache invalidation on success.",
+      "exports": [
+        "ReReportStatus ('submitted' | 'approved' | 'rejected')",
+        "ReReport (interface)",
+        "ReReportComment (interface)",
+        "ReReportArchive (interface — has archived_reason, reject_reason)",
+        "useReReviewQueue(projectId, statusFilter) → UseQueryResult<ReReport[]>",
+        "useReportComments(reportId) → UseQueryResult<ReReportComment[]>",
+        "useReportArchives(reportId) → UseQueryResult<ReReportArchive[]>",
+        "useAddComment(reportId, projectId) → UseMutationResult",
+        "useApproveReport(projectId) → UseMutationResult<void, Error, string>",
+        "useRejectReport(projectId) → UseMutationResult<void, Error, {reportId, reason}>"
+      ],
+      "key_decisions": [
+        "statusFilter defaults to 'submitted' so the RE queue defaults to the action queue rather than history.",
+        "Profile name resolution is a secondary fetch (not a join) — keeps the query simple and avoids policy conflicts on the profiles table.",
+        "useReportArchives casts daily_report_snapshots `as any` because Supabase types.ts does include the table but the select signature expects string literal columns — `as any` is a short-term workaround until types are verified."
+      ],
+      "gaps": [
+        "useApproveReport approves via .update({ status: 'approved' }) — it does NOT supply reject_reason, which is correct, but it also does not verify the caller is a resident_engineer before sending the request. The DB RLS policy ('RE updates submitted report') enforces this, but a client error surfaces as a generic 403 with no user-facing explanation.",
+        "useRejectReport does a client-side trim check on reason but does NOT enforce a minimum length — a single space character passes the trim check on the client (the DB trigger will catch it, but the UX gives no early warning).",
+        "No optimistic updates — approving/rejecting shows a loading state but the card stays in the queue until the invalidation round-trip completes.",
+        "useReReviewQueue fetches ALL submitted reports at once — no pagination. For a long-running project with many daily submissions this will grow unbounded.",
+        "There is no realtime subscription on daily_reports for the RE queue — a second RE could approve a report while the first RE is viewing it, and the first RE's UI won't update until they manually refetch.",
+        "daily_report_snapshots table is cast `as any` — the TypeScript type for ReReportArchive.archived_reason is `string | null` but the generated DB type for the column is also nullable; the any cast masks the need for a type assertion on the snapshot field."
+      ]
+    },
+    {
+      "id": "S18-5",
+      "name": "ReReviewCard component",
+      "file": "src/components/ReReviewCard.tsx",
+      "status": "complete",
+      "description": "Card UI for a single daily report in the RE queue. Header shows report_date (formatted), inspector_name, submitted_at, and a status badge (SUBMITTED/APPROVED/REJECTED in amber/emerald/destructive). Snapshot renders as a sortable pay-item table: item_code, name, today's delta_quantity, optional Δ-vs-prior column (shown when archivesQ has data), prior_cumulative, new_cumulative, % of contract_quantity. Over-100% contract pct renders in destructive colour. Approve/Reject buttons trigger onApprove/onReject callbacks. Reject opens ReRejectDialog for reason entry. History section (toggle) renders archived snapshots (archived_at, line count, reject_reason) and a threaded comments panel with a new-comment textarea. Diff against the most recent archive is computed via useMemo when resubmitting.",
+      "key_decisions": [
+        "Diff column appears automatically when archivesQ.data is non-empty — no manual toggle needed.",
+        "Over-contract-qty colouring is amber at >80% and destructive at >100%, matching AASHTO contractor reporting convention.",
+        "ReRejectDialog is a separate modal component to keep the reject-reason form logic isolated from the review card."
+      ],
+      "gaps": [
+        "diffByItem useMemo depends on archivesQ.data and report.snapshot but archivesQ is only enabled when historyOpen=true — the diff column never renders on initial load even if archives exist, because historyOpen starts false. The diff should be computed independently of the history toggle.",
+        "Approve/Reject buttons are always rendered even when readOnly=true in the component's Props — the readOnly prop is passed through to ReRejectDialog but does not disable the Approve button, leaving a potential UI inconsistency.",
+        "The snapshot table has no sort controls — items are sorted by item_code (ascending, from the DB) and cannot be reordered client-side.",
+        "No print / export button on the ReReviewCard itself — export is available at a higher page level only.",
+        "The history section uses lazy-loaded archivesQ (enabled on historyOpen) — if a user expands history on multiple cards simultaneously, N parallel queries are fired with no debounce.",
+        "Contract-quantity percentage column uses `it.contract_quantity` from the frozen snapshot. If a contract amendment has since changed the contract quantity, the percentage shown may be stale.",
+        "No accessibility attributes (aria-label, role) on the approve/reject icon buttons — keyboard-only users cannot identify the actions."
+      ]
+    },
+    {
+      "id": "S18-6",
+      "name": "ReRejectDialog component",
+      "file": "src/components/ReRejectDialog.tsx",
+      "status": "complete",
+      "description": "Modal dialog for the RE to enter a reject_reason before rejecting a daily report. Renders a Textarea for the reason and a Reject button that calls onReject({ reportId, reason }). Cancel button closes without action. Confirm button is disabled when the textarea is empty (trim check). Controlled by open/onOpenChange from the parent ReReviewCard.",
+      "key_decisions": [
+        "Trim check on the client prevents trivially empty reasons from reaching the DB (DB trigger provides the backstop).",
+        "Dialog is non-closable via backdrop click when rejecting is in progress (rejecting prop disables interaction)."
+      ],
+      "gaps": [
+        "No minimum character count enforced (e.g. 10 chars) — a single character reason ('x') passes. The DB trigger only checks length(trim(reject_reason)) = 0, so single-character reasons persist.",
+        "No character counter or max-length cap — very long reasons are accepted without UX warning.",
+        "The textarea placeholder is generic ('Enter reason for rejection…') — no guidance on what constitutes a valid reject reason for compliance purposes (e.g. 'quantity discrepancy', 'missing pay item').",
+        "No audit of WHO triggered the rejection beyond rejected_by=auth.uid() in the DB trigger — the reason text is the only human-readable record."
+      ]
+    },
+    {
+      "id": "S18-7",
+      "name": "useDailyReport hook — submit / reopen / isStale",
+      "file": "src/hooks/useDailyReport.ts",
+      "status": "complete",
+      "description": "Inspector-side hook managing the daily report lifecycle for a (projectId, userId, dateISO) triple. Fetches or creates the draft row. submit() mutation: calls buildDailyReportSnapshot(), upserts snapshot on the draft, then flips status to 'submitted'. reopen() mutation: flips status back to 'draft' (triggers archive). previewQuery runs continuously (disabled only when status=approved) to detect snapshot drift — isStale is true when the frozen snapshot diverges from the live preview (line count mismatch or per-item delta > 0.005). Invalidates ['daily-report', 'daily-report-preview', 're-review'] on success.",
+      "key_decisions": [
+        "Empty submissions are allowed (REs can reject a zero-day) — no guard against submitting a snapshot with zero items.",
+        "isStale comparison uses 0.005 tolerance to absorb floating-point rounding without over-triggering.",
+        "If status is 'rejected' or 'submitted' the draft path resets status to 'draft' and refreshes the snapshot before flipping to 'submitted' — prevents double-submission collisions."
+      ],
+      "gaps": [
+        "submit() performs a multi-step mutation (build snapshot → upsert draft → set submitted) without a DB transaction. If the second UPDATE (status flip) fails after the snapshot is already written, the report row is in an inconsistent state (snapshot updated, status still draft).",
+        "reopen() flips to draft via a direct UPDATE — the side-effects trigger (which archives the snapshot) fires in the DB, but the client does not wait for or handle archive failures. If the trigger fails (e.g. constraint violation), the row is in draft but no archive was created.",
+        "isStale is computed on every render via a side-effect-free useMemo equivalent — but it reads previewQuery.data which is re-fetched every time the query key changes (including on status change). This can cause a brief isStale=true flash after approval even though the report is now approved and the guard `query.data?.status !== 'approved'` should suppress it — the guard disables the previewQuery but previewQuery.data may retain stale data from the last successful fetch.",
+        "No optimistic UI on submit — the inspector sees a loading state while the DB round-trip completes.",
+        "buildDailyReportSnapshot is called twice on resubmission (once to reset to draft with new snapshot, once to submit) — this doubles the Supabase query load."
+      ]
+    },
+    {
+      "id": "S18-8",
+      "name": "v_approved_pay_item_quantities view",
+      "file": "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
+      "status": "complete",
+      "description": "Security-invoker view that flattens the approved daily_reports.snapshot jsonb into one row per pay item per report date. Columns: project_id, report_date, inspector_id, approved_at, approved_by, pay_item_id (uuid cast), item_code, pay_item_name, unit, delta_quantity (numeric, COALESCE 0), new_cumulative (numeric, COALESCE 0), notes. Only reads rows WHERE status = 'approved'. Used by buildDailyReportSnapshot for prior-cumulative calculation and by PM dashboards / PMXML export.",
+      "key_decisions": [
+        "security_invoker=on so the view respects the calling user's RLS policies on daily_reports — no privilege escalation.",
+        "COALESCE(..., 0) on numeric casts defends against NULL from jsonb extraction.",
+        "Source of truth for all downstream quantity aggregations — PM dashboards, exports, P6 round-trip all read this view exclusively."
+      ],
+      "gaps": [
+        "No RLS policy directly on the view — access is controlled entirely by the underlying daily_reports table's SELECT policies. If a user gains SELECT on daily_reports outside of RLS (e.g. via service-role), they see all approved quantities without project-membership enforcement.",
+        "new_cumulative in the view is the cumulative as-of the report's snapshot freeze date. If a report is retroactively corrected (status flipped back to draft and resubmitted), the view returns both the old approved row (from before retraction — which no longer exists because status is now draft/submitted) and the new one. In practice retraction is not possible in the current FSM (approved is terminal) but should be documented as a constraint.",
+        "The view is not materialised — every query re-parses all approved snapshots. For projects with hundreds of daily reports this is O(n×items) on every dashboard load.",
+        "delta_quantity and new_cumulative are cast from jsonb text with no bounds check — malformed snapshot entries (non-numeric strings) will cause the cast to fail and surface as a query error rather than a NULL."
+      ]
+    },
+    {
+      "id": "S18-9",
+      "name": "DCMA 14-Point Schedule Audit — analysis library",
+      "file": "src/lib/schedule/analysis/dcma.ts",
+      "status": "complete",
+      "description": "Pure in-memory implementation of the DCMA 14-point schedule health assessment against the project's normalised ScheduleActivity/ActivityRelationship arrays. Exports runDcma(input) → DcmaResult[] and dcmaSummary(results) → plain-text report. The 14 checks implemented: (1) Logic < 5% incomplete activities missing pred or succ, (2) Leads = 0 negative-lag relationships, (3) Lags < 5%, (4) FS relationships ≥ 90%, (5) Hard constraints (MSO/MFO) < 5%, (6) High Float > 44 days < 5%, (7) Negative Float = 0, (8) High Duration > 44 days < 5%, (9) Invalid dates (actual dates in future relative to data date), (10) Resources — informational, (11) Missed Tasks < 5%, (12) Critical Path Test ≥ 1 critical activity, (13) CPLI ≥ 0.95, (14) BEI ≥ 0.95. Each DcmaResult carries: id, name, description, target, metric (human string), pass (bool), failingActivityIds[].",
+      "dcma_checks": [
+        { "id": "logic",    "target": "< 5%",     "metric_type": "percentage of incomplete activities" },
+        { "id": "leads",    "target": "0",         "metric_type": "count of negative-lag relationships" },
+        { "id": "lags",     "target": "< 5%",      "metric_type": "percentage of relationships with positive lag" },
+        { "id": "fs",       "target": "≥ 90% FS",  "metric_type": "percentage of FS relationships" },
+        { "id": "hard",     "target": "< 5%",      "metric_type": "percentage of incomplete activities with MSO/MFO" },
+        { "id": "highfloat","target": "< 5%",      "metric_type": "percentage of incomplete with TF > 44 days" },
+        { "id": "negfloat", "target": "0",         "metric_type": "count with negative TF" },
+        { "id": "highdur",  "target": "< 5%",      "metric_type": "percentage of incomplete non-milestones > 44 days" },
+        { "id": "invaliddates","target":"0",        "metric_type": "count with future actual dates" },
+        { "id": "resources","target":"Informational","metric_type":"percentage of activities with primary_resource_id" },
+        { "id": "missed",   "target": "< 5%",      "metric_type": "percentage of incomplete with baseline_end < data_date" },
+        { "id": "cp",       "target": "≥ 1 path",  "metric_type": "count of critical incomplete activities" },
+        { "id": "cpli",     "target": "≥ 0.95",    "metric_type": "scalar index" },
+        { "id": "bei",      "target": "≥ 0.95",    "metric_type": "scalar index" }
+      ],
+      "key_decisions": [
+        "HIGH_DAYS = 44 — matches the DCMA standard (44 working days ≈ 2 calendar months on a 5-day week).",
+        "Resources check is always pass=true (informational only) — TakeoffPro's schedule model tracks resources via pay_items, not activity-level loading, so this check is advisory.",
+        "CPLI formula: (CP_length + avg_TF) / CP_length — uses sum of critical activity durations as CP proxy because early/late date CPM is not yet computed.",
+        "BEI: actual completed / planned-complete-by-data-date — requires baseline_end data; returns 1.0 (pass) if no data date is set."
+      ],
+      "gaps": [
+        "CPLI uses sum of TF across critical activities rather than the path-level float of the longest critical chain — this overestimates CPLI when there are multiple critical sub-chains with different floats.",
+        "BEI denominator counts ALL completed activities (any status), not just those completed within the baseline window — inflates BEI when early completions dominate.",
+        "Check #9 (invalid dates) logic is not surfaced in the dcma.ts source visible — if it exists it is between checks 8 and 10. Verify the implementation covers actual_start/actual_finish > data_date.",
+        "runDcma is recomputed on every useMemo dependency change in DcmaPanel (activities, relationships, meta.data_date) — for large schedules (1000+ activities) this blocks the render thread. Should be moved to a Web Worker.",
+        "dcmaSummary outputs plain text only — no JSON export or structured report for downstream tooling (e.g. P6 notebook integration).",
+        "No persistence — audit results are ephemeral. There is no table or edge function to save a point-in-time DCMA snapshot for compliance record-keeping.",
+        "The Resources check hard-codes pass=true regardless of loading — once the schedule model supports resource loading, this check will need a real threshold."
+      ]
+    },
+    {
+      "id": "S18-10",
+      "name": "DcmaPanel component",
+      "file": "src/components/schedule/DcmaPanel.tsx",
+      "status": "complete",
+      "description": "Modal dialog (max-w-3xl) presenting the 14-point DCMA audit results. Score badge (N/14 checks passed) colour-codes green at 14/14, secondary at ≥10, destructive below. Each row shows a pass/fail icon, check name (font-mono), metric, and target threshold. Clicking a row expands a sub-list of failing activity IDs resolved to activity names via idLookup map. 'Export .txt' button calls dcmaSummary() and triggers a browser download of a plain-text report. Data date shown in dialog description. Results are memoised from runDcma().",
+      "key_decisions": [
+        "Dialog opens from ScheduleToolbar — no dedicated route.",
+        "idLookup Map built once per activities prop change — O(n) lookup, not O(n²) per failing row.",
+        "Export uses Blob + createObjectURL for a no-dependency client-side download."
+      ],
+      "gaps": [
+        "idLookup resolves activity IDs to names but the failing-activity list in the expanded row shows only IDs, not names — the lookup map is built but not applied in the render (the code likely shows a.id only).",
+        "No 'copy to clipboard' option for individual check failure lists.",
+        "Dialog has no max-height guard on mobile — on small screens the ScrollArea may overflow behind the keyboard.",
+        "Export filename uses client-side new Date() — timezone is the browser's local zone, not the project's data_date timezone, so filename dates can be inconsistent.",
+        "No keyboard shortcut to open DcmaPanel from the schedule workspace."
+      ]
+    }
+  ],
+  "data_model": {
+    "daily_reports": {
+      "relevant_columns": [
+        "id uuid PK",
+        "project_id uuid FK projects",
+        "user_id uuid FK auth.users (inspector)",
+        "report_date date",
+        "status text CHECK (draft | submitted | approved | rejected)",
+        "submitted_at timestamptz",
+        "approved_at timestamptz",
+        "approved_by uuid FK auth.users",
+        "rejected_at timestamptz",
+        "rejected_by uuid FK auth.users",
+        "reject_reason text — REQUIRED (non-empty) when status=rejected; enforced by DB trigger",
+        "snapshot jsonb NOT NULL DEFAULT '[]' — frozen SnapshotItem[] at submission time"
+      ],
+      "rls": {
+        "INSERT": "Owner inserts own draft (status=draft, is_project_member)",
+        "UPDATE (owner)": "Owner updates own draft or rejected rows",
+        "UPDATE (RE)": "RE updates submitted rows (has_role resident_engineer + is_project_member)",
+        "UPDATE (creator)": "Project creator updates any report",
+        "DELETE": "Owner deletes own drafts only",
+        "SELECT": "All project members (is_project_member)"
+      },
+      "triggers": [
+        "trg_daily_reports_status_transition BEFORE UPDATE — FSM enforcement + timestamp stamping",
+        "trg_daily_reports_status_side_effects AFTER UPDATE — snapshot archiving + notification fan-out"
+      ],
+      "indexes": [
+        "idx_daily_reports_status ON (project_id, status, report_date DESC)"
+      ]
+    },
+    "daily_report_snapshots": {
+      "columns": [
+        "id uuid PK",
+        "daily_report_id uuid FK daily_reports CASCADE",
+        "project_id uuid (denormalised)",
+        "snapshot jsonb NOT NULL DEFAULT '[]'",
+        "archived_at timestamptz NOT NULL DEFAULT now()",
+        "archived_reason text (enum values: reopen_after_reject — others not yet defined)",
+        "reject_reason text (copy of daily_reports.reject_reason at archive time)"
+      ],
+      "rls": "SELECT: is_project_member; INSERT/UPDATE/DELETE: none (trigger-only writes)",
+      "indexes": ["idx_daily_report_snapshots_report ON (daily_report_id, archived_at DESC)"]
+    },
+    "daily_report_comments": {
+      "columns": [
+        "id uuid PK",
+        "daily_report_id uuid FK daily_reports CASCADE",
+        "project_id uuid",
+        "user_id uuid",
+        "body text NOT NULL",
+        "created_at timestamptz NOT NULL DEFAULT now()"
+      ],
+      "rls": "SELECT: is_project_member; INSERT: own user_id + is_project_member; UPDATE/DELETE: none"
+    },
+    "v_approved_pay_item_quantities": {
+      "type": "view (security_invoker=on)",
+      "description": "Flattened approved pay-item quantities. Source of truth for cumulative quantities, PM dashboards, PMXML export.",
+      "columns": ["project_id", "report_date", "inspector_id", "approved_at", "approved_by", "pay_item_id", "item_code", "pay_item_name", "unit", "delta_quantity", "new_cumulative", "notes"],
+      "filter": "status = 'approved'"
+    }
+  },
+  "fsm_diagram": {
+    "states": ["draft", "submitted", "approved", "rejected"],
+    "transitions": [
+      { "from": "draft",     "to": "submitted", "actor": "inspector", "guard": "none",                     "side_effect": "submitted_at stamped; notify REs" },
+      { "from": "submitted", "to": "approved",  "actor": "RE/creator", "guard": "none",                     "side_effect": "approved_at + approved_by stamped; notify inspector" },
+      { "from": "submitted", "to": "rejected",  "actor": "RE/creator", "guard": "reject_reason non-empty",  "side_effect": "rejected_at + rejected_by stamped; notify inspector" },
+      { "from": "rejected",  "to": "draft",     "actor": "inspector",  "guard": "none",                     "side_effect": "all timestamps cleared; snapshot archived to daily_report_snapshots" }
+    ],
+    "terminal_states": ["approved"],
+    "enforcement": "BEFORE UPDATE DB trigger (SECURITY DEFINER) — client cannot bypass"
+  },
+  "audit_trail_inventory": {
+    "what_is_captured": [
+      "daily_report_snapshots: full frozen snapshot on rejected→draft with archived_reason + reject_reason",
+      "daily_reports.approved_by / rejected_by: actor UUID for approve/reject transitions",
+      "daily_reports.approved_at / rejected_at / submitted_at: timestamps for all non-draft transitions",
+      "daily_report_comments: threaded commentary visible to all project members",
+      "notifications table: fan-out events with payload (daily_report_id, report_date, reject_reason)"
+    ],
+    "gaps": [
+      "No row-level change log (CDC) for daily_reports — only the current state is queryable; prior field values (e.g. snapshot before re-submission) are not recoverable unless an archive row exists.",
+      "Snapshot is NOT archived on submitted→approved — there is no immutable record of what was approved if the row is later mutated (e.g. via service-role direct update).",
+      "Snapshot is NOT archived on draft→submitted — a draft that is submitted without a prior rejection has no archived_reason record.",
+      "approved (terminal) state is not truly immutable — a service-role UPDATE can change status past 'approved' if the trigger is bypassed (trigger runs as SECURITY DEFINER but service-role bypasses RLS, not triggers — needs verification).",
+      "No audit log table — audit queries must reconstruct history from daily_report_snapshots (partial) + notifications (fan-out events only) + daily_reports current state. A proper audit_events table with (table, row_id, actor, action, old_values jsonb, new_values jsonb, ts) is absent.",
+      "daily_report_comments can be deleted by a project admin via service-role — no immutability policy on comments.",
+      "DCMA audit results are not persisted — point-in-time DCMA compliance snapshots for contractual reporting do not exist.",
+      "No signed/tamper-evident log — all audit records are editable by service-role; there is no cryptographic integrity guarantee."
+    ]
+  },
+  "reject_reason_enforcement": {
+    "client_layer": "ReRejectDialog: Reject button disabled when textarea.trim() is empty",
+    "db_layer": "trg_daily_reports_status_transition (BEFORE UPDATE, SECURITY DEFINER): RAISE EXCEPTION when status=rejected AND (reject_reason IS NULL OR length(trim(reject_reason)) = 0)",
+    "display": [
+      "ReReviewCard history section: reject_reason shown in italic destructive text next to archived snapshot",
+      "DailyReport.tsx:78-84: reject_reason shown in amber warning banner to inspector on the report page",
+      "NotificationBell: report_rejected notification renders payload.reject_reason in italic text"
+    ],
+    "gaps": [
+      "No minimum length (e.g. 20 chars) — single-character reasons pass all layers.",
+      "No taxonomy / enumerated reject codes — free-text only, making aggregate analysis of rejection patterns impossible.",
+      "reject_reason is cleared on rejected→draft transition (trigger sets it to NULL via 'ELSIF NEW.status = draft' branch) — the reason is preserved only in daily_report_snapshots.reject_reason (if the archive was created). If the archive fails silently, the rejection reason is lost."
+    ]
+  },
+  "dcma_14_point_summary": {
+    "implementation_status": "14/14 checks implemented in src/lib/schedule/analysis/dcma.ts",
+    "data_source": "In-memory ScheduleActivity[] + ActivityRelationship[] — no XER upload required",
+    "known_deviations_from_standard": [
+      "CPLI uses summed TF across critical activities as path-float proxy — not true longest-path float",
+      "BEI counts all completed activities, not just within-baseline-window completions",
+      "Resources check is always informational (pass=true) — no actual resource loading model",
+      "HIGH_DAYS threshold is 44 (standard) but not configurable per-project or per-contract"
+    ],
+    "missing_for_full_compliance": [
+      "CPM forward/backward pass to compute true Early/Late dates (currently consuming what P6 exports)",
+      "Saved point-in-time DCMA snapshots for contract deliverable reporting",
+      "PDF/structured export of audit results (only plain-text .txt currently)",
+      "Automated scheduling of periodic DCMA checks (e.g. weekly cron edge function)"
+    ]
+  },
+  "integration_points": [
+    "Stream 08 (Daily Report page / DailyReport.tsx): renders report status badge and reject_reason banner; calls useDailyReport.submit() and useDailyReport.reopen()",
+    "Stream 17 (Notifications): daily_reports_status_side_effects trigger writes to notifications table; NotificationBell renders report_submitted/approved/rejected kinds with reject_reason",
+    "Stream 10 (Schedule Management / DcmaPanel): DcmaPanel is opened from ScheduleToolbar; consumes runDcma from stream-18's analysis library",
+    "Stream 07 (Pay Items / v_approved_pay_item_quantities): buildDailyReportSnapshot reads the approved view for prior-cumulative; PM dashboards aggregate from the same view",
+    "Stream 16 (PMXML export): p6_activity_id on pay_items references approved quantities from v_approved_pay_item_quantities for the PMXML activity quantity roll-up"
+  ],
+  "open_items": [
+    "Add `archived_reason` CHECK constraint to daily_report_snapshots to enumerate valid values and prevent free-text pollution",
+    "Persist DCMA audit results to a `dcma_snapshots` table for point-in-time compliance reporting",
+    "Add audit_events generic CDC table (table, row_id, actor, action, old jsonb, new jsonb, ts) — backfill via triggers on daily_reports",
+    "Archive snapshot on submitted→approved in addition to rejected→draft",
+    "Add minimum reject_reason length (≥ 20 chars) and optional category enum (quantity_discrepancy | missing_item | date_error | other)",
+    "Paginate useReReviewQueue — add cursor-based paging with a page size of 20",
+    "Add Supabase Realtime subscription on daily_reports in useReReviewQueue to surface concurrent RE approvals",
+    "Move runDcma to a Web Worker to avoid blocking the render thread on large schedules",
+    "Add structured JSON/PDF export from DcmaPanel for contractual deliverable submission",
+    "Fix diffByItem useMemo in ReReviewCard to be independent of historyOpen toggle",
+    "Verify trg_daily_reports_status_transition fires even under service-role UPDATE (triggers bypass RLS but not trigger functions — confirm in Supabase docs)",
+    "Add unit tests for buildSnapshotFromInputs (pure function — ideal vitest coverage)",
+    "Remove `as any` casts once Supabase generated types include daily_report_snapshots correctly"
+  ]
+}

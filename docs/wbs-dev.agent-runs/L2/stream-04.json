@@ -1,0 +1,130 @@
+{
+  "stream": "04 pdf-canvas-annotation",
+  "intents": [
+    {
+      "id": "pdf-canvas-component",
+      "stream": "04",
+      "intent": "Core PdfCanvas component for interactive PDF annotation and measurement",
+      "evidence": [
+        {
+          "file": "src/components/PdfCanvas.tsx",
+          "lines": "42-1426",
+          "snippet": "export function PdfCanvas({ pdf, currentPage, scale, ... }) { ... }"
+        }
+      ],
+      "status": "shipped",
+      "confidence": 1.0,
+      "gaps": []
+    },
+    {
+      "id": "canvas-handlers",
+      "stream": "04",
+      "intent": "Implement 26 event and interaction handlers for drawing, selection, and viewport management",
+      "evidence": [
+        {
+          "file": "src/components/PdfCanvas.tsx",
+          "lines": "147-1134",
+          "snippet": "getCanvasPos, getTouchCanvasPos, s, hitTestAnnotations, drawTocRect, guardDrawing, hitTestHandles, handleClickAtPos, handleCanvasClick, handleDoubleClickAtPos, handleDoubleClick, submitDepth, submitLabel, handleMouseMove, handleMouseDown, handleMouseUp, submitCalibration, handleImportToc, handleContextMenu, handler (keyboard), handleOverlayTouchStart, handleOverlayTouchMove, handleOverlayTouchEnd, preventMove, preventStart"
+        }
+      ],
+      "status": "shipped",
+      "confidence": 1.0,
+      "gaps": []
+    },
+    {
+      "id": "annotation-tools",
+      "stream": "04",
+      "intent": "Support multiple tool modes: select, calibrate, line, polygon, count, label, pan, tocSelect",
+      "evidence": [
+        {
+          "file": "src/types/project.ts",
+          "lines": "92",
+          "snippet": "export type ToolMode = 'select' | 'calibrate' | 'line' | 'polygon' | 'pan' | 'tocSelect' | 'count' | 'label';"
+        },
+        {
+          "file": "src/components/PdfCanvas.tsx",
+          "lines": "1412-1422",
+          "snippet": "Instructions overlay for each toolMode"
+        }
+      ],
+      "status": "shipped",
+      "confidence": 1.0,
+      "gaps": []
+    },
+    {
+      "id": "dual-layer-rendering",
+      "stream": "04",
+      "intent": "Render PDF background and interactive annotations using a dual-canvas architecture",
+      "evidence": [
+        {
+          "file": "src/components/PdfCanvas.tsx",
+          "lines": "1162-1177",
+          "snippet": "<canvas ref={pdfCanvasRef} ... /><canvas ref={overlayCanvasRef} ... />"
+        }
+      ],
+      "status": "shipped",
+      "confidence": 1.0,
+      "gaps": []
+    },
+    {
+      "id": "coordinate-normalization",
+      "stream": "04",
+      "intent": "Maintain a normalized coordinate system (scale=1) for persistent storage and cross-device consistency",
+      "evidence": [
+        {
+          "file": "src/components/PdfCanvas.tsx",
+          "lines": "147-165",
+          "snippet": "getCanvasPos (normalized) and s (scaled for rendering)"
+        }
+      ],
+      "status": "shipped",
+      "confidence": 1.0,
+      "gaps": []
+    },
+    {
+      "id": "touch-and-gestures",
+      "stream": "04",
+      "intent": "Provide comprehensive touch support including pinch-to-zoom, two-finger pan, and touch-optimized drawing",
+      "evidence": [
+        {
+          "file": "src/components/PdfCanvas.tsx",
+          "lines": "895-1116",
+          "snippet": "handleOverlayTouchStart, handleOverlayTouchMove, handleOverlayTouchEnd with touchStateRef"
+        }
+      ],
+      "status": "shipped",
+      "confidence": 1.0,
+      "gaps": []
+    },
+    {
+      "id": "gps-plan-overlay",
+      "stream": "04",
+      "intent": "Overlay live GPS position and breadcrumb traces onto the engineering plans",
+      "evidence": [
+        {
+          "file": "src/components/PdfCanvas.tsx",
+          "lines": "484-520",
+          "snippet": "Drawing gpsTracePoints (polyline) and gpsPosition (center dot and accuracy ring)"
+        }
+      ],
+      "status": "shipped",
+      "confidence": 1.0,
+      "gaps": []
+    },
+    {
+      "id": "data-persistence-bridge",
+      "stream": "04",
+      "intent": "Interface with project state via callbacks for adding, updating, and removing annotations and calibrations",
+      "evidence": [
+        {
+          "file": "src/components/PdfCanvas.tsx",
+          "lines": "20-23",
+          "snippet": "onCalibrate, onAddAnnotation, onRemoveAnnotation, onUpdateAnnotation"
+        }
+      ],
+      "status": "shipped",
+      "confidence": 1.0,
+      "gaps": []
+    }
+  ]
+}
