@@ -1,0 +1,279 @@
+{
+  "stream": "03-project-onboarding",
+  "agent": "L2-comprehender",
+  "generatedAt": "2026-05-29T00:00:00.000Z",
+  "purposeSummary": "Everything between 'project row created' and 'inspector can start drawing': PDF upload, TOC/sheet-index parsing, calibration hydration, pay-item import, specs upload, and folder seeding. No field-capture work can begin until this stream completes.",
+  "intentLeaves": [
+    {
+      "id": "S03-L01",
+      "intent": "Project creation dialog",
+      "area": "project-creation",
+      "anchor": {
+        "file": "src/pages/Dashboard.tsx",
+        "symbol": "handleCreate",
+        "lines": "54-74"
+      },
+      "inputs": ["projectName: string", "contractNumber?: string", "planPDF: File"],
+      "outputs": ["projects row inserted", "PDF stored at {userId}/{uuid}.pdf in project-pdfs bucket", "navigate to /project/:id"],
+      "gatingCriteria": "Name and PDF required; toast on missing fields; on success user lands at /project/:id with PDF rendered.",
+      "status": "implemented",
+      "risks": [],
+      "crossStreamHandoffs": ["feeds: S01 (portfolio list)", "feeds: S04 (field-capture initProject)"]
+    },
+    {
+      "id": "S03-L02",
+      "intent": "Plan PDF upload to storage",
+      "area": "project-creation",
+      "anchor": {
+        "file": "src/hooks/useProjects.ts",
+        "symbol": "createProject",
+        "lines": "112-135"
+      },
+      "inputs": ["File (PDF)", "userId", "projectId (uuid)"],
+      "outputs": ["Supabase storage path {userId}/{uuid}.pdf in project-pdfs bucket", "public.projects row with storage_path"],
+      "gatingCriteria": "Upload must complete before project row is inserted; signed URL must be derivable from storage path.",
+      "status": "implemented",
+      "risks": [],
+      "crossStreamHandoffs": ["feeds: S03-L03 (PDF load on /project/:id)"]
+    },
+    {
+      "id": "S03-L03",
+      "intent": "Project load with offline fallback",
+      "area": "project-load",
+      "anchor": {
+        "file": "src/pages/Index.tsx",
+        "symbol": "load",
+        "lines": "115-143"
+      },
+      "inputs": ["projectId from URL param", "supabase session"],
+      "outputs": ["signed URL for PDF", "calibrations array from public.calibrations", "annotations array from public.annotations", "payItems from public.projects.pay_items JSONB", "toc from public.projects.toc JSONB"],
+      "gatingCriteria": "On offline, IDB cache (safePut/safeGet) is used with toast 'Viewing cached project data.'. State hydrated via useProject.initProject().",
+      "status": "implemented",
+      "risks": ["IDB cache staleness not surfaced to user beyond toast"],
+      "crossStreamHandoffs": ["receives: S03-L02 (storage path)", "feeds: S04 (initProject seam at Index.tsx:190)"]
+    },
+    {
+      "id": "S03-L04",
+      "intent": "Sheet/TOC drag-select (Index of Sheets parsing)",
+      "area": "toc-import",
+      "anchor": {
+        "file": "src/pages/Index.tsx",
+        "symbol": "handleTocRegionSelected",
+        "lines": "370-386"
+      },
+      "inputs": ["tocSelect tool active", "drag region (x,y,w,h) on PDF canvas", "PDF text layer"],
+      "outputs": ["TocEntry[] persisted to public.projects.toc JSONB via useProject.updateToc", "sidebar 'Sections' list populated"],
+      "gatingCriteria": "Drag-selecting the INDEX OF SHEETS region must produce ≥1 TocEntry per visible row. Toast 'No entries found' on empty parse.",
+      "status": "implemented",
+      "risks": [
+        "Hardcoded 5px Y-grouping tolerance breaks dense or rotated text layouts",
+        "console.log debug noise in production (pdf-utils.ts extractTextFromRegion)"
+      ],
+      "crossStreamHandoffs": ["feeds: S04 (section-keyed color assignment for pay items)"]
+    },
+    {
+      "id": "S03-L05",
+      "intent": "TOC extraction logic (text-layer heuristic)",
+      "area": "toc-import",
+      "anchor": {
+        "file": "src/lib/pdf-utils.ts",
+        "symbol": "extractTextFromRegion",
+        "lines": "43-193"
+      },
+      "inputs": ["PDFDocumentProxy", "pageNumber", "region rect"],
+      "outputs": ["TocEntry[] with {label, sheetNo, startPage, endPage}"],
+      "gatingCriteria": "Must parse multi-column TOC layouts; must handle sheet numbers like '1-1', 'COVER'.",
+      "status": "implemented",
+      "risks": [
+        "No parse-quality indicator returned to UI",
+        "Scanned/rasterized pages silently return []"
+      ],
+      "crossStreamHandoffs": []
+    },
+    {
+      "id": "S03-L06",
+      "intent": "TOC persistence (survives reload)",
+      "area": "toc-import",
+      "anchor": {
+        "file": "src/hooks/useProject.ts",
+        "symbol": "updateToc",
+        "lines": "331-338"
+      },
+      "inputs": ["TocEntry[]", "projectId"],
+      "outputs": ["PATCH to public.projects.toc JSONB column"],
+      "gatingCriteria": "TOC must be present in useProject state after hard reload of /project/:id.",
+      "status": "implemented",
+      "risks": [],
+      "crossStreamHandoffs": []
+    },
+    {
+      "id": "S03-L07",
+      "intent": "Pay-item import from contract PDF",
+      "area": "pay-item-import",
+      "anchor": {
+        "file": "src/pages/Index.tsx",
+        "symbol": "handleImportPayItems",
+        "lines": "388-420"
+      },
+      "inputs": ["current PDF page", "up to +4 subsequent pages", "PDF text layer"],
+      "outputs": ["PayItem[] with {itemCode, name, unit, unitPrice, contractQty, color}", "persisted to public.projects"],
+      "gatingCriteria": "Populates pay-item list; deduplicates against existing items; toasts count or 'All items already imported'.",
+      "status": "implemented",
+      "risks": [
+        "Magic number +4 pages: no UI indication of scan extent or stop point",
+        "Heuristic regex fails on non-standard table layouts (merged cells, scanned pages)"
+      ],
+      "crossStreamHandoffs": ["feeds: S05 (pay-item-catalog initial population)"]
+    },
+    {
+      "id": "S03-L08",
+      "intent": "Pay-item extraction logic (heuristic)",
+      "area": "pay-item-import",
+      "anchor": {
+        "file": "src/lib/pdf-utils.ts",
+        "symbol": "extractPayItemsFromPage",
+        "lines": "278-591"
+      },
+      "inputs": ["PDFDocumentProxy", "pageNumber"],
+      "outputs": ["Partial<PayItem>[] for that page"],
+      "gatingCriteria": "Must extract itemCode, name, unit, unitPrice columns from standard NJTA/NJDOT schedule-of-values tables.",
+      "status": "implemented",
+      "risks": ["Silently returns [] on rotated text or scanned pages"]
+    },
+    {
+      "id": "S03-L09",
+      "intent": "Manual pay-item add dialog",
+      "area": "pay-item-import",
+      "anchor": {
+        "file": "src/components/ProjectSidebar.tsx",
+        "symbol": "ProjectSidebar",
+        "lines": "269-377"
+      },
+      "inputs": ["itemCode", "name", "unit", "unitPrice", "contractQty", "color", "drawable flag"],
+      "outputs": ["PayItem appended to project state and persisted"],
+      "gatingCriteria": "Non-drawable items must show 'quantity must be entered manually' notice. Save updates project state immediately.",
+      "status": "implemented",
+      "risks": []
+    },
+    {
+      "id": "S03-L10",
+      "intent": "Pay-item persistence (survives reload)",
+      "area": "pay-item-import",
+      "anchor": {
+        "file": "src/hooks/useProject.ts",
+        "symbol": "updatePayItems",
+        "lines": "303-328"
+      },
+      "inputs": ["PayItem[]", "projectId"],
+      "outputs": ["PATCH to public.projects (pay_items JSONB or related column)"],
+      "gatingCriteria": "Pay items must be present in sidebar after hard reload.",
+      "status": "implemented",
+      "risks": []
+    },
+    {
+      "id": "S03-L11",
+      "intent": "Standard Specs PDF upload and indexing",
+      "area": "specs-upload",
+      "anchor": {
+        "file": "src/pages/Index.tsx",
+        "symbol": "handleSpecsUpload",
+        "lines": "333-358"
+      },
+      "inputs": ["File (PDF)", "projectId"],
+      "outputs": ["specs PDF stored at {projectId}/specs.pdf in specs-pdfs bucket", "public.projects.specs_storage_path set", "full-text index built in specs-utils"],
+      "gatingCriteria": "Upload toasts 'Loading Standard Specs…'; on success toasts 'Specs Loaded'. specs_storage_path persisted.",
+      "status": "implemented",
+      "risks": [
+        "upsert: true at fixed path {projectId}/specs.pdf — concurrent uploads silently overwrite previous specs"
+      ],
+      "crossStreamHandoffs": ["feeds: S04 (SpecViewer search context)"]
+    },
+    {
+      "id": "S03-L12",
+      "intent": "Calibration hydration on project load",
+      "area": "calibration",
+      "anchor": {
+        "file": "src/pages/Index.tsx",
+        "symbol": "load",
+        "lines": "115-143"
+      },
+      "inputs": ["calibrations from public.calibrations WHERE project_id = :id"],
+      "outputs": ["calibration scale applied to useProject state; subsequent measurements use correct px-to-unit ratio"],
+      "gatingCriteria": "On /project/:id load, calibration must be fetched and applied before any measurement annotation is created.",
+      "status": "implemented",
+      "risks": [],
+      "crossStreamHandoffs": ["feeds: S04 (field-capture measurement accuracy)"]
+    },
+    {
+      "id": "S03-L13",
+      "intent": "Folder / section seeding from TOC",
+      "area": "folder-seeding",
+      "anchor": {
+        "file": "src/components/ProjectSidebar.tsx",
+        "symbol": "ProjectSidebar",
+        "lines": "159-220"
+      },
+      "inputs": ["TocEntry[] from useProject state"],
+      "outputs": ["Sidebar 'Sections' list with label→page-range entries", "section-keyed colors assigned to pay items"],
+      "gatingCriteria": "Each TocEntry must be navigable (clicking jumps to startPage). Sections list must update immediately after TOC import without reload.",
+      "status": "implemented",
+      "risks": ["No persistence model for section colors beyond in-memory assignment; color conflicts on large TOCs not handled"]
+    },
+    {
+      "id": "S03-L14",
+      "intent": "initProject seam — single hydration entry point",
+      "area": "project-load",
+      "anchor": {
+        "file": "src/pages/Index.tsx",
+        "symbol": "useProject.initProject",
+        "lines": "190"
+      },
+      "inputs": ["annotations", "calibrations", "payItems", "toc", "projectMeta"],
+      "outputs": ["useProject state fully populated for field-capture consumption"],
+      "gatingCriteria": "All onboarding sub-streams (TOC, pay items, calibration, specs path) must be complete before this call is meaningful.",
+      "status": "implemented",
+      "risks": ["Partial hydration (e.g. specs not yet uploaded) is not distinguished from fully onboarded state"],
+      "crossStreamHandoffs": ["feeds: S04 (field-capture)", "feeds: S05 (pay-item-catalog)"]
+    }
+  ],
+  "openRisks": [
+    {
+      "id": "R03-01",
+      "description": "extractPayItemsFromPage and extractTextFromRegion are pure heuristics; scanned or rotated PDFs silently produce zero entries with no user feedback.",
+      "severity": "high",
+      "affectedLeaves": ["S03-L04", "S03-L07", "S03-L08"]
+    },
+    {
+      "id": "R03-02",
+      "description": "console.log debug noise from TOC parsing in production; no structured logging or parse-quality telemetry.",
+      "severity": "medium",
+      "affectedLeaves": ["S03-L05"]
+    },
+    {
+      "id": "R03-03",
+      "description": "+4 page pay-item scan limit is a magic number; UI gives no indication of where scan stopped or how many pages were examined.",
+      "severity": "low",
+      "affectedLeaves": ["S03-L07"]
+    },
+    {
+      "id": "R03-04",
+      "description": "specs_storage_path uses upsert at fixed path — concurrent or repeat uploads silently overwrite without versioning.",
+      "severity": "medium",
+      "affectedLeaves": ["S03-L11"]
+    }
+  ],
+  "criticalSeams": [
+    {
+      "seam": "useProject.initProject()",
+      "file": "src/pages/Index.tsx",
+      "line": 190,
+      "description": "Single call that assembles all onboarding outputs into the state consumed by field-capture. Must receive all sub-stream outputs before field work begins."
+    },
+    {
+      "seam": "handleImportPayItems → pay-item-catalog bootstrap",
+      "file": "src/pages/Index.tsx",
+      "line": "388-420",
+      "description": "First population of PayItem[]. Pay-item-catalog stream (S05) treats this as the source of truth for initial item lifecycle."
+    }
+  ]
+}
