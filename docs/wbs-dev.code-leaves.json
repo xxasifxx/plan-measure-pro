@@ -1,0 +1,3821 @@
+{
+  "generatedAt": "2026-05-29T16:09:35.677Z",
+  "totals": {
+    "leaves": 210,
+    "byStream": {
+      "10": 6,
+      "11": 41,
+      "12": 3,
+      "13": 8,
+      "14": 5,
+      "15": 23,
+      "16": 5,
+      "17": 5,
+      "18": 13,
+      "19": 4,
+      "20": 4,
+      "97": 18,
+      "98": 35,
+      "99": 1,
+      "05": 4,
+      "02": 6,
+      "07": 8,
+      "09": 2,
+      "01": 10,
+      "06": 5,
+      "03": 1,
+      "08": 2,
+      "04": 1
+    },
+    "byLayer": {
+      "Frontend": 107,
+      "Mobile": 24,
+      "Verification": 29,
+      "Backend": 40,
+      "Build": 10
+    },
+    "tables": 30,
+    "views": 1,
+    "migrationWeeks": 4
+  },
+  "leaves": [
+    {
+      "streamNum": "99",
+      "layer": "Frontend",
+      "name": "shadcn UI primitives",
+      "fileGlobs": [
+        "src/components/ui/accordion.tsx",
+        "src/components/ui/alert-dialog.tsx",
+        "src/components/ui/alert.tsx",
+        "src/components/ui/aspect-ratio.tsx",
+        "src/components/ui/avatar.tsx",
+        "src/components/ui/badge.tsx",
+        "src/components/ui/breadcrumb.tsx",
+        "src/components/ui/button.tsx",
+        "src/components/ui/calendar.tsx",
+        "src/components/ui/card.tsx",
+        "src/components/ui/carousel.tsx",
+        "src/components/ui/chart.tsx",
+        "src/components/ui/checkbox.tsx",
+        "src/components/ui/collapsible.tsx",
+        "src/components/ui/command.tsx",
+        "src/components/ui/context-menu.tsx",
+        "src/components/ui/dialog.tsx",
+        "src/components/ui/drawer.tsx",
+        "src/components/ui/dropdown-menu.tsx",
+        "src/components/ui/form.tsx",
+        "src/components/ui/hover-card.tsx",
+        "src/components/ui/input-otp.tsx",
+        "src/components/ui/input.tsx",
+        "src/components/ui/label.tsx",
+        "src/components/ui/menubar.tsx",
+        "src/components/ui/navigation-menu.tsx",
+        "src/components/ui/pagination.tsx",
+        "src/components/ui/popover.tsx",
+        "src/components/ui/progress.tsx",
+        "src/components/ui/radio-group.tsx",
+        "src/components/ui/resizable.tsx",
+        "src/components/ui/scroll-area.tsx",
+        "src/components/ui/select.tsx",
+        "src/components/ui/separator.tsx",
+        "src/components/ui/sheet.tsx",
+        "src/components/ui/sidebar.tsx",
+        "src/components/ui/skeleton.tsx",
+        "src/components/ui/slider.tsx",
+        "src/components/ui/sonner.tsx",
+        "src/components/ui/switch.tsx",
+        "src/components/ui/table.tsx",
+        "src/components/ui/tabs.tsx",
+        "src/components/ui/textarea.tsx",
+        "src/components/ui/toast.tsx",
+        "src/components/ui/toaster.tsx",
+        "src/components/ui/toggle-group.tsx",
+        "src/components/ui/toggle.tsx",
+        "src/components/ui/tooltip.tsx",
+        "src/components/ui/use-toast.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "cluster": "shadcn"
+        }
+      ],
+      "stream": "99 Cross-cutting",
+      "id": "99:frontend:shadcn-ui-primitives"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Frontend",
+      "name": "App",
+      "fileGlobs": [
+        "src/App.css"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/App.css"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:frontend:app"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Frontend",
+      "name": "App",
+      "fileGlobs": [
+        "src/App.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/App.tsx"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:frontend:app"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "app-icon-master",
+      "fileGlobs": [
+        "src/assets/app-icon-master.png"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/assets/app-icon-master.png"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:app-icon-master"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "blueprint-plans",
+      "fileGlobs": [
+        "src/assets/blueprint-plans.jpg"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/assets/blueprint-plans.jpg"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:blueprint-plans"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "gps-field-measurement",
+      "fileGlobs": [
+        "src/assets/gps-field-measurement.jpg"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/assets/gps-field-measurement.jpg"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:gps-field-measurement"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "hero-product-shot",
+      "fileGlobs": [
+        "src/assets/hero-product-shot.png"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/assets/hero-product-shot.png"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:hero-product-shot"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "hero-screenshot",
+      "fileGlobs": [
+        "src/assets/hero-screenshot.jpg"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/assets/hero-screenshot.jpg"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:hero-screenshot"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "highway-construction-aerial",
+      "fileGlobs": [
+        "src/assets/highway-construction-aerial.jpg"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/assets/highway-construction-aerial.jpg"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:highway-construction-aerial"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "inspector-tablet",
+      "fileGlobs": [
+        "src/assets/inspector-tablet.jpg"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/assets/inspector-tablet.jpg"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:inspector-tablet"
+    },
+    {
+      "streamNum": "15",
+      "layer": "Mobile",
+      "name": "BiometricGate",
+      "fileGlobs": [
+        "src/components/BiometricGate.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/BiometricGate.tsx"
+        }
+      ],
+      "stream": "15 Offline & Native Durability",
+      "id": "15:mobile:biometricgate"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "ConfirmDialog",
+      "fileGlobs": [
+        "src/components/ConfirmDialog.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/ConfirmDialog.tsx"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:confirmdialog"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "EmptyState",
+      "fileGlobs": [
+        "src/components/EmptyState.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/EmptyState.tsx"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:emptystate"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "GanttUploader",
+      "fileGlobs": [
+        "src/components/GanttUploader.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/GanttUploader.tsx"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:ganttuploader"
+    },
+    {
+      "streamNum": "14",
+      "layer": "Frontend",
+      "name": "GpsCalibration",
+      "fileGlobs": [
+        "src/components/GpsCalibration.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/GpsCalibration.tsx"
+        }
+      ],
+      "stream": "14 Measurement & Geometry Engine",
+      "id": "14:frontend:gpscalibration"
+    },
+    {
+      "streamNum": "14",
+      "layer": "Frontend",
+      "name": "GpsTraceControls",
+      "fileGlobs": [
+        "src/components/GpsTraceControls.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/GpsTraceControls.tsx"
+        }
+      ],
+      "stream": "14 Measurement & Geometry Engine",
+      "id": "14:frontend:gpstracecontrols"
+    },
+    {
+      "streamNum": "19",
+      "layer": "Frontend",
+      "name": "GuidedTour",
+      "fileGlobs": [
+        "src/components/GuidedTour.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/GuidedTour.tsx"
+        }
+      ],
+      "stream": "19 Onboarding & Tutorials",
+      "id": "19:frontend:guidedtour"
+    },
+    {
+      "streamNum": "16",
+      "layer": "Mobile",
+      "name": "MobileAnnotationSheet",
+      "fileGlobs": [
+        "src/components/MobileAnnotationSheet.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/MobileAnnotationSheet.tsx"
+        }
+      ],
+      "stream": "16 Mobile Field Ergonomics",
+      "id": "16:mobile:mobileannotationsheet"
+    },
+    {
+      "streamNum": "16",
+      "layer": "Mobile",
+      "name": "MobilePayItems",
+      "fileGlobs": [
+        "src/components/MobilePayItems.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/MobilePayItems.tsx"
+        }
+      ],
+      "stream": "16 Mobile Field Ergonomics",
+      "id": "16:mobile:mobilepayitems"
+    },
+    {
+      "streamNum": "16",
+      "layer": "Mobile",
+      "name": "MobileSections",
+      "fileGlobs": [
+        "src/components/MobileSections.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/MobileSections.tsx"
+        }
+      ],
+      "stream": "16 Mobile Field Ergonomics",
+      "id": "16:mobile:mobilesections"
+    },
+    {
+      "streamNum": "16",
+      "layer": "Mobile",
+      "name": "MobileTabBar",
+      "fileGlobs": [
+        "src/components/MobileTabBar.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/MobileTabBar.tsx"
+        }
+      ],
+      "stream": "16 Mobile Field Ergonomics",
+      "id": "16:mobile:mobiletabbar"
+    },
+    {
+      "streamNum": "16",
+      "layer": "Mobile",
+      "name": "MobileToolbar",
+      "fileGlobs": [
+        "src/components/MobileToolbar.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/MobileToolbar.tsx"
+        }
+      ],
+      "stream": "16 Mobile Field Ergonomics",
+      "id": "16:mobile:mobiletoolbar"
+    },
+    {
+      "streamNum": "15",
+      "layer": "Mobile",
+      "name": "NativeFirstRun",
+      "fileGlobs": [
+        "src/components/NativeFirstRun.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/NativeFirstRun.tsx"
+        }
+      ],
+      "stream": "15 Offline & Native Durability",
+      "id": "15:mobile:nativefirstrun"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "NavLink",
+      "fileGlobs": [
+        "src/components/NavLink.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/NavLink.tsx"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:navlink"
+    },
+    {
+      "streamNum": "17",
+      "layer": "Frontend",
+      "name": "NotificationBell",
+      "fileGlobs": [
+        "src/components/NotificationBell.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/NotificationBell.tsx"
+        }
+      ],
+      "stream": "17 Notifications & Presence",
+      "id": "17:frontend:notificationbell"
+    },
+    {
+      "streamNum": "05",
+      "layer": "Frontend",
+      "name": "PdfCanvas",
+      "fileGlobs": [
+        "src/components/PdfCanvas.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/PdfCanvas.tsx"
+        }
+      ],
+      "stream": "05 Field Capture",
+      "id": "05:frontend:pdfcanvas"
+    },
+    {
+      "streamNum": "02",
+      "layer": "Frontend",
+      "name": "ProjectSidebar",
+      "fileGlobs": [
+        "src/components/ProjectSidebar.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/ProjectSidebar.tsx"
+        }
+      ],
+      "stream": "02 Portfolio & PM Home",
+      "id": "02:frontend:projectsidebar"
+    },
+    {
+      "streamNum": "15",
+      "layer": "Mobile",
+      "name": "PwaShell",
+      "fileGlobs": [
+        "src/components/PwaShell.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/PwaShell.tsx"
+        }
+      ],
+      "stream": "15 Offline & Native Durability",
+      "id": "15:mobile:pwashell"
+    },
+    {
+      "streamNum": "07",
+      "layer": "Frontend",
+      "name": "ReRejectDialog",
+      "fileGlobs": [
+        "src/components/ReRejectDialog.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/ReRejectDialog.tsx"
+        }
+      ],
+      "stream": "07 Quantity to Payment",
+      "id": "07:frontend:rerejectdialog"
+    },
+    {
+      "streamNum": "07",
+      "layer": "Frontend",
+      "name": "ReReviewCard",
+      "fileGlobs": [
+        "src/components/ReReviewCard.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/ReReviewCard.tsx"
+        }
+      ],
+      "stream": "07 Quantity to Payment",
+      "id": "07:frontend:rereviewcard"
+    },
+    {
+      "streamNum": "09",
+      "layer": "Frontend",
+      "name": "SpecViewer",
+      "fileGlobs": [
+        "src/components/SpecViewer.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/SpecViewer.tsx"
+        }
+      ],
+      "stream": "09 Standard Specifications",
+      "id": "09:frontend:specviewer"
+    },
+    {
+      "streamNum": "07",
+      "layer": "Frontend",
+      "name": "SummaryPanel",
+      "fileGlobs": [
+        "src/components/SummaryPanel.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/SummaryPanel.tsx"
+        }
+      ],
+      "stream": "07 Quantity to Payment",
+      "id": "07:frontend:summarypanel"
+    },
+    {
+      "streamNum": "15",
+      "layer": "Mobile",
+      "name": "SyncPanel",
+      "fileGlobs": [
+        "src/components/SyncPanel.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/SyncPanel.tsx"
+        }
+      ],
+      "stream": "15 Offline & Native Durability",
+      "id": "15:mobile:syncpanel"
+    },
+    {
+      "streamNum": "01",
+      "layer": "Frontend",
+      "name": "TeamManager",
+      "fileGlobs": [
+        "src/components/TeamManager.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/TeamManager.tsx"
+        }
+      ],
+      "stream": "01 Identity & Access",
+      "id": "01:frontend:teammanager"
+    },
+    {
+      "streamNum": "05",
+      "layer": "Frontend",
+      "name": "Toolbar",
+      "fileGlobs": [
+        "src/components/Toolbar.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/Toolbar.tsx"
+        }
+      ],
+      "stream": "05 Field Capture",
+      "id": "05:frontend:toolbar"
+    },
+    {
+      "streamNum": "19",
+      "layer": "Frontend",
+      "name": "WelcomeCarousel",
+      "fileGlobs": [
+        "src/components/WelcomeCarousel.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/WelcomeCarousel.tsx"
+        }
+      ],
+      "stream": "19 Onboarding & Tutorials",
+      "id": "19:frontend:welcomecarousel"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "ActivityInspector",
+      "fileGlobs": [
+        "src/components/schedule/ActivityInspector.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/schedule/ActivityInspector.tsx"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:activityinspector"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "BaselineManager",
+      "fileGlobs": [
+        "src/components/schedule/BaselineManager.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/schedule/BaselineManager.tsx"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:baselinemanager"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "CalendarManager",
+      "fileGlobs": [
+        "src/components/schedule/CalendarManager.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/schedule/CalendarManager.tsx"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:calendarmanager"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "ComplianceStrip",
+      "fileGlobs": [
+        "src/components/schedule/ComplianceStrip.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/schedule/ComplianceStrip.tsx"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:compliancestrip"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "DcmaPanel",
+      "fileGlobs": [
+        "src/components/schedule/DcmaPanel.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/schedule/DcmaPanel.tsx"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:dcmapanel"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "GanttChart",
+      "fileGlobs": [
+        "src/components/schedule/GanttChart.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/schedule/GanttChart.tsx"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:ganttchart"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "ImportP6Panel",
+      "fileGlobs": [
+        "src/components/schedule/ImportP6Panel.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/schedule/ImportP6Panel.tsx"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:importp6panel"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "MetaControls",
+      "fileGlobs": [
+        "src/components/schedule/MetaControls.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/schedule/MetaControls.tsx"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:metacontrols"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "ResourceManager",
+      "fileGlobs": [
+        "src/components/schedule/ResourceManager.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/schedule/ResourceManager.tsx"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:resourcemanager"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "ScheduleToolbar",
+      "fileGlobs": [
+        "src/components/schedule/ScheduleToolbar.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/schedule/ScheduleToolbar.tsx"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:scheduletoolbar"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "ScheduleWorkspace",
+      "fileGlobs": [
+        "src/components/schedule/ScheduleWorkspace.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/schedule/ScheduleWorkspace.tsx"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:scheduleworkspace"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "WbsTree",
+      "fileGlobs": [
+        "src/components/schedule/WbsTree.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/components/schedule/WbsTree.tsx"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:wbstree"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "use-mobile",
+      "fileGlobs": [
+        "src/hooks/use-mobile.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/hooks/use-mobile.tsx"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:use-mobile"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "use-toast",
+      "fileGlobs": [
+        "src/hooks/use-toast.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/hooks/use-toast.ts"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:use-toast"
+    },
+    {
+      "streamNum": "01",
+      "layer": "Frontend",
+      "name": "useAuth",
+      "fileGlobs": [
+        "src/hooks/useAuth.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/hooks/useAuth.tsx"
+        }
+      ],
+      "stream": "01 Identity & Access",
+      "id": "01:frontend:useauth"
+    },
+    {
+      "streamNum": "06",
+      "layer": "Frontend",
+      "name": "useDailyReport",
+      "fileGlobs": [
+        "src/hooks/useDailyReport.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/hooks/useDailyReport.ts"
+        }
+      ],
+      "stream": "06 Daily Report Lifecycle",
+      "id": "06:frontend:usedailyreport"
+    },
+    {
+      "streamNum": "10",
+      "layer": "Frontend",
+      "name": "useDocuments",
+      "fileGlobs": [
+        "src/hooks/useDocuments.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/hooks/useDocuments.ts"
+        }
+      ],
+      "stream": "10 Document Management",
+      "id": "10:frontend:usedocuments"
+    },
+    {
+      "streamNum": "15",
+      "layer": "Frontend",
+      "name": "useNetworkStatus",
+      "fileGlobs": [
+        "src/hooks/useNetworkStatus.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/hooks/useNetworkStatus.ts"
+        }
+      ],
+      "stream": "15 Offline & Native Durability",
+      "id": "15:frontend:usenetworkstatus"
+    },
+    {
+      "streamNum": "17",
+      "layer": "Frontend",
+      "name": "useNotifications",
+      "fileGlobs": [
+        "src/hooks/useNotifications.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/hooks/useNotifications.ts"
+        }
+      ],
+      "stream": "17 Notifications & Presence",
+      "id": "17:frontend:usenotifications"
+    },
+    {
+      "streamNum": "15",
+      "layer": "Frontend",
+      "name": "useOutbox",
+      "fileGlobs": [
+        "src/hooks/useOutbox.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/hooks/useOutbox.ts"
+        }
+      ],
+      "stream": "15 Offline & Native Durability",
+      "id": "15:frontend:useoutbox"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "usePayItemActivityMap",
+      "fileGlobs": [
+        "src/hooks/usePayItemActivityMap.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/hooks/usePayItemActivityMap.ts"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:usepayitemactivitymap"
+    },
+    {
+      "streamNum": "02",
+      "layer": "Frontend",
+      "name": "useProject",
+      "fileGlobs": [
+        "src/hooks/useProject.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/hooks/useProject.ts"
+        }
+      ],
+      "stream": "02 Portfolio & PM Home",
+      "id": "02:frontend:useproject"
+    },
+    {
+      "streamNum": "02",
+      "layer": "Frontend",
+      "name": "useProjects",
+      "fileGlobs": [
+        "src/hooks/useProjects.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/hooks/useProjects.ts"
+        }
+      ],
+      "stream": "02 Portfolio & PM Home",
+      "id": "02:frontend:useprojects"
+    },
+    {
+      "streamNum": "07",
+      "layer": "Frontend",
+      "name": "useReReviewQueue",
+      "fileGlobs": [
+        "src/hooks/useReReviewQueue.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/hooks/useReReviewQueue.ts"
+        }
+      ],
+      "stream": "07 Quantity to Payment",
+      "id": "07:frontend:userereviewqueue"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "useTheme",
+      "fileGlobs": [
+        "src/hooks/useTheme.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/hooks/useTheme.ts"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:usetheme"
+    },
+    {
+      "streamNum": "19",
+      "layer": "Frontend",
+      "name": "useTour",
+      "fileGlobs": [
+        "src/hooks/useTour.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/hooks/useTour.ts"
+        }
+      ],
+      "stream": "19 Onboarding & Tutorials",
+      "id": "19:frontend:usetour"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Frontend",
+      "name": "index",
+      "fileGlobs": [
+        "src/index.css"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/index.css"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:frontend:index"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "client",
+      "fileGlobs": [
+        "src/integrations/supabase/client.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/integrations/supabase/client.ts"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:client"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "types",
+      "fileGlobs": [
+        "src/integrations/supabase/types.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/integrations/supabase/types.ts"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:types"
+    },
+    {
+      "streamNum": "07",
+      "layer": "Frontend",
+      "name": "approved-quantities",
+      "fileGlobs": [
+        "src/lib/approved-quantities.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/approved-quantities.ts"
+        }
+      ],
+      "stream": "07 Quantity to Payment",
+      "id": "07:frontend:approved-quantities"
+    },
+    {
+      "streamNum": "07",
+      "layer": "Frontend",
+      "name": "daily-report-snapshot",
+      "fileGlobs": [
+        "src/lib/daily-report-snapshot.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/daily-report-snapshot.ts"
+        }
+      ],
+      "stream": "07 Quantity to Payment",
+      "id": "07:frontend:daily-report-snapshot"
+    },
+    {
+      "streamNum": "13",
+      "layer": "Frontend",
+      "name": "export-utils",
+      "fileGlobs": [
+        "src/lib/export-utils.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/export-utils.ts"
+        }
+      ],
+      "stream": "13 Data Export & Interoperability",
+      "id": "13:frontend:export-utils"
+    },
+    {
+      "streamNum": "14",
+      "layer": "Frontend",
+      "name": "geo-transform",
+      "fileGlobs": [
+        "src/lib/geo-transform.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/geo-transform.ts"
+        }
+      ],
+      "stream": "14 Measurement & Geometry Engine",
+      "id": "14:frontend:geo-transform"
+    },
+    {
+      "streamNum": "14",
+      "layer": "Frontend",
+      "name": "geometry",
+      "fileGlobs": [
+        "src/lib/geometry.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/geometry.ts"
+        }
+      ],
+      "stream": "14 Measurement & Geometry Engine",
+      "id": "14:frontend:geometry"
+    },
+    {
+      "streamNum": "15",
+      "layer": "Mobile",
+      "name": "app-state",
+      "fileGlobs": [
+        "src/lib/native/app-state.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/native/app-state.ts"
+        }
+      ],
+      "stream": "15 Offline & Native Durability",
+      "id": "15:mobile:app-state"
+    },
+    {
+      "streamNum": "15",
+      "layer": "Mobile",
+      "name": "background-sync",
+      "fileGlobs": [
+        "src/lib/native/background-sync.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/native/background-sync.ts"
+        }
+      ],
+      "stream": "15 Offline & Native Durability",
+      "id": "15:mobile:background-sync"
+    },
+    {
+      "streamNum": "15",
+      "layer": "Mobile",
+      "name": "biometric",
+      "fileGlobs": [
+        "src/lib/native/biometric.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/native/biometric.ts"
+        }
+      ],
+      "stream": "15 Offline & Native Durability",
+      "id": "15:mobile:biometric"
+    },
+    {
+      "streamNum": "15",
+      "layer": "Mobile",
+      "name": "camera",
+      "fileGlobs": [
+        "src/lib/native/camera.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/native/camera.ts"
+        }
+      ],
+      "stream": "15 Offline & Native Durability",
+      "id": "15:mobile:camera"
+    },
+    {
+      "streamNum": "15",
+      "layer": "Mobile",
+      "name": "filesystem",
+      "fileGlobs": [
+        "src/lib/native/filesystem.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/native/filesystem.ts"
+        }
+      ],
+      "stream": "15 Offline & Native Durability",
+      "id": "15:mobile:filesystem"
+    },
+    {
+      "streamNum": "15",
+      "layer": "Mobile",
+      "name": "geolocation",
+      "fileGlobs": [
+        "src/lib/native/geolocation.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/native/geolocation.ts"
+        }
+      ],
+      "stream": "15 Offline & Native Durability",
+      "id": "15:mobile:geolocation"
+    },
+    {
+      "streamNum": "15",
+      "layer": "Mobile",
+      "name": "platform",
+      "fileGlobs": [
+        "src/lib/native/platform.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/native/platform.ts"
+        }
+      ],
+      "stream": "15 Offline & Native Durability",
+      "id": "15:mobile:platform"
+    },
+    {
+      "streamNum": "15",
+      "layer": "Mobile",
+      "name": "push",
+      "fileGlobs": [
+        "src/lib/native/push.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/native/push.ts"
+        }
+      ],
+      "stream": "15 Offline & Native Durability",
+      "id": "15:mobile:push"
+    },
+    {
+      "streamNum": "15",
+      "layer": "Mobile",
+      "name": "db",
+      "fileGlobs": [
+        "src/lib/offline/db.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/offline/db.ts"
+        }
+      ],
+      "stream": "15 Offline & Native Durability",
+      "id": "15:mobile:db"
+    },
+    {
+      "streamNum": "15",
+      "layer": "Mobile",
+      "name": "idb-persister",
+      "fileGlobs": [
+        "src/lib/offline/idb-persister.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/offline/idb-persister.ts"
+        }
+      ],
+      "stream": "15 Offline & Native Durability",
+      "id": "15:mobile:idb-persister"
+    },
+    {
+      "streamNum": "15",
+      "layer": "Mobile",
+      "name": "mirror",
+      "fileGlobs": [
+        "src/lib/offline/mirror.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/offline/mirror.ts"
+        }
+      ],
+      "stream": "15 Offline & Native Durability",
+      "id": "15:mobile:mirror"
+    },
+    {
+      "streamNum": "15",
+      "layer": "Mobile",
+      "name": "mutation-client",
+      "fileGlobs": [
+        "src/lib/offline/mutation-client.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/offline/mutation-client.ts"
+        }
+      ],
+      "stream": "15 Offline & Native Durability",
+      "id": "15:mobile:mutation-client"
+    },
+    {
+      "streamNum": "15",
+      "layer": "Mobile",
+      "name": "outbox",
+      "fileGlobs": [
+        "src/lib/offline/outbox.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/offline/outbox.ts"
+        }
+      ],
+      "stream": "15 Offline & Native Durability",
+      "id": "15:mobile:outbox"
+    },
+    {
+      "streamNum": "15",
+      "layer": "Mobile",
+      "name": "pdf-cache",
+      "fileGlobs": [
+        "src/lib/offline/pdf-cache.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/offline/pdf-cache.ts"
+        }
+      ],
+      "stream": "15 Offline & Native Durability",
+      "id": "15:mobile:pdf-cache"
+    },
+    {
+      "streamNum": "15",
+      "layer": "Mobile",
+      "name": "sync",
+      "fileGlobs": [
+        "src/lib/offline/sync.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/offline/sync.ts"
+        }
+      ],
+      "stream": "15 Offline & Native Durability",
+      "id": "15:mobile:sync"
+    },
+    {
+      "streamNum": "13",
+      "layer": "Frontend",
+      "name": "apply-progress",
+      "fileGlobs": [
+        "src/lib/p6xml/apply-progress.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/p6xml/apply-progress.ts"
+        }
+      ],
+      "stream": "13 Data Export & Interoperability",
+      "id": "13:frontend:apply-progress"
+    },
+    {
+      "streamNum": "13",
+      "layer": "Frontend",
+      "name": "build-from-project",
+      "fileGlobs": [
+        "src/lib/p6xml/build-from-project.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/p6xml/build-from-project.ts"
+        }
+      ],
+      "stream": "13 Data Export & Interoperability",
+      "id": "13:frontend:build-from-project"
+    },
+    {
+      "streamNum": "13",
+      "layer": "Frontend",
+      "name": "load-approved",
+      "fileGlobs": [
+        "src/lib/p6xml/load-approved.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/p6xml/load-approved.ts"
+        }
+      ],
+      "stream": "13 Data Export & Interoperability",
+      "id": "13:frontend:load-approved"
+    },
+    {
+      "streamNum": "13",
+      "layer": "Frontend",
+      "name": "parser",
+      "fileGlobs": [
+        "src/lib/p6xml/parser.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/p6xml/parser.ts"
+        }
+      ],
+      "stream": "13 Data Export & Interoperability",
+      "id": "13:frontend:parser"
+    },
+    {
+      "streamNum": "13",
+      "layer": "Frontend",
+      "name": "sample",
+      "fileGlobs": [
+        "src/lib/p6xml/sample.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/p6xml/sample.ts"
+        }
+      ],
+      "stream": "13 Data Export & Interoperability",
+      "id": "13:frontend:sample"
+    },
+    {
+      "streamNum": "13",
+      "layer": "Frontend",
+      "name": "serializer",
+      "fileGlobs": [
+        "src/lib/p6xml/serializer.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/p6xml/serializer.ts"
+        }
+      ],
+      "stream": "13 Data Export & Interoperability",
+      "id": "13:frontend:serializer"
+    },
+    {
+      "streamNum": "13",
+      "layer": "Frontend",
+      "name": "types",
+      "fileGlobs": [
+        "src/lib/p6xml/types.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/p6xml/types.ts"
+        }
+      ],
+      "stream": "13 Data Export & Interoperability",
+      "id": "13:frontend:types"
+    },
+    {
+      "streamNum": "10",
+      "layer": "Frontend",
+      "name": "pdf-utils",
+      "fileGlobs": [
+        "src/lib/pdf-utils.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/pdf-utils.ts"
+        }
+      ],
+      "stream": "10 Document Management",
+      "id": "10:frontend:pdf-utils"
+    },
+    {
+      "streamNum": "15",
+      "layer": "Frontend",
+      "name": "pwa",
+      "fileGlobs": [
+        "src/lib/pwa.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/pwa.ts"
+        }
+      ],
+      "stream": "15 Offline & Native Durability",
+      "id": "15:frontend:pwa"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "aace",
+      "fileGlobs": [
+        "src/lib/schedule/analysis/aace.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/schedule/analysis/aace.ts"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:aace"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "chart-export",
+      "fileGlobs": [
+        "src/lib/schedule/analysis/chart-export.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/schedule/analysis/chart-export.ts"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:chart-export"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "dcma",
+      "fileGlobs": [
+        "src/lib/schedule/analysis/dcma.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/schedule/analysis/dcma.ts"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:dcma"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "feedback",
+      "fileGlobs": [
+        "src/lib/schedule/analysis/feedback.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/schedule/analysis/feedback.ts"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:feedback"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "memo-export",
+      "fileGlobs": [
+        "src/lib/schedule/analysis/memo-export.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/schedule/analysis/memo-export.ts"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:memo-export"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "progress",
+      "fileGlobs": [
+        "src/lib/schedule/analysis/progress.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/schedule/analysis/progress.ts"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:progress"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "tia",
+      "fileGlobs": [
+        "src/lib/schedule/analysis/tia.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/schedule/analysis/tia.ts"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:tia"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "baseline",
+      "fileGlobs": [
+        "src/lib/schedule/baseline.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/schedule/baseline.ts"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:baseline"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "calendars",
+      "fileGlobs": [
+        "src/lib/schedule/calendars.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/schedule/calendars.ts"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:calendars"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "cpm",
+      "fileGlobs": [
+        "src/lib/schedule/cpm.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/schedule/cpm.ts"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:cpm"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "date-utils",
+      "fileGlobs": [
+        "src/lib/schedule/date-utils.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/schedule/date-utils.ts"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:date-utils"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "import-p6",
+      "fileGlobs": [
+        "src/lib/schedule/import-p6.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/schedule/import-p6.ts"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:import-p6"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "types",
+      "fileGlobs": [
+        "src/lib/schedule/types.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/schedule/types.ts"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:types"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "use-schedule",
+      "fileGlobs": [
+        "src/lib/schedule/use-schedule.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/schedule/use-schedule.ts"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:use-schedule"
+    },
+    {
+      "streamNum": "09",
+      "layer": "Frontend",
+      "name": "specs-utils",
+      "fileGlobs": [
+        "src/lib/specs-utils.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/specs-utils.ts"
+        }
+      ],
+      "stream": "09 Standard Specifications",
+      "id": "09:frontend:specs-utils"
+    },
+    {
+      "streamNum": "10",
+      "layer": "Frontend",
+      "name": "storage",
+      "fileGlobs": [
+        "src/lib/storage.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/storage.ts"
+        }
+      ],
+      "stream": "10 Document Management",
+      "id": "10:frontend:storage"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "utils",
+      "fileGlobs": [
+        "src/lib/utils.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/lib/utils.ts"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:utils"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Frontend",
+      "name": "main",
+      "fileGlobs": [
+        "src/main.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/main.tsx"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:frontend:main"
+    },
+    {
+      "streamNum": "01",
+      "layer": "Frontend",
+      "name": "Admin",
+      "fileGlobs": [
+        "src/pages/Admin.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/Admin.tsx"
+        }
+      ],
+      "stream": "01 Identity & Access",
+      "id": "01:frontend:admin"
+    },
+    {
+      "streamNum": "01",
+      "layer": "Frontend",
+      "name": "Auth",
+      "fileGlobs": [
+        "src/pages/Auth.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/Auth.tsx"
+        }
+      ],
+      "stream": "01 Identity & Access",
+      "id": "01:frontend:auth"
+    },
+    {
+      "streamNum": "06",
+      "layer": "Frontend",
+      "name": "DailyReport",
+      "fileGlobs": [
+        "src/pages/DailyReport.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/DailyReport.tsx"
+        }
+      ],
+      "stream": "06 Daily Report Lifecycle",
+      "id": "06:frontend:dailyreport"
+    },
+    {
+      "streamNum": "02",
+      "layer": "Frontend",
+      "name": "Dashboard",
+      "fileGlobs": [
+        "src/pages/Dashboard.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/Dashboard.tsx"
+        }
+      ],
+      "stream": "02 Portfolio & PM Home",
+      "id": "02:frontend:dashboard"
+    },
+    {
+      "streamNum": "19",
+      "layer": "Frontend",
+      "name": "Demo",
+      "fileGlobs": [
+        "src/pages/Demo.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/Demo.tsx"
+        }
+      ],
+      "stream": "19 Onboarding & Tutorials",
+      "id": "19:frontend:demo"
+    },
+    {
+      "streamNum": "10",
+      "layer": "Frontend",
+      "name": "Documents",
+      "fileGlobs": [
+        "src/pages/Documents.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/Documents.tsx"
+        }
+      ],
+      "stream": "10 Document Management",
+      "id": "10:frontend:documents"
+    },
+    {
+      "streamNum": "20",
+      "layer": "Frontend",
+      "name": "FajarPitch",
+      "fileGlobs": [
+        "src/pages/FajarPitch.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/FajarPitch.tsx"
+        }
+      ],
+      "stream": "20 Sales & Pitch",
+      "id": "20:frontend:fajarpitch"
+    },
+    {
+      "streamNum": "03",
+      "layer": "Frontend",
+      "name": "Index",
+      "fileGlobs": [
+        "src/pages/Index.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/Index.tsx"
+        }
+      ],
+      "stream": "03 Project Onboarding",
+      "id": "03:frontend:index"
+    },
+    {
+      "streamNum": "20",
+      "layer": "Frontend",
+      "name": "Landing",
+      "fileGlobs": [
+        "src/pages/Landing.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/Landing.tsx"
+        }
+      ],
+      "stream": "20 Sales & Pitch",
+      "id": "20:frontend:landing"
+    },
+    {
+      "streamNum": "20",
+      "layer": "Frontend",
+      "name": "McfaPitch",
+      "fileGlobs": [
+        "src/pages/McfaPitch.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/McfaPitch.tsx"
+        }
+      ],
+      "stream": "20 Sales & Pitch",
+      "id": "20:frontend:mcfapitch"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "NotFound",
+      "fileGlobs": [
+        "src/pages/NotFound.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/NotFound.tsx"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:notfound"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "P6Export",
+      "fileGlobs": [
+        "src/pages/P6Export.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/P6Export.tsx"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:p6export"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Frontend",
+      "name": "P6XmlDemo",
+      "fileGlobs": [
+        "src/pages/P6XmlDemo.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/P6XmlDemo.tsx"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:frontend:p6xmldemo"
+    },
+    {
+      "streamNum": "12",
+      "layer": "Frontend",
+      "name": "ProjectControls",
+      "fileGlobs": [
+        "src/pages/ProjectControls.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/ProjectControls.tsx"
+        }
+      ],
+      "stream": "12 Project Health & Controls",
+      "id": "12:frontend:projectcontrols"
+    },
+    {
+      "streamNum": "07",
+      "layer": "Frontend",
+      "name": "ReReview",
+      "fileGlobs": [
+        "src/pages/ReReview.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/ReReview.tsx"
+        }
+      ],
+      "stream": "07 Quantity to Payment",
+      "id": "07:frontend:rereview"
+    },
+    {
+      "streamNum": "01",
+      "layer": "Frontend",
+      "name": "ResetPassword",
+      "fileGlobs": [
+        "src/pages/ResetPassword.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/ResetPassword.tsx"
+        }
+      ],
+      "stream": "01 Identity & Access",
+      "id": "01:frontend:resetpassword"
+    },
+    {
+      "streamNum": "01",
+      "layer": "Frontend",
+      "name": "Settings",
+      "fileGlobs": [
+        "src/pages/Settings.tsx"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/pages/Settings.tsx"
+        }
+      ],
+      "stream": "01 Identity & Access",
+      "id": "01:frontend:settings"
+    },
+    {
+      "streamNum": "18",
+      "layer": "Verification",
+      "name": "analysis-dcma.test",
+      "fileGlobs": [
+        "src/test/analysis-dcma.test.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/test/analysis-dcma.test.ts"
+        }
+      ],
+      "stream": "18 Compliance & Audit",
+      "id": "18:verification:analysis-dcma-test"
+    },
+    {
+      "streamNum": "18",
+      "layer": "Verification",
+      "name": "analysis-tia.test",
+      "fileGlobs": [
+        "src/test/analysis-tia.test.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/test/analysis-tia.test.ts"
+        }
+      ],
+      "stream": "18 Compliance & Audit",
+      "id": "18:verification:analysis-tia-test"
+    },
+    {
+      "streamNum": "18",
+      "layer": "Verification",
+      "name": "baseline-end.test",
+      "fileGlobs": [
+        "src/test/baseline-end.test.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/test/baseline-end.test.ts"
+        }
+      ],
+      "stream": "18 Compliance & Audit",
+      "id": "18:verification:baseline-end-test"
+    },
+    {
+      "streamNum": "18",
+      "layer": "Verification",
+      "name": "cpm.test",
+      "fileGlobs": [
+        "src/test/cpm.test.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/test/cpm.test.ts"
+        }
+      ],
+      "stream": "18 Compliance & Audit",
+      "id": "18:verification:cpm-test"
+    },
+    {
+      "streamNum": "18",
+      "layer": "Verification",
+      "name": "daily-report-snapshot.test",
+      "fileGlobs": [
+        "src/test/daily-report-snapshot.test.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/test/daily-report-snapshot.test.ts"
+        }
+      ],
+      "stream": "18 Compliance & Audit",
+      "id": "18:verification:daily-report-snapshot-test"
+    },
+    {
+      "streamNum": "18",
+      "layer": "Verification",
+      "name": "date-utils.test",
+      "fileGlobs": [
+        "src/test/date-utils.test.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/test/date-utils.test.ts"
+        }
+      ],
+      "stream": "18 Compliance & Audit",
+      "id": "18:verification:date-utils-test"
+    },
+    {
+      "streamNum": "18",
+      "layer": "Verification",
+      "name": "dev-pmxml.test",
+      "fileGlobs": [
+        "src/test/dev-pmxml.test.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/test/dev-pmxml.test.ts"
+        }
+      ],
+      "stream": "18 Compliance & Audit",
+      "id": "18:verification:dev-pmxml-test"
+    },
+    {
+      "streamNum": "18",
+      "layer": "Verification",
+      "name": "example.test",
+      "fileGlobs": [
+        "src/test/example.test.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/test/example.test.ts"
+        }
+      ],
+      "stream": "18 Compliance & Audit",
+      "id": "18:verification:example-test"
+    },
+    {
+      "streamNum": "18",
+      "layer": "Verification",
+      "name": "geometry.test",
+      "fileGlobs": [
+        "src/test/geometry.test.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/test/geometry.test.ts"
+        }
+      ],
+      "stream": "18 Compliance & Audit",
+      "id": "18:verification:geometry-test"
+    },
+    {
+      "streamNum": "18",
+      "layer": "Verification",
+      "name": "import-p6.test",
+      "fileGlobs": [
+        "src/test/import-p6.test.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/test/import-p6.test.ts"
+        }
+      ],
+      "stream": "18 Compliance & Audit",
+      "id": "18:verification:import-p6-test"
+    },
+    {
+      "streamNum": "18",
+      "layer": "Verification",
+      "name": "p6xml.test",
+      "fileGlobs": [
+        "src/test/p6xml.test.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/test/p6xml.test.ts"
+        }
+      ],
+      "stream": "18 Compliance & Audit",
+      "id": "18:verification:p6xml-test"
+    },
+    {
+      "streamNum": "18",
+      "layer": "Verification",
+      "name": "setup",
+      "fileGlobs": [
+        "src/test/setup.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/test/setup.ts"
+        }
+      ],
+      "stream": "18 Compliance & Audit",
+      "id": "18:verification:setup"
+    },
+    {
+      "streamNum": "18",
+      "layer": "Verification",
+      "name": "specs-utils.test",
+      "fileGlobs": [
+        "src/test/specs-utils.test.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/test/specs-utils.test.ts"
+        }
+      ],
+      "stream": "18 Compliance & Audit",
+      "id": "18:verification:specs-utils-test"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "project",
+      "fileGlobs": [
+        "src/types/project.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/types/project.ts"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:project"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Frontend",
+      "name": "vite-env.d",
+      "fileGlobs": [
+        "src/vite-env.d.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "src/vite-env.d.ts"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:frontend:vite-env-d"
+    },
+    {
+      "streamNum": "01",
+      "layer": "Backend",
+      "name": "fn: invite-user",
+      "fileGlobs": [
+        "supabase/functions/invite-user/index.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "supabase/functions/invite-user/index.ts"
+        }
+      ],
+      "stream": "01 Identity & Access",
+      "id": "01:backend:fn-invite-user"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Backend",
+      "name": "fn: parse-schedule",
+      "fileGlobs": [
+        "supabase/functions/parse-schedule/index.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "supabase/functions/parse-schedule/index.ts"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:backend:fn-parse-schedule"
+    },
+    {
+      "streamNum": "17",
+      "layer": "Backend",
+      "name": "fn: send-push",
+      "fileGlobs": [
+        "supabase/functions/send-push/index.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "supabase/functions/send-push/index.ts"
+        }
+      ],
+      "stream": "17 Notifications & Presence",
+      "id": "17:backend:fn-send-push"
+    },
+    {
+      "streamNum": "08",
+      "layer": "Backend",
+      "name": "fn: tag-photo",
+      "fileGlobs": [
+        "supabase/functions/tag-photo/index.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "supabase/functions/tag-photo/index.ts"
+        }
+      ],
+      "stream": "08 Photo Evidence",
+      "id": "08:backend:fn-tag-photo"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "apply-depth-patches",
+      "fileGlobs": [
+        "scripts/apply-depth-patches.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/apply-depth-patches.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:apply-depth-patches"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "build-demo-pdf",
+      "fileGlobs": [
+        "scripts/build-demo-pdf.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/build-demo-pdf.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:build-demo-pdf"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "build-dev-pmxml",
+      "fileGlobs": [
+        "scripts/build-dev-pmxml.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/build-dev-pmxml.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:build-dev-pmxml"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "build-dev-wbs",
+      "fileGlobs": [
+        "scripts/build-dev-wbs.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/build-dev-wbs.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:build-dev-wbs"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "consolidate-wbs",
+      "fileGlobs": [
+        "scripts/consolidate-wbs.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/consolidate-wbs.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:consolidate-wbs"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "derive-file-surface",
+      "fileGlobs": [
+        "scripts/derive-file-surface.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/derive-file-surface.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:derive-file-surface"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "build-code-leaves",
+      "fileGlobs": [
+        "scripts/dev-wbs/build-code-leaves.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/dev-wbs/build-code-leaves.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:build-code-leaves"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "build-leaves",
+      "fileGlobs": [
+        "scripts/dev-wbs/build-leaves.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/dev-wbs/build-leaves.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:build-leaves"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "git-dates",
+      "fileGlobs": [
+        "scripts/dev-wbs/git-dates.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/dev-wbs/git-dates.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:git-dates"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "parse-brief",
+      "fileGlobs": [
+        "scripts/dev-wbs/parse-brief.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/dev-wbs/parse-brief.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:parse-brief"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "stream-heuristics",
+      "fileGlobs": [
+        "scripts/dev-wbs/stream-heuristics.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/dev-wbs/stream-heuristics.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:stream-heuristics"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "discover-work-items",
+      "fileGlobs": [
+        "scripts/discover-work-items.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/discover-work-items.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:discover-work-items"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "extract-build-history",
+      "fileGlobs": [
+        "scripts/extract-build-history.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/extract-build-history.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:extract-build-history"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "extract-marketing-promises",
+      "fileGlobs": [
+        "scripts/extract-marketing-promises.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/extract-marketing-promises.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:extract-marketing-promises"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "reconcile-scope",
+      "fileGlobs": [
+        "scripts/reconcile-scope.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/reconcile-scope.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:reconcile-scope"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "verify-e2e",
+      "fileGlobs": [
+        "scripts/verify-e2e.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/verify-e2e.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:verify-e2e"
+    },
+    {
+      "streamNum": "15",
+      "layer": "Build",
+      "name": "capacitor.config",
+      "fileGlobs": [
+        "capacitor.config.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "capacitor.config.ts"
+        }
+      ],
+      "stream": "15 Offline & Native Durability",
+      "id": "15:build:capacitor-config"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Build",
+      "name": "vite.config",
+      "fileGlobs": [
+        "vite.config.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "vite.config.ts"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:build:vite-config"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Build",
+      "name": "tailwind.config",
+      "fileGlobs": [
+        "tailwind.config.ts"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "tailwind.config.ts"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:build:tailwind-config"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Build",
+      "name": "postcss.config",
+      "fileGlobs": [
+        "postcss.config.js"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "postcss.config.js"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:build:postcss-config"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Build",
+      "name": "eslint.config",
+      "fileGlobs": [
+        "eslint.config.js"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "eslint.config.js"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:build:eslint-config"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Build",
+      "name": "components",
+      "fileGlobs": [
+        "components.json"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "components.json"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:build:components"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Build",
+      "name": "index",
+      "fileGlobs": [
+        "index.html"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "index.html"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:build:index"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Build",
+      "name": "tsconfig",
+      "fileGlobs": [
+        "tsconfig.json"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "tsconfig.json"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:build:tsconfig"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Build",
+      "name": "tsconfig.app",
+      "fileGlobs": [
+        "tsconfig.app.json"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "tsconfig.app.json"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:build:tsconfig-app"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Build",
+      "name": "tsconfig.node",
+      "fileGlobs": [
+        "tsconfig.node.json"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "tsconfig.node.json"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:build:tsconfig-node"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "config",
+      "fileGlobs": [
+        "supabase/config.toml"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "supabase/config.toml"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:config"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "Migrations 2026-w12",
+      "fileGlobs": [
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+        "supabase/migrations/20260321162325_749c9dcd-0ffa-430d-bf20-422872294f47.sql",
+        "supabase/migrations/20260321162349_089b7eac-a691-474e-96f4-b97ab4d2581d.sql",
+        "supabase/migrations/20260321162408_22a25531-f789-4f47-b2d5-ec7d40196497.sql",
+        "supabase/migrations/20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql",
+        "supabase/migrations/20260321164313_fadd3bba-4f5e-4ac1-b47b-3887bdd98769.sql",
+        "supabase/migrations/20260321164809_127eb40b-40a6-4814-b6cc-ed2f3acd27f2.sql",
+        "supabase/migrations/20260321170227_75de1f7c-2825-40a9-b86e-f031966b835e.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260321162325_749c9dcd-0ffa-430d-bf20-422872294f47.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260321162349_089b7eac-a691-474e-96f4-b97ab4d2581d.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260321162408_22a25531-f789-4f47-b2d5-ec7d40196497.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260321164313_fadd3bba-4f5e-4ac1-b47b-3887bdd98769.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260321164809_127eb40b-40a6-4814-b6cc-ed2f3acd27f2.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260321170227_75de1f7c-2825-40a9-b86e-f031966b835e.sql"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migrations-2026-w12"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "Migrations 2026-w13",
+      "fileGlobs": [
+        "supabase/migrations/20260323121718_947e033e-ded7-4dae-9824-5ff155f34faf.sql",
+        "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql",
+        "supabase/migrations/20260323184019_702975d9-3680-45b2-9a82-8587db5f26e5.sql",
+        "supabase/migrations/20260327122843_6f261706-ce0b-4c8a-b707-c3c8b0648540.sql",
+        "supabase/migrations/20260328182512_208ba41b-5292-403a-baf4-9b9b2d158879.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260323121718_947e033e-ded7-4dae-9824-5ff155f34faf.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260323184019_702975d9-3680-45b2-9a82-8587db5f26e5.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260327122843_6f261706-ce0b-4c8a-b707-c3c8b0648540.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260328182512_208ba41b-5292-403a-baf4-9b9b2d158879.sql"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migrations-2026-w13"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "Migrations 2026-w19",
+      "fileGlobs": [
+        "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
+        "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migrations-2026-w19"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "Migrations 2026-w22",
+      "fileGlobs": [
+        "supabase/migrations/20260524015102_6a9de603-5b28-4109-98fe-7e343194da37.sql",
+        "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
+        "supabase/migrations/20260524015158_bd7b1203-22ec-46f0-8c88-3c4208a05c7d.sql",
+        "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql",
+        "supabase/migrations/20260524172951_27a28235-ea50-4c3c-be4a-528f35665ed2.sql",
+        "supabase/migrations/20260524173747_cd76e27d-fda9-4f8b-aac8-c875aa100937.sql",
+        "supabase/migrations/20260524173937_345bb077-7543-4a05-9ef8-c474d5276b1f.sql",
+        "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+        "supabase/migrations/20260524182507_aa3b520a-cfe2-4510-b710-0caf0809bc7f.sql",
+        "supabase/migrations/20260524230947_197a36b0-b223-4c6d-a3b6-73dd795f14de.sql",
+        "supabase/migrations/20260525163245_e34bfccb-6eb4-4a47-b075-1f9c628559da.sql",
+        "supabase/migrations/20260526015440_e7d9bc81-0db3-4acd-88f7-ff486798a2b2.sql",
+        "supabase/migrations/20260526021443_4709d075-1bb1-44b9-ae5f-3edc62bcd171.sql",
+        "supabase/migrations/20260526105432_7d5d3850-b410-4d77-ad92-1f2f0e524b65.sql",
+        "supabase/migrations/20260526114744_9262b81e-12b7-4ca4-a3c8-d39802232caf.sql",
+        "supabase/migrations/20260526114820_e82b22fa-1dac-434e-942a-e18387a3c065.sql",
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+        "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql",
+        "supabase/migrations/20260528155528_44c52ae9-d9c8-4390-8dde-0367583b44ef.sql",
+        "supabase/migrations/20260528155928_1fea17ca-9deb-4078-8173-ee3e52b6eab6.sql",
+        "supabase/migrations/20260529041918_637a0229-3683-4419-9838-890b4e588b31.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524015102_6a9de603-5b28-4109-98fe-7e343194da37.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524015158_bd7b1203-22ec-46f0-8c88-3c4208a05c7d.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524172951_27a28235-ea50-4c3c-be4a-528f35665ed2.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524173747_cd76e27d-fda9-4f8b-aac8-c875aa100937.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524173937_345bb077-7543-4a05-9ef8-c474d5276b1f.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524182507_aa3b520a-cfe2-4510-b710-0caf0809bc7f.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524230947_197a36b0-b223-4c6d-a3b6-73dd795f14de.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260525163245_e34bfccb-6eb4-4a47-b075-1f9c628559da.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260526015440_e7d9bc81-0db3-4acd-88f7-ff486798a2b2.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260526021443_4709d075-1bb1-44b9-ae5f-3edc62bcd171.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260526105432_7d5d3850-b410-4d77-ad92-1f2f0e524b65.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260526114744_9262b81e-12b7-4ca4-a3c8-d39802232caf.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260526114820_e82b22fa-1dac-434e-942a-e18387a3c065.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260528155528_44c52ae9-d9c8-4390-8dde-0367583b44ef.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260528155928_1fea17ca-9deb-4078-8173-ee3e52b6eab6.sql"
+        },
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260529041918_637a0229-3683-4419-9838-890b4e588b31.sql"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migrations-2026-w22"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Backend",
+      "name": "db: activity_assignments",
+      "fileGlobs": [
+        "public.activity_assignments"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "activity_assignments"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:backend:db-activity-assignments"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Backend",
+      "name": "db: activity_pay_items",
+      "fileGlobs": [
+        "public.activity_pay_items"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "activity_pay_items"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:backend:db-activity-pay-items"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Backend",
+      "name": "db: activity_relationships",
+      "fileGlobs": [
+        "public.activity_relationships"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "activity_relationships"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:backend:db-activity-relationships"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Backend",
+      "name": "db: activity_resource_assignments",
+      "fileGlobs": [
+        "public.activity_resource_assignments"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "activity_resource_assignments"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:backend:db-activity-resource-assignments"
+    },
+    {
+      "streamNum": "08",
+      "layer": "Backend",
+      "name": "db: annotation_photos",
+      "fileGlobs": [
+        "public.annotation_photos"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "annotation_photos"
+        }
+      ],
+      "stream": "08 Photo Evidence",
+      "id": "08:backend:db-annotation-photos"
+    },
+    {
+      "streamNum": "05",
+      "layer": "Backend",
+      "name": "db: annotations",
+      "fileGlobs": [
+        "public.annotations"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "annotations"
+        }
+      ],
+      "stream": "05 Field Capture",
+      "id": "05:backend:db-annotations"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Backend",
+      "name": "db: baseline_activities",
+      "fileGlobs": [
+        "public.baseline_activities"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "baseline_activities"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:backend:db-baseline-activities"
+    },
+    {
+      "streamNum": "05",
+      "layer": "Backend",
+      "name": "db: calibrations",
+      "fileGlobs": [
+        "public.calibrations"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "calibrations"
+        }
+      ],
+      "stream": "05 Field Capture",
+      "id": "05:backend:db-calibrations"
+    },
+    {
+      "streamNum": "06",
+      "layer": "Backend",
+      "name": "db: daily_report_comments",
+      "fileGlobs": [
+        "public.daily_report_comments"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "daily_report_comments"
+        }
+      ],
+      "stream": "06 Daily Report Lifecycle",
+      "id": "06:backend:db-daily-report-comments"
+    },
+    {
+      "streamNum": "06",
+      "layer": "Backend",
+      "name": "db: daily_report_snapshots",
+      "fileGlobs": [
+        "public.daily_report_snapshots"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "daily_report_snapshots"
+        }
+      ],
+      "stream": "06 Daily Report Lifecycle",
+      "id": "06:backend:db-daily-report-snapshots"
+    },
+    {
+      "streamNum": "06",
+      "layer": "Backend",
+      "name": "db: daily_reports",
+      "fileGlobs": [
+        "public.daily_reports"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "daily_reports"
+        }
+      ],
+      "stream": "06 Daily Report Lifecycle",
+      "id": "06:backend:db-daily-reports"
+    },
+    {
+      "streamNum": "20",
+      "layer": "Backend",
+      "name": "db: demo_requests",
+      "fileGlobs": [
+        "public.demo_requests"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "demo_requests"
+        }
+      ],
+      "stream": "20 Sales & Pitch",
+      "id": "20:backend:db-demo-requests"
+    },
+    {
+      "streamNum": "17",
+      "layer": "Backend",
+      "name": "db: device_tokens",
+      "fileGlobs": [
+        "public.device_tokens"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "device_tokens"
+        }
+      ],
+      "stream": "17 Notifications & Presence",
+      "id": "17:backend:db-device-tokens"
+    },
+    {
+      "streamNum": "10",
+      "layer": "Backend",
+      "name": "db: document_folders",
+      "fileGlobs": [
+        "public.document_folders"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "document_folders"
+        }
+      ],
+      "stream": "10 Document Management",
+      "id": "10:backend:db-document-folders"
+    },
+    {
+      "streamNum": "10",
+      "layer": "Backend",
+      "name": "db: documents",
+      "fileGlobs": [
+        "public.documents"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "documents"
+        }
+      ],
+      "stream": "10 Document Management",
+      "id": "10:backend:db-documents"
+    },
+    {
+      "streamNum": "14",
+      "layer": "Backend",
+      "name": "db: geo_calibrations",
+      "fileGlobs": [
+        "public.geo_calibrations"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "geo_calibrations"
+        }
+      ],
+      "stream": "14 Measurement & Geometry Engine",
+      "id": "14:backend:db-geo-calibrations"
+    },
+    {
+      "streamNum": "01",
+      "layer": "Backend",
+      "name": "db: invitations",
+      "fileGlobs": [
+        "public.invitations"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "invitations"
+        }
+      ],
+      "stream": "01 Identity & Access",
+      "id": "01:backend:db-invitations"
+    },
+    {
+      "streamNum": "17",
+      "layer": "Backend",
+      "name": "db: notifications",
+      "fileGlobs": [
+        "public.notifications"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "notifications"
+        }
+      ],
+      "stream": "17 Notifications & Presence",
+      "id": "17:backend:db-notifications"
+    },
+    {
+      "streamNum": "04",
+      "layer": "Backend",
+      "name": "db: pay_items",
+      "fileGlobs": [
+        "public.pay_items"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "pay_items"
+        }
+      ],
+      "stream": "04 Pay Item Catalog",
+      "id": "04:backend:db-pay-items"
+    },
+    {
+      "streamNum": "01",
+      "layer": "Backend",
+      "name": "db: profiles",
+      "fileGlobs": [
+        "public.profiles"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "profiles"
+        }
+      ],
+      "stream": "01 Identity & Access",
+      "id": "01:backend:db-profiles"
+    },
+    {
+      "streamNum": "02",
+      "layer": "Backend",
+      "name": "db: project_members",
+      "fileGlobs": [
+        "public.project_members"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "project_members"
+        }
+      ],
+      "stream": "02 Portfolio & PM Home",
+      "id": "02:backend:db-project-members"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Backend",
+      "name": "db: project_schedule_meta",
+      "fileGlobs": [
+        "public.project_schedule_meta"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "project_schedule_meta"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:backend:db-project-schedule-meta"
+    },
+    {
+      "streamNum": "02",
+      "layer": "Backend",
+      "name": "db: projects",
+      "fileGlobs": [
+        "public.projects"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "projects"
+        }
+      ],
+      "stream": "02 Portfolio & PM Home",
+      "id": "02:backend:db-projects"
+    },
+    {
+      "streamNum": "12",
+      "layer": "Backend",
+      "name": "db: rocks",
+      "fileGlobs": [
+        "public.rocks"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "rocks"
+        }
+      ],
+      "stream": "12 Project Health & Controls",
+      "id": "12:backend:db-rocks"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Backend",
+      "name": "db: schedule_activities",
+      "fileGlobs": [
+        "public.schedule_activities"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "schedule_activities"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:backend:db-schedule-activities"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Backend",
+      "name": "db: schedule_baselines",
+      "fileGlobs": [
+        "public.schedule_baselines"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "schedule_baselines"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:backend:db-schedule-baselines"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Backend",
+      "name": "db: schedule_calendars",
+      "fileGlobs": [
+        "public.schedule_calendars"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "schedule_calendars"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:backend:db-schedule-calendars"
+    },
+    {
+      "streamNum": "11",
+      "layer": "Backend",
+      "name": "db: schedule_resources",
+      "fileGlobs": [
+        "public.schedule_resources"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "schedule_resources"
+        }
+      ],
+      "stream": "11 Schedule Management",
+      "id": "11:backend:db-schedule-resources"
+    },
+    {
+      "streamNum": "12",
+      "layer": "Backend",
+      "name": "db: scorecard_metrics",
+      "fileGlobs": [
+        "public.scorecard_metrics"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "scorecard_metrics"
+        }
+      ],
+      "stream": "12 Project Health & Controls",
+      "id": "12:backend:db-scorecard-metrics"
+    },
+    {
+      "streamNum": "01",
+      "layer": "Backend",
+      "name": "db: user_roles",
+      "fileGlobs": [
+        "public.user_roles"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "user_roles"
+        }
+      ],
+      "stream": "01 Identity & Access",
+      "id": "01:backend:db-user-roles"
+    },
+    {
+      "streamNum": "07",
+      "layer": "Backend",
+      "name": "db: v_approved_pay_item_quantities",
+      "fileGlobs": [
+        "public.v_approved_pay_item_quantities"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "table",
+          "table": "v_approved_pay_item_quantities"
+        }
+      ],
+      "stream": "07 Quantity to Payment",
+      "id": "07:backend:db-v-approved-pay-item-quantities"
+    }
+  ]
+}
