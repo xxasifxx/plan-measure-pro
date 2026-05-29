@@ -160,80 +160,75 @@ for (const c of sortedCommits) {
   const filePaths = (c.files || []).map((f) => (typeof f === 'string' ? f : f?.path)).filter(Boolean);
   const insertions = (c.files || []).reduce((s, f) => s + (typeof f === 'object' ? (f.insertions || 0) : 0), 0);
   const deletions = (c.files || []).reduce((s, f) => s + (typeof f === 'object' ? (f.deletions || 0) : 0), 0);
-  const tags = (c.pathTags && c.pathTags.length ? c.pathTags : ['_misc']).slice();
-  const primaryTag = tags[0];
-
-  // Expire any activities in this bucket idle > GAP
-  if (liveByTag.has(primaryTag)) {
-    liveByTag.set(
-      primaryTag,
-      liveByTag.get(primaryTag).filter((a) => ts - new Date(a.lastTs).getTime() < GAP_MS),
-    );
-  }
-  const live = liveByTag.get(primaryTag) || [];
+  const allTags = (c.pathTags && c.pathTags.length ? c.pathTags : ['_misc']).slice(0, 6);
+  const primaryTag = allTags[0];
+  const secondaryTags = allTags.slice(1);
 
   const commitFileSet = new Set(filePaths);
   const commitTokenSet = new Set(tokens(c.subject || ''));
 
-  // Score primary
-  let bestPrimary = null;
-  let bestScore = 0;
-  for (const a of live) {
-    const s = 0.5 * jaccard(commitTokenSet, a.tokenBag) + 0.5 * jaccard(commitFileSet, a.fileSet);
-    if (s > bestScore) {
-      bestScore = s;
-      bestPrimary = a;
+  // Helper: pick or mint live activity for a given tag bucket.
+  const attribute = (tag, kind) => {
+    if (liveByTag.has(tag)) {
+      liveByTag.set(
+        tag,
+        liveByTag.get(tag).filter((a) => ts - new Date(a.lastTs).getTime() < GAP_MS),
+      );
     }
-  }
-  let primaryActivity;
-  if (bestPrimary && bestScore >= 0.4) {
-    primaryActivity = bestPrimary;
-    commitActivity.push({
-      sha: c.sha,
-      activity_id: primaryActivity.id,
-      contribution: 'primary',
-      weight: Math.min(1, 0.5 + bestScore / 2),
-      signal: 'token+file',
-    });
-  } else {
-    primaryActivity = mkActivity(c, primaryTag);
-    commitActivity.push({
-      sha: c.sha,
-      activity_id: primaryActivity.id,
-      contribution: 'primary',
-      weight: 1,
-      signal: 'new-cluster',
-    });
-  }
-
-  // Update primary activity
-  primaryActivity.lastTs = c.iso;
-  primaryActivity.commitCount += 1;
-  primaryActivity.locAdded += insertions;
-  primaryActivity.locRemoved += deletions;
-  for (const t of commitTokenSet) primaryActivity.tokenBag.add(t);
-  for (const f of filePaths) primaryActivity.fileSet.add(f);
-  if (primaryActivity.subjects.length < 5) primaryActivity.subjects.push(c.subject);
-
-  // Secondary attribution
-  if (filePaths.length >= 2) {
-    const seen = new Set([primaryActivity.id]);
-    for (const [, arr] of liveByTag) {
-      for (const a of arr) {
-        if (seen.has(a.id)) continue;
-        let shared = 0;
-        for (const f of commitFileSet) if (a.fileSet.has(f)) shared++;
-        if (shared >= 3) {
-          commitActivity.push({
-            sha: c.sha,
-            activity_id: a.id,
-            contribution: 'secondary',
-            weight: Math.min(0.5, shared / commitFileSet.size),
-            signal: 'co-edit',
-          });
-          seen.add(a.id);
-        }
+    const live = liveByTag.get(tag) || [];
+    // Within the bucket: pick best by combined token+file similarity. Same
+    // bucket means we want to AGGREGATE liberally — threshold low (0.15).
+    let best = null;
+    let bestScore = 0;
+    for (const a of live) {
+      const s = 0.4 * jaccard(commitTokenSet, a.tokenBag) + 0.6 * jaccard(commitFileSet, a.fileSet);
+      if (s > bestScore) {
+        bestScore = s;
+        best = a;
       }
+    }
+    let a;
+    let signal;
+    if (best && (bestScore >= 0.15 || (live.length > 0 && kind === 'primary' && bestScore > 0))) {
+      a = best;
+      signal = 'token+file';
+    } else if (best && live.length > 0 && live[0]) {
+      // Fall back to most-recent in bucket to avoid runaway fragmentation.
+      a = live[live.length - 1];
+      signal = 'bucket-recency';
+    } else {
+      a = mkActivity(c, tag);
+      signal = 'new-cluster';
+    }
+    // Update aggregate
+    a.lastTs = c.iso;
+    if (kind === 'primary') {
+      a.commitCount += 1;
+      a.locAdded += insertions;
+      a.locRemoved += deletions;
+      if (a.subjects.length < 5) a.subjects.push(c.subject);
+    }
+    for (const t of commitTokenSet) a.tokenBag.add(t);
+    for (const f of filePaths) a.fileSet.add(f);
+    commitActivity.push({
+      sha: c.sha,
+      activity_id: a.id,
+      contribution: kind,
+      weight: kind === 'primary' ? Math.min(1, 0.5 + bestScore) : 0.3,
+      signal,
+    });
+    return a;
+  };
+
+  const primaryActivity = attribute(primaryTag, 'primary');
+  const seen = new Set([primaryActivity.id]);
+  for (const t of secondaryTags) {
+    const a = attribute(t, 'secondary');
+    if (seen.has(a.id)) {
+      // Remove the duplicate row we just added — same activity, primary already wins.
+      commitActivity.pop();
+    } else {
+      seen.add(a.id);
     }
   }
 }
