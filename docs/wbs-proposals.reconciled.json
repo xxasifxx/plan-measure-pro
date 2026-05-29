@@ -1,0 +1,2707 @@
+{
+  "generatedAt": "2026-05-29T08:28:42.931Z",
+  "thresholds": {
+    "minEdgeWeight": 0.3,
+    "maxGapDays": 30,
+    "matchThreshold": 5
+  },
+  "summary": {
+    "workItems": 103,
+    "builtClusters": 32,
+    "singletonClusters": 23,
+    "inventoryCapabilities": 129,
+    "matchedCapabilities": 62,
+    "orphanCapabilities": 67
+  },
+  "surfaceSummary": {
+    "Takeoff": {
+      "builtClusters": 8,
+      "buildCommits": 971
+    },
+    "Scheduling": {
+      "builtClusters": 4,
+      "buildCommits": 37,
+      "plannedCapabilities": 2,
+      "shippedCapabilities": 5,
+      "partialCapabilities": 2,
+      "aspirationalCapabilities": 2
+    },
+    "UNASSIGNED": {
+      "builtClusters": 12,
+      "buildCommits": 80
+    },
+    "Field Ops": {
+      "builtClusters": 3,
+      "buildCommits": 18,
+      "partialCapabilities": 1
+    },
+    "Marketing & Sales": {
+      "builtClusters": 1,
+      "buildCommits": 13,
+      "shippedCapabilities": 4,
+      "plannedCapabilities": 1
+    },
+    "Documents": {
+      "builtClusters": 1,
+      "buildCommits": 8,
+      "plannedCapabilities": 1
+    },
+    "Reporting": {
+      "builtClusters": 1,
+      "buildCommits": 8
+    },
+    "Notifications": {
+      "builtClusters": 1,
+      "buildCommits": 8,
+      "plannedCapabilities": 1
+    },
+    "Native & Offline": {
+      "builtClusters": 1,
+      "buildCommits": 3,
+      "shippedCapabilities": 9,
+      "partialCapabilities": 1,
+      "plannedCapabilities": 7
+    },
+    "Project Controls": {
+      "builtClusters": 0,
+      "buildCommits": 0,
+      "shippedCapabilities": 4,
+      "plannedCapabilities": 1,
+      "partialCapabilities": 1
+    },
+    "Auth & Admin": {
+      "builtClusters": 0,
+      "buildCommits": 0,
+      "shippedCapabilities": 1,
+      "aspirationalCapabilities": 3
+    },
+    "Cross-Cutting": {
+      "builtClusters": 0,
+      "buildCommits": 0,
+      "shippedCapabilities": 3
+    },
+    "Integrations": {
+      "builtClusters": 0,
+      "buildCommits": 0,
+      "aspirationalCapabilities": 7
+    },
+    "AI": {
+      "builtClusters": 0,
+      "buildCommits": 0,
+      "aspirationalCapabilities": 1,
+      "partialCapabilities": 1
+    },
+    "Fajar": {
+      "builtClusters": 0,
+      "buildCommits": 0,
+      "aspirationalCapabilities": 8
+    },
+    "Backend & Infra": {
+      "builtClusters": 0,
+      "buildCommits": 0,
+      "shippedCapabilities": 1
+    }
+  },
+  "builtClusters": [
+    {
+      "clusterId": "BC-001",
+      "memberCount": 54,
+      "memberWorkItemIds": [
+        "WI-001",
+        "WI-011",
+        "WI-043",
+        "WI-024",
+        "WI-008",
+        "WI-021",
+        "WI-022",
+        "WI-032",
+        "WI-036",
+        "WI-035",
+        "WI-028",
+        "WI-029",
+        "WI-031",
+        "WI-027",
+        "WI-023",
+        "WI-012",
+        "WI-007",
+        "WI-006",
+        "WI-004",
+        "WI-002",
+        "WI-047",
+        "WI-074",
+        "WI-076",
+        "WI-099",
+        "WI-058",
+        "WI-049",
+        "WI-057",
+        "WI-048",
+        "WI-044",
+        "WI-045",
+        "WI-041",
+        "WI-033",
+        "WI-030",
+        "WI-013",
+        "WI-014",
+        "WI-054",
+        "WI-071",
+        "WI-078",
+        "WI-073",
+        "WI-069",
+        "WI-075",
+        "WI-060",
+        "WI-059",
+        "WI-086",
+        "WI-061",
+        "WI-080",
+        "WI-079",
+        "WI-051",
+        "WI-072",
+        "WI-005",
+        "WI-010",
+        "WI-003",
+        "WI-025",
+        "WI-009"
+      ],
+      "memberPrimaryTags": [
+        "app-shell",
+        "route:takeoff",
+        "hook:useProject",
+        "lib:export-utils",
+        "lib:geometry",
+        "hook:useAuth",
+        "route:auth",
+        "edge:invite-user",
+        "component:TeamManager",
+        "page:auth",
+        "page:dashboard",
+        "route:admin",
+        "page:admin",
+        "hook:useProjects",
+        "styles",
+        "component:SummaryPanel",
+        "component:PdfCanvas",
+        "page:mcfapitch",
+        "route:marketing",
+        "page:landing",
+        "page:fajarpitch",
+        "page:xerdemo",
+        "page:demo",
+        "html",
+        "public:icons",
+        "page:index",
+        "edge:send-push",
+        "component:PwaShell",
+        "page:documents",
+        "component:Toolbar",
+        "component:ProjectSidebar",
+        "lib:pdf-utils"
+      ],
+      "buildCommits": 915,
+      "acceptanceCommits": 1197,
+      "firstCommit": "2026-03-08",
+      "lastCommit": "2026-05-28",
+      "topTags": [
+        {
+          "tag": "route:takeoff",
+          "weight": 401
+        },
+        {
+          "tag": "route:marketing",
+          "weight": 268
+        },
+        {
+          "tag": "page:index",
+          "weight": 249
+        },
+        {
+          "tag": "page:mcfapitch",
+          "weight": 121
+        },
+        {
+          "tag": "app-shell",
+          "weight": 100
+        },
+        {
+          "tag": "component:PdfCanvas",
+          "weight": 92
+        }
+      ],
+      "candidateCapabilities": [
+        {
+          "capId": "cap.takeoff.pdf-canvas",
+          "name": "PDF plan canvas + page navigation",
+          "surface": "Takeoff",
+          "status": "shipped",
+          "score": 28
+        },
+        {
+          "capId": "cap.takeoff.annotation-draw",
+          "name": "Line / polygon / count / label annotations",
+          "surface": "Takeoff",
+          "status": "shipped",
+          "score": 25
+        },
+        {
+          "capId": "cap.marketing.landing",
+          "name": "NJTA/NJDOT landing page + demo form",
+          "surface": "Marketing & Sales",
+          "status": "shipped",
+          "score": 20
+        },
+        {
+          "capId": "cap.takeoff.toc-import",
+          "name": "Table-of-contents auto-parse / region select",
+          "surface": "Takeoff",
+          "status": "shipped",
+          "score": 18
+        },
+        {
+          "capId": "cap.auth.invitations",
+          "name": "Email invitation tokens + accept flow",
+          "surface": "Auth & Admin",
+          "status": "shipped",
+          "score": 17
+        }
+      ],
+      "proposedSurface": "Takeoff",
+      "proposedName": "PDF plan canvas + page navigation",
+      "sampleSubjects": [
+        "Implement TOC auto-parse and polygon-only takeoff",
+        "Manual TOC selection implemented",
+        "Improve TOC data model and UI",
+        "Overhauled Pay Items UI",
+        "Improve Pay Items grouping by item number",
+        "Make select tool functional",
+        "Implement TOC auto-parse and polygon-only takeoff",
+        "Manual TOC selection implemented"
+      ]
+    },
+    {
+      "clusterId": "BC-002",
+      "memberCount": 2,
+      "memberWorkItemIds": [
+        "WI-015",
+        "WI-037"
+      ],
+      "memberPrimaryTags": [
+        "component:SpecViewer",
+        "lib:specs-utils"
+      ],
+      "buildCommits": 29,
+      "acceptanceCommits": 34,
+      "firstCommit": "2026-03-15",
+      "lastCommit": "2026-03-23",
+      "topTags": [
+        {
+          "tag": "component:SpecViewer",
+          "weight": 28
+        },
+        {
+          "tag": "lib:specs-utils",
+          "weight": 3
+        }
+      ],
+      "candidateCapabilities": [
+        {
+          "capId": "cap.takeoff.specs-viewer",
+          "name": "Standard Specs viewer + search",
+          "surface": "Takeoff",
+          "status": "shipped",
+          "score": 18
+        }
+      ],
+      "proposedSurface": "Takeoff",
+      "proposedName": "Standard Specs viewer + search",
+      "sampleSubjects": [
+        "Add specs-utils and viewer",
+        "Improve spec viewer navigation",
+        "Changes",
+        "Make spec viewer resizable",
+        "Resizable spec viewer panel",
+        "Add in-page spec search tool",
+        "Relax section detection"
+      ]
+    },
+    {
+      "clusterId": "BC-027",
+      "memberCount": 7,
+      "memberWorkItemIds": [
+        "WI-088",
+        "WI-098",
+        "WI-096",
+        "WI-093",
+        "WI-092",
+        "WI-090",
+        "WI-089"
+      ],
+      "memberPrimaryTags": [
+        "lib:p6xml:build-from-project",
+        "ui:schedule:ScheduleWorkspace",
+        "ui:schedule:ActivityInspector",
+        "lib:schedule:use-schedule",
+        "lib:schedule:types",
+        "lib:schedule:date-utils",
+        "lib:schedule:cpm"
+      ],
+      "buildCommits": 27,
+      "acceptanceCommits": 33,
+      "firstCommit": "2026-05-26",
+      "lastCommit": "2026-05-28",
+      "topTags": [
+        {
+          "tag": "lib:schedule:use-schedule",
+          "weight": 13
+        },
+        {
+          "tag": "lib:schedule:cpm",
+          "weight": 12
+        },
+        {
+          "tag": "lib:schedule:date-utils",
+          "weight": 9
+        },
+        {
+          "tag": "lib:p6xml:build-from-project",
+          "weight": 7
+        },
+        {
+          "tag": "ui:schedule:ScheduleWorkspace",
+          "weight": 7
+        },
+        {
+          "tag": "lib:schedule:types",
+          "weight": 7
+        }
+      ],
+      "candidateCapabilities": [
+        {
+          "capId": "cap.schedule.activities-crud",
+          "name": "Schedule activities CRUD + Gantt",
+          "surface": "Scheduling",
+          "status": "shipped",
+          "score": 19
+        },
+        {
+          "capId": "cap.schedule.cpm-engine",
+          "name": "Calendar-aware CPM engine",
+          "surface": "Scheduling",
+          "status": "shipped",
+          "score": 17
+        },
+        {
+          "capId": "cap.schedule.baseline",
+          "name": "Schedule baseline capture + compare",
+          "surface": "Scheduling",
+          "status": "shipped",
+          "score": 17
+        },
+        {
+          "capId": "cap.schedule.xer-import",
+          "name": "XER -> activities + relationships import",
+          "surface": "Scheduling",
+          "status": "shipped",
+          "score": 17
+        },
+        {
+          "capId": "cap.schedule.calendars",
+          "name": "Working calendars with exceptions",
+          "surface": "Scheduling",
+          "status": "shipped",
+          "score": 15
+        }
+      ],
+      "proposedSurface": "Scheduling",
+      "proposedName": "Schedule activities CRUD + Gantt",
+      "sampleSubjects": [
+        "Changes",
+        "Changes",
+        "Changes",
+        "Changes",
+        "Changes",
+        "Changes",
+        "Changes"
+      ]
+    },
+    {
+      "clusterId": "BC-020",
+      "memberCount": 2,
+      "memberWorkItemIds": [
+        "WI-068",
+        "WI-083"
+      ],
+      "memberPrimaryTags": [
+        "migration",
+        "public:icons"
+      ],
+      "buildCommits": 23,
+      "acceptanceCommits": 28,
+      "firstCommit": "2026-05-24",
+      "lastCommit": "2026-05-29",
+      "topTags": [
+        {
+          "tag": "migration",
+          "weight": 22
+        },
+        {
+          "tag": "public:icons",
+          "weight": 3
+        }
+      ],
+      "candidateCapabilities": [],
+      "proposedSurface": "UNASSIGNED",
+      "proposedName": "(unnamed cluster around migration)",
+      "sampleSubjects": [
+        "Changes",
+        "Changes"
+      ]
+    },
+    {
+      "clusterId": "BC-017",
+      "memberCount": 4,
+      "memberWorkItemIds": [
+        "WI-062",
+        "WI-067",
+        "WI-064",
+        "WI-065"
+      ],
+      "memberPrimaryTags": [
+        "hook:useDailyReport",
+        "lib:p6xml:load-approved",
+        "hook:useReReviewQueue",
+        "lib:daily-report-snapshot"
+      ],
+      "buildCommits": 14,
+      "acceptanceCommits": 16,
+      "firstCommit": "2026-05-24",
+      "lastCommit": "2026-05-24",
+      "topTags": [
+        {
+          "tag": "hook:useDailyReport",
+          "weight": 9
+        },
+        {
+          "tag": "hook:useReReviewQueue",
+          "weight": 6
+        },
+        {
+          "tag": "lib:p6xml:load-approved",
+          "weight": 5
+        },
+        {
+          "tag": "component:NotificationBell",
+          "weight": 4
+        },
+        {
+          "tag": "component:ReReviewCard",
+          "weight": 4
+        },
+        {
+          "tag": "hook:useNotifications",
+          "weight": 4
+        }
+      ],
+      "candidateCapabilities": [
+        {
+          "capId": "cap.field.daily-report-inspector",
+          "name": "Inspector daily report draft + submit",
+          "surface": "Field Ops",
+          "status": "shipped",
+          "score": 16
+        },
+        {
+          "capId": "cap.field.re-review-queue",
+          "name": "RE review queue (approve/reject/bulk)",
+          "surface": "Field Ops",
+          "status": "shipped",
+          "score": 10
+        },
+        {
+          "capId": "cap.notif.inbox",
+          "name": "In-app notification inbox + bell",
+          "surface": "Notifications",
+          "status": "shipped",
+          "score": 10
+        },
+        {
+          "capId": "cap.field.report-comments",
+          "name": "Threaded comments on daily reports",
+          "surface": "Field Ops",
+          "status": "shipped",
+          "score": 9
+        },
+        {
+          "capId": "cap.field.report-snapshot-archive",
+          "name": "Daily report snapshot archive on reopen",
+          "surface": "Field Ops",
+          "status": "shipped",
+          "score": 7
+        }
+      ],
+      "proposedSurface": "Field Ops",
+      "proposedName": "Inspector daily report draft + submit",
+      "sampleSubjects": [
+        "Changes",
+        "Changes",
+        "Changes",
+        "Changes"
+      ]
+    },
+    {
+      "clusterId": "BC-008",
+      "memberCount": 1,
+      "memberWorkItemIds": [
+        "WI-026"
+      ],
+      "memberPrimaryTags": [
+        "migration"
+      ],
+      "buildCommits": 13,
+      "acceptanceCommits": 37,
+      "firstCommit": "2026-03-21",
+      "lastCommit": "2026-03-28",
+      "topTags": [
+        {
+          "tag": "migration",
+          "weight": 13
+        },
+        {
+          "tag": "component:GuidedTour",
+          "weight": 1
+        },
+        {
+          "tag": "component:WelcomeCarousel",
+          "weight": 1
+        },
+        {
+          "tag": "hook:useTour",
+          "weight": 1
+        },
+        {
+          "tag": "page:landing",
+          "weight": 1
+        },
+        {
+          "tag": "route:marketing",
+          "weight": 1
+        }
+      ],
+      "candidateCapabilities": [
+        {
+          "capId": "cap.marketing.landing",
+          "name": "NJTA/NJDOT landing page + demo form",
+          "surface": "Marketing & Sales",
+          "status": "shipped",
+          "score": 14
+        },
+        {
+          "capId": "cap.app.tour",
+          "name": "Guided tour framework + workspace/dashboard tours",
+          "surface": "Cross-Cutting",
+          "status": "shipped",
+          "score": 10
+        },
+        {
+          "capId": "cap.app.welcome-carousel",
+          "name": "First-visit welcome carousel",
+          "surface": "Cross-Cutting",
+          "status": "shipped",
+          "score": 5
+        }
+      ],
+      "proposedSurface": "Marketing & Sales",
+      "proposedName": "NJTA/NJDOT landing page + demo form",
+      "sampleSubjects": [
+        "Connected to Lovable Cloud",
+        "Add project dashboard",
+        "Pivot to Supabase-backed projects",
+        "Add Supabase-backed projects",
+        "Add admin panel and policies",
+        "Add realtime annotation sync"
+      ]
+    },
+    {
+      "clusterId": "BC-016",
+      "memberCount": 1,
+      "memberWorkItemIds": [
+        "WI-056"
+      ],
+      "memberPrimaryTags": [
+        "component:XerLensTour"
+      ],
+      "buildCommits": 13,
+      "acceptanceCommits": 7,
+      "firstCommit": "2026-05-05",
+      "lastCommit": "2026-05-05",
+      "topTags": [
+        {
+          "tag": "component:XerLensTour",
+          "weight": 13
+        }
+      ],
+      "candidateCapabilities": [],
+      "proposedSurface": "UNASSIGNED",
+      "proposedName": "(unnamed cluster around component:XerLensTour)",
+      "sampleSubjects": [
+        "Changes"
+      ]
+    },
+    {
+      "clusterId": "BC-003",
+      "memberCount": 1,
+      "memberWorkItemIds": [
+        "WI-016"
+      ],
+      "memberPrimaryTags": [
+        "lib:specs-utils"
+      ],
+      "buildCommits": 12,
+      "acceptanceCommits": 10,
+      "firstCommit": "2026-03-15",
+      "lastCommit": "2026-03-15",
+      "topTags": [
+        {
+          "tag": "lib:specs-utils",
+          "weight": 12
+        },
+        {
+          "tag": "component:SpecViewer",
+          "weight": 2
+        }
+      ],
+      "candidateCapabilities": [
+        {
+          "capId": "cap.takeoff.specs-viewer",
+          "name": "Standard Specs viewer + search",
+          "surface": "Takeoff",
+          "status": "shipped",
+          "score": 16
+        }
+      ],
+      "proposedSurface": "Takeoff",
+      "proposedName": "Standard Specs viewer + search",
+      "sampleSubjects": [
+        "Add specs-utils and viewer",
+        "Validate specs against PDF read",
+        "Preceding changes",
+        "Refined section boundary lookup",
+        "Adjust section boundaries lookup",
+        "Fix extracted TOC issue"
+      ]
+    },
+    {
+      "clusterId": "BC-004",
+      "memberCount": 1,
+      "memberWorkItemIds": [
+        "WI-017"
+      ],
+      "memberPrimaryTags": [
+        "test:specs-utils"
+      ],
+      "buildCommits": 11,
+      "acceptanceCommits": 7,
+      "firstCommit": "2026-03-15",
+      "lastCommit": "2026-03-15",
+      "topTags": [
+        {
+          "tag": "test:specs-utils",
+          "weight": 11
+        }
+      ],
+      "candidateCapabilities": [],
+      "proposedSurface": "UNASSIGNED",
+      "proposedName": "(unnamed cluster around test:specs-utils)",
+      "sampleSubjects": [
+        "Add plan & specs test hook",
+        "Add specs utils tests",
+        "Add spec utils tests",
+        "Add specs tests",
+        "Refined TOC filtering for specs",
+        "Refined TOC vs content detection"
+      ]
+    },
+    {
+      "clusterId": "BC-014",
+      "memberCount": 4,
+      "memberWorkItemIds": [
+        "WI-052",
+        "WI-095",
+        "WI-094",
+        "WI-053"
+      ],
+      "memberPrimaryTags": [
+        "page:projectcontrols",
+        "route:schedule"
+      ],
+      "buildCommits": 10,
+      "acceptanceCommits": 2,
+      "firstCommit": "2026-05-04",
+      "lastCommit": "2026-05-26",
+      "topTags": [
+        {
+          "tag": "page:projectcontrols",
+          "weight": 10
+        },
+        {
+          "tag": "route:schedule",
+          "weight": 10
+        }
+      ],
+      "candidateCapabilities": [],
+      "proposedSurface": "UNASSIGNED",
+      "proposedName": "(unnamed cluster around page:projectcontrols)",
+      "sampleSubjects": [
+        "Changes",
+        "Changes",
+        "Changes",
+        "Changes"
+      ]
+    },
+    {
+      "clusterId": "BC-018",
+      "memberCount": 1,
+      "memberWorkItemIds": [
+        "WI-063"
+      ],
+      "memberPrimaryTags": [
+        "hook:useDocuments"
+      ],
+      "buildCommits": 8,
+      "acceptanceCommits": 3,
+      "firstCommit": "2026-05-24",
+      "lastCommit": "2026-05-24",
+      "topTags": [
+        {
+          "tag": "hook:useDocuments",
+          "weight": 8
+        }
+      ],
+      "candidateCapabilities": [
+        {
+          "capId": "cap.docs.folder-tree",
+          "name": "Hierarchical folder tree + system folders",
+          "surface": "Documents",
+          "status": "shipped",
+          "score": 5
+        },
+        {
+          "capId": "cap.docs.upload-versioning",
+          "name": "Upload + auto-versioning + version history",
+          "surface": "Documents",
+          "status": "shipped",
+          "score": 5
+        },
+        {
+          "capId": "cap.docs.trash-restore",
+          "name": "Soft-delete + trash + restore + hard-delete",
+          "surface": "Documents",
+          "status": "shipped",
+          "score": 5
+        }
+      ],
+      "proposedSurface": "Documents",
+      "proposedName": "Hierarchical folder tree + system folders",
+      "sampleSubjects": [
+        "Changes"
+      ]
+    },
+    {
+      "clusterId": "BC-019",
+      "memberCount": 1,
+      "memberWorkItemIds": [
+        "WI-066"
+      ],
+      "memberPrimaryTags": [
+        "lib:export-utils"
+      ],
+      "buildCommits": 8,
+      "acceptanceCommits": 14,
+      "firstCommit": "2026-05-24",
+      "lastCommit": "2026-05-26",
+      "topTags": [
+        {
+          "tag": "lib:export-utils",
+          "weight": 8
+        }
+      ],
+      "candidateCapabilities": [
+        {
+          "capId": "cap.takeoff.export-csv-pdf-excel",
+          "name": "CSV / PDF / Excel takeoff exports",
+          "surface": "Reporting",
+          "status": "shipped",
+          "score": 7
+        }
+      ],
+      "proposedSurface": "Reporting",
+      "proposedName": "CSV / PDF / Excel takeoff exports",
+      "sampleSubjects": [
+        "Changes"
+      ]
+    },
+    {
+      "clusterId": "BC-021",
+      "memberCount": 2,
+      "memberWorkItemIds": [
+        "WI-070",
+        "WI-077"
+      ],
+      "memberPrimaryTags": [
+        "page:dailyreport",
+        "route:re"
+      ],
+      "buildCommits": 8,
+      "acceptanceCommits": 11,
+      "firstCommit": "2026-05-24",
+      "lastCommit": "2026-05-24",
+      "topTags": [
+        {
+          "tag": "route:re",
+          "weight": 8
+        },
+        {
+          "tag": "page:dailyreport",
+          "weight": 6
+        },
+        {
+          "tag": "component:NotificationBell",
+          "weight": 2
+        },
+        {
+          "tag": "component:ReReviewCard",
+          "weight": 2
+        },
+        {
+          "tag": "hook:useDailyReport",
+          "weight": 2
+        },
+        {
+          "tag": "page:rereview",
+          "weight": 2
+        }
+      ],
+      "candidateCapabilities": [
+        {
+          "capId": "cap.notif.inbox",
+          "name": "In-app notification inbox + bell",
+          "surface": "Notifications",
+          "status": "shipped",
+          "score": 10
+        },
+        {
+          "capId": "cap.field.daily-report-inspector",
+          "name": "Inspector daily report draft + submit",
+          "surface": "Field Ops",
+          "status": "shipped",
+          "score": 5
+        },
+        {
+          "capId": "cap.field.re-review-queue",
+          "name": "RE review queue (approve/reject/bulk)",
+          "surface": "Field Ops",
+          "status": "shipped",
+          "score": 5
+        }
+      ],
+      "proposedSurface": "Notifications",
+      "proposedName": "In-app notification inbox + bell",
+      "sampleSubjects": [
+        "Changes",
+        "Changes"
+      ]
+    },
+    {
+      "clusterId": "BC-032",
+      "memberCount": 1,
+      "memberWorkItemIds": [
+        "WI-103"
+      ],
+      "memberPrimaryTags": [
+        "scripts:extract-build-history"
+      ],
+      "buildCommits": 7,
+      "acceptanceCommits": 2,
+      "firstCommit": "2026-05-29",
+      "lastCommit": "2026-05-29",
+      "topTags": [
+        {
+          "tag": "scripts:extract-build-history",
+          "weight": 7
+        }
+      ],
+      "candidateCapabilities": [],
+      "proposedSurface": "UNASSIGNED",
+      "proposedName": "(unnamed cluster around scripts:extract-build-history)",
+      "sampleSubjects": [
+        "Changes"
+      ]
+    },
+    {
+      "clusterId": "BC-005",
+      "memberCount": 3,
+      "memberWorkItemIds": [
+        "WI-018",
+        "WI-042",
+        "WI-046"
+      ],
+      "memberPrimaryTags": [
+        "component:MobilePayItems",
+        "component:MobileToolbar",
+        "styles"
+      ],
+      "buildCommits": 6,
+      "acceptanceCommits": 6,
+      "firstCommit": "2026-03-19",
+      "lastCommit": "2026-04-07",
+      "topTags": [
+        {
+          "tag": "component:MobilePayItems",
+          "weight": 4
+        },
+        {
+          "tag": "component:MobileToolbar",
+          "weight": 3
+        },
+        {
+          "tag": "styles",
+          "weight": 2
+        },
+        {
+          "tag": "component:EmptyState",
+          "weight": 1
+        },
+        {
+          "tag": "component:MobileSections",
+          "weight": 1
+        },
+        {
+          "tag": "component:MobileTabBar",
+          "weight": 1
+        }
+      ],
+      "candidateCapabilities": [
+        {
+          "capId": "cap.takeoff.pay-items-import",
+          "name": "Pay-items import from spec tables",
+          "surface": "Takeoff",
+          "status": "shipped",
+          "score": 5
+        },
+        {
+          "capId": "cap.takeoff.pay-items-ui",
+          "name": "Pay items panel (group/filter/select)",
+          "surface": "Takeoff",
+          "status": "shipped",
+          "score": 5
+        },
+        {
+          "capId": "cap.app.theme",
+          "name": "Light/dark theme toggle",
+          "surface": "Cross-Cutting",
+          "status": "shipped",
+          "score": 5
+        }
+      ],
+      "proposedSurface": "Takeoff",
+      "proposedName": "Pay-items import from spec tables",
+      "sampleSubjects": [
+        "Overhauled mobile UI",
+        "Preceding changes",
+        "Inspector view streamlined",
+        "Add inspector view UI",
+        "Revamped mobile demo UX",
+        "Revamped mobile demo UX"
+      ]
+    },
+    {
+      "clusterId": "BC-006",
+      "memberCount": 1,
+      "memberWorkItemIds": [
+        "WI-019"
+      ],
+      "memberPrimaryTags": [
+        "component:MobileToolbar"
+      ],
+      "buildCommits": 4,
+      "acceptanceCommits": 40,
+      "firstCommit": "2026-03-19",
+      "lastCommit": "2026-03-29",
+      "topTags": [
+        {
+          "tag": "component:MobileToolbar",
+          "weight": 4
+        },
+        {
+          "tag": "component:EmptyState",
+          "weight": 2
+        },
+        {
+          "tag": "component:Toolbar",
+          "weight": 2
+        },
+        {
+          "tag": "component:MobilePayItems",
+          "weight": 1
+        },
+        {
+          "tag": "component:MobileSections",
+          "weight": 1
+        },
+        {
+          "tag": "component:MobileTabBar",
+          "weight": 1
+        }
+      ],
+      "candidateCapabilities": [
+        {
+          "capId": "cap.takeoff.pay-items-import",
+          "name": "Pay-items import from spec tables",
+          "surface": "Takeoff",
+          "status": "shipped",
+          "score": 5
+        },
+        {
+          "capId": "cap.takeoff.pay-items-ui",
+          "name": "Pay items panel (group/filter/select)",
+          "surface": "Takeoff",
+          "status": "shipped",
+          "score": 5
+        },
+        {
+          "capId": "cap.takeoff.annotation-draw",
+          "name": "Line / polygon / count / label annotations",
+          "surface": "Takeoff",
+          "status": "shipped",
+          "score": 5
+        }
+      ],
+      "proposedSurface": "Takeoff",
+      "proposedName": "Pay-items import from spec tables",
+      "sampleSubjects": [
+        "Overhauled mobile UI",
+        "Implement inspector view UI",
+        "Created UI revamp tasks for app",
+        "Added demo onboarding tour"
+      ]
+    },
+    {
+      "clusterId": "BC-010",
+      "memberCount": 1,
+      "memberWorkItemIds": [
+        "WI-038"
+      ],
+      "memberPrimaryTags": [
+        "asset"
+      ],
+      "buildCommits": 4,
+      "acceptanceCommits": 7,
+      "firstCommit": "2026-03-25",
+      "lastCommit": "2026-03-27",
+      "topTags": [
+        {
+          "tag": "asset",
+          "weight": 4
+        }
+      ],
+      "candidateCapabilities": [],
+      "proposedSurface": "UNASSIGNED",
+      "proposedName": "(unnamed cluster around asset)",
+      "sampleSubjects": [
+        "Captured landing hero screenshot",
+        "Generated NJTA interface hero mockup",
+        "Overhauled Landing page visuals",
+        "Added GPS-to-plan georeferencing"
+      ]
+    },
+    {
+      "clusterId": "BC-029",
+      "memberCount": 1,
+      "memberWorkItemIds": [
+        "WI-097"
+      ],
+      "memberPrimaryTags": [
+        "ui:schedule:ScheduleToolbar"
+      ],
+      "buildCommits": 4,
+      "acceptanceCommits": 3,
+      "firstCommit": "2026-05-26",
+      "lastCommit": "2026-05-26",
+      "topTags": [
+        {
+          "tag": "ui:schedule:ScheduleToolbar",
+          "weight": 4
+        },
+        {
+          "tag": "ui:schedule:ComplianceStrip",
+          "weight": 1
+        },
+        {
+          "tag": "ui:schedule:GanttChart",
+          "weight": 1
+        },
+        {
+          "tag": "ui:schedule:WbsTree",
+          "weight": 1
+        },
+        {
+          "tag": "lib:p6xml:build-from-project",
+          "weight": 1
+        },
+        {
+          "tag": "lib:schedule:cpm",
+          "weight": 1
+        }
+      ],
+      "candidateCapabilities": [
+        {
+          "capId": "cap.p6.build-from-project",
+          "name": "Build PMXML from in-app activities",
+          "surface": "Scheduling",
+          "status": "partial",
+          "score": 9
+        },
+        {
+          "capId": "cap.schedule.activities-crud",
+          "name": "Schedule activities CRUD + Gantt",
+          "surface": "Scheduling",
+          "status": "shipped",
+          "score": 5
+        },
+        {
+          "capId": "cap.schedule.cpm-engine",
+          "name": "Calendar-aware CPM engine",
+          "surface": "Scheduling",
+          "status": "shipped",
+          "score": 5
+        }
+      ],
+      "proposedSurface": "Scheduling",
+      "proposedName": "Build PMXML from in-app activities",
+      "sampleSubjects": [
+        "Changes"
+      ]
+    },
+    {
+      "clusterId": "BC-030",
+      "memberCount": 1,
+      "memberWorkItemIds": [
+        "WI-100"
+      ],
+      "memberPrimaryTags": [
+        "public:seo"
+      ],
+      "buildCommits": 4,
+      "acceptanceCommits": 1,
+      "firstCommit": "2026-05-27",
+      "lastCommit": "2026-05-28",
+      "topTags": [
+        {
+          "tag": "public:seo",
+          "weight": 4
+        }
+      ],
+      "candidateCapabilities": [],
+      "proposedSurface": "UNASSIGNED",
+      "proposedName": "(unnamed cluster around public:seo)",
+      "sampleSubjects": [
+        "Changes"
+      ]
+    },
+    {
+      "clusterId": "BC-015",
+      "memberCount": 1,
+      "memberWorkItemIds": [
+        "WI-055"
+      ],
+      "memberPrimaryTags": [
+        "component:ProjectSidebar"
+      ],
+      "buildCommits": 3,
+      "acceptanceCommits": 0,
+      "firstCommit": "2026-05-05",
+      "lastCommit": "2026-05-05",
+      "topTags": [
+        {
+          "tag": "component:ProjectSidebar",
+          "weight": 3
+        }
+      ],
+      "candidateCapabilities": [],
+      "proposedSurface": "UNASSIGNED",
+      "proposedName": "(unnamed cluster around component:ProjectSidebar)",
+      "sampleSubjects": [
+        "Changes"
+      ]
+    },
+    {
+      "clusterId": "BC-022",
+      "memberCount": 1,
+      "memberWorkItemIds": [
+        "WI-081"
+      ],
+      "memberPrimaryTags": [
+        "lib:offline:db"
+      ],
+      "buildCommits": 3,
+      "acceptanceCommits": 12,
+      "firstCommit": "2026-05-25",
+      "lastCommit": "2026-05-28",
+      "topTags": [
+        {
+          "tag": "lib:offline:db",
+          "weight": 3
+        },
+        {
+          "tag": "lib:offline:mirror",
+          "weight": 2
+        },
+        {
+          "tag": "lib:offline:mutation-client",
+          "weight": 2
+        },
+        {
+          "tag": "lib:offline:idb-persister",
+          "weight": 1
+        },
+        {
+          "tag": "lib:offline:pdf-cache",
+          "weight": 1
+        },
+        {
+          "tag": "lib:offline:outbox",
+          "weight": 1
+        }
+      ],
+      "candidateCapabilities": [
+        {
+          "capId": "cap.offline.mutation-client",
+          "name": "Online/offline mutation router",
+          "surface": "Native & Offline",
+          "status": "shipped",
+          "score": 22
+        },
+        {
+          "capId": "cap.offline.pdf-cache",
+          "name": "PDF CacheStorage with LRU eviction",
+          "surface": "Native & Offline",
+          "status": "partial",
+          "score": 22
+        },
+        {
+          "capId": "cap.offline.idb-schema",
+          "name": "IndexedDB schema + safe CRUD",
+          "surface": "Native & Offline",
+          "status": "shipped",
+          "score": 20
+        },
+        {
+          "capId": "cap.offline.react-query-persist",
+          "name": "React Query persister (IDB-backed)",
+          "surface": "Native & Offline",
+          "status": "shipped",
+          "score": 20
+        },
+        {
+          "capId": "cap.offline.mirror",
+          "name": "Supabase -> IDB project mirror",
+          "surface": "Native & Offline",
+          "status": "shipped",
+          "score": 20
+        }
+      ],
+      "proposedSurface": "Native & Offline",
+      "proposedName": "Online/offline mutation router",
+      "sampleSubjects": [
+        "Changes"
+      ]
+    },
+    {
+      "clusterId": "BC-025",
+      "memberCount": 1,
+      "memberWorkItemIds": [
+        "WI-085"
+      ],
+      "memberPrimaryTags": [
+        "component:GpsTraceControls"
+      ],
+      "buildCommits": 3,
+      "acceptanceCommits": 0,
+      "firstCommit": "2026-05-26",
+      "lastCommit": "2026-05-26",
+      "topTags": [
+        {
+          "tag": "component:GpsTraceControls",
+          "weight": 3
+        }
+      ],
+      "candidateCapabilities": [
+        {
+          "capId": "cap.field.gps-trace",
+          "name": "Live GPS trace overlay + Kalman smoothing",
+          "surface": "Field Ops",
+          "status": "shipped",
+          "score": 5
+        }
+      ],
+      "proposedSurface": "Field Ops",
+      "proposedName": "Live GPS trace overlay + Kalman smoothing",
+      "sampleSubjects": [
+        "Changes"
+      ]
+    },
+    {
+      "clusterId": "BC-026",
+      "memberCount": 1,
+      "memberWorkItemIds": [
+        "WI-087"
+      ],
+      "memberPrimaryTags": [
+        "hook:useProject"
+      ],
+      "buildCommits": 3,
+      "acceptanceCommits": 0,
+      "firstCommit": "2026-05-26",
+      "lastCommit": "2026-05-26",
+      "topTags": [
+        {
+          "tag": "hook:useProject",
+          "weight": 3
+        }
+      ],
+      "candidateCapabilities": [
+        {
+          "capId": "cap.takeoff.undo-redo",
+          "name": "Undo / redo stack",
+          "surface": "Takeoff",
+          "status": "shipped",
+          "score": 5
+        },
+        {
+          "capId": "cap.app.realtime-presence",
+          "name": "Realtime collaborative presence",
+          "surface": "Cross-Cutting",
+          "status": "shipped",
+          "score": 5
+        }
+      ],
+      "proposedSurface": "Takeoff",
+      "proposedName": "Undo / redo stack",
+      "sampleSubjects": [
+        "Changes"
+      ]
+    },
+    {
+      "clusterId": "BC-028",
+      "memberCount": 1,
+      "memberWorkItemIds": [
+        "WI-091"
+      ],
+      "memberPrimaryTags": [
+        "lib:schedule:import-p6"
+      ],
+      "buildCommits": 3,
+      "acceptanceCommits": 7,
+      "firstCommit": "2026-05-26",
+      "lastCommit": "2026-05-28",
+      "topTags": [
+        {
+          "tag": "lib:schedule:import-p6",
+          "weight": 3
+        },
+        {
+          "tag": "lib:schedule:baseline",
+          "weight": 1
+        },
+        {
+          "tag": "lib:p6xml:build-from-project",
+          "weight": 1
+        },
+        {
+          "tag": "edge:send-push",
+          "weight": 1
+        },
+        {
+          "tag": "edge:tag-photo",
+          "weight": 1
+        },
+        {
+          "tag": "hook:useAuth",
+          "weight": 1
+        }
+      ],
+      "candidateCapabilities": [
+        {
+          "capId": "cap.schedule.activities-crud",
+          "name": "Schedule activities CRUD + Gantt",
+          "surface": "Scheduling",
+          "status": "shipped",
+          "score": 10
+        },
+        {
+          "capId": "cap.field.photo-ai-tag",
+          "name": "AI photo tagging via tag-photo edge function",
+          "surface": "Field Ops",
+          "status": "shipped",
+          "score": 9
+        },
+        {
+          "capId": "cap.p6.build-from-project",
+          "name": "Build PMXML from in-app activities",
+          "surface": "Scheduling",
+          "status": "partial",
+          "score": 9
+        },
+        {
+          "capId": "cap.schedule.baseline",
+          "name": "Schedule baseline capture + compare",
+          "surface": "Scheduling",
+          "status": "shipped",
+          "score": 8
+        },
+        {
+          "capId": "cap.schedule.xer-import",
+          "name": "XER -> activities + relationships import",
+          "surface": "Scheduling",
+          "status": "shipped",
+          "score": 8
+        }
+      ],
+      "proposedSurface": "Scheduling",
+      "proposedName": "Schedule activities CRUD + Gantt",
+      "sampleSubjects": [
+        "Changes"
+      ]
+    },
+    {
+      "clusterId": "BC-031",
+      "memberCount": 2,
+      "memberWorkItemIds": [
+        "WI-101",
+        "WI-102"
+      ],
+      "memberPrimaryTags": [
+        "lib:geometry",
+        "supabase:config"
+      ],
+      "buildCommits": 3,
+      "acceptanceCommits": 2,
+      "firstCommit": "2026-05-28",
+      "lastCommit": "2026-05-29",
+      "topTags": [
+        {
+          "tag": "supabase:config",
+          "weight": 3
+        },
+        {
+          "tag": "lib:geometry",
+          "weight": 2
+        },
+        {
+          "tag": "app-shell",
+          "weight": 2
+        },
+        {
+          "tag": "edge:parse-schedule",
+          "weight": 2
+        },
+        {
+          "tag": "edge:send-push",
+          "weight": 2
+        },
+        {
+          "tag": "hook:useAuth",
+          "weight": 2
+        }
+      ],
+      "candidateCapabilities": [
+        {
+          "capId": "cap.schedule.gantt-image-import",
+          "name": "Gantt image -> activities via AI (parse-schedule)",
+          "surface": "Scheduling",
+          "status": "shipped",
+          "score": 7
+        },
+        {
+          "capId": "cap.notif.push-dispatch",
+          "name": "Server-side push dispatch (FCM/APNs)",
+          "surface": "Notifications",
+          "status": "planned",
+          "score": 7
+        },
+        {
+          "capId": "cap.takeoff.annotation-draw",
+          "name": "Line / polygon / count / label annotations",
+          "surface": "Takeoff",
+          "status": "shipped",
+          "score": 5
+        },
+        {
+          "capId": "cap.takeoff.annotation-edit",
+          "name": "Select / move / vertex-edit / delete annotations",
+          "surface": "Takeoff",
+          "status": "shipped",
+          "score": 5
+        },
+        {
+          "capId": "cap.takeoff.measurement-formulas",
+          "name": "SY / CY / LF / EA measurement math",
+          "surface": "Takeoff",
+          "status": "shipped",
+          "score": 5
+        }
+      ],
+      "proposedSurface": "Scheduling",
+      "proposedName": "Gantt image -> activities via AI (parse-schedule)",
+      "sampleSubjects": [
+        "Changes",
+        "Changes"
+      ]
+    },
+    {
+      "clusterId": "BC-013",
+      "memberCount": 1,
+      "memberWorkItemIds": [
+        "WI-050"
+      ],
+      "memberPrimaryTags": [
+        "migration"
+      ],
+      "buildCommits": 2,
+      "acceptanceCommits": 1,
+      "firstCommit": "2026-05-04",
+      "lastCommit": "2026-05-05",
+      "topTags": [
+        {
+          "tag": "migration",
+          "weight": 2
+        }
+      ],
+      "candidateCapabilities": [],
+      "proposedSurface": "UNASSIGNED",
+      "proposedName": "(unnamed cluster around migration)",
+      "sampleSubjects": [
+        "Changes"
+      ]
+    },
+    {
+      "clusterId": "BC-007",
+      "memberCount": 1,
+      "memberWorkItemIds": [
+        "WI-020"
+      ],
+      "memberPrimaryTags": [
+        "styles"
+      ],
+      "buildCommits": 1,
+      "acceptanceCommits": 0,
+      "firstCommit": "2026-03-19",
+      "lastCommit": "2026-03-19",
+      "topTags": [
+        {
+          "tag": "styles",
+          "weight": 1
+        },
+        {
+          "tag": "component:SummaryPanel",
+          "weight": 1
+        },
+        {
+          "tag": "page:index",
+          "weight": 1
+        },
+        {
+          "tag": "route:takeoff",
+          "weight": 1
+        }
+      ],
+      "candidateCapabilities": [
+        {
+          "capId": "cap.takeoff.pdf-canvas",
+          "name": "PDF plan canvas + page navigation",
+          "surface": "Takeoff",
+          "status": "shipped",
+          "score": 7
+        },
+        {
+          "capId": "cap.takeoff.pay-items-ui",
+          "name": "Pay items panel (group/filter/select)",
+          "surface": "Takeoff",
+          "status": "shipped",
+          "score": 5
+        },
+        {
+          "capId": "cap.takeoff.summary-panel",
+          "name": "Summary panel with totals + variance",
+          "surface": "Takeoff",
+          "status": "shipped",
+          "score": 5
+        }
+      ],
+      "proposedSurface": "Takeoff",
+      "proposedName": "PDF plan canvas + page navigation",
+      "sampleSubjects": [
+        "Improve mobile UI with bottom tabs"
+      ]
+    },
+    {
+      "clusterId": "BC-009",
+      "memberCount": 1,
+      "memberWorkItemIds": [
+        "WI-034"
+      ],
+      "memberPrimaryTags": [
+        "supabase:config"
+      ],
+      "buildCommits": 1,
+      "acceptanceCommits": 0,
+      "firstCommit": "2026-03-21",
+      "lastCommit": "2026-03-21",
+      "topTags": [
+        {
+          "tag": "supabase:config",
+          "weight": 1
+        }
+      ],
+      "candidateCapabilities": [],
+      "proposedSurface": "UNASSIGNED",
+      "proposedName": "(unnamed cluster around supabase:config)",
+      "sampleSubjects": [
+        "Changes"
+      ]
+    },
+    {
+      "clusterId": "BC-011",
+      "memberCount": 1,
+      "memberWorkItemIds": [
+        "WI-039"
+      ],
+      "memberPrimaryTags": [
+        "component:GpsTraceControls"
+      ],
+      "buildCommits": 1,
+      "acceptanceCommits": 0,
+      "firstCommit": "2026-03-27",
+      "lastCommit": "2026-03-27",
+      "topTags": [
+        {
+          "tag": "component:GpsTraceControls",
+          "weight": 1
+        },
+        {
+          "tag": "component:GpsCalibration",
+          "weight": 1
+        }
+      ],
+      "candidateCapabilities": [
+        {
+          "capId": "cap.field.gps-calibration",
+          "name": "GPS 2-3 point georeferencing",
+          "surface": "Field Ops",
+          "status": "shipped",
+          "score": 5
+        },
+        {
+          "capId": "cap.field.gps-trace",
+          "name": "Live GPS trace overlay + Kalman smoothing",
+          "surface": "Field Ops",
+          "status": "shipped",
+          "score": 5
+        }
+      ],
+      "proposedSurface": "Field Ops",
+      "proposedName": "GPS 2-3 point georeferencing",
+      "sampleSubjects": [
+        "Added geo-transform utilities"
+      ]
+    },
+    {
+      "clusterId": "BC-012",
+      "memberCount": 1,
+      "memberWorkItemIds": [
+        "WI-040"
+      ],
+      "memberPrimaryTags": [
+        "styles"
+      ],
+      "buildCommits": 1,
+      "acceptanceCommits": 0,
+      "firstCommit": "2026-03-27",
+      "lastCommit": "2026-03-27",
+      "topTags": [
+        {
+          "tag": "styles",
+          "weight": 1
+        }
+      ],
+      "candidateCapabilities": [],
+      "proposedSurface": "UNASSIGNED",
+      "proposedName": "(unnamed cluster around styles)",
+      "sampleSubjects": [
+        "Added enterprise landing imagery"
+      ]
+    },
+    {
+      "clusterId": "BC-023",
+      "memberCount": 1,
+      "memberWorkItemIds": [
+        "WI-082"
+      ],
+      "memberPrimaryTags": [
+        "lib:pdf-utils"
+      ],
+      "buildCommits": 1,
+      "acceptanceCommits": 0,
+      "firstCommit": "2026-05-25",
+      "lastCommit": "2026-05-25",
+      "topTags": [
+        {
+          "tag": "lib:pdf-utils",
+          "weight": 1
+        },
+        {
+          "tag": "page:index",
+          "weight": 1
+        },
+        {
+          "tag": "route:takeoff",
+          "weight": 1
+        }
+      ],
+      "candidateCapabilities": [
+        {
+          "capId": "cap.takeoff.pdf-canvas",
+          "name": "PDF plan canvas + page navigation",
+          "surface": "Takeoff",
+          "status": "shipped",
+          "score": 14
+        },
+        {
+          "capId": "cap.takeoff.toc-import",
+          "name": "Table-of-contents auto-parse / region select",
+          "surface": "Takeoff",
+          "status": "shipped",
+          "score": 7
+        },
+        {
+          "capId": "cap.takeoff.pay-items-import",
+          "name": "Pay-items import from spec tables",
+          "surface": "Takeoff",
+          "status": "shipped",
+          "score": 5
+        },
+        {
+          "capId": "cap.takeoff.pay-items-ui",
+          "name": "Pay items panel (group/filter/select)",
+          "surface": "Takeoff",
+          "status": "shipped",
+          "score": 5
+        }
+      ],
+      "proposedSurface": "Takeoff",
+      "proposedName": "PDF plan canvas + page navigation",
+      "sampleSubjects": [
+        "Changes"
+      ]
+    },
+    {
+      "clusterId": "BC-024",
+      "memberCount": 1,
+      "memberWorkItemIds": [
+        "WI-084"
+      ],
+      "memberPrimaryTags": [
+        "asset"
+      ],
+      "buildCommits": 1,
+      "acceptanceCommits": 0,
+      "firstCommit": "2026-05-26",
+      "lastCommit": "2026-05-26",
+      "topTags": [
+        {
+          "tag": "asset",
+          "weight": 1
+        }
+      ],
+      "candidateCapabilities": [],
+      "proposedSurface": "UNASSIGNED",
+      "proposedName": "(unnamed cluster around asset)",
+      "sampleSubjects": [
+        "Changes"
+      ]
+    }
+  ],
+  "orphanCapabilities": [
+    {
+      "capId": "cap.field.photo-capture",
+      "name": "Field photo capture (camera + attach to annotation)",
+      "surface": "Field Ops",
+      "status": "partial",
+      "notes": "Camera shim + annotation_photos table exist; landing/store promise this with geo-tag dispute resolution which is unbuilt.",
+      "keywords": [
+        "photo",
+        "camera",
+        "capture",
+        "attach",
+        "annotation"
+      ]
+    },
+    {
+      "capId": "cap.schedule.activity-user-assignments",
+      "name": "Activity user assignments UI",
+      "surface": "Scheduling",
+      "status": "planned",
+      "notes": "activity_assignments table exists; no UI.",
+      "keywords": [
+        "activity",
+        "user",
+        "assignment",
+        "responsibility"
+      ]
+    },
+    {
+      "capId": "cap.scheduling.xer-dcma14",
+      "name": "DCMA 14-point schedule audit",
+      "surface": "Scheduling",
+      "status": "shipped",
+      "keywords": [
+        "dcma",
+        "audit",
+        "check",
+        "schedule",
+        "health"
+      ]
+    },
+    {
+      "capId": "cap.scheduling.xer-tia",
+      "name": "TIA fragnet + NJDOT 108-03 narrative",
+      "surface": "Scheduling",
+      "status": "partial",
+      "notes": "FS-only fragnet; no actual CPM re-computation.",
+      "keywords": [
+        "tia",
+        "fragnet",
+        "delay",
+        "narrative",
+        "njdot",
+        "108"
+      ]
+    },
+    {
+      "capId": "cap.scheduling.xer-progress",
+      "name": "Baseline vs update SPI/CPI progress",
+      "surface": "Scheduling",
+      "status": "partial",
+      "notes": "CPI=SPI because no cost data loaded.",
+      "keywords": [
+        "spi",
+        "cpi",
+        "progress",
+        "slip",
+        "forecast",
+        "baseline",
+        "update"
+      ]
+    },
+    {
+      "capId": "cap.scheduling.xer-wbs-njdot",
+      "name": "WBS tree + NJDOT M-milestone compliance",
+      "surface": "Scheduling",
+      "status": "shipped",
+      "keywords": [
+        "wbs",
+        "milestone",
+        "njdot",
+        "compliance"
+      ]
+    },
+    {
+      "capId": "cap.scheduling.xer-feedback",
+      "name": "RE feedback memo from DCMA",
+      "surface": "Scheduling",
+      "status": "shipped",
+      "keywords": [
+        "memo",
+        "feedback",
+        "re",
+        "recommendation"
+      ]
+    },
+    {
+      "capId": "cap.scheduling.xer-aace",
+      "name": "AACE 98R-18 estimate-class bands",
+      "surface": "Scheduling",
+      "status": "shipped",
+      "keywords": [
+        "aace",
+        "estimate",
+        "class",
+        "accuracy",
+        "band"
+      ]
+    },
+    {
+      "capId": "cap.scheduling.portfolio-rollup",
+      "name": "Cross-project portfolio health strip",
+      "surface": "Scheduling",
+      "status": "aspirational",
+      "notes": "Promised in McfaPitch; no implementation.",
+      "keywords": [
+        "portfolio",
+        "rollup",
+        "cross",
+        "project",
+        "strip"
+      ]
+    },
+    {
+      "capId": "cap.scheduling.aace-progression",
+      "name": "AACE Class 5->1 estimate progression tool",
+      "surface": "Scheduling",
+      "status": "aspirational",
+      "notes": "Promised in McfaPitch; metadata only exists.",
+      "keywords": [
+        "aace",
+        "class",
+        "progression",
+        "estimate",
+        "deterministic",
+        "probabilistic"
+      ]
+    },
+    {
+      "capId": "cap.p6.xml-parse-serialize",
+      "name": "P6 PMXML parse + serialize round-trip",
+      "surface": "Scheduling",
+      "status": "shipped",
+      "keywords": [
+        "p6",
+        "pmxml",
+        "xml",
+        "parse",
+        "serialize",
+        "round",
+        "trip"
+      ]
+    },
+    {
+      "capId": "cap.p6.approved-quantity-embed",
+      "name": "Embed approved quantities into exported PMXML",
+      "surface": "Scheduling",
+      "status": "planned",
+      "notes": "P6Export only writes dates/% - not approved quantities.",
+      "keywords": [
+        "embed",
+        "approved",
+        "quantity",
+        "pmxml",
+        "export"
+      ]
+    },
+    {
+      "capId": "cap.eos.rocks",
+      "name": "EOS Quarterly Rocks",
+      "surface": "Project Controls",
+      "status": "shipped",
+      "keywords": [
+        "eos",
+        "rocks",
+        "quarterly",
+        "owner",
+        "status"
+      ]
+    },
+    {
+      "capId": "cap.eos.scorecard",
+      "name": "EOS weekly scorecard metrics",
+      "surface": "Project Controls",
+      "status": "shipped",
+      "keywords": [
+        "scorecard",
+        "metric",
+        "weekly",
+        "kpi"
+      ]
+    },
+    {
+      "capId": "cap.eos.cross-project-trends",
+      "name": "Cross-project EOS trend dashboard",
+      "surface": "Project Controls",
+      "status": "planned",
+      "notes": "scorecard_metrics exists but no aggregating widget.",
+      "keywords": [
+        "cross",
+        "project",
+        "trend",
+        "scorecard",
+        "dashboard"
+      ]
+    },
+    {
+      "capId": "cap.controls.executive-kpi",
+      "name": "Executive KPI tiles (schedule/milestones/issues/freshness)",
+      "surface": "Project Controls",
+      "status": "partial",
+      "notes": "Has hardcoded CPI/SPI placeholder.",
+      "keywords": [
+        "kpi",
+        "executive",
+        "dashboard",
+        "tile",
+        "milestone",
+        "cpi",
+        "spi"
+      ]
+    },
+    {
+      "capId": "cap.controls.variance-tracking",
+      "name": "Quantity variance progress bars",
+      "surface": "Project Controls",
+      "status": "shipped",
+      "keywords": [
+        "variance",
+        "progress",
+        "bar",
+        "installed",
+        "contract"
+      ]
+    },
+    {
+      "capId": "cap.controls.bid-summary",
+      "name": "Bid summary (contract total + pay-item table)",
+      "surface": "Project Controls",
+      "status": "shipped",
+      "keywords": [
+        "bid",
+        "summary",
+        "contract",
+        "total",
+        "unit",
+        "price"
+      ]
+    },
+    {
+      "capId": "cap.docs.system-folder-rendering",
+      "name": "Specialized rendering of system folders",
+      "surface": "Documents",
+      "status": "planned",
+      "keywords": [
+        "system",
+        "folder",
+        "specialized",
+        "render"
+      ]
+    },
+    {
+      "capId": "cap.auth.profile-table",
+      "name": "User profiles + display name + welcome flag",
+      "surface": "Auth & Admin",
+      "status": "shipped",
+      "keywords": [
+        "profile",
+        "full",
+        "name",
+        "welcome"
+      ]
+    },
+    {
+      "capId": "cap.notif.push-tap-deeplink",
+      "name": "Tap-to-deep-link on push notification",
+      "surface": "Notifications",
+      "status": "planned",
+      "keywords": [
+        "push",
+        "tap",
+        "deep",
+        "link",
+        "action"
+      ]
+    },
+    {
+      "capId": "cap.native.platform-shim",
+      "name": "Capacitor platform/isNative shim",
+      "surface": "Native & Offline",
+      "status": "shipped",
+      "keywords": [
+        "capacitor",
+        "platform",
+        "native",
+        "web"
+      ]
+    },
+    {
+      "capId": "cap.native.camera",
+      "name": "Capacitor camera + web file-input fallback",
+      "surface": "Native & Offline",
+      "status": "shipped",
+      "keywords": [
+        "camera",
+        "photo",
+        "capture"
+      ]
+    },
+    {
+      "capId": "cap.native.geolocation",
+      "name": "Capacitor geolocation watchPosition",
+      "surface": "Native & Offline",
+      "status": "shipped",
+      "keywords": [
+        "geolocation",
+        "watch",
+        "position",
+        "gps"
+      ]
+    },
+    {
+      "capId": "cap.native.biometric",
+      "name": "Face ID / Touch ID biometric unlock",
+      "surface": "Native & Offline",
+      "status": "shipped",
+      "keywords": [
+        "biometric",
+        "face",
+        "touch",
+        "unlock",
+        "keychain",
+        "keystore"
+      ]
+    },
+    {
+      "capId": "cap.native.filesystem-share",
+      "name": "Native filesystem + share sheet for exports",
+      "surface": "Native & Offline",
+      "status": "shipped",
+      "keywords": [
+        "filesystem",
+        "share",
+        "sheet",
+        "export",
+        "save"
+      ]
+    },
+    {
+      "capId": "cap.native.push-registration",
+      "name": "Push notification registration + device tokens",
+      "surface": "Native & Offline",
+      "status": "shipped",
+      "keywords": [
+        "push",
+        "register",
+        "device",
+        "token",
+        "fcm",
+        "apns"
+      ]
+    },
+    {
+      "capId": "cap.native.app-state",
+      "name": "App state listener -> auth refresh + sync trigger",
+      "surface": "Native & Offline",
+      "status": "shipped",
+      "keywords": [
+        "app",
+        "state",
+        "foreground",
+        "resume"
+      ]
+    },
+    {
+      "capId": "cap.native.background-sync",
+      "name": "Background outbox sync scheduler",
+      "surface": "Native & Offline",
+      "status": "partial",
+      "keywords": [
+        "background",
+        "sync",
+        "scheduler",
+        "fetch",
+        "workmanager",
+        "backgroundtask"
+      ]
+    },
+    {
+      "capId": "cap.native.first-run-wizard",
+      "name": "First-run permission wizard",
+      "surface": "Native & Offline",
+      "status": "shipped",
+      "keywords": [
+        "first",
+        "run",
+        "wizard",
+        "onboarding",
+        "permission"
+      ]
+    },
+    {
+      "capId": "cap.native.deep-link",
+      "name": "Deep-link / appUrlOpen handling",
+      "surface": "Native & Offline",
+      "status": "planned",
+      "keywords": [
+        "deep",
+        "link",
+        "url",
+        "open"
+      ]
+    },
+    {
+      "capId": "cap.native.ios-android-folders",
+      "name": "iOS / Android platform folders + builds",
+      "surface": "Native & Offline",
+      "status": "planned",
+      "keywords": [
+        "ios",
+        "android",
+        "capacitor",
+        "add",
+        "platform",
+        "build"
+      ]
+    },
+    {
+      "capId": "cap.native.transistorsoft-license",
+      "name": "@transistorsoft commercial license for prod",
+      "surface": "Native & Offline",
+      "status": "planned",
+      "keywords": [
+        "transistorsoft",
+        "license",
+        "commercial"
+      ]
+    },
+    {
+      "capId": "cap.native.store-icons-splash",
+      "name": "App icon / splash generation + maskable PWA icon",
+      "surface": "Native & Offline",
+      "status": "planned",
+      "keywords": [
+        "icon",
+        "splash",
+        "maskable",
+        "generate"
+      ]
+    },
+    {
+      "capId": "cap.native.store-screenshots",
+      "name": "App Store screenshots (6 device sizes)",
+      "surface": "Native & Offline",
+      "status": "planned",
+      "keywords": [
+        "screenshot",
+        "store",
+        "device",
+        "size"
+      ]
+    },
+    {
+      "capId": "cap.offline.sync-panel",
+      "name": "SyncPanel UI (pending/retry/discard)",
+      "surface": "Native & Offline",
+      "status": "shipped",
+      "keywords": [
+        "sync",
+        "panel",
+        "pending",
+        "retry",
+        "discard"
+      ]
+    },
+    {
+      "capId": "cap.offline.service-worker",
+      "name": "PWA service worker for cold-start offline",
+      "surface": "Native & Offline",
+      "status": "planned",
+      "keywords": [
+        "service",
+        "worker",
+        "sw",
+        "register",
+        "offline",
+        "cold",
+        "start"
+      ]
+    },
+    {
+      "capId": "cap.offline.install-prompt",
+      "name": "beforeinstallprompt PWA install prompt",
+      "surface": "Native & Offline",
+      "status": "planned",
+      "keywords": [
+        "install",
+        "prompt",
+        "beforeinstallprompt",
+        "a2hs"
+      ]
+    },
+    {
+      "capId": "cap.app.toast",
+      "name": "Global toast (Radix + Sonner)",
+      "surface": "Cross-Cutting",
+      "status": "shipped",
+      "keywords": [
+        "toast",
+        "sonner",
+        "notify"
+      ]
+    },
+    {
+      "capId": "cap.app.confirm-dialog",
+      "name": "Confirm dialog (useConfirm)",
+      "surface": "Cross-Cutting",
+      "status": "shipped",
+      "keywords": [
+        "confirm",
+        "dialog",
+        "alert"
+      ]
+    },
+    {
+      "capId": "cap.app.keyboard-shortcuts",
+      "name": "Keyboard shortcuts (undo/redo etc.)",
+      "surface": "Cross-Cutting",
+      "status": "shipped",
+      "keywords": [
+        "keyboard",
+        "shortcut",
+        "ctrl"
+      ]
+    },
+    {
+      "capId": "cap.marketing.mcfa-pitch",
+      "name": "MCFA long-form employment pitch",
+      "surface": "Marketing & Sales",
+      "status": "shipped",
+      "keywords": [
+        "mcfa",
+        "pitch",
+        "employment",
+        "proposal",
+        "systems",
+        "cpm"
+      ]
+    },
+    {
+      "capId": "cap.marketing.xerlens-demo",
+      "name": "XerLens CPM scheduler public demo (17-step tour)",
+      "surface": "Marketing & Sales",
+      "status": "shipped",
+      "keywords": [
+        "xer",
+        "xerlens",
+        "cpm",
+        "demo",
+        "dcma",
+        "tia"
+      ]
+    },
+    {
+      "capId": "cap.marketing.p6xml-demo",
+      "name": "P6 XML round-trip standalone demo",
+      "surface": "Marketing & Sales",
+      "status": "shipped",
+      "keywords": [
+        "p6",
+        "xml",
+        "demo",
+        "round",
+        "trip"
+      ]
+    },
+    {
+      "capId": "cap.marketing.fajar-pitch",
+      "name": "Fajar Al Mustaqbal equipment-rental pitch",
+      "surface": "Marketing & Sales",
+      "status": "shipped",
+      "keywords": [
+        "fajar",
+        "equipment",
+        "rental",
+        "uae"
+      ]
+    },
+    {
+      "capId": "cap.marketing.privacy-terms",
+      "name": "Privacy + Terms pages",
+      "surface": "Marketing & Sales",
+      "status": "planned",
+      "keywords": [
+        "privacy",
+        "terms",
+        "policy",
+        "legal"
+      ]
+    },
+    {
+      "capId": "cap.integrations.projectwise",
+      "name": "ProjectWise plan-set integration",
+      "surface": "Integrations",
+      "status": "aspirational",
+      "keywords": [
+        "projectwise",
+        "dms",
+        "plan",
+        "set",
+        "integration",
+        "pull"
+      ]
+    },
+    {
+      "capId": "cap.integrations.sitemanager-aashtoware",
+      "name": "SiteManager / AASHTOWare quantity sync",
+      "surface": "Integrations",
+      "status": "aspirational",
+      "keywords": [
+        "sitemanager",
+        "aashtoware",
+        "sync",
+        "quantity"
+      ]
+    },
+    {
+      "capId": "cap.integrations.bim360",
+      "name": "BIM 360 data source integration",
+      "surface": "Integrations",
+      "status": "aspirational",
+      "keywords": [
+        "bim",
+        "360",
+        "integration",
+        "design"
+      ]
+    },
+    {
+      "capId": "cap.integrations.power-bi",
+      "name": "Power BI semantic model export",
+      "surface": "Integrations",
+      "status": "aspirational",
+      "keywords": [
+        "power",
+        "bi",
+        "semantic",
+        "model",
+        "export"
+      ]
+    },
+    {
+      "capId": "cap.integrations.public-api",
+      "name": "Public REST/GraphQL API for enterprise",
+      "surface": "Integrations",
+      "status": "aspirational",
+      "keywords": [
+        "api",
+        "public",
+        "rest",
+        "graphql",
+        "enterprise"
+      ]
+    },
+    {
+      "capId": "cap.integrations.dc84-export",
+      "name": "NJDOT DC-84 monthly estimate export",
+      "surface": "Integrations",
+      "status": "aspirational",
+      "keywords": [
+        "dc",
+        "84",
+        "monthly",
+        "estimate",
+        "format",
+        "njdot"
+      ]
+    },
+    {
+      "capId": "cap.integrations.contractor-portal",
+      "name": "Contractor read-only portal",
+      "surface": "Integrations",
+      "status": "aspirational",
+      "keywords": [
+        "contractor",
+        "portal",
+        "read",
+        "only",
+        "share"
+      ]
+    },
+    {
+      "capId": "cap.ai.quantity-extraction",
+      "name": "AI auto-extract quantities from spec tables / plan notes",
+      "surface": "AI",
+      "status": "aspirational",
+      "keywords": [
+        "ai",
+        "quantity",
+        "extract",
+        "spec",
+        "plan",
+        "note",
+        "auto"
+      ]
+    },
+    {
+      "capId": "cap.ai.tia-narrative-draft",
+      "name": "Plain-text delay -> auto fragnet + TIA narrative",
+      "surface": "AI",
+      "status": "partial",
+      "keywords": [
+        "ai",
+        "tia",
+        "delay",
+        "narrative",
+        "draft",
+        "fragnet",
+        "auto"
+      ]
+    },
+    {
+      "capId": "cap.admin.soc2",
+      "name": "SOC 2 compliance program",
+      "surface": "Auth & Admin",
+      "status": "aspirational",
+      "keywords": [
+        "soc",
+        "2",
+        "compliance",
+        "audit"
+      ]
+    },
+    {
+      "capId": "cap.admin.uptime-sla",
+      "name": "99.9% uptime SLA",
+      "surface": "Auth & Admin",
+      "status": "aspirational",
+      "keywords": [
+        "uptime",
+        "sla",
+        "99.9"
+      ]
+    },
+    {
+      "capId": "cap.admin.dedicated-onboarding",
+      "name": "Dedicated onboarding service for NJTA teams",
+      "surface": "Auth & Admin",
+      "status": "aspirational",
+      "keywords": [
+        "dedicated",
+        "onboarding",
+        "service",
+        "white",
+        "glove"
+      ]
+    },
+    {
+      "capId": "cap.fajar.whatsapp-booking-agent",
+      "name": "WhatsApp booking agent (DM->reservation->payment)",
+      "surface": "Fajar",
+      "status": "aspirational",
+      "keywords": [
+        "fajar",
+        "whatsapp",
+        "booking",
+        "agent",
+        "dm",
+        "payment"
+      ]
+    },
+    {
+      "capId": "cap.fajar.whatsapp-maintenance-agent",
+      "name": "WhatsApp ops maintenance agent (auto fleet lock)",
+      "surface": "Fajar",
+      "status": "aspirational",
+      "keywords": [
+        "fajar",
+        "whatsapp",
+        "maintenance",
+        "operator",
+        "fleet",
+        "lock"
+      ]
+    },
+    {
+      "capId": "cap.fajar.availability-engine",
+      "name": "Live fleet availability engine",
+      "surface": "Fajar",
+      "status": "aspirational",
+      "keywords": [
+        "fajar",
+        "availability",
+        "calendar",
+        "engine",
+        "fleet"
+      ]
+    },
+    {
+      "capId": "cap.fajar.seo-machine-pages",
+      "name": "Per-machine SEO landing pages",
+      "surface": "Fajar",
+      "status": "aspirational",
+      "keywords": [
+        "fajar",
+        "seo",
+        "machine",
+        "page",
+        "schema",
+        "google"
+      ]
+    },
+    {
+      "capId": "cap.fajar.arabic-hreflang",
+      "name": "Arabic site with hreflang",
+      "surface": "Fajar",
+      "status": "aspirational",
+      "keywords": [
+        "fajar",
+        "arabic",
+        "hreflang",
+        "bilingual"
+      ]
+    },
+    {
+      "capId": "cap.fajar.admin-dashboard",
+      "name": "Phone-accessible admin dashboard",
+      "surface": "Fajar",
+      "status": "aspirational",
+      "keywords": [
+        "fajar",
+        "admin",
+        "dashboard",
+        "vacancy",
+        "queue"
+      ]
+    },
+    {
+      "capId": "cap.fajar.human-handoff",
+      "name": "Agent->human handoff with context",
+      "surface": "Fajar",
+      "status": "aspirational",
+      "keywords": [
+        "fajar",
+        "human",
+        "handoff",
+        "escalation",
+        "context"
+      ]
+    },
+    {
+      "capId": "cap.fajar.uae-hosting",
+      "name": "UAE-region hosting + daily backups + CSV/SQL export",
+      "surface": "Fajar",
+      "status": "aspirational",
+      "keywords": [
+        "fajar",
+        "uae",
+        "hosting",
+        "backup",
+        "export"
+      ]
+    },
+    {
+      "capId": "cap.infra.testing",
+      "name": "Vitest test suite",
+      "surface": "Backend & Infra",
+      "status": "shipped",
+      "keywords": [
+        "test",
+        "vitest",
+        "unit"
+      ]
+    }
+  ]
+}
