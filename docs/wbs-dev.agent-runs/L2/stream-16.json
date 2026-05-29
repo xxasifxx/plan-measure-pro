@@ -1,0 +1,61 @@
+[
+  {
+    "id": "send-push-edge-fn",
+    "stream": 16,
+    "intent": "Implement and maintain send-push Edge Function for FCM/APNs delivery",
+    "evidence": "supabase/functions/send-push/index.ts exists and uses FCM HTTP v1 API to send notifications to device tokens.",
+    "status": "done",
+    "confidence": 1,
+    "gaps": []
+  },
+  {
+    "id": "notification-inserts",
+    "stream": 16,
+    "intent": "Ensure in-app notifications are inserted into public.notifications table",
+    "evidence": "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql creates the table and defines policies.",
+    "status": "done",
+    "confidence": 1,
+    "gaps": []
+  },
+  {
+    "id": "daily-reports-status-side-effects",
+    "stream": 16,
+    "intent": "Trigger notifications and snapshots on daily report status changes",
+    "evidence": "daily_reports_status_side_effects() function in 20260524130242 migration handles 'submitted', 'approved', and 'rejected' states.",
+    "status": "done",
+    "confidence": 1,
+    "gaps": []
+  },
+  {
+    "id": "web-push-subscriptions",
+    "stream": 16,
+    "intent": "Support Web-Push (VAPID) subscriptions in the frontend and database",
+    "evidence": "device_tokens table supports 'web' platform, but no VAPID implementation or PushManager registration found in frontend (src/lib/native/push.ts is Capacitor-focused).",
+    "status": "todo",
+    "confidence": 0.8,
+    "gaps": [
+      "No VAPID public key configuration found",
+      "No Service Worker PushManager subscription logic for web"
+    ]
+  },
+  {
+    "id": "mobile-push-delivery",
+    "stream": 16,
+    "intent": "Deliver push notifications to mobile devices via Capacitor and FCM",
+    "evidence": "src/lib/native/push.ts handles Capacitor PushNotifications registration and token upsert to device_tokens.",
+    "status": "done",
+    "confidence": 1,
+    "gaps": []
+  },
+  {
+    "id": "notification-trigger-sync",
+    "stream": 16,
+    "intent": "Connect public.notifications inserts to the send-push Edge Function",
+    "evidence": "send-push function exists but no database trigger was found calling it via net.http_post or similar after a notification insert.",
+    "status": "todo",
+    "confidence": 0.9,
+    "gaps": [
+      "Missing trigger on public.notifications to invoke the send-push edge function"
+    ]
+  }
+]

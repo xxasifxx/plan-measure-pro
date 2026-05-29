@@ -1,0 +1,101 @@
+{
+  "stream": "17-offline-and-sync",
+  "generatedAt": "2026-05-29T18:00:00.000Z",
+  "agent": "L2-comprehender",
+  "intentLeaves": [
+    {
+      "id": "offline-idb-schema",
+      "intent": "IndexedDB schema for project mirroring and write outbox",
+      "evidence": "src/lib/offline/db.ts",
+      "status": "implemented",
+      "confidence": 1.0,
+      "anchors": [
+        { "file": "src/lib/offline/db.ts", "region": "40-58" }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "offline-mutate",
+      "intent": "Online-first mutation wrapper with optimistic UI and outbox fallback",
+      "evidence": "src/lib/offline/mutation-client.ts",
+      "status": "implemented",
+      "confidence": 0.95,
+      "anchors": [
+        { "file": "src/lib/offline/mutation-client.ts", "region": "49-85" }
+      ],
+      "gaps": [
+        "applyMirror (line 24) does not support all tables found in IDB schema (e.g., pdf_cache_meta, meta are missing from storeMap).",
+        "Optimistic flag _pendingSync is set in IDB but not exposed in types/project.ts, so UI components cannot visually distinguish pending vs synced rows easily."
+      ]
+    },
+    {
+      "id": "offline-sync-loop",
+      "intent": "Reliable outbox drain loop with backoff and causality preservation",
+      "evidence": "src/lib/offline/sync.ts",
+      "status": "implemented",
+      "confidence": 0.9,
+      "anchors": [
+        { "file": "src/lib/offline/sync.ts", "region": "27-76" }
+      ],
+      "gaps": [
+        "Serial processing (line 36) preserves causality per rowId, but there is no mechanism to handle cross-row dependencies (e.g., creating a pay_item then an annotation that references it).",
+        "Conflict detection (baseUpdatedAt) is present in the schema but no resolution logic exists in drainOnce; items that fail with 409 are just marked 'failed' and retried until MAX_ATTEMPTS."
+      ]
+    },
+    {
+      "id": "offline-mirror",
+      "intent": "Snapshotting Supabase project data to IndexedDB for offline access",
+      "evidence": "src/lib/offline/mirror.ts",
+      "status": "implemented",
+      "confidence": 1.0,
+      "anchors": [
+        { "file": "src/lib/offline/mirror.ts", "region": "9-51" }
+      ],
+      "gaps": [
+        "mirrorProject is called manually in Index.tsx:128; there is no automatic periodic re-snapshotting if the app stays open for long periods."
+      ]
+    },
+    {
+      "id": "use-project-offline-pivot",
+      "intent": "Pivot useProject to use offlineMutate for all write operations",
+      "evidence": "src/hooks/useProject.ts",
+      "status": "implemented",
+      "confidence": 0.9,
+      "anchors": [
+        { "file": "src/hooks/useProject.ts", "region": "166-170, 185-189, 213-217" }
+      ],
+      "gaps": [
+        "useProject still accepts supabaseProjectId/userId and performs manual DB updates for calibrations (line 92) and pay_items (line 311) instead of using the uniform offlineMutate path.",
+        "Realtime subscription (line 341) does not check the outbox; incoming remote changes could overwrite local optimistic state before it syncs (documented Risk in stream doc)."
+      ]
+    },
+    {
+      "id": "offline-service-worker",
+      "intent": "PWA Service Worker for asset caching and offline navigation",
+      "evidence": "vite.config.ts, src/lib/pwa.ts",
+      "status": "implemented",
+      "confidence": 1.0,
+      "anchors": [
+        { "file": "vite.config.ts", "region": "19-95" },
+        { "file": "src/lib/pwa.ts", "region": "25-38" }
+      ],
+      "gaps": [
+        "Runtime caching for Supabase REST (line 72) uses NetworkFirst with 3s timeout; if the network is extremely slow but not 'offline', the UI will hang for 3s on every fetch."
+      ]
+    }
+  ],
+  "docDrift": [
+    {
+      "location": "stream doc §Current state — Offline pivot (2026-05-26)",
+      "finding": "The doc states useProject is 'offline-first pivoted', but several methods (setCalibration, updatePayItems) still call supabase directly rather than using offlineMutate. This is an inconsistent implementation of the pivot.",
+      "severity": "warning",
+      "recommendation": "Migrate calibrations and pay_items to use offlineMutate to ensure consistent reliability."
+    },
+    {
+      "location": "stream doc §Conflict Resolution",
+      "finding": "The doc mentions conflict resolution using baseUpdatedAt. While the field exists in the outbox schema, the sync engine (sync.ts) does not implement any 3-way merge or rebase logic. It simply retries.",
+      "severity": "info",
+      "recommendation": "Clarify that conflict resolution is 'detection-only' in the current version."
+    }
+  ]
+}
