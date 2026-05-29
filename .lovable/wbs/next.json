@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-05-29T18:56:06.153Z",
+  "generatedAt": "2026-05-29T18:56:42.973Z",
   "sortedBy": "downstreamCount DESC, lieTaxExposure DESC, lastTouched DESC",
-  "count": 22,
+  "count": 29,
   "items": [
     {
       "activityId": "A0026",
@@ -254,6 +254,25 @@
         }
       ],
       "statusEvidence": "72d idle; 2 associated leaves, untagged verdicts"
+    },
+    {
+      "activityId": "A0016",
+      "name": "[lib:specs-utils] Validate specs against PDF read",
+      "status": "dormant",
+      "stream": "09 Standard Specifications",
+      "era": "era-02",
+      "lastTouched": "2026-03-15",
+      "dormancyDays": 75,
+      "lieTaxExposure": 0,
+      "downstreamCount": 2,
+      "successors": [
+        {
+          "description": "Stream \"09 Standard Specifications\" has no implemented leaves — close the loop or formally retire",
+          "whyNeeded": "entire value stream lacks shipped code despite intent docs",
+          "source": "stream-doc:09 Standard Specifications"
+        }
+      ],
+      "statusEvidence": "75d idle; 1 associated leaves, untagged verdicts"
     },
     {
       "activityId": "A0059",
@@ -645,6 +664,38 @@
       "statusEvidence": "63d idle; 1 associated leaves, untagged verdicts"
     },
     {
+      "activityId": "A0065",
+      "name": "[lib:geo-transform] Added GPS-to-plan feature plan",
+      "status": "dormant",
+      "stream": "05 Field Capture",
+      "era": "era-04",
+      "lastTouched": "2026-03-27",
+      "dormancyDays": 63,
+      "lieTaxExposure": 0,
+      "downstreamCount": 0,
+      "successors": [],
+      "statusEvidence": "63d idle; 2 associated leaves, untagged verdicts"
+    },
+    {
+      "activityId": "A0043",
+      "name": "[lib:specs-utils] Relax section detection",
+      "status": "dormant",
+      "stream": "09 Standard Specifications",
+      "era": "era-04",
+      "lastTouched": "2026-03-23",
+      "dormancyDays": 67,
+      "lieTaxExposure": 0,
+      "downstreamCount": 0,
+      "successors": [
+        {
+          "description": "Stream \"09 Standard Specifications\" has no implemented leaves — close the loop or formally retire",
+          "whyNeeded": "entire value stream lacks shipped code despite intent docs",
+          "source": "stream-doc:09 Standard Specifications"
+        }
+      ],
+      "statusEvidence": "67d idle; 1 associated leaves, untagged verdicts"
+    },
+    {
       "activityId": "A0044",
       "name": "[component:SpecViewer] Continuous scroll viewer added",
       "status": "dormant",
@@ -664,6 +715,25 @@
       "statusEvidence": "67d idle; 1 associated leaves, untagged verdicts"
     },
     {
+      "activityId": "A0036",
+      "name": "[lib:export-utils] Add annotation fields migration",
+      "status": "dormant",
+      "stream": "07 Quantity to Payment",
+      "era": "era-03",
+      "lastTouched": "2026-03-21",
+      "dormancyDays": 69,
+      "lieTaxExposure": 0,
+      "downstreamCount": 0,
+      "successors": [
+        {
+          "description": "Stream \"07 Quantity to Payment\" has no implemented leaves — close the loop or formally retire",
+          "whyNeeded": "entire value stream lacks shipped code despite intent docs",
+          "source": "stream-doc:07 Quantity to Payment"
+        }
+      ],
+      "statusEvidence": "69d idle; 2 associated leaves, untagged verdicts"
+    },
+    {
       "activityId": "A0019",
       "name": "[component:EmptyState] Overhauled mobile UI",
       "status": "dormant",
@@ -681,6 +751,51 @@
         }
       ],
       "statusEvidence": "71d idle; 8 associated leaves, untagged verdicts"
+    },
+    {
+      "activityId": "A0017",
+      "name": "[test:specs-utils] Add specs utils tests",
+      "status": "dormant",
+      "stream": "18 Compliance & Audit",
+      "era": "era-02",
+      "lastTouched": "2026-03-15",
+      "dormancyDays": 75,
+      "lieTaxExposure": 0,
+      "downstreamCount": 0,
+      "successors": [],
+      "statusEvidence": "75d idle; 1 associated leaves, untagged verdicts"
+    },
+    {
+      "activityId": "A0018",
+      "name": "[test:setup] Add unit tests for specs utils",
+      "status": "dormant",
+      "stream": "18 Compliance & Audit",
+      "era": "era-02",
+      "lastTouched": "2026-03-15",
+      "dormancyDays": 75,
+      "lieTaxExposure": 0,
+      "downstreamCount": 0,
+      "successors": [],
+      "statusEvidence": "75d idle; 1 associated leaves, untagged verdicts"
+    },
+    {
+      "activityId": "A0005",
+      "name": "[lib:storage] Add clear project button",
+      "status": "dormant",
+      "stream": "10 Document Management",
+      "era": "era-01",
+      "lastTouched": "2026-03-08",
+      "dormancyDays": 82,
+      "lieTaxExposure": 0,
+      "downstreamCount": 0,
+      "successors": [
+        {
+          "description": "Stream \"10 Document Management\" has no implemented leaves — close the loop or formally retire",
+          "whyNeeded": "entire value stream lacks shipped code despite intent docs",
+          "source": "stream-doc:10 Document Management"
+        }
+      ],
+      "statusEvidence": "82d idle; 1 associated leaves, untagged verdicts"
     }
   ]
 }

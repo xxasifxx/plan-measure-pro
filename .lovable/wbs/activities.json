@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-05-29T18:56:06.143Z",
+  "generatedAt": "2026-05-29T18:56:42.969Z",
   "totals": {
     "activities": 156,
     "orphaned": 3,
-    "shipped": 24,
-    "abandoned": 59,
-    "dormant": 21,
-    "quiet": 13,
-    "in_progress": 35,
+    "shipped": 32,
+    "dormant": 28,
+    "quiet": 23,
+    "abandoned": 5,
+    "in_progress": 64,
     "blocked": 1
   },
   "thresholds": {
@@ -881,8 +881,8 @@
         "A0011"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'component:ProjectSidebar' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "shipped",
+      "statusEvidence": "76d idle; all associated leaves implemented (10 leaves)",
       "lieTaxIds": [],
       "successorsImplied": []
     },
@@ -1017,8 +1017,8 @@
         "A0009"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'lib:pdf-utils' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "shipped",
+      "statusEvidence": "78d idle; all associated leaves implemented (2 leaves)",
       "lieTaxIds": [],
       "successorsImplied": []
     },
@@ -1073,8 +1073,8 @@
         "A0007"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'lib:storage' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "dormant",
+      "statusEvidence": "82d idle; 1 associated leaves, untagged verdicts",
       "lieTaxIds": [],
       "successorsImplied": [
         {
@@ -2365,8 +2365,8 @@
           "confidence": "low"
         }
       ],
-      "status": "abandoned",
-      "statusEvidence": "tag 'component:ProjectSidebar' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "shipped",
+      "statusEvidence": "75d idle; all associated leaves implemented (2 leaves)",
       "lieTaxIds": [],
       "successorsImplied": []
     },
@@ -2484,8 +2484,8 @@
         "A0018"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'lib:specs-utils' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "dormant",
+      "statusEvidence": "75d idle; 1 associated leaves, untagged verdicts",
       "lieTaxIds": [],
       "successorsImplied": [
         {
@@ -2616,8 +2616,8 @@
         "A0018"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'test:specs-utils' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "dormant",
+      "statusEvidence": "75d idle; 1 associated leaves, untagged verdicts",
       "lieTaxIds": [],
       "successorsImplied": []
     },
@@ -2672,8 +2672,8 @@
         "A0017"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'test:setup' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "dormant",
+      "statusEvidence": "75d idle; 1 associated leaves, untagged verdicts",
       "lieTaxIds": [],
       "successorsImplied": []
     },
@@ -3932,8 +3932,8 @@
           "confidence": "low"
         }
       ],
-      "status": "abandoned",
-      "statusEvidence": "tag 'lib:pdf-utils' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "shipped",
+      "statusEvidence": "69d idle; all associated leaves implemented (2 leaves)",
       "lieTaxIds": [],
       "successorsImplied": []
     },
@@ -4385,8 +4385,8 @@
           "confidence": "low"
         }
       ],
-      "status": "abandoned",
-      "statusEvidence": "tag 'component:ProjectSidebar' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "shipped",
+      "statusEvidence": "69d idle; all associated leaves implemented (2 leaves)",
       "lieTaxIds": [],
       "successorsImplied": []
     },
@@ -4816,8 +4816,8 @@
         "A0038"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'lib:export-utils' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "dormant",
+      "statusEvidence": "69d idle; 2 associated leaves, untagged verdicts",
       "lieTaxIds": [],
       "successorsImplied": [
         {
@@ -6453,8 +6453,8 @@
           "confidence": "low"
         }
       ],
-      "status": "abandoned",
-      "statusEvidence": "tag 'lib:specs-utils' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "dormant",
+      "statusEvidence": "67d idle; 1 associated leaves, untagged verdicts",
       "lieTaxIds": [],
       "successorsImplied": [
         {
@@ -8260,8 +8260,8 @@
           "confidence": "low"
         }
       ],
-      "status": "abandoned",
-      "statusEvidence": "tag 'hook:useProjects' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "shipped",
+      "statusEvidence": "67d idle; all associated leaves implemented (2 leaves)",
       "lieTaxIds": [],
       "successorsImplied": []
     },
@@ -9103,8 +9103,8 @@
           "confidence": "low"
         }
       ],
-      "status": "abandoned",
-      "statusEvidence": "tag 'component:ProjectSidebar' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "shipped",
+      "statusEvidence": "63d idle; all associated leaves implemented (2 leaves)",
       "lieTaxIds": [],
       "successorsImplied": []
     },
@@ -9191,8 +9191,8 @@
           "confidence": "low"
         }
       ],
-      "status": "abandoned",
-      "statusEvidence": "tag 'lib:geo-transform' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "dormant",
+      "statusEvidence": "63d idle; 2 associated leaves, untagged verdicts",
       "lieTaxIds": [],
       "successorsImplied": []
     },
@@ -9282,8 +9282,8 @@
           "confidence": "low"
         }
       ],
-      "status": "abandoned",
-      "statusEvidence": "tag 'component:GpsCalibration' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "shipped",
+      "statusEvidence": "63d idle; all associated leaves implemented (4 leaves)",
       "lieTaxIds": [],
       "successorsImplied": []
     },
@@ -9608,10 +9608,18 @@
         "A0069"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'page:demo' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
-      "lieTaxIds": [],
-      "successorsImplied": []
+      "status": "quiet",
+      "statusEvidence": "last commit 45d ago",
+      "lieTaxIds": [
+        "LT-C-C-4"
+      ],
+      "successorsImplied": [
+        {
+          "description": "Resolve lie-tax: \"Demo completion screen: \"Sign up to save your work, collaborate, and export reports\"\"",
+          "whyNeeded": "Demo measurements are ephemeral and not associated with a real project. \"Save your work\" implies the demo session data persists after sign-up, which it does not.",
+          "source": "lie-tax:LT-C-C-4 (cosmetic)"
+        }
+      ]
     },
     {
       "id": "A0069",
@@ -9801,7 +9809,7 @@
       ],
       "predecessors": [],
       "status": "abandoned",
-      "statusEvidence": "tag 'page:mcfapitch' falls in blast-radius of pivot 'TakeoffPro brand and GPS field-measurement page swept out' (2026-05-05); no commits after pivot",
+      "statusEvidence": "tag 'page:mcfapitch' literally appears in blast-radius of capability-removal pivot 'TakeoffPro brand and GPS field-measurement page swept out' (2026-05-05); no commits after pivot",
       "lieTaxIds": [],
       "successorsImplied": []
     },
@@ -10758,8 +10766,8 @@
         "A0094"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'edge:parse-schedule' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "quiet",
+      "statusEvidence": "last commit 24d ago",
       "lieTaxIds": [],
       "successorsImplied": [
         {
@@ -11008,8 +11016,8 @@
         "A0094"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'component:ProjectSidebar' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "quiet",
+      "statusEvidence": "last commit 24d ago",
       "lieTaxIds": [],
       "successorsImplied": []
     },
@@ -11398,7 +11406,7 @@
         }
       ],
       "status": "abandoned",
-      "statusEvidence": "tag 'page:mcfapitch' falls in blast-radius of pivot 'TakeoffPro brand and GPS field-measurement page swept out' (2026-05-05); no commits after pivot",
+      "statusEvidence": "tag 'page:mcfapitch' literally appears in blast-radius of capability-removal pivot 'TakeoffPro brand and GPS field-measurement page swept out' (2026-05-05); no commits after pivot",
       "lieTaxIds": [],
       "successorsImplied": []
     },
@@ -11541,8 +11549,8 @@
         "A0094"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'lib:xer:dcma' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "quiet",
+      "statusEvidence": "last commit 24d ago",
       "lieTaxIds": [],
       "successorsImplied": []
     },
@@ -11866,7 +11874,7 @@
       ],
       "predecessors": [],
       "status": "abandoned",
-      "statusEvidence": "tag 'page:xerdemo' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "statusEvidence": "tag 'page:xerdemo' literally appears in blast-radius of capability-removal pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
       "lieTaxIds": [],
       "successorsImplied": []
     },
@@ -12240,7 +12248,7 @@
       ],
       "predecessors": [],
       "status": "abandoned",
-      "statusEvidence": "tag 'component:XerLensTour' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "statusEvidence": "tag 'component:XerLensTour' literally appears in blast-radius of capability-removal pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
       "lieTaxIds": [],
       "successorsImplied": []
     },
@@ -12306,8 +12314,8 @@
         "A0094"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'lib:xer:aace' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "quiet",
+      "statusEvidence": "last commit 24d ago",
       "lieTaxIds": [],
       "successorsImplied": []
     },
@@ -12371,8 +12379,8 @@
         "A0094"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'lib:xer:sample-update' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "quiet",
+      "statusEvidence": "last commit 24d ago",
       "lieTaxIds": [],
       "successorsImplied": []
     },
@@ -12436,8 +12444,8 @@
         "A0094"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'lib:xer:memo-export' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "quiet",
+      "statusEvidence": "last commit 24d ago",
       "lieTaxIds": [],
       "successorsImplied": []
     },
@@ -12501,8 +12509,8 @@
         "A0094"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'lib:xer:progress' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "quiet",
+      "statusEvidence": "last commit 24d ago",
       "lieTaxIds": [],
       "successorsImplied": []
     },
@@ -12566,8 +12574,8 @@
         "A0094"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'lib:xer:chart-export' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "quiet",
+      "statusEvidence": "last commit 24d ago",
       "lieTaxIds": [],
       "successorsImplied": []
     },
@@ -12631,8 +12639,8 @@
         "A0094"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'lib:xer:parser' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "quiet",
+      "statusEvidence": "last commit 24d ago",
       "lieTaxIds": [],
       "successorsImplied": []
     },
@@ -12697,7 +12705,7 @@
       ],
       "predecessors": [],
       "status": "abandoned",
-      "statusEvidence": "tag 'test:xer-parser' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "statusEvidence": "tag 'test:xer-parser' literally appears in blast-radius of capability-removal pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
       "lieTaxIds": [],
       "successorsImplied": []
     },
@@ -12970,8 +12978,8 @@
         "A0117"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'lib:p6xml:apply-progress' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "in_progress",
+      "statusEvidence": "last commit 5d ago; intensity 1 commits/day",
       "lieTaxIds": [],
       "successorsImplied": [
         {
@@ -13830,8 +13838,8 @@
         "A0117"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'lib:approved-quantities' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "in_progress",
+      "statusEvidence": "last commit 5d ago; intensity 1 commits/day",
       "lieTaxIds": [],
       "successorsImplied": [
         {
@@ -13946,8 +13954,8 @@
         "A0117"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'lib:export-utils' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "in_progress",
+      "statusEvidence": "last commit 5d ago; intensity 6 commits/day",
       "lieTaxIds": [],
       "successorsImplied": [
         {
@@ -14225,8 +14233,8 @@
         "A0117"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'page:p6export' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "in_progress",
+      "statusEvidence": "last commit 5d ago; intensity 2 commits/day",
       "lieTaxIds": [],
       "successorsImplied": [
         {
@@ -14305,8 +14313,8 @@
         "A0117"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'lib:daily-report-snapshot' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "in_progress",
+      "statusEvidence": "last commit 5d ago; intensity 1 commits/day",
       "lieTaxIds": [],
       "successorsImplied": [
         {
@@ -14521,8 +14529,8 @@
         "A0117"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'hook:useDocuments' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "in_progress",
+      "statusEvidence": "last commit 5d ago; intensity 8 commits/day",
       "lieTaxIds": [],
       "successorsImplied": [
         {
@@ -14916,8 +14924,8 @@
         "A0117"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'page:documents' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "in_progress",
+      "statusEvidence": "last commit 5d ago; intensity 46 commits/day",
       "lieTaxIds": [],
       "successorsImplied": [
         {
@@ -15295,8 +15303,8 @@
         "A0121"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'lib:offline:db' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "in_progress",
+      "statusEvidence": "last commit 4d ago; intensity 1 commits/day",
       "lieTaxIds": [],
       "successorsImplied": [
         {
@@ -15370,8 +15378,8 @@
           "confidence": "low"
         }
       ],
-      "status": "abandoned",
-      "statusEvidence": "tag 'lib:pdf-utils' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "in_progress",
+      "statusEvidence": "last commit 4d ago; intensity 1 commits/day",
       "lieTaxIds": [],
       "successorsImplied": []
     },
@@ -15724,8 +15732,8 @@
         "A0147"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'lib:offline:db' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "in_progress",
+      "statusEvidence": "last commit 3d ago; intensity 1 commits/day",
       "lieTaxIds": [],
       "successorsImplied": [
         {
@@ -16185,8 +16193,8 @@
           "confidence": "low"
         }
       ],
-      "status": "abandoned",
-      "statusEvidence": "tag 'lib:native:app-state' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "in_progress",
+      "statusEvidence": "last commit 3d ago; intensity 1 commits/day",
       "lieTaxIds": [],
       "successorsImplied": [
         {
@@ -16287,8 +16295,8 @@
           "confidence": "low"
         }
       ],
-      "status": "abandoned",
-      "statusEvidence": "tag 'lib:export-utils' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "in_progress",
+      "statusEvidence": "last commit 3d ago; intensity 2 commits/day",
       "lieTaxIds": [],
       "successorsImplied": [
         {
@@ -16459,8 +16467,8 @@
         "A0147"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'component:GpsCalibration' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "in_progress",
+      "statusEvidence": "last commit 3d ago; intensity 1 commits/day",
       "lieTaxIds": [],
       "successorsImplied": []
     },
@@ -16746,8 +16754,8 @@
           "confidence": "low"
         }
       ],
-      "status": "abandoned",
-      "statusEvidence": "tag 'lib:native:background-sync' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "in_progress",
+      "statusEvidence": "last commit 3d ago; intensity 1 commits/day",
       "lieTaxIds": [],
       "successorsImplied": [
         {
@@ -17025,8 +17033,8 @@
         "A0147"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'lib:schedule:cpm' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "in_progress",
+      "statusEvidence": "last commit 3d ago; intensity 1 commits/day",
       "lieTaxIds": [],
       "successorsImplied": [
         {
@@ -17113,8 +17121,8 @@
         "A0147"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'ui:schedule:ComplianceStrip' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "in_progress",
+      "statusEvidence": "last commit 3d ago; intensity 1 commits/day",
       "lieTaxIds": [],
       "successorsImplied": [
         {
@@ -17225,8 +17233,8 @@
         "A0147"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'lib:p6xml:build-from-project' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "in_progress",
+      "statusEvidence": "last commit 3d ago; intensity 3 commits/day",
       "lieTaxIds": [],
       "successorsImplied": [
         {
@@ -17402,8 +17410,8 @@
         "A0147"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'test:cpm' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "in_progress",
+      "statusEvidence": "last commit 3d ago; intensity 1 commits/day",
       "lieTaxIds": [],
       "successorsImplied": []
     },
@@ -17488,8 +17496,8 @@
         "A0147"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'lib:schedule:baseline' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "in_progress",
+      "statusEvidence": "last commit 3d ago; intensity 2 commits/day",
       "lieTaxIds": [],
       "successorsImplied": [
         {
@@ -17569,8 +17577,8 @@
         "A0147"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'lib:schedule:types' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "in_progress",
+      "statusEvidence": "last commit 3d ago; intensity 1 commits/day",
       "lieTaxIds": [],
       "successorsImplied": [
         {
@@ -17660,8 +17668,8 @@
         "A0147"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'test:baseline-end' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "in_progress",
+      "statusEvidence": "last commit 3d ago; intensity 1 commits/day",
       "lieTaxIds": [],
       "successorsImplied": []
     },
@@ -17739,8 +17747,8 @@
         "A0147"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'lib:schedule:calendars' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "in_progress",
+      "statusEvidence": "last commit 3d ago; intensity 1 commits/day",
       "lieTaxIds": [],
       "successorsImplied": [
         {
@@ -17837,8 +17845,8 @@
         "A0151"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'lib:schedule:use-schedule' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "in_progress",
+      "statusEvidence": "last commit 1d ago; intensity 1 commits/day",
       "lieTaxIds": [],
       "successorsImplied": [
         {
@@ -17925,8 +17933,8 @@
         "A0147"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'ui:schedule:ActivityInspector' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "in_progress",
+      "statusEvidence": "last commit 3d ago; intensity 2 commits/day",
       "lieTaxIds": [],
       "successorsImplied": [
         {
@@ -18013,8 +18021,8 @@
         "A0147"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'ui:schedule:ScheduleToolbar' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "in_progress",
+      "statusEvidence": "last commit 3d ago; intensity 2 commits/day",
       "lieTaxIds": [],
       "successorsImplied": [
         {
@@ -18116,8 +18124,8 @@
         "A0146"
       ],
       "predecessors": [],
-      "status": "abandoned",
-      "statusEvidence": "tag 'ui:schedule:ScheduleWorkspace' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "in_progress",
+      "statusEvidence": "last commit 3d ago; intensity 4 commits/day",
       "lieTaxIds": [],
       "successorsImplied": [
         {
@@ -18834,8 +18842,8 @@
           "confidence": "low"
         }
       ],
-      "status": "abandoned",
-      "statusEvidence": "tag 'scripts:build-demo-pdf' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "in_progress",
+      "statusEvidence": "last commit 0d ago; intensity 1 commits/day",
       "lieTaxIds": [],
       "successorsImplied": [
         {
@@ -18908,8 +18916,8 @@
           "confidence": "low"
         }
       ],
-      "status": "abandoned",
-      "statusEvidence": "tag 'test:date-utils' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "in_progress",
+      "statusEvidence": "last commit 0d ago; intensity 1 commits/day",
       "lieTaxIds": [],
       "successorsImplied": []
     },
@@ -19023,8 +19031,8 @@
           "confidence": "low"
         }
       ],
-      "status": "abandoned",
-      "statusEvidence": "tag 'scripts:extract-build-history' falls in blast-radius of pivot 'Drop XER format and demo; analysis modules relocated under schedule/' (2026-05-29); no commits after pivot",
+      "status": "in_progress",
+      "statusEvidence": "last commit 0d ago; intensity 7 commits/day",
       "lieTaxIds": [],
       "successorsImplied": [
         {

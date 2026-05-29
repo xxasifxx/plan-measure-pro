@@ -1,6 +1,6 @@
 # .lovable/wbs — Project-as-Schedule
 
-Generated: 2026-05-29T18:56:06.153Z
+Generated: 2026-05-29T18:56:42.974Z
 Source: `scripts/mine-wbs-actuals.mjs`
 
 ## What this is
@@ -70,10 +70,10 @@ app code.
 ## Totals at generation time
 
 - Activities: 156
-- Status breakdown: {"orphaned":3,"shipped":24,"abandoned":59,"dormant":21,"quiet":13,"in_progress":35,"blocked":1}
+- Status breakdown: {"orphaned":3,"shipped":32,"dormant":28,"quiet":23,"abandoned":5,"in_progress":64,"blocked":1}
 - Eras: 7
 - Streams represented: 21
-- "Next" queue: 22 items
+- "Next" queue: 29 items
 
 ## Regenerating
 
