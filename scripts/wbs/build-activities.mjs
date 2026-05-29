@@ -50,8 +50,8 @@ for (const l of leaves) {
 }
 
 const leafForFile = (file) => {
+  if (!file || typeof file !== 'string') return [];
   if (fileToLeafIds.has(file)) return fileToLeafIds.get(file);
-  // try parent paths
   let p = file;
   while (p.includes('/')) {
     p = p.slice(0, p.lastIndexOf('/'));
