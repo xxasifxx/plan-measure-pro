@@ -13,11 +13,14 @@
 //   - docs/wbs-dev.leaves.json (final, replaces Phase-1 output)
 //   - docs/wbs-dev.leaves.md   (re-rendered with provenance column)
 //   - docs/wbs-dev.catalog-gaps.md
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { STREAM_NAMES } from './stream-heuristics.mjs';
 
 const briefDoc = JSON.parse(readFileSync('docs/wbs-dev.leaves.json', 'utf8'));
 const codeDoc  = JSON.parse(readFileSync('docs/wbs-dev.code-leaves.json', 'utf8'));
+const dbDoc    = existsSync('docs/wbs-dev.db-surface-leaves.json')
+  ? JSON.parse(readFileSync('docs/wbs-dev.db-surface-leaves.json', 'utf8'))
+  : { leaves: [] };
 
 function slugify(s) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
@@ -28,7 +31,8 @@ const briefLeaves = briefDoc.leaves.map(l => ({
   ...l,
   provenance: l.streamNum === '00' ? 'inventory' : 'brief-only',
 }));
-const codeLeaves = codeDoc.leaves.slice();
+const codeLeaves = [...codeDoc.leaves, ...dbDoc.leaves];
+
 
 // Build path → brief-leaf index for fast overlap matching.
 const briefByPath = new Map();
