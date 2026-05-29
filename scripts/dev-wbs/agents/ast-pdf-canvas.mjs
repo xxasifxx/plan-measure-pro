@@ -37,10 +37,23 @@ for (const rel of FILES) {
       const body = node.body ? node.body.getText(sf).split("\n").slice(0, 6).join("\n") : "";
       functions.push({ name: node.name.getText(sf), line: lineOf(node), bodyPreview: body.slice(0, 400) });
     }
-    if (ts.isVariableDeclaration(node) && node.initializer && (ts.isArrowFunction(node.initializer) || ts.isFunctionExpression(node.initializer))) {
-      const name = node.name.getText(sf);
-      const body = node.initializer.body.getText(sf).split("\n").slice(0, 6).join("\n");
-      functions.push({ name, line: lineOf(node), bodyPreview: body.slice(0, 400) });
+    if (ts.isVariableDeclaration(node) && node.initializer) {
+      // Unwrap useCallback(fn, deps) / useMemo(() => fn, deps) / React.memo(fn)
+      let init = node.initializer;
+      let wrapper = null;
+      if (ts.isCallExpression(init)) {
+        const callee = init.expression.getText(sf);
+        if (/^(useCallback|useMemo|React\.memo|memo|forwardRef)$/.test(callee) && init.arguments[0]) {
+          wrapper = callee;
+          init = init.arguments[0];
+        }
+      }
+      if (ts.isArrowFunction(init) || ts.isFunctionExpression(init)) {
+        const name = node.name.getText(sf);
+        const bodyNode = init.body;
+        const body = (bodyNode ? bodyNode.getText(sf) : "").split("\n").slice(0, 8).join("\n");
+        functions.push({ name, wrapper, line: lineOf(node), bodyPreview: body.slice(0, 500) });
+      }
     }
     if (ts.isSwitchStatement(node)) {
       const disc = node.expression.getText(sf).slice(0, 80);
