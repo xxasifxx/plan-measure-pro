@@ -135,8 +135,8 @@ while (cursor && !visited.has(cursor.id)) {
   chain.unshift({
     ext_id: extByUuid.get(cursor.id) || cursor.id,
     name: cursor.name,
-    stream: streamOf(extByUuid.get(cursor.id) || ''),
-    origin: originOf(extByUuid.get(cursor.id) || ''),
+    stream: streamOfUuid(cursor.id),
+    origin: originOfUuid(cursor.id),
     early_start: cursor.early_start,
     early_finish: cursor.early_finish,
     duration_days: cursor.duration_days || 0,
@@ -186,7 +186,7 @@ const beforeDataDate = chain.filter((s) => (s.early_finish || '') < dataDate).le
 const afterDataDate = chain.length - beforeDataDate;
 const criticalsByStream = new Map<string, number>();
 for (const a of criticals) {
-  const k = streamOf(extByUuid.get(a.id) || '');
+  const k = streamOfUuid(a.id);
   criticalsByStream.set(k, (criticalsByStream.get(k) || 0) + 1);
 }
 
