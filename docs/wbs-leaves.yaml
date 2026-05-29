@@ -1,0 +1,1543 @@
+# TakeoffPro — Exhaustive WBS Leaves
+# Generated: 2026-05-29
+# Sources: scope-inventory.json, pages.md, libs-and-hooks.md, backend.md,
+#          marketing-promises.md, wbs-proposals.reconciled.json (BC-001..BC-032)
+# Size codes: S=3d  M=5d  L=10d  XL=15d  XXL=25d
+
+# ─────────────────────────────────────────────────────────────────────────────
+bootstrap_shell:
+# ─────────────────────────────────────────────────────────────────────────────
+
+  - id: BS-001
+    name: App Shell Scaffolding & Routing
+    status: shipped
+    durationDays: 5   # M
+    rationale: >
+      Vite + React + TailwindCSS scaffold, React Router v6 route table
+      (ProtectedRoute / AuthRoute / AdminRoute guards), PersistQueryClientProvider
+      with IDB persister, BiometricGate wrapper, and NativeFirstRun wizard wiring.
+      Constitutes the load-bearing frame for every surface.
+    sources:
+      - src/App.tsx
+      - src/lib/pwa.ts
+      - src/lib/offline/idb-persister.ts
+      - pages.md (cross-cutting)
+    prerequisites: []
+    subTasks:
+      - task: Configure Vite project, tsconfig, path aliases                days: 0.5
+      - task: Define React Router v6 route table with all known paths       days: 0.5
+      - task: Implement ProtectedRoute / AuthRoute / AdminRoute guards      days: 1
+      - task: Wire PersistQueryClientProvider + createIdbPersister          days: 1
+      - task: Add BiometricGate global wrapper                              days: 0.5
+      - task: Add NativeFirstRun wizard entry point                         days: 0.5
+      - task: Smoke-test all routes render without crash                    days: 1
+    workItemHint: ["app-shell", "route:auth", "route:takeoff"]
+
+  - id: BS-002
+    name: Design Token System & Theme Engine
+    status: shipped
+    durationDays: 5   # M
+    rationale: >
+      CSS custom-property token set (colors, spacing, radii, shadows) driving
+      both light and dark themes via useTheme hook and Tailwind dark-mode class
+      strategy. TooltipProvider global context. Must precede all UI work.
+    sources:
+      - src/hooks/useTheme.ts
+      - src/index.css (implied)
+      - pages.md (cross-cutting: dark/light theme toggle)
+    prerequisites: [BS-001]
+    subTasks:
+      - task: Define full semantic color token palette (light + dark)       days: 1
+      - task: Map tokens to Tailwind config (extend.colors / extend.spacing) days: 0.5
+      - task: Implement useTheme hook with localStorage persistence          days: 0.5
+      - task: Add ThemeToggle button component wired globally                days: 0.5
+      - task: Add TooltipProvider to App root                               days: 0.5
+      - task: Visual QA across key pages in both themes                     days: 2
+    workItemHint: ["styles", "hook:useTheme"]
+
+  - id: BS-003
+    name: Build Pipeline & CI/CD
+    status: shipped
+    durationDays: 3   # S
+    rationale: >
+      Vite production build, Vitest unit test runner, GitHub Actions (or Lovable
+      CI) pipeline with lint → test → build → deploy. Establishes baseline
+      quality gates for all future sprints.
+    sources:
+      - docs/scope-inventory/backend.md (infra)
+      - libs-and-hooks.md (Vitest test suite implied)
+    prerequisites: [BS-001]
+    subTasks:
+      - task: Configure Vitest with jsdom + coverage reporter               days: 0.5
+      - task: Write first smoke-test suite (routes render, auth redirects)  days: 1
+      - task: Set up GitHub Actions: lint + test + build job                days: 1
+      - task: Configure Lovable deploy preview + production channel         days: 0.5
+    workItemHint: ["ci", "test"]
+
+  - id: BS-004
+    name: PWA Shell & Service Worker
+    status: shipped
+    durationDays: 3   # S
+    rationale: >
+      Vite PWA plugin configuration generating manifest.webmanifest, precache
+      strategy for app shell assets, runtime caching for plan PDFs, and
+      install-prompt UX via PwaShell component.
+    sources:
+      - src/lib/pwa.ts
+      - src/components/PwaShell.tsx (implied)
+      - marketing-promises.md (browser-based-no-install, offline-mode)
+    prerequisites: [BS-001, BS-002]
+    subTasks:
+      - task: Configure vite-plugin-pwa with workbox strategies             days: 0.5
+      - task: Define app manifest (name, icons, display, theme_color)       days: 0.5
+      - task: Implement SW registration + update notification banner        days: 1
+      - task: Wire install-prompt hook + PwaShell dismiss logic             days: 0.5
+      - task: Test install on Chrome/iOS Safari                             days: 0.5
+    workItemHint: ["component:PwaShell", "public:icons"]
+
+  - id: BS-005
+    name: Deployment Configuration
+    status: shipped
+    durationDays: 3   # S
+    rationale: >
+      Supabase project environment (prod vs preview), Vite env var wiring
+      (VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY), edge-function secrets
+      management, and custom domain / CORS setup.
+    sources:
+      - docs/scope-inventory/backend.md (Supabase config section)
+    prerequisites: [BS-003]
+    subTasks:
+      - task: Create Supabase prod project; record URL + anon key           days: 0.5
+      - task: Wire .env.production / .env.development + CI secrets          days: 0.5
+      - task: Configure CORS allowed origins on Supabase                    days: 0.5
+      - task: Document edge-function secrets (FCM_SERVER_KEY, etc.)        days: 0.5
+      - task: Verify deployed build connects to prod Supabase              days: 1
+    workItemHint: ["migration", "ci"]
+
+# ─────────────────────────────────────────────────────────────────────────────
+project_lifecycle:
+# ─────────────────────────────────────────────────────────────────────────────
+
+  - id: PL-001
+    name: Project Create Wizard
+    status: shipped
+    durationDays: 5   # M
+    rationale: >
+      PM / admin multi-step dialog: enter project name, contract number, upload
+      plan-set PDF (to project-pdfs bucket), optional specs PDF (to specs-pdfs
+      bucket). Writes row to projects table; navigates to new workspace.
+    sources:
+      - pages.md (dashboard: create new project)
+      - backend.md (projects table, storage buckets)
+    prerequisites: [BS-001, BE-001]
+    subTasks:
+      - task: Create multi-step Dialog component (name + contract → PDF upload) days: 1
+      - task: Implement PDF upload to project-pdfs Supabase Storage         days: 1
+      - task: Insert projects row via useProjects mutation                  days: 1
+      - task: Redirect to /project/:id after creation                      days: 0.5
+      - task: Error handling (duplicate contract number, file size limits)  days: 1
+      - task: E2E test: create → redirect → workspace loads PDF            days: 0.5
+    workItemHint: ["hook:useProjects", "page:dashboard"]
+
+  - id: PL-002
+    name: Project Dashboard (Card Grid)
+    status: shipped
+    durationDays: 5   # M
+    rationale: >
+      Central hub rendering all accessible projects as cards with annotation
+      count, last activity date, member count, progress bar, pending RE review
+      badges, and inspector-activity expansion panel. Links to workspace,
+      controls hub, and RE review queue.
+    sources:
+      - pages.md (dashboard)
+      - scope-inventory.json (cap.controls.inspector-adoption)
+    prerequisites: [PL-001]
+    subTasks:
+      - task: Implement useProjects hook (RLS-aware list query)             days: 1
+      - task: Design ProjectCard component with all metadata fields         days: 1
+      - task: Add expandable inspector-activity panel (PM/admin only)      days: 1
+      - task: Add pending-RE-review count badge (realtime subscription)     days: 1
+      - task: Wire delete project flow (confirm dialog, owner-only)         days: 1
+    workItemHint: ["page:dashboard", "hook:useProjects"]
+
+  - id: PL-003
+    name: Project Sidebar Navigation
+    status: shipped
+    durationDays: 3   # S
+    rationale: >
+      Collapsible sidebar shown inside every /project/:id route providing links
+      to Takeoff canvas, Daily Report, Documents, P6 Export, Project Controls,
+      and team/settings panels. Role-gated items.
+    sources:
+      - pages.md (project-workspace capabilities)
+      - src/components/ProjectSidebar.tsx (implied by BC-001 tag)
+    prerequisites: [PL-001, BS-001]
+    subTasks:
+      - task: Build ProjectSidebar with collapse/expand animation           days: 1
+      - task: Enumerate nav items + role-gate visibility                   days: 0.5
+      - task: Active route highlighting                                     days: 0.5
+      - task: Mobile bottom-tab adaptation                                  days: 1
+    workItemHint: ["component:ProjectSidebar"]
+
+  - id: PL-004
+    name: Project Settings & Metadata Edit
+    status: shipped
+    durationDays: 3   # S
+    rationale: >
+      Settings panel to rename project, update contract number, replace plan PDF
+      or specs PDF, toggle is_bid flag, and archive/delete project. Required
+      for ongoing project management lifecycle.
+    sources:
+      - backend.md (projects table: is_bid)
+      - pages.md (dashboard: delete project)
+    prerequisites: [PL-001]
+    subTasks:
+      - task: Build settings form (name, contract number, is_bid toggle)    days: 1
+      - task: Implement plan-PDF replacement with version preservation      days: 1
+      - task: Archive (soft-delete) and hard-delete project flows           days: 0.5
+      - task: Role guard (PM/admin only)                                   days: 0.5
+    workItemHint: ["hook:useProjects", "page:dashboard"]
+
+  - id: PL-005
+    name: Project Activity Tracking
+    status: shipped
+    durationDays: 5   # M
+    rationale: >
+      Cross-project inspector adoption metric (7-day annotation staleness),
+      reporting freshness KPI, and project-level last-activity timestamp used
+      on dashboard cards and the Project Controls hub.
+    sources:
+      - scope-inventory.json (cap.controls.inspector-adoption)
+      - pages.md (project-controls: inspector adoption metric)
+    prerequisites: [PL-002, BE-001]
+    subTasks:
+      - task: Write DB view / RPC for 7-day per-inspector annotation counts days: 1
+      - task: Build InspectorAdoption widget component                      days: 1
+      - task: Reporting freshness KPI tile (last approved report age)       days: 1
+      - task: Wire to dashboard card expandable panel                      days: 1
+      - task: Stale-flag threshold configuration                           days: 1
+    workItemHint: ["page:project-controls", "page:dashboard"]
+
+# ─────────────────────────────────────────────────────────────────────────────
+takeoff:
+# ─────────────────────────────────────────────────────────────────────────────
+
+  - id: TK-001
+    name: PDF Plan Canvas & Page Navigation
+    status: shipped
+    durationDays: 10  # L
+    rationale: >
+      Core pdf.js rendering canvas with page-by-page navigation (prev/next,
+      jump-to-page, fit-to-screen), signed-URL loading from project-pdfs bucket,
+      offline IDB fallback, and real-time presence overlay. Foundational for
+      all annotation and calibration work.
+    sources:
+      - scope-inventory.json (cap.takeoff.pdf-canvas)
+      - pages.md (project-workspace)
+      - src/lib/pdf-utils.ts
+    prerequisites: [BS-001, BE-001, PL-001]
+    subTasks:
+      - task: Wrap pdf.js worker in pdf-utils; expose renderPage()          days: 2
+      - task: Build PdfCanvas component with <canvas> layer stack          days: 2
+      - task: Page nav controls (prev/next/jump/fit-to-screen)             days: 1
+      - task: Signed-URL fetch from project-pdfs with stale/revalidate     days: 1
+      - task: IndexedDB PDF cache fallback (offline-pdf-cache.ts)          days: 2
+      - task: Realtime presence dot overlay (useProject onlineUsers)       days: 1
+      - task: Performance: progressive page rendering + canvas memoization  days: 1
+    workItemHint: ["component:PdfCanvas", "lib:pdf-utils", "page:index"]
+
+  - id: TK-002
+    name: TOC Auto-Parse & Region Select
+    status: shipped
+    durationDays: 5   # M
+    rationale: >
+      Drag-to-select a rectangle on any plan page to extract a Table of Contents.
+      pdf-utils multi-cluster algorithm identifies sheet rows; results populate
+      the project TOC jsonb in the projects table enabling sheet-name labels and
+      calibration copy ranges.
+    sources:
+      - scope-inventory.json (cap.takeoff.toc-import)
+      - src/lib/pdf-utils.ts (sophisticated multi-cluster algorithm)
+    prerequisites: [TK-001]
+    subTasks:
+      - task: Implement drag-select region overlay on canvas                days: 1
+      - task: Extract text blocks in region via pdf.js getTextContent       days: 1
+      - task: Multi-cluster algorithm: detect sheet-number + name rows      days: 1.5
+      - task: Write TOC jsonb to projects row; display in page nav dropdown days: 1
+      - task: Handle no-TOC fallback (manual sheet list)                   days: 0.5
+    workItemHint: ["lib:pdf-utils", "component:PdfCanvas"]
+
+  - id: TK-003
+    name: Paper-Scale Calibration & Sync
+    status: shipped
+    durationDays: 5   # M
+    rationale: >
+      Two-point click calibration (pixels-per-foot) per page stored in the
+      calibrations table. Copy calibration to all pages or a named range derived
+      from the TOC. Prerequisite for all measurement math.
+    sources:
+      - scope-inventory.json (cap.takeoff.calibration)
+    prerequisites: [TK-001, TK-002]
+    subTasks:
+      - task: Calibration mode: crosshair cursor + click-two-points UX     days: 1
+      - task: Enter real-distance dialog; compute pixels_per_foot           days: 0.5
+      - task: Persist to calibrations table (upsert per project+page)      days: 0.5
+      - task: Copy-to-range dialog with TOC page picker                    days: 1.5
+      - task: Display current scale in status bar                          days: 0.5
+      - task: Sync calibration on remote update (realtime subscription)    days: 1
+    workItemHint: ["component:PdfCanvas", "hook:useProject"]
+
+  - id: TK-004
+    name: Annotation Draw — Line / Polygon / Count / Label
+    status: shipped
+    durationDays: 10  # L
+    rationale: >
+      Four draw tools tied to active pay-item unit type: polyline (LF),
+      polygon (SF/SY/CY), count marker (EA), and text label. Canvas pointer
+      events, snap-to-grid optional, color-coded per pay item. Saved to
+      annotations table with computed measurement field.
+    sources:
+      - scope-inventory.json (cap.takeoff.annotation-draw)
+      - src/lib/geometry.ts
+    prerequisites: [TK-001, TK-003]
+    subTasks:
+      - task: Toolbar component with draw-mode button group                days: 1
+      - task: Polyline draw: click sequence → segment preview → double-click commit days: 2
+      - task: Polygon draw: closed shape with fill preview                 days: 2
+      - task: Count marker: single click places EA marker                  days: 0.5
+      - task: Text label: click + type dialog; leader line rendering       days: 1
+      - task: Auto-compute measurement from geometry.ts on commit          days: 1
+      - task: Persist annotation to Supabase + optimistic IDB update       days: 1.5
+      - task: Touch/stylus pointer event handling (mobile annotation flow)  days: 1
+    workItemHint: ["component:PdfCanvas", "component:Toolbar", "lib:geometry"]
+
+  - id: TK-005
+    name: Annotation Edit — Select / Move / Vertex / Delete
+    status: shipped
+    durationDays: 10  # L
+    rationale: >
+      Select tool supporting single-click hit test (point-in-polygon, near-line,
+      near-marker), drag-move entire annotation, vertex drag for polygon/polyline
+      reshaping, and delete. Geometric editing crucial for measurement accuracy.
+    sources:
+      - scope-inventory.json (cap.takeoff.annotation-edit)
+      - src/lib/geometry.ts (hit testing)
+    prerequisites: [TK-004]
+    subTasks:
+      - task: Hit-test engine: point-on-line, point-in-polygon, near-marker days: 2
+      - task: Selection highlight overlay (dashed bounding box + handles)  days: 1
+      - task: Drag-move annotation with canvas offset transform            days: 1.5
+      - task: Vertex drag: detect near-vertex, update single point         days: 2
+      - task: Delete selected annotation (keyboard Delete + toolbar button) days: 0.5
+      - task: Multi-select (shift-click) and bulk delete                   days: 1.5
+      - task: Recompute measurement after any vertex edit                  days: 1
+      - task: Persist all edits with optimistic update + rollback on error days: 0.5
+    workItemHint: ["component:PdfCanvas", "lib:geometry", "hook:useProject"]
+
+  - id: TK-006
+    name: Measurement Formulas — SY / CY / LF / EA
+    status: shipped
+    durationDays: 5   # M
+    rationale: >
+      Unit-conversion math layer in geometry.ts: polygon area → SF → SY (÷9),
+      polygon area × depth → CY (÷27), polyline pixel length → LF, count → EA.
+      Manual quantity override support. Drives every number in summary, daily
+      report, and exports.
+    sources:
+      - scope-inventory.json (cap.takeoff.measurement-formulas)
+      - src/lib/geometry.ts
+    prerequisites: [TK-004]
+    subTasks:
+      - task: Implement polylineLength(points, pxPerFt) → LF               days: 0.5
+      - task: Implement polygonArea(points, pxPerFt) → SF / SY / CY with depth days: 1
+      - task: Count EA logic (trivial but needs unit guard)                days: 0.5
+      - task: Manual override field on annotation (manual_quantity column)  days: 1
+      - task: Unit display formatter (toLocaleString + unit suffix)        days: 0.5
+      - task: Unit-test all formula paths with known fixtures              days: 1.5
+    workItemHint: ["lib:geometry"]
+
+  - id: TK-007
+    name: Undo / Redo Stack
+    status: shipped
+    durationDays: 3   # S
+    rationale: >
+      Command-pattern undo/redo maintained in useProject state for all
+      annotation create/edit/delete operations. Keyboard shortcuts Ctrl+Z /
+      Ctrl+Y / Ctrl+Shift+Z. Critical UX safety net for field workers.
+    sources:
+      - scope-inventory.json (cap.takeoff.undo-redo)
+    prerequisites: [TK-004, TK-005]
+    subTasks:
+      - task: Define Command interface (do / undo) in useProject            days: 0.5
+      - task: Wrap create/edit/delete mutations in Command objects          days: 1
+      - task: Maintain undoStack / redoStack with max-50 depth             days: 0.5
+      - task: Bind Ctrl+Z / Ctrl+Y / Ctrl+Shift+Z keyboard listeners       days: 0.5
+      - task: Toolbar undo/redo buttons with disabled state                days: 0.5
+    workItemHint: ["hook:useProject"]
+
+  - id: TK-008
+    name: Pay-Items Panel — Group / Filter / Select
+    status: shipped
+    durationDays: 5   # M
+    rationale: >
+      Side panel listing all project pay items, grouped by spec section,
+      filterable by unit type or search string. Selecting a pay item activates
+      the corresponding draw tool and sets annotation color. Core workflow entry
+      point for every measurement session.
+    sources:
+      - scope-inventory.json (cap.takeoff.pay-items-ui)
+    prerequisites: [TK-004, BE-001]
+    subTasks:
+      - task: Fetch pay_items from Supabase grouped by item_number prefix   days: 1
+      - task: Build MobilePayItems panel with search + unit filter          days: 1.5
+      - task: Active-item selection state → switch draw tool                days: 0.5
+      - task: Color swatch per pay item; color picker for custom colors     days: 1
+      - task: Empty-state prompt when no pay items exist                   days: 0.5
+      - task: Mobile bottom-sheet variant                                   days: 0.5
+    workItemHint: ["component:MobilePayItems", "page:index"]
+
+  - id: TK-009
+    name: Pay-Items Import from Spec Tables
+    status: shipped
+    durationDays: 5   # M
+    rationale: >
+      Scans current + 4 adjacent PDF pages using pdf-utils multi-cluster
+      Estimate-of-Quantities table detector to extract item_number, name,
+      unit, and contract_quantity rows. Inserts into pay_items with de-duplication.
+    sources:
+      - scope-inventory.json (cap.takeoff.pay-items-import)
+      - src/lib/pdf-utils.ts
+    prerequisites: [TK-001, TK-008]
+    subTasks:
+      - task: Build table-detection pass in pdf-utils (column alignment heuristic) days: 2
+      - task: Map detected rows to pay_items schema (unit normalization)    days: 1
+      - task: De-duplication check against existing pay_items              days: 0.5
+      - task: Preview dialog: review detected items before insert          days: 1
+      - task: Bulk insert mutation with rollback on partial failure         days: 0.5
+    workItemHint: ["lib:pdf-utils", "component:MobilePayItems"]
+
+  - id: TK-010
+    name: Standard Specs Viewer & Search
+    status: shipped
+    durationDays: 5   # M
+    rationale: >
+      In-workspace panel rendering the project's uploaded NJDOT Standard Specs
+      PDF section-by-section with keyword search. specs-utils extracts section
+      text; SpecViewer renders with resizable panel, in-page search highlight,
+      and section navigation.
+    sources:
+      - scope-inventory.json (cap.takeoff.specs-viewer)
+      - src/lib/specs-utils.ts
+      - wbs-proposals.reconciled.json (BC-002)
+    prerequisites: [TK-001]
+    subTasks:
+      - task: Upload specs PDF to specs-pdfs bucket; store path in projects  days: 0.5
+      - task: specs-utils: extract section text via pdf.js getTextContent   days: 1.5
+      - task: SpecViewer panel: section list + section body renderer        days: 1.5
+      - task: In-page keyword search with highlight + prev/next navigation  days: 1
+      - task: Resizable split-panel integration inside workspace            days: 0.5
+    workItemHint: ["component:SpecViewer", "lib:specs-utils"]
+
+  - id: TK-011
+    name: Summary Panel — Totals & Variance
+    status: shipped
+    durationDays: 5   # M
+    rationale: >
+      SummaryPanel component aggregating per-pay-item: measured quantity,
+      approved quantity, contract quantity, variance %, over-contract alert.
+      Triggers CSV / PDF / Excel export actions. Visible to all roles.
+    sources:
+      - scope-inventory.json (cap.takeoff.summary-panel, cap.takeoff.export-csv-pdf-excel)
+      - src/lib/export-utils.ts
+    prerequisites: [TK-006, TK-008]
+    subTasks:
+      - task: Aggregate measured totals per pay item from annotations store days: 1
+      - task: Join approved quantities from v_approved_pay_item_quantities   days: 1
+      - task: Variance % bar and over-contract color alert                 days: 1
+      - task: Export button group: CSV + PDF + Excel (export-utils.ts)     days: 1.5
+      - task: Print layout CSS for PDF export                              days: 0.5
+    workItemHint: ["component:SummaryPanel", "lib:export-utils"]
+
+  - id: TK-012
+    name: Annotation Labels with Leader Lines
+    status: shipped
+    durationDays: 3   # S
+    rationale: >
+      Text label tool rendering a callout with configurable leader line from
+      annotation centroid to label box. Used for notes, location references,
+      and measurement annotations on plan canvas.
+    sources:
+      - scope-inventory.json (cap.takeoff.annotation-draw: label type)
+    prerequisites: [TK-004]
+    subTasks:
+      - task: SVG leader-line from anchor point to floating label box       days: 1
+      - task: Label text input dialog on place; inline edit on double-click days: 1
+      - task: Canvas render of leader-line + label across zoom levels       days: 0.5
+      - task: Persist label type annotation to annotations table            days: 0.5
+    workItemHint: ["component:PdfCanvas", "lib:geometry"]
+
+  - id: TK-013
+    name: Fit-to-Screen Zoom & Canvas Navigation
+    status: shipped
+    durationDays: 3   # S
+    rationale: >
+      Pinch-to-zoom (touch), scroll-wheel zoom, pan with middle-mouse / two-
+      finger drag, and fit-to-screen button. Zoom-aware hit-testing and annotation
+      render. Essential on tablet field devices.
+    sources:
+      - pages.md (project-workspace: fit-to-screen)
+      - scope-inventory.json (cap.takeoff.pdf-canvas)
+    prerequisites: [TK-001]
+    subTasks:
+      - task: Wheel event zoom (origin at cursor)                          days: 0.5
+      - task: Pinch gesture recognition on touch devices                   days: 1
+      - task: Pan: PointerMove while space-key or two-finger held          days: 0.5
+      - task: Fit-to-screen: compute scale to fill viewport                days: 0.5
+      - task: Zoom-level indicator badge                                   days: 0.5
+    workItemHint: ["component:PdfCanvas"]
+
+  - id: TK-014
+    name: Mobile Annotation Sheet & Tab Bar
+    status: shipped
+    durationDays: 5   # M
+    rationale: >
+      Mobile-first layout with bottom tab bar (canvas / sections / pay-items /
+      summary), swipe-up annotation sheet, compact toolbar strip, and
+      touch-optimised draw interactions for tablet/phone inspectors.
+    sources:
+      - scope-inventory.json (cap.takeoff.pdf-canvas — mobile tab bar)
+      - pages.md (project-workspace: mobile tab bar)
+    prerequisites: [TK-004, TK-008, TK-011]
+    subTasks:
+      - task: MobileTabBar component with 4 tab slots                      days: 1
+      - task: Swipe-up bottom sheet for sections / pay-items panels        days: 1.5
+      - task: Compact mobile toolbar (draw mode + undo only)               days: 0.5
+      - task: Touch interaction handlers (tap = click, long-press = context) days: 1
+      - task: Responsive breakpoint switch: desktop sidebar ↔ mobile tabs  days: 1
+    workItemHint: ["component:MobilePayItems", "page:index"]
+
+  - id: TK-015
+    name: Mobile Pay Items & Sections Panels
+    status: shipped
+    durationDays: 3   # S
+    rationale: >
+      Dedicated mobile-optimised views for the pay-items list and TOC section
+      list within the bottom-sheet drawer. Separate from desktop panel layout
+      to ensure touch target sizes and scroll performance on tablets.
+    sources:
+      - pages.md (project-workspace: mobile tab bar)
+      - scope-inventory.json (cap.takeoff.pay-items-ui)
+    prerequisites: [TK-014]
+    subTasks:
+      - task: MobileSections panel: sheet list from TOC, tap to jump page  days: 1
+      - task: MobilePayItems panel: grouped list with swipe-to-select      days: 1
+      - task: Status shortcuts strip (active item indicator + measurement)  days: 0.5
+      - task: Keyboard avoid when virtual keyboard open                    days: 0.5
+    workItemHint: ["component:MobilePayItems", "page:index"]
+
+  - id: TK-016
+    name: Geometric Vertex Editing
+    status: shipped
+    durationDays: 5   # M
+    rationale: >
+      Advanced vertex manipulation: drag individual polygon/polyline vertices,
+      insert mid-edge vertex, delete vertex (min 3 for polygon), close/open
+      polygon. Underlying geometry math in geometry.ts supports all operations.
+    sources:
+      - scope-inventory.json (cap.takeoff.annotation-edit: vertex-edit)
+    prerequisites: [TK-005]
+    subTasks:
+      - task: Vertex handle rendering as draggable circles on selected annotation days: 1
+      - task: Vertex drag with live measurement recompute preview           days: 1.5
+      - task: Mid-edge click to insert new vertex                          days: 1
+      - task: Vertex delete with minimum-count guard                       days: 0.5
+      - task: Persist updated points array + recomputed measurement        days: 1
+    workItemHint: ["component:PdfCanvas", "lib:geometry"]
+
+# ─────────────────────────────────────────────────────────────────────────────
+field_ops:
+# ─────────────────────────────────────────────────────────────────────────────
+
+  - id: FO-001
+    name: Inspector Daily Report — Draft & Submit
+    status: shipped
+    durationDays: 10  # L
+    rationale: >
+      Core inspector workflow: select date, preview live annotation delta per
+      pay item (delta / prior cumulative / new cumulative / vs contract %),
+      submit to freeze a SnapshotItem[] stored in daily_reports, and detect
+      stale snapshots after re-annotation. Replaces DC paper diaries.
+    sources:
+      - scope-inventory.json (cap.field.daily-report-inspector)
+      - pages.md (daily-report)
+      - src/lib/daily-report-snapshot.ts
+    prerequisites: [TK-006, BE-001]
+    subTasks:
+      - task: Date picker (today default, max today, America/NY timezone)   days: 0.5
+      - task: Compute per-item delta from annotations.work_date slice       days: 2
+      - task: Live preview table (delta / prior cumul / new cumul / % contract) days: 2
+      - task: Over-contract count badge + color alert                      days: 0.5
+      - task: Submit action: build snapshot (daily-report-snapshot.ts) + insert days: 2
+      - task: Stale-snapshot detection + resubmit prompt                   days: 1
+      - task: Status banner state machine (draft / submitted / approved / rejected) days: 1
+      - task: Reopen-rejected flow: restore draft for edit                 days: 1
+    workItemHint: ["page:daily-report", "hook:useDailyReport", "lib:daily-report-snapshot"]
+
+  - id: FO-002
+    name: RE Review Queue — Approve / Reject / Bulk
+    status: shipped
+    durationDays: 10  # L
+    rationale: >
+      Resident-Engineer facing queue across all projects. Filters by project,
+      status, inspector, and date range. Single approve/reject with reason
+      dialog, and bulk-approve all visible pending reports. Notification trigger
+      fires on approval/rejection.
+    sources:
+      - scope-inventory.json (cap.field.re-review-queue)
+      - pages.md (re-review)
+    prerequisites: [FO-001, BE-001]
+    subTasks:
+      - task: Build useReReviewQueue hook (paginated, filtered query)       days: 2
+      - task: ReReviewCard component: snapshot table + approve/reject buttons days: 2
+      - task: Reject dialog: reason text + confirm                         days: 1
+      - task: Bulk-approve: select-all visible + confirm dialog            days: 1
+      - task: Filter bar: project, status, inspector, date range           days: 1.5
+      - task: RE-only approval lock (DB trigger enforces role)             days: 0.5
+      - task: Notification dispatch on status change                       days: 1
+      - task: Read-only mode for PM (no approve/reject buttons)            days: 1
+    workItemHint: ["page:re-review", "component:ReReviewCard", "hook:useReReviewQueue"]
+
+  - id: FO-003
+    name: Threaded Report Comments
+    status: shipped
+    durationDays: 5   # M
+    rationale: >
+      RE and inspector can post threaded comments on any daily report card.
+      Stored in daily_report_comments; displayed in chronological thread below
+      snapshot preview. Enables async clarification without external email.
+    sources:
+      - scope-inventory.json (cap.field.report-comments)
+    prerequisites: [FO-002]
+    subTasks:
+      - task: Build useReportComments + useAddComment hooks                days: 1
+      - task: Comment thread UI: avatar, timestamp, body                   days: 1.5
+      - task: Compose + submit comment form                                days: 1
+      - task: Realtime subscription for new comments on open card          days: 1
+      - task: Unread-comment badge on ReReviewCard                         days: 0.5
+    workItemHint: ["hook:useReReviewQueue"]
+
+  - id: FO-004
+    name: Report Snapshot Archive on Reopen
+    status: shipped
+    durationDays: 3   # S
+    rationale: >
+      When a rejected report is reopened and re-annotated, the prior snapshot is
+      archived in daily_report_snapshots before the new snapshot is written.
+      Enables full audit trail per NJDOT inspection requirements.
+    sources:
+      - scope-inventory.json (cap.field.report-snapshot-archive)
+      - backend.md (daily_report_snapshots table)
+    prerequisites: [FO-001]
+    subTasks:
+      - task: Archive-on-reopen trigger or client logic saving old snapshot days: 1
+      - task: Snapshot history viewer in ReReviewCard (collapsible timeline) days: 1.5
+      - task: Hard-immutability guard: no mutation on archived snapshots    days: 0.5
+    workItemHint: ["hook:useReReviewQueue", "lib:daily-report-snapshot"]
+
+  - id: FO-005
+    name: Field Photo Capture & Geo-Tag Dispute UI
+    status: partial
+    durationDays: 10  # L
+    rationale: >
+      Camera integration via Capacitor (native) or file-input (web) to attach
+      photos to annotations. annotation_photos table + annotation-photos storage
+      bucket exist; camera shim complete. Unbuilt: geo-tag dispute resolution UI
+      (map overlay showing photo GPS vs annotation GPS, flag for conflict).
+    sources:
+      - scope-inventory.json (cap.field.photo-capture, cap.native.camera)
+      - backend.md (annotation_photos table)
+      - marketing-promises.md (field-photo-attachment-store-listing, photo-documentation-roadmap)
+    prerequisites: [TK-004, BE-003]
+    subTasks:
+      - task: Camera button on annotation context menu (Capacitor + web fallback) days: 1
+      - task: Upload captured photo to annotation-photos bucket             days: 1
+      - task: Insert annotation_photos row with GPS coords from device     days: 1
+      - task: Geo-tag conflict detector: compare photo GPS vs annotation GPS days: 2
+      - task: Dispute resolution UI: side-by-side map + accept/reassign    days: 3
+      - task: Photo thumbnail strip on annotation inspector panel          days: 1
+      - task: E2E test on iOS simulator (Capacitor)                        days: 1
+    workItemHint: ["lib:native", "edge:tag-photo"]
+
+  - id: FO-006
+    name: GPS Calibration — 2-3 Point Georeferencing
+    status: shipped
+    durationDays: 5   # M
+    rationale: >
+      Inspector stands at 2-3 known control points, taps matching plan locations;
+      system builds affine transform (geo-transform.ts) mapping GPS coords to
+      plan pixels. Stored in geo_calibrations table. Prerequisite for GPS trace.
+    sources:
+      - scope-inventory.json (cap.field.gps-calibration)
+      - src/lib/geo-transform.ts
+    prerequisites: [TK-001, BE-001]
+    subTasks:
+      - task: GpsCalibration UI: point list + tap-on-canvas to place        days: 1.5
+      - task: Live GPS position read via native/geolocation.ts             days: 0.5
+      - task: Compute affine transform from 2-3 point pairs                days: 1.5
+      - task: Persist transform + error estimate to geo_calibrations       days: 0.5
+      - task: Estimated error display + recalibrate flow                   days: 1
+    workItemHint: ["component:GpsCalibration", "lib:geo-transform"]
+
+  - id: FO-007
+    name: Live GPS Trace Overlay & Kalman Smoothing
+    status: shipped
+    durationDays: 5   # M
+    rationale: >
+      Once georeferenced, activating trace mode shows a live dot on the plan
+      canvas following the device GPS, with a breadcrumb trail stored in memory.
+      Kalman filter in geo-transform.ts reduces GPS jitter for accurate LF
+      measurement from walking.
+    sources:
+      - scope-inventory.json (cap.field.gps-trace)
+      - src/lib/geo-transform.ts
+      - marketing-promises.md (gps-trace-mode)
+    prerequisites: [FO-006]
+    subTasks:
+      - task: GpsTraceControls: start/stop/clear trace buttons             days: 1
+      - task: watchPosition subscription → Kalman filter → plan-pixel map  days: 1.5
+      - task: Canvas overlay: animated live dot + breadcrumb polyline      days: 1
+      - task: Convert completed trace path to LF annotation on stop        days: 1
+      - task: Offline buffering of GPS points → sync on reconnect          days: 0.5
+    workItemHint: ["component:GpsTraceControls", "lib:geo-transform", "lib:native"]
+
+  - id: FO-008
+    name: Offline-First Field Workflow
+    status: partial
+    durationDays: 15  # XL
+    rationale: >
+      End-to-end offline capability: plan PDF cached in CacheStorage, annotation
+      reads/writes via IDB mutation-client outbox, background sync drain on
+      reconnect. Background sync scheduler (iOS BackgroundTask / WorkManager)
+      is partial; concurrent-edit deep-diff in useProject unbuilt.
+    sources:
+      - src/lib/offline/*.ts (all 7 modules)
+      - marketing-promises.md (offline-mode, background-sync)
+      - libs-and-hooks.md (useProject: no deep-diff on remote updates)
+    prerequisites: [TK-001, FO-001, BE-001]
+    subTasks:
+      - task: Ensure warmPdf() called from useProject on project open      days: 1
+      - task: Verify all annotation mutations route via mutation-client.ts  days: 2
+      - task: Fix useProject deep-diff: merge remote patches without clobbering days: 3
+      - task: Complete native/background-sync.ts iOS BackgroundTask wiring  days: 3
+      - task: Add background-sync toggle in Settings page (native only)    days: 1
+      - task: Offline banner + sync-status indicator                       days: 1
+      - task: Outbox drain E2E test (block network → annotate → restore)   days: 2
+      - task: Conflict resolution strategy doc + user-facing toast         days: 2
+    workItemHint: ["lib:native", "hook:useProject", "hook:useOutbox"]
+
+# ─────────────────────────────────────────────────────────────────────────────
+documents:
+# ─────────────────────────────────────────────────────────────────────────────
+
+  - id: DOC-001
+    name: Folder Tree & System Folder Rendering
+    status: partial
+    durationDays: 5   # M
+    rationale: >
+      Hierarchical folder tree rendering the 10 auto-seeded system folders
+      (plans, specs, rfis, submittals, shop_drawings, change_orders,
+      daily_reports, photos, as_builts, correspondence) with distinct icons and
+      access rules. Custom folder CRUD. System-folder specialised rendering
+      is currently unbuilt.
+    sources:
+      - scope-inventory.json (cap.docs.folder-tree, cap.docs.system-folder-rendering)
+      - pages.md (documents)
+      - backend.md (document_folders: 10 system_kind values)
+    prerequisites: [PL-001, BE-001]
+    subTasks:
+      - task: FolderTree component: recursive collapsible tree              days: 1
+      - task: Render distinct icon per system_kind (plans, specs, rfis...)  days: 1
+      - task: Create / rename / delete custom folder with inline edit       days: 1
+      - task: Role-gated visibility (inspectors: photos + daily_reports only) days: 1
+      - task: Breadcrumb navigation bar                                     days: 0.5
+      - task: Specialised system-folder rendering (planned view, spec indexing) days: 0.5
+    workItemHint: ["page:documents", "hook:useDocuments"]
+
+  - id: DOC-002
+    name: File Upload, Versioning & History
+    status: shipped
+    durationDays: 10  # L
+    rationale: >
+      Drag-drop or file-picker upload with per-file progress queue to the
+      project-documents bucket. Auto-versioning via replaces_document_id
+      self-FK; version history viewer; restore old version as new head.
+    sources:
+      - scope-inventory.json (cap.docs.upload-versioning)
+      - pages.md (documents: upload + versioning)
+    prerequisites: [DOC-001, BE-001]
+    subTasks:
+      - task: Drop zone + file picker; per-file progress bar with cancel   days: 2
+      - task: Upload folder (folder input) with path preservation          days: 1
+      - task: Upload new version flow: detect existing name → increment    days: 1.5
+      - task: Version history drawer: list versions with date + uploader   days: 1.5
+      - task: Restore older version: copy Storage object + new documents row days: 1.5
+      - task: Storage quota guard + file size limit toast                  days: 0.5
+      - task: Source_kind tagging (plan / spec / rfi / etc.)               days: 0.5
+      - task: Multi-file upload batch progress summary                     days: 1.5
+    workItemHint: ["page:documents", "hook:useDocuments"]
+
+  - id: DOC-003
+    name: Trash, Restore & Hard-Delete
+    status: shipped
+    durationDays: 5   # M
+    rationale: >
+      Soft-delete (move to Trash) with undo toast (5s), Trash folder view
+      with restore and hard-delete per file, empty-trash bulk action.
+      Folder soft-delete cascading to all children.
+    sources:
+      - scope-inventory.json (cap.docs.trash-restore)
+      - pages.md (documents)
+    prerequisites: [DOC-002]
+    subTasks:
+      - task: Soft-delete mutation → set deleted_at on documents row        days: 1
+      - task: Undo toast with 5s window calling restore mutation            days: 1
+      - task: Trash folder view: list all deleted items                    days: 1
+      - task: Restore individual document from Trash                       days: 0.5
+      - task: Hard-delete: Storage object removal + row delete             days: 1
+      - task: Empty Trash bulk action with confirm dialog                  days: 0.5
+    workItemHint: ["page:documents", "hook:useDocuments"]
+
+  - id: DOC-004
+    name: Document Search, Sort & Bulk Ops
+    status: shipped
+    durationDays: 5   # M
+    rationale: >
+      In-folder search by filename, tri-column sort (name / size / date), multi-
+      select with select-all toggle, bulk download (zip), and bulk soft-delete.
+      Star / favorite documents (mutation wiring partial).
+    sources:
+      - scope-inventory.json (cap.docs.search-sort, cap.docs.star-favorite)
+      - pages.md (documents)
+    prerequisites: [DOC-002]
+    subTasks:
+      - task: Search input debounced filter on documents list               days: 0.5
+      - task: Sort control: name / size / date asc-desc toggle             days: 0.5
+      - task: Multi-select checkbox column + select-all header             days: 1
+      - task: Bulk download: generate zip via JSZip + native share sheet   days: 1.5
+      - task: Bulk soft-delete with undo toast                             days: 0.5
+      - task: Star/favorite: wire is_starred mutation to Supabase          days: 0.5
+      - task: Rename inline + move to folder picker                        days: 0.5
+    workItemHint: ["page:documents", "hook:useDocuments"]
+
+  - id: DOC-005
+    name: Document Preview — Image & PDF Inline
+    status: shipped
+    durationDays: 3   # S
+    rationale: >
+      Click a document row to open a modal preview: pdf.js render for PDFs,
+      <img> for images, download fallback for other MIME types. Necessary for
+      quick plan and submittal review without leaving the app.
+    sources:
+      - scope-inventory.json (cap.docs.preview)
+      - pages.md (documents)
+    prerequisites: [DOC-002]
+    subTasks:
+      - task: PreviewDialog component with MIME type dispatch               days: 1
+      - task: PDF preview: pdf.js single-page render with page nav         days: 1
+      - task: Image preview with pinch-zoom                                days: 0.5
+      - task: Download button + loading skeleton                           days: 0.5
+    workItemHint: ["page:documents"]
+
+  - id: DOC-006
+    name: Document Tagging & Aspirational Search
+    status: planned
+    durationDays: 10  # L
+    rationale: >
+      Discipline / status / ISO 19650 code tagging per document (demo'd in
+      XerDemo Module F tab). Full-text search across all project documents.
+      Planned scope; no backend tag columns exist yet.
+    sources:
+      - scope-inventory.json (cap.docs.system-folder-rendering: aspirational search)
+      - pages.md (xer-demo: Files tab artifact tagging — demo-only)
+    prerequisites: [DOC-002, BE-001]
+    subTasks:
+      - task: Add tags jsonb column to documents table (migration)          days: 0.5
+      - task: Tag editor UI: discipline / status / ISO-19650 code pickers  days: 2
+      - task: Tag filter bar on documents list                             days: 1
+      - task: Full-text search index (pg_trgm or tsvector) on documents    days: 2
+      - task: Search results page across all project folders               days: 2
+      - task: Persist tag mutations; wire tag-based folder auto-routing     days: 1
+      - task: API rate limits + result pagination                          days: 1.5
+    workItemHint: ["page:documents", "hook:useDocuments"]
+
+# ─────────────────────────────────────────────────────────────────────────────
+reporting_exports:
+# ─────────────────────────────────────────────────────────────────────────────
+
+  - id: RE-001
+    name: CSV / Excel Takeoff Exports
+    status: shipped
+    durationDays: 3   # S
+    rationale: >
+      export-utils.ts produces XLS(X)-compatible CSV with pay item rows
+      (item_number, name, unit, measured qty, approved qty, contract qty,
+      variance %). Two variants: live (all annotations) and approved-only
+      (from v_approved_pay_item_quantities).
+    sources:
+      - scope-inventory.json (cap.takeoff.export-csv-pdf-excel)
+      - src/lib/export-utils.ts
+    prerequisites: [TK-011]
+    subTasks:
+      - task: exportCsv() live variant from annotations state              days: 0.5
+      - task: exportApprovedCsv() from v_approved_pay_item_quantities view  days: 0.5
+      - task: exportExcel() with SheetJS / xlsx library                   days: 1
+      - task: Native share-sheet dispatch (native/filesystem.ts)           days: 0.5
+      - task: Unit test fixtures for all three export formats              days: 0.5
+    workItemHint: ["lib:export-utils"]
+
+  - id: RE-002
+    name: PDF Summary Report Export
+    status: shipped
+    durationDays: 3   # S
+    rationale: >
+      jsPDF-generated PDF report: project header, pay-item summary table,
+      signature block. Used for monthly estimate submission and audit trail.
+      Triggered from SummaryPanel.
+    sources:
+      - scope-inventory.json (cap.takeoff.export-csv-pdf-excel)
+      - marketing-promises.md (monthly-estimate-export)
+    prerequisites: [TK-011]
+    subTasks:
+      - task: jsPDF document layout: header, table, footer                 days: 1
+      - task: Approved quantities variant with RE approval stamp           days: 0.5
+      - task: Native filesystem save + browser anchor-download fallback    days: 0.5
+      - task: Print-preview dialog before download                         days: 0.5
+      - task: Branded cover page (contract number, project name, date)     days: 0.5
+    workItemHint: ["lib:export-utils", "component:SummaryPanel"]
+
+  - id: RE-003
+    name: DC-84 Monthly Estimate Format (Planned)
+    status: planned
+    durationDays: 15  # XL
+    rationale: >
+      NJDOT DC-84 formatted monthly payment estimate: fixed column layout,
+      signature lines, running totals per spec section. Currently aspirational;
+      requires NJDOT template analysis and precise column mapping.
+    sources:
+      - marketing-promises.md (automated-monthly-estimate-dc84)
+    prerequisites: [RE-002, BE-001]
+    subTasks:
+      - task: Obtain and analyse DC-84 template structure                  days: 2
+      - task: Map pay_items to DC-84 section columns                      days: 2
+      - task: Build DC-84 PDF renderer (jsPDF + custom layout)             days: 5
+      - task: Running-total sub-totals per spec section                    days: 2
+      - task: Signature / certification block with RE name autofill        days: 1
+      - task: Export + download flow; test against real NJDOT contract     days: 3
+    workItemHint: ["lib:export-utils"]
+
+  - id: RE-004
+    name: Approved Quantities Embed into PMXML
+    status: planned
+    durationDays: 10  # L
+    rationale: >
+      P6Export.tsx currently writes only dates and % complete back into the
+      PMXML. Planned: embed approved cumulative quantities per activity into
+      resource assignment fields of the exported PMXML for full earned-value
+      calculation in P6.
+    sources:
+      - backend.md (cap: Approved-quantity P6 round-trip integration)
+      - src/lib/p6xml/apply-progress.ts
+    prerequisites: [RE-001, BE-001]
+    subTasks:
+      - task: Extend p6xml-apply-progress to accept approved quantity map  days: 2
+      - task: Map pay_items → resource assignments in PMXML serializer     days: 2
+      - task: P6Export UI: checkbox "embed approved quantities"            days: 1
+      - task: PMXML round-trip unit tests with approved quantities         days: 2
+      - task: Document P6 import steps for RE / PM                        days: 1
+      - task: Skip-activities coverage report update                       days: 2
+    workItemHint: ["lib:export-utils", "page:p6-export"]
+
+# ─────────────────────────────────────────────────────────────────────────────
+marketing_sales:
+# ─────────────────────────────────────────────────────────────────────────────
+
+  - id: MS-001
+    name: NJTA / NJDOT Landing Page
+    status: shipped
+    durationDays: 10  # L
+    rationale: >
+      Public product page for TakeoffPro targeting NJTA/NJDOT RE teams.
+      Scroll-nav, Features / How It Works / Personas / FAQ / Demo sections,
+      demo-request form (writes demo_requests table), schema.org FAQ LD+JSON
+      for SEO, animated framer-motion sections, comparison table.
+    sources:
+      - pages.md (landing)
+      - marketing-promises.md (njta/njdot surface)
+      - wbs-proposals.reconciled.json (BC-001: cap.marketing.landing score 20)
+    prerequisites: [BS-001, BS-002, BE-001]
+    subTasks:
+      - task: Hero section: headline, sub-copy, dual CTA (Try Demo / Log In) days: 1
+      - task: Features grid with icon cards and pain-point stats           days: 1.5
+      - task: How-It-Works 4-step workflow section                         days: 1
+      - task: Role personas (RE / Inspector / PM) section                  days: 1
+      - task: FAQ accordion with schema.org LD+JSON (8 questions)          days: 1
+      - task: Demo-request form → demo_requests Supabase insert            days: 1.5
+      - task: Comparison table (old vs TakeoffPro methods)                 days: 1
+      - task: Framer-motion fade-up animations + scroll-spy nav            days: 1
+      - task: SEO meta tags, OG image, canonical URL                       days: 1
+    workItemHint: ["page:landing", "route:marketing"]
+
+  - id: MS-002
+    name: MCFA CPM Scheduler Pitch Page
+    status: shipped
+    durationDays: 5   # M
+    rationale: >
+      Long-form employment proposal page for MCFA targeting Systems-Enabled CPM
+      Scheduler/Estimator role. Highlights DCMA-14 auditor, SPI/CPI dashboard,
+      TIA fragnet workflow, portfolio rollup, AACE estimate progression. Links
+      to XerLens demo.
+    sources:
+      - pages.md (mcfa-pitch)
+      - marketing-promises.md (mcfa surface)
+    prerequisites: [BS-001, BS-002]
+    subTasks:
+      - task: Value prop hero + candidate profile section                  days: 1
+      - task: Capability grid (DCMA / SPI-CPI / TIA / Portfolio / AACE)   days: 1.5
+      - task: Data-sources + outputs integration diagram                   days: 1
+      - task: Revenue / ROI calculation section                            days: 1
+      - task: CTA links to /mcfa/demo and /mcfa/p6-xml                    days: 0.5
+    workItemHint: ["page:mcfapitch", "route:marketing"]
+
+  - id: MS-003
+    name: XerLens CPM Demo — 17-Step Guided Tour
+    status: shipped
+    durationDays: 15  # XL
+    rationale: >
+      Full interactive public demo of the XerLens scheduling suite. Upload XER,
+      DCMA-14 audit, RE feedback memo (PDF + DOCX), baseline vs update progress
+      comparison, Gantt slip chart (Recharts), TIA fragnet, NJDOT WBS compliance,
+      AACE estimate bands, Module F artifact tagging, portfolio strip.
+      17-step animated XerLensTour.
+    sources:
+      - pages.md (xer-demo)
+      - scope-inventory.json (cap.scheduling.xer-dcma14, cap.scheduling.xer-tia, etc.)
+      - wbs-proposals.reconciled.json (BC-001 tag: page:xerdemo)
+    prerequisites: [BS-001, BS-002]
+    subTasks:
+      - task: XER file upload or load sample (xer-sample.ts)              days: 1
+      - task: DCMA-14 audit UI (14 checks with pass/fail badges)           days: 2
+      - task: RE feedback memo render + clipboard copy                     days: 1
+      - task: PDF + DOCX memo download (jsPDF + docx library)             days: 1.5
+      - task: Baseline vs update comparison table + slip chart (Recharts)  days: 2
+      - task: TIA fragnet builder + NJDOT 108-03 narrative                days: 1.5
+      - task: NJDOT WBS tree + M-milestone compliance panel               days: 1
+      - task: AACE estimate class selector + accuracy band calculator     days: 1
+      - task: Module F artifact tagging UI (demo-only, no persistence)     days: 1
+      - task: Portfolio health strip placeholder                           days: 0.5
+      - task: XerLensTour 17-step animated walkthrough                    days: 2.5
+    workItemHint: ["page:xerdemo", "lib:xer", "lib:p6xml"]
+
+  - id: MS-004
+    name: P6 XML Round-Trip Demo Page
+    status: shipped
+    durationDays: 3   # S
+    rationale: >
+      Standalone public page demonstrating the daily-report → PMXML apply-progress
+      round-trip. Upload contractor PMXML, apply sample approved quantities,
+      download updated XML. Sales collateral for NJDOT / MCFA audiences.
+    sources:
+      - pages.md (p6-xml-demo)
+    prerequisites: [BS-001]
+    subTasks:
+      - task: PMXML upload + parse metadata display                        days: 0.5
+      - task: Sample approved quantities injection UI                      days: 1
+      - task: Apply progress + per-activity change log display            days: 1
+      - task: Download updated PMXML                                       days: 0.5
+    workItemHint: ["page:p6-xml-demo", "lib:p6xml"]
+
+  - id: MS-005
+    name: Fajar Al Mustaqbal Equipment-Rental Pitch
+    status: shipped
+    durationDays: 10  # L
+    rationale: >
+      UAE equipment-rental sales pitch for Fajar. Fleet categories, per-unit
+      availability calendar (demo/seed), WhatsApp booking agent wireframe,
+      maintenance queue, admin dashboard mockup. Aspirational backend unbuilt.
+    sources:
+      - pages.md (fajar-pitch)
+      - marketing-promises.md (fajar surface)
+    prerequisites: [BS-001, BS-002]
+    subTasks:
+      - task: Fleet category grid with availability indicators             days: 1.5
+      - task: Per-unit availability calendar component (seed data)         days: 2
+      - task: WhatsApp booking agent workflow diagram                      days: 1.5
+      - task: Maintenance queue mockup panel                               days: 1
+      - task: Admin dashboard phone mockup section                         days: 1
+      - task: CTA / proposal summary + pricing table                       days: 1.5
+      - task: Arabic language hreflang stub (future)                       days: 1.5
+    workItemHint: ["page:fajarpitch", "route:marketing"]
+
+  - id: MS-006
+    name: Interactive Demo Mode (12-Step Walkthrough)
+    status: shipped
+    durationDays: 10  # L
+    rationale: >
+      /demo route provides a fully functional in-browser quantity takeoff demo
+      with sample PDF and pre-seeded pay items. 12-step guided tour using
+      useTour hook. No data persistence; everything runs in memory. Primary
+      no-friction sales funnel entry.
+    sources:
+      - pages.md (demo)
+      - scope-inventory.json (cap.takeoff.pdf-canvas, cap.takeoff.annotation-draw)
+    prerequisites: [TK-001, TK-004, TK-008, CC-001]
+    subTasks:
+      - task: Seed sample project data in memory (pay items + sample PDF)  days: 1
+      - task: Disable all Supabase mutations in demo mode                  days: 1
+      - task: 12-step useTour script targeting canvas and panel elements   days: 3
+      - task: Demo banner + "Sign Up" CTA overlay at end of tour           days: 1
+      - task: Demo mode analytics event logging (no PII)                  days: 1
+      - task: Responsive layout test (tablet + mobile)                    days: 1
+      - task: Reset demo state on revisit                                  days: 1
+      - task: Performance: preload sample PDF to avoid demo lag            days: 1
+    workItemHint: ["page:demo", "hook:useTour"]
+
+  - id: MS-007
+    name: Privacy Policy & Terms of Service Pages (Planned)
+    status: planned
+    durationDays: 3   # S
+    rationale: >
+      Legal pages required for App Store submission (Apple / Google) and NJDOT
+      enterprise procurement. Currently not implemented; marketing-promises.md
+      notes aspirational SOC 2 compliance roadmap.
+    sources:
+      - marketing-promises.md (soc2-compliance-roadmap)
+      - docs/STORE_LISTING.md
+    prerequisites: [BS-001, BS-002]
+    subTasks:
+      - task: Draft Privacy Policy content (data collected, retention, GDPR) days: 1
+      - task: Draft Terms of Service content                               days: 1
+      - task: Render as static /privacy and /terms routes                  days: 0.5
+      - task: Link from Landing page footer + App Store metadata           days: 0.5
+    workItemHint: ["route:marketing", "page:landing"]
+
+  - id: MS-008
+    name: Case Studies & Blog/SEO Content (Aspirational)
+    status: aspirational
+    durationDays: 25  # XXL
+    rationale: >
+      Ongoing SEO content strategy: per-project case studies (NJTA Route 9,
+      Route 1 overlay), blog posts (GPS takeoff workflow, DCMA audit guide),
+      per-machine Fajar SEO pages, schema.org rich snippets. No implementation
+      exists; aspirational scope driven by marketing-promises.md.
+    sources:
+      - marketing-promises.md (fajar-per-machine-seo-pages, fajar-arabic-site-hreflang)
+    prerequisites: [MS-001, BS-001]
+    subTasks:
+      - task: Define CMS strategy (static MDX vs headless CMS)             days: 2
+      - task: 3x NJTA/NJDOT case study pages                               days: 6
+      - task: 5x technical blog posts (GPS, DCMA, offline sync, P6)       days: 10
+      - task: Fajar per-machine SEO pages (10 units × 0.5d)               days: 5
+      - task: schema.org rich snippets on all content pages               days: 2
+    workItemHint: ["route:marketing"]
+
+# ─────────────────────────────────────────────────────────────────────────────
+backend_infra:
+# ─────────────────────────────────────────────────────────────────────────────
+
+  - id: BE-001
+    name: Database Migrations & Schema (36 Migrations)
+    status: shipped
+    durationDays: 15  # XL
+    rationale: >
+      Full Supabase schema: 26 tables across 36 migrations (2026-03-08 to
+      2026-05-29) covering profiles, projects, pay_items, annotations,
+      calibrations, geo_calibrations, daily_reports, snapshots, notifications,
+      schedule_activities, relationships, resources, documents, folders,
+      device_tokens (missing migration – schema gap). RLS on all tables.
+    sources:
+      - backend.md (all tables section)
+      - scope-inventory.json (implied by all shipped capabilities)
+    prerequisites: [BS-005]
+    subTasks:
+      - task: Core tables M1 (profiles, user_roles, projects, members, pay_items, calibrations, annotations, invitations) days: 3
+      - task: Field ops tables M2 (daily_reports, snapshots, comments, notifications, annotation_photos, rocks, scorecard_metrics) days: 3
+      - task: Schedule tables M3 (schedule_activities, relationships, calendars, resources, assignments, baselines, meta) days: 3
+      - task: Document tables M4 (document_folders, documents + system-folder seed function) days: 2
+      - task: Add device_tokens migration (currently schema gap)           days: 1
+      - task: All RLS policy consolidation pass                            days: 2
+      - task: Schema documentation (dbml or Supabase schema viz export)    days: 1
+    workItemHint: ["migration"]
+
+  - id: BE-002
+    name: Row-Level Security Policies
+    status: shipped
+    durationDays: 10  # L
+    rationale: >
+      Comprehensive RLS across all 26 tables ensuring: org isolation,
+      project-member access, role-gated write paths (RE-only approval trigger),
+      admin override policies, public INSERT on demo_requests.
+      Migration 28155528 was a full RLS consolidation pass.
+    sources:
+      - backend.md (migrations: 21162349, 21162325, 24015141, 28155528)
+    prerequisites: [BE-001]
+    subTasks:
+      - task: Projects + project_members READ policies (member or admin)    days: 1
+      - task: Annotations CRUD policies (member write, RE approve)         days: 1.5
+      - task: Daily_reports policies (inspector write, RE approve lock trigger) days: 1.5
+      - task: Documents + folders policies (role-gated system folders)     days: 2
+      - task: Schedule tables policies (PM/admin write, member read)       days: 1.5
+      - task: Admin override (service_role bypass) verification            days: 1
+      - task: RLS penetration test suite (role-switching tests in Vitest)  days: 1.5
+    workItemHint: ["migration"]
+
+  - id: BE-003
+    name: Edge Function — invite-user
+    status: shipped
+    durationDays: 3   # S
+    rationale: >
+      Admin-only Deno edge function that calls Supabase Auth admin.inviteUserByEmail,
+      creates an invitations row with token, and sends branded email. Also handles
+      resend flow. Called from Admin.tsx.
+    sources:
+      - backend.md (edge: invite-user)
+    prerequisites: [BE-001]
+    subTasks:
+      - task: Deno function scaffold + CORS headers                        days: 0.5
+      - task: Role check (admin only via service_role JWT)                 days: 0.5
+      - task: Call auth.admin.inviteUserByEmail + insert invitations row   days: 0.5
+      - task: Resend branch: reset token + re-invite                      days: 0.5
+      - task: Unit test with Deno test runner                              days: 1
+    workItemHint: ["edge:invite-user"]
+
+  - id: BE-004
+    name: Edge Function — parse-schedule (Gemini AI Gantt Parser)
+    status: shipped
+    durationDays: 5   # M
+    rationale: >
+      Accepts a base64 Gantt image, sends to Gemini 2.5 Pro via Lovable AI
+      Gateway with structured tool-calling, returns WBS activity rows inserted
+      into schedule_activities. Called by GanttUploader component.
+    sources:
+      - backend.md (edge: parse-schedule)
+    prerequisites: [BE-001]
+    subTasks:
+      - task: Base64 image accept + validate content-type                  days: 0.5
+      - task: Gemini 2.5 Pro prompt engineering for WBS extraction         days: 1.5
+      - task: Tool-call schema definition (activity id, name, start, finish, predecessors) days: 1
+      - task: Parse Gemini response → schedule_activities insert           days: 1
+      - task: Error handling (model refusal, malformed image, rate limit)  days: 1
+    workItemHint: ["edge:parse-schedule"]
+
+  - id: BE-005
+    name: Edge Function — tag-photo (Gemini AI Photo Tagger)
+    status: shipped
+    durationDays: 5   # M
+    rationale: >
+      Given a signed annotation-photo URL and the project's pay_items list,
+      calls Gemini 2.5 Flash to identify the best-matching pay item by
+      item_code with confidence score and rationale. Called from ProjectControls.
+    sources:
+      - backend.md (edge: tag-photo)
+    prerequisites: [BE-001]
+    subTasks:
+      - task: Accept photo URL + pay_items JSON payload                    days: 0.5
+      - task: Generate signed URL (short-lived) for Gemini vision call     days: 0.5
+      - task: Gemini 2.5 Flash prompt: match image to pay item             days: 1.5
+      - task: Return item_code + confidence + rationale JSON               days: 0.5
+      - task: Fallback (no match → return null with explanation)           days: 0.5
+      - task: Unit test with mock Gemini responses                         days: 1.5
+    workItemHint: ["edge:tag-photo"]
+
+  - id: BE-006
+    name: Edge Function — send-push (FCM/APNs Dispatcher)
+    status: planned
+    durationDays: 10  # L
+    rationale: >
+      send-push edge function + push.ts shim + device_tokens table all exist
+      but are DORMANT. No DB trigger or cron invokes it end-to-end.
+      FCM_SERVER_KEY not configured. Completing this enables push notifications
+      for daily-report status changes.
+    sources:
+      - backend.md (edge: send-push — DORMANT)
+      - scope-inventory.json (cap.notif.push-dispatch)
+    prerequisites: [BE-001, BE-002]
+    subTasks:
+      - task: Add device_tokens migration (link to BE-001 gap fix)        days: 0.5
+      - task: Configure FCM_SERVER_KEY + APNs auth-key secrets            days: 1
+      - task: Write DB trigger on daily_reports status → call send-push   days: 2
+      - task: Deep-link payload in push message (tap → navigate to report) days: 1.5
+      - task: send-push: multi-device fan-out; remove stale tokens        days: 2
+      - task: End-to-end test: submit report → receive push on device     days: 3
+    workItemHint: ["edge:send-push", "lib:native"]
+
+  - id: BE-007
+    name: Supabase Realtime Configuration
+    status: shipped
+    durationDays: 3   # S
+    rationale: >
+      Publication of annotations table to Supabase Realtime (migration
+      21170227). Channel-based presence for collaborative online-users overlay.
+      Notification bell subscription. Ensures low-latency field sync.
+    sources:
+      - backend.md (annotations: later 21170227 realtime publication)
+      - libs-and-hooks.md (useNotifications: realtime INSERT subscription)
+    prerequisites: [BE-001]
+    subTasks:
+      - task: Enable realtime on annotations, notifications tables          days: 0.5
+      - task: Collaborative presence channel in useProject (onlineUsers)   days: 1
+      - task: Notifications realtime INSERT subscription in useNotifications days: 0.5
+      - task: Test realtime latency with 2 concurrent browser sessions      days: 1
+    workItemHint: ["hook:useProject", "hook:useNotifications"]
+
+  - id: BE-008
+    name: Vitest Test Suite
+    status: shipped
+    durationDays: 10  # L
+    rationale: >
+      Unit and integration tests covering: geometry math formulas, CPM engine
+      (topological sort, forward/backward pass), XER parser, DCMA-14 checks,
+      export-utils, daily-report-snapshot logic, and RLS policy smoke tests.
+      Current coverage unknown; suite exists but depth is partial.
+    sources:
+      - libs-and-hooks.md (most-sophisticated: CPM engine, DCMA auditor, P6 round-trip)
+    prerequisites: [BS-003]
+    subTasks:
+      - task: geometry.ts: 100% formula coverage (LF, SY, CY, hit-test)   days: 1
+      - task: CPM engine: cycle detection, forward/backward pass, constraints days: 2
+      - task: XER parser: parse xer-sample.ts fixtures                    days: 1
+      - task: DCMA-14: each of 14 checks with pass + fail fixture          days: 2
+      - task: daily-report-snapshot: build + archive round-trip            days: 1
+      - task: export-utils: CSV / Excel / PDF output assertion             days: 1.5
+      - task: RLS role-switching integration tests (supabase-js test client) days: 1.5
+    workItemHint: ["lib:geometry", "lib:schedule", "lib:xer"]
+
+  - id: BE-009
+    name: Observability & Logging (Aspirational)
+    status: aspirational
+    durationDays: 10  # L
+    rationale: >
+      Production error tracking (Sentry or equivalent), structured edge-function
+      logging (Logflare), performance monitoring (Web Vitals dashboard),
+      and uptime alerting aligned with the 99.9% SLA marketing promise.
+    sources:
+      - marketing-promises.md (uptime-sla-99-9)
+    prerequisites: [BS-003, BS-005]
+    subTasks:
+      - task: Integrate Sentry SDK with source maps upload                 days: 1.5
+      - task: Error boundary with Sentry captureException hook             days: 1
+      - task: Structured JSON logging in all edge functions                days: 1
+      - task: Logflare / Grafana dashboard for edge function calls         days: 2
+      - task: Web Vitals (LCP, CLS, FID) tracking                        days: 1.5
+      - task: Uptime check + PagerDuty alert on Supabase + Lovable host   days: 2
+      - task: Runbook for on-call incident response                       days: 1
+    workItemHint: ["ci"]
+
+  - id: BE-010
+    name: Build-History Tooling & WBS Governance
+    status: shipped
+    durationDays: 5   # M
+    rationale: >
+      Internal tooling: wbs-proposals.reconciled.json generator, scope-inventory
+      sub-agent pipeline, tag-extraction heuristics, and cluster reconciliation
+      scripts that produced the 32 built clusters feeding this WBS. Ensures
+      ongoing scope traceability as the codebase grows.
+    sources:
+      - docs/wbs-proposals.reconciled.json (all metadata)
+      - docs/scope-inventory.json
+    prerequisites: [BS-003]
+    subTasks:
+      - task: Tag-extraction script (git log → work item tags)             days: 1
+      - task: Cluster reconciliation algorithm (edge weight + gap rules)   days: 1
+      - task: Scope-inventory sub-agent prompt pipeline                    days: 1
+      - task: WBS YAML generation + validation script                     days: 1
+      - task: Automate run on each sprint close (CI job)                  days: 1
+    workItemHint: ["ci"]
+
+# ─────────────────────────────────────────────────────────────────────────────
+cross_cutting:
+# ─────────────────────────────────────────────────────────────────────────────
+
+  - id: CC-001
+    name: Guided Tour Framework (useTour + GuidedTour)
+    status: shipped
+    durationDays: 5   # M
+    rationale: >
+      useTour hook with step sequencing, target-element highlighting, tooltip
+      positioning, skip/next/back controls, and localStorage "seen" flag.
+      GuidedTour component used on Dashboard (5 steps) and Workspace (5 steps).
+      XerLensTour variant with 17 steps has its own implementation.
+    sources:
+      - libs-and-hooks.md (useTour)
+      - pages.md (dashboard: guided tour 5 steps; project-workspace: 5 steps)
+      - pages.md (xer-demo: XerLensTour 17 steps)
+    prerequisites: [BS-001, BS-002]
+    subTasks:
+      - task: useTour hook: step array, current index, next/prev/skip/reset days: 1
+      - task: GuidedTour component: spotlight overlay + arrow tooltip      days: 1.5
+      - task: Target element scroll-into-view + highlight ring             days: 1
+      - task: localStorage seen-flag → auto-skip on replay button          days: 0.5
+      - task: XerLensTour 17-step variant with animated transitions        days: 1
+    workItemHint: ["hook:useTour", "page:dashboard", "page:xerdemo"]
+
+  - id: CC-002
+    name: Welcome Carousel (First-Visit Onboarding)
+    status: shipped
+    durationDays: 3   # S
+    rationale: >
+      Modal carousel shown on first Dashboard visit (has_seen_welcome flag in
+      profiles table). 4-6 slides introducing key capabilities. Dismissed on
+      last slide or skip; updates has_seen_welcome via Supabase.
+    sources:
+      - pages.md (dashboard: welcome carousel on first visit)
+      - backend.md (profiles: has_seen_welcome column)
+    prerequisites: [BS-002, BE-001]
+    subTasks:
+      - task: WelcomeCarousel component: slide renderer + dot nav          days: 1
+      - task: Check has_seen_welcome on dashboard mount                    days: 0.5
+      - task: Skip + Close actions → update profiles row                  days: 0.5
+      - task: 4 slides: PDF canvas / pay items / daily report / GPS trace days: 1
+    workItemHint: ["page:dashboard"]
+
+  - id: CC-003
+    name: Toast Notification System
+    status: shipped
+    durationDays: 3   # S
+    rationale: >
+      Global toast layer using Radix Toaster + Sonner for success, error, info,
+      and undo-action toasts. use-toast hook provides imperative API. Used
+      across every surface for mutation feedback, offline fallback alerts,
+      and undo-delete flows.
+    sources:
+      - pages.md (cross-cutting: global toast notifications)
+      - libs-and-hooks.md (use-toast hook)
+    prerequisites: [BS-001]
+    subTasks:
+      - task: Add Sonner Toaster to App root with max 5 visible            days: 0.5
+      - task: use-toast hook: toast()/dismiss() API                        days: 0.5
+      - task: Undo-action variant with timeout callback                    days: 1
+      - task: Error toast with Sentry correlation ID (future)              days: 0.5
+      - task: Visual QA: stacking, z-index, mobile safe area               days: 0.5
+    workItemHint: ["hook:use-toast"]
+
+  - id: CC-004
+    name: Confirm Dialog (useConfirm Hook)
+    status: shipped
+    durationDays: 3   # S
+    rationale: >
+      Shared headless confirm dialog driven by useConfirm hook with promise
+      interface (await confirm("Are you sure?")). Used for destructive actions:
+      delete project, empty trash, bulk approve, archive. Prevents accidental
+      data loss.
+    sources:
+      - pages.md (cross-cutting: ConfirmDialog)
+      - libs-and-hooks.md (implied)
+    prerequisites: [BS-001, BS-002]
+    subTasks:
+      - task: useConfirm hook: show(title, message) → Promise<boolean>    days: 1
+      - task: ConfirmDialog modal component: title / body / Cancel / Confirm days: 0.5
+      - task: Mount as portal at App root                                  days: 0.5
+      - task: Wire to all 6+ destructive action sites                     days: 1
+    workItemHint: ["component:ConfirmDialog"]
+
+  - id: CC-005
+    name: Keyboard Shortcuts
+    status: shipped
+    durationDays: 3   # S
+    rationale: >
+      Global keyboard handler for Ctrl+Z (undo), Ctrl+Y / Ctrl+Shift+Z (redo),
+      Escape (cancel draw / close dialog), Delete (remove selected annotation),
+      and Space (pan mode toggle). Critical for desktop power-user workflow.
+    sources:
+      - pages.md (cross-cutting: keyboard shortcuts Ctrl+Z/Y)
+      - scope-inventory.json (cap.takeoff.undo-redo)
+    prerequisites: [TK-007]
+    subTasks:
+      - task: Global keydown listener with preventDefault on reserved combos days: 0.5
+      - task: Scope shortcuts to canvas-active state                       days: 0.5
+      - task: Escape: cancel active draw + clear selection                 days: 0.5
+      - task: Delete key: remove selected annotation (with confirm)        days: 0.5
+      - task: Space: toggle pan mode cursor                                days: 0.5
+      - task: Keyboard shortcut reference tooltip / help modal             days: 0.5
+    workItemHint: ["hook:useProject", "component:PdfCanvas"]
+
+  - id: CC-006
+    name: Theme Toggle
+    status: shipped
+    durationDays: 3   # S
+    rationale: >
+      Dark / light mode toggle available on Dashboard, Admin, and Workspace
+      pages. useTheme hook persists preference to localStorage. Syncs with
+      OS prefers-color-scheme on first load.
+    sources:
+      - pages.md (cross-cutting: dark/light theme toggle)
+      - libs-and-hooks.md (useTheme)
+    prerequisites: [BS-002]
+    subTasks:
+      - task: useTheme: read localStorage → OS default → apply class       days: 0.5
+      - task: ThemeToggle button component (sun / moon icon swap)          days: 0.5
+      - task: System preference media query listener                       days: 0.5
+      - task: Verify all pages in both themes (visual regression)          days: 1.5
+    workItemHint: ["hook:useTheme", "styles"]
+
+  - id: CC-007
+    name: Notification Bell & In-App Inbox
+    status: shipped
+    durationDays: 5   # M
+    rationale: >
+      NotificationBell component showing unread count badge. Clicking opens
+      inbox drawer listing notifications with mark-read / mark-all-read
+      actions. Supabase realtime INSERT subscription keeps count live.
+      Notifications populated by daily-report status-change DB triggers.
+    sources:
+      - scope-inventory.json (cap.notif.inbox)
+      - libs-and-hooks.md (useNotifications)
+    prerequisites: [BE-001, BE-007]
+    subTasks:
+      - task: useNotifications hook: list + realtime subscription + counts  days: 1.5
+      - task: NotificationBell icon with badge (unread count)              days: 0.5
+      - task: Notification inbox drawer: list items with type icons        days: 1.5
+      - task: Mark single / mark all as read mutations                     days: 0.5
+      - task: Click notification → navigate to relevant report/project     days: 1
+    workItemHint: ["hook:useNotifications", "component:NotificationBell"]
+
+  - id: CC-008
+    name: Error Boundary & Loading States
+    status: shipped
+    durationDays: 3   # S
+    rationale: >
+      React ErrorBoundary wrapping route subtrees: catches render errors,
+      displays friendly fallback with reload button, logs to console (Sentry
+      hook future). Skeleton / spinner loading states on all async data fetches
+      to prevent layout shift.
+    sources:
+      - pages.md (cross-cutting: implied by all async pages)
+    prerequisites: [BS-001]
+    subTasks:
+      - task: ErrorBoundary component with caught-error UI + reload button  days: 1
+      - task: Wrap each route subtree (takeoff, field, docs, admin)         days: 0.5
+      - task: Skeleton loaders for ProjectCard, PayItems, Annotations list days: 1
+      - task: Spinner fallback for PDF render, large uploads               days: 0.5
+    workItemHint: ["app-shell"]
+
+  - id: CC-009
+    name: Auth Flow — Sign-In / Sign-Up / Reset Password / Roles
+    status: shipped
+    durationDays: 10  # L
+    rationale: >
+      Email+password sign-in/up, invitation token accept flow, password reset,
+      org-owner bootstrap RPC (assign_owner_role), multi-role assignment
+      (admin/pm/inspector/RE), role-based UI branching via useAuth.
+    sources:
+      - scope-inventory.json (cap.auth.email-password through cap.auth.profile-table)
+      - pages.md (auth, reset-password, admin)
+    prerequisites: [BE-001, BE-002, BE-003]
+    subTasks:
+      - task: Auth.tsx: sign-in / sign-up / forgot-password tab layout     days: 1.5
+      - task: Invitation token accept flow (localStorage persist + RPC)    days: 1.5
+      - task: ResetPassword.tsx: PASSWORD_RECOVERY event + new-password form days: 1
+      - task: useAuth hook: session, roles, isAdmin/isManager/isInspector flags days: 2
+      - task: assign_owner_role RPC on first SIGNED_IN                    days: 1
+      - task: Admin.tsx: user list + add/remove role + project assignments days: 2
+      - task: TeamManager component for PM-level project team management   days: 1
+    workItemHint: ["page:auth", "hook:useAuth", "route:auth", "edge:invite-user", "component:TeamManager"]
+
