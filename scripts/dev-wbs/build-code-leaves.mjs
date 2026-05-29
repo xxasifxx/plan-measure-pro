@@ -88,16 +88,20 @@ const seenPath = new Set(shadcn);
 for (const p of ALL) {
   if (seenPath.has(p)) continue;
   seenPath.add(p);
-  const sn = streamForPath(p);
+  // skip migrations here — handled per-file below
+  if (/^supabase\/migrations\//.test(p)) continue;
+  const sn = /^public\//.test(p) ? streamForPublicPath(p) : streamForPath(p);
+  const layer = /^public\//.test(p) ? 'Frontend' : layerFor(p);
   leaves.push({
     streamNum: sn,
-    layer: layerFor(p),
+    layer,
     name: nameFromPath(p),
     fileGlobs: [p],
     provenance: 'code-only',
     sources: [{ kind: 'file-cluster', path: p }],
   });
 }
+
 
 // ── 2) migration weekly clusters ──────────────────────────────────────────────
 const migrations = readdirSync('supabase/migrations')
