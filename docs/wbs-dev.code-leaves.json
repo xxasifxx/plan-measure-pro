@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-05-29T16:09:35.677Z",
+  "generatedAt": "2026-05-29T16:10:34.921Z",
   "totals": {
-    "leaves": 210,
+    "leaves": 211,
     "byStream": {
       "10": 6,
       "11": 41,
@@ -15,7 +15,7 @@
       "19": 4,
       "20": 4,
       "97": 18,
-      "98": 35,
+      "98": 36,
       "99": 1,
       "05": 4,
       "02": 6,
@@ -30,7 +30,7 @@
     "byLayer": {
       "Frontend": 107,
       "Mobile": 24,
-      "Verification": 29,
+      "Verification": 30,
       "Backend": 40,
       "Build": 10
     },
@@ -2772,6 +2772,23 @@
       ],
       "stream": "98 Build & Infra",
       "id": "98:verification:parse-brief"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
+      "name": "reconcile-leaves",
+      "fileGlobs": [
+        "scripts/dev-wbs/reconcile-leaves.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/dev-wbs/reconcile-leaves.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:reconcile-leaves"
     },
     {
       "streamNum": "98",
