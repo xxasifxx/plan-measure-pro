@@ -123,6 +123,9 @@ const liveByTag = new Map(); // primaryTag -> Activity[]
 const GAP_MS = 14 * 86400000;
 
 const mkActivity = (commit, primaryTag) => {
+  const filePaths = (commit.files || [])
+    .map((f) => (typeof f === 'string' ? f : f?.path))
+    .filter(Boolean);
   const name = commit.subject?.slice(0, 100) || `Work ${commit.sha.slice(0, 7)}`;
   const a = {
     id: padId('ACT-', activities.length + 1),
@@ -130,7 +133,7 @@ const mkActivity = (commit, primaryTag) => {
     origin: 'git',
     primaryTag,
     tokenBag: new Set(tokens(commit.subject || '')),
-    fileSet: new Set(commit.files || []),
+    fileSet: new Set(filePaths),
     firstTs: commit.iso,
     lastTs: commit.iso,
     commitCount: 0,
@@ -154,6 +157,9 @@ const sortedCommits = [...history.commits].sort((x, y) => x.iso.localeCompare(y.
 
 for (const c of sortedCommits) {
   const ts = new Date(c.iso).getTime();
+  const filePaths = (c.files || []).map((f) => (typeof f === 'string' ? f : f?.path)).filter(Boolean);
+  const insertions = (c.files || []).reduce((s, f) => s + (typeof f === 'object' ? (f.insertions || 0) : 0), 0);
+  const deletions = (c.files || []).reduce((s, f) => s + (typeof f === 'object' ? (f.deletions || 0) : 0), 0);
   const tags = (c.pathTags && c.pathTags.length ? c.pathTags : ['_misc']).slice();
   const primaryTag = tags[0];
 
@@ -166,11 +172,14 @@ for (const c of sortedCommits) {
   }
   const live = liveByTag.get(primaryTag) || [];
 
+  const commitFileSet = new Set(filePaths);
+  const commitTokenSet = new Set(tokens(c.subject || ''));
+
   // Score primary
   let bestPrimary = null;
   let bestScore = 0;
   for (const a of live) {
-    const s = scoreCommitAgainstActivity(c, a);
+    const s = 0.5 * jaccard(commitTokenSet, a.tokenBag) + 0.5 * jaccard(commitFileSet, a.fileSet);
     if (s > bestScore) {
       bestScore = s;
       bestPrimary = a;
@@ -200,29 +209,26 @@ for (const c of sortedCommits) {
   // Update primary activity
   primaryActivity.lastTs = c.iso;
   primaryActivity.commitCount += 1;
-  primaryActivity.locAdded += c.insertions || 0;
-  primaryActivity.locRemoved += c.deletions || 0;
-  for (const t of tokens(c.subject || '')) primaryActivity.tokenBag.add(t);
-  for (const f of c.files || []) primaryActivity.fileSet.add(f);
+  primaryActivity.locAdded += insertions;
+  primaryActivity.locRemoved += deletions;
+  for (const t of commitTokenSet) primaryActivity.tokenBag.add(t);
+  for (const f of filePaths) primaryActivity.fileSet.add(f);
   if (primaryActivity.subjects.length < 5) primaryActivity.subjects.push(c.subject);
 
-  // Secondary attribution: any OTHER live activity (any bucket) sharing ≥3
-  // files with this commit gets a secondary contribution. This is what lets one
-  // commit advance several activities.
-  if ((c.files || []).length >= 2) {
-    const commitFiles = new Set(c.files);
+  // Secondary attribution
+  if (filePaths.length >= 2) {
     const seen = new Set([primaryActivity.id]);
-    for (const [tag, arr] of liveByTag) {
+    for (const [, arr] of liveByTag) {
       for (const a of arr) {
         if (seen.has(a.id)) continue;
         let shared = 0;
-        for (const f of commitFiles) if (a.fileSet.has(f)) shared++;
+        for (const f of commitFileSet) if (a.fileSet.has(f)) shared++;
         if (shared >= 3) {
           commitActivity.push({
             sha: c.sha,
             activity_id: a.id,
             contribution: 'secondary',
-            weight: Math.min(0.5, shared / commitFiles.size),
+            weight: Math.min(0.5, shared / commitFileSet.size),
             signal: 'co-edit',
           });
           seen.add(a.id);
