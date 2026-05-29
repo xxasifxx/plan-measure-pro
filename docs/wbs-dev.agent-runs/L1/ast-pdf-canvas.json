@@ -1,6 +1,6 @@
 {
   "agent": "ast-pdf-canvas",
-  "generatedAt": "2026-05-29T17:45:05.284Z",
+  "generatedAt": "2026-05-29T17:45:38.597Z",
   "fileCount": 5,
   "files": [
     {
@@ -13,32 +13,152 @@
           "bodyPreview": "{\n  const pdfCanvasRef = useRef<HTMLCanvasElement>(null);\n  const overlayCanvasRef = useRef<HTMLCanvasElement>(null);\n  const containerRef = useRef<HTMLDivElement>(null);\n  const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });\n  const [drawingPoints, setDrawingPoints] = useState<PointXY[]>([]);"
         },
         {
+          "name": "getCanvasPos",
+          "wrapper": "useCallback",
+          "line": 147,
+          "bodyPreview": "{\n    const rect = overlayCanvasRef.current!.getBoundingClientRect();\n    return {\n      x: (e.clientX - rect.left) / scale,\n      y: (e.clientY - rect.top) / scale,\n    };\n  }"
+        },
+        {
+          "name": "getTouchCanvasPos",
+          "wrapper": "useCallback",
+          "line": 156,
+          "bodyPreview": "{\n    const rect = overlayCanvasRef.current!.getBoundingClientRect();\n    return {\n      x: (touch.clientX - rect.left) / scale,\n      y: (touch.clientY - rect.top) / scale,\n    };\n  }"
+        },
+        {
+          "name": "s",
+          "wrapper": "useCallback",
+          "line": 165,
+          "bodyPreview": "({ x: pt.x * scale, y: pt.y * scale })"
+        },
+        {
+          "name": "hitTestAnnotations",
+          "wrapper": "useCallback",
+          "line": 168,
+          "bodyPreview": "{\n    const pageAnnotations = annotations.filter(a => a.page === currentPage && a.type !== 'manual');\n    // Reverse order so topmost drawn annotation is selected first\n    for (let i = pageAnnotations.length - 1; i >= 0; i--) {\n      const ann = pageAnnotations[i];\n      if (ann.type === 'count') {\n        if (pointToMarkerDistance(pos, ann.points[0]) <= MARKER_RADIUS) return ann;\n      } else if (ann.type === 'label' && ann.points.length >= 2) {"
+        },
+        {
           "name": "drawTocRect",
+          "wrapper": null,
           "line": 466,
-          "bodyPreview": "{\n      const sx1 = x1 * scale, sy1 = y1 * scale, sx2 = x2 * scale, sy2 = y2 * scale;\n      ctx.strokeStyle = '#3b82f6';\n      ctx.fillStyle = 'rgba(59, 130, 246, 0.1)';\n      ctx.lineWidth = 2;\n      ctx.setLineDash([6, 3]);"
+          "bodyPreview": "{\n      const sx1 = x1 * scale, sy1 = y1 * scale, sx2 = x2 * scale, sy2 = y2 * scale;\n      ctx.strokeStyle = '#3b82f6';\n      ctx.fillStyle = 'rgba(59, 130, 246, 0.1)';\n      ctx.lineWidth = 2;\n      ctx.setLineDash([6, 3]);\n      ctx.strokeRect(sx1, sy1, sx2 - sx1, sy2 - sy1);\n      ctx.fillRect(sx1, sy1, sx2 - sx1, sy2 - sy1);"
+        },
+        {
+          "name": "guardDrawing",
+          "wrapper": "useCallback",
+          "line": 530,
+          "bodyPreview": "{\n    if (!activePayItemId || !payItems.find(p => p.id === activePayItemId)) {\n      toast({ title: 'No pay item selected', description: 'Select a pay item in the sidebar before drawing.', variant: 'destructive' });\n      return false;\n    }\n    if (needsCalibration && !calibration) {\n      toast({ title: 'No calibration set', description: 'Calibrate the scale on this page before measuring.', variant: 'destructive' });\n      return false;"
+        },
+        {
+          "name": "hitTestHandles",
+          "wrapper": "useCallback",
+          "line": 543,
+          "bodyPreview": "{\n    if (!selectedAnnotationId) return null;\n    const ann = annotations.find(a => a.id === selectedAnnotationId);\n    if (!ann || (ann.type !== 'line' && ann.type !== 'polygon' && ann.type !== 'label')) return null;\n    for (let i = 0; i < ann.points.length; i++) {\n      if (distancePx(pos, ann.points[i]) <= HANDLE_HIT_RADIUS) {\n        return { annotationId: ann.id, pointIndex: i };\n      }"
+        },
+        {
+          "name": "handleClickAtPos",
+          "wrapper": "useCallback",
+          "line": 556,
+          "bodyPreview": "{\n    // Intercept for GPS calibration plan-tap\n    if (onGpsPlanTap) {\n      onGpsPlanTap(pos);\n      return;\n    }\n\n    if (toolMode === 'pan' || toolMode === 'tocSelect') return;"
+        },
+        {
+          "name": "handleCanvasClick",
+          "wrapper": "useCallback",
+          "line": 634,
+          "bodyPreview": "{\n    if (touchStateRef.current.suppressClick) {\n      touchStateRef.current.suppressClick = false;\n      return;\n    }\n    if (handleDragJustFinished.current) {\n      handleDragJustFinished.current = false;\n      return;"
+        },
+        {
+          "name": "handleDoubleClickAtPos",
+          "wrapper": "useCallback",
+          "line": 647,
+          "bodyPreview": "{\n    if (toolMode !== 'polygon' || drawingPoints.length < 3) return;\n    if (!calibration) {\n      toast({ title: 'No calibration set', description: 'Calibrate the scale before measuring areas.', variant: 'destructive' });\n      setDrawingPoints([]);\n      return;\n    }\n"
+        },
+        {
+          "name": "handleDoubleClick",
+          "wrapper": "useCallback",
+          "line": 680,
+          "bodyPreview": "{\n    handleDoubleClickAtPos();\n  }"
+        },
+        {
+          "name": "submitDepth",
+          "wrapper": "useCallback",
+          "line": 684,
+          "bodyPreview": "{\n    if (!pendingPolygon || !calibration) return;\n    const depth = parseFloat(depthInput);\n    if (isNaN(depth) || depth <= 0) return;\n    const volumeCY = (pendingPolygon.areaSF * depth) / 27;\n    onAddAnnotation({\n      id: crypto.randomUUID(),\n      type: 'polygon',"
+        },
+        {
+          "name": "submitLabel",
+          "wrapper": "useCallback",
+          "line": 703,
+          "bodyPreview": "{\n    if (labelPoints.length !== 2 || !labelTextInput.trim()) return;\n    onAddAnnotation({\n      id: crypto.randomUUID(),\n      type: 'label',\n      points: labelPoints,\n      payItemId: activePayItemId || '',\n      page: currentPage,"
+        },
+        {
+          "name": "handleMouseMove",
+          "wrapper": "useCallback",
+          "line": 720,
+          "bodyPreview": "{\n    // Handle endpoint dragging\n    if (draggingHandle) {\n      e.preventDefault();\n      const pos = getCanvasPos(e);\n      setDraggingHandle(prev => prev ? { ...prev, currentPos: pos } : null);\n      return;\n    }"
+        },
+        {
+          "name": "handleMouseDown",
+          "wrapper": "useCallback",
+          "line": 747,
+          "bodyPreview": "{\n    // Check for handle drag on selected line\n    if (toolMode === 'select') {\n      const pos = getCanvasPos(e);\n      const handle = hitTestHandles(pos);\n      if (handle) {\n        e.preventDefault();\n        const ann = annotations.find(a => a.id === handle.annotationId);"
+        },
+        {
+          "name": "handleMouseUp",
+          "wrapper": "useCallback",
+          "line": 780,
+          "bodyPreview": "{\n    // Finalize endpoint drag\n    if (draggingHandle && onUpdateAnnotation) {\n      const ann = annotations.find(a => a.id === draggingHandle.annotationId);\n      if (ann) {\n        const newPoints = ann.points.map((p, i) =>\n          i === draggingHandle.pointIndex ? draggingHandle.currentPos : p\n        );"
         },
         {
           "name": "submitCalibration",
+          "wrapper": null,
           "line": 831,
-          "bodyPreview": "{\n    const dist = parseFloat(calibrateDistance);\n    if (isNaN(dist) || dist <= 0 || calibratePoints.length !== 2) return;\n    const pxDist = distancePx(calibratePoints[0], calibratePoints[1]);\n    onCalibrate({\n      point1: calibratePoints[0],"
+          "bodyPreview": "{\n    const dist = parseFloat(calibrateDistance);\n    if (isNaN(dist) || dist <= 0 || calibratePoints.length !== 2) return;\n    const pxDist = distancePx(calibratePoints[0], calibratePoints[1]);\n    onCalibrate({\n      point1: calibratePoints[0],\n      point2: calibratePoints[1],\n      realDistance: dist,"
         },
         {
           "name": "handleImportToc",
+          "wrapper": null,
           "line": 846,
           "bodyPreview": "{\n    if (tocRect && onTocRegionSelected) {\n      onTocRegionSelected(tocRect);\n      setTocRect(null);\n    }\n  }"
         },
         {
+          "name": "handleContextMenu",
+          "wrapper": "useCallback",
+          "line": 853,
+          "bodyPreview": "{\n    e.preventDefault();\n    setDrawingPoints([]);\n    setCalibratePoints([]);\n    setShowCalPrompt(false);\n    setTocDragStart(null);\n    setTocDragEnd(null);\n    setTocRect(null);"
+        },
+        {
           "name": "handler",
+          "wrapper": null,
           "line": 866,
-          "bodyPreview": "{\n      if (e.key === 'Escape') {\n        setDrawingPoints([]);\n        setCalibratePoints([]);\n        setShowCalPrompt(false);\n        setTocDragStart(null);"
+          "bodyPreview": "{\n      if (e.key === 'Escape') {\n        setDrawingPoints([]);\n        setCalibratePoints([]);\n        setShowCalPrompt(false);\n        setTocDragStart(null);\n        setTocDragEnd(null);\n        setTocRect(null);"
+        },
+        {
+          "name": "handleOverlayTouchStart",
+          "wrapper": "useCallback",
+          "line": 895,
+          "bodyPreview": "{\n    const ts = touchStateRef.current;\n\n    if (e.touches.length === 2) {\n      e.preventDefault();\n      const t0 = e.touches[0], t1 = e.touches[1];\n      const dist = Math.hypot(t1.clientX - t0.clientX, t1.clientY - t0.clientY);\n      const center = { x: (t0.clientX + t1.clientX) / 2, y: (t0.clientY + t1.clientY) / 2 };"
+        },
+        {
+          "name": "handleOverlayTouchMove",
+          "wrapper": "useCallback",
+          "line": 952,
+          "bodyPreview": "{\n    const ts = touchStateRef.current;\n\n    // Handle endpoint dragging (touch)\n    if (draggingHandle && e.touches.length === 1) {\n      e.preventDefault();\n      const pos = getTouchCanvasPos(e.touches[0]);\n      setDraggingHandle(prev => prev ? { ...prev, currentPos: pos } : null);"
+        },
+        {
+          "name": "handleOverlayTouchEnd",
+          "wrapper": "useCallback",
+          "line": 1027,
+          "bodyPreview": "{\n    const ts = touchStateRef.current;\n\n    if (e.touches.length < 2) {\n      ts.isTwoFinger = false;\n    }\n\n    // Finalize handle drag (touch)"
         },
         {
           "name": "preventMove",
+          "wrapper": null,
           "line": 1122,
           "bodyPreview": "{\n      if (e.touches.length >= 2) e.preventDefault();\n    }"
         },
         {
           "name": "preventStart",
+          "wrapper": null,
           "line": 1125,
           "bodyPreview": "{\n      if (e.touches.length >= 2) e.preventDefault();\n    }"
         }
@@ -493,6 +613,7 @@
         },
         {
           "name": "solve3x3",
+          "wrapper": null,
           "line": 110,
           "bodyPreview": "{\n    const x = (r1 * (Syy * n - Sy * Sy) - Sxy * (r2 * n - Sy * r3) + Sx * (r2 * Sy - Syy * r3)) / det;\n    const y = (Sxx * (r2 * n - Sy * r3) - r1 * (Sxy * n - Sy * Sx) + Sx * (Sxy * r3 - r2 * Sx)) / det;\n    const z = (Sxx * (Syy * r3 - r2 * Sy) - Sxy * (Sxy * r3 - r2 * Sx) + r1 * (Sxy * Sy - Syy * Sx)) / det;\n    return [x, y, z] as const;\n  }"
         },
