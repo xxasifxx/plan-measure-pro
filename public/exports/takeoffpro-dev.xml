@@ -1,0 +1,2679 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APIBusinessObjects xmlns="http://xmlns.oracle.com/Primavera/P6/V22.12/API/BusinessObjects" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Project>
+    <ObjectId>9001</ObjectId>
+    <Id>TAKEOFFPRO-DEV</Id>
+    <Name>TakeoffPro Build — Dev WBS (strict scoring)</Name>
+    <DataDate>2026-05-29T00:00:00</DataDate>
+    <PlannedStartDate>2025-09-01T08:00:00</PlannedStartDate>
+    <Activity>
+      <ObjectId>10000</ObjectId>
+      <Id>A0001</Id>
+      <Name>Organic signup → admin role</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Identity &amp; Access
+WBS: 01-identity-and-access/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: Auth.tsx, useAuth.tsx</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10001</ObjectId>
+      <Id>A0002</Id>
+      <Name>Invitation flow</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Identity &amp; Access
+WBS: 01-identity-and-access/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: Auth.tsx</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10002</ObjectId>
+      <Id>A0003</Id>
+      <Name>Roles populated</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Identity &amp; Access
+WBS: 01-identity-and-access/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: useAuth.tsx</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10003</ObjectId>
+      <Id>A0004</Id>
+      <Name>Role booleans correct</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Identity &amp; Access
+WBS: 01-identity-and-access/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: useAuth.tsx</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10004</ObjectId>
+      <Id>A0005</Id>
+      <Name>Biometric gate</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Identity &amp; Access
+WBS: 01-identity-and-access/Mobile
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: BiometricGate.tsx</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10005</ObjectId>
+      <Id>A0006</Id>
+      <Name>Password reset</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Identity &amp; Access
+WBS: 01-identity-and-access/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: ResetPassword.tsx</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10006</ObjectId>
+      <Id>A0007</Id>
+      <Name>RLS posture</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>30</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>6</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Identity &amp; Access
+WBS: 01-identity-and-access/Docs
+Source: brief-criterion
+Verdict: partial
+code_present=true  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10007</ObjectId>
+      <Id>A0008</Id>
+      <Name>`assign_owner_role` is called in both `Auth.tsx:103` and `useAuth.tsx:55` — one of these will always be a redundant no-o</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Identity &amp; Access
+WBS: 01-identity-and-access/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10008</ObjectId>
+      <Id>A0009</Id>
+      <Name>`BiometricGate` only runs the native path; there is no web-equivalent MFA or session idle timeout, leaving browser sessi</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>40</PlannedDuration>
+      <RemainingDuration>40</RemainingDuration>
+      <AtCompletionDuration>40</AtCompletionDuration>
+      <Notes>Stream: Identity &amp; Access
+WBS: 01-identity-and-access/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10009</ObjectId>
+      <Id>A0010</Id>
+      <Name>The `resident_engineer` role was added late and backfilled to all existing admins — new user invitations do not expose a</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Identity &amp; Access
+WBS: 01-identity-and-access/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10010</ObjectId>
+      <Id>A0011</Id>
+      <Name>`ResetPassword.tsx:46` shows a &quot;Loading recovery session…&quot; spinner indefinitely if `PASSWORD_RECOVERY` never fires (e.g.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Identity &amp; Access
+WBS: 01-identity-and-access/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10011</ObjectId>
+      <Id>A0012</Id>
+      <Name>Ownership + member union</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Portfolio &amp; PM Home
+WBS: 02-portfolio-and-pm-home/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: useProjects.ts</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10012</ObjectId>
+      <Id>A0013</Id>
+      <Name>Card stats</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Portfolio &amp; PM Home
+WBS: 02-portfolio-and-pm-home/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: useProjects.ts, Dashboard.tsx</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10013</ObjectId>
+      <Id>A0014</Id>
+      <Name>New Project dialog</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Portfolio &amp; PM Home
+WBS: 02-portfolio-and-pm-home/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: Dashboard.tsx</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10014</ObjectId>
+      <Id>A0015</Id>
+      <Name>Delete guard</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Portfolio &amp; PM Home
+WBS: 02-portfolio-and-pm-home/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: Dashboard.tsx</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10015</ObjectId>
+      <Id>A0016</Id>
+      <Name>PM inspector detail</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>30</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>6</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Portfolio &amp; PM Home
+WBS: 02-portfolio-and-pm-home/Docs
+Source: brief-criterion
+Verdict: partial
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: Dashboard.tsx</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10016</ObjectId>
+      <Id>A0017</Id>
+      <Name>Role badge</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Portfolio &amp; PM Home
+WBS: 02-portfolio-and-pm-home/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: Dashboard.tsx</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10017</ObjectId>
+      <Id>A0018</Id>
+      <Name>Inspector empty state</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Portfolio &amp; PM Home
+WBS: 02-portfolio-and-pm-home/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: Dashboard.tsx</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10018</ObjectId>
+      <Id>A0019</Id>
+      <Name>`useProjects` fetches all annotations for all user projects in a single unbounded query — will be slow/expensive at scal</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Portfolio &amp; PM Home
+WBS: 02-portfolio-and-pm-home/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10019</ObjectId>
+      <Id>A0020</Id>
+      <Name>`totalPages` in the PM inspector detail panel is hardcoded to `0` (`Dashboard.tsx:154`), making the &quot;pages annotated&quot; de</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Portfolio &amp; PM Home
+WBS: 02-portfolio-and-pm-home/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10020</ObjectId>
+      <Id>A0021</Id>
+      <Name>No React Query cache invalidation when a team member adds annotations in another session; `staleTime` defaults cause sta</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Portfolio &amp; PM Home
+WBS: 02-portfolio-and-pm-home/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10021</ObjectId>
+      <Id>A0022</Id>
+      <Name>`loadPendingReviewCounts` fires per-project-list render with all project IDs as a comma-joined cache key, recomputing on</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Portfolio &amp; PM Home
+WBS: 02-portfolio-and-pm-home/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10022</ObjectId>
+      <Id>A0023</Id>
+      <Name>Create project / PDF upload</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Project Onboarding
+WBS: 03-project-onboarding/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: useProjects.ts</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10023</ObjectId>
+      <Id>A0024</Id>
+      <Name>Load with offline fallback</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Project Onboarding
+WBS: 03-project-onboarding/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: Index.tsx</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10024</ObjectId>
+      <Id>A0025</Id>
+      <Name>TOC drag-select</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Project Onboarding
+WBS: 03-project-onboarding/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: PdfCanvas.tsx, Index.tsx, pdf-utils.ts</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10025</ObjectId>
+      <Id>A0026</Id>
+      <Name>Pay-item import</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Project Onboarding
+WBS: 03-project-onboarding/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10026</ObjectId>
+      <Id>A0027</Id>
+      <Name>Specs PDF upload + indexing</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Project Onboarding
+WBS: 03-project-onboarding/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: Index.tsx</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10027</ObjectId>
+      <Id>A0028</Id>
+      <Name>TOC / pay-items survive reload</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Project Onboarding
+WBS: 03-project-onboarding/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: useProject.ts, useProject.ts</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10028</ObjectId>
+      <Id>A0029</Id>
+      <Name>`extractPayItemsFromPage` is a pure heuristic regex scan of PDF text layers; non-standard table layouts (rotated text, s</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Project Onboarding
+WBS: 03-project-onboarding/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10029</ObjectId>
+      <Id>A0030</Id>
+      <Name>TOC parsing uses a hardcoded 5px Y-grouping tolerance and `console.log` debug noise in production — no structured loggin</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Project Onboarding
+WBS: 03-project-onboarding/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10030</ObjectId>
+      <Id>A0031</Id>
+      <Name>The &quot;Up to 4 subsequent pages&quot; pay-item scan is a magic number with no UI indication of where the scan stopped.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Project Onboarding
+WBS: 03-project-onboarding/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10031</ObjectId>
+      <Id>A0032</Id>
+      <Name>`specs_storage_path` is uploaded with `upsert: true` at fixed path `{projectId}/specs.pdf` — concurrent uploads silently</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Project Onboarding
+WBS: 03-project-onboarding/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10032</ObjectId>
+      <Id>A0033</Id>
+      <Name>drawable flag</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Pay Item Catalog
+WBS: 04-pay-item-catalog/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: types/project.ts, Toolbar.tsx</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10033</ObjectId>
+      <Id>A0034</Id>
+      <Name>Delete cascade</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Pay Item Catalog
+WBS: 04-pay-item-catalog/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: ProjectSidebar.tsx, useProject.ts</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10034</ObjectId>
+      <Id>A0035</Id>
+      <Name>Edit inline</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Pay Item Catalog
+WBS: 04-pay-item-catalog/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: ProjectSidebar.tsx</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10035</ObjectId>
+      <Id>A0036</Id>
+      <Name>DB persistence</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Pay Item Catalog
+WBS: 04-pay-item-catalog/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: useProject.ts</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10036</ObjectId>
+      <Id>A0037</Id>
+      <Name>Section-keyed colors</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Pay Item Catalog
+WBS: 04-pay-item-catalog/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: pdf-utils.ts</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10037</ObjectId>
+      <Id>A0038</Id>
+      <Name>Contract quantity denominator</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>30</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>6</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Pay Item Catalog
+WBS: 04-pay-item-catalog/Docs
+Source: brief-criterion
+Verdict: partial
+code_present=true  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10038</ObjectId>
+      <Id>A0039</Id>
+      <Name>Contract modifications</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Pay Item Catalog
+WBS: 04-pay-item-catalog/Docs
+Source: brief-criterion
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10039</ObjectId>
+      <Id>A0040</Id>
+      <Name>`updatePayItems` issues full `DELETE` + bulk `INSERT` on every change — data-loss race if two users edit pay items concu</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Pay Item Catalog
+WBS: 04-pay-item-catalog/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10040</ObjectId>
+      <Id>A0041</Id>
+      <Name>No contract-modification workflow exists; no audit trail for `contract_quantity` bumps.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>16</PlannedDuration>
+      <RemainingDuration>16</RemainingDuration>
+      <AtCompletionDuration>16</AtCompletionDuration>
+      <Notes>Stream: Pay Item Catalog
+WBS: 04-pay-item-catalog/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10041</ObjectId>
+      <Id>A0042</Id>
+      <Name>Pay-item color auto-assigned from `SECTION_COLORS` at import; no per-item color picker on mobile.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Pay Item Catalog
+WBS: 04-pay-item-catalog/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10042</ObjectId>
+      <Id>A0043</Id>
+      <Name>Cascade deletion done client-side via N individual `offlineMutate` calls, not a single server-side DELETE; unreliable on</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>40</PlannedDuration>
+      <RemainingDuration>40</RemainingDuration>
+      <AtCompletionDuration>40</AtCompletionDuration>
+      <Notes>Stream: Pay Item Catalog
+WBS: 04-pay-item-catalog/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10043</ObjectId>
+      <Id>A0044</Id>
+      <Name>Scale calibration</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Field Capture
+WBS: 05-field-capture/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: PdfCanvas.tsx, Toolbar.tsx</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10044</ObjectId>
+      <Id>A0045</Id>
+      <Name>Polygon with CY depth prompt</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Field Capture
+WBS: 05-field-capture/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: PdfCanvas.tsx</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10045</ObjectId>
+      <Id>A0046</Id>
+      <Name>Drag-handle editing</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Field Capture
+WBS: 05-field-capture/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: PdfCanvas.tsx, PdfCanvas.tsx</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10046</ObjectId>
+      <Id>A0047</Id>
+      <Name>Undo/redo with DB sync</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Field Capture
+WBS: 05-field-capture/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: useProject.ts</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10047</ObjectId>
+      <Id>A0048</Id>
+      <Name>Realtime multi-user sync</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Field Capture
+WBS: 05-field-capture/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: useProject.ts, useProject.ts</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10048</ObjectId>
+      <Id>A0049</Id>
+      <Name>GPS calibration overlay</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Field Capture
+WBS: 05-field-capture/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: GpsCalibration.tsx, GpsTraceControls.tsx, PdfCanvas.tsx</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10049</ObjectId>
+      <Id>A0050</Id>
+      <Name>Manual quantity override</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Field Capture
+WBS: 05-field-capture/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: PdfCanvas.tsx</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10050</ObjectId>
+      <Id>A0051</Id>
+      <Name>readOnly mode</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Field Capture
+WBS: 05-field-capture/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: Index.tsx, Toolbar.tsx</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10051</ObjectId>
+      <Id>A0052</Id>
+      <Name>`PdfCanvas` is 1,426 lines with pointer/touch/draw/GPS/TOC/drag logic co-located — extremely hard to test in isolation.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>16</PlannedDuration>
+      <RemainingDuration>16</RemainingDuration>
+      <AtCompletionDuration>16</AtCompletionDuration>
+      <Notes>Stream: Field Capture
+WBS: 05-field-capture/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10052</ObjectId>
+      <Id>A0053</Id>
+      <Name>`buildGeoCalibration` silently throws on degenerate transforms (`GpsCalibration.tsx:72–79`); no diagnostic when affine m</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Field Capture
+WBS: 05-field-capture/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10053</ObjectId>
+      <Id>A0054</Id>
+      <Name>Undo stack is per-session and per-device only; undoing on one device does not roll back another user's view.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Field Capture
+WBS: 05-field-capture/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10054</ObjectId>
+      <Id>A0055</Id>
+      <Name>&quot;Copy calibration to pages&quot; does a bulk DB delete + re-insert with no confirmation of which pages were overwritten.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Field Capture
+WBS: 05-field-capture/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10055</ObjectId>
+      <Id>A0056</Id>
+      <Name>**`daily_report_snapshots` table missing from generated types** — queried with `as any` cast; if the table doesn't exist</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Daily Report Lifecycle
+WBS: 06-daily-report-lifecycle/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10056</ObjectId>
+      <Id>A0057</Id>
+      <Name>**Role enforcement is client-only** — `useApproveReport`/`useRejectReport` do a plain `update` with no server-side RLS p</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>8</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Daily Report Lifecycle
+WBS: 06-daily-report-lifecycle/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10057</ObjectId>
+      <Id>A0058</Id>
+      <Name>**`rejected_at` not cleared on reopen** — `useDailyReport.reopen` only sets `status: 'draft'`; `rejected_at` and `reject</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>16</PlannedDuration>
+      <RemainingDuration>16</RemainingDuration>
+      <AtCompletionDuration>16</AtCompletionDuration>
+      <Notes>Stream: Daily Report Lifecycle
+WBS: 06-daily-report-lifecycle/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10058</ObjectId>
+      <Id>A0059</Id>
+      <Name>**No push notification to inspector on RE decision** — `useApproveReport` and `useRejectReport` only invalidate React Qu</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Daily Report Lifecycle
+WBS: 06-daily-report-lifecycle/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10059</ObjectId>
+      <Id>A0060</Id>
+      <Name>**ProjectControls variance uses raw annotations, not approved quantities** — `ProjectControls.tsx:180-187` sums `manual_</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Quantity to Payment
+WBS: 07-quantity-to-payment/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10060</ObjectId>
+      <Id>A0061</Id>
+      <Name>**SummaryPanel operates on live annotations, not `v_approved_pay_item_quantities`** — the embedded summary in the main t</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Quantity to Payment
+WBS: 07-quantity-to-payment/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10061</ObjectId>
+      <Id>A0062</Id>
+      <Name>**No payment-period scoping** — there is no date-range filter on approved quantity exports; a pay estimate must be compu</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Quantity to Payment
+WBS: 07-quantity-to-payment/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10062</ObjectId>
+      <Id>A0063</Id>
+      <Name>**View definition not in repo** — `v_approved_pay_item_quantities` is consumed everywhere but its SQL is not in `supabas</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>8</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Quantity to Payment
+WBS: 07-quantity-to-payment/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10063</ObjectId>
+      <Id>A0064</Id>
+      <Name>**`annotation_id` linkage is missing in practice** — the `by_annotation` IndexedDB index implies photos should be tied t</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Photo Evidence
+WBS: 08-photo-evidence/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10064</ObjectId>
+      <Id>A0065</Id>
+      <Name>**AI call is fire-and-forget with no retry** — if `tag-photo` fails (rate limit, credits exhausted), the error is swallo</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Photo Evidence
+WBS: 08-photo-evidence/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10065</ObjectId>
+      <Id>A0066</Id>
+      <Name>**Gallery lives only in ProjectControls** — the photo tab is buried in the PM-facing controls hub; inspectors using `Dai</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Photo Evidence
+WBS: 08-photo-evidence/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10066</ObjectId>
+      <Id>A0067</Id>
+      <Name>**Offline blob serialization unresolved** — IndexedDB store exists but camera blob is never serialized to it; offline ca</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>40</PlannedDuration>
+      <RemainingDuration>40</RemainingDuration>
+      <AtCompletionDuration>40</AtCompletionDuration>
+      <Notes>Stream: Photo Evidence
+WBS: 08-photo-evidence/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10067</ObjectId>
+      <Id>A0068</Id>
+      <Name>**Entire PDF loaded into memory** — `pdfjs-dist` loads the full binary; a 1,200-page NJDOT spec PDF can consume 200–400 </Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Standard Specifications
+WBS: 09-standard-specifications/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10068</ObjectId>
+      <Id>A0069</Id>
+      <Name>**Search highlight is canvas-drawn, not DOM-native** — the highlight overlay re-renders the entire page canvas on every </Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>40</PlannedDuration>
+      <RemainingDuration>40</RemainingDuration>
+      <AtCompletionDuration>40</AtCompletionDuration>
+      <Notes>Stream: Standard Specifications
+WBS: 09-standard-specifications/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10069</ObjectId>
+      <Id>A0070</Id>
+      <Name>**`extractAllText` runs on the main thread** — though batched, there is no Web Worker; a 900-page extraction still block</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Standard Specifications
+WBS: 09-standard-specifications/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10070</ObjectId>
+      <Id>A0071</Id>
+      <Name>**No spec PDF upload UI in this stream** — `specs_storage_path` must be set externally (e.g., through the admin panel or</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Standard Specifications
+WBS: 09-standard-specifications/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10071</ObjectId>
+      <Id>A0072</Id>
+      <Name>**`fetchDocumentVersions` fetches all project documents** — the version-chain query selects the entire `documents` table</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Document Management
+WBS: 10-document-management/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10072</ObjectId>
+      <Id>A0073</Id>
+      <Name>**Blob orphan risk on insert failure** — `runUploads` in `Documents.tsx` does a best-effort `remove` on insert failure, </Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Document Management
+WBS: 10-document-management/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10073</ObjectId>
+      <Id>A0074</Id>
+      <Name>**No folder-level permission model** — all folders within a project share the same manager/inspector role split; there i</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Document Management
+WBS: 10-document-management/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10074</ObjectId>
+      <Id>A0075</Id>
+      <Name>**Preview uses signed URLs with 1-hour TTL** — if a user keeps a preview modal open for &gt; 1 hour (e.g., reviewing a larg</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>8</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Document Management
+WBS: 10-document-management/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10075</ObjectId>
+      <Id>A0076</Id>
+      <Name>**Drag mutation race** — `GanttChart.tsx:88` mutates `cpm.byId` in-place during drag; parent re-render resets position s</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Schedule Management
+WBS: 11-schedule-management/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10076</ObjectId>
+      <Id>A0077</Id>
+      <Name>**`as any` casts on every Supabase call** — generated types don't yet include schedule tables; full persistence layer un</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Schedule Management
+WBS: 11-schedule-management/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10077</ObjectId>
+      <Id>A0078</Id>
+      <Name>**CPM not persisted automatically** — `persistCpm` is a separate manual mutation; tab close after import leaves `is_crit</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Schedule Management
+WBS: 11-schedule-management/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10078</ObjectId>
+      <Id>A0079</Id>
+      <Name>**TIA narrative is a static template** — `buildTia` (tia.ts:23) inserts only the first direct successor; multi-path impa</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Schedule Management
+WBS: 11-schedule-management/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10079</ObjectId>
+      <Id>A0080</Id>
+      <Name>**Hardcoded CPI/SPI** — primary schedule KPI tile shows `CPI 1.03 · SPI 0.98` unconditionally; real values from `analysi</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Project Health and Controls
+WBS: 12-project-health-and-controls/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10080</ObjectId>
+      <Id>A0081</Id>
+      <Name>**`computeExpectedPct` provenance unclear** — `dashboard` memo calls it but function is not visible in first 389 lines; </Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Project Health and Controls
+WBS: 12-project-health-and-controls/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10081</ObjectId>
+      <Id>A0082</Id>
+      <Name>**No pagination on scorecard metrics** — `limit(60)` silently drops older data on long-running projects.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Project Health and Controls
+WBS: 12-project-health-and-controls/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10082</ObjectId>
+      <Id>A0083</Id>
+      <Name>**Photo AI confidence threshold not enforced** — `ai_confidence` read but never used to filter or warn in UI.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Project Health and Controls
+WBS: 12-project-health-and-controls/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10083</ObjectId>
+      <Id>A0084</Id>
+      <Name>**No round-trip test suite** — P6 import compatibility asserted only in comments; schema regression caught only by contr</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>16</PlannedDuration>
+      <RemainingDuration>16</RemainingDuration>
+      <AtCompletionDuration>16</AtCompletionDuration>
+      <Notes>Stream: Data Export and Interoperability
+WBS: 13-data-export-and-interoperability/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10084</ObjectId>
+      <Id>A0085</Id>
+      <Name>**`applyDailyReportsToP6` mutates the live DOM** — shared state; double-apply stacks silently.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Data Export and Interoperability
+WBS: 13-data-export-and-interoperability/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10085</ObjectId>
+      <Id>A0086</Id>
+      <Name>**`jsPDF` `doc.save()` bypasses `saveExport`** — `writePdfFromRows` calls `doc.save()` directly; on native, PDF goes to </Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>40</PlannedDuration>
+      <RemainingDuration>40</RemainingDuration>
+      <AtCompletionDuration>40</AtCompletionDuration>
+      <Notes>Stream: Data Export and Interoperability
+WBS: 13-data-export-and-interoperability/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10086</ObjectId>
+      <Id>A0087</Id>
+      <Name>**`as-of-date` cutoff is UI-only** — never validated server-side; blank value returns all-time approved quantities.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Data Export and Interoperability
+WBS: 13-data-export-and-interoperability/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10087</ObjectId>
+      <Id>A0088</Id>
+      <Name>**`pixelsPerFoot` is a single global scalar** — assumes uniform scale; scanned/tilted drawings produce systematic invisi</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Measurement and Geometry Engine
+WBS: 14-measurement-and-geometry-engine/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10088</ObjectId>
+      <Id>A0089</Id>
+      <Name>**`estimateError` reports pixels, not feet** — docstring says &quot;rough feet&quot; but returns plan-pixel residual (geo-transfor</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Measurement and Geometry Engine
+WBS: 14-measurement-and-geometry-engine/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10089</ObjectId>
+      <Id>A0090</Id>
+      <Name>**No coordinate normalization spec** — `PdfCanvas.tsx` renders raw pixel coordinates; zoom-independent normalization ref</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Measurement and Geometry Engine
+WBS: 14-measurement-and-geometry-engine/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10090</ObjectId>
+      <Id>A0091</Id>
+      <Name>**Kalman state is in-memory only** — `KalmanState` never persisted; filter cold-starts on every `GpsTraceControls` remou</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Measurement and Geometry Engine
+WBS: 14-measurement-and-geometry-engine/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10091</ObjectId>
+      <Id>A0092</Id>
+      <Name>**`daily_reports` capped at 30 rows** — inspectors reviewing older history offline see gaps with no warning.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>40</PlannedDuration>
+      <RemainingDuration>40</RemainingDuration>
+      <AtCompletionDuration>40</AtCompletionDuration>
+      <Notes>Stream: Offline and Native Durability
+WBS: 15-offline-and-native-durability/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10092</ObjectId>
+      <Id>A0093</Id>
+      <Name>**No conflict resolution UI** — `OutboxStatus` includes `&quot;conflict&quot;` but `mutation-client.ts` never sets it; conflicts l</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Offline and Native Durability
+WBS: 15-offline-and-native-durability/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10093</ObjectId>
+      <Id>A0094</Id>
+      <Name>**IDB schema is v2 with no documented migration path** — `getDB` only handles `oldVersion &lt; 1` and `&lt; 2`; a future v3 ri</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>8</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Offline and Native Durability
+WBS: 15-offline-and-native-durability/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10094</ObjectId>
+      <Id>A0095</Id>
+      <Name>**`jsPDF.save()` bypass** — generated PDFs aren't warmable and won't be available offline.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>40</PlannedDuration>
+      <RemainingDuration>40</RemainingDuration>
+      <AtCompletionDuration>40</AtCompletionDuration>
+      <Notes>Stream: Offline and Native Durability
+WBS: 15-offline-and-native-durability/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10095</ObjectId>
+      <Id>A0096</Id>
+      <Name>Tab switching / PDF persistence</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Mobile Field Ergonomics
+WBS: 16-mobile-field-ergonomics/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10096</ObjectId>
+      <Id>A0097</Id>
+      <Name>Active pay item chip</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Mobile Field Ergonomics
+WBS: 16-mobile-field-ergonomics/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10097</ObjectId>
+      <Id>A0098</Id>
+      <Name>Badge counts</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Mobile Field Ergonomics
+WBS: 16-mobile-field-ergonomics/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10098</ObjectId>
+      <Id>A0099</Id>
+      <Name>Zoom clamp</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Mobile Field Ergonomics
+WBS: 16-mobile-field-ergonomics/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10099</ObjectId>
+      <Id>A0100</Id>
+      <Name>Calibration chip tap</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Mobile Field Ergonomics
+WBS: 16-mobile-field-ergonomics/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10100</ObjectId>
+      <Id>A0101</Id>
+      <Name>No enforced minimum touch-target size on annotation handles; overlapping annotations on zoomed-out sheets are very hard </Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Mobile Field Ergonomics
+WBS: 16-mobile-field-ergonomics/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10101</ObjectId>
+      <Id>A0102</Id>
+      <Name>`useIsMobile` uses hard 768 px breakpoint with no resize listener; tablet rotation doesn't re-evaluate.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Mobile Field Ergonomics
+WBS: 16-mobile-field-ergonomics/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10102</ObjectId>
+      <Id>A0103</Id>
+      <Name>`MobileToolbar` duplicates zoom logic from desktop `Toolbar`; no shared `useZoom` hook.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Mobile Field Ergonomics
+WBS: 16-mobile-field-ergonomics/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10103</ObjectId>
+      <Id>A0104</Id>
+      <Name>`Demo.tsx` reimplements full mobile layout independently rather than reusing `Index.tsx` — two maintenance surfaces.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Mobile Field Ergonomics
+WBS: 16-mobile-field-ergonomics/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10104</ObjectId>
+      <Id>A0105</Id>
+      <Name>Bell + realtime subscribe</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Notifications &amp; Presence
+WBS: 17-notifications-and-presence/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10105</ObjectId>
+      <Id>A0106</Id>
+      <Name>markRead / markAllRead</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Notifications &amp; Presence
+WBS: 17-notifications-and-presence/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10106</ObjectId>
+      <Id>A0107</Id>
+      <Name>Navigation on click</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Notifications &amp; Presence
+WBS: 17-notifications-and-presence/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10107</ObjectId>
+      <Id>A0108</Id>
+      <Name>Native push registration</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Notifications &amp; Presence
+WBS: 17-notifications-and-presence/Mobile
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: lib/native/push.ts</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10108</ObjectId>
+      <Id>A0109</Id>
+      <Name>send-push edge function</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Notifications &amp; Presence
+WBS: 17-notifications-and-presence/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10109</ObjectId>
+      <Id>A0110</Id>
+      <Name>Presence / online users</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Notifications &amp; Presence
+WBS: 17-notifications-and-presence/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10110</ObjectId>
+      <Id>A0111</Id>
+      <Name>No confirmed trigger that auto-inserts into `notifications`; notification pipeline may be entirely manual/missing.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>16</PlannedDuration>
+      <RemainingDuration>16</RemainingDuration>
+      <AtCompletionDuration>16</AtCompletionDuration>
+      <Notes>Stream: Notifications &amp; Presence
+WBS: 17-notifications-and-presence/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10111</ObjectId>
+      <Id>A0112</Id>
+      <Name>Presence `name` always `''`; online user list shows &quot;User&quot; for everyone.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Notifications &amp; Presence
+WBS: 17-notifications-and-presence/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10112</ObjectId>
+      <Id>A0113</Id>
+      <Name>`useNotifications` polls every 60s on web; poor UX fallback for time-sensitive RE actions.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Notifications &amp; Presence
+WBS: 17-notifications-and-presence/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10113</ObjectId>
+      <Id>A0114</Id>
+      <Name>`send-push` reads `FCM_SERVER_KEY` but FCM HTTP v1 requires OAuth2 service-account tokens, not legacy server key; likely</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Notifications &amp; Presence
+WBS: 17-notifications-and-presence/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10114</ObjectId>
+      <Id>A0115</Id>
+      <Name>Negative lag / M-code check</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Compliance &amp; Audit
+WBS: 18-compliance-and-audit/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10115</ObjectId>
+      <Id>A0116</Id>
+      <Name>DCMA 14-point</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Compliance &amp; Audit
+WBS: 18-compliance-and-audit/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified
+Evidence: lib/schedule/analysis/dcma.ts</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10116</ObjectId>
+      <Id>A0117</Id>
+      <Name>Approve/reject timestamps + reviewer</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Compliance &amp; Audit
+WBS: 18-compliance-and-audit/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10117</ObjectId>
+      <Id>A0118</Id>
+      <Name>Snapshot freeze</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Compliance &amp; Audit
+WBS: 18-compliance-and-audit/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10118</ObjectId>
+      <Id>A0119</Id>
+      <Name>Drift detection</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Compliance &amp; Audit
+WBS: 18-compliance-and-audit/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10119</ObjectId>
+      <Id>A0120</Id>
+      <Name>M-code detection relies on `activity_id` prefix; non-standard prefix (`AD-M100`) breaks check with no fallback to name m</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Compliance &amp; Audit
+WBS: 18-compliance-and-audit/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10120</ObjectId>
+      <Id>A0121</Id>
+      <Name>Approval fields are plain mutable columns; admin could UPDATE `approved_at` retroactively — no immutable audit trail.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>16</PlannedDuration>
+      <RemainingDuration>16</RemainingDuration>
+      <AtCompletionDuration>16</AtCompletionDuration>
+      <Notes>Stream: Compliance &amp; Audit
+WBS: 18-compliance-and-audit/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10121</ObjectId>
+      <Id>A0122</Id>
+      <Name>DCMA runs client-side on full activity set; 1000+ task schedules block JS thread with no web-worker offload.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Compliance &amp; Audit
+WBS: 18-compliance-and-audit/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10122</ObjectId>
+      <Id>A0123</Id>
+      <Name>`reject_reason` is freeform with no character minimum at mutation layer; empty-string rejections allowed.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Compliance &amp; Audit
+WBS: 18-compliance-and-audit/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10123</ObjectId>
+      <Id>A0124</Id>
+      <Name>WelcomeCarousel gating</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Onboarding &amp; Tutorials
+WBS: 19-onboarding-and-tutorials/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10124</ObjectId>
+      <Id>A0125</Id>
+      <Name>Role filtering</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Onboarding &amp; Tutorials
+WBS: 19-onboarding-and-tutorials/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10125</ObjectId>
+      <Id>A0126</Id>
+      <Name>Guided tour auto-start</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Onboarding &amp; Tutorials
+WBS: 19-onboarding-and-tutorials/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10126</ObjectId>
+      <Id>A0127</Id>
+      <Name>Demo 12-step walkthrough</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Onboarding &amp; Tutorials
+WBS: 19-onboarding-and-tutorials/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10127</ObjectId>
+      <Id>A0128</Id>
+      <Name>NativeFirstRun shown once</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Onboarding &amp; Tutorials
+WBS: 19-onboarding-and-tutorials/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10128</ObjectId>
+      <Id>A0129</Id>
+      <Name>`GuidedTour` polls `querySelector` every 500ms; missing `data-tour` attribute (e.g. collapsed sidebar) means tooltip nev</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Onboarding &amp; Tutorials
+WBS: 19-onboarding-and-tutorials/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10129</ObjectId>
+      <Id>A0130</Id>
+      <Name>`useTour` stores completion only in `localStorage`; clearing storage replays tour; second device sees it fresh.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Onboarding &amp; Tutorials
+WBS: 19-onboarding-and-tutorials/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10130</ObjectId>
+      <Id>A0131</Id>
+      <Name>`WelcomeCarousel` hard-codes 5 slides; adding a new role requires editing component.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Onboarding &amp; Tutorials
+WBS: 19-onboarding-and-tutorials/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10131</ObjectId>
+      <Id>A0132</Id>
+      <Name>`Demo.tsx` is ~400 lines of standalone workspace duplication; core takeoff UI changes require parallel updates.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Onboarding &amp; Tutorials
+WBS: 19-onboarding-and-tutorials/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10132</ObjectId>
+      <Id>A0133</Id>
+      <Name>Landing page</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Sales &amp; Pitch
+WBS: 20-sales-and-pitch/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10133</ObjectId>
+      <Id>A0134</Id>
+      <Name>Demo CTA linkage</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Sales &amp; Pitch
+WBS: 20-sales-and-pitch/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10134</ObjectId>
+      <Id>A0135</Id>
+      <Name>McfaPitch / FajarPitch</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Sales &amp; Pitch
+WBS: 20-sales-and-pitch/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10135</ObjectId>
+      <Id>A0136</Id>
+      <Name>P6XmlDemo</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Sales &amp; Pitch
+WBS: 20-sales-and-pitch/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10136</ObjectId>
+      <Id>A0137</Id>
+      <Name>sitemap.xml completeness</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Sales &amp; Pitch
+WBS: 20-sales-and-pitch/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10137</ObjectId>
+      <Id>A0138</Id>
+      <Name>llms.txt accuracy</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Sales &amp; Pitch
+WBS: 20-sales-and-pitch/Docs
+Source: brief-criterion
+Verdict: implemented
+code_present=true  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10138</ObjectId>
+      <Id>A0139</Id>
+      <Name>`demo_requests` table referenced but no migration found; contact form may be silently broken in production.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>8</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Sales &amp; Pitch
+WBS: 20-sales-and-pitch/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10139</ObjectId>
+      <Id>A0140</Id>
+      <Name>`FajarPitch.tsx` uses deterministic seed to generate fake equipment availability; if interpreted as real fleet data, mis</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Sales &amp; Pitch
+WBS: 20-sales-and-pitch/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10140</ObjectId>
+      <Id>A0141</Id>
+      <Name>`McfaPitch` and `FajarPitch` hard-code proposal specifics in source; updating pricing/scope requires code deploy rather </Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>24</PlannedDuration>
+      <RemainingDuration>24</RemainingDuration>
+      <AtCompletionDuration>24</AtCompletionDuration>
+      <Notes>Stream: Sales &amp; Pitch
+WBS: 20-sales-and-pitch/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10141</ObjectId>
+      <Id>A0142</Id>
+      <Name>`llms.txt` and `sitemap.xml` hard-code production domain (`draw-quantify-dash.lovable.app`); staging/preview deployments</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>8</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: Sales &amp; Pitch
+WBS: 20-sales-and-pitch/Remaining
+Source: brief-risk
+Verdict: missing
+code_present=false  verified_e2e=false
+Verification status: unverified</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10142</ObjectId>
+      <Id>A0143</Id>
+      <Name>Deliver: Walk the site. Measure automatically.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>40</PlannedDuration>
+      <RemainingDuration>40</RemainingDuration>
+      <AtCompletionDuration>40</AtCompletionDuration>
+      <Notes>Stream: 21 Marketing Debt
+WBS: 21-marketing-debt/05-field-capture
+Source: marketing-promise
+Verdict: undelivered
+code_present=false  verified_e2e=false
+Verification status: unverified
+Marketing claim age: 68d</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10143</ObjectId>
+      <Id>A0144</Id>
+      <Name>Deliver: We'll configure a walkthrough around your contract.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>40</PlannedDuration>
+      <RemainingDuration>40</RemainingDuration>
+      <AtCompletionDuration>40</AtCompletionDuration>
+      <Notes>Stream: 21 Marketing Debt
+WBS: 21-marketing-debt/19-onboarding-and-tutorials
+Source: marketing-promise
+Verdict: undelivered
+code_present=false  verified_e2e=false
+Verification status: unverified
+Marketing claim age: 68d</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10144</ObjectId>
+      <Id>A0145</Id>
+      <Name>Deliver: [Landing](/landing): Product overview, features, FAQ, and demo request.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>40</PlannedDuration>
+      <RemainingDuration>40</RemainingDuration>
+      <AtCompletionDuration>40</AtCompletionDuration>
+      <Notes>Stream: 21 Marketing Debt
+WBS: 21-marketing-debt/Unmapped
+Source: marketing-promise
+Verdict: undelivered
+code_present=false  verified_e2e=false
+Verification status: unverified
+Marketing claim age: 2d</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10145</ObjectId>
+      <Id>A0146</Id>
+      <Name>Deliver: [Interactive Demo](/demo): Standalone walkthrough of field setup and measurement.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>40</PlannedDuration>
+      <RemainingDuration>40</RemainingDuration>
+      <AtCompletionDuration>40</AtCompletionDuration>
+      <Notes>Stream: 21 Marketing Debt
+WBS: 21-marketing-debt/03-project-onboarding
+Source: marketing-promise
+Verdict: undelivered
+code_present=false  verified_e2e=false
+Verification status: unverified
+Marketing claim age: 2d</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10146</ObjectId>
+      <Id>A0147</Id>
+      <Name>Deliver: [Sign in](/auth): Authentication for existing teams.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>40</PlannedDuration>
+      <RemainingDuration>40</RemainingDuration>
+      <AtCompletionDuration>40</AtCompletionDuration>
+      <Notes>Stream: 21 Marketing Debt
+WBS: 21-marketing-debt/01-identity-and-access
+Source: marketing-promise
+Verdict: undelivered
+code_present=false  verified_e2e=false
+Verification status: unverified
+Marketing claim age: 2d</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10147</ObjectId>
+      <Id>A0148</Id>
+      <Name>Deliver: [MCFA Pitch](/mcfa): Partner-specific overview for MCFA.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>40</PlannedDuration>
+      <RemainingDuration>40</RemainingDuration>
+      <AtCompletionDuration>40</AtCompletionDuration>
+      <Notes>Stream: 21 Marketing Debt
+WBS: 21-marketing-debt/Unmapped
+Source: marketing-promise
+Verdict: undelivered
+code_present=false  verified_e2e=false
+Verification status: unverified
+Marketing claim age: 2d</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10148</ObjectId>
+      <Id>A0149</Id>
+      <Name>Deliver: [Fajar Pitch](/fajar): Partner-specific overview for Fajar.</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>40</PlannedDuration>
+      <RemainingDuration>40</RemainingDuration>
+      <AtCompletionDuration>40</AtCompletionDuration>
+      <Notes>Stream: 21 Marketing Debt
+WBS: 21-marketing-debt/Unmapped
+Source: marketing-promise
+Verdict: undelivered
+code_present=false  verified_e2e=false
+Verification status: unverified
+Marketing claim age: 2d</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10149</ObjectId>
+      <Id>A0150</Id>
+      <Name>Deliver: [PMXML Demo](/p6-xml): Primavera P6 XML round-trip demo (DCMA, progress, RE memo).</Name>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>40</PlannedDuration>
+      <RemainingDuration>40</RemainingDuration>
+      <AtCompletionDuration>40</AtCompletionDuration>
+      <Notes>Stream: 21 Marketing Debt
+WBS: 21-marketing-debt/11-schedule-management
+Source: marketing-promise
+Verdict: undelivered
+code_present=false  verified_e2e=false
+Verification status: unverified
+Marketing claim age: 2d</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10150</ObjectId>
+      <Id>A0151</Id>
+      <Name>XER ingest engine (scrapped pivot)</Name>
+      <Status>Completed</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-04-01T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-20T00:00:00</ActualFinishDate>
+      <PlannedDuration>240</PlannedDuration>
+      <RemainingDuration>0</RemainingDuration>
+      <AtCompletionDuration>240</AtCompletionDuration>
+      <Notes>Stream: 99 Cross-cutting
+WBS: 99-cross-cutting/Narrative
+Source: cross-cutting
+Verdict: implemented
+code_present=true  verified_e2e=true
+Verification status: unverified
+Note: Built then deleted when format proved hostile; informed PMXML pivot.</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10151</ObjectId>
+      <Id>A0152</Id>
+      <Name>PMXML pivot — replace XER with Oracle PMXML round-trip</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>60</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-15T00:00:00</ActualStartDate>
+      <PlannedDuration>112</PlannedDuration>
+      <RemainingDuration>45</RemainingDuration>
+      <AtCompletionDuration>112</AtCompletionDuration>
+      <Notes>Stream: 99 Cross-cutting
+WBS: 99-cross-cutting/Narrative
+Source: cross-cutting
+Verdict: partial
+code_present=true  verified_e2e=false
+Verification status: unverified
+Note: Parser + serializer + apply-progress shipped; baseline import + UDF round-trip remain.</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10152</ObjectId>
+      <Id>A0153</Id>
+      <Name>20-stream comprehension pass (this artefact set)</Name>
+      <Status>Completed</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-28T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
+      <PlannedDuration>16</PlannedDuration>
+      <RemainingDuration>0</RemainingDuration>
+      <AtCompletionDuration>16</AtCompletionDuration>
+      <Notes>Stream: 99 Cross-cutting
+WBS: 99-cross-cutting/Narrative
+Source: cross-cutting
+Verdict: implemented
+code_present=true  verified_e2e=true
+Verification status: unverified
+Note: Briefs, wbs-v2.json, comprehension-report.md.</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>10153</ObjectId>
+      <Id>A0154</Id>
+      <Name>Dev WBS authoring (recursive — this effort)</Name>
+      <Status>In Progress</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <PlannedDuration>8</PlannedDuration>
+      <RemainingDuration>4</RemainingDuration>
+      <AtCompletionDuration>8</AtCompletionDuration>
+      <Notes>Stream: 99 Cross-cutting
+WBS: 99-cross-cutting/Narrative
+Source: cross-cutting
+Verdict: partial
+code_present=true  verified_e2e=false
+Verification status: unverified
+Note: Strict-rule scoring + marketing-debt branch + PMXML self-proof.</Notes>
+    </Activity>
+  </Project>
+</APIBusinessObjects>
