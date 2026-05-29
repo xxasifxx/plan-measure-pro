@@ -1,0 +1,652 @@
+{
+  "agent": "ast-pdf-canvas",
+  "generatedAt": "2026-05-29T17:45:38.597Z",
+  "fileCount": 5,
+  "files": [
+    {
+      "file": "src/components/PdfCanvas.tsx",
+      "loc": 1427,
+      "functions": [
+        {
+          "name": "PdfCanvas",
+          "line": 42,
+          "bodyPreview": "{\n  const pdfCanvasRef = useRef<HTMLCanvasElement>(null);\n  const overlayCanvasRef = useRef<HTMLCanvasElement>(null);\n  const containerRef = useRef<HTMLDivElement>(null);\n  const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });\n  const [drawingPoints, setDrawingPoints] = useState<PointXY[]>([]);"
+        },
+        {
+          "name": "getCanvasPos",
+          "wrapper": "useCallback",
+          "line": 147,
+          "bodyPreview": "{\n    const rect = overlayCanvasRef.current!.getBoundingClientRect();\n    return {\n      x: (e.clientX - rect.left) / scale,\n      y: (e.clientY - rect.top) / scale,\n    };\n  }"
+        },
+        {
+          "name": "getTouchCanvasPos",
+          "wrapper": "useCallback",
+          "line": 156,
+          "bodyPreview": "{\n    const rect = overlayCanvasRef.current!.getBoundingClientRect();\n    return {\n      x: (touch.clientX - rect.left) / scale,\n      y: (touch.clientY - rect.top) / scale,\n    };\n  }"
+        },
+        {
+          "name": "s",
+          "wrapper": "useCallback",
+          "line": 165,
+          "bodyPreview": "({ x: pt.x * scale, y: pt.y * scale })"
+        },
+        {
+          "name": "hitTestAnnotations",
+          "wrapper": "useCallback",
+          "line": 168,
+          "bodyPreview": "{\n    const pageAnnotations = annotations.filter(a => a.page === currentPage && a.type !== 'manual');\n    // Reverse order so topmost drawn annotation is selected first\n    for (let i = pageAnnotations.length - 1; i >= 0; i--) {\n      const ann = pageAnnotations[i];\n      if (ann.type === 'count') {\n        if (pointToMarkerDistance(pos, ann.points[0]) <= MARKER_RADIUS) return ann;\n      } else if (ann.type === 'label' && ann.points.length >= 2) {"
+        },
+        {
+          "name": "drawTocRect",
+          "wrapper": null,
+          "line": 466,
+          "bodyPreview": "{\n      const sx1 = x1 * scale, sy1 = y1 * scale, sx2 = x2 * scale, sy2 = y2 * scale;\n      ctx.strokeStyle = '#3b82f6';\n      ctx.fillStyle = 'rgba(59, 130, 246, 0.1)';\n      ctx.lineWidth = 2;\n      ctx.setLineDash([6, 3]);\n      ctx.strokeRect(sx1, sy1, sx2 - sx1, sy2 - sy1);\n      ctx.fillRect(sx1, sy1, sx2 - sx1, sy2 - sy1);"
+        },
+        {
+          "name": "guardDrawing",
+          "wrapper": "useCallback",
+          "line": 530,
+          "bodyPreview": "{\n    if (!activePayItemId || !payItems.find(p => p.id === activePayItemId)) {\n      toast({ title: 'No pay item selected', description: 'Select a pay item in the sidebar before drawing.', variant: 'destructive' });\n      return false;\n    }\n    if (needsCalibration && !calibration) {\n      toast({ title: 'No calibration set', description: 'Calibrate the scale on this page before measuring.', variant: 'destructive' });\n      return false;"
+        },
+        {
+          "name": "hitTestHandles",
+          "wrapper": "useCallback",
+          "line": 543,
+          "bodyPreview": "{\n    if (!selectedAnnotationId) return null;\n    const ann = annotations.find(a => a.id === selectedAnnotationId);\n    if (!ann || (ann.type !== 'line' && ann.type !== 'polygon' && ann.type !== 'label')) return null;\n    for (let i = 0; i < ann.points.length; i++) {\n      if (distancePx(pos, ann.points[i]) <= HANDLE_HIT_RADIUS) {\n        return { annotationId: ann.id, pointIndex: i };\n      }"
+        },
+        {
+          "name": "handleClickAtPos",
+          "wrapper": "useCallback",
+          "line": 556,
+          "bodyPreview": "{\n    // Intercept for GPS calibration plan-tap\n    if (onGpsPlanTap) {\n      onGpsPlanTap(pos);\n      return;\n    }\n\n    if (toolMode === 'pan' || toolMode === 'tocSelect') return;"
+        },
+        {
+          "name": "handleCanvasClick",
+          "wrapper": "useCallback",
+          "line": 634,
+          "bodyPreview": "{\n    if (touchStateRef.current.suppressClick) {\n      touchStateRef.current.suppressClick = false;\n      return;\n    }\n    if (handleDragJustFinished.current) {\n      handleDragJustFinished.current = false;\n      return;"
+        },
+        {
+          "name": "handleDoubleClickAtPos",
+          "wrapper": "useCallback",
+          "line": 647,
+          "bodyPreview": "{\n    if (toolMode !== 'polygon' || drawingPoints.length < 3) return;\n    if (!calibration) {\n      toast({ title: 'No calibration set', description: 'Calibrate the scale before measuring areas.', variant: 'destructive' });\n      setDrawingPoints([]);\n      return;\n    }\n"
+        },
+        {
+          "name": "handleDoubleClick",
+          "wrapper": "useCallback",
+          "line": 680,
+          "bodyPreview": "{\n    handleDoubleClickAtPos();\n  }"
+        },
+        {
+          "name": "submitDepth",
+          "wrapper": "useCallback",
+          "line": 684,
+          "bodyPreview": "{\n    if (!pendingPolygon || !calibration) return;\n    const depth = parseFloat(depthInput);\n    if (isNaN(depth) || depth <= 0) return;\n    const volumeCY = (pendingPolygon.areaSF * depth) / 27;\n    onAddAnnotation({\n      id: crypto.randomUUID(),\n      type: 'polygon',"
+        },
+        {
+          "name": "submitLabel",
+          "wrapper": "useCallback",
+          "line": 703,
+          "bodyPreview": "{\n    if (labelPoints.length !== 2 || !labelTextInput.trim()) return;\n    onAddAnnotation({\n      id: crypto.randomUUID(),\n      type: 'label',\n      points: labelPoints,\n      payItemId: activePayItemId || '',\n      page: currentPage,"
+        },
+        {
+          "name": "handleMouseMove",
+          "wrapper": "useCallback",
+          "line": 720,
+          "bodyPreview": "{\n    // Handle endpoint dragging\n    if (draggingHandle) {\n      e.preventDefault();\n      const pos = getCanvasPos(e);\n      setDraggingHandle(prev => prev ? { ...prev, currentPos: pos } : null);\n      return;\n    }"
+        },
+        {
+          "name": "handleMouseDown",
+          "wrapper": "useCallback",
+          "line": 747,
+          "bodyPreview": "{\n    // Check for handle drag on selected line\n    if (toolMode === 'select') {\n      const pos = getCanvasPos(e);\n      const handle = hitTestHandles(pos);\n      if (handle) {\n        e.preventDefault();\n        const ann = annotations.find(a => a.id === handle.annotationId);"
+        },
+        {
+          "name": "handleMouseUp",
+          "wrapper": "useCallback",
+          "line": 780,
+          "bodyPreview": "{\n    // Finalize endpoint drag\n    if (draggingHandle && onUpdateAnnotation) {\n      const ann = annotations.find(a => a.id === draggingHandle.annotationId);\n      if (ann) {\n        const newPoints = ann.points.map((p, i) =>\n          i === draggingHandle.pointIndex ? draggingHandle.currentPos : p\n        );"
+        },
+        {
+          "name": "submitCalibration",
+          "wrapper": null,
+          "line": 831,
+          "bodyPreview": "{\n    const dist = parseFloat(calibrateDistance);\n    if (isNaN(dist) || dist <= 0 || calibratePoints.length !== 2) return;\n    const pxDist = distancePx(calibratePoints[0], calibratePoints[1]);\n    onCalibrate({\n      point1: calibratePoints[0],\n      point2: calibratePoints[1],\n      realDistance: dist,"
+        },
+        {
+          "name": "handleImportToc",
+          "wrapper": null,
+          "line": 846,
+          "bodyPreview": "{\n    if (tocRect && onTocRegionSelected) {\n      onTocRegionSelected(tocRect);\n      setTocRect(null);\n    }\n  }"
+        },
+        {
+          "name": "handleContextMenu",
+          "wrapper": "useCallback",
+          "line": 853,
+          "bodyPreview": "{\n    e.preventDefault();\n    setDrawingPoints([]);\n    setCalibratePoints([]);\n    setShowCalPrompt(false);\n    setTocDragStart(null);\n    setTocDragEnd(null);\n    setTocRect(null);"
+        },
+        {
+          "name": "handler",
+          "wrapper": null,
+          "line": 866,
+          "bodyPreview": "{\n      if (e.key === 'Escape') {\n        setDrawingPoints([]);\n        setCalibratePoints([]);\n        setShowCalPrompt(false);\n        setTocDragStart(null);\n        setTocDragEnd(null);\n        setTocRect(null);"
+        },
+        {
+          "name": "handleOverlayTouchStart",
+          "wrapper": "useCallback",
+          "line": 895,
+          "bodyPreview": "{\n    const ts = touchStateRef.current;\n\n    if (e.touches.length === 2) {\n      e.preventDefault();\n      const t0 = e.touches[0], t1 = e.touches[1];\n      const dist = Math.hypot(t1.clientX - t0.clientX, t1.clientY - t0.clientY);\n      const center = { x: (t0.clientX + t1.clientX) / 2, y: (t0.clientY + t1.clientY) / 2 };"
+        },
+        {
+          "name": "handleOverlayTouchMove",
+          "wrapper": "useCallback",
+          "line": 952,
+          "bodyPreview": "{\n    const ts = touchStateRef.current;\n\n    // Handle endpoint dragging (touch)\n    if (draggingHandle && e.touches.length === 1) {\n      e.preventDefault();\n      const pos = getTouchCanvasPos(e.touches[0]);\n      setDraggingHandle(prev => prev ? { ...prev, currentPos: pos } : null);"
+        },
+        {
+          "name": "handleOverlayTouchEnd",
+          "wrapper": "useCallback",
+          "line": 1027,
+          "bodyPreview": "{\n    const ts = touchStateRef.current;\n\n    if (e.touches.length < 2) {\n      ts.isTwoFinger = false;\n    }\n\n    // Finalize handle drag (touch)"
+        },
+        {
+          "name": "preventMove",
+          "wrapper": null,
+          "line": 1122,
+          "bodyPreview": "{\n      if (e.touches.length >= 2) e.preventDefault();\n    }"
+        },
+        {
+          "name": "preventStart",
+          "wrapper": null,
+          "line": 1125,
+          "bodyPreview": "{\n      if (e.touches.length >= 2) e.preventDefault();\n    }"
+        }
+      ],
+      "switches": [],
+      "conditionals": [
+        {
+          "condition": "toolMode !== 'tocSelect'",
+          "line": 103
+        },
+        {
+          "condition": "toolMode === 'polygon' && drawingPoints.length >= 3 && calibration",
+          "line": 432
+        },
+        {
+          "condition": "toolMode === 'tocSelect' && tocDragStart && tocDragEnd",
+          "line": 477
+        },
+        {
+          "condition": "tocRect && toolMode === 'tocSelect'",
+          "line": 480
+        },
+        {
+          "condition": "toolMode === 'pan' || toolMode === 'tocSelect'",
+          "line": 563
+        },
+        {
+          "condition": "toolMode === 'select'",
+          "line": 565
+        },
+        {
+          "condition": "toolMode === 'count'",
+          "line": 571
+        },
+        {
+          "condition": "toolMode === 'calibrate'",
+          "line": 585
+        },
+        {
+          "condition": "toolMode === 'line'",
+          "line": 594
+        },
+        {
+          "condition": "toolMode === 'label'",
+          "line": 614
+        },
+        {
+          "condition": "toolMode === 'polygon'",
+          "line": 625
+        },
+        {
+          "condition": "toolMode !== 'polygon' || drawingPoints.length < 3",
+          "line": 648
+        },
+        {
+          "condition": "toolMode === 'tocSelect' && tocDragStart",
+          "line": 737
+        },
+        {
+          "condition": "toolMode === 'select'",
+          "line": 749
+        },
+        {
+          "condition": "toolMode === 'pan'",
+          "line": 766
+        },
+        {
+          "condition": "toolMode === 'tocSelect'",
+          "line": 772
+        },
+        {
+          "condition": "toolMode === 'tocSelect' && tocDragStart && tocDragEnd",
+          "line": 815
+        },
+        {
+          "condition": "(e.key === 'Delete' || e.key === 'Backspace') && selectedAnnotationId && toolMode === 'select'",
+          "line": 880
+        },
+        {
+          "condition": "toolMode === 'select'",
+          "line": 923
+        },
+        {
+          "condition": "toolMode === 'pan' || toolMode === 'select'",
+          "line": 939
+        },
+        {
+          "condition": "toolMode === 'tocSelect'",
+          "line": 944
+        },
+        {
+          "condition": "(toolMode === 'line' || toolMode === 'calibrate') && !ts.dragFirstPointPlaced",
+          "line": 997
+        },
+        {
+          "condition": "toolMode === 'pan' || toolMode === 'select' || toolMode === 'count' || toolMode === 'polygon'",
+          "line": 1007
+        },
+        {
+          "condition": "toolMode === 'line' || toolMode === 'calibrate'",
+          "line": 1015
+        },
+        {
+          "condition": "toolMode === 'tocSelect'",
+          "line": 1020
+        },
+        {
+          "condition": "toolMode !== 'tocSelect'",
+          "line": 1082
+        },
+        {
+          "condition": "(toolMode === 'line' || toolMode === 'calibrate') && ts.dragFirstPointPlaced",
+          "line": 1089
+        },
+        {
+          "condition": "toolMode === 'tocSelect' && tocDragStart",
+          "line": 1095
+        }
+      ],
+      "propTypes": [
+        {
+          "name": "Props",
+          "line": 10,
+          "members": [
+            "pdf",
+            "currentPage",
+            "scale",
+            "onScaleChange",
+            "toolMode",
+            "calibration",
+            "annotations",
+            "activePayItemId",
+            "payItems",
+            "onCalibrate",
+            "onAddAnnotation",
+            "onRemoveAnnotation",
+            "onUpdateAnnotation",
+            "onTocRegionSelected",
+            "externalContainerRef",
+            "selectedAnnotationId",
+            "onSelectAnnotation",
+            "isMobile",
+            "gpsPosition",
+            "gpsTracePoints",
+            "onGpsPlanTap"
+          ]
+        }
+      ],
+      "jsxStrings": [
+        {
+          "text": "Type:",
+          "line": 1188
+        },
+        {
+          "text": "Calc'd Qty:",
+          "line": 1189
+        },
+        {
+          "text": "Depth:",
+          "line": 1190
+        },
+        {
+          "text": "ft",
+          "line": 1190
+        },
+        {
+          "text": "Page:",
+          "line": 1191
+        },
+        {
+          "text": "Override Qty:",
+          "line": 1198
+        },
+        {
+          "text": "Reset",
+          "line": 1216
+        },
+        {
+          "text": "Location:",
+          "line": 1222
+        },
+        {
+          "text": "Notes:",
+          "line": 1232
+        },
+        {
+          "text": "Reassign to:",
+          "line": 1247
+        },
+        {
+          "text": "Delete",
+          "line": 1278
+        },
+        {
+          "text": "Deselect",
+          "line": 1284
+        },
+        {
+          "text": "Enter the real-world distance between the two points (feet):",
+          "line": 1293
+        },
+        {
+          "text": "Set Scale",
+          "line": 1305
+        },
+        {
+          "text": "Cancel",
+          "line": 1311
+        },
+        {
+          "text": "Area:",
+          "line": 1320
+        },
+        {
+          "text": "SF",
+          "line": 1320
+        },
+        {
+          "text": "Enter depth in feet to calculate cubic yards:",
+          "line": 1321
+        },
+        {
+          "text": "Calculate",
+          "line": 1333
+        },
+        {
+          "text": "Cancel",
+          "line": 1339
+        },
+        {
+          "text": "Import the Table of Contents from the selected area?",
+          "line": 1348
+        },
+        {
+          "text": "Import TOC",
+          "line": 1351
+        },
+        {
+          "text": "Reselect",
+          "line": 1357
+        },
+        {
+          "text": "Cancel",
+          "line": 1363
+        },
+        {
+          "text": "Enter label text:",
+          "line": 1372
+        },
+        {
+          "text": "Add Label",
+          "line": 1384
+        },
+        {
+          "text": "Cancel",
+          "line": 1390
+        },
+        {
+          "text": "Upload a PDF to begin",
+          "line": 1405
+        },
+        {
+          "text": "Use the sidebar to load your construction plans",
+          "line": 1406
+        }
+      ]
+    },
+    {
+      "file": "src/components/Toolbar.tsx",
+      "loc": 198,
+      "functions": [
+        {
+          "name": "formatScale",
+          "line": 38,
+          "bodyPreview": "{\n  if (!calibration) return 'No scale';\n  const ftPerPx = 1 / calibration.pixelsPerFoot;\n  // Try to find a nice scale like 1\" = 20'\n  const ftPerInch = ftPerPx * 96; // 96 px per inch on screen (approximate)\n  if (ftPerInch >= 1) {"
+        },
+        {
+          "name": "Toolbar",
+          "line": 50,
+          "bodyPreview": "{\n  const tools = readOnly\n    ? allTools.filter(t => t.mode !== 'calibrate')\n    : allTools;\n\n  return ("
+        }
+      ],
+      "switches": [],
+      "conditionals": [],
+      "propTypes": [
+        {
+          "name": "Props",
+          "line": 10,
+          "members": [
+            "toolMode",
+            "onToolChange",
+            "currentPage",
+            "totalPages",
+            "onPageChange",
+            "scale",
+            "onScaleChange",
+            "calibration",
+            "activePayItem",
+            "onShowSummary",
+            "onExport",
+            "onFitToScreen",
+            "onUndo",
+            "onRedo",
+            "canUndo",
+            "canRedo",
+            "onCopyCalibration",
+            "readOnly"
+          ]
+        }
+      ],
+      "jsxStrings": [
+        {
+          "text": "manual",
+          "line": 107
+        },
+        {
+          "text": "No scale set",
+          "line": 129
+        },
+        {
+          "text": "Summary",
+          "line": 185
+        },
+        {
+          "text": "Export",
+          "line": 192
+        }
+      ]
+    },
+    {
+      "file": "src/components/MobileToolbar.tsx",
+      "loc": 151,
+      "functions": [
+        {
+          "name": "MobileToolbar",
+          "line": 37,
+          "bodyPreview": "{\n  const tools = readOnly\n    ? allTools.filter(t => t.mode !== 'calibrate')\n    : allTools;\n  return (\n    <div className=\"flex flex-col bg-card/95 backdrop-blur-sm border-b border-border shadow-sm\">"
+        }
+      ],
+      "switches": [],
+      "conditionals": [],
+      "propTypes": [
+        {
+          "name": "Props",
+          "line": 10,
+          "members": [
+            "toolMode",
+            "onToolChange",
+            "currentPage",
+            "totalPages",
+            "onPageChange",
+            "scale",
+            "onScaleChange",
+            "calibration",
+            "activePayItem",
+            "onFitToScreen",
+            "onUndo",
+            "onRedo",
+            "canUndo",
+            "canRedo",
+            "onCopyCalibration",
+            "readOnly",
+            "onCalibrationChipTap"
+          ]
+        }
+      ],
+      "jsxStrings": [
+        {
+          "text": "No scale",
+          "line": 126
+        }
+      ]
+    },
+    {
+      "file": "src/lib/geometry.ts",
+      "loc": 75,
+      "functions": [
+        {
+          "name": "distancePx",
+          "line": 3,
+          "bodyPreview": "{\n  return Math.sqrt((p2.x - p1.x) ** 2 + (p2.y - p1.y) ** 2);\n}"
+        },
+        {
+          "name": "lineLength",
+          "line": 7,
+          "bodyPreview": "{\n  if (points.length < 2) return 0;\n  let totalPx = 0;\n  for (let i = 1; i < points.length; i++) {\n    totalPx += distancePx(points[i - 1], points[i]);\n  }"
+        },
+        {
+          "name": "polygonAreaPx",
+          "line": 17,
+          "bodyPreview": "{\n  if (points.length < 3) return 0;\n  let area = 0;\n  for (let i = 0; i < points.length; i++) {\n    const j = (i + 1) % points.length;\n    area += points[i].x * points[j].y;"
+        },
+        {
+          "name": "polygonAreaSF",
+          "line": 28,
+          "bodyPreview": "{\n  return polygonAreaPx(points) / (pixelsPerFoot * pixelsPerFoot);\n}"
+        },
+        {
+          "name": "sfToCY",
+          "line": 32,
+          "bodyPreview": "{\n  return (sf * depthFeet) / 27;\n}"
+        },
+        {
+          "name": "sfToSY",
+          "line": 36,
+          "bodyPreview": "{\n  return sf / 9;\n}"
+        },
+        {
+          "name": "formatMeasurement",
+          "line": 40,
+          "bodyPreview": "{\n  if (value >= 1000) return `${(value / 1000).toFixed(1)}K ${unit}`;\n  return `${value.toFixed(1)} ${unit}`;\n}"
+        },
+        {
+          "name": "pointToSegmentDistance",
+          "line": 48,
+          "bodyPreview": "{\n  const dx = b.x - a.x;\n  const dy = b.y - a.y;\n  const lenSq = dx * dx + dy * dy;\n  if (lenSq === 0) return distancePx(p, a);\n  let t = ((p.x - a.x) * dx + (p.y - a.y) * dy) / lenSq;"
+        },
+        {
+          "name": "pointInPolygon",
+          "line": 59,
+          "bodyPreview": "{\n  let inside = false;\n  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {\n    const xi = polygon[i].x, yi = polygon[i].y;\n    const xj = polygon[j].x, yj = polygon[j].y;\n    if ((yi > p.y) !== (yj > p.y) && p.x < (xj - xi) * (p.y - yi) / (yj - yi) + xi) {"
+        },
+        {
+          "name": "pointToMarkerDistance",
+          "line": 72,
+          "bodyPreview": "{\n  return distancePx(p, marker);\n}"
+        }
+      ],
+      "switches": [],
+      "conditionals": [],
+      "propTypes": [],
+      "jsxStrings": []
+    },
+    {
+      "file": "src/lib/geo-transform.ts",
+      "loc": 195,
+      "functions": [
+        {
+          "name": "gpsToLocalFt",
+          "line": 31,
+          "bodyPreview": "{\n  const dLat = (point.lat - origin.lat) * DEG_TO_RAD;\n  const dLng = (point.lng - origin.lng) * DEG_TO_RAD;\n  const cosLat = Math.cos(origin.lat * DEG_TO_RAD);\n  return {\n    x: dLng * cosLat * EARTH_RADIUS_FT,"
+        },
+        {
+          "name": "solveAffine2",
+          "line": 44,
+          "bodyPreview": "{\n  if (pts.length < 2) throw new Error('Need at least 2 control points');\n  const origin = pts[0].gps;\n  const src = pts.map(p => gpsToLocalFt(origin, p.gps));\n  const dst = pts.map(p => p.plan);\n"
+        },
+        {
+          "name": "solveAffine3",
+          "line": 77,
+          "bodyPreview": "{\n  if (pts.length < 3) return solveAffine2(pts);\n  const origin = pts[0].gps;\n  const src = pts.map(p => gpsToLocalFt(origin, p.gps));\n  const dst = pts.map(p => p.plan);\n"
+        },
+        {
+          "name": "solve3x3",
+          "wrapper": null,
+          "line": 110,
+          "bodyPreview": "{\n    const x = (r1 * (Syy * n - Sy * Sy) - Sxy * (r2 * n - Sy * r3) + Sx * (r2 * Sy - Syy * r3)) / det;\n    const y = (Sxx * (r2 * n - Sy * r3) - r1 * (Sxy * n - Sy * Sx) + Sx * (Sxy * r3 - r2 * Sx)) / det;\n    const z = (Sxx * (Syy * r3 - r2 * Sy) - Sxy * (Sxy * r3 - r2 * Sx) + r1 * (Sxy * Sy - Syy * Sx)) / det;\n    return [x, y, z] as const;\n  }"
+        },
+        {
+          "name": "gpsToplan",
+          "line": 124,
+          "bodyPreview": "{\n  const origin = cal.controlPoints[0].gps;\n  const local = gpsToLocalFt(origin, gps);\n  const [a, b, tx, c, d, ty] = cal.transform;\n  return {\n    x: a * local.x + b * local.y + tx,"
+        },
+        {
+          "name": "estimateError",
+          "line": 135,
+          "bodyPreview": "{\n  let totalErr = 0;\n  for (const cp of cal.controlPoints) {\n    const projected = gpsToplan(cal, cp.gps);\n    const dx = projected.x - cp.plan.x;\n    const dy = projected.y - cp.plan.y;"
+        },
+        {
+          "name": "buildGeoCalibration",
+          "line": 149,
+          "bodyPreview": "{\n  const transform = points.length >= 3 ? solveAffine3(points) : solveAffine2(points);\n  const cal: GeoCalibration = { controlPoints: points, transform, estimatedErrorFt: 0 };\n  cal.estimatedErrorFt = estimateError(cal);\n  return cal;\n}"
+        },
+        {
+          "name": "initKalman",
+          "line": 167,
+          "bodyPreview": "{\n  return { lat: gps.lat, lng: gps.lng, vLat: 0, vLng: 0, accuracy, timestamp };\n}"
+        },
+        {
+          "name": "updateKalman",
+          "line": 171,
+          "bodyPreview": "{\n  const dt = (timestamp - state.timestamp) / 1000; // seconds\n  if (dt <= 0) return { ...state, lat: gps.lat, lng: gps.lng, accuracy, timestamp };\n\n  // Predict\n  const predLat = state.lat + state.vLat * dt;"
+        }
+      ],
+      "switches": [],
+      "conditionals": [],
+      "propTypes": [],
+      "jsxStrings": []
+    }
+  ]
+}

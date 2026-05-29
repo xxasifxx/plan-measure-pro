@@ -1,0 +1,265 @@
+{
+  "agent": "edge-fns",
+  "generatedAt": "2026-05-29T17:45:05.261Z",
+  "fnCount": 4,
+  "functions": [
+    {
+      "file": "supabase/functions/invite-user/index.ts",
+      "name": "invite-user",
+      "loc": 153,
+      "tables": [
+        "user_roles",
+        "invitations"
+      ],
+      "rpcs": [],
+      "fetches": [],
+      "envReads": [
+        "SUPABASE_URL",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "SUPABASE_ANON_KEY"
+      ],
+      "requestFields": [
+        "email",
+        "role"
+      ],
+      "branches": [
+        {
+          "condition": "req.method === \"OPTIONS\"",
+          "line": 10
+        },
+        {
+          "condition": "!authHeader?.startsWith(\"Bearer \")",
+          "line": 16
+        },
+        {
+          "condition": "userErr || !userData?.user?.id",
+          "line": 32
+        },
+        {
+          "condition": "!roleCheck",
+          "line": 50
+        },
+        {
+          "condition": "!email || !role",
+          "line": 58
+        },
+        {
+          "condition": "existing && existing.accepted_at",
+          "line": 75
+        },
+        {
+          "condition": "existing",
+          "line": 87
+        },
+        {
+          "condition": "updateErr",
+          "line": 94
+        },
+        {
+          "condition": "insertErr",
+          "line": 106
+        },
+        {
+          "condition": "!siteUrl && referer",
+          "line": 116
+        },
+        {
+          "condition": "!siteUrl || siteUrl.includes(\"supabase\")",
+          "line": 120
+        },
+        {
+          "condition": "inviteErr && !inviteErr.message?.includes(\"already been registered\")",
+          "line": 131
+        }
+      ]
+    },
+    {
+      "file": "supabase/functions/parse-schedule/index.ts",
+      "name": "parse-schedule",
+      "loc": 130,
+      "tables": [],
+      "rpcs": [],
+      "fetches": [
+        "https://ai.gateway.lovable.dev/v1/chat/completions"
+      ],
+      "envReads": [
+        "SUPABASE_URL",
+        "SUPABASE_ANON_KEY",
+        "LOVABLE_API_KEY"
+      ],
+      "requestFields": [
+        "imageBase64",
+        "mimeType"
+      ],
+      "branches": [
+        {
+          "condition": "req.method === \"OPTIONS\"",
+          "line": 41
+        },
+        {
+          "condition": "!authHeader?.startsWith(\"Bearer \")",
+          "line": 45
+        },
+        {
+          "condition": "userErr || !userData?.user?.id",
+          "line": 56
+        },
+        {
+          "condition": "!imageBase64",
+          "line": 63
+        },
+        {
+          "condition": "!LOVABLE_API_KEY",
+          "line": 70
+        },
+        {
+          "condition": "response.status === 429",
+          "line": 99
+        },
+        {
+          "condition": "response.status === 402",
+          "line": 104
+        },
+        {
+          "condition": "!response.ok",
+          "line": 109
+        }
+      ]
+    },
+    {
+      "file": "supabase/functions/send-push/index.ts",
+      "name": "send-push",
+      "loc": 110,
+      "tables": [
+        "device_tokens"
+      ],
+      "rpcs": [],
+      "fetches": [
+        "https://fcm.googleapis.com/fcm/send"
+      ],
+      "envReads": [
+        "FCM_SERVER_KEY",
+        "SUPABASE_URL",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "SUPABASE_ANON_KEY"
+      ],
+      "requestFields": [],
+      "branches": [
+        {
+          "condition": "req.method === \"OPTIONS\"",
+          "line": 26
+        },
+        {
+          "condition": "!isService",
+          "line": 34
+        },
+        {
+          "condition": "!bearer",
+          "line": 35
+        },
+        {
+          "condition": "uErr || !u?.user?.id",
+          "line": 44
+        },
+        {
+          "condition": "!FCM_SERVER_KEY",
+          "line": 51
+        },
+        {
+          "condition": "!parsed.success",
+          "line": 59
+        },
+        {
+          "condition": "error",
+          "line": 71
+        },
+        {
+          "condition": "!tokens || tokens.length === 0",
+          "line": 76
+        },
+        {
+          "condition": "res.ok",
+          "line": 99
+        }
+      ]
+    },
+    {
+      "file": "supabase/functions/tag-photo/index.ts",
+      "name": "tag-photo",
+      "loc": 143,
+      "tables": [
+        "annotation_photos",
+        "pay_items",
+        "annotation-photos"
+      ],
+      "rpcs": [
+        "is_project_member"
+      ],
+      "fetches": [
+        "https://ai.gateway.lovable.dev/v1/chat/completions"
+      ],
+      "envReads": [
+        "SUPABASE_URL",
+        "SUPABASE_ANON_KEY",
+        "LOVABLE_API_KEY"
+      ],
+      "requestFields": [
+        "photoId"
+      ],
+      "branches": [
+        {
+          "condition": "req.method === \"OPTIONS\"",
+          "line": 12
+        },
+        {
+          "condition": "!authHeader",
+          "line": 16
+        },
+        {
+          "condition": "!user",
+          "line": 25
+        },
+        {
+          "condition": "!photoId",
+          "line": 28
+        },
+        {
+          "condition": "photoErr || !photo",
+          "line": 35
+        },
+        {
+          "condition": "!isMember",
+          "line": 43
+        },
+        {
+          "condition": "!payItems?.length",
+          "line": 50
+        },
+        {
+          "condition": "!signed?.signedUrl",
+          "line": 56
+        },
+        {
+          "condition": "!LOVABLE_API_KEY",
+          "line": 59
+        },
+        {
+          "condition": "!aiResp.ok",
+          "line": 106
+        },
+        {
+          "condition": "aiResp.status === 429",
+          "line": 107
+        },
+        {
+          "condition": "aiResp.status === 402",
+          "line": 108
+        },
+        {
+          "condition": "!args",
+          "line": 114
+        }
+      ]
+    }
+  ]
+}

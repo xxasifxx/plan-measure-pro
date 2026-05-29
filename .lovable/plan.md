@@ -1,81 +1,99 @@
-# Phase 1.6 — Account for what the catalog still misses
+# Phase 1.7 — Multi-agent intent extraction + retroactive snapshots
 
-The 298-leaf catalog still has structural blind spots. Code inspection found seven categories of work that exist in the repo but produce zero leaves (or get collapsed so aggressively they hide weeks of effort). Phase 2 commit-mapping will misattribute or drop activity if we don't close these first.
+Replace the single-script pipeline with an agent organization. Many narrow specialists read the file system (and git history) in parallel; a thin synthesis layer reconciles their output. Each layer's raw output is checkpointed to disk so reviews and re-runs are cheap.
 
-## Blind spots found
+## Org chart
 
-**1. Database functions are invisible.** 17 SECURITY DEFINER functions in `public` (`assign_owner_role`, `has_role`, `is_project_member`, `accept_invitation`, `handle_new_user`, `seed_demo_users`, `seed_project_standard_folders`, `daily_reports_status_transition`, `daily_reports_status_side_effects`, `document_folders_block_nonempty_delete`, `projects_seed_folders`, `replace_project_schedule` ×2 overloads, `capture_baseline`, `delete_baseline`, `schedule_activities_validate_constraint`, `update_updated_at_column`). These are major work — none are leaves. They only show up indirectly inside weekly migration clusters.
+```text
+ORCHESTRATOR (this session)
+│
+├── L1  PARSERS  — mechanical, model=fast, one slice each, parallel
+│   ├── ast-frontend         src/{components,pages,hooks,lib}/**/*.{ts,tsx}
+│   ├── ast-schedule-lib     src/lib/schedule/** + src/components/schedule/**
+│   ├── ast-native-offline   src/lib/native/** + src/lib/offline/**
+│   ├── ast-pdf-canvas       PdfCanvas.tsx + Toolbar.tsx + MobileToolbar.tsx + geometry.ts + geo-transform.ts (its own agent — too dense to share)
+│   ├── ast-project-hook     useProject.ts + useProjects.ts + useDailyReport.ts + useDocuments.ts + useReReviewQueue.ts
+│   ├── sql-migrations       supabase/migrations/*.sql  (per-file table deltas, function bodies, policy expressions, trigger conditions)
+│   ├── edge-fns             supabase/functions/*/index.ts  (request dispatch tree per function)
+│   ├── tests                src/test/*.test.ts  (each it() = one asserted intent)
+│   ├── config-infra         vite/tailwind/capacitor/supabase/config.toml, package.json scripts, eslint, vitest
+│   ├── docs-streams         docs/streams/*.md  (Purpose / Surfaces / Acceptance / Current state — strict parse, fail loud)
+│   ├── docs-scope           docs/scope-inventory/**, docs/comprehension-report.md, README, NATIVE_SETUP, STORE_LISTING
+│   └── marketing-copy       public/llms.txt, src/pages/{Landing,FajarPitch,McfaPitch,Demo}.tsx, public/sitemap.xml
+│
+├── L2  COMPREHENDERS  — one per value stream (20 streams + 97/98/99), model=capable, parallel
+│   ├── Inputs per stream agent: stream doc + files claimed by it + relevant parser outputs (filtered by file path)
+│   ├── Tasks:
+│   │   1. Emit intent leaves: { name, acceptance[], anchors[{file, region}], state, gaps[] }
+│   │   2. Cross-check the stream doc's "Current state" claims against actual parser output → doc-drift entries
+│   │   3. Flag capabilities present in code but missing from the stream doc → propose stream-doc patch
+│   └── Output: docs/wbs-dev.agent-runs/L2/{stream-slug}.json
+│
+├── L3  HISTORIANS  — git-history-aware, model=capable, parallel
+│   ├── per-file-timeline (one agent per "dense" file: PdfCanvas, useProject, Index, ScheduleWorkspace, parse-schedule edge fn, schedule libs aggregate, plus each migration cluster)
+│   │   Method: git log --follow --patch <file>; for each commit, classify the hunk:
+│   │     - capability-add     (new switch arm, new exported fn, new component, new RLS policy)
+│   │     - capability-edit    (behavior change to existing capability)
+│   │     - capability-remove  (deleted arm, removed export, dropped table/column)
+│   │     - rewrite            (>40% LOC churn, same surface)
+│   │     - pivot              (rename, type-signature break, dep swap, file split/merge)
+│   │   Output: docs/wbs-dev.agent-runs/L3/<file-slug>.timeline.json
+│   │
+│   └── pivot-detector (single agent over the whole repo's git log)
+│       Method: scan merge commits + rename detection (git log --follow -M -C --name-status), large deletions, package.json dep changes, migrations that drop/recreate the same object, large refactors of stream docs.
+│       Output: docs/wbs-dev.agent-runs/L3/pivots.json with { date, sha, kind, before, after, blast-radius[] }
+│
+└── L4  SYNTHESIZERS  — model=capable, sequential (each depends on prior)
+    ├── architect       Merges all L2 outputs → docs/wbs-dev.intent-leaves.json (the new catalog).
+    │                   Rules: dedupe cross-stream overlap by anchor; assign stable IDs; collapse file-cluster leaves whose regions are now fully covered by intent leaves; keep them only for true orphans.
+    ├── snapshotter     Joins L3 per-file timelines with the intent-leaf catalog → for each meaningful commit (merges + every Nth commit), emit docs/wbs-dev.snapshots/<YYYY-MM-DD>-<sha7>.json with the leaf-state vector (untouched/in-progress/landed/abandoned/pivoted-from/pivoted-to) at that moment. Produces docs/wbs-dev.snapshots.md as a narrative timeline.
+    └── auditor         Cross-checks marketing-copy parser output vs intent-leaf states → docs/wbs-dev.lie-tax.md (claims with no landed leaf, claims with abandoned-and-resurrected history, claims that postdate the code by months — "shipped before promised" wins too).
+```
 
-**2. Migrations are over-collapsed.** 36 migration files → 4 weekly cluster leaves. That's 9× hidden granularity. Phase 2 needs per-migration leaves (or per-day) to attribute commits truthfully.
+## Heavy file-system access — no shortcuts
 
-**3. RLS policies, triggers, enums, indexes have no leaves.** `app_role` and `resource_type` enums; status-transition triggers; ~30+ RLS policies across tables — all swept into "Migrations 2026-wXX".
+- L1 parsers each open every file in their slice (no sampling). They emit per-file JSON with: exported symbols, discriminated-union arms, route paths, JSX intent strings (button text, form labels, toast messages — these are user-facing intent surfaces nobody is reading right now), SQL object deltas, test `it()` titles.
+- L3 historians run `git log --follow -p` on their target files end-to-end. The git-dates helper already exists (`scripts/dev-wbs/git-dates.mjs`) but only pulls first/last touch; historians produce full per-hunk timelines.
+- The orchestrator does not summarize parser output for comprehenders. Each L2 agent reads the raw L1 JSON for its file set directly from disk. Synthesis only kicks in at L4.
 
-**4. Storage buckets are brief-only.** `project-pdfs`, `specs-pdfs`, `annotation-photos`, `project-documents` exist as real surface but only two are claimed (in stale brief-only form with bogus paths like `supabase/storage/annotation-photos`).
+## What the catalog will look like after this
 
-**5. Static `public/*` SEO/PWA surface unclaimed by code-leaves.** `public/llms.txt`, `sitemap.xml`, `robots.txt`, `manifest.webmanifest`, `placeholder.svg`, `exports/takeoffpro-dev.xml` — only referenced from stale brief bullets, none in code-leaves.
+- ~540–600 intent leaves (vs 417 file/db leaves today).
+- Each leaf has `anchors[{ file, region }]` where region is a symbol, switch arm, route path, SQL object, or `it()` title — never just "whole file" unless truly unavoidable.
+- Each leaf has a `history[]` field with `{ sha, date, kind }` events from L3, so you can ask "when did the polygon CY-depth prompt land, and was it ever removed?"
+- `docs/wbs-dev.snapshots/` becomes a queryable retroactive record: pick any date, see exactly which capabilities were live, which were under construction, which had been abandoned, and which were about to pivot.
+- `docs/wbs-dev.lie-tax.md` finally separates "promised but never shipped" from "shipped, abandoned, re-promised" from "quietly shipped, never marketed."
 
-**6. Edge function ancillary surface.** `supabase/config.toml` got one leaf, but per-function `verify_jwt` config, secret bindings, and `supabase/seed.sql` are uncounted.
+## Governance & cost
 
-**7. Type & misc leaks.** `src/types/project.ts` not a leaf. `src/App.css` officially unclaimed. Six `src/assets/*` images dumped into `97 Plumbing` when they belong to `20 Sales & Pitch` (landing/marketing assets).
+- Parser agents (L1, 11 agents) run `model=fast`, hard cap 11 parallel spawns. Each emits a single JSON; orchestrator does not read full bodies — only file sizes and error flags.
+- Comprehender agents (L2, ~23 agents) run `model=capable`, batched 5–6 parallel to keep token spend bounded. Total bounded by stream count.
+- Historian agents (L3, ~8 per-file + 1 pivot) run `model=capable`, parallel with L2.
+- Synthesizers (L4, 3 agents) run sequentially.
+- Every agent writes to `docs/wbs-dev.agent-runs/L{n}/...` — failures are inspectable, individual agents are re-runnable without re-running the whole pipeline.
+- Token-budget guard: orchestrator records bytes-in / bytes-out per agent; if any agent exceeds a soft cap it gets split (e.g. ast-frontend → per-directory shards).
 
-## What this plan does
+## Pipeline driver
 
-Add **Phase 1.6** to the WBS pipeline: a sixth source that fills these gaps, plus heuristic fixes for misrouted leaves.
+New: `scripts/dev-wbs/orchestrate.mjs` — declarative spec of agents (slice, model, output path, dependencies). The orchestrator wraps the existing `spawn_agent` tool, so re-running is `node scripts/dev-wbs/orchestrate.mjs --layer L2 --stream 05-field-capture` for surgical re-runs.
 
-### Step 1 — db-surface leaves
-New script `scripts/dev-wbs/build-db-surface-leaves.mjs`. Parses migrations with regex to extract:
-- One leaf per `CREATE FUNCTION public.<name>` (routed by name → stream via `DB_FUNCTION_TO_STREAM` map in `stream-heuristics.mjs`).
-- One leaf per `CREATE TYPE … AS ENUM`.
-- One leaf per `CREATE TRIGGER` on a public table (named `trg: <table>.<trigger>`).
-- One leaf per storage bucket from `storage.buckets` inserts.
-- RLS policies stay aggregated as one leaf per table-level policy block (`rls: <table>`) to avoid leaf explosion.
+## Review checkpoints
 
-### Step 2 — Per-migration leaves replace weekly clusters
-In `build-code-leaves.mjs`, drop the `isoWeek` aggregation. Emit one leaf per `supabase/migrations/<file>.sql` under `98 Build & Infra` / Backend, named `migration: YYYY-MM-DD <slug>`. Weekly summary moves to a derived rollup in the markdown report only.
+1. **After L1**: spot-check 3 parser JSONs (`ast-pdf-canvas`, `sql-migrations`, `marketing-copy`). If a parser hallucinated, fix its system prompt and re-run only that agent.
+2. **After L2**: read `docs/wbs-dev.agent-runs/L2/05-field-capture.json`. Confirm `PdfCanvas.tsx` yields ~10 distinct intent leaves with regions, not one file leaf.
+3. **After L3**: scan `pivots.json` and one per-file timeline. Confirm pivots match your memory of the project's actual turns (XER → PMXML pivot must show up; if it doesn't, the detector is wrong).
+4. **After L4 architect**: review `intent-leaves.json` size + cross-stream dedupe. Walk one snapshot from 3 months ago and check it against memory.
 
-### Step 3 — Static public-surface leaves
-Walk `public/**` in `build-code-leaves.mjs`. Route via new `PUBLIC_PATH_RULES`:
-- `llms.txt`, `sitemap.xml`, `robots.txt` → `20 Sales & Pitch`
-- `manifest.webmanifest`, icons → `15 Offline & Native Durability`
-- `exports/*` → `13 Data Export`
-- everything else → `97 Plumbing`
+## Out of scope
 
-### Step 4 — Re-route landing/marketing assets
-Extend `STREAM_RULES` so `src/assets/(hero-|highway-|inspector-|blueprint-|gps-field-)` → `20 Sales & Pitch`, and `app-icon-master.png` → `15 Offline & Native Durability`. Removes 6 false-positives from `97 Plumbing`.
+- No edits to product code, schema, or UI.
+- No commit-to-leaf attribution (still Phase 2; this phase produces the targets it needs).
+- No PMXML regen.
+- No auto-creation of stream docs; the L2 comprehenders only *propose* doc patches in their output JSON. The user accepts/rejects in a separate pass.
 
-### Step 5 — Pick up trailing files
-Add `src/App.css`, `src/types/*`, `supabase/seed.sql`, and any per-function `supabase/config.toml` overrides as their own leaves. Verify the "files in repo that no leaf claims" section of `catalog-gaps.md` ends up empty.
+## Why this answers the critique
 
-### Step 6 — Regenerate & report
-Re-run the pipeline (`build-leaves` → `build-code-leaves` → `build-db-surface-leaves` → `reconcile-leaves` → `build-dev-wbs`). Update `docs/wbs-dev.catalog-gaps.md` with a new top section **"Newly catalogued in 1.6"** listing every leaf added in this pass, so the user can audit the delta in one place.
-
-## Technical details
-
-**Files created**
-- `scripts/dev-wbs/build-db-surface-leaves.mjs`
-
-**Files edited**
-- `scripts/dev-wbs/build-code-leaves.mjs` — per-migration leaves, `public/**` walk
-- `scripts/dev-wbs/stream-heuristics.mjs` — asset re-routes, `DB_FUNCTION_TO_STREAM`, `PUBLIC_PATH_RULES`
-- `scripts/dev-wbs/reconcile-leaves.mjs` — accept the new db-surface source
-- `docs/wbs-dev.md` — pipeline diagram updated
-
-**Expected leaf-count delta**
-- +17 db function leaves
-- +2 enum leaves
-- ~+8 trigger leaves
-- +4 storage-bucket leaves
-- ~+15 RLS-per-table leaves
-- +32 per-migration leaves (replacing 4 weekly clusters → net +28)
-- +6 public/** leaves
-- +3 misc (App.css, types, seed.sql)
-- Total: **~298 → ~380 leaves**
-
-**Out of scope for this phase**
-- No commit mapping (Phase 2)
-- No forward-looking activities (Phase 3)
-- No PMXML regeneration (Phase 5)
-
-## Approval
-
-Say **proceed** to implement Phase 1.6, or push back on any of the seven blind-spot categories (e.g. "skip per-migration split, weekly clusters are fine" or "don't bother with RLS-per-table leaves").
+- **Distributed analysis**: 11 parsers + 23 comprehenders + 9 historians + 3 synthesizers = 46 agents working in their own contexts, each looking at a slice small enough to read in full. The orchestrator never holds more than the agent manifest in its own context.
+- **Every intent signal**: parsers cover ASTs, SQL, edge dispatch, tests, configs, marketing copy, *and* JSX user-facing strings — nothing currently extracted by the regex-based scripts.
+- **Retroactive snapshots**: the L3 + snapshotter track makes "what did the app look like at <date>" a real query, and surfaces pivots (XER→PMXML, any abandoned features, refactor moments) as first-class artifacts instead of being lost between commits.
+- **Re-runnable**: failures don't poison the whole catalog; each agent's output is a file you can delete and regenerate independently.
