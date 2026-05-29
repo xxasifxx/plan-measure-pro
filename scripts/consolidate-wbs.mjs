@@ -47,9 +47,12 @@ const SURFACE_KEY_LABEL = {
 };
 
 function looksLikeLeaf(o) {
-  return o && typeof o === 'object' && !Array.isArray(o)
-    && typeof o.id === 'string'
-    && (typeof o.name === 'string' || typeof o.title === 'string');
+  if (!o || typeof o !== 'object' || Array.isArray(o)) return false;
+  if (typeof o.id !== 'string') return false;
+  if (typeof o.name !== 'string' && typeof o.title !== 'string') return false;
+  // Container nodes (id+name but they hold child collections) are not leaves.
+  if (Array.isArray(o.workPackages) || Array.isArray(o.leaves) || Array.isArray(o.children)) return false;
+  return true;
 }
 
 function normalizeSubTasks(raw) {
