@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APIBusinessObjects xmlns="http://xmlns.oracle.com/Primavera/P6/V8.4/API/BusinessObjects"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <!-- Rejected relationships (below confidence threshold or cycle-broken). For audit only. -->
+  <Project><ObjectId>1001</ObjectId><Id>LOVABLE</Id>
+  </Project>
+</APIBusinessObjects>
