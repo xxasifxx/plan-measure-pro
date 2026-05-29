@@ -1,3 +1,19 @@
+---
+stream_key: 05-field-capture
+paths:
+  - src/pages/Index.tsx
+  - src/components/PdfCanvas.tsx
+  - src/components/Toolbar.tsx
+  - src/components/MobileToolbar.tsx
+  - src/components/GpsCalibration.tsx
+  - src/components/GpsTraceControls.tsx
+  - src/components/MobileAnnotationSheet.tsx
+  - src/hooks/useProject.ts
+  - src/lib/geometry.ts
+  - src/lib/geo-transform.ts
+  - src/types/project.ts
+shared_paths: []
+---
 # Field Capture
 
 ## Purpose

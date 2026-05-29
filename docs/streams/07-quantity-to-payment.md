@@ -1,3 +1,12 @@
+---
+stream_key: 07-quantity-to-payment
+paths:
+  - src/lib/approved-quantities.ts
+  - src/lib/export-utils.ts
+  - src/components/SummaryPanel.tsx
+  - src/pages/ProjectControls.tsx
+shared_paths: []
+---
 # Quantity to Payment
 
 ## Purpose

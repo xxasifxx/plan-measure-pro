@@ -1,3 +1,17 @@
+---
+stream_key: 20-sales-and-pitch
+paths:
+  - src/pages/Landing.tsx
+  - src/pages/McfaPitch.tsx
+  - src/pages/FajarPitch.tsx
+  - src/pages/P6XmlDemo.tsx
+  - src/pages/Demo.tsx
+  - public/llms.txt
+  - public/sitemap.xml
+  - public/robots.txt
+  - src/App.tsx
+shared_paths: []
+---
 # Sales & Pitch
 
 ## Purpose

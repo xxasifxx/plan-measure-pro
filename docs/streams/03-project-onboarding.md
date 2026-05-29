@@ -1,3 +1,15 @@
+---
+stream_key: 03-project-onboarding
+paths:
+  - src/pages/Dashboard.tsx
+  - src/hooks/useProjects.ts
+  - src/pages/Index.tsx
+  - src/components/ProjectSidebar.tsx
+  - src/lib/pdf-utils.ts
+  - src/hooks/useProject.ts
+  - src/types/project.ts
+shared_paths: []
+---
 # Project Onboarding
 
 ## Purpose

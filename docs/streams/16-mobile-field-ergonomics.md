@@ -1,3 +1,16 @@
+---
+stream_key: 16-mobile-field-ergonomics
+paths:
+  - src/components/MobileTabBar.tsx
+  - src/components/MobileToolbar.tsx
+  - src/components/MobileAnnotationSheet.tsx
+  - src/components/MobileSections.tsx
+  - src/components/MobilePayItems.tsx
+  - src/hooks/use-mobile.tsx
+  - src/pages/Index.tsx
+  - src/pages/Demo.tsx
+shared_paths: []
+---
 # Mobile Field Ergonomics
 
 ## Purpose

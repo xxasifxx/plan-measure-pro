@@ -1,3 +1,11 @@
+---
+stream_key: 09-standard-specifications
+paths:
+  - src/components/SpecViewer.tsx
+  - src/lib/specs-utils.ts
+  - src/pages/Index.tsx
+shared_paths: []
+---
 # Standard Specifications
 
 ## Purpose

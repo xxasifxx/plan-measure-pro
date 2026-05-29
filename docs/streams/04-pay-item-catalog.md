@@ -1,3 +1,16 @@
+---
+stream_key: 04-pay-item-catalog
+paths:
+  - src/types/project.ts
+  - src/components/ProjectSidebar.tsx
+  - src/hooks/useProject.ts
+  - src/lib/pdf-utils.ts
+  - src/pages/Index.tsx
+  - src/components/MobilePayItems.tsx
+  - src/hooks/usePayItemActivityMap.ts
+  - src/components/SummaryPanel.tsx
+shared_paths: []
+---
 # Pay Item Catalog
 
 ## Purpose

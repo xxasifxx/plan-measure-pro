@@ -1,3 +1,11 @@
+---
+stream_key: 10-document-management
+paths:
+  - src/pages/Documents.tsx
+  - src/hooks/useDocuments.ts
+  - supabase/storage/project-documents
+shared_paths: []
+---
 # Document Management
 
 ## Purpose

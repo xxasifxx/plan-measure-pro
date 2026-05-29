@@ -1,3 +1,12 @@
+---
+stream_key: 12-project-health-and-controls
+paths:
+  - src/pages/ProjectControls.tsx
+  - src/components/schedule/ScheduleWorkspace.tsx
+  - src/components/GanttUploader.tsx
+  - src/types/project.ts
+shared_paths: []
+---
 # Project Health and Controls
 
 ## Purpose

@@ -1,3 +1,14 @@
+---
+stream_key: 01-identity-and-access
+paths:
+  - src/pages/Auth.tsx
+  - src/pages/ResetPassword.tsx
+  - src/hooks/useAuth.tsx
+  - src/components/BiometricGate.tsx
+  - src/App.tsx
+  - supabase/functions/invite-user/
+shared_paths: []
+---
 # Identity & Access
 
 ## Purpose
