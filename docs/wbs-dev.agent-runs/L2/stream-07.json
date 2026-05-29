@@ -1,0 +1,150 @@
+{
+  "stream": "07-quantity-to-payment",
+  "purpose": "Aggregates RE-approved daily-report quantities into official contract totals and surfaces them as variance-coded exports (CSV, PDF, Excel) for NJDOT/NJTA pay estimate submissions.",
+  "surfaces": {
+    "src/lib/approved-quantities.ts": {
+      "role": "Core helpers",
+      "functions": {
+        "loadApprovedTotalsByPayItem": {
+          "description": "Sums delta_quantity from v_approved_pay_item_quantities per pay item; returns a map keyed by pay item containing only items with at least one approved report.",
+          "lines": "20-48",
+          "filter_mechanism": "Entirely trusts v_approved_pay_item_quantities view definition — no extra status filter applied in code.",
+          "acceptance_status": "PASS"
+        },
+        "loadPendingReviewCounts": {
+          "description": "Returns badge counts for dashboard; filters on status = 'submitted' rows only.",
+          "lines": "55-68",
+          "acceptance_status": "PASS"
+        }
+      }
+    },
+    "src/lib/export-utils.ts": {
+      "role": "Export functions for CSV, PDF, and per-inspector Excel",
+      "functions": {
+        "exportApprovedCsv": {
+          "description": "Produces CSV where each row quantity equals the approved sum from loadApprovedTotalsByPayItem; file suffix is _approved_summary.csv.",
+          "lines": "101-108",
+          "acceptance_status": "PASS"
+        },
+        "exportApprovedPdfReport": {
+          "description": "Produces PDF titled 'RE-Approved Quantity Report'; fileSuffix is approved_report.",
+          "lines": "207-222",
+          "acceptance_status": "PASS"
+        },
+        "exportInspectorDaily": {
+          "description": "Per-inspector daily Excel export.",
+          "acceptance_status": "PASS"
+        },
+        "exportApprovedInspectorDaily": {
+          "description": "Marks export 'RE-Approved Daily' when status = 'approved'; uses 'PENDING' prefix otherwise.",
+          "lines": "318-401",
+          "acceptance_status": "PASS"
+        }
+      }
+    },
+    "src/components/SummaryPanel.tsx": {
+      "role": "Desktop quantity summary table with variance % column and export button row",
+      "variance_color_coding": {
+        "green": "pct <= 0%",
+        "amber": "1% to 10%",
+        "red": "> 10%",
+        "dash": "contract_quantity absent",
+        "implementation_lines": "115-120",
+        "acceptance_status": "PASS"
+      },
+      "data_source_issue": {
+        "status": "DEBT",
+        "detail": "Reads live annotations, not v_approved_pay_item_quantities — does not reflect RE-approved totals; creates two-source-of-truth problem."
+      }
+    },
+    "src/pages/ProjectControls.tsx": {
+      "role": "Variance tab: derives installed quantities and computes pct = installed / contract_quantity",
+      "variance_tab": {
+        "data_source": "Raw annotations table (not approved view)",
+        "lines": "177-187",
+        "sum_logic": "manual_quantity ?? measurement from unfiltered annotations",
+        "acceptance_status": "PARTIAL",
+        "issue": "Submitted-but-not-yet-approved reports inflate the installed figure shown to PMs; criteria requires approved quantities for this path."
+      }
+    },
+    "public.v_approved_pay_item_quantities": {
+      "role": "DB view: one row per approved daily_report × pay_item; exposes delta_quantity, approved_at, item_code, pay_item_name, unit",
+      "issue": {
+        "status": "DEBT",
+        "detail": "View SQL not present in supabase/migrations/; a schema change could silently break all approved-quantity paths."
+      }
+    }
+  },
+  "acceptance_criteria": [
+    {
+      "id": "AC-01",
+      "description": "loadApprovedTotalsByPayItem returns only pay items with at least one approved report; draft/submitted/rejected deltas must not appear.",
+      "status": "PASS",
+      "notes": "Enforced by view definition."
+    },
+    {
+      "id": "AC-02",
+      "description": "exportApprovedCsv row quantities equal approved sum; file labeled _approved_summary.csv.",
+      "status": "PASS"
+    },
+    {
+      "id": "AC-03",
+      "description": "exportApprovedPdfReport title = 'RE-Approved Quantity Report'; fileSuffix = 'approved_report'.",
+      "status": "PASS"
+    },
+    {
+      "id": "AC-04",
+      "description": "SummaryPanel variance column: green ≤ 0%, amber 1–10%, red > 10%, dash when contract_quantity absent.",
+      "status": "PASS"
+    },
+    {
+      "id": "AC-05",
+      "description": "exportApprovedInspectorDaily marks 'RE-Approved Daily' when status = 'approved'; 'PENDING' prefix otherwise.",
+      "status": "PASS"
+    },
+    {
+      "id": "AC-06",
+      "description": "loadPendingReviewCounts returns count only for status = 'submitted' rows.",
+      "status": "PASS"
+    }
+  ],
+  "gaps": [
+    {
+      "id": "GAP-01",
+      "severity": "HIGH",
+      "title": "ProjectControls variance uses raw annotations, not approved quantities",
+      "detail": "ProjectControls.tsx:180-187 sums manual_quantity ?? measurement from unfiltered annotations. A submitted-but-not-yet-approved report inflates the installed figure shown to PMs.",
+      "fix": "Replace raw annotation sum with loadApprovedTotalsByPayItem; or clearly label the figure as 'Submitted (Pending Approval)' to avoid misleading comparisons."
+    },
+    {
+      "id": "GAP-02",
+      "severity": "MEDIUM",
+      "title": "SummaryPanel uses live annotations instead of v_approved_pay_item_quantities",
+      "detail": "The embedded summary in the main takeoff tool does not reflect RE-approved totals, creating a two-source-of-truth problem with exportApprovedCsv/PDF.",
+      "fix": "Feed SummaryPanel from loadApprovedTotalsByPayItem for the approved totals column, or add a second column distinguishing live vs approved."
+    },
+    {
+      "id": "GAP-03",
+      "severity": "MEDIUM",
+      "title": "No payment-period date-range scoping for exports",
+      "detail": "No UI or helper exists to export quantities scoped to a specific payment period. A pay estimate must be computed by manually diffing two full exports.",
+      "fix": "Add optional dateFrom/dateTo parameters to loadApprovedTotalsByPayItem and the CSV/PDF export helpers; expose a date-range picker in the export UI."
+    },
+    {
+      "id": "GAP-04",
+      "severity": "LOW",
+      "title": "v_approved_pay_item_quantities SQL not in migrations",
+      "detail": "The view is consumed everywhere but its DDL is absent from supabase/migrations/; a schema change could silently break all approved-quantity paths.",
+      "fix": "Add a CREATE OR REPLACE VIEW migration for v_approved_pay_item_quantities."
+    }
+  ],
+  "cross_stream_handoffs": {
+    "feeds_from": "daily-report-lifecycle — v_approved_pay_item_quantities populated only when daily_reports.status = 'approved'",
+    "feeds_into": [
+      "P6/schedule export stream — exportApprovedCsv and exportApprovedPdfReport are the deliverable artifacts; P6Export.tsx is a sibling consumer of pay-item data",
+      "Dashboard/Summary — SummaryPanel embedded in Index.tsx reads live annotations (known inconsistency)"
+    ]
+  },
+  "overall_status": "MOSTLY_IMPLEMENTED",
+  "summary": "Core approved-quantity rollup, export utilities, and variance color coding all satisfy acceptance criteria. Two notable gaps remain: (1) ProjectControls variance tab inflates installed totals with unapproved data, and (2) no payment-period date-range scoping exists for exports, requiring manual diffing for NJDOT/NJTA pay estimates."
+}
