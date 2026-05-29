@@ -1,0 +1,237 @@
+{
+  "generatedAt": "2026-05-29T19:53:45.006Z",
+  "streams": {
+    "04-pay-item-catalog": {
+      "verifies": 11,
+      "stub_leaves": 3,
+      "stubs": 3,
+      "edges_added": {
+        "verify_chain": 10,
+        "stub_serial": 0,
+        "stub_to_verify": 3
+      }
+    },
+    "10-document-management": {
+      "verifies": 4,
+      "stub_leaves": 4,
+      "stubs": 5,
+      "edges_added": {
+        "verify_chain": 3,
+        "stub_serial": 1,
+        "stub_to_verify": 4
+      }
+    },
+    "05-field-capture": {
+      "verifies": 12,
+      "stub_leaves": 10,
+      "stubs": 11,
+      "edges_added": {
+        "verify_chain": 11,
+        "stub_serial": 1,
+        "stub_to_verify": 10
+      }
+    },
+    "98-build-and-infra": {
+      "verifies": 0,
+      "stub_leaves": 25,
+      "stubs": 25,
+      "edges_added": {
+        "verify_chain": 0,
+        "stub_serial": 0,
+        "stub_to_verify": 0
+      }
+    },
+    "09-standard-specifications": {
+      "verifies": 4,
+      "stub_leaves": 1,
+      "stubs": 1,
+      "edges_added": {
+        "verify_chain": 3,
+        "stub_serial": 0,
+        "stub_to_verify": 1
+      }
+    },
+    "18-compliance-and-audit": {
+      "verifies": 9,
+      "stub_leaves": 11,
+      "stubs": 11,
+      "edges_added": {
+        "verify_chain": 8,
+        "stub_serial": 0,
+        "stub_to_verify": 11
+      }
+    },
+    "97-plumbing": {
+      "verifies": 0,
+      "stub_leaves": 6,
+      "stubs": 6,
+      "edges_added": {
+        "verify_chain": 0,
+        "stub_serial": 0,
+        "stub_to_verify": 0
+      }
+    },
+    "01-identity-and-access": {
+      "verifies": 11,
+      "stub_leaves": 4,
+      "stubs": 4,
+      "edges_added": {
+        "verify_chain": 10,
+        "stub_serial": 0,
+        "stub_to_verify": 4
+      }
+    },
+    "02-portfolio-and-pm-home": {
+      "verifies": 11,
+      "stub_leaves": 4,
+      "stubs": 4,
+      "edges_added": {
+        "verify_chain": 10,
+        "stub_serial": 0,
+        "stub_to_verify": 4
+      }
+    },
+    "20-sales-and-pitch": {
+      "verifies": 10,
+      "stub_leaves": 12,
+      "stubs": 17,
+      "edges_added": {
+        "verify_chain": 9,
+        "stub_serial": 5,
+        "stub_to_verify": 12
+      }
+    },
+    "03-project-onboarding": {
+      "verifies": 10,
+      "stub_leaves": 2,
+      "stubs": 2,
+      "edges_added": {
+        "verify_chain": 9,
+        "stub_serial": 0,
+        "stub_to_verify": 2
+      }
+    },
+    "08-photo-evidence": {
+      "verifies": 4,
+      "stub_leaves": 1,
+      "stubs": 1,
+      "edges_added": {
+        "verify_chain": 3,
+        "stub_serial": 0,
+        "stub_to_verify": 1
+      }
+    },
+    "07-quantity-to-payment": {
+      "verifies": 4,
+      "stub_leaves": 1,
+      "stubs": 1,
+      "edges_added": {
+        "verify_chain": 3,
+        "stub_serial": 0,
+        "stub_to_verify": 1
+      }
+    },
+    "11-schedule-management": {
+      "verifies": 4,
+      "stub_leaves": 32,
+      "stubs": 43,
+      "edges_added": {
+        "verify_chain": 3,
+        "stub_serial": 11,
+        "stub_to_verify": 32
+      }
+    },
+    "12-project-health-and-controls": {
+      "verifies": 4,
+      "stub_leaves": 8,
+      "stubs": 14,
+      "edges_added": {
+        "verify_chain": 3,
+        "stub_serial": 6,
+        "stub_to_verify": 8
+      }
+    },
+    "13-data-export-and-interoperability": {
+      "verifies": 4,
+      "stub_leaves": 1,
+      "stubs": 1,
+      "edges_added": {
+        "verify_chain": 3,
+        "stub_serial": 0,
+        "stub_to_verify": 1
+      }
+    },
+    "06-daily-report-lifecycle": {
+      "verifies": 4,
+      "stub_leaves": 5,
+      "stubs": 5,
+      "edges_added": {
+        "verify_chain": 3,
+        "stub_serial": 0,
+        "stub_to_verify": 5
+      }
+    },
+    "15-offline-and-native-durability": {
+      "verifies": 4,
+      "stub_leaves": 18,
+      "stubs": 35,
+      "edges_added": {
+        "verify_chain": 3,
+        "stub_serial": 17,
+        "stub_to_verify": 18
+      }
+    },
+    "16-mobile-field-ergonomics": {
+      "verifies": 9,
+      "stub_leaves": 6,
+      "stubs": 6,
+      "edges_added": {
+        "verify_chain": 8,
+        "stub_serial": 0,
+        "stub_to_verify": 6
+      }
+    },
+    "17-notifications-and-presence": {
+      "verifies": 10,
+      "stub_leaves": 11,
+      "stubs": 12,
+      "edges_added": {
+        "verify_chain": 9,
+        "stub_serial": 1,
+        "stub_to_verify": 11
+      }
+    },
+    "19-onboarding-and-tutorials": {
+      "verifies": 9,
+      "stub_leaves": 6,
+      "stubs": 6,
+      "edges_added": {
+        "verify_chain": 8,
+        "stub_serial": 0,
+        "stub_to_verify": 6
+      }
+    },
+    "14-measurement-and-geometry-engine": {
+      "verifies": 4,
+      "stub_leaves": 1,
+      "stubs": 1,
+      "edges_added": {
+        "verify_chain": 3,
+        "stub_serial": 0,
+        "stub_to_verify": 1
+      }
+    }
+  },
+  "future_side": {
+    "total": 427,
+    "with_predecessor": 185,
+    "with_successor": 305,
+    "orphan_parallel": 102,
+    "dependent_share": 0.433
+  },
+  "totals": {
+    "new_edges": 305,
+    "cycle_breaks": 2,
+    "total_edges": 472
+  }
+}
