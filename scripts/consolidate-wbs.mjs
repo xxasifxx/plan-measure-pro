@@ -111,6 +111,15 @@ for (const src of SOURCES) {
     /^(\s*)-\s*task:\s*(.+?)\s+days:\s*([\d.]+)\s*$/gm,
     (_, ind, t, d) => `${ind}- task: ${JSON.stringify(t.trim())}\n${ind}  days: ${d}`
   );
+  // Quote bare list items that contain a colon (e.g. "- pages.md (dashboard: foo)")
+  // which YAML would otherwise misread as a mapping.
+  raw = raw.replace(/^(\s*-\s+)([^"'\[\{\-\s][^\n]*)$/gm, (m, lead, val) => {
+    // Skip if value is "key: value" with a single colon at a position that looks
+    // like a real mapping (no surrounding parens/brackets before the colon).
+    if (/^[A-Za-z_][\w\-]*:\s/.test(val) && !/[(\[]/.test(val.split(':')[0])) return m;
+    if (!/:\s/.test(val)) return m;
+    return lead + JSON.stringify(val.trim());
+  });
   const doc = yaml.load(raw);
   const before = all.length;
   walk(doc, src.defaultSurface, all, src.file);
