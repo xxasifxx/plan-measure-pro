@@ -65,8 +65,8 @@ const phases = [
   {
     n: '01',
     icon: Activity,
-    title: 'XerLens DCMA-14 + RE Memo Auto-Generation',
-    body: 'In-browser auditor runs all 14 DCMA checks against contractor XER submissions and emits a plain-English memo to the Resident Engineer with accept / accept-with-conditions / reject recommendation, NJDOT spec citations, and offending activity codes. Already shipped — see Module A on /p6-xml.',
+    title: 'PMXML DCMA-14 + RE Memo Auto-Generation',
+    body: 'In-browser auditor runs all 14 DCMA checks against contractor XER submissions and emits a plain-English memo to the Resident Engineer with accept / accept-with-conditions / reject recommendation, NJDOT spec citations, and offending activity codes. Already shipped — see the live PMXML demo at /p6-xml.',
     accent: 'border-emerald-500/40 bg-emerald-500/5',
     pill: 'Q1 ROCK · 90 DAYS',
   },
@@ -233,12 +233,12 @@ const recruiterQA: { q: string; a: string; tag?: string }[] = [
   },
   {
     q: 'How will you handle Resident Engineer communication on contractor schedule reviews?',
-    a: "Plain-English memos, not screenshots of P6. The /p6-xml Module A turns every DCMA-14 audit into a one-page memo addressed to the RE — recommendation (accept / accept-with-conditions / reject), hard blockers, advisory flags, and next steps. The RE never has to interpret a Gantt to act on the review.",
+    a: "Plain-English memos, not screenshots of P6. The /p6-xml demo turns every DCMA-14 audit into a one-page memo addressed to the RE — recommendation (accept / accept-with-conditions / reject), hard blockers, advisory flags, and next steps. The RE never has to interpret a Gantt to act on the review.",
     tag: 'RE COMMS',
   },
   {
     q: 'How does this scale across the Newark / PANYNJ portfolio?',
-    a: "Module B in the demo computes SPI/CPI and slip from a baseline + monthly update XER pair. Roll that across every active project, plug the scores into the L10 scorecard, and the Project Controls Director sees the entire portfolio's health on one strip. That's the Section 3 'Integrated Reporting' deliverable, productized.",
+    a: "The /p6-xml demo computes SPI/CPI and slip from a baseline + monthly update XER pair. Roll that across every active project, plug the scores into the L10 scorecard, and the Project Controls Director sees the entire portfolio's health on one strip. That's the Section 3 'Integrated Reporting' deliverable, productized.",
     tag: 'PORTFOLIO',
   },
   {
@@ -268,7 +268,7 @@ const recruiterQA: { q: string; a: string; tag?: string }[] = [
   },
   {
     q: "How will you reduce administrative time by 30% (PDF long-term KPI)?",
-    a: "By collapsing the four manual scheduler passes — XER review, monthly update report, variance roll-up, executive snapshot — into one in-browser pipeline. the PMXML demo collapses the contractor-review pass; Module B collapses the monthly update pass. The 30% target is a documented before/after, not a promise.",
+    a: "By collapsing the four manual scheduler passes — XER review, monthly update report, variance roll-up, executive snapshot — into one in-browser pipeline. the PMXML demo collapses both passes. The 30% target is a documented before/after, not a promise.",
     tag: 'EFFICIENCY',
   },
 ];
@@ -407,7 +407,7 @@ const McfaPitch = () => {
                     <span className="h-2.5 w-2.5 rounded-full bg-emerald-500/60" />
                     <span className="ml-auto text-[10px] tracking-widest text-muted-foreground">PMXML · LIVE — /p6-xml</span>
                   </div>
-                  <img src={heroScreenshot} alt="XerLens weekly scheduler workflow" className="w-full h-auto" />
+                  <img src={heroScreenshot} alt="PMXML weekly scheduler workflow" className="w-full h-auto" />
                 </div>
                 <div className="absolute -bottom-4 -right-4 hidden md:block bg-primary text-primary-foreground text-xs font-bold px-3 py-2 rounded-sm shadow-xl">
                   WORKING DEMO · /p6-xml
@@ -436,7 +436,7 @@ const McfaPitch = () => {
               <p>
                 The role reports to the <span className="text-foreground">Project Controls Director</span>, supports
                 Resident Engineers on contractor schedule reviews, and feeds the L10 Scorecard with two predictive numbers
-                every week. The Entrepreneurial value-add is the in-browser <span className="text-primary font-semibold">XerLens</span> tooling
+                every week. The Entrepreneurial value-add is the in-browser <span className="text-primary font-semibold">PMXML</span> tooling
                 shown at <Link to="/p6-xml" className="text-foreground underline underline-offset-4">/p6-xml</Link> —
                 accelerators that make the scheduler faster, not a separate role.
               </p>
@@ -834,7 +834,7 @@ const McfaPitch = () => {
               <Layers className="h-5 w-5 text-primary mb-2" />
               <div className="font-semibold mb-1">Software Cost Avoidance</div>
               <div className="text-xs text-muted-foreground leading-relaxed">
-                Internally operated XerLens bypasses traditional SaaS. MCFA pays only the raw external footprint — hosting,
+                Internally operated PMXML tooling bypasses traditional SaaS. MCFA pays only the raw external footprint — hosting,
                 DB transit, AI API calls. Internal tooling budget scales fluidly.
               </div>
             </Card>
@@ -870,7 +870,7 @@ const McfaPitch = () => {
               <Target className="h-6 w-6 text-emerald-400 mb-3" />
               <div className="font-semibold mb-2">"The Rock" Ownership</div>
               <div className="text-sm text-muted-foreground leading-relaxed">
-                Every 90 days, ownership of one measurable Rock: Q1 XerLens DCMA-14 GA · Q2 Automated TIA fragnet ·
+                Every 90 days, ownership of one measurable Rock: Q1 PMXML DCMA-14 GA · Q2 Automated TIA fragnet ·
                 Q3 Portfolio EVM telemetry on the L10 scorecard.
               </div>
             </Card>
