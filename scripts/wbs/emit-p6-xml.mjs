@@ -287,10 +287,11 @@ function buildActivities() {
     const wbsOid = wbsOidByLeafId.get(a.primary_leaf) || ROOT_WBS_OID;
     const aOid = activityOidById.get(a.id);
 
-    // Dates
+    // Dates + duration. Comprehension overrides duration for future activities
+    // so CPM has something to chain against (was 0 → finish collapsed to data date).
     let actualStart = "", actualFinish = "", plannedDuration = "";
     if (a.time_window) {
-      const lc = state?.lifecycle;
+      const lc = comprehensionLifecycle(a, state);
       if (lc === "shipped" || lc === "in-flight" || lc === "paused" || lc === "dormant") {
         actualStart = fmtDate(a.time_window.first); cov.actualStart++;
       }
@@ -299,9 +300,12 @@ function buildActivities() {
       }
       if (type === "Task Dependent") {
         const days = Math.max(1, a.time_window.active_days || 1);
-        plannedDuration = (days * 8).toFixed(1); // hours
-        cov.plannedDuration++;
+        plannedDuration = (days * 8).toFixed(1); cov.plannedDuration++;
       }
+    }
+    const ov = compByAct.get(a.id);
+    if (!plannedDuration && ov?.duration_days) {
+      plannedDuration = (ov.duration_days * 8).toFixed(1); cov.plannedDuration++;
     }
 
     out += `
