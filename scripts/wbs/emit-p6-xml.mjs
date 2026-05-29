@@ -431,7 +431,7 @@ const mainXml = HEADER
   + buildCalendar()
   + buildCodeTypes()
   + buildUDFTypes()
-  + buildProjectInline(buildActivities(), buildRelationships(relsDoc.edges))
+  + buildProjectInline(buildActivities(), buildRelationships([...relsDoc.edges, ...compHandoffs]))
   + `\n</APIBusinessObjects>\n`;
 
 fs.writeFileSync(path.join(ROOT, "project.p6.xml"), mainXml);
