@@ -1,0 +1,801 @@
+{
+  "generatedAt": "2026-05-29T18:56:42.973Z",
+  "sortedBy": "downstreamCount DESC, lieTaxExposure DESC, lastTouched DESC",
+  "count": 29,
+  "items": [
+    {
+      "activityId": "A0026",
+      "name": "[app-shell] Migrate to Supabase backend",
+      "status": "dormant",
+      "stream": "01 Identity & Access",
+      "era": "era-03",
+      "lastTouched": "2026-03-21",
+      "dormancyDays": 69,
+      "lieTaxExposure": 13,
+      "downstreamCount": 8,
+      "successors": [
+        {
+          "description": "Resolve lie-tax: \"\"99.9% uptime SLA\" (trust-signal badge)\"",
+          "whyNeeded": "No SLA agreement exists. The app is hosted on Lovable/Supabase with no contractual uptime commitment. Any NJTA procurement officer will ask for the SLA document.",
+          "source": "lie-tax:LT-F-F-1 (fraud-risk)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"API access is available for enterprise integrations — SiteManager, AASHTOWare, or interna\"",
+          "whyNeeded": "No public or private API exists. There is no API surface in the codebase (no `/api` routes, no documented endpoints, no API key management). Telling prospects \"contact us to discuss\" implies imminent ",
+          "source": "lie-tax:LT-F-F-2 (fraud-risk)"
+        },
+        {
+          "description": "Resolve lie-tax: \"Workflow step 1: \"Drop the PDF plan set from ProjectWise or your file system\" — implies Pr\"",
+          "whyNeeded": "\"ProjectWise Integration\" is explicitly listed in the Roadmap section (`Landing.tsx:180`) as a future feature. Current support is file-system upload only.",
+          "source": "lie-tax:LT-M-M-1 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"Start Free Trial\" CTA button navigates to `/auth`\"",
+          "whyNeeded": "No free trial offering exists. The FAQ states pricing is per-project by quote only (`Landing.tsx:228`). The button label creates a false expectation; users reach a generic auth screen with no trial fr",
+          "source": "lie-tax:LT-M-M-2 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"Dedicated onboarding for NJTA teams\" trust-signal badge\"",
+          "whyNeeded": "No onboarding materials, playbooks, dedicated CSM role, or onboarding SLA exist in the codebase or documentation. This is aspirational.",
+          "source": "lie-tax:LT-M-M-3 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"30+ days — Payment delays from quantity disputes\" stat\"",
+          "whyNeeded": "Presented as industry fact with no citation, source study, or qualifying language. If a customer asks for the reference, none can be provided.",
+          "source": "lie-tax:LT-M-M-4 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"5–15% variance — DC form errors compound monthly\" stat\"",
+          "whyNeeded": "Same issue as M-4: stated as fact, no citation or methodology.",
+          "source": "lie-tax:LT-M-M-5 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"Real-time sync across all inspectors\" (comparison table)\"",
+          "whyNeeded": "Sync is outbox-based (IndexedDB queue → Supabase on reconnect). Supabase Realtime is subscribed in some hooks (`useProject`, `useOutbox`) for cache invalidation, but inspectors do **not** see each oth",
+          "source": "lie-tax:LT-M-M-6 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"Capability section: \"Roll up all measurements into a pay item summary report that mirrors \"",
+          "whyNeeded": "Roadmap item (`Landing.tsx:181`) says \"Automated Monthly Estimate Generation — Format quantities into NJDOT DC-84 payment estimate format\" is future work. `export-utils.ts` produces generic XLSX expor",
+          "source": "lie-tax:LT-M-M-8 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"SOC 2 compliance roadmap\" listed as a trust signal badge (present tense)\"",
+          "whyNeeded": "The phrase is a roadmap claim formatted as a present-tense trust badge alongside \"Your data stays yours\" and \"99.9% uptime SLA\". Prospects may read it as current compliance status.",
+          "source": "lie-tax:LT-M-M-9 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"Browser mockup address bar shows `app.takeoffpro.com`\"",
+          "whyNeeded": "The actual app lives at `draw-quantify-dash.lovable.app`. The domain `app.takeoffpro.com` does not exist (no DNS, no redirect).",
+          "source": "lie-tax:LT-C-C-1 (cosmetic)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"Zero Install\" badge + FAQ: \"No app install, no plugins, no VPN\"\"",
+          "whyNeeded": "A native iOS/Android app is in active development (`capacitor.config.ts`, `STORE_LISTING.md`). The zero-install claim is accurate for the web version but creates a contradiction with the store listing",
+          "source": "lie-tax:LT-C-C-2 (cosmetic)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"Your data stays yours\" trust-signal badge\"",
+          "whyNeeded": "Data is stored in Supabase (a third-party SaaS). Customers cannot self-host or export their full database. The claim is emotionally accurate but technically ambiguous.",
+          "source": "lie-tax:LT-C-C-3 (cosmetic)"
+        }
+      ],
+      "statusEvidence": "69d idle; leaves: {\"untagged\":8,\"implemented\":12}; lie-tax exposure: 13"
+    },
+    {
+      "activityId": "A0028",
+      "name": "[page:admin] Add admin RLS policies",
+      "status": "dormant",
+      "stream": "01 Identity & Access",
+      "era": "era-03",
+      "lastTouched": "2026-03-21",
+      "dormancyDays": 69,
+      "lieTaxExposure": 0,
+      "downstreamCount": 6,
+      "successors": [],
+      "statusEvidence": "69d idle; 1 associated leaves, untagged verdicts"
+    },
+    {
+      "activityId": "A0033",
+      "name": "[component:Toolbar] Add inspector view refactor",
+      "status": "dormant",
+      "stream": "05 Field Capture",
+      "era": "era-03",
+      "lastTouched": "2026-03-21",
+      "dormancyDays": 69,
+      "lieTaxExposure": 0,
+      "downstreamCount": 5,
+      "successors": [],
+      "statusEvidence": "69d idle; 1 associated leaves, untagged verdicts"
+    },
+    {
+      "activityId": "A0034",
+      "name": "[component:MobileToolbar] Implement inspector view UI",
+      "status": "dormant",
+      "stream": "05 Field Capture",
+      "era": "era-03",
+      "lastTouched": "2026-03-21",
+      "dormancyDays": 69,
+      "lieTaxExposure": 0,
+      "downstreamCount": 5,
+      "successors": [],
+      "statusEvidence": "69d idle; 2 associated leaves, untagged verdicts"
+    },
+    {
+      "activityId": "A0009",
+      "name": "[component:SummaryPanel] Preceding changes",
+      "status": "dormant",
+      "stream": "04 Pay Item Catalog",
+      "era": "era-01",
+      "lastTouched": "2026-03-13",
+      "dormancyDays": 77,
+      "lieTaxExposure": 0,
+      "downstreamCount": 5,
+      "successors": [],
+      "statusEvidence": "77d idle; 2 associated leaves, untagged verdicts"
+    },
+    {
+      "activityId": "A0011",
+      "name": "[html] Update site info for publish",
+      "status": "dormant",
+      "stream": "98 Build & Infra",
+      "era": "era-01",
+      "lastTouched": "2026-03-14",
+      "dormancyDays": 76,
+      "lieTaxExposure": 0,
+      "downstreamCount": 4,
+      "successors": [
+        {
+          "description": "Stream \"98 Build & Infra\" has no implemented leaves — close the loop or formally retire",
+          "whyNeeded": "entire value stream lacks shipped code despite intent docs",
+          "source": "stream-doc:98 Build & Infra"
+        }
+      ],
+      "statusEvidence": "76d idle; 2 associated leaves, untagged verdicts"
+    },
+    {
+      "activityId": "A0056",
+      "name": "[component:MobileAnnotationSheet] Real-time annotations enabled",
+      "status": "dormant",
+      "stream": "05 Field Capture",
+      "era": "era-04",
+      "lastTouched": "2026-03-23",
+      "dormancyDays": 67,
+      "lieTaxExposure": 0,
+      "downstreamCount": 3,
+      "successors": [],
+      "statusEvidence": "67d idle; 2 associated leaves, untagged verdicts"
+    },
+    {
+      "activityId": "A0024",
+      "name": "[supabase:config] Changes",
+      "status": "dormant",
+      "stream": "98 Build & Infra",
+      "era": "era-03",
+      "lastTouched": "2026-03-21",
+      "dormancyDays": 69,
+      "lieTaxExposure": 0,
+      "downstreamCount": 3,
+      "successors": [
+        {
+          "description": "Stream \"98 Build & Infra\" has no implemented leaves — close the loop or formally retire",
+          "whyNeeded": "entire value stream lacks shipped code despite intent docs",
+          "source": "stream-doc:98 Build & Infra"
+        }
+      ],
+      "statusEvidence": "69d idle; 1 associated leaves, untagged verdicts"
+    },
+    {
+      "activityId": "A0025",
+      "name": "[migration] Connected to Lovable Cloud",
+      "status": "dormant",
+      "stream": "98 Build & Infra",
+      "era": "era-03",
+      "lastTouched": "2026-03-21",
+      "dormancyDays": 69,
+      "lieTaxExposure": 0,
+      "downstreamCount": 3,
+      "successors": [
+        {
+          "description": "Stream \"98 Build & Infra\" has no implemented leaves — close the loop or formally retire",
+          "whyNeeded": "entire value stream lacks shipped code despite intent docs",
+          "source": "stream-doc:98 Build & Infra"
+        }
+      ],
+      "statusEvidence": "69d idle; 27 associated leaves, untagged verdicts"
+    },
+    {
+      "activityId": "A0038",
+      "name": "[html] Landing page added",
+      "status": "dormant",
+      "stream": "98 Build & Infra",
+      "era": "era-03",
+      "lastTouched": "2026-03-21",
+      "dormancyDays": 69,
+      "lieTaxExposure": 0,
+      "downstreamCount": 3,
+      "successors": [
+        {
+          "description": "Stream \"98 Build & Infra\" has no implemented leaves — close the loop or formally retire",
+          "whyNeeded": "entire value stream lacks shipped code despite intent docs",
+          "source": "stream-doc:98 Build & Infra"
+        }
+      ],
+      "statusEvidence": "69d idle; 1 associated leaves, untagged verdicts"
+    },
+    {
+      "activityId": "A0035",
+      "name": "[component:GuidedTour] Add welcome carousel onboarding",
+      "status": "dormant",
+      "stream": "02 Portfolio & PM Home",
+      "era": "era-03",
+      "lastTouched": "2026-03-21",
+      "dormancyDays": 69,
+      "lieTaxExposure": 0,
+      "downstreamCount": 2,
+      "successors": [],
+      "statusEvidence": "69d idle; 6 associated leaves, untagged verdicts"
+    },
+    {
+      "activityId": "A0013",
+      "name": "[component:SpecViewer] Add specs-utils and viewer",
+      "status": "dormant",
+      "stream": "09 Standard Specifications",
+      "era": "era-02",
+      "lastTouched": "2026-03-18",
+      "dormancyDays": 72,
+      "lieTaxExposure": 0,
+      "downstreamCount": 2,
+      "successors": [
+        {
+          "description": "Stream \"09 Standard Specifications\" has no implemented leaves — close the loop or formally retire",
+          "whyNeeded": "entire value stream lacks shipped code despite intent docs",
+          "source": "stream-doc:09 Standard Specifications"
+        }
+      ],
+      "statusEvidence": "72d idle; 2 associated leaves, untagged verdicts"
+    },
+    {
+      "activityId": "A0016",
+      "name": "[lib:specs-utils] Validate specs against PDF read",
+      "status": "dormant",
+      "stream": "09 Standard Specifications",
+      "era": "era-02",
+      "lastTouched": "2026-03-15",
+      "dormancyDays": 75,
+      "lieTaxExposure": 0,
+      "downstreamCount": 2,
+      "successors": [
+        {
+          "description": "Stream \"09 Standard Specifications\" has no implemented leaves — close the loop or formally retire",
+          "whyNeeded": "entire value stream lacks shipped code despite intent docs",
+          "source": "stream-doc:09 Standard Specifications"
+        }
+      ],
+      "statusEvidence": "75d idle; 1 associated leaves, untagged verdicts"
+    },
+    {
+      "activityId": "A0059",
+      "name": "[html] Rewrote NJTA/NJDOT landing page",
+      "status": "dormant",
+      "stream": "98 Build & Infra",
+      "era": "era-04",
+      "lastTouched": "2026-03-25",
+      "dormancyDays": 65,
+      "lieTaxExposure": 13,
+      "downstreamCount": 1,
+      "successors": [
+        {
+          "description": "Resolve lie-tax: \"\"99.9% uptime SLA\" (trust-signal badge)\"",
+          "whyNeeded": "No SLA agreement exists. The app is hosted on Lovable/Supabase with no contractual uptime commitment. Any NJTA procurement officer will ask for the SLA document.",
+          "source": "lie-tax:LT-F-F-1 (fraud-risk)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"API access is available for enterprise integrations — SiteManager, AASHTOWare, or interna\"",
+          "whyNeeded": "No public or private API exists. There is no API surface in the codebase (no `/api` routes, no documented endpoints, no API key management). Telling prospects \"contact us to discuss\" implies imminent ",
+          "source": "lie-tax:LT-F-F-2 (fraud-risk)"
+        },
+        {
+          "description": "Resolve lie-tax: \"Workflow step 1: \"Drop the PDF plan set from ProjectWise or your file system\" — implies Pr\"",
+          "whyNeeded": "\"ProjectWise Integration\" is explicitly listed in the Roadmap section (`Landing.tsx:180`) as a future feature. Current support is file-system upload only.",
+          "source": "lie-tax:LT-M-M-1 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"Start Free Trial\" CTA button navigates to `/auth`\"",
+          "whyNeeded": "No free trial offering exists. The FAQ states pricing is per-project by quote only (`Landing.tsx:228`). The button label creates a false expectation; users reach a generic auth screen with no trial fr",
+          "source": "lie-tax:LT-M-M-2 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"Dedicated onboarding for NJTA teams\" trust-signal badge\"",
+          "whyNeeded": "No onboarding materials, playbooks, dedicated CSM role, or onboarding SLA exist in the codebase or documentation. This is aspirational.",
+          "source": "lie-tax:LT-M-M-3 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"30+ days — Payment delays from quantity disputes\" stat\"",
+          "whyNeeded": "Presented as industry fact with no citation, source study, or qualifying language. If a customer asks for the reference, none can be provided.",
+          "source": "lie-tax:LT-M-M-4 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"5–15% variance — DC form errors compound monthly\" stat\"",
+          "whyNeeded": "Same issue as M-4: stated as fact, no citation or methodology.",
+          "source": "lie-tax:LT-M-M-5 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"Real-time sync across all inspectors\" (comparison table)\"",
+          "whyNeeded": "Sync is outbox-based (IndexedDB queue → Supabase on reconnect). Supabase Realtime is subscribed in some hooks (`useProject`, `useOutbox`) for cache invalidation, but inspectors do **not** see each oth",
+          "source": "lie-tax:LT-M-M-6 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"Capability section: \"Roll up all measurements into a pay item summary report that mirrors \"",
+          "whyNeeded": "Roadmap item (`Landing.tsx:181`) says \"Automated Monthly Estimate Generation — Format quantities into NJDOT DC-84 payment estimate format\" is future work. `export-utils.ts` produces generic XLSX expor",
+          "source": "lie-tax:LT-M-M-8 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"SOC 2 compliance roadmap\" listed as a trust signal badge (present tense)\"",
+          "whyNeeded": "The phrase is a roadmap claim formatted as a present-tense trust badge alongside \"Your data stays yours\" and \"99.9% uptime SLA\". Prospects may read it as current compliance status.",
+          "source": "lie-tax:LT-M-M-9 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"Browser mockup address bar shows `app.takeoffpro.com`\"",
+          "whyNeeded": "The actual app lives at `draw-quantify-dash.lovable.app`. The domain `app.takeoffpro.com` does not exist (no DNS, no redirect).",
+          "source": "lie-tax:LT-C-C-1 (cosmetic)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"Zero Install\" badge + FAQ: \"No app install, no plugins, no VPN\"\"",
+          "whyNeeded": "A native iOS/Android app is in active development (`capacitor.config.ts`, `STORE_LISTING.md`). The zero-install claim is accurate for the web version but creates a contradiction with the store listing",
+          "source": "lie-tax:LT-C-C-2 (cosmetic)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"Your data stays yours\" trust-signal badge\"",
+          "whyNeeded": "Data is stored in Supabase (a third-party SaaS). Customers cannot self-host or export their full database. The claim is emotionally accurate but technically ambiguous.",
+          "source": "lie-tax:LT-C-C-3 (cosmetic)"
+        },
+        {
+          "description": "Stream \"98 Build & Infra\" has no implemented leaves — close the loop or formally retire",
+          "whyNeeded": "entire value stream lacks shipped code despite intent docs",
+          "source": "stream-doc:98 Build & Infra"
+        }
+      ],
+      "statusEvidence": "65d idle; leaves: {\"untagged\":2}; lie-tax exposure: 13"
+    },
+    {
+      "activityId": "A0032",
+      "name": "[component:MobilePayItems] Inspector view streamlined",
+      "status": "dormant",
+      "stream": "04 Pay Item Catalog",
+      "era": "era-03",
+      "lastTouched": "2026-03-21",
+      "dormancyDays": 69,
+      "lieTaxExposure": 0,
+      "downstreamCount": 1,
+      "successors": [],
+      "statusEvidence": "69d idle; 2 associated leaves, untagged verdicts"
+    },
+    {
+      "activityId": "A0067",
+      "name": "[route:marketing] Added label tool and demo route",
+      "status": "dormant",
+      "stream": "01 Identity & Access",
+      "era": "era-04",
+      "lastTouched": "2026-03-29",
+      "dormancyDays": 61,
+      "lieTaxExposure": 14,
+      "downstreamCount": 0,
+      "successors": [
+        {
+          "description": "Resolve lie-tax: \"Demo completion screen: \"Sign up to save your work, collaborate, and export reports\"\"",
+          "whyNeeded": "Demo measurements are ephemeral and not associated with a real project. \"Save your work\" implies the demo session data persists after sign-up, which it does not.",
+          "source": "lie-tax:LT-C-C-4 (cosmetic)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"99.9% uptime SLA\" (trust-signal badge)\"",
+          "whyNeeded": "No SLA agreement exists. The app is hosted on Lovable/Supabase with no contractual uptime commitment. Any NJTA procurement officer will ask for the SLA document.",
+          "source": "lie-tax:LT-F-F-1 (fraud-risk)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"API access is available for enterprise integrations — SiteManager, AASHTOWare, or interna\"",
+          "whyNeeded": "No public or private API exists. There is no API surface in the codebase (no `/api` routes, no documented endpoints, no API key management). Telling prospects \"contact us to discuss\" implies imminent ",
+          "source": "lie-tax:LT-F-F-2 (fraud-risk)"
+        },
+        {
+          "description": "Resolve lie-tax: \"Workflow step 1: \"Drop the PDF plan set from ProjectWise or your file system\" — implies Pr\"",
+          "whyNeeded": "\"ProjectWise Integration\" is explicitly listed in the Roadmap section (`Landing.tsx:180`) as a future feature. Current support is file-system upload only.",
+          "source": "lie-tax:LT-M-M-1 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"Start Free Trial\" CTA button navigates to `/auth`\"",
+          "whyNeeded": "No free trial offering exists. The FAQ states pricing is per-project by quote only (`Landing.tsx:228`). The button label creates a false expectation; users reach a generic auth screen with no trial fr",
+          "source": "lie-tax:LT-M-M-2 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"Dedicated onboarding for NJTA teams\" trust-signal badge\"",
+          "whyNeeded": "No onboarding materials, playbooks, dedicated CSM role, or onboarding SLA exist in the codebase or documentation. This is aspirational.",
+          "source": "lie-tax:LT-M-M-3 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"30+ days — Payment delays from quantity disputes\" stat\"",
+          "whyNeeded": "Presented as industry fact with no citation, source study, or qualifying language. If a customer asks for the reference, none can be provided.",
+          "source": "lie-tax:LT-M-M-4 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"5–15% variance — DC form errors compound monthly\" stat\"",
+          "whyNeeded": "Same issue as M-4: stated as fact, no citation or methodology.",
+          "source": "lie-tax:LT-M-M-5 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"Real-time sync across all inspectors\" (comparison table)\"",
+          "whyNeeded": "Sync is outbox-based (IndexedDB queue → Supabase on reconnect). Supabase Realtime is subscribed in some hooks (`useProject`, `useOutbox`) for cache invalidation, but inspectors do **not** see each oth",
+          "source": "lie-tax:LT-M-M-6 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"Capability section: \"Roll up all measurements into a pay item summary report that mirrors \"",
+          "whyNeeded": "Roadmap item (`Landing.tsx:181`) says \"Automated Monthly Estimate Generation — Format quantities into NJDOT DC-84 payment estimate format\" is future work. `export-utils.ts` produces generic XLSX expor",
+          "source": "lie-tax:LT-M-M-8 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"SOC 2 compliance roadmap\" listed as a trust signal badge (present tense)\"",
+          "whyNeeded": "The phrase is a roadmap claim formatted as a present-tense trust badge alongside \"Your data stays yours\" and \"99.9% uptime SLA\". Prospects may read it as current compliance status.",
+          "source": "lie-tax:LT-M-M-9 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"Browser mockup address bar shows `app.takeoffpro.com`\"",
+          "whyNeeded": "The actual app lives at `draw-quantify-dash.lovable.app`. The domain `app.takeoffpro.com` does not exist (no DNS, no redirect).",
+          "source": "lie-tax:LT-C-C-1 (cosmetic)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"Zero Install\" badge + FAQ: \"No app install, no plugins, no VPN\"\"",
+          "whyNeeded": "A native iOS/Android app is in active development (`capacitor.config.ts`, `STORE_LISTING.md`). The zero-install claim is accurate for the web version but creates a contradiction with the store listing",
+          "source": "lie-tax:LT-C-C-2 (cosmetic)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"Your data stays yours\" trust-signal badge\"",
+          "whyNeeded": "Data is stored in Supabase (a third-party SaaS). Customers cannot self-host or export their full database. The claim is emotionally accurate but technically ambiguous.",
+          "source": "lie-tax:LT-C-C-3 (cosmetic)"
+        }
+      ],
+      "statusEvidence": "61d idle; leaves: {\"untagged\":6}; lie-tax exposure: 14"
+    },
+    {
+      "activityId": "A0040",
+      "name": "[migration] Implement org-based signup",
+      "status": "dormant",
+      "stream": "98 Build & Infra",
+      "era": "era-04",
+      "lastTouched": "2026-03-28",
+      "dormancyDays": 62,
+      "lieTaxExposure": 13,
+      "downstreamCount": 0,
+      "successors": [
+        {
+          "description": "Resolve lie-tax: \"\"99.9% uptime SLA\" (trust-signal badge)\"",
+          "whyNeeded": "No SLA agreement exists. The app is hosted on Lovable/Supabase with no contractual uptime commitment. Any NJTA procurement officer will ask for the SLA document.",
+          "source": "lie-tax:LT-F-F-1 (fraud-risk)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"API access is available for enterprise integrations — SiteManager, AASHTOWare, or interna\"",
+          "whyNeeded": "No public or private API exists. There is no API surface in the codebase (no `/api` routes, no documented endpoints, no API key management). Telling prospects \"contact us to discuss\" implies imminent ",
+          "source": "lie-tax:LT-F-F-2 (fraud-risk)"
+        },
+        {
+          "description": "Resolve lie-tax: \"Workflow step 1: \"Drop the PDF plan set from ProjectWise or your file system\" — implies Pr\"",
+          "whyNeeded": "\"ProjectWise Integration\" is explicitly listed in the Roadmap section (`Landing.tsx:180`) as a future feature. Current support is file-system upload only.",
+          "source": "lie-tax:LT-M-M-1 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"Start Free Trial\" CTA button navigates to `/auth`\"",
+          "whyNeeded": "No free trial offering exists. The FAQ states pricing is per-project by quote only (`Landing.tsx:228`). The button label creates a false expectation; users reach a generic auth screen with no trial fr",
+          "source": "lie-tax:LT-M-M-2 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"Dedicated onboarding for NJTA teams\" trust-signal badge\"",
+          "whyNeeded": "No onboarding materials, playbooks, dedicated CSM role, or onboarding SLA exist in the codebase or documentation. This is aspirational.",
+          "source": "lie-tax:LT-M-M-3 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"30+ days — Payment delays from quantity disputes\" stat\"",
+          "whyNeeded": "Presented as industry fact with no citation, source study, or qualifying language. If a customer asks for the reference, none can be provided.",
+          "source": "lie-tax:LT-M-M-4 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"5–15% variance — DC form errors compound monthly\" stat\"",
+          "whyNeeded": "Same issue as M-4: stated as fact, no citation or methodology.",
+          "source": "lie-tax:LT-M-M-5 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"Real-time sync across all inspectors\" (comparison table)\"",
+          "whyNeeded": "Sync is outbox-based (IndexedDB queue → Supabase on reconnect). Supabase Realtime is subscribed in some hooks (`useProject`, `useOutbox`) for cache invalidation, but inspectors do **not** see each oth",
+          "source": "lie-tax:LT-M-M-6 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"Capability section: \"Roll up all measurements into a pay item summary report that mirrors \"",
+          "whyNeeded": "Roadmap item (`Landing.tsx:181`) says \"Automated Monthly Estimate Generation — Format quantities into NJDOT DC-84 payment estimate format\" is future work. `export-utils.ts` produces generic XLSX expor",
+          "source": "lie-tax:LT-M-M-8 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"SOC 2 compliance roadmap\" listed as a trust signal badge (present tense)\"",
+          "whyNeeded": "The phrase is a roadmap claim formatted as a present-tense trust badge alongside \"Your data stays yours\" and \"99.9% uptime SLA\". Prospects may read it as current compliance status.",
+          "source": "lie-tax:LT-M-M-9 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"Browser mockup address bar shows `app.takeoffpro.com`\"",
+          "whyNeeded": "The actual app lives at `draw-quantify-dash.lovable.app`. The domain `app.takeoffpro.com` does not exist (no DNS, no redirect).",
+          "source": "lie-tax:LT-C-C-1 (cosmetic)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"Zero Install\" badge + FAQ: \"No app install, no plugins, no VPN\"\"",
+          "whyNeeded": "A native iOS/Android app is in active development (`capacitor.config.ts`, `STORE_LISTING.md`). The zero-install claim is accurate for the web version but creates a contradiction with the store listing",
+          "source": "lie-tax:LT-C-C-2 (cosmetic)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"Your data stays yours\" trust-signal badge\"",
+          "whyNeeded": "Data is stored in Supabase (a third-party SaaS). Customers cannot self-host or export their full database. The claim is emotionally accurate but technically ambiguous.",
+          "source": "lie-tax:LT-C-C-3 (cosmetic)"
+        },
+        {
+          "description": "Stream \"98 Build & Infra\" has no implemented leaves — close the loop or formally retire",
+          "whyNeeded": "entire value stream lacks shipped code despite intent docs",
+          "source": "stream-doc:98 Build & Infra"
+        }
+      ],
+      "statusEvidence": "62d idle; leaves: {\"untagged\":14}; lie-tax exposure: 13"
+    },
+    {
+      "activityId": "A0061",
+      "name": "[page:landing] Enhanced landing with FAQ form",
+      "status": "dormant",
+      "stream": "20 Sales & Pitch",
+      "era": "era-04",
+      "lastTouched": "2026-03-28",
+      "dormancyDays": 62,
+      "lieTaxExposure": 13,
+      "downstreamCount": 0,
+      "successors": [
+        {
+          "description": "Resolve lie-tax: \"\"99.9% uptime SLA\" (trust-signal badge)\"",
+          "whyNeeded": "No SLA agreement exists. The app is hosted on Lovable/Supabase with no contractual uptime commitment. Any NJTA procurement officer will ask for the SLA document.",
+          "source": "lie-tax:LT-F-F-1 (fraud-risk)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"API access is available for enterprise integrations — SiteManager, AASHTOWare, or interna\"",
+          "whyNeeded": "No public or private API exists. There is no API surface in the codebase (no `/api` routes, no documented endpoints, no API key management). Telling prospects \"contact us to discuss\" implies imminent ",
+          "source": "lie-tax:LT-F-F-2 (fraud-risk)"
+        },
+        {
+          "description": "Resolve lie-tax: \"Workflow step 1: \"Drop the PDF plan set from ProjectWise or your file system\" — implies Pr\"",
+          "whyNeeded": "\"ProjectWise Integration\" is explicitly listed in the Roadmap section (`Landing.tsx:180`) as a future feature. Current support is file-system upload only.",
+          "source": "lie-tax:LT-M-M-1 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"Start Free Trial\" CTA button navigates to `/auth`\"",
+          "whyNeeded": "No free trial offering exists. The FAQ states pricing is per-project by quote only (`Landing.tsx:228`). The button label creates a false expectation; users reach a generic auth screen with no trial fr",
+          "source": "lie-tax:LT-M-M-2 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"Dedicated onboarding for NJTA teams\" trust-signal badge\"",
+          "whyNeeded": "No onboarding materials, playbooks, dedicated CSM role, or onboarding SLA exist in the codebase or documentation. This is aspirational.",
+          "source": "lie-tax:LT-M-M-3 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"30+ days — Payment delays from quantity disputes\" stat\"",
+          "whyNeeded": "Presented as industry fact with no citation, source study, or qualifying language. If a customer asks for the reference, none can be provided.",
+          "source": "lie-tax:LT-M-M-4 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"5–15% variance — DC form errors compound monthly\" stat\"",
+          "whyNeeded": "Same issue as M-4: stated as fact, no citation or methodology.",
+          "source": "lie-tax:LT-M-M-5 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"Real-time sync across all inspectors\" (comparison table)\"",
+          "whyNeeded": "Sync is outbox-based (IndexedDB queue → Supabase on reconnect). Supabase Realtime is subscribed in some hooks (`useProject`, `useOutbox`) for cache invalidation, but inspectors do **not** see each oth",
+          "source": "lie-tax:LT-M-M-6 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"Capability section: \"Roll up all measurements into a pay item summary report that mirrors \"",
+          "whyNeeded": "Roadmap item (`Landing.tsx:181`) says \"Automated Monthly Estimate Generation — Format quantities into NJDOT DC-84 payment estimate format\" is future work. `export-utils.ts` produces generic XLSX expor",
+          "source": "lie-tax:LT-M-M-8 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"SOC 2 compliance roadmap\" listed as a trust signal badge (present tense)\"",
+          "whyNeeded": "The phrase is a roadmap claim formatted as a present-tense trust badge alongside \"Your data stays yours\" and \"99.9% uptime SLA\". Prospects may read it as current compliance status.",
+          "source": "lie-tax:LT-M-M-9 (misleading)"
+        },
+        {
+          "description": "Resolve lie-tax: \"Browser mockup address bar shows `app.takeoffpro.com`\"",
+          "whyNeeded": "The actual app lives at `draw-quantify-dash.lovable.app`. The domain `app.takeoffpro.com` does not exist (no DNS, no redirect).",
+          "source": "lie-tax:LT-C-C-1 (cosmetic)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"Zero Install\" badge + FAQ: \"No app install, no plugins, no VPN\"\"",
+          "whyNeeded": "A native iOS/Android app is in active development (`capacitor.config.ts`, `STORE_LISTING.md`). The zero-install claim is accurate for the web version but creates a contradiction with the store listing",
+          "source": "lie-tax:LT-C-C-2 (cosmetic)"
+        },
+        {
+          "description": "Resolve lie-tax: \"\"Your data stays yours\" trust-signal badge\"",
+          "whyNeeded": "Data is stored in Supabase (a third-party SaaS). Customers cannot self-host or export their full database. The claim is emotionally accurate but technically ambiguous.",
+          "source": "lie-tax:LT-C-C-3 (cosmetic)"
+        }
+      ],
+      "statusEvidence": "62d idle; leaves: {\"untagged\":1}; lie-tax exposure: 13"
+    },
+    {
+      "activityId": "A0095",
+      "name": "[page:fajarpitch] Changes",
+      "status": "blocked",
+      "stream": "20 Sales & Pitch",
+      "era": "era-05",
+      "lastTouched": "2026-05-06",
+      "dormancyDays": 23,
+      "lieTaxExposure": 0,
+      "downstreamCount": 0,
+      "successors": [],
+      "statusEvidence": "last commit 23d ago | blocked by A0070 (abandoned)"
+    },
+    {
+      "activityId": "A0060",
+      "name": "[asset] Captured landing hero screenshot",
+      "status": "dormant",
+      "stream": "20 Sales & Pitch",
+      "era": "era-04",
+      "lastTouched": "2026-03-27",
+      "dormancyDays": 63,
+      "lieTaxExposure": 0,
+      "downstreamCount": 0,
+      "successors": [],
+      "statusEvidence": "63d idle; 6 associated leaves, untagged verdicts"
+    },
+    {
+      "activityId": "A0062",
+      "name": "[styles] Added enterprise landing imagery",
+      "status": "dormant",
+      "stream": "98 Build & Infra",
+      "era": "era-04",
+      "lastTouched": "2026-03-27",
+      "dormancyDays": 63,
+      "lieTaxExposure": 0,
+      "downstreamCount": 0,
+      "successors": [
+        {
+          "description": "Stream \"98 Build & Infra\" has no implemented leaves — close the loop or formally retire",
+          "whyNeeded": "entire value stream lacks shipped code despite intent docs",
+          "source": "stream-doc:98 Build & Infra"
+        }
+      ],
+      "statusEvidence": "63d idle; 1 associated leaves, untagged verdicts"
+    },
+    {
+      "activityId": "A0065",
+      "name": "[lib:geo-transform] Added GPS-to-plan feature plan",
+      "status": "dormant",
+      "stream": "05 Field Capture",
+      "era": "era-04",
+      "lastTouched": "2026-03-27",
+      "dormancyDays": 63,
+      "lieTaxExposure": 0,
+      "downstreamCount": 0,
+      "successors": [],
+      "statusEvidence": "63d idle; 2 associated leaves, untagged verdicts"
+    },
+    {
+      "activityId": "A0043",
+      "name": "[lib:specs-utils] Relax section detection",
+      "status": "dormant",
+      "stream": "09 Standard Specifications",
+      "era": "era-04",
+      "lastTouched": "2026-03-23",
+      "dormancyDays": 67,
+      "lieTaxExposure": 0,
+      "downstreamCount": 0,
+      "successors": [
+        {
+          "description": "Stream \"09 Standard Specifications\" has no implemented leaves — close the loop or formally retire",
+          "whyNeeded": "entire value stream lacks shipped code despite intent docs",
+          "source": "stream-doc:09 Standard Specifications"
+        }
+      ],
+      "statusEvidence": "67d idle; 1 associated leaves, untagged verdicts"
+    },
+    {
+      "activityId": "A0044",
+      "name": "[component:SpecViewer] Continuous scroll viewer added",
+      "status": "dormant",
+      "stream": "09 Standard Specifications",
+      "era": "era-04",
+      "lastTouched": "2026-03-23",
+      "dormancyDays": 67,
+      "lieTaxExposure": 0,
+      "downstreamCount": 0,
+      "successors": [
+        {
+          "description": "Stream \"09 Standard Specifications\" has no implemented leaves — close the loop or formally retire",
+          "whyNeeded": "entire value stream lacks shipped code despite intent docs",
+          "source": "stream-doc:09 Standard Specifications"
+        }
+      ],
+      "statusEvidence": "67d idle; 1 associated leaves, untagged verdicts"
+    },
+    {
+      "activityId": "A0036",
+      "name": "[lib:export-utils] Add annotation fields migration",
+      "status": "dormant",
+      "stream": "07 Quantity to Payment",
+      "era": "era-03",
+      "lastTouched": "2026-03-21",
+      "dormancyDays": 69,
+      "lieTaxExposure": 0,
+      "downstreamCount": 0,
+      "successors": [
+        {
+          "description": "Stream \"07 Quantity to Payment\" has no implemented leaves — close the loop or formally retire",
+          "whyNeeded": "entire value stream lacks shipped code despite intent docs",
+          "source": "stream-doc:07 Quantity to Payment"
+        }
+      ],
+      "statusEvidence": "69d idle; 2 associated leaves, untagged verdicts"
+    },
+    {
+      "activityId": "A0019",
+      "name": "[component:EmptyState] Overhauled mobile UI",
+      "status": "dormant",
+      "stream": "97 Plumbing",
+      "era": "era-02",
+      "lastTouched": "2026-03-19",
+      "dormancyDays": 71,
+      "lieTaxExposure": 0,
+      "downstreamCount": 0,
+      "successors": [
+        {
+          "description": "Stream \"97 Plumbing\" has no implemented leaves — close the loop or formally retire",
+          "whyNeeded": "entire value stream lacks shipped code despite intent docs",
+          "source": "stream-doc:97 Plumbing"
+        }
+      ],
+      "statusEvidence": "71d idle; 8 associated leaves, untagged verdicts"
+    },
+    {
+      "activityId": "A0017",
+      "name": "[test:specs-utils] Add specs utils tests",
+      "status": "dormant",
+      "stream": "18 Compliance & Audit",
+      "era": "era-02",
+      "lastTouched": "2026-03-15",
+      "dormancyDays": 75,
+      "lieTaxExposure": 0,
+      "downstreamCount": 0,
+      "successors": [],
+      "statusEvidence": "75d idle; 1 associated leaves, untagged verdicts"
+    },
+    {
+      "activityId": "A0018",
+      "name": "[test:setup] Add unit tests for specs utils",
+      "status": "dormant",
+      "stream": "18 Compliance & Audit",
+      "era": "era-02",
+      "lastTouched": "2026-03-15",
+      "dormancyDays": 75,
+      "lieTaxExposure": 0,
+      "downstreamCount": 0,
+      "successors": [],
+      "statusEvidence": "75d idle; 1 associated leaves, untagged verdicts"
+    },
+    {
+      "activityId": "A0005",
+      "name": "[lib:storage] Add clear project button",
+      "status": "dormant",
+      "stream": "10 Document Management",
+      "era": "era-01",
+      "lastTouched": "2026-03-08",
+      "dormancyDays": 82,
+      "lieTaxExposure": 0,
+      "downstreamCount": 0,
+      "successors": [
+        {
+          "description": "Stream \"10 Document Management\" has no implemented leaves — close the loop or formally retire",
+          "whyNeeded": "entire value stream lacks shipped code despite intent docs",
+          "source": "stream-doc:10 Document Management"
+        }
+      ],
+      "statusEvidence": "82d idle; 1 associated leaves, untagged verdicts"
+    }
+  ]
+}

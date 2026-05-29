@@ -1,86 +1,154 @@
+## What we're rebuilding
 
-# Project-as-Schedule: WBS + activities from git + audit
+A single JSON dataset where the **canonical 417-leaf WBS** is the spine, and **many activities (past, in-flight, dormant, and future)** hang off each leaf — with relationships, state, and concurrency that reflect how the project actually moved. P6 XML is deferred; this plan stops at JSON.
 
-Apply this app's own schedule-analytics thesis to its own history. Output is JSON only — no app wiring yet, no charter, no fixes. Goal: see what got worked on when, what ran in parallel, what's gated on what, and what looks dormant-but-needed vs. dead.
+## What's wrong with the current `.lovable/wbs/*`
 
-## Output
+- WBS hierarchy is derived from commit paths (Era→Stream→Tag) instead of the canonical leaves in `docs/wbs-dev.leaves.json` (417 leaves) augmented by `docs/wbs-proposals.reconciled.json` (orphan capabilities — the brass tacks).
+- Activities are 1:1 with commit clusters. Every commit lives in exactly one bucket. That violates both directions you stated: one leaf needs many activities, and one commit can advance several activities.
+- No future-facing activities. The schedule only looks backward.
+- State vocabulary collapsed to a flat status field on the activity; no representation of "awaiting-successor", "paused-pending-decision", "blocked-on-external", "dormant-but-needed".
+- No real predecessor inference beyond file-overlap heuristics; the marketing-debt / verification-gap / risk channels you specified in #609 are entirely absent.
 
-Two files under `.lovable/wbs/`:
+## Target shape (JSON only, no XML)
 
-- **`wbs.json`** — hierarchy: pivot era → product thesis → subsystem → work-package → activity. Each node has id, parent, name, evidence pointers (leaf IDs, snapshot dates, lie-tax row, mem refs).
-- **`activities.json`** — flat list of activities, the heavy file. Each activity has:
-  ```
-  id, wbs_id, name,
-  first_commit_ts, last_commit_ts, calendar_duration_days, active_days,
-  commits[], files_touched[], loc_added, loc_removed,
-  resource_load: { commits_per_active_day, files_per_active_day, peak_day, peak_intensity },
-  dormancy: { longest_gap_days, gap_windows[], current_dormancy_days },
-  status: in_progress | quiet | paused | dormant | blocked | abandoned | shipped | orphaned | needs_successor,
-  status_evidence: "...",
-  predecessors: [{ id, type: FS|SS|FF, basis: file_overlap|import_dep|message_ref|semantic|temporal, confidence }],
-  successors_implied: [{ description, why_needed }],   // open work the activity points to but never did
-  concurrent_with: [ids]
-  ```
+```
+.lovable/wbs/
+  wbs.json          # 417+ leaves: the canonical taxonomy (the spine)
+  activities.json   # MANY activities per leaf, past + present + future
+  links.json        # commit ↔ activity (M:N), activity ↔ leaf (M:1 primary, M:N contributing)
+  relationships.json# activity → activity (FS/SS/FF, lag, confidence, source)
+  state.json        # per-activity state vector (not a single enum)
+  next.json         # derived: what's ready to start, what's blocked, what's at risk
+  README.md
+```
 
-## Derivation pipeline (one script, `scripts/wbs-mine.ts`)
+### wbs.json — the spine (no commit data)
 
-1. **Raw events** — `git log --all --numstat --no-merges` → JSON of (sha, ts, author, msg, files[+/-/del]).
-2. **Cluster commits into activities** — group by: (a) file-set Jaccard ≥ 0.4 within a 14-day window, (b) commit-message n-gram similarity, (c) shared subsystem path prefix. One activity = one coherent thread of work.
-3. **Map to audit** — join each activity to L4 leaves via file paths. An activity inherits the leaves it touches; this is how WBS levels above "activity" get populated.
-4. **Build WBS** — top level = 8 detected pivots (eras), level 2 = product theses active in that era, level 3 = subsystems (from leaf clustering), level 4 = work-packages, level 5 = activities. Pivots come from `L3/pivots.json`; theses from snapshot history.
-5. **Compute resource loading** — per activity and rolled up per WBS node, per day. Detect peak-load days and concurrent activities (any two activities with overlapping `[first..last]` ranges and ≥1 shared active day).
-6. **Infer dependency logic** — for each activity pair:
-   - **FS (finish-start)** if activity B's first commit touches files activity A created, and A's last commit predates B's first.
-   - **SS (start-start)** if they share files and overlap in time.
-   - **Explicit** if commit message of B references A (issue ref, file ref, "follow-up to", "fixes", etc.).
-   - **Semantic** if B imports a symbol A exports.
-   - Confidence: explicit > import > file_overlap > temporal.
-7. **Status classification** — rule table, not vibes:
-   - `shipped` = activity's leaves are all implemented + linked + no lie-tax flag.
-   - `orphaned` = implemented but no `links_to[]` from any user-reachable surface.
-   - `abandoned` = implemented but explicitly contradicted by a later pivot (per `pivots.json`).
-   - `dormant` = no commits in 60+ days AND has open implied successors.
-   - `paused` = no commits in 14–60 days AND last commit message contains "wip"/"todo"/"part 1".
-   - `blocked` = open predecessor (declared in message) is itself not `shipped`.
-   - `quiet` = recent commits but low intensity (≤1 commit/week).
-   - `in_progress` = commits within last 14 days at normal intensity.
-   - `needs_successor` = shipped but has `successors_implied[]` that nobody picked up.
-8. **Surface "what needs to happen"** — derived view, written as `next.json`: every activity with `status ∈ {dormant, blocked, needs_successor}` plus its implied successors, sorted by (a) downstream activity count, (b) lie-tax exposure, (c) recency of last touch.
+Source of truth: `docs/wbs-dev.leaves.json` (417) ∪ `docs/wbs-proposals.reconciled.json.builtClusters` ∪ `.orphanCapabilities` (the brass tacks the catalog never named, discovered from code reality). Deduped by normalized name within stream.
 
-## Implied successors — where they come from
+```json
+{
+  "id": "01-identity-and-access/Frontend/Auth",
+  "stream": "01 Identity & Access",
+  "layer": "Frontend",
+  "name": "Auth",
+  "origin": "brief" | "code-surface" | "orphan-capability" | "marketing-debt" | "verification-gap",
+  "fileGlobs": ["src/pages/Auth.tsx"],
+  "criteria": [ {id, text, verdict} ],
+  "parent": "01-identity-and-access/Frontend"
+}
+```
 
-Not invented. Sourced from:
-- `TODO`/`FIXME`/`XXX` comments inside files the activity created (with file:line).
-- L4 leaves marked `partial` or `stub`.
-- Memory notes (`mem://`) that describe behavior the code doesn't yet implement.
-- Lie-tax rows (marketing claims with no implementing leaf).
-- Stream docs (`docs/streams/*`) listing outcomes that have zero implemented leaves.
+### activities.json — many per leaf, past + future
 
-Each implied successor carries its source so you can audit it.
+Each activity has a `primary_leaf` and an optional `contributing_leaves[]` (so a refactor that touches Auth + RBAC + Onboarding is one activity contributing to three leaves, not three duplicate activities).
 
-## Scope discipline
+```json
+{
+  "id": "ACT-0001",
+  "name": "Wire Supabase magic-link auth to Auth.tsx",
+  "primary_leaf": "01-identity-and-access/Frontend/Auth",
+  "contributing_leaves": ["01-identity-and-access/Backend/Session"],
+  "origin": "git" | "future-risk" | "future-marketing-debt" | "future-verification-gap" | "future-promise",
+  "time_window": { "first": "...", "last": "...", "active_days": N, "calendar_days": M, "gaps": [...] },
+  "effort": { "commit_count": N, "loc_added": N, "loc_removed": N, "files_touched": [...] },
+  "predecessors": ["ACT-xxxx"],
+  "successors": ["ACT-xxxx"],
+  "concurrent_with": ["ACT-xxxx"],
+  "evidence": { "commit_shas": [...], "marketing_claim": "...", "risk_id": "...", "verification_gap_id": "..." }
+}
+```
 
-- **No app changes.** Pure data extraction → JSON.
-- **No fixes.** This run only describes; it does not prescribe individual code edits.
-- **No charter.** That conversation is parked. If the WBS makes the missing meta-decision obvious, we'll know without me forcing it.
-- **No deletions.** Even `abandoned` activities stay in the data with the reason.
+Future activities have no `time_window`/`effort` and instead carry `planned_after`, `planned_size_hint`, and `gating_predecessors`.
 
-## Build steps
+### links.json — the M:N tables
 
-1. Read `L4/*.json`, `L3/pivots.json`, `L3/hist-*.json`, `mem://**`, `docs/streams/*`, `llms.txt`, `STORE_LISTING.md`, `src/pages/Landing.tsx`.
-2. Write `scripts/wbs-mine.ts`.
-3. Run it. Mining the full git history + clustering + dependency inference will take a few minutes on a repo this size; activity count will likely be in the 200–600 range.
-4. Sanity-check: spot-check 5 activities by hand against git log to confirm clustering and dependency inference aren't garbage. Adjust thresholds (Jaccard, window size, intensity cutoffs) if they are.
-5. Write `.lovable/wbs/wbs.json`, `.lovable/wbs/activities.json`, `.lovable/wbs/next.json`.
-6. Write `.lovable/wbs/README.md` — schema, derivation rules, threshold values used, known limitations (e.g., merge commits skipped, renames may break clustering across rename boundaries).
-7. Summarize back: total activities, count by status, top 10 concurrent-activity windows, top 10 entries in `next.json`.
+Two tables, kept separate from activities so commit→activity attribution can be re-derived without rewriting activities:
 
-## What you get to look at
+```
+commit_activity:  [{ sha, activity_id, contribution: "primary"|"secondary", weight: 0..1, signal: "path"|"token"|"co-edit"|"intent-extract" }]
+activity_leaf:    [{ activity_id, leaf_id, role: "primary"|"contributing" }]
+```
 
-A 600-row activity table where you can sort by status, filter by WBS branch, and trace any "needs_successor" item back to the commits, files, leaves, and marketing claims that imply it. If the data is useful, next move is wiring it into the in-app Gantt — but that decision waits until you've seen the JSON.
+This is what lets one commit advance multiple activities. Weight is for resource-loading math later.
 
-## What I'm NOT promising
+### relationships.json — typed dependencies
 
-- Perfect clustering. File renames, refactors that move code wholesale, and "drive-by" commits will produce some misattribution. Thresholds will need a tune-up pass.
-- Perfect dependency edges. Temporal/file-overlap edges are heuristic; only `explicit` and `import` edges are high-confidence.
-- Coverage of work done outside git (chat decisions, plans, designs that never landed). Those show up only via memory notes and stream docs.
+```
+{ pred, succ, type: "FS"|"SS"|"FF", lag_days, confidence: 0..1,
+  source: "file-overlap" | "commit-token" | "temporal" | "leaf-criterion" | "intent-extract" | "manual" }
+```
+
+Sourced from: shared-file evidence, commit message tokens ("after X", "depends on Y", "now that Z"), L4 intent-extract output (`docs/wbs-dev.agent-runs/L4/intent-leaves.json.cross_stream_links`), and criterion ordering inside leaves.
+
+### state.json — state vector, not a single enum
+
+Per activity:
+```
+{ activity_id,
+  lifecycle: "planned"|"in-flight"|"paused"|"dormant"|"shipped"|"abandoned",
+  blocking: { kind: "successor-missing"|"external"|"decision"|"none", note },
+  health: { dormancy_days, marketing_debt_count, verification_gap_count },
+  visibility: "quiet"|"normal"|"loud",
+  last_signal_ts }
+```
+
+A "dormant-but-needed" activity is `lifecycle=dormant` + `blocking.kind=none` + `marketing_debt_count>0`. A "paused-pending-decision" is `lifecycle=paused` + `blocking.kind=decision`. Etc. — the combinations express the vocabulary; we don't pre-collapse them.
+
+## How activities get built (the smarter mapping)
+
+Three independent passes, then merge:
+
+1. **Pass A — commit clustering with multi-attribution.** For each commit, compute its file set. Score each candidate activity (existing or new) by Jaccard overlap with that activity's file set and by message-token similarity. If top-1 score > 0.6 → primary contribution. If top-2 score > 0.35 → secondary contribution. New activity created when no candidate scores > 0.35 *and* the commit's file set is coherent (single stream/layer). Output: `commit_activity` rows.
+
+2. **Pass B — leaf-driven activity synthesis.** For every leaf in `wbs.json`, ensure ≥1 activity exists per `criterion`. If commits already exist that touch the leaf's `fileGlobs`, attach them. If a criterion exists with verdict ≠ "implemented" and no commit evidence, mint a **future** activity (`origin: future-verification-gap`).
+
+3. **Pass C — debt-driven future activities.** Mint future activities from:
+   - marketing claims with no implementing leaf (from `docs/lie-tax.*` if present, else `Landing.tsx` + `llms.txt` + `STORE_LISTING.md` scan)
+   - risks in `docs/streams/*` not yet on a leaf
+   - verification-gap rows in `docs/wbs-dev.verification.manifest.json`
+   Each future activity declares `gating_predecessors` against existing activity ids.
+
+Merge: if Pass A and Pass B produce activities on the same leaf with ≥80% commit-sha overlap → merge. Otherwise keep distinct (a leaf often has a "build" activity and a "harden/verify" activity that are genuinely different work).
+
+## Smarter predecessor inference (replaces current file-overlap-only)
+
+Four signals, weighted, must reach `confidence ≥ 0.5` to emit a relationship:
+
+| Signal | Weight | Source |
+|---|---|---|
+| Shared files, predecessor's `last` before successor's `first` | 0.3 | git |
+| Commit-message tokens ("after", "depends on", "now that", "follows") | 0.25 | git messages |
+| L4 cross-stream-links | 0.3 | `intent-leaves.json` |
+| Leaf criterion ordering inside same leaf | 0.4 | `wbs-dev.leaves.json` |
+
+Cycles broken by dropping lowest-confidence edge. All dropped/uncertain edges go to a `relationships.rejected.json` sidecar so the heuristic itself stays auditable.
+
+## What this plan does NOT do
+
+- No P6 XML emission.
+- No edits to `src/`.
+- No new app routes or UI.
+- No fixes to the audit, marketing copy, or memory.
+- No deletion of `.lovable/wbs/wbs.json` etc. — they're replaced in place, but the old shape is archived to `.lovable/wbs/_archive-v1/` so we can diff against the first pass.
+
+## File changes
+
+- create `scripts/wbs/build-spine.mjs` (reads existing catalogs → `wbs.json`)
+- create `scripts/wbs/build-activities.mjs` (Pass A + B + C → `activities.json`, `links.json`)
+- create `scripts/wbs/build-relationships.mjs` (4-signal inference → `relationships.json` + `.rejected.json`)
+- create `scripts/wbs/build-state.mjs` (state vector → `state.json`)
+- create `scripts/wbs/build-next.mjs` (derived view → `next.json`)
+- create `scripts/wbs/build-all.mjs` (orchestrator)
+- archive current `.lovable/wbs/*.json` → `.lovable/wbs/_archive-v1/`
+- write new `.lovable/wbs/{wbs,activities,links,relationships,relationships.rejected,state,next}.json` + `README.md`
+
+## Step order I'll execute when you approve
+
+1. Build the spine (`wbs.json`) and sanity-check counts against the 417-leaf catalog + orphan capabilities.
+2. Pass A in isolation, dump stats, eyeball 10 commits to confirm multi-attribution behaves.
+3. Pass B + merge, eyeball 10 leaves to confirm many-per-leaf works.
+4. Pass C, confirm future activities have `gating_predecessors` resolving to real ids.
+5. Relationships + state + next.
+6. Report counts, top 10 "ready-to-start" future activities, top 10 dormant-but-needed activities. No XML, no UI.
