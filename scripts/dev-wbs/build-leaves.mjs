@@ -55,6 +55,54 @@ function slugify(s) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
 }
 
+// ─── basename → full-path resolver (walks src/, supabase/, scripts/) ──────────
+function walk(dir, out = []) {
+  if (!existsSync(dir)) return out;
+  for (const ent of readdirSync(dir)) {
+    if (ent === 'node_modules' || ent.startsWith('.')) continue;
+    const p = join(dir, ent);
+    const st = statSync(p);
+    if (st.isDirectory()) walk(p, out);
+    else out.push(p.replace(/\\/g, '/'));
+  }
+  return out;
+}
+const ALL_PATHS = [...walk('src'), ...walk('supabase'), ...walk('scripts'), 'capacitor.config.ts', 'index.html', 'vite.config.ts', 'tailwind.config.ts'];
+const BASENAME_INDEX = (() => {
+  const m = new Map();
+  for (const p of ALL_PATHS) {
+    const base = p.split('/').pop();
+    if (!m.has(base)) m.set(base, []);
+    m.get(base).push(p);
+  }
+  return m;
+})();
+
+/**
+ * Resolve a path token from a brief into one or more real repo paths.
+ * - `src/components/Foo.tsx` → [as-is] if exists
+ * - `Foo.tsx`                → [src/components/Foo.tsx, ...] from basename index
+ * - `public.table`           → [as-is]
+ * - `supabase/functions/x/`  → [as-is]
+ * Token's :line suffix already stripped by EVIDENCE_RE.
+ */
+function resolvePath(token) {
+  if (!token) return [];
+  if (/^public\./.test(token)) return [token];
+  if (/^supabase\/(functions|storage|migrations)\//.test(token)) return [token];
+  if (ALL_PATHS.includes(token)) return [token];
+  // bare basename?
+  if (!token.includes('/')) {
+    const hits = BASENAME_INDEX.get(token);
+    if (hits?.length) return hits;
+  }
+  // path-suffix match (e.g. "components/Foo.tsx")
+  const suffixHits = ALL_PATHS.filter(p => p.endsWith('/' + token));
+  if (suffixHits.length) return suffixHits;
+  return [token]; // unresolved — keep for traceability
+}
+
+
 function splitSections(text) {
   const out = {};
   const parts = text.split(/^##\s+/m);
