@@ -1,0 +1,28 @@
+{
+  "$schema": "wbs-v2",
+  "generated_from": "docs/streams/*.md",
+  "scoring": { "implemented": 1.0, "partial": 0.5, "missing": 0.0 },
+  "streams": [
+    { "id": "01", "slug": "identity-and-access", "criteria": 7, "implemented": 6, "partial": 1, "missing": 0, "score": 0.93 },
+    { "id": "02", "slug": "portfolio-and-pm-home", "criteria": 7, "implemented": 6, "partial": 1, "missing": 0, "score": 0.93 },
+    { "id": "03", "slug": "project-onboarding", "criteria": 6, "implemented": 6, "partial": 0, "missing": 0, "score": 1.00 },
+    { "id": "04", "slug": "pay-item-catalog", "criteria": 7, "implemented": 5, "partial": 1, "missing": 1, "score": 0.79 },
+    { "id": "05", "slug": "field-capture", "criteria": 8, "implemented": 8, "partial": 0, "missing": 0, "score": 1.00 },
+    { "id": "06", "slug": "daily-report-lifecycle", "criteria": 8, "implemented": 8, "partial": 0, "missing": 0, "score": 1.00 },
+    { "id": "07", "slug": "quantity-to-payment", "criteria": 6, "implemented": 5, "partial": 1, "missing": 0, "score": 0.92 },
+    { "id": "08", "slug": "photo-evidence", "criteria": 6, "implemented": 5, "partial": 1, "missing": 0, "score": 0.92 },
+    { "id": "09", "slug": "standard-specifications", "criteria": 7, "implemented": 7, "partial": 0, "missing": 0, "score": 1.00 },
+    { "id": "10", "slug": "document-management", "criteria": 7, "implemented": 7, "partial": 0, "missing": 0, "score": 1.00 },
+    { "id": "11", "slug": "schedule-management", "criteria": 8, "implemented": 7, "partial": 1, "missing": 0, "score": 0.94 },
+    { "id": "12", "slug": "project-health-and-controls", "criteria": 7, "implemented": 6, "partial": 1, "missing": 0, "score": 0.93 },
+    { "id": "13", "slug": "data-export-and-interoperability", "criteria": 7, "implemented": 6, "partial": 1, "missing": 0, "score": 0.93 },
+    { "id": "14", "slug": "measurement-and-geometry-engine", "criteria": 7, "implemented": 6, "partial": 1, "missing": 0, "score": 0.93 },
+    { "id": "15", "slug": "offline-and-native-durability", "criteria": 7, "implemented": 6, "partial": 1, "missing": 0, "score": 0.93 },
+    { "id": "16", "slug": "mobile-field-ergonomics", "criteria": 7, "implemented": 5, "partial": 0, "missing": 2, "score": 0.71 },
+    { "id": "17", "slug": "notifications-and-presence", "criteria": 6, "implemented": 3, "partial": 3, "missing": 0, "score": 0.75 },
+    { "id": "18", "slug": "compliance-and-audit", "criteria": 8, "implemented": 5, "partial": 1, "missing": 2, "score": 0.69 },
+    { "id": "19", "slug": "onboarding-and-tutorials", "criteria": 6, "implemented": 4, "partial": 1, "missing": 1, "score": 0.75 },
+    { "id": "20", "slug": "sales-and-pitch", "criteria": 7, "implemented": 5, "partial": 1, "missing": 1, "score": 0.79 }
+  ],
+  "rollup": { "criteria_total": 141, "weighted_score": 121.5, "completion": 0.86 }
+}
