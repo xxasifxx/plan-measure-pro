@@ -1,21 +1,21 @@
 {
-  "generatedAt": "2026-05-29T16:10:34.921Z",
+  "generatedAt": "2026-05-29T17:07:01.026Z",
   "totals": {
-    "leaves": 211,
+    "leaves": 261,
     "byStream": {
       "10": 6,
       "11": 41,
       "12": 3,
-      "13": 8,
+      "13": 9,
       "14": 5,
-      "15": 23,
+      "15": 28,
       "16": 5,
       "17": 5,
       "18": 13,
       "19": 4,
-      "20": 4,
-      "97": 18,
-      "98": 36,
+      "20": 13,
+      "97": 20,
+      "98": 69,
       "99": 1,
       "05": 4,
       "02": 6,
@@ -28,15 +28,15 @@
       "04": 1
     },
     "byLayer": {
-      "Frontend": 107,
+      "Frontend": 123,
       "Mobile": 24,
-      "Verification": 30,
-      "Backend": 40,
+      "Verification": 31,
+      "Backend": 73,
       "Build": 10
     },
     "tables": 30,
     "views": 1,
-    "migrationWeeks": 4
+    "migrations": 36
   },
   "leaves": [
     {
@@ -139,7 +139,7 @@
       "id": "98:frontend:app"
     },
     {
-      "streamNum": "97",
+      "streamNum": "15",
       "layer": "Frontend",
       "name": "app-icon-master",
       "fileGlobs": [
@@ -152,11 +152,11 @@
           "path": "src/assets/app-icon-master.png"
         }
       ],
-      "stream": "97 Plumbing",
-      "id": "97:frontend:app-icon-master"
+      "stream": "15 Offline & Native Durability",
+      "id": "15:frontend:app-icon-master"
     },
     {
-      "streamNum": "97",
+      "streamNum": "20",
       "layer": "Frontend",
       "name": "blueprint-plans",
       "fileGlobs": [
@@ -169,11 +169,11 @@
           "path": "src/assets/blueprint-plans.jpg"
         }
       ],
-      "stream": "97 Plumbing",
-      "id": "97:frontend:blueprint-plans"
+      "stream": "20 Sales & Pitch",
+      "id": "20:frontend:blueprint-plans"
     },
     {
-      "streamNum": "97",
+      "streamNum": "20",
       "layer": "Frontend",
       "name": "gps-field-measurement",
       "fileGlobs": [
@@ -186,11 +186,11 @@
           "path": "src/assets/gps-field-measurement.jpg"
         }
       ],
-      "stream": "97 Plumbing",
-      "id": "97:frontend:gps-field-measurement"
+      "stream": "20 Sales & Pitch",
+      "id": "20:frontend:gps-field-measurement"
     },
     {
-      "streamNum": "97",
+      "streamNum": "20",
       "layer": "Frontend",
       "name": "hero-product-shot",
       "fileGlobs": [
@@ -203,11 +203,11 @@
           "path": "src/assets/hero-product-shot.png"
         }
       ],
-      "stream": "97 Plumbing",
-      "id": "97:frontend:hero-product-shot"
+      "stream": "20 Sales & Pitch",
+      "id": "20:frontend:hero-product-shot"
     },
     {
-      "streamNum": "97",
+      "streamNum": "20",
       "layer": "Frontend",
       "name": "hero-screenshot",
       "fileGlobs": [
@@ -220,11 +220,11 @@
           "path": "src/assets/hero-screenshot.jpg"
         }
       ],
-      "stream": "97 Plumbing",
-      "id": "97:frontend:hero-screenshot"
+      "stream": "20 Sales & Pitch",
+      "id": "20:frontend:hero-screenshot"
     },
     {
-      "streamNum": "97",
+      "streamNum": "20",
       "layer": "Frontend",
       "name": "highway-construction-aerial",
       "fileGlobs": [
@@ -237,11 +237,11 @@
           "path": "src/assets/highway-construction-aerial.jpg"
         }
       ],
-      "stream": "97 Plumbing",
-      "id": "97:frontend:highway-construction-aerial"
+      "stream": "20 Sales & Pitch",
+      "id": "20:frontend:highway-construction-aerial"
     },
     {
-      "streamNum": "97",
+      "streamNum": "20",
       "layer": "Frontend",
       "name": "inspector-tablet",
       "fileGlobs": [
@@ -254,8 +254,8 @@
           "path": "src/assets/inspector-tablet.jpg"
         }
       ],
-      "stream": "97 Plumbing",
-      "id": "97:frontend:inspector-tablet"
+      "stream": "20 Sales & Pitch",
+      "id": "20:frontend:inspector-tablet"
     },
     {
       "streamNum": "15",
@@ -2725,6 +2725,23 @@
     {
       "streamNum": "98",
       "layer": "Verification",
+      "name": "build-db-surface-leaves",
+      "fileGlobs": [
+        "scripts/dev-wbs/build-db-surface-leaves.mjs"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "scripts/dev-wbs/build-db-surface-leaves.mjs"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:verification:build-db-surface-leaves"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Verification",
       "name": "build-leaves",
       "fileGlobs": [
         "scripts/dev-wbs/build-leaves.mjs"
@@ -2891,6 +2908,278 @@
       ],
       "stream": "98 Build & Infra",
       "id": "98:verification:verify-e2e"
+    },
+    {
+      "streamNum": "15",
+      "layer": "Frontend",
+      "name": "apple-touch-icon",
+      "fileGlobs": [
+        "public/apple-touch-icon.png"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "public/apple-touch-icon.png"
+        }
+      ],
+      "stream": "15 Offline & Native Durability",
+      "id": "15:frontend:apple-touch-icon"
+    },
+    {
+      "streamNum": "13",
+      "layer": "Frontend",
+      "name": "takeoffpro-dev",
+      "fileGlobs": [
+        "public/exports/takeoffpro-dev.xml"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "public/exports/takeoffpro-dev.xml"
+        }
+      ],
+      "stream": "13 Data Export & Interoperability",
+      "id": "13:frontend:takeoffpro-dev"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "admin",
+      "fileGlobs": [
+        "public/fajar/admin.png"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "public/fajar/admin.png"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:admin"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "listing",
+      "fileGlobs": [
+        "public/fajar/listing.png"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "public/fajar/listing.png"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:listing"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "machine-detail",
+      "fileGlobs": [
+        "public/fajar/machine-detail.png"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "public/fajar/machine-detail.png"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:machine-detail"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "mobile-booking",
+      "fileGlobs": [
+        "public/fajar/mobile-booking.png"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "public/fajar/mobile-booking.png"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:mobile-booking"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "serp",
+      "fileGlobs": [
+        "public/fajar/serp.png"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "public/fajar/serp.png"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:serp"
+    },
+    {
+      "streamNum": "15",
+      "layer": "Frontend",
+      "name": "favicon-32",
+      "fileGlobs": [
+        "public/favicon-32.png"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "public/favicon-32.png"
+        }
+      ],
+      "stream": "15 Offline & Native Durability",
+      "id": "15:frontend:favicon-32"
+    },
+    {
+      "streamNum": "15",
+      "layer": "Frontend",
+      "name": "favicon",
+      "fileGlobs": [
+        "public/favicon.ico"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "public/favicon.ico"
+        }
+      ],
+      "stream": "15 Offline & Native Durability",
+      "id": "15:frontend:favicon"
+    },
+    {
+      "streamNum": "20",
+      "layer": "Frontend",
+      "name": "llms",
+      "fileGlobs": [
+        "public/llms.txt"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "public/llms.txt"
+        }
+      ],
+      "stream": "20 Sales & Pitch",
+      "id": "20:frontend:llms"
+    },
+    {
+      "streamNum": "15",
+      "layer": "Frontend",
+      "name": "manifest",
+      "fileGlobs": [
+        "public/manifest.webmanifest"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "public/manifest.webmanifest"
+        }
+      ],
+      "stream": "15 Offline & Native Durability",
+      "id": "15:frontend:manifest"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "placeholder",
+      "fileGlobs": [
+        "public/placeholder.svg"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "public/placeholder.svg"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:placeholder"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "pwa-192",
+      "fileGlobs": [
+        "public/pwa-192.png"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "public/pwa-192.png"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:pwa-192"
+    },
+    {
+      "streamNum": "97",
+      "layer": "Frontend",
+      "name": "pwa-512",
+      "fileGlobs": [
+        "public/pwa-512.png"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "public/pwa-512.png"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:frontend:pwa-512"
+    },
+    {
+      "streamNum": "20",
+      "layer": "Frontend",
+      "name": "robots",
+      "fileGlobs": [
+        "public/robots.txt"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "public/robots.txt"
+        }
+      ],
+      "stream": "20 Sales & Pitch",
+      "id": "20:frontend:robots"
+    },
+    {
+      "streamNum": "20",
+      "layer": "Frontend",
+      "name": "sitemap",
+      "fileGlobs": [
+        "public/sitemap.xml"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "public/sitemap.xml"
+        }
+      ],
+      "stream": "20 Sales & Pitch",
+      "id": "20:frontend:sitemap"
     },
     {
       "streamNum": "15",
@@ -3080,232 +3369,669 @@
       "id": "98:backend:config"
     },
     {
+      "streamNum": "97",
+      "layer": "Backend",
+      "name": "seed",
+      "fileGlobs": [
+        "supabase/seed.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "file-cluster",
+          "path": "supabase/seed.sql"
+        }
+      ],
+      "stream": "97 Plumbing",
+      "id": "97:backend:seed"
+    },
+    {
       "streamNum": "98",
       "layer": "Backend",
-      "name": "Migrations 2026-w12",
+      "name": "migration: 2026-03-21 88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550",
       "fileGlobs": [
-        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
-        "supabase/migrations/20260321162325_749c9dcd-0ffa-430d-bf20-422872294f47.sql",
-        "supabase/migrations/20260321162349_089b7eac-a691-474e-96f4-b97ab4d2581d.sql",
-        "supabase/migrations/20260321162408_22a25531-f789-4f47-b2d5-ec7d40196497.sql",
-        "supabase/migrations/20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql",
-        "supabase/migrations/20260321164313_fadd3bba-4f5e-4ac1-b47b-3887bdd98769.sql",
-        "supabase/migrations/20260321164809_127eb40b-40a6-4814-b6cc-ed2f3acd27f2.sql",
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+          "iso": "2026-03-21"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-03-21-88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-03-21 749c9dcd-0ffa-430d-bf20-422872294f47",
+      "fileGlobs": [
+        "supabase/migrations/20260321162325_749c9dcd-0ffa-430d-bf20-422872294f47.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260321162325_749c9dcd-0ffa-430d-bf20-422872294f47.sql",
+          "iso": "2026-03-21"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-03-21-749c9dcd-0ffa-430d-bf20-422872294f47"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-03-21 089b7eac-a691-474e-96f4-b97ab4d2581d",
+      "fileGlobs": [
+        "supabase/migrations/20260321162349_089b7eac-a691-474e-96f4-b97ab4d2581d.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260321162349_089b7eac-a691-474e-96f4-b97ab4d2581d.sql",
+          "iso": "2026-03-21"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-03-21-089b7eac-a691-474e-96f4-b97ab4d2581d"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-03-21 22a25531-f789-4f47-b2d5-ec7d40196497",
+      "fileGlobs": [
+        "supabase/migrations/20260321162408_22a25531-f789-4f47-b2d5-ec7d40196497.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260321162408_22a25531-f789-4f47-b2d5-ec7d40196497.sql",
+          "iso": "2026-03-21"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-03-21-22a25531-f789-4f47-b2d5-ec7d40196497"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-03-21 c4804e7a-cb2d-4898-be1d-27ba7694c893",
+      "fileGlobs": [
+        "supabase/migrations/20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql",
+          "iso": "2026-03-21"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-03-21-c4804e7a-cb2d-4898-be1d-27ba7694c893"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-03-21 fadd3bba-4f5e-4ac1-b47b-3887bdd98769",
+      "fileGlobs": [
+        "supabase/migrations/20260321164313_fadd3bba-4f5e-4ac1-b47b-3887bdd98769.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260321164313_fadd3bba-4f5e-4ac1-b47b-3887bdd98769.sql",
+          "iso": "2026-03-21"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-03-21-fadd3bba-4f5e-4ac1-b47b-3887bdd98769"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-03-21 127eb40b-40a6-4814-b6cc-ed2f3acd27f2",
+      "fileGlobs": [
+        "supabase/migrations/20260321164809_127eb40b-40a6-4814-b6cc-ed2f3acd27f2.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260321164809_127eb40b-40a6-4814-b6cc-ed2f3acd27f2.sql",
+          "iso": "2026-03-21"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-03-21-127eb40b-40a6-4814-b6cc-ed2f3acd27f2"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-03-21 75de1f7c-2825-40a9-b86e-f031966b835e",
+      "fileGlobs": [
         "supabase/migrations/20260321170227_75de1f7c-2825-40a9-b86e-f031966b835e.sql"
       ],
       "provenance": "code-only",
       "sources": [
         {
           "kind": "migration",
-          "path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260321162325_749c9dcd-0ffa-430d-bf20-422872294f47.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260321162349_089b7eac-a691-474e-96f4-b97ab4d2581d.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260321162408_22a25531-f789-4f47-b2d5-ec7d40196497.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260321164313_fadd3bba-4f5e-4ac1-b47b-3887bdd98769.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260321164809_127eb40b-40a6-4814-b6cc-ed2f3acd27f2.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260321170227_75de1f7c-2825-40a9-b86e-f031966b835e.sql"
+          "path": "supabase/migrations/20260321170227_75de1f7c-2825-40a9-b86e-f031966b835e.sql",
+          "iso": "2026-03-21"
         }
       ],
       "stream": "98 Build & Infra",
-      "id": "98:backend:migrations-2026-w12"
+      "id": "98:backend:migration-2026-03-21-75de1f7c-2825-40a9-b86e-f031966b835e"
     },
     {
       "streamNum": "98",
       "layer": "Backend",
-      "name": "Migrations 2026-w13",
+      "name": "migration: 2026-03-23 947e033e-ded7-4dae-9824-5ff155f34faf",
       "fileGlobs": [
-        "supabase/migrations/20260323121718_947e033e-ded7-4dae-9824-5ff155f34faf.sql",
-        "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql",
-        "supabase/migrations/20260323184019_702975d9-3680-45b2-9a82-8587db5f26e5.sql",
-        "supabase/migrations/20260327122843_6f261706-ce0b-4c8a-b707-c3c8b0648540.sql",
+        "supabase/migrations/20260323121718_947e033e-ded7-4dae-9824-5ff155f34faf.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260323121718_947e033e-ded7-4dae-9824-5ff155f34faf.sql",
+          "iso": "2026-03-23"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-03-23-947e033e-ded7-4dae-9824-5ff155f34faf"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-03-23 a351e076-b680-476d-b06d-1b2165092b26",
+      "fileGlobs": [
+        "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql",
+          "iso": "2026-03-23"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-03-23-a351e076-b680-476d-b06d-1b2165092b26"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-03-23 702975d9-3680-45b2-9a82-8587db5f26e5",
+      "fileGlobs": [
+        "supabase/migrations/20260323184019_702975d9-3680-45b2-9a82-8587db5f26e5.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260323184019_702975d9-3680-45b2-9a82-8587db5f26e5.sql",
+          "iso": "2026-03-23"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-03-23-702975d9-3680-45b2-9a82-8587db5f26e5"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-03-27 6f261706-ce0b-4c8a-b707-c3c8b0648540",
+      "fileGlobs": [
+        "supabase/migrations/20260327122843_6f261706-ce0b-4c8a-b707-c3c8b0648540.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260327122843_6f261706-ce0b-4c8a-b707-c3c8b0648540.sql",
+          "iso": "2026-03-27"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-03-27-6f261706-ce0b-4c8a-b707-c3c8b0648540"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-03-28 208ba41b-5292-403a-baf4-9b9b2d158879",
+      "fileGlobs": [
         "supabase/migrations/20260328182512_208ba41b-5292-403a-baf4-9b9b2d158879.sql"
       ],
       "provenance": "code-only",
       "sources": [
         {
           "kind": "migration",
-          "path": "supabase/migrations/20260323121718_947e033e-ded7-4dae-9824-5ff155f34faf.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260323184019_702975d9-3680-45b2-9a82-8587db5f26e5.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260327122843_6f261706-ce0b-4c8a-b707-c3c8b0648540.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260328182512_208ba41b-5292-403a-baf4-9b9b2d158879.sql"
+          "path": "supabase/migrations/20260328182512_208ba41b-5292-403a-baf4-9b9b2d158879.sql",
+          "iso": "2026-03-28"
         }
       ],
       "stream": "98 Build & Infra",
-      "id": "98:backend:migrations-2026-w13"
+      "id": "98:backend:migration-2026-03-28-208ba41b-5292-403a-baf4-9b9b2d158879"
     },
     {
       "streamNum": "98",
       "layer": "Backend",
-      "name": "Migrations 2026-w19",
+      "name": "migration: 2026-05-04 3462a0a5-a4a5-4f17-8272-83c40fa4e039",
       "fileGlobs": [
-        "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
+        "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
+          "iso": "2026-05-04"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-04-3462a0a5-a4a5-4f17-8272-83c40fa4e039"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-05 f50b6c32-d0b3-42dd-9336-494143f5a389",
+      "fileGlobs": [
         "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql"
       ],
       "provenance": "code-only",
       "sources": [
         {
           "kind": "migration",
-          "path": "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql"
+          "path": "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql",
+          "iso": "2026-05-05"
         }
       ],
       "stream": "98 Build & Infra",
-      "id": "98:backend:migrations-2026-w19"
+      "id": "98:backend:migration-2026-05-05-f50b6c32-d0b3-42dd-9336-494143f5a389"
     },
     {
       "streamNum": "98",
       "layer": "Backend",
-      "name": "Migrations 2026-w22",
+      "name": "migration: 2026-05-24 6a9de603-5b28-4109-98fe-7e343194da37",
       "fileGlobs": [
-        "supabase/migrations/20260524015102_6a9de603-5b28-4109-98fe-7e343194da37.sql",
-        "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
-        "supabase/migrations/20260524015158_bd7b1203-22ec-46f0-8c88-3c4208a05c7d.sql",
-        "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql",
-        "supabase/migrations/20260524172951_27a28235-ea50-4c3c-be4a-528f35665ed2.sql",
-        "supabase/migrations/20260524173747_cd76e27d-fda9-4f8b-aac8-c875aa100937.sql",
-        "supabase/migrations/20260524173937_345bb077-7543-4a05-9ef8-c474d5276b1f.sql",
-        "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
-        "supabase/migrations/20260524182507_aa3b520a-cfe2-4510-b710-0caf0809bc7f.sql",
-        "supabase/migrations/20260524230947_197a36b0-b223-4c6d-a3b6-73dd795f14de.sql",
-        "supabase/migrations/20260525163245_e34bfccb-6eb4-4a47-b075-1f9c628559da.sql",
-        "supabase/migrations/20260526015440_e7d9bc81-0db3-4acd-88f7-ff486798a2b2.sql",
-        "supabase/migrations/20260526021443_4709d075-1bb1-44b9-ae5f-3edc62bcd171.sql",
-        "supabase/migrations/20260526105432_7d5d3850-b410-4d77-ad92-1f2f0e524b65.sql",
-        "supabase/migrations/20260526114744_9262b81e-12b7-4ca4-a3c8-d39802232caf.sql",
-        "supabase/migrations/20260526114820_e82b22fa-1dac-434e-942a-e18387a3c065.sql",
-        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
-        "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql",
-        "supabase/migrations/20260528155528_44c52ae9-d9c8-4390-8dde-0367583b44ef.sql",
-        "supabase/migrations/20260528155928_1fea17ca-9deb-4078-8173-ee3e52b6eab6.sql",
+        "supabase/migrations/20260524015102_6a9de603-5b28-4109-98fe-7e343194da37.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524015102_6a9de603-5b28-4109-98fe-7e343194da37.sql",
+          "iso": "2026-05-24"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-24-6a9de603-5b28-4109-98fe-7e343194da37"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-24 75af5978-5463-48f0-894d-a5ff9931868e",
+      "fileGlobs": [
+        "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
+          "iso": "2026-05-24"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-24-75af5978-5463-48f0-894d-a5ff9931868e"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-24 bd7b1203-22ec-46f0-8c88-3c4208a05c7d",
+      "fileGlobs": [
+        "supabase/migrations/20260524015158_bd7b1203-22ec-46f0-8c88-3c4208a05c7d.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524015158_bd7b1203-22ec-46f0-8c88-3c4208a05c7d.sql",
+          "iso": "2026-05-24"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-24-bd7b1203-22ec-46f0-8c88-3c4208a05c7d"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-24 5034e85e-37ad-4471-bb00-017b17d673ee",
+      "fileGlobs": [
+        "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql",
+          "iso": "2026-05-24"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-24-5034e85e-37ad-4471-bb00-017b17d673ee"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-24 27a28235-ea50-4c3c-be4a-528f35665ed2",
+      "fileGlobs": [
+        "supabase/migrations/20260524172951_27a28235-ea50-4c3c-be4a-528f35665ed2.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524172951_27a28235-ea50-4c3c-be4a-528f35665ed2.sql",
+          "iso": "2026-05-24"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-24-27a28235-ea50-4c3c-be4a-528f35665ed2"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-24 cd76e27d-fda9-4f8b-aac8-c875aa100937",
+      "fileGlobs": [
+        "supabase/migrations/20260524173747_cd76e27d-fda9-4f8b-aac8-c875aa100937.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524173747_cd76e27d-fda9-4f8b-aac8-c875aa100937.sql",
+          "iso": "2026-05-24"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-24-cd76e27d-fda9-4f8b-aac8-c875aa100937"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-24 345bb077-7543-4a05-9ef8-c474d5276b1f",
+      "fileGlobs": [
+        "supabase/migrations/20260524173937_345bb077-7543-4a05-9ef8-c474d5276b1f.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524173937_345bb077-7543-4a05-9ef8-c474d5276b1f.sql",
+          "iso": "2026-05-24"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-24-345bb077-7543-4a05-9ef8-c474d5276b1f"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-24 68108104-7e60-4587-a574-eeef24c30253",
+      "fileGlobs": [
+        "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+          "iso": "2026-05-24"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-24-68108104-7e60-4587-a574-eeef24c30253"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-24 aa3b520a-cfe2-4510-b710-0caf0809bc7f",
+      "fileGlobs": [
+        "supabase/migrations/20260524182507_aa3b520a-cfe2-4510-b710-0caf0809bc7f.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524182507_aa3b520a-cfe2-4510-b710-0caf0809bc7f.sql",
+          "iso": "2026-05-24"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-24-aa3b520a-cfe2-4510-b710-0caf0809bc7f"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-24 197a36b0-b223-4c6d-a3b6-73dd795f14de",
+      "fileGlobs": [
+        "supabase/migrations/20260524230947_197a36b0-b223-4c6d-a3b6-73dd795f14de.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260524230947_197a36b0-b223-4c6d-a3b6-73dd795f14de.sql",
+          "iso": "2026-05-24"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-24-197a36b0-b223-4c6d-a3b6-73dd795f14de"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-25 e34bfccb-6eb4-4a47-b075-1f9c628559da",
+      "fileGlobs": [
+        "supabase/migrations/20260525163245_e34bfccb-6eb4-4a47-b075-1f9c628559da.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260525163245_e34bfccb-6eb4-4a47-b075-1f9c628559da.sql",
+          "iso": "2026-05-25"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-25-e34bfccb-6eb4-4a47-b075-1f9c628559da"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-26 e7d9bc81-0db3-4acd-88f7-ff486798a2b2",
+      "fileGlobs": [
+        "supabase/migrations/20260526015440_e7d9bc81-0db3-4acd-88f7-ff486798a2b2.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260526015440_e7d9bc81-0db3-4acd-88f7-ff486798a2b2.sql",
+          "iso": "2026-05-26"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-26-e7d9bc81-0db3-4acd-88f7-ff486798a2b2"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-26 4709d075-1bb1-44b9-ae5f-3edc62bcd171",
+      "fileGlobs": [
+        "supabase/migrations/20260526021443_4709d075-1bb1-44b9-ae5f-3edc62bcd171.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260526021443_4709d075-1bb1-44b9-ae5f-3edc62bcd171.sql",
+          "iso": "2026-05-26"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-26-4709d075-1bb1-44b9-ae5f-3edc62bcd171"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-26 7d5d3850-b410-4d77-ad92-1f2f0e524b65",
+      "fileGlobs": [
+        "supabase/migrations/20260526105432_7d5d3850-b410-4d77-ad92-1f2f0e524b65.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260526105432_7d5d3850-b410-4d77-ad92-1f2f0e524b65.sql",
+          "iso": "2026-05-26"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-26-7d5d3850-b410-4d77-ad92-1f2f0e524b65"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-26 9262b81e-12b7-4ca4-a3c8-d39802232caf",
+      "fileGlobs": [
+        "supabase/migrations/20260526114744_9262b81e-12b7-4ca4-a3c8-d39802232caf.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260526114744_9262b81e-12b7-4ca4-a3c8-d39802232caf.sql",
+          "iso": "2026-05-26"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-26-9262b81e-12b7-4ca4-a3c8-d39802232caf"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-26 e82b22fa-1dac-434e-942a-e18387a3c065",
+      "fileGlobs": [
+        "supabase/migrations/20260526114820_e82b22fa-1dac-434e-942a-e18387a3c065.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260526114820_e82b22fa-1dac-434e-942a-e18387a3c065.sql",
+          "iso": "2026-05-26"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-26-e82b22fa-1dac-434e-942a-e18387a3c065"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-26 dea32198-fe8d-4add-89e7-7aca7ad513b7",
+      "fileGlobs": [
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+          "iso": "2026-05-26"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-26-dea32198-fe8d-4add-89e7-7aca7ad513b7"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-26 08c40dcb-7912-41d8-bc1d-3668026265ac",
+      "fileGlobs": [
+        "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql",
+          "iso": "2026-05-26"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-26-08c40dcb-7912-41d8-bc1d-3668026265ac"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-28 44c52ae9-d9c8-4390-8dde-0367583b44ef",
+      "fileGlobs": [
+        "supabase/migrations/20260528155528_44c52ae9-d9c8-4390-8dde-0367583b44ef.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260528155528_44c52ae9-d9c8-4390-8dde-0367583b44ef.sql",
+          "iso": "2026-05-28"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-28-44c52ae9-d9c8-4390-8dde-0367583b44ef"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-28 1fea17ca-9deb-4078-8173-ee3e52b6eab6",
+      "fileGlobs": [
+        "supabase/migrations/20260528155928_1fea17ca-9deb-4078-8173-ee3e52b6eab6.sql"
+      ],
+      "provenance": "code-only",
+      "sources": [
+        {
+          "kind": "migration",
+          "path": "supabase/migrations/20260528155928_1fea17ca-9deb-4078-8173-ee3e52b6eab6.sql",
+          "iso": "2026-05-28"
+        }
+      ],
+      "stream": "98 Build & Infra",
+      "id": "98:backend:migration-2026-05-28-1fea17ca-9deb-4078-8173-ee3e52b6eab6"
+    },
+    {
+      "streamNum": "98",
+      "layer": "Backend",
+      "name": "migration: 2026-05-29 637a0229-3683-4419-9838-890b4e588b31",
+      "fileGlobs": [
         "supabase/migrations/20260529041918_637a0229-3683-4419-9838-890b4e588b31.sql"
       ],
       "provenance": "code-only",
       "sources": [
         {
           "kind": "migration",
-          "path": "supabase/migrations/20260524015102_6a9de603-5b28-4109-98fe-7e343194da37.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260524015158_bd7b1203-22ec-46f0-8c88-3c4208a05c7d.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260524172951_27a28235-ea50-4c3c-be4a-528f35665ed2.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260524173747_cd76e27d-fda9-4f8b-aac8-c875aa100937.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260524173937_345bb077-7543-4a05-9ef8-c474d5276b1f.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260524182507_aa3b520a-cfe2-4510-b710-0caf0809bc7f.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260524230947_197a36b0-b223-4c6d-a3b6-73dd795f14de.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260525163245_e34bfccb-6eb4-4a47-b075-1f9c628559da.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260526015440_e7d9bc81-0db3-4acd-88f7-ff486798a2b2.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260526021443_4709d075-1bb1-44b9-ae5f-3edc62bcd171.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260526105432_7d5d3850-b410-4d77-ad92-1f2f0e524b65.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260526114744_9262b81e-12b7-4ca4-a3c8-d39802232caf.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260526114820_e82b22fa-1dac-434e-942a-e18387a3c065.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260528155528_44c52ae9-d9c8-4390-8dde-0367583b44ef.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260528155928_1fea17ca-9deb-4078-8173-ee3e52b6eab6.sql"
-        },
-        {
-          "kind": "migration",
-          "path": "supabase/migrations/20260529041918_637a0229-3683-4419-9838-890b4e588b31.sql"
+          "path": "supabase/migrations/20260529041918_637a0229-3683-4419-9838-890b4e588b31.sql",
+          "iso": "2026-05-29"
         }
       ],
       "stream": "98 Build & Infra",
-      "id": "98:backend:migrations-2026-w22"
+      "id": "98:backend:migration-2026-05-29-637a0229-3683-4419-9838-890b4e588b31"
     },
     {
       "streamNum": "11",

@@ -2,6 +2,10 @@
 // Order matters: first matching regex wins. Fall through → "97".
 
 export const STREAM_RULES = [
+  // ── 20 Sales & Pitch (landing/marketing assets) ─────────────────────────
+  [/^src\/assets\/(hero-|highway-|inspector-|blueprint-|gps-field-)/, '20'],
+  [/^src\/assets\/app-icon-master\.png$/, '15'],
+
   // ── 11 Schedule ─────────────────────────────────────────────────────────
   [/^src\/components\/schedule\//, '11'],
   [/^src\/lib\/schedule\//, '11'],
@@ -156,7 +160,50 @@ export const STREAM_NAMES = {
   '99': 'Cross-cutting',
 };
 
+export const DB_FUNCTION_TO_STREAM = {
+  has_role: '01',
+  assign_owner_role: '01',
+  handle_new_user: '01',
+  accept_invitation: '01',
+  seed_demo_users: '01',
+  is_project_member: '02',
+  projects_seed_folders: '03',
+  seed_project_standard_folders: '03',
+  daily_reports_status_transition: '06',
+  daily_reports_status_side_effects: '06',
+  document_folders_block_nonempty_delete: '10',
+  replace_project_schedule: '11',
+  capture_baseline: '11',
+  delete_baseline: '11',
+  schedule_activities_validate_constraint: '11',
+  update_updated_at_column: '97',
+};
+
+export const DB_ENUM_TO_STREAM = {
+  app_role: '01',
+  resource_type: '11',
+};
+
+export const STORAGE_BUCKET_TO_STREAM = {
+  'project-pdfs': '05',
+  'specs-pdfs': '09',
+  'annotation-photos': '08',
+  'project-documents': '10',
+};
+
+export const PUBLIC_PATH_RULES = [
+  [/^public\/(llms\.txt|sitemap\.xml|robots\.txt)$/, '20'],
+  [/^public\/(manifest\.webmanifest|favicon|.*icon.*\.png)/, '15'],
+  [/^public\/exports\//, '13'],
+];
+
 export function streamForPath(path) {
   for (const [re, sn] of STREAM_RULES) if (re.test(path)) return sn;
   return '97';
 }
+
+export function streamForPublicPath(path) {
+  for (const [re, sn] of PUBLIC_PATH_RULES) if (re.test(path)) return sn;
+  return '97';
+}
+

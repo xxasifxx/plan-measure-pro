@@ -1,89 +1,81 @@
-# Phase 1.5 — Close the catalog gap
+# Phase 1.6 — Account for what the catalog still misses
 
-## The problem your message names
+The 298-leaf catalog still has structural blind spots. Code inspection found seven categories of work that exist in the repo but produce zero leaves (or get collapsed so aggressively they hide weeks of effort). Phase 2 commit-mapping will misattribute or drop activity if we don't close these first.
 
-The current 211 leaves come from what stream briefs *wrote down*. But:
+## Blind spots found
 
-- Briefs describe **features**, commits touch **files** — and most commits do plumbing work (types, hooks, utility refactors, RLS tweaks, edge-function helpers, migration fixups, test scaffolding, build scripts) that no brief bullet ever names.
-- "Surfaces (files)" sections list the *headline* files per stream; they skip the 60–70% of the tree that exists in service of those headlines.
-- Result: when Phase 2 runs, a large fraction of commit file-touches will hit `_unattributed` or get force-bucketed into the nearest leaf, inflating that leaf and hiding real work.
+**1. Database functions are invisible.** 17 SECURITY DEFINER functions in `public` (`assign_owner_role`, `has_role`, `is_project_member`, `accept_invitation`, `handle_new_user`, `seed_demo_users`, `seed_project_standard_folders`, `daily_reports_status_transition`, `daily_reports_status_side_effects`, `document_folders_block_nonempty_delete`, `projects_seed_folders`, `replace_project_schedule` ×2 overloads, `capture_baseline`, `delete_baseline`, `schedule_activities_validate_constraint`, `update_updated_at_column`). These are major work — none are leaves. They only show up indirectly inside weekly migration clusters.
 
-Proof from the current leaves file: Frontend 149 / Backend 24 / Mobile 33. The repo has ~120 frontend files, ~30 mobile/offline files, **8 edge functions + ~40 migrations + dozens of `public.*` tables** — Backend is undercounted by an order of magnitude because briefs name tables sparingly.
+**2. Migrations are over-collapsed.** 36 migration files → 4 weekly cluster leaves. That's 9× hidden granularity. Phase 2 needs per-migration leaves (or per-day) to attribute commits truthfully.
 
-## Fix: derive leaves from code, then reconcile with briefs
+**3. RLS policies, triggers, enums, indexes have no leaves.** `app_role` and `resource_type` enums; status-transition triggers; ~30+ RLS policies across tables — all swept into "Migrations 2026-wXX".
 
-Add a second leaf source that walks the actual repo and emits a leaf for every meaningful code unit, then merges with the brief-derived leaves.
+**4. Storage buckets are brief-only.** `project-pdfs`, `specs-pdfs`, `annotation-photos`, `project-documents` exist as real surface but only two are claimed (in stale brief-only form with bogus paths like `supabase/storage/annotation-photos`).
 
-### Three new leaf sources (additive to Phase 1)
+**5. Static `public/*` SEO/PWA surface unclaimed by code-leaves.** `public/llms.txt`, `sitemap.xml`, `robots.txt`, `manifest.webmanifest`, `placeholder.svg`, `exports/takeoffpro-dev.xml` — only referenced from stale brief bullets, none in code-leaves.
 
-1. **File-cluster leaves** — group `src/**` files by directory + naming family:
-   - `src/components/schedule/*` → one leaf per file (these are real features).
-   - `src/lib/<domain>/*` → one leaf per file (already domain-clustered).
-   - `src/components/ui/*` → **one** leaf "shadcn primitives" (intentionally coarse — not feature work).
-   - `src/hooks/*` → one leaf per hook.
-   - `src/pages/*` → one leaf per page.
-   - `src/test/*` → one leaf per test file (Verification layer).
+**6. Edge function ancillary surface.** `supabase/config.toml` got one leaf, but per-function `verify_jwt` config, secret bindings, and `supabase/seed.sql` are uncounted.
 
-2. **Backend surface leaves** — walk the backend, not the brief:
-   - `supabase/migrations/*.sql` → cluster by week → one leaf per migration cluster (e.g. "Migrations 2026-03-w2").
-   - `supabase/functions/<name>/index.ts` → one leaf per edge function.
-   - `public.<table>` → derive from `src/integrations/supabase/types.ts` (the generated schema), one leaf per table, classified by which stream's RLS migration created it.
+**7. Type & misc leaks.** `src/types/project.ts` not a leaf. `src/App.css` officially unclaimed. Six `src/assets/*` images dumped into `97 Plumbing` when they belong to `20 Sales & Pitch` (landing/marketing assets).
 
-3. **Build/infra leaves** — `scripts/*`, `vite.config.ts`, `capacitor.config.ts`, `tailwind.config.ts`, `supabase/config.toml`, `tsconfig*.json` → one leaf per file under a new stream **`98 Build & Infra`** (currently invisible work).
+## What this plan does
 
-### Reconciliation rules
+Add **Phase 1.6** to the WBS pipeline: a sixth source that fills these gaps, plus heuristic fixes for misrouted leaves.
 
-When a code-derived leaf and a brief-derived leaf claim the same file:
+### Step 1 — db-surface leaves
+New script `scripts/dev-wbs/build-db-surface-leaves.mjs`. Parses migrations with regex to extract:
+- One leaf per `CREATE FUNCTION public.<name>` (routed by name → stream via `DB_FUNCTION_TO_STREAM` map in `stream-heuristics.mjs`).
+- One leaf per `CREATE TYPE … AS ENUM`.
+- One leaf per `CREATE TRIGGER` on a public table (named `trg: <table>.<trigger>`).
+- One leaf per storage bucket from `storage.buckets` inserts.
+- RLS policies stay aggregated as one leaf per table-level policy block (`rls: <table>`) to avoid leaf explosion.
 
-- **Brief wins on name** (human-authored label is better than `geometry.ts`).
-- **Code wins on `fileGlobs`** (the brief often missed sibling files).
-- Merge sources; record both `surface` and `file-cluster` provenance.
+### Step 2 — Per-migration leaves replace weekly clusters
+In `build-code-leaves.mjs`, drop the `isoWeek` aggregation. Emit one leaf per `supabase/migrations/<file>.sql` under `98 Build & Infra` / Backend, named `migration: YYYY-MM-DD <slug>`. Weekly summary moves to a derived rollup in the markdown report only.
 
-When a code-derived leaf has **no** brief claim:
+### Step 3 — Static public-surface leaves
+Walk `public/**` in `build-code-leaves.mjs`. Route via new `PUBLIC_PATH_RULES`:
+- `llms.txt`, `sitemap.xml`, `robots.txt` → `20 Sales & Pitch`
+- `manifest.webmanifest`, icons → `15 Offline & Native Durability`
+- `exports/*` → `13 Data Export`
+- everything else → `97 Plumbing`
 
-- Assign to a stream via path heuristic (`src/components/schedule/*` → `11 Schedule`, `src/lib/native/*` → `15 Offline & Native`, etc.) using a small explicit table.
-- If no heuristic matches, file under **`97 Plumbing`** (a new stream for cross-cutting code).
-- Mark `provenance: "code-only"` so the verification report can flag "this leaf has code but no brief acceptance criteria" — a different kind of debt.
+### Step 4 — Re-route landing/marketing assets
+Extend `STREAM_RULES` so `src/assets/(hero-|highway-|inspector-|blueprint-|gps-field-)` → `20 Sales & Pitch`, and `app-icon-master.png` → `15 Offline & Native Durability`. Removes 6 false-positives from `97 Plumbing`.
 
-### Expected new totals (estimated)
+### Step 5 — Pick up trailing files
+Add `src/App.css`, `src/types/*`, `supabase/seed.sql`, and any per-function `supabase/config.toml` overrides as their own leaves. Verify the "files in repo that no leaf claims" section of `catalog-gaps.md` ends up empty.
 
-| Stream class | Before | After |
-|---|---:|---:|
-| Brief-claimed leaves | 211 | ~211 (renamed/merged) |
-| `98 Build & Infra` | 0 | ~15 |
-| `97 Plumbing` | 0 | ~40–80 |
-| Backend (tables + migrations + functions) | 24 | ~80–100 |
-| **Total** | **211** | **~400–500** |
+### Step 6 — Regenerate & report
+Re-run the pipeline (`build-leaves` → `build-code-leaves` → `build-db-surface-leaves` → `reconcile-leaves` → `build-dev-wbs`). Update `docs/wbs-dev.catalog-gaps.md` with a new top section **"Newly catalogued in 1.6"** listing every leaf added in this pass, so the user can audit the delta in one place.
 
-This lands inside your stated target of 300–500 leaves *honestly*, not by splitting hairs on what briefs already covered.
+## Technical details
 
-## Two new artifacts
+**Files created**
+- `scripts/dev-wbs/build-db-surface-leaves.mjs`
 
-- `docs/wbs-dev.code-leaves.json` — pure code-derived list, intermediate.
-- `docs/wbs-dev.catalog-gaps.md` — report listing:
-  - leaves with `provenance: "code-only"` (code exists, brief is silent),
-  - leaves with `provenance: "brief-only"` (brief mentions a file the resolver couldn't find — stale brief or rename),
-  - files in `src/`/`supabase/` that no leaf claims after reconciliation (should be near-zero; if not, the heuristic table needs another entry).
+**Files edited**
+- `scripts/dev-wbs/build-code-leaves.mjs` — per-migration leaves, `public/**` walk
+- `scripts/dev-wbs/stream-heuristics.mjs` — asset re-routes, `DB_FUNCTION_TO_STREAM`, `PUBLIC_PATH_RULES`
+- `scripts/dev-wbs/reconcile-leaves.mjs` — accept the new db-surface source
+- `docs/wbs-dev.md` — pipeline diagram updated
 
-The final `docs/wbs-dev.leaves.json` is regenerated by merging brief + code sources through the reconciliation rules above. `docs/wbs-dev.leaves.md` gains a "Catalog provenance" column.
+**Expected leaf-count delta**
+- +17 db function leaves
+- +2 enum leaves
+- ~+8 trigger leaves
+- +4 storage-bucket leaves
+- ~+15 RLS-per-table leaves
+- +32 per-migration leaves (replacing 4 weekly clusters → net +28)
+- +6 public/** leaves
+- +3 misc (App.css, types, seed.sql)
+- Total: **~298 → ~380 leaves**
 
-## What I will NOT do in this phase
+**Out of scope for this phase**
+- No commit mapping (Phase 2)
+- No forward-looking activities (Phase 3)
+- No PMXML regeneration (Phase 5)
 
-- No commit mapping yet (that's Phase 2 — runs cleanly only once the catalog is honest).
-- No forward activities yet (Phase 3).
-- No PMXML regeneration yet (Phase 5).
+## Approval
 
-## Deliverables
-
-- `scripts/dev-wbs/build-code-leaves.mjs` — new, walks repo + types.ts.
-- `scripts/dev-wbs/reconcile-leaves.mjs` — new, merges brief + code with the rules above.
-- `scripts/dev-wbs/build-leaves.mjs` — becomes a 2-step orchestrator (existing brief pass → code pass → reconcile).
-- `docs/wbs-dev.code-leaves.json` — new intermediate.
-- `docs/wbs-dev.catalog-gaps.md` — new report.
-- `docs/wbs-dev.leaves.json` + `docs/wbs-dev.leaves.md` — regenerated, ~400–500 leaves with provenance.
-
-## Checkpoint
-
-After this phase you review `catalog-gaps.md`. If a stream has many "code-only" leaves, that's a brief that needs updating (separate human task). If a stream has many "brief-only" leaves, those files were probably renamed/deleted and the brief is lying. Either way the gap becomes visible *before* commits get attributed, instead of being hidden inside a too-coarse leaf.
-
-Say **proceed** to implement Phase 1.5, or push back on the heuristic stream-assignment table / the `97 Plumbing` + `98 Build & Infra` stream additions.
+Say **proceed** to implement Phase 1.6, or push back on any of the seven blind-spot categories (e.g. "skip per-migration split, weekly clusters are fine" or "don't bother with RLS-per-table leaves").

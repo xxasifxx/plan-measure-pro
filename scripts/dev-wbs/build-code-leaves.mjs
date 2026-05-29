@@ -6,12 +6,15 @@
 //   - Backend surface leaves: edge functions, migrations (weekly clusters),
 //     public.<table> from types.ts.
 //   - Build/infra leaves under stream "98".
+//   - Per-migration leaves (one per supabase/migrations/*.sql file).
+//   - Public asset leaves from public/**.
 //   - Everything that doesn't match a heuristic falls to "97 Plumbing".
 //
 // Output: docs/wbs-dev.code-leaves.json
 import { readFileSync, writeFileSync, readdirSync, statSync, existsSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { streamForPath, TABLE_TO_STREAM, STREAM_NAMES } from './stream-heuristics.mjs';
+import { streamForPath, streamForPublicPath, TABLE_TO_STREAM, STREAM_NAMES } from './stream-heuristics.mjs';
+
 
 const OUT = 'docs/wbs-dev.code-leaves.json';
 
@@ -57,11 +60,13 @@ const ALL = [
   ...walk('src'),
   ...walk('supabase/functions'),
   ...walk('scripts'),
+  ...walk('public'),
   'capacitor.config.ts', 'vite.config.ts', 'tailwind.config.ts',
   'postcss.config.js', 'eslint.config.js', 'components.json',
   'index.html', 'tsconfig.json', 'tsconfig.app.json', 'tsconfig.node.json',
-  'supabase/config.toml',
+  'supabase/config.toml', 'supabase/seed.sql',
 ].filter(p => existsSync(p));
+
 
 const leaves = [];
 
@@ -83,10 +88,13 @@ const seenPath = new Set(shadcn);
 for (const p of ALL) {
   if (seenPath.has(p)) continue;
   seenPath.add(p);
-  const sn = streamForPath(p);
+  // skip migrations here — handled per-file below
+  if (/^supabase\/migrations\//.test(p)) continue;
+  const sn = /^public\//.test(p) ? streamForPublicPath(p) : streamForPath(p);
+  const layer = /^public\//.test(p) ? 'Frontend' : layerFor(p);
   leaves.push({
     streamNum: sn,
-    layer: layerFor(p),
+    layer,
     name: nameFromPath(p),
     fileGlobs: [p],
     provenance: 'code-only',
@@ -94,37 +102,27 @@ for (const p of ALL) {
   });
 }
 
-// ── 2) migration weekly clusters ──────────────────────────────────────────────
+
+// ── 2) per-migration leaves ───────────────────────────────────────────────────
 const migrations = readdirSync('supabase/migrations')
   .filter(f => f.endsWith('.sql'))
   .map(f => ({
     file: `supabase/migrations/${f}`,
     iso: `${f.slice(0, 4)}-${f.slice(4, 6)}-${f.slice(6, 8)}`,
+    slug: f.replace(/^\d+_/, '').replace(/\.sql$/, '').slice(0, 40),
   }));
 
-function isoWeek(iso) {
-  const d = new Date(iso + 'T00:00:00Z');
-  const onejan = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-  const wk = Math.ceil((((d - onejan) / 86400000) + onejan.getUTCDay() + 1) / 7);
-  return `${d.getUTCFullYear()}-w${String(wk).padStart(2, '0')}`;
-}
-
-const byWeek = new Map();
 for (const m of migrations) {
-  const k = isoWeek(m.iso);
-  if (!byWeek.has(k)) byWeek.set(k, []);
-  byWeek.get(k).push(m.file);
-}
-for (const [wk, files] of byWeek) {
   leaves.push({
     streamNum: '98',
     layer: 'Backend',
-    name: `Migrations ${wk}`,
-    fileGlobs: files,
+    name: `migration: ${m.iso} ${m.slug}`,
+    fileGlobs: [m.file],
     provenance: 'code-only',
-    sources: files.map(f => ({ kind: 'migration', path: f })),
+    sources: [{ kind: 'migration', path: m.file, iso: m.iso }],
   });
 }
+
 
 // ── 3) public.<table> leaves from types.ts ────────────────────────────────────
 const typesSrc = readFileSync('src/integrations/supabase/types.ts', 'utf8');
@@ -165,7 +163,7 @@ const out = {
     leaves: leaves.length,
     byStream: leaves.reduce((a, l) => (a[l.streamNum] = (a[l.streamNum] || 0) + 1, a), {}),
     byLayer: leaves.reduce((a, l) => (a[l.layer] = (a[l.layer] || 0) + 1, a), {}),
-    tables: tables.size, views: views.size, migrationWeeks: byWeek.size,
+    tables: tables.size, views: views.size, migrations: migrations.length,
   },
   leaves,
 };
@@ -175,4 +173,5 @@ writeFileSync(OUT, JSON.stringify(out, null, 2) + '\n');
 console.log(`Wrote ${OUT}`);
 console.log(`  ${out.totals.leaves} code-derived leaves`);
 console.log(`  byLayer: ${JSON.stringify(out.totals.byLayer)}`);
-console.log(`  ${tables.size} tables, ${views.size} views, ${byWeek.size} migration weeks`);
+console.log(`  ${tables.size} tables, ${views.size} views, ${migrations.length} migrations`);
+
