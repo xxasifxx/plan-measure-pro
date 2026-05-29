@@ -1,0 +1,558 @@
+{
+  "totalMigrations": 36,
+  "generatedAt": "2026-05-29T00:00:00Z",
+  "byCluster": {
+    "auth/roles": [
+      {
+        "file": "20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+        "date": "2026-03-21",
+        "gitSubject": "Connected to Lovable Cloud",
+        "capability": "Bootstrap: enum app_role (admin|project_manager|inspector), tables profiles + user_roles, functions has_role() + is_project_member() + handle_new_user() + update_updated_at_column(), trigger on_auth_user_created",
+        "objects": {
+          "types": ["app_role"],
+          "tables": ["profiles", "user_roles"],
+          "functions": ["has_role", "is_project_member", "handle_new_user", "update_updated_at_column"],
+          "triggers": ["on_auth_user_created", "update_projects_updated_at"],
+          "policies": [
+            "Users can view own profile", "Users can update own profile", "Users can insert own profile",
+            "Users can view own roles", "Admins can manage roles"
+          ]
+        }
+      },
+      {
+        "file": "20260321162325_749c9dcd-0ffa-430d-bf20-422872294f47.sql",
+        "date": "2026-03-21",
+        "gitSubject": "Add project dashboard",
+        "capability": "Auto-assign project_manager role on signup via trigger",
+        "objects": {
+          "functions": ["handle_new_user_role"],
+          "triggers": ["on_auth_user_created_role"]
+        }
+      },
+      {
+        "file": "20260321162349_089b7eac-a691-474e-96f4-b97ab4d2581d.sql",
+        "date": "2026-03-21",
+        "gitSubject": "Pivot to Supabase-backed projects",
+        "capability": "Re-register profile trigger under separate name on_auth_user_created_profile (de-conflict with role trigger)",
+        "objects": {
+          "triggers": ["on_auth_user_created_profile"]
+        }
+      },
+      {
+        "file": "20260323121718_947e033e-ded7-4dae-9824-5ff155f34faf.sql",
+        "date": "2026-03-23",
+        "gitSubject": "Fix signup profile conflict",
+        "capability": "Patch handle_new_user() to use ON CONFLICT upsert — fixes duplicate-key error on re-confirm",
+        "objects": {
+          "functions": ["handle_new_user"],
+          "triggers": ["on_auth_user_created"]
+        }
+      },
+      {
+        "file": "20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql",
+        "date": "2026-03-23",
+        "gitSubject": "Implement org-based signup",
+        "capability": "PIVOT — drop auto-assign trigger, create invitations table, add assign_owner_role() + accept_invitation() functions for invitation-based onboarding",
+        "objects": {
+          "tables": ["invitations"],
+          "functions": ["assign_owner_role", "accept_invitation"],
+          "droppedTriggers": ["on_auth_user_created_role"],
+          "policies": ["Admins can manage invitations", "Users can view own invitations"]
+        }
+      },
+      {
+        "file": "20260323184019_702975d9-3680-45b2-9a82-8587db5f26e5.sql",
+        "date": "2026-03-23",
+        "gitSubject": "Team management UI implemented",
+        "capability": "Allow project creators to search profiles by email for team management",
+        "objects": {
+          "policies": ["Project creators can search profiles"]
+        }
+      },
+      {
+        "file": "20260524015102_6a9de603-5b28-4109-98fe-7e343194da37.sql",
+        "date": "2026-05-24",
+        "gitSubject": "Changes",
+        "capability": "Add resident_engineer value to app_role enum",
+        "objects": {
+          "types": ["app_role (+ resident_engineer)"]
+        }
+      },
+      {
+        "file": "20260528155928_1fea17ca-9deb-4078-8173-ee3e52b6eab6.sql",
+        "date": "2026-05-28",
+        "gitSubject": "Changes",
+        "capability": "REVOKE/GRANT on replace_project_schedule 7-arg; consolidate geo_calibrations RLS to members-view + creators-manage pattern",
+        "objects": {
+          "policies": ["Members view geo calibrations", "Creators manage geo calibrations"],
+          "droppedPolicies": [
+            "Users can manage own geo calibrations",
+            "Project creators can manage geo calibrations",
+            "Project members can view geo calibrations"
+          ]
+        }
+      },
+      {
+        "file": "20260529041918_637a0229-3683-4419-9838-890b4e588b31.sql",
+        "date": "2026-05-29",
+        "gitSubject": "Changes",
+        "capability": "Add co-member profile visibility policy; add seed_demo_users() SECURITY DEFINER function (service_role only)",
+        "objects": {
+          "functions": ["seed_demo_users"],
+          "policies": ["Members view co-member profiles"]
+        }
+      }
+    ],
+    "projects": [
+      {
+        "file": "20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+        "date": "2026-03-21",
+        "gitSubject": "Connected to Lovable Cloud",
+        "capability": "Initial projects + project_members tables with creator/member RLS + storage buckets project-pdfs + specs-pdfs",
+        "objects": {
+          "tables": ["projects", "project_members"],
+          "storageBuckets": ["project-pdfs", "specs-pdfs"],
+          "policies": [
+            "Creators can manage own projects", "Members can view assigned projects",
+            "Project creators can manage members", "Members can view own membership",
+            "Authenticated users can upload project PDFs", "Authenticated users can read project PDFs"
+          ]
+        }
+      },
+      {
+        "file": "20260321162408_22a25531-f789-4f47-b2d5-ec7d40196497.sql",
+        "date": "2026-03-21",
+        "gitSubject": "Add Supabase-backed projects",
+        "capability": "Supplement storage policies (upload/read/delete) for project-pdfs and specs-pdfs",
+        "objects": {
+          "policies": ["Users can upload PDFs", "Users can read PDFs", "Users can delete own PDFs", "Users can upload specs", "Users can read specs"]
+        }
+      },
+      {
+        "file": "20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql",
+        "date": "2026-03-21",
+        "gitSubject": "Add admin panel and policies",
+        "capability": "Admin-role RLS policies across profiles, project_members, projects",
+        "objects": {
+          "policies": [
+            "Admins can view all profiles", "Admins can view all project members",
+            "Admins can manage all project members", "Admins can view all projects"
+          ]
+        }
+      },
+      {
+        "file": "20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
+        "date": "2026-05-04",
+        "gitSubject": "Changes",
+        "capability": "Add is_bid flag to projects; create schedule_activities, rocks, scorecard_metrics, annotation_photos tables; add annotation-photos storage bucket",
+        "objects": {
+          "alteredTables": ["projects (+ is_bid)"],
+          "tables": ["schedule_activities", "rocks", "scorecard_metrics", "annotation_photos"],
+          "storageBuckets": ["annotation-photos"],
+          "triggers": ["trg_sched_act_updated", "trg_rocks_updated"]
+        }
+      },
+      {
+        "file": "20260528155528_44c52ae9-d9c8-4390-8dde-0367583b44ef.sql",
+        "date": "2026-05-28",
+        "gitSubject": "Changes",
+        "capability": "Global RLS hardening: tighten storage policies on all buckets, refine profile search policy, add input-validation CHECK on demo_requests INSERT, REVOKE EXECUTE on SECURITY DEFINER functions from PUBLIC/anon, enable RLS on realtime.messages with project-channel subscriber policy",
+        "objects": {
+          "droppedPolicies": [
+            "Authenticated users can read/upload project PDFs",
+            "Users can read/upload/delete PDFs",
+            "Members read annotation photos (broad)",
+            "Project creators can search profiles",
+            "Users can view own invitations",
+            "Anyone can submit demo requests (broad)"
+          ],
+          "policies": [
+            "Members read project PDFs", "Users upload own project PDFs", "Project creators delete project PDFs",
+            "Members read specs PDFs", "Project creators upload/delete specs PDFs",
+            "Members read/upload annotation photos (scoped)",
+            "PMs delete/update project documents storage",
+            "Project creators view member profiles",
+            "Anyone can submit demo requests (validated)",
+            "Members subscribe to project channels"
+          ]
+        }
+      }
+    ],
+    "pay-items": [
+      {
+        "file": "20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+        "date": "2026-03-21",
+        "gitSubject": "Connected to Lovable Cloud",
+        "capability": "Initial pay_items table (item_number, item_code, unit, unit_price, color, contract_quantity, drawable) + member/creator RLS",
+        "objects": {
+          "tables": ["pay_items"],
+          "policies": ["Project members can view pay items", "Project creators can manage pay items"]
+        }
+      },
+      {
+        "file": "20260524172951_27a28235-ea50-4c3c-be4a-528f35665ed2.sql",
+        "date": "2026-05-24",
+        "gitSubject": "Changes",
+        "capability": "Add p6_activity_id column to pay_items for Primavera P6 round-trip linkage",
+        "objects": {
+          "alteredTables": ["pay_items (+ p6_activity_id)"],
+          "indexes": ["idx_pay_items_p6_activity"]
+        }
+      }
+    ],
+    "annotations": [
+      {
+        "file": "20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+        "date": "2026-03-21",
+        "gitSubject": "Connected to Lovable Cloud",
+        "capability": "Initial annotations table (line/polygon/count, points JSONB, pay_item_id, page, measurement) + member RLS; calibrations table",
+        "objects": {
+          "tables": ["annotations", "calibrations"],
+          "policies": ["Users can manage own annotations", "Project members can view all annotations"]
+        }
+      },
+      {
+        "file": "20260321164313_fadd3bba-4f5e-4ac1-b47b-3887bdd98769.sql",
+        "date": "2026-03-21",
+        "gitSubject": "Add realtime annotation sync",
+        "capability": "Enable Supabase Realtime publication for annotations table",
+        "objects": {
+          "realtimePublications": ["annotations"]
+        }
+      },
+      {
+        "file": "20260321164809_127eb40b-40a6-4814-b6cc-ed2f3acd27f2.sql",
+        "date": "2026-03-21",
+        "gitSubject": "Add welcome carousel onboarding",
+        "capability": "Add has_seen_welcome column to profiles for onboarding carousel state",
+        "objects": {
+          "alteredTables": ["profiles (+ has_seen_welcome)"]
+        }
+      },
+      {
+        "file": "20260321170227_75de1f7c-2825-40a9-b86e-f031966b835e.sql",
+        "date": "2026-03-21",
+        "gitSubject": "Add inspector export",
+        "capability": "Extend annotations with manual_quantity, location, notes for inspector export workflow",
+        "objects": {
+          "alteredTables": ["annotations (+ manual_quantity, location, notes)"]
+        }
+      },
+      {
+        "file": "20260327122843_6f261706-ce0b-4c8a-b707-c3c8b0648540.sql",
+        "date": "2026-03-27",
+        "gitSubject": "Added GPS calibration UI flow",
+        "capability": "Add geo_calibrations table (control_points JSONB, transform_matrix, estimated_error_ft) for GPS-to-PDF coordinate mapping",
+        "objects": {
+          "tables": ["geo_calibrations"],
+          "policies": ["Project members can view geo calibrations", "Project creators can manage geo calibrations", "Users can manage own geo calibrations"]
+        }
+      },
+      {
+        "file": "20260524173747_cd76e27d-fda9-4f8b-aac8-c875aa100937.sql",
+        "date": "2026-05-24",
+        "gitSubject": "Changes",
+        "capability": "PIVOT — lock daily_report approval to RE only (drop PM update policy); add work_date column to annotations for timezone-aware day bucketing (America/New_York)",
+        "objects": {
+          "alteredTables": ["annotations (+ work_date NOT NULL with timezone default)"],
+          "droppedPolicies": ["Project creator updates report"],
+          "indexes": ["idx_annotations_project_user_workdate"]
+        }
+      }
+    ],
+    "daily-reports": [
+      {
+        "file": "20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql",
+        "date": "2026-05-05",
+        "gitSubject": "Changes",
+        "capability": "Create daily_reports table with per-inspector/project/date uniqueness; also activity_assignments + activity_pay_items junction tables",
+        "objects": {
+          "tables": ["activity_assignments", "activity_pay_items", "daily_reports"],
+          "triggers": ["update_daily_reports_updated_at"],
+          "indexes": ["idx_activity_assignments_user", "idx_activity_pay_items_activity", "idx_daily_reports_project_date"]
+        }
+      },
+      {
+        "file": "20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
+        "date": "2026-05-24",
+        "gitSubject": "Changes",
+        "capability": "Daily report workflow: add status/approval/rejection columns, daily_report_comments table, status-transition trigger (draft→submitted→approved/rejected), v_approved_pay_item_quantities view",
+        "objects": {
+          "alteredTables": ["daily_reports (+ status, approved_at, approved_by, rejected_at, rejected_by, reject_reason, snapshot)"],
+          "tables": ["daily_report_comments"],
+          "functions": ["daily_reports_status_transition"],
+          "triggers": ["trg_daily_reports_status_transition"],
+          "views": ["v_approved_pay_item_quantities"],
+          "policies": [
+            "Owner inserts own draft report", "Owner updates own draft report", "Owner deletes own draft report",
+            "RE updates submitted report", "Project creator updates report"
+          ]
+        }
+      },
+      {
+        "file": "20260524015158_bd7b1203-22ec-46f0-8c88-3c4208a05c7d.sql",
+        "date": "2026-05-24",
+        "gitSubject": "Changes",
+        "capability": "Set security_invoker=on on v_approved_pay_item_quantities view for proper RLS enforcement",
+        "objects": {
+          "alteredViews": ["v_approved_pay_item_quantities (security_invoker = on)"]
+        }
+      },
+      {
+        "file": "20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql",
+        "date": "2026-05-24",
+        "gitSubject": "Changes",
+        "capability": "Add daily_report_snapshots (audit archive on reopen) and notifications tables; add side-effects trigger that fires notifications on status change and archives snapshots on reject→reopen; backfill admins with resident_engineer role",
+        "objects": {
+          "tables": ["daily_report_snapshots", "notifications"],
+          "functions": ["daily_reports_status_side_effects"],
+          "triggers": ["trg_daily_reports_status_side_effects"],
+          "indexes": ["idx_daily_report_snapshots_report", "idx_notifications_user_unread"]
+        }
+      },
+      {
+        "file": "20260524173937_345bb077-7543-4a05-9ef8-c474d5276b1f.sql",
+        "date": "2026-05-24",
+        "gitSubject": "Changes",
+        "capability": "Allow report author to withdraw submitted report back to draft (submitted→draft transition); add Owner withdraws own submitted report policy",
+        "objects": {
+          "functions": ["daily_reports_status_transition (updated — allow submitted→draft)"],
+          "policies": ["Owner withdraws own submitted report"]
+        }
+      },
+      {
+        "file": "20260524230947_197a36b0-b223-4c6d-a3b6-73dd795f14de.sql",
+        "date": "2026-05-24",
+        "gitSubject": "Changes",
+        "capability": "Allow comment authors to update and delete their own daily_report_comments",
+        "objects": {
+          "policies": ["Authors update own comments", "Authors delete own comments"]
+        }
+      }
+    ],
+    "schedule": [
+      {
+        "file": "20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
+        "date": "2026-05-04",
+        "gitSubject": "Changes",
+        "capability": "Create schedule_activities (wbs_code, baseline dates, percent_complete, pay_item_id); also rocks and scorecard_metrics tables for EOS-style tracking",
+        "objects": {
+          "tables": ["schedule_activities", "rocks", "scorecard_metrics"]
+        }
+      },
+      {
+        "file": "20260525163245_e34bfccb-6eb4-4a47-b075-1f9c628559da.sql",
+        "date": "2026-05-25",
+        "gitSubject": "Changes",
+        "capability": "Seed synthetic 'Platform: PWA Rollout' project with 29 schedule_activities (PWA-1.x through PWA-5.x WBS items) as internal dev schedule",
+        "objects": {
+          "dataSeed": ["schedule_activities (29 rows for Platform: PWA Rollout project)"]
+        }
+      },
+      {
+        "file": "20260526021443_4709d075-1bb1-44b9-ae5f-3edc62bcd171.sql",
+        "date": "2026-05-26",
+        "gitSubject": "Changes",
+        "capability": "WBS progress update: mark PWA Phase 5 native-bridge items 100% complete, store/release items 50%",
+        "objects": {
+          "dataUpdate": ["schedule_activities.percent_complete for PWA-5.1–5.9"]
+        }
+      },
+      {
+        "file": "20260526105432_7d5d3850-b410-4d77-ad92-1f2f0e524b65.sql",
+        "date": "2026-05-26",
+        "gitSubject": "Changes",
+        "capability": "P6-compatible schedule: extend schedule_activities with parent_wbs_id, activity_id, activity_type, CPM fields (early/late start/finish, total_float, is_critical, sort_order); create activity_relationships (FS/SS/FF/SF) + project_schedule_meta; add replace_project_schedule() v1 RPC",
+        "objects": {
+          "alteredTables": ["schedule_activities (+ 10 P6 columns)"],
+          "tables": ["activity_relationships", "project_schedule_meta"],
+          "functions": ["replace_project_schedule (4-arg v1)"],
+          "triggers": ["update_project_schedule_meta_updated_at"],
+          "indexes": ["idx_schedule_activities_parent", "idx_schedule_activities_project", "idx_activity_rel_project", "idx_activity_rel_pred", "idx_activity_rel_succ"]
+        }
+      },
+      {
+        "file": "20260526114744_9262b81e-12b7-4ca4-a3c8-d39802232caf.sql",
+        "date": "2026-05-26",
+        "gitSubject": "Changes",
+        "capability": "Add manual_finish + remaining_duration_days to schedule_activities; replace replace_project_schedule() with v2 that maps those new columns",
+        "objects": {
+          "alteredTables": ["schedule_activities (+ manual_finish, remaining_duration_days)"],
+          "functions": ["replace_project_schedule (4-arg v2)"]
+        }
+      },
+      {
+        "file": "20260526114820_e82b22fa-1dac-434e-942a-e18387a3c065.sql",
+        "date": "2026-05-26",
+        "gitSubject": "Changes",
+        "capability": "Lock replace_project_schedule 4-arg to authenticated only (REVOKE from PUBLIC/anon)",
+        "objects": {
+          "grants": ["REVOKE PUBLIC/anon; GRANT authenticated on replace_project_schedule(4-arg)"]
+        }
+      },
+      {
+        "file": "20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+        "date": "2026-05-26",
+        "gitSubject": "Changes",
+        "capability": "PIVOT — add schedule_calendars + schedule_resources + activity_resource_assignments + schedule_baselines + baseline_activities tables; add constraint validation trigger; add capture_baseline() + delete_baseline() RPCs; upgrade replace_project_schedule() to 7-arg v3 that includes calendars, resources, and resource assignments in atomic schedule import",
+        "objects": {
+          "types": ["resource_type (labor|material|equipment|nonlabor)"],
+          "tables": ["schedule_calendars", "schedule_resources", "activity_resource_assignments", "schedule_baselines", "baseline_activities"],
+          "alteredTables": ["schedule_activities (+ calendar_id, constraint_type, constraint_date, primary_resource_id)"],
+          "functions": ["capture_baseline", "delete_baseline", "replace_project_schedule (7-arg v3)", "schedule_activities_validate_constraint"],
+          "triggers": [
+            "trg_schedule_calendars_updated", "trg_schedule_resources_updated",
+            "trg_ara_updated", "trg_schedule_activities_validate_constraint"
+          ]
+        }
+      },
+      {
+        "file": "20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql",
+        "date": "2026-05-26",
+        "gitSubject": "Changes",
+        "capability": "Lock replace_project_schedule 7-arg to authenticated; consolidate geo_calibrations RLS",
+        "objects": {
+          "grants": ["REVOKE PUBLIC/anon; GRANT authenticated on replace_project_schedule(7-arg)"]
+        }
+      },
+      {
+        "file": "20260529041918_637a0229-3683-4419-9838-890b4e588b31.sql",
+        "date": "2026-05-29",
+        "gitSubject": "Changes",
+        "capability": "Update replace_project_schedule 7-arg to wire primary_resource_id + remaining_duration_days during P6 import; add seed_demo_users() for PM/RE/Inspector demo fixture accounts",
+        "objects": {
+          "functions": ["replace_project_schedule (7-arg v4 — primary_resource_id + remaining_duration_days)", "seed_demo_users"]
+        }
+      }
+    ],
+    "photos": [
+      {
+        "file": "20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
+        "date": "2026-05-04",
+        "gitSubject": "Changes",
+        "capability": "Create annotation_photos table with AI pay-item suggestion columns (ai_suggested_pay_item_id, ai_confidence, ai_rationale, confirmed); add annotation-photos storage bucket",
+        "objects": {
+          "tables": ["annotation_photos"],
+          "storageBuckets": ["annotation-photos"],
+          "policies": ["Members view photos", "Members upload photos", "Project creators manage photos", "Uploaders update own", "Members read annotation photos", "Members upload annotation photos"]
+        }
+      }
+    ],
+    "notifications": [
+      {
+        "file": "20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql",
+        "date": "2026-05-24",
+        "gitSubject": "Changes",
+        "capability": "In-app notifications table (user_id, project_id, kind, payload, read_at) auto-populated by daily_reports_status_side_effects trigger",
+        "objects": {
+          "tables": ["notifications"],
+          "policies": ["Users view own notifications", "Users mark own notifications read", "Users delete own notifications"],
+          "indexes": ["idx_notifications_user_unread"]
+        }
+      },
+      {
+        "file": "20260526015440_e7d9bc81-0db3-4acd-88f7-ff486798a2b2.sql",
+        "date": "2026-05-26",
+        "gitSubject": "Changes",
+        "capability": "Add device_tokens table (user_id, platform ios/android/web, token) for push notification registration",
+        "objects": {
+          "tables": ["device_tokens"],
+          "policies": ["Users view/insert/update/delete own device tokens"],
+          "indexes": ["idx_device_tokens_user"]
+        }
+      }
+    ],
+    "documents": [
+      {
+        "file": "20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+        "date": "2026-05-24",
+        "gitSubject": "Changes",
+        "capability": "PIVOT — full document management system: document_folders (self-referential tree, system_kind enum) + documents (versioned, replaces_document_id) tables; seed_project_standard_folders() + projects_seed_folders trigger; project-documents storage bucket; backfill existing projects with 10 standard folders and migrate legacy pdf_storage_path rows",
+        "objects": {
+          "tables": ["document_folders", "documents"],
+          "functions": ["document_folders_block_nonempty_delete", "seed_project_standard_folders", "projects_seed_folders"],
+          "triggers": ["trg_document_folders_updated", "trg_documents_updated", "trg_document_folders_block_nonempty", "trg_projects_seed_folders"],
+          "storageBuckets": ["project-documents"],
+          "policies": [
+            "Members view folders", "PMs manage folders",
+            "Members view documents", "PMs manage documents",
+            "Inspectors upload to photos and daily_reports",
+            "Members read/upload project documents", "PMs manage project documents storage"
+          ]
+        }
+      },
+      {
+        "file": "20260524182507_aa3b520a-cfe2-4510-b710-0caf0809bc7f.sql",
+        "date": "2026-05-24",
+        "gitSubject": "Changes",
+        "capability": "Soft-delete support on documents: add deleted_at + deleted_by columns and covering index",
+        "objects": {
+          "alteredTables": ["documents (+ deleted_at, deleted_by)"],
+          "indexes": ["idx_documents_project_deleted"]
+        }
+      }
+    ]
+  },
+  "pivots": [
+    {
+      "id": "P1",
+      "date": "2026-03-23",
+      "name": "Invitation-based org signup replaces auto-assign",
+      "files": [
+        "20260321162325_749c9dcd-0ffa-430d-bf20-422872294f47.sql",
+        "20260321162349_089b7eac-a691-474e-96f4-b97ab4d2581d.sql",
+        "20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql"
+      ],
+      "description": "Two migrations (Mar 21) created a trigger that auto-assigned every new signup the project_manager role. Just two days later, both that trigger and function were dropped and replaced with a formal invitations table + accept_invitation() + assign_owner_role() flow. Organic signups now become admin; invited users get the role specified in the invitation token."
+    },
+    {
+      "id": "P2",
+      "date": "2026-05-24",
+      "name": "Daily report approval locked to Resident Engineer role",
+      "files": [
+        "20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
+        "20260524173747_cd76e27d-fda9-4f8b-aac8-c875aa100937.sql"
+      ],
+      "description": "The initial daily-report workflow migration included a policy allowing project creators (PMs) to update reports. The very next substantive migration that same day dropped that policy and added a hard check inside the status-transition trigger: only a user with the resident_engineer role who is also a project member may set status to approved or rejected."
+    },
+    {
+      "id": "P3",
+      "date": "2026-05-24",
+      "name": "Document management replaces flat PDF storage paths",
+      "files": [
+        "20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+        "20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql"
+      ],
+      "description": "The original schema stored plan/spec PDFs as bare text paths (pdf_storage_path, specs_storage_path) on the projects row. Migration 20260524174837 introduced a full hierarchical document management system (document_folders + documents with versioning), 10 system-seeded folders per project, a non-empty-folder delete guard, and backfilled legacy PDF paths into the Plans/Specs folders."
+    },
+    {
+      "id": "P4",
+      "date": "2026-05-26",
+      "name": "Schedule calendars + resources additions (P6 parity gap filled)",
+      "files": [
+        "20260526105432_7d5d3850-b410-4d77-ad92-1f2f0e524b65.sql",
+        "20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql"
+      ],
+      "description": "The first P6-compatible schedule migration (20260526105432) added CPM fields, activity_relationships, and replace_project_schedule() but had no calendar or resource model. Within the same day, migration 20260526115717 added schedule_calendars, schedule_resources, activity_resource_assignments, schedule_baselines/baseline_activities, and upgraded replace_project_schedule() to a 7-argument RPC that atomically imports all of those in one transaction."
+    },
+    {
+      "id": "P5",
+      "date": "2026-03-28",
+      "name": "demo_requests table isolated — no downstream adoption until RLS hardening",
+      "files": [
+        "20260328182512_208ba41b-5292-403a-baf4-9b9b2d158879.sql",
+        "20260528155528_44c52ae9-d9c8-4390-8dde-0367583b44ef.sql"
+      ],
+      "description": "demo_requests was created on 2026-03-28 with a permissive anon INSERT policy. It then had no follow-up migration for two months. The global RLS hardening of 2026-05-28 replaced the permissive INSERT policy with one that validates field lengths and email format — the table's only schema evolution in 36 migrations."
+    },
+    {
+      "id": "P6",
+      "date": "2026-05-28",
+      "name": "Global RLS hardening and SECURITY DEFINER privilege lock-down",
+      "files": [
+        "20260528155528_44c52ae9-d9c8-4390-8dde-0367583b44ef.sql"
+      ],
+      "description": "A single migration swept all storage bucket policies (replacing broad authenticated-only checks with project-membership checks), tightened the profiles search policy, added input validation to demo_requests, revoked EXECUTE on all SECURITY DEFINER functions from PUBLIC and anon (trigger-only functions also revoked from authenticated), and enabled RLS on realtime.messages with a project-channel membership gate. This is the most cross-cutting single migration in the timeline."
+    }
+  ]
+}
