@@ -202,52 +202,60 @@ function sh(cmd) {
   return execSync(cmd, { cwd: REPO_ROOT, encoding: 'utf8', maxBuffer: 128 * 1024 * 1024 });
 }
 
+function parseHeader(header) {
+  const p1 = header.indexOf('|');
+  const p2 = header.indexOf('|', p1 + 1);
+  const p3 = header.indexOf('|', p2 + 1);
+  return {
+    hash: header.slice(0, p1),
+    iso: header.slice(p1 + 1, p2),
+    parents: header.slice(p2 + 1, p3),
+    subject: header.slice(p3 + 1).trim(),
+  };
+}
+
 function loadAllCommits() {
-  // --numstat gives insertions/deletions per file (for merges, only diff vs first parent)
-  // --name-status gives A/M/D/R… status; we line up by path.
-  // We run two passes (numstat, then name-status) because mixing both can be ambiguous.
-  const raw = sh(
-    "git log --reverse -m --first-parent --numstat --format='__C__%H|%aI|%P|%s'",
+  // Two passes:
+  //   1) --no-merges + --numstat → build commits with file deltas.
+  //   2) --merges only → acceptance markers (the user accepting an iteration).
+  // Merges in Lovable carry no diff vs first parent (preview was already at
+  // that tree), so they don't contribute file work — they mark wall-clock
+  // acceptance, which is what we want them to represent in the schedule.
+  const buildRaw = sh(
+    "git log --reverse --no-merges --numstat --format='__C__%H|%aI|%P|%s'",
   );
-  // -m forces merge commits to emit a diff (vs first parent) so files appear.
-  // --first-parent keeps each merge as a single commit, not its merged children.
+  const mergeRaw = sh(
+    "git log --reverse --merges --format='__C__%H|%aI|%P|%s'",
+  );
 
   const commits = [];
-  for (const block of raw.split('__C__')) {
+
+  for (const block of buildRaw.split('__C__')) {
     if (!block.trim()) continue;
     const [header, ...rest] = block.split('\n');
-    const pipeIdx1 = header.indexOf('|');
-    const pipeIdx2 = header.indexOf('|', pipeIdx1 + 1);
-    const pipeIdx3 = header.indexOf('|', pipeIdx2 + 1);
-    const hash = header.slice(0, pipeIdx1);
-    const iso = header.slice(pipeIdx1 + 1, pipeIdx2);
-    const parents = header.slice(pipeIdx2 + 1, pipeIdx3);
-    const subject = header.slice(pipeIdx3 + 1).trim();
-
+    const { hash, iso, subject } = parseHeader(header);
     if (TEMPLATE_SUBJECT_RE.test(subject)) continue;
 
     const files = [];
     for (const ln of rest) {
       const t = ln.trim();
       if (!t) continue;
-      // numstat: "ins\tdel\tpath"  (binary files show "-\t-\tpath")
       const parts = t.split('\t');
       if (parts.length < 3) continue;
       const [insRaw, delRaw, ...pathParts] = parts;
       const path = pathParts.join('\t');
       if (IGNORE_FILE(path)) continue;
-      const insertions = insRaw === '-' ? null : Number(insRaw);
-      const deletions = delRaw === '-' ? null : Number(delRaw);
-      files.push({ path, insertions, deletions });
+      files.push({
+        path,
+        insertions: insRaw === '-' ? null : Number(insRaw),
+        deletions: delRaw === '-' ? null : Number(delRaw),
+      });
     }
 
-    const parentCount = parents.trim().split(/\s+/).filter(Boolean).length;
-    const isMerge = parentCount > 1;
-
-    let kind;
-    if (isMerge) kind = 'acceptance';
-    else if (BOOTSTRAP_SUBJECT_RE.test(subject) && files.length === 0) kind = 'bootstrap';
-    else kind = 'build';
+    const kind =
+      BOOTSTRAP_SUBJECT_RE.test(subject) && files.length === 0
+        ? 'bootstrap'
+        : 'build';
 
     commits.push({
       sha: hash,
@@ -259,6 +267,24 @@ function loadAllCommits() {
       files,
     });
   }
+
+  for (const block of mergeRaw.split('__C__')) {
+    if (!block.trim()) continue;
+    const [header] = block.split('\n');
+    const { hash, iso, subject } = parseHeader(header);
+    if (TEMPLATE_SUBJECT_RE.test(subject)) continue;
+    commits.push({
+      sha: hash,
+      iso,
+      date: iso.slice(0, 10),
+      kind: 'acceptance',
+      subject,
+      subjectTokens: tokenizeSubject(subject),
+      files: [],
+    });
+  }
+
+  commits.sort((a, b) => a.iso.localeCompare(b.iso));
   return commits;
 }
 
