@@ -1,0 +1,90 @@
+[
+  {
+    "id": "PROM-1",
+    "source": "landing",
+    "sourceFile": "src/pages/Landing.tsx",
+    "claimAgeFromISO": "2026-03-21T17:11:58Z",
+    "claim": "Walk the site. Measure automatically.",
+    "stream": "05-field-capture",
+    "verdict": null,
+    "verifiedE2E": false,
+    "evidenceFiles": []
+  },
+  {
+    "id": "PROM-2",
+    "source": "landing",
+    "sourceFile": "src/pages/Landing.tsx",
+    "claimAgeFromISO": "2026-03-21T17:11:58Z",
+    "claim": "We'll configure a walkthrough around your contract.",
+    "stream": "19-onboarding-and-tutorials",
+    "verdict": null,
+    "verifiedE2E": false,
+    "evidenceFiles": []
+  },
+  {
+    "id": "PROM-3",
+    "source": "llms",
+    "sourceFile": "public/llms.txt",
+    "claimAgeFromISO": "2026-05-27T08:21:36Z",
+    "claim": "[Landing](/landing): Product overview, features, FAQ, and demo request.",
+    "stream": "UNMAPPED",
+    "verdict": null,
+    "verifiedE2E": false,
+    "evidenceFiles": []
+  },
+  {
+    "id": "PROM-4",
+    "source": "llms",
+    "sourceFile": "public/llms.txt",
+    "claimAgeFromISO": "2026-05-27T08:21:36Z",
+    "claim": "[Interactive Demo](/demo): Standalone walkthrough of field setup and measurement.",
+    "stream": "03-project-onboarding",
+    "verdict": null,
+    "verifiedE2E": false,
+    "evidenceFiles": []
+  },
+  {
+    "id": "PROM-5",
+    "source": "llms",
+    "sourceFile": "public/llms.txt",
+    "claimAgeFromISO": "2026-05-27T08:21:36Z",
+    "claim": "[Sign in](/auth): Authentication for existing teams.",
+    "stream": "01-identity-and-access",
+    "verdict": null,
+    "verifiedE2E": false,
+    "evidenceFiles": []
+  },
+  {
+    "id": "PROM-6",
+    "source": "llms",
+    "sourceFile": "public/llms.txt",
+    "claimAgeFromISO": "2026-05-27T08:21:36Z",
+    "claim": "[MCFA Pitch](/mcfa): Partner-specific overview for MCFA.",
+    "stream": "UNMAPPED",
+    "verdict": null,
+    "verifiedE2E": false,
+    "evidenceFiles": []
+  },
+  {
+    "id": "PROM-7",
+    "source": "llms",
+    "sourceFile": "public/llms.txt",
+    "claimAgeFromISO": "2026-05-27T08:21:36Z",
+    "claim": "[Fajar Pitch](/fajar): Partner-specific overview for Fajar.",
+    "stream": "UNMAPPED",
+    "verdict": null,
+    "verifiedE2E": false,
+    "evidenceFiles": []
+  },
+  {
+    "id": "PROM-8",
+    "source": "llms",
+    "sourceFile": "public/llms.txt",
+    "claimAgeFromISO": "2026-05-27T08:21:36Z",
+    "claim": "[PMXML Demo](/p6-xml): Primavera P6 XML round-trip demo (DCMA, progress, RE memo).",
+    "stream": "11-schedule-management",
+    "verdict": null,
+    "verifiedE2E": false,
+    "evidenceFiles": []
+  }
+]

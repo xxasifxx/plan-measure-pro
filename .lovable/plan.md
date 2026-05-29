@@ -1,105 +1,123 @@
-## Why this revision
+# TakeoffPro Development WBS → PMXML Fixture (v3)
 
-Previous plan treated "drop XerDemo" as deleting one page. Your correction: the *reason* is that PMXML is the import/export format, so the XER format itself is going away — the demo was just its only remaining visible surface. That means the entire `src/lib/xer/*` engine has to be reckoned with, not preserved. You also confirmed the engine's analytical capabilities (DCMA-14, TIA, AACE, RE memo) are real product value that should survive — just on PMXML rails.
+Anchored to your six decisions: 20 streams at Level 2 with engineering-layer sub-WBS at Level 3, **strict end-to-end-with-seed-data completion rule**, **marketing claims surface as remaining work**, **git-derived dates for completed activities**, **PMXML self-proof for our own importer**, **self-management** as the optimization target.
 
-You also approved 5 additional value streams. Total goes from 15 → 20.
+## Deliverables
 
----
+1. `docs/wbs-dev.activities.json` — canonical activity list with strict scoring.
+2. `docs/wbs-dev.promises.json` — extracted marketing claims with code-evidence verdict (Delivered / Partial / Undelivered).
+3. `docs/wbs-dev.verification.md` — per-activity e2e verification recipe (what URL, what seed, what to observe). This is the document that justifies any "Completed" status.
+4. `scripts/extract-marketing-promises.mjs` — parses `src/pages/Landing.tsx`, `McfaPitch.tsx`, `FajarPitch.tsx`, `public/llms.txt`, README hero copy into claim records.
+5. `scripts/verify-e2e.mjs` — best-effort scripted check per activity (route reachable, seed data renders, mutation persists). Activities without an automatable check are flagged `unverified` and default to **Not Started** under the strict rule.
+6. `scripts/build-dev-wbs.mjs` — assembles JSON from briefs + git log + promises + verification.
+7. `scripts/build-dev-pmxml.mjs` — emits PMXML covering the feature matrix of `src/lib/p6xml/parser.ts`.
+8. `public/exports/takeoffpro-dev.xml` — the fixture; round-trips through `/p6-xml`.
+9. `src/test/dev-pmxml.test.ts` — round-trip + feature-matrix coverage assertions.
+10. `docs/wbs-dev.md` — narrative: structure, scoring methodology, marketing-debt reading, how to refresh.
 
-## Track 1 — XER demolition + engine rehome onto PMXML
+## WBS structure (hybrid restored)
 
-**Delete outright**
-- `src/pages/XerDemo.tsx`, `src/components/XerLensTour.tsx`
-- `/mcfa/demo` route in `src/App.tsx`, XerDemo CTA in `src/pages/McfaPitch.tsx`
-- `src/lib/xer/parser.ts`, `sample.ts`, `sample-update.ts`, `types.ts`, `wbs.ts` (after extracting one constant)
-- `.xer` file support in `src/components/schedule/ImportP6Panel.tsx` and `src/lib/schedule/import-p6.ts` — XML only
-- `src/test/xer-parser.test.ts`, `src/test/tia.test.ts` (rewritten under PMXML)
+```text
+TakeoffPro Build
+├── 01 Identity & Access
+│   ├── Frontend     (UI components, routes, hooks)
+│   ├── Backend      (migrations, RLS, edge functions)
+│   ├── Mobile       (native/PWA-specific work)
+│   ├── Verification (e2e seed-data tests)
+│   └── Docs         (briefs, runbooks)
+├── 02 Portfolio & PM Home  (same 5-leaf sub-WBS)
+├── ... (streams 03–20)
+├── 21 Marketing Debt        (cross-stream: claims without delivery)
+└── 99 Cross-cutting         (audit log, role-RLS, notifications trigger,
+                              XER scrap, PMXML pivot, comprehension pass,
+                              this WBS effort itself)
+```
 
-**Inline trivial leftovers**
-- Lift `NJDOT_REQUIRED_MILESTONES` from `lib/xer/wbs.ts` into `src/components/schedule/ComplianceStrip.tsx` (the only consumer)
+Engineering-layer sub-WBS keeps the brief's bullets sortable: a "partial" bullet about RLS lands under Backend, a "missing" touch-target bullet under Mobile.
 
-**Rehome the engine onto PMXML** — move into `src/lib/schedule/analysis/`, refactored to consume the parsed PMXML tables (`P6Tables` from `src/lib/p6xml/parser.ts`) or the project's `ScheduleActivity[]`/`ActivityRelationship[]` shape (already normalized), not XER tables:
-- `dcma.ts` → DCMA-14 schedule quality checks
-- `tia.ts` → Time Impact Analysis
-- `aace.ts` → AACE estimate-class bands
-- `feedback.ts` + `memo-export.ts` → RE feedback memo (PDF/DOC)
-- `progress.ts` → period-over-period progress comparison
-- `chart-export.ts` → SVG-to-PNG chart export
+## Scoring methodology (strict rule applied)
 
-These become first-class capabilities of the **Schedule Management** stream, surfaced inside `ProjectControls.tsx`'s Schedule workspace (not in a standalone demo). Tests rewritten against PMXML samples in `src/lib/p6xml/sample.ts`.
+Every activity carries three fields:
 
-**Sanity check**
-- Zero hits for `lib/xer`, `XerDemo`, `XerLensTour`, `.xer` after demolition (except possibly in `docs/` historical files, which is fine)
-- `bun test` green
-- `/mcfa/demo` returns 404; sitemap/llms.txt updated
+| Field | Source | Default if absent |
+|---|---|---|
+| `code_present` | Brief bullet says "implemented" / files exist | false |
+| `verified_e2e` | `scripts/verify-e2e.mjs` returns pass with seed data | false |
+| `status` | derived | see table below |
 
----
+```text
+code_present  verified_e2e   status
+false         false          Not Started
+true          false          In Progress (50%)   ← was 100% before
+true          true           Completed (100%)
+false         true           (impossible)
+```
 
-## Track 2 — 20 value streams
+Result: the 86% completion headline from `wbs-v2.json` will collapse — expect a real number in the 40–60% range once the verifier runs. That's the point. `wbs-v2.json` is kept as-is for code-only baseline comparison; `wbs-dev.activities.json` is the truthful version.
 
-Original 15 stand, with four splits and one addition. Reorganized:
+Activities that can't be automatically verified (visual polish, native-only flows) are marked `unverified=manual` and require a one-line manual check in `verification.md` before they can move to Completed.
 
-**Operational value streams (deliver participant value)**
-1. **Identity & Access** — auth, RLS, invite, reset, role membership
-2. **Portfolio & PM Home** *(new)* — Dashboard, project list, cross-project switching, "where you land after login"
-3. **Project Onboarding** *(narrowed)* — first-run setup wizard: org → project → plans → initial calibration → team → ready. Stops the moment ongoing operation begins.
-4. **Pay Item Catalog** *(split from Onboarding)* — ongoing lifecycle: import from plans, manual add, contract mods, unit-code grouping, cascade deletes, measurable vs manual-entry
-5. **Field Capture** *(narrowed)* — inspector on site: annotate, GPS-trace, capture quantities, offline-durable submission
-6. **Daily Report Lifecycle** *(split from Q2P)* — inspector compose → submit → RE re-review queue → approve/reject. Surfaces: `DailyReport.tsx`, `ReReview.tsx`, snapshot library, useReReviewQueue
-7. **Quantity-to-Payment** *(narrowed)* — payment-side: approved-quantity cumulation, contract-vs-measured variance, payment-period rollups
-8. **Photo Evidence** — capture, AI-tag (tag-photo edge fn), link to pay item
-9. **Standard Specifications** — upload, index, instant search, per-pay-item lookup
-10. **Document Management** — folders, versions, trash, preview, search, star
-11. **Schedule Management** *(expanded scope)* — PMXML ingest/export, CPM, Gantt, baselines, calendars, resources + the **rehomed engine** (DCMA-14, TIA, AACE, RE feedback memo)
-12. **Project Health & Controls** — KPI tiles, quantity variance, inspector adoption, EOS scorecard (per-project scope only; portfolio scope is stream #2)
-13. **Data Export & Interoperability** — CSV, approved-PDF, Excel daily report, PMXML round-trip, NJDOT format conformance. Its acceptance criteria are format-fidelity, not upstream content.
+## Marketing-as-remaining-work
 
-**Enabling streams (substrate with own acceptance criteria)**
-14. **Measurement & Geometry Engine** *(split from Field Capture)* — scale calibration, geometric editing, SY/CY formulas, GPS georef + Kalman, annotation labels with leader lines, zoom-independence, manual-override preservation
-15. **Offline & Native Durability** — IndexedDB, outbox, mirror, sync, PWA, biometric gate, background sync, push, first-run wizard
-16. **Mobile Field Ergonomics** *(new)* — MobileTabBar, MobileToolbar, MobileAnnotationSheet, MobilePayItems, MobileSections, status chips, touch selection constraints. Distinct from #15: that's data durability, this is interaction design.
-17. **Notifications & Presence** — NotificationBell, realtime channels, online users, push delivery
-18. **Compliance & Audit** — traceable captures, spec citation per quantity, DC-84 conformance, immutability of approved snapshots
+`extract-marketing-promises.mjs` scans the three pitch pages + landing + llms.txt and extracts claim sentences (regex on bullet lists + headline patterns, hand-curated tail). For each claim:
 
-**Cross-cutting streams**
-19. **Onboarding & Tutorials** — GuidedTour, useTour, WelcomeCarousel, NativeFirstRun, the 12-step interactive demo at `/demo`
-20. **Sales & Pitch** — Landing, McfaPitch, FajarPitch, P6XmlDemo (kept as standalone PMXML pitch). Marketing stream.
+- Map to the most relevant stream branch (manual mapping table seeded by Lovable, reviewed by you).
+- Cross-check against code evidence:
+  - **Delivered + verified** → no activity created (already covered).
+  - **Delivered but unverified** → `In Progress` activity "Verify e2e: \<claim\>".
+  - **Partial** → `In Progress` activity "Finish delivery: \<claim\>".
+  - **Undelivered** → `Not Started` activity "Deliver: \<claim\> (marketing claim since \<earliest-git-date-of-claim\>)".
 
----
+Branch `21 Marketing Debt` rolls up every Undelivered claim with critical path stretching through it — this is the lie tax made visible on the Gantt.
 
-## Track 3 — Comprehension pass (unchanged shape, new stream count)
+## Dates
 
-**Phase 1** *(AI only)* — write one-page brief per stream in `docs/streams/<id>.md`: purpose, value delivered, primary persona + secondary/tertiary, jobs list, handoffs in/out, success metrics, format-fidelity criteria (for #13), audit criteria (for #18). Plus `docs/streams/00-overview.md` with the stream map and handoff graph.
+- **Completed activities**: `git log --diff-filter=A --follow --format=%aI -- <evidence>` for first commit; `git log -1 --format=%aI` for last. Capped at 30d duration to prevent long-lived files from skewing the Gantt.
+- **Marketing claim age**: git history of the pitch file the claim appears in — establishes how long the promise has been outstanding.
+- **Remaining activities**: hand-set in JSON (migration=1d, RLS=1d, edge-function=2d, UI refactor=3d, feature=5d, e2e verification=0.5d each). You review and override before PMXML emit.
+- **Sub-WBS pivots as activities** (under `99 Cross-cutting`, hand-authored):
+  - `XER ingest engine (scrapped)` — first → last commit on `src/lib/xer/**` before deletion.
+  - `PMXML pivot` — first commit on `src/lib/p6xml/**` → today.
+  - `20-stream comprehension pass` — dated today.
+  - `Dev WBS authoring (this effort)` — recursive, dated today.
 
-**Phase 2** *(capable subagents in parallel, ~40–55 jobs total across 20 streams)* — one subagent per job, each reconstructing from code + the stream brief only. Output `docs/jobs/<stream-id>-<job-id>.md` with trigger, preconditions, steps (with surface/file evidence), acceptance criteria, current state (built / partial / planned), gaps, failure modes. Forbidden inputs: `wbs.json`, `wbs-leaves.yaml`, `wbs-proposals.reconciled.json`, `scope-inventory*`, old `commit-tag` artifacts, old `scripts/*.mjs` outputs.
+## PMXML feature-matrix coverage
 
-**Phase 3** *(one capable subagent)* — `docs/functional-requirements.md`: cross-cutting requirements (RLS posture, offline guarantees, format-fidelity matrix, audit chain, NJTA 7th Ed. citation rules) that every stream must satisfy.
+The fixture must exercise everything `src/lib/p6xml/parser.ts` claims to support; the round-trip test asserts each. Concretely:
 
-**Phase 4** *(AI synthesis)* — `docs/comprehension-report.md` as the presentation artifact: meta-pitch framing ("we're using TakeoffPro to comprehend TakeoffPro"), per-stream status, live handoffs, broken handoffs, headline gaps, cross-cutting requirements. Plus `docs/wbs-v2.json` mechanically derived from job files: status from acceptance-criteria satisfaction, durations estimated per unsatisfied criterion, dependencies from handoffs.
+| Feature | How fixture covers it |
+|---|---|
+| Calendar | One 5-day calendar, one 24/7 calendar (cross-cutting branch) |
+| WBS hierarchy | 3 levels (root → stream → engineering layer) |
+| Activity types | Task, Milestone, LOE |
+| Relationships | FS, SS, FF + non-zero lag on at least one |
+| Resources | Single "Lovable+you" resource assigned to all activities (truthful) |
+| Baselines | One baseline = snapshot at "Today" milestone |
+| Notebook topics | One per stream branch carrying the brief's narrative |
+| User-defined fields | `code_present`, `verified_e2e`, `marketing_claim_age_days` |
 
-**Phase 5** *(AI only)* — `docs/wbs-diff.md`: old `wbs.json` kept as "before" baseline, diff'd against `wbs-v2.json`. Notes what's newly visible, newly retired, and what changed status.
+This is what makes the fixture a self-proof: importing `takeoffpro-dev.xml` into our own `/p6-xml` page must reproduce every field, and the test fails if our parser drops any.
 
----
+## Refresh model
 
-## Files touched
+```text
+node scripts/extract-marketing-promises.mjs
+node scripts/verify-e2e.mjs          # writes verification.md
+node scripts/build-dev-wbs.mjs       # consumes briefs + git + promises + verification
+node scripts/build-dev-pmxml.mjs     # emits public/exports/takeoffpro-dev.xml
+npx vitest run dev-pmxml             # round-trip + feature-matrix assertions
+```
 
-**Deleted:** `XerDemo.tsx`, `XerLensTour.tsx`, `lib/xer/*` (all 13 files), `test/xer-parser.test.ts`, `test/tia.test.ts`
-**Modified:** `App.tsx`, `McfaPitch.tsx`, `ImportP6Panel.tsx`, `lib/schedule/import-p6.ts`, `ComplianceStrip.tsx`, `public/sitemap.xml`, `public/llms.txt`, `ProjectControls.tsx` (mount engine panels)
-**Created (engine rehome):** `src/lib/schedule/analysis/{dcma,tia,aace,feedback,memo-export,progress,chart-export}.ts`, `src/test/{dcma,tia-pmxml,aace}.test.ts`
-**Created (comprehension):** `docs/streams/00-overview.md` + 20 stream briefs, `docs/jobs/*.md` (~40–55), `docs/functional-requirements.md`, `docs/comprehension-report.md`, `docs/wbs-v2.json`, `docs/wbs-diff.md`
-**Untouched:** old `wbs.json`, `wbs-leaves.yaml`, `wbs-proposals.reconciled.json`, `scope-inventory*`, old `scripts/*.mjs` (kept as historical baseline for Phase 5 diff)
+Every brief edit, every shipped fix, every new pitch-page claim re-flows into the fixture.
 
----
+## Two checkpoints I'll pause for
 
-## Cost shape
+1. **After `extract-marketing-promises.mjs` first run** — show you the claim-to-stream mapping table for review (this is judgement-heavy and wrong-by-default).
+2. **After `verify-e2e.mjs` first run** — show you the activities that flipped from Completed to In Progress under the strict rule, so you can confirm or override individual cases before they hit the PMXML.
 
-- Track 1: small but real — engine rehome is a refactor with test rewrites, not a delete
-- Track 3 Phase 1: AI only
-- Track 3 Phase 2: dominant cost — ~40–55 capable subagents in parallel
-- Track 3 Phases 3–5: AI only
+## Out of scope
 
-## Out of scope (explicitly)
-
-- Re-deriving file surfaces, recomputing critical path, estimating durations from git history, depth-audit of old artifacts
-- Building any new product feature beyond the engine rehome required by Track 1
-- Touching `src/lib/p6xml/*` beyond what the engine rehome needs to consume it
+- Implementing any backlog item as code (they appear in the schedule as work to do, not work being done).
+- Cost loading / earned value.
+- Re-scoring `wbs-v2.json` (kept as the lenient baseline for contrast).
+- Customer-project pricing model — separate doc.
