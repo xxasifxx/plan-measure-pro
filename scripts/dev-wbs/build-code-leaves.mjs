@@ -103,37 +103,26 @@ for (const p of ALL) {
 }
 
 
-// ── 2) migration weekly clusters ──────────────────────────────────────────────
+// ── 2) per-migration leaves ───────────────────────────────────────────────────
 const migrations = readdirSync('supabase/migrations')
   .filter(f => f.endsWith('.sql'))
   .map(f => ({
     file: `supabase/migrations/${f}`,
     iso: `${f.slice(0, 4)}-${f.slice(4, 6)}-${f.slice(6, 8)}`,
+    slug: f.replace(/^\d+_/, '').replace(/\.sql$/, '').slice(0, 40),
   }));
 
-function isoWeek(iso) {
-  const d = new Date(iso + 'T00:00:00Z');
-  const onejan = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-  const wk = Math.ceil((((d - onejan) / 86400000) + onejan.getUTCDay() + 1) / 7);
-  return `${d.getUTCFullYear()}-w${String(wk).padStart(2, '0')}`;
-}
-
-const byWeek = new Map();
 for (const m of migrations) {
-  const k = isoWeek(m.iso);
-  if (!byWeek.has(k)) byWeek.set(k, []);
-  byWeek.get(k).push(m.file);
-}
-for (const [wk, files] of byWeek) {
   leaves.push({
     streamNum: '98',
     layer: 'Backend',
-    name: `Migrations ${wk}`,
-    fileGlobs: files,
+    name: `migration: ${m.iso} ${m.slug}`,
+    fileGlobs: [m.file],
     provenance: 'code-only',
-    sources: files.map(f => ({ kind: 'migration', path: f })),
+    sources: [{ kind: 'migration', path: m.file, iso: m.iso }],
   });
 }
+
 
 // ── 3) public.<table> leaves from types.ts ────────────────────────────────────
 const typesSrc = readFileSync('src/integrations/supabase/types.ts', 'utf8');
