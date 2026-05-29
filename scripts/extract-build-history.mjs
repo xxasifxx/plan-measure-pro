@@ -130,20 +130,29 @@ function classifyFile(file) {
   return null;
 }
 
+// Pre-work plan/bootstrap commits authored before any real file deltas.
+// In Lovable these are the "Update plan" / "Save plan" / first "Changes" stubs.
+const BOOTSTRAP_SUBJECT_RE = /^(Update plan|Save plan in Lovable|Changes)$/i;
+
 function loadAllCommits() {
-  // Format: __C__hash|ISO date|subject\nfile1\nfile2\n\n...
-  const raw = sh("git log --reverse --no-merges --name-only --format='__C__%H|%aI|%s'");
+  // Include merges — in Lovable a merge is the user accepting an iteration
+  // (preview → main), which is real human review work, not noise.
+  // %P = parent hashes (space-separated); >1 parent ⇒ merge commit.
+  const raw = sh("git log --reverse --name-only --format='__C__%H|%aI|%P|%s'");
   const commits = [];
   for (const block of raw.split('__C__')) {
     if (!block.trim()) continue;
     const [header, ...rest] = block.split('\n');
-    const [hash, iso, ...subjParts] = header.split('|');
+    const [hash, iso, parents, ...subjParts] = header.split('|');
     const subject = subjParts.join('|').trim();
     const files = rest.map(s => s.trim()).filter(Boolean).filter(f => !IGNORE_FILE(f));
-    // Skip upstream Lovable template commits (always have date 2025-01-01 and
-    // a `template:` subject). They precede the real project start.
     if (TEMPLATE_SUBJECT_RE.test(subject)) continue;
-    commits.push({ hash, iso, date: iso.slice(0, 10), subject, files });
+    const isMerge = parents.trim().split(/\s+/).filter(Boolean).length > 1;
+    let kind;
+    if (isMerge) kind = 'acceptance';
+    else if (BOOTSTRAP_SUBJECT_RE.test(subject) && files.length === 0) kind = 'bootstrap';
+    else kind = 'build';
+    commits.push({ hash, iso, date: iso.slice(0, 10), subject, files, kind });
   }
   return commits;
 }
