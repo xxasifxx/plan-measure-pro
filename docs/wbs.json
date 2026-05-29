@@ -1,10 +1,17 @@
 {
-  "generatedAt": "2026-05-29T11:00:36.609Z",
+  "generatedAt": "2026-05-29T11:01:04.727Z",
   "summary": {
-    "totalLeaves": 268,
+    "totalLeaves": 276,
     "bySurface": {
       "Bootstrap & Shell": 5,
-      "Uncategorized": 89,
+      "Project Lifecycle": 5,
+      "Takeoff": 16,
+      "Field Operations": 8,
+      "Documents": 6,
+      "Reporting & Exports": 4,
+      "Marketing & Sales": 8,
+      "Backend & Infra": 10,
+      "Cross-Cutting": 9,
       "Resource Management": 25,
       "Fajar / Equipment Rental": 15,
       "Cost Management": 8,
@@ -13,8 +20,10 @@
       "Claims & Delay Analysis": 6,
       "Scenarios & Reflections": 4,
       "Scheduling": 21,
+      "Project Controls": 13,
+      "Reporting": 10,
       "Scheduling Extras": 12,
-      "Integrations": 1,
+      "Integrations": 9,
       "AI": 12,
       "Auth & Admin": 19,
       "Native & Offline": 32,
@@ -23,12 +32,12 @@
     "byStatus": {
       "shipped": 98,
       "partial": 28,
-      "planned": 102,
-      "aspirational": 40
+      "planned": 101,
+      "aspirational": 49
     },
     "duplicateIds": [],
     "orphanPrereqCount": 2,
-    "remainingEstimatedDays": 1858,
+    "remainingEstimatedDays": 2038,
     "sourceFiles": [
       {
         "file": "docs/wbs-leaves.yaml",
@@ -56,7 +65,7 @@
       },
       {
         "file": "/mnt/documents/wbs-integrations.yaml",
-        "leaves": 1
+        "leaves": 9
       },
       {
         "file": "/mnt/documents/wbs-ai-auth-admin.yaml",
@@ -293,7 +302,7 @@
     {
       "id": "PL-001",
       "name": "Project Create Wizard",
-      "surface": "Uncategorized",
+      "surface": "Project Lifecycle",
       "status": "shipped",
       "durationDays": 5,
       "prerequisites": [
@@ -340,7 +349,7 @@
     {
       "id": "PL-002",
       "name": "Project Dashboard (Card Grid)",
-      "surface": "Uncategorized",
+      "surface": "Project Lifecycle",
       "status": "shipped",
       "durationDays": 5,
       "prerequisites": [
@@ -382,7 +391,7 @@
     {
       "id": "PL-003",
       "name": "Project Sidebar Navigation",
-      "surface": "Uncategorized",
+      "surface": "Project Lifecycle",
       "status": "shipped",
       "durationDays": 3,
       "prerequisites": [
@@ -420,7 +429,7 @@
     {
       "id": "PL-004",
       "name": "Project Settings & Metadata Edit",
-      "surface": "Uncategorized",
+      "surface": "Project Lifecycle",
       "status": "shipped",
       "durationDays": 3,
       "prerequisites": [
@@ -458,7 +467,7 @@
     {
       "id": "PL-005",
       "name": "Project Activity Tracking",
-      "surface": "Uncategorized",
+      "surface": "Project Lifecycle",
       "status": "shipped",
       "durationDays": 5,
       "prerequisites": [
@@ -501,7 +510,7 @@
     {
       "id": "TK-001",
       "name": "PDF Plan Canvas & Page Navigation",
-      "surface": "Uncategorized",
+      "surface": "Takeoff",
       "status": "shipped",
       "durationDays": 10,
       "prerequisites": [
@@ -555,7 +564,7 @@
     {
       "id": "TK-002",
       "name": "TOC Auto-Parse & Region Select",
-      "surface": "Uncategorized",
+      "surface": "Takeoff",
       "status": "shipped",
       "durationDays": 5,
       "prerequisites": [
@@ -597,7 +606,7 @@
     {
       "id": "TK-003",
       "name": "Paper-Scale Calibration & Sync",
-      "surface": "Uncategorized",
+      "surface": "Takeoff",
       "status": "shipped",
       "durationDays": 5,
       "prerequisites": [
@@ -643,7 +652,7 @@
     {
       "id": "TK-004",
       "name": "Annotation Draw — Line / Polygon / Count / Label",
-      "surface": "Uncategorized",
+      "surface": "Takeoff",
       "status": "shipped",
       "durationDays": 10,
       "prerequisites": [
@@ -699,7 +708,7 @@
     {
       "id": "TK-005",
       "name": "Annotation Edit — Select / Move / Vertex / Delete",
-      "surface": "Uncategorized",
+      "surface": "Takeoff",
       "status": "shipped",
       "durationDays": 10,
       "prerequisites": [
@@ -754,7 +763,7 @@
     {
       "id": "TK-006",
       "name": "Measurement Formulas — SY / CY / LF / EA",
-      "surface": "Uncategorized",
+      "surface": "Takeoff",
       "status": "shipped",
       "durationDays": 5,
       "prerequisites": [
@@ -799,7 +808,7 @@
     {
       "id": "TK-007",
       "name": "Undo / Redo Stack",
-      "surface": "Uncategorized",
+      "surface": "Takeoff",
       "status": "shipped",
       "durationDays": 3,
       "prerequisites": [
@@ -840,7 +849,7 @@
     {
       "id": "TK-008",
       "name": "Pay-Items Panel — Group / Filter / Select",
-      "surface": "Uncategorized",
+      "surface": "Takeoff",
       "status": "shipped",
       "durationDays": 5,
       "prerequisites": [
@@ -886,7 +895,7 @@
     {
       "id": "TK-009",
       "name": "Pay-Items Import from Spec Tables",
-      "surface": "Uncategorized",
+      "surface": "Takeoff",
       "status": "shipped",
       "durationDays": 5,
       "prerequisites": [
@@ -929,7 +938,7 @@
     {
       "id": "TK-010",
       "name": "Standard Specs Viewer & Search",
-      "surface": "Uncategorized",
+      "surface": "Takeoff",
       "status": "shipped",
       "durationDays": 5,
       "prerequisites": [
@@ -972,7 +981,7 @@
     {
       "id": "TK-011",
       "name": "Summary Panel — Totals & Variance",
-      "surface": "Uncategorized",
+      "surface": "Takeoff",
       "status": "shipped",
       "durationDays": 5,
       "prerequisites": [
@@ -1015,7 +1024,7 @@
     {
       "id": "TK-012",
       "name": "Annotation Labels with Leader Lines",
-      "surface": "Uncategorized",
+      "surface": "Takeoff",
       "status": "shipped",
       "durationDays": 3,
       "prerequisites": [
@@ -1052,7 +1061,7 @@
     {
       "id": "TK-013",
       "name": "Fit-to-Screen Zoom & Canvas Navigation",
-      "surface": "Uncategorized",
+      "surface": "Takeoff",
       "status": "shipped",
       "durationDays": 3,
       "prerequisites": [
@@ -1093,7 +1102,7 @@
     {
       "id": "TK-014",
       "name": "Mobile Annotation Sheet & Tab Bar",
-      "surface": "Uncategorized",
+      "surface": "Takeoff",
       "status": "shipped",
       "durationDays": 5,
       "prerequisites": [
@@ -1137,7 +1146,7 @@
     {
       "id": "TK-015",
       "name": "Mobile Pay Items & Sections Panels",
-      "surface": "Uncategorized",
+      "surface": "Takeoff",
       "status": "shipped",
       "durationDays": 3,
       "prerequisites": [
@@ -1175,7 +1184,7 @@
     {
       "id": "TK-016",
       "name": "Geometric Vertex Editing",
-      "surface": "Uncategorized",
+      "surface": "Takeoff",
       "status": "shipped",
       "durationDays": 5,
       "prerequisites": [
@@ -1216,7 +1225,7 @@
     {
       "id": "FO-001",
       "name": "Inspector Daily Report — Draft & Submit",
-      "surface": "Uncategorized",
+      "surface": "Field Operations",
       "status": "shipped",
       "durationDays": 10,
       "prerequisites": [
@@ -1273,7 +1282,7 @@
     {
       "id": "FO-002",
       "name": "RE Review Queue — Approve / Reject / Bulk",
-      "surface": "Uncategorized",
+      "surface": "Field Operations",
       "status": "shipped",
       "durationDays": 10,
       "prerequisites": [
@@ -1329,7 +1338,7 @@
     {
       "id": "FO-003",
       "name": "Threaded Report Comments",
-      "surface": "Uncategorized",
+      "surface": "Field Operations",
       "status": "shipped",
       "durationDays": 5,
       "prerequisites": [
@@ -1369,7 +1378,7 @@
     {
       "id": "FO-004",
       "name": "Report Snapshot Archive on Reopen",
-      "surface": "Uncategorized",
+      "surface": "Field Operations",
       "status": "shipped",
       "durationDays": 3,
       "prerequisites": [
@@ -1403,7 +1412,7 @@
     {
       "id": "FO-005",
       "name": "Field Photo Capture & Geo-Tag Dispute UI",
-      "surface": "Uncategorized",
+      "surface": "Field Operations",
       "status": "partial",
       "durationDays": 10,
       "prerequisites": [
@@ -1455,7 +1464,7 @@
     {
       "id": "FO-006",
       "name": "GPS Calibration — 2-3 Point Georeferencing",
-      "surface": "Uncategorized",
+      "surface": "Field Operations",
       "status": "shipped",
       "durationDays": 5,
       "prerequisites": [
@@ -1498,7 +1507,7 @@
     {
       "id": "FO-007",
       "name": "Live GPS Trace Overlay & Kalman Smoothing",
-      "surface": "Uncategorized",
+      "surface": "Field Operations",
       "status": "shipped",
       "durationDays": 5,
       "prerequisites": [
@@ -1542,7 +1551,7 @@
     {
       "id": "FO-008",
       "name": "Offline-First Field Workflow",
-      "surface": "Uncategorized",
+      "surface": "Field Operations",
       "status": "partial",
       "durationDays": 15,
       "prerequisites": [
@@ -1600,7 +1609,7 @@
     {
       "id": "DOC-001",
       "name": "Folder Tree & System Folder Rendering",
-      "surface": "Uncategorized",
+      "surface": "Documents",
       "status": "partial",
       "durationDays": 5,
       "prerequisites": [
@@ -1648,7 +1657,7 @@
     {
       "id": "DOC-002",
       "name": "File Upload, Versioning & History",
-      "surface": "Uncategorized",
+      "surface": "Documents",
       "status": "shipped",
       "durationDays": 10,
       "prerequisites": [
@@ -1703,7 +1712,7 @@
     {
       "id": "DOC-003",
       "name": "Trash, Restore & Hard-Delete",
-      "surface": "Uncategorized",
+      "surface": "Documents",
       "status": "shipped",
       "durationDays": 5,
       "prerequisites": [
@@ -1749,7 +1758,7 @@
     {
       "id": "DOC-004",
       "name": "Document Search, Sort & Bulk Ops",
-      "surface": "Uncategorized",
+      "surface": "Documents",
       "status": "shipped",
       "durationDays": 5,
       "prerequisites": [
@@ -1799,7 +1808,7 @@
     {
       "id": "DOC-005",
       "name": "Document Preview — Image & PDF Inline",
-      "surface": "Uncategorized",
+      "surface": "Documents",
       "status": "shipped",
       "durationDays": 3,
       "prerequisites": [
@@ -1836,7 +1845,7 @@
     {
       "id": "DOC-006",
       "name": "Document Tagging & Aspirational Search",
-      "surface": "Uncategorized",
+      "surface": "Documents",
       "status": "planned",
       "durationDays": 10,
       "prerequisites": [
@@ -1887,7 +1896,7 @@
     {
       "id": "RE-001",
       "name": "CSV / Excel Takeoff Exports",
-      "surface": "Uncategorized",
+      "surface": "Reporting & Exports",
       "status": "shipped",
       "durationDays": 3,
       "prerequisites": [
@@ -1928,7 +1937,7 @@
     {
       "id": "RE-002",
       "name": "PDF Summary Report Export",
-      "surface": "Uncategorized",
+      "surface": "Reporting & Exports",
       "status": "shipped",
       "durationDays": 3,
       "prerequisites": [
@@ -1970,7 +1979,7 @@
     {
       "id": "RE-003",
       "name": "DC-84 Monthly Estimate Format (Planned)",
-      "surface": "Uncategorized",
+      "surface": "Reporting & Exports",
       "status": "planned",
       "durationDays": 15,
       "prerequisites": [
@@ -2015,7 +2024,7 @@
     {
       "id": "RE-004",
       "name": "Approved Quantities Embed into PMXML",
-      "surface": "Uncategorized",
+      "surface": "Reporting & Exports",
       "status": "planned",
       "durationDays": 10,
       "prerequisites": [
@@ -2062,7 +2071,7 @@
     {
       "id": "MS-001",
       "name": "NJTA / NJDOT Landing Page",
-      "surface": "Uncategorized",
+      "surface": "Marketing & Sales",
       "status": "shipped",
       "durationDays": 10,
       "prerequisites": [
@@ -2123,7 +2132,7 @@
     {
       "id": "MS-002",
       "name": "MCFA CPM Scheduler Pitch Page",
-      "surface": "Uncategorized",
+      "surface": "Marketing & Sales",
       "status": "shipped",
       "durationDays": 5,
       "prerequisites": [
@@ -2166,7 +2175,7 @@
     {
       "id": "MS-003",
       "name": "XerLens CPM Demo — 17-Step Guided Tour",
-      "surface": "Uncategorized",
+      "surface": "Marketing & Sales",
       "status": "shipped",
       "durationDays": 15,
       "prerequisites": [
@@ -2235,7 +2244,7 @@
     {
       "id": "MS-004",
       "name": "P6 XML Round-Trip Demo Page",
-      "surface": "Uncategorized",
+      "surface": "Marketing & Sales",
       "status": "shipped",
       "durationDays": 3,
       "prerequisites": [
@@ -2272,7 +2281,7 @@
     {
       "id": "MS-005",
       "name": "Fajar Al Mustaqbal Equipment-Rental Pitch",
-      "surface": "Uncategorized",
+      "surface": "Marketing & Sales",
       "status": "shipped",
       "durationDays": 10,
       "prerequisites": [
@@ -2323,7 +2332,7 @@
     {
       "id": "MS-006",
       "name": "Interactive Demo Mode (12-Step Walkthrough)",
-      "surface": "Uncategorized",
+      "surface": "Marketing & Sales",
       "status": "shipped",
       "durationDays": 10,
       "prerequisites": [
@@ -2380,7 +2389,7 @@
     {
       "id": "MS-007",
       "name": "Privacy Policy & Terms of Service Pages (Planned)",
-      "surface": "Uncategorized",
+      "surface": "Marketing & Sales",
       "status": "planned",
       "durationDays": 3,
       "prerequisites": [
@@ -2419,7 +2428,7 @@
     {
       "id": "MS-008",
       "name": "Case Studies & Blog/SEO Content (Aspirational)",
-      "surface": "Uncategorized",
+      "surface": "Marketing & Sales",
       "status": "aspirational",
       "durationDays": 25,
       "prerequisites": [
@@ -2460,7 +2469,7 @@
     {
       "id": "BE-001",
       "name": "Database Migrations & Schema (36 Migrations)",
-      "surface": "Uncategorized",
+      "surface": "Backend & Infra",
       "status": "shipped",
       "durationDays": 15,
       "prerequisites": [
@@ -2509,7 +2518,7 @@
     {
       "id": "BE-002",
       "name": "Row-Level Security Policies",
-      "surface": "Uncategorized",
+      "surface": "Backend & Infra",
       "status": "shipped",
       "durationDays": 10,
       "prerequisites": [
@@ -2557,7 +2566,7 @@
     {
       "id": "BE-003",
       "name": "Edge Function — invite-user",
-      "surface": "Uncategorized",
+      "surface": "Backend & Infra",
       "status": "shipped",
       "durationDays": 3,
       "prerequisites": [
@@ -2597,7 +2606,7 @@
     {
       "id": "BE-004",
       "name": "Edge Function — parse-schedule (Gemini AI Gantt Parser)",
-      "surface": "Uncategorized",
+      "surface": "Backend & Infra",
       "status": "shipped",
       "durationDays": 5,
       "prerequisites": [
@@ -2637,7 +2646,7 @@
     {
       "id": "BE-005",
       "name": "Edge Function — tag-photo (Gemini AI Photo Tagger)",
-      "surface": "Uncategorized",
+      "surface": "Backend & Infra",
       "status": "shipped",
       "durationDays": 5,
       "prerequisites": [
@@ -2681,7 +2690,7 @@
     {
       "id": "BE-006",
       "name": "Edge Function — send-push (FCM/APNs Dispatcher)",
-      "surface": "Uncategorized",
+      "surface": "Backend & Infra",
       "status": "planned",
       "durationDays": 10,
       "prerequisites": [
@@ -2728,7 +2737,7 @@
     {
       "id": "BE-007",
       "name": "Supabase Realtime Configuration",
-      "surface": "Uncategorized",
+      "surface": "Backend & Infra",
       "status": "shipped",
       "durationDays": 3,
       "prerequisites": [
@@ -2766,7 +2775,7 @@
     {
       "id": "BE-008",
       "name": "Vitest Test Suite",
-      "surface": "Uncategorized",
+      "surface": "Backend & Infra",
       "status": "shipped",
       "durationDays": 10,
       "prerequisites": [
@@ -2816,7 +2825,7 @@
     {
       "id": "BE-009",
       "name": "Observability & Logging (Aspirational)",
-      "surface": "Uncategorized",
+      "surface": "Backend & Infra",
       "status": "aspirational",
       "durationDays": 10,
       "prerequisites": [
@@ -2865,7 +2874,7 @@
     {
       "id": "BE-010",
       "name": "Build-History Tooling & WBS Governance",
-      "surface": "Uncategorized",
+      "surface": "Backend & Infra",
       "status": "shipped",
       "durationDays": 5,
       "prerequisites": [
@@ -2906,7 +2915,7 @@
     {
       "id": "CC-001",
       "name": "Guided Tour Framework (useTour + GuidedTour)",
-      "surface": "Uncategorized",
+      "surface": "Cross-Cutting",
       "status": "shipped",
       "durationDays": 5,
       "prerequisites": [
@@ -2951,7 +2960,7 @@
     {
       "id": "CC-002",
       "name": "Welcome Carousel (First-Visit Onboarding)",
-      "surface": "Uncategorized",
+      "surface": "Cross-Cutting",
       "status": "shipped",
       "durationDays": 3,
       "prerequisites": [
@@ -2989,7 +2998,7 @@
     {
       "id": "CC-003",
       "name": "Toast Notification System",
-      "surface": "Uncategorized",
+      "surface": "Cross-Cutting",
       "status": "shipped",
       "durationDays": 3,
       "prerequisites": [
@@ -3030,7 +3039,7 @@
     {
       "id": "CC-004",
       "name": "Confirm Dialog (useConfirm Hook)",
-      "surface": "Uncategorized",
+      "surface": "Cross-Cutting",
       "status": "shipped",
       "durationDays": 3,
       "prerequisites": [
@@ -3068,7 +3077,7 @@
     {
       "id": "CC-005",
       "name": "Keyboard Shortcuts",
-      "surface": "Uncategorized",
+      "surface": "Cross-Cutting",
       "status": "shipped",
       "durationDays": 3,
       "prerequisites": [
@@ -3114,7 +3123,7 @@
     {
       "id": "CC-006",
       "name": "Theme Toggle",
-      "surface": "Uncategorized",
+      "surface": "Cross-Cutting",
       "status": "shipped",
       "durationDays": 3,
       "prerequisites": [
@@ -3152,7 +3161,7 @@
     {
       "id": "CC-007",
       "name": "Notification Bell & In-App Inbox",
-      "surface": "Uncategorized",
+      "surface": "Cross-Cutting",
       "status": "shipped",
       "durationDays": 5,
       "prerequisites": [
@@ -3195,7 +3204,7 @@
     {
       "id": "CC-008",
       "name": "Error Boundary & Loading States",
-      "surface": "Uncategorized",
+      "surface": "Cross-Cutting",
       "status": "shipped",
       "durationDays": 3,
       "prerequisites": [
@@ -3231,7 +3240,7 @@
     {
       "id": "CC-009",
       "name": "Auth Flow — Sign-In / Sign-Up / Reset Password / Roles",
-      "surface": "Uncategorized",
+      "surface": "Cross-Cutting",
       "status": "shipped",
       "durationDays": 10,
       "prerequisites": [
@@ -7319,7 +7328,7 @@
     {
       "id": "PC-001",
       "name": "Executive KPI Dashboard Tiles (Real CPI / SPI)",
-      "surface": "Uncategorized",
+      "surface": "Project Controls",
       "status": "partial",
       "durationDays": 15,
       "prerequisites": [
@@ -7367,7 +7376,7 @@
     {
       "id": "PC-002",
       "name": "Quantity Variance Progress Bars",
-      "surface": "Uncategorized",
+      "surface": "Project Controls",
       "status": "shipped",
       "durationDays": 5,
       "prerequisites": [],
@@ -7406,7 +7415,7 @@
     {
       "id": "PC-003",
       "name": "Inspector Adoption Tracking",
-      "surface": "Uncategorized",
+      "surface": "Project Controls",
       "status": "shipped",
       "durationDays": 5,
       "prerequisites": [],
@@ -7439,7 +7448,7 @@
     {
       "id": "PC-004",
       "name": "EOS Quarterly Rocks",
-      "surface": "Uncategorized",
+      "surface": "Project Controls",
       "status": "shipped",
       "durationDays": 10,
       "prerequisites": [],
@@ -7480,7 +7489,7 @@
     {
       "id": "PC-005",
       "name": "EOS Weekly Scorecard",
-      "surface": "Uncategorized",
+      "surface": "Project Controls",
       "status": "shipped",
       "durationDays": 10,
       "prerequisites": [],
@@ -7521,7 +7530,7 @@
     {
       "id": "PC-006",
       "name": "Cross-Project EOS Trends",
-      "surface": "Uncategorized",
+      "surface": "Project Controls",
       "status": "planned",
       "durationDays": 15,
       "prerequisites": [
@@ -7560,7 +7569,7 @@
     {
       "id": "PC-007",
       "name": "Bid Summary Panel",
-      "surface": "Uncategorized",
+      "surface": "Project Controls",
       "status": "shipped",
       "durationDays": 5,
       "prerequisites": [],
@@ -7597,7 +7606,7 @@
     {
       "id": "PC-008",
       "name": "Variance Tracking Register",
-      "surface": "Uncategorized",
+      "surface": "Project Controls",
       "status": "planned",
       "durationDays": 15,
       "prerequisites": [
@@ -7640,7 +7649,7 @@
     {
       "id": "PC-009",
       "name": "Issue Log",
-      "surface": "Uncategorized",
+      "surface": "Project Controls",
       "status": "aspirational",
       "durationDays": 15,
       "prerequisites": [
@@ -7682,7 +7691,7 @@
     {
       "id": "PC-010",
       "name": "RFI Tracker",
-      "surface": "Uncategorized",
+      "surface": "Project Controls",
       "status": "aspirational",
       "durationDays": 15,
       "prerequisites": [
@@ -7724,7 +7733,7 @@
     {
       "id": "PC-011",
       "name": "Submittal Log",
-      "surface": "Uncategorized",
+      "surface": "Project Controls",
       "status": "aspirational",
       "durationDays": 15,
       "prerequisites": [
@@ -7766,7 +7775,7 @@
     {
       "id": "PC-012",
       "name": "Change Order Register",
-      "surface": "Uncategorized",
+      "surface": "Project Controls",
       "status": "aspirational",
       "durationDays": 20,
       "prerequisites": [
@@ -7809,7 +7818,7 @@
     {
       "id": "PC-013",
       "name": "AI Field Photo Tagging",
-      "surface": "Uncategorized",
+      "surface": "Project Controls",
       "status": "shipped",
       "durationDays": 10,
       "prerequisites": [],
@@ -7851,7 +7860,7 @@
     {
       "id": "RPT-001",
       "name": "CSV / PDF / Excel Takeoff Exports",
-      "surface": "Uncategorized",
+      "surface": "Reporting",
       "status": "shipped",
       "durationDays": 10,
       "prerequisites": [],
@@ -7894,7 +7903,7 @@
     {
       "id": "RPT-002",
       "name": "Daily Report PDF Export",
-      "surface": "Uncategorized",
+      "surface": "Reporting",
       "status": "shipped",
       "durationDays": 10,
       "prerequisites": [],
@@ -7937,7 +7946,7 @@
     {
       "id": "RPT-003",
       "name": "DCMA 14-Point Audit Report (Memo Export)",
-      "surface": "Uncategorized",
+      "surface": "Reporting",
       "status": "shipped",
       "durationDays": 5,
       "prerequisites": [
@@ -7984,7 +7993,7 @@
     {
       "id": "RPT-004",
       "name": "Schedule Progress Summary PDF",
-      "surface": "Uncategorized",
+      "surface": "Reporting",
       "status": "shipped",
       "durationDays": 5,
       "prerequisites": [
@@ -8024,7 +8033,7 @@
     {
       "id": "RPT-005",
       "name": "Project Status Report Generator",
-      "surface": "Uncategorized",
+      "surface": "Reporting",
       "status": "planned",
       "durationDays": 20,
       "prerequisites": [
@@ -8070,7 +8079,7 @@
     {
       "id": "RPT-006",
       "name": "Weekly Executive Dashboard PDF",
-      "surface": "Uncategorized",
+      "surface": "Reporting",
       "status": "planned",
       "durationDays": 15,
       "prerequisites": [
@@ -8110,7 +8119,7 @@
     {
       "id": "RPT-007",
       "name": "DC-84 Monthly Estimate Integration",
-      "surface": "Uncategorized",
+      "surface": "Reporting",
       "status": "aspirational",
       "durationDays": 25,
       "prerequisites": [
@@ -8158,7 +8167,7 @@
     {
       "id": "RPT-008",
       "name": "XER / Gantt Chart Export (PNG)",
-      "surface": "Uncategorized",
+      "surface": "Reporting",
       "status": "shipped",
       "durationDays": 3,
       "prerequisites": [],
@@ -8192,7 +8201,7 @@
     {
       "id": "RPT-009",
       "name": "TIA Narrative Document Export",
-      "surface": "Uncategorized",
+      "surface": "Reporting",
       "status": "partial",
       "durationDays": 5,
       "prerequisites": [
@@ -8234,7 +8243,7 @@
     {
       "id": "RPT-010",
       "name": "Portfolio Health Report PDF",
-      "surface": "Uncategorized",
+      "surface": "Reporting",
       "status": "aspirational",
       "durationDays": 15,
       "prerequisites": [
@@ -8831,16 +8840,516 @@
       "_sourceFile": "/mnt/documents/wbs-scheduling-extras.yaml"
     },
     {
-      "id": "INT",
-      "name": "Integrations Surface",
+      "id": "INT-01",
+      "name": "ProjectWise plan-set pull integration",
       "surface": "Integrations",
-      "status": "planned",
-      "durationDays": null,
+      "status": "aspirational",
+      "durationDays": 25,
       "prerequisites": [],
       "workItemHint": null,
-      "sources": [],
-      "rationale": null,
-      "subTasks": [],
+      "sources": [
+        "cap.integrations.projectwise",
+        "marketing-promises.md::projectwise-integration",
+        "Landing.tsx:180"
+      ],
+      "rationale": "Landing.tsx roadmap item promises \"Pull plan sets directly from your NJTA/NJDOT document management system\"; eliminates manual PDF download step that is a day-1 friction point for every NJTA/NJDOT project.",
+      "subTasks": [
+        {
+          "name": "Discovery — map ProjectWise API / PWDI editions in use at NJTA and NJDOT",
+          "days": 3,
+          "notes": "Confirm whether NJTA/NJDOT expose ProjectWise Web Services (PWWS), ProjectWise Explorer SDK, or newer ProjectWise 365 REST API; document auth model (NTLM vs OAuth2 vs API-key); capture folder/datasource taxonomy and version-numbering scheme.\n"
+        },
+        {
+          "name": "Integration spec and security design",
+          "days": 3,
+          "notes": "Write connector spec: scopes, rate limits, error handling, credential storage (Supabase Vault vs environment secrets); design \"Connect ProjectWise datasource\" UI flow; get sign-off from NJTA IT POC.\n"
+        },
+        {
+          "name": "Auth / OAuth2 / service-account connector",
+          "days": 5,
+          "notes": "Implement Supabase Edge Function pw-oauth: accepts datasource URL + user credential, stores encrypted refresh token in vault, returns short-lived access token. Support both PWWS NTLM (legacy) and PW 365 OAuth2 code-flow.\n"
+        },
+        {
+          "name": "Document-browse and PDF-fetch endpoints",
+          "days": 5,
+          "notes": "Edge Function pw-browse: traverse datasource folder tree, list .pdf plan sets, return paginated JSON. Edge Function pw-fetch: stream selected PDF into Supabase Storage bucket under project/plans/; record provenance (datasource, document ID, revision, fetched-at).\n"
+        },
+        {
+          "name": "UI — ProjectWise file-picker modal",
+          "days": 5,
+          "notes": "New ProjectWisePicker component inside the \"Upload Plans\" dialog: breadcrumb folder nav, document list with revision badges, multi-select, \"Import to project\" button. Shows alongside existing file-drop zone.\n"
+        },
+        {
+          "name": "Background re-sync and revision-update notifications",
+          "days": 3,
+          "notes": "Nightly Supabase cron checks linked PW documents for new revisions; creates in-app notification and flags plan sheet as \"superseded\" if revision number has incremented.\n"
+        },
+        {
+          "name": "Testing (unit + integration + E2E against PW sandbox)",
+          "days": 5,
+          "notes": "Vitest unit tests for pw-oauth and pw-browse Edge Functions; Playwright E2E against a NJDOT staging ProjectWise datasource (or mock server); security pen-test checklist for credential handling.\n"
+        },
+        {
+          "name": "Documentation and NJTA IT runbook",
+          "days": 2,
+          "notes": "Admin guide: how to register TakeoffPro as a trusted client in ProjectWise Administrator; user guide: connecting a datasource, browsing, importing. Runbook for token rotation.\n"
+        }
+      ],
+      "_sourceFile": "/mnt/documents/wbs-integrations.yaml"
+    },
+    {
+      "id": "INT-02",
+      "name": "SiteManager / AASHTOWare quantity sync",
+      "surface": "Integrations",
+      "status": "aspirational",
+      "durationDays": 25,
+      "prerequisites": [
+        "INT-05"
+      ],
+      "workItemHint": null,
+      "sources": [
+        "cap.integrations.sitemanager-aashtoware",
+        "marketing-promises.md::sitemanager-aashtoware-integration",
+        "Landing.tsx:183",
+        "Landing.tsx:232 (API FAQ answer)"
+      ],
+      "rationale": "Landing.tsx roadmap and marketing-promises.md explicitly promise \"Sync quantities with NJDOT's official construction management system\"; without this, approved quantities must be re-keyed into SiteManager, creating reconciliation risk and re-entry labor.",
+      "subTasks": [
+        {
+          "name": "Discovery — NJDOT AASHTOWare/SiteManager API capabilities",
+          "days": 3,
+          "notes": "Determine if NJDOT exposes AASHTOWare Project Construction (APC) REST API, SiteManager Web Services, or only flat-file import (CSV/XML DailyWork). Document contract item number schema, DWR (Daily Work Report) data model, and authorization model (state agency PKI vs OAuth2).\n"
+        },
+        {
+          "name": "Data-mapping spec — TakeoffPro pay items ↔ AASHTOWare contract items",
+          "days": 3,
+          "notes": "Map TakeoffPro pay-item schema (item no., unit, approved qty) to AASHTOWare's ContractItem and DailyWorkReport structures. Define resolution rules for unit-of-measure discrepancies (SY vs SF, etc.) and quantity override audit trail.\n"
+        },
+        {
+          "name": "Auth connector — state-agency PKI / OAuth2",
+          "days": 5,
+          "notes": "Edge Function sm-auth: handles mTLS client certificate or OAuth2 client-credentials flow as required by NJDOT. Store credentials in Supabase Vault. Implement token-refresh and expiry monitoring.\n"
+        },
+        {
+          "name": "Quantity push endpoint (approved DWRs → SiteManager)",
+          "days": 5,
+          "notes": "Edge Function sm-push: on daily-report approval event, construct AASHTOWare DailyWorkReport payload from approved TakeoffPro quantities, POST to SM API, store sm_transaction_id on the daily report row. Idempotency key prevents double-push.\n"
+        },
+        {
+          "name": "Quantity pull endpoint (SiteManager → TakeoffPro reconciliation)",
+          "days": 5,
+          "notes": "Edge Function sm-pull: fetch previously accepted DWR quantities from SiteManager to verify no manual edits occurred downstream; flag discrepancies in the RE dashboard variance panel.\n"
+        },
+        {
+          "name": "UI — SiteManager sync status panel and conflict resolver",
+          "days": 3,
+          "notes": "New SiteManagerSync panel on the P6 Export / Project Controls page: per-item sync status (pending / synced / conflict), one-click re-push, conflict diff view showing TakeoffPro qty vs SM qty side by side.\n"
+        },
+        {
+          "name": "Testing and NJDOT UAT support",
+          "days": 5,
+          "notes": "Unit tests for sm-push/sm-pull; integration tests against NJDOT SiteManager test environment; coordinate UAT with NJDOT Construction Bureau; regression suite for quantity round-trip fidelity.\n"
+        },
+        {
+          "name": "Documentation and NJDOT IT runbook",
+          "days": 2,
+          "notes": "Technical runbook: certificate installation, scopes required, firewall whitelist. User guide: enabling SM sync per project, reviewing sync log, resolving conflicts.\n"
+        }
+      ],
+      "_sourceFile": "/mnt/documents/wbs-integrations.yaml"
+    },
+    {
+      "id": "INT-03",
+      "name": "BIM 360 / ACC design and docs integration",
+      "surface": "Integrations",
+      "status": "aspirational",
+      "durationDays": 25,
+      "prerequisites": [],
+      "workItemHint": null,
+      "sources": [
+        "cap.integrations.bim360",
+        "McfaPitch.tsx:113 (integrationLayers data)",
+        "marketing-promises.md::mcfa-p6-integration-bim360"
+      ],
+      "rationale": "McfaPitch.tsx integrationLayers explicitly lists \"BIM 360 — Design + Docs\" as a data source feeding the integration layer alongside P6; MCFA and PANYNJ projects increasingly store RFI/submittal records and design models in Autodesk Construction Cloud.",
+      "subTasks": [
+        {
+          "name": "Discovery — Autodesk Construction Cloud / BIM 360 API editions",
+          "days": 3,
+          "notes": "Map APS (Autodesk Platform Services) Data Management API and BIM 360 Docs API endpoints for hub/project/folder/item navigation; confirm which hub type MCFA/PANYNJ uses (BIM 360 vs ACC); document OAuth2 3-legged flow requirements and viewer token needs.\n"
+        },
+        {
+          "name": "OAuth2 3-legged auth connector (APS)",
+          "days": 5,
+          "notes": "Edge Function aps-oauth: implements PKCE authorize → callback → token-exchange with Autodesk APS; stores refresh token in Vault per user; provides /aps/token endpoint for downstream Edge Functions.\n"
+        },
+        {
+          "name": "BIM 360 Docs file-browser and PDF-plan fetch",
+          "days": 5,
+          "notes": "Edge Function bim-browse: list hubs → projects → folders → items filtered to PDF sheets; bim-fetch: stream derivative (PDF export of a Revit/Civil 3D sheet) into Supabase Storage under project/plans/. Handle AutoCAD/Revit derivative conversion via APS Model Derivative API.\n"
+        },
+        {
+          "name": "RFI / Submittal metadata import",
+          "days": 5,
+          "notes": "Edge Function bim-rfis: pull open RFIs and submittals from BIM 360 Field/Docs API; store in a bim_issues table; surface count and links in the Project Controls dashboard as a \"Design Issues\" KPI tile.\n"
+        },
+        {
+          "name": "UI — BIM 360 file-picker and issues tile",
+          "days": 3,
+          "notes": "BIM360Picker component inside Upload Plans dialog (mirrors ProjectWisePicker pattern); Project Controls: \"Open BIM 360 Issues\" deep-link button per project.\n"
+        },
+        {
+          "name": "Webhook for BIM 360 document publish events",
+          "days": 3,
+          "notes": "Register APS webhook on item.added / version.added events; Edge Function bim-webhook: verify HMAC, create in-app notification \"New plan set version published in BIM 360\", flag plan as superseded.\n"
+        },
+        {
+          "name": "Testing and sandbox validation",
+          "days": 5,
+          "notes": "Vitest unit tests for aps-oauth, bim-browse, bim-fetch; E2E against Autodesk ACC sandbox hub; validate PDF derivative quality for TakeoffPro canvas rendering; security review of 3-legged token storage.\n"
+        },
+        {
+          "name": "Documentation",
+          "days": 2,
+          "notes": "Admin guide: creating APS app, configuring redirect URIs, granting project access. User guide: connecting BIM 360 account, browsing for plan sets, reviewing open issues.\n"
+        }
+      ],
+      "_sourceFile": "/mnt/documents/wbs-integrations.yaml"
+    },
+    {
+      "id": "INT-04",
+      "name": "Power BI semantic model export",
+      "surface": "Integrations",
+      "status": "aspirational",
+      "durationDays": 15,
+      "prerequisites": [
+        "INT-05"
+      ],
+      "workItemHint": null,
+      "sources": [
+        "cap.integrations.power-bi",
+        "marketing-promises.md::mcfa-power-bi-semantic-model",
+        "McfaPitch.tsx:124"
+      ],
+      "rationale": "McfaPitch.tsx integrationLayers.Outputs explicitly lists \"Power BI Semantic Model\" as an output; MCFA Project Controls Directors require live dashboards in their existing Power BI environment rather than yet another SaaS portal.",
+      "subTasks": [
+        {
+          "name": "Discovery — Power BI dataset push API vs DirectQuery via public API",
+          "days": 3,
+          "notes": "Evaluate two architecture options: (A) Push dataset via Power BI REST API (requires Azure AD app registration, service principal, workspace admin consent); (B) Power BI DirectQuery or Dataflow connecting to TakeoffPro public REST API with OAuth2. Document pros/cons for MCFA's IT posture.\n"
+        },
+        {
+          "name": "Power BI app registration and service-principal auth",
+          "days": 3,
+          "notes": "Register Azure AD application; configure Entra service principal with Dataset.ReadWrite.All; store credentials in Supabase Vault; Edge Function pbi-auth returning access tokens for subsequent push calls.\n"
+        },
+        {
+          "name": "Semantic model schema design",
+          "days": 3,
+          "notes": "Design star-schema: fact_quantities (approved qty, measured qty, contract qty, date, project, pay item); dim_project; dim_pay_item; dim_inspector; dim_date. Write Power BI dataset definition JSON.\n"
+        },
+        {
+          "name": "Push-dataset Edge Function and nightly refresh cron",
+          "days": 5,
+          "notes": "Edge Function pbi-push: upsert rows into Power BI push dataset via REST API after each daily-report approval. Supabase cron pbi-nightly: full refresh of dimension tables at 02:00 EST. Retry with exponential back-off on 429/503.\n"
+        },
+        {
+          "name": "Template Power BI report (.pbix)",
+          "days": 5,
+          "notes": "Build and publish a starter .pbix with: SPI/CPI trend line, contract vs measured quantity waterfall, inspector adoption heatmap, portfolio health matrix. Distribute via GitHub and in-app \"Connect Power BI\" wizard download link.\n"
+        },
+        {
+          "name": "UI — Power BI connection wizard in Project Controls",
+          "days": 3,
+          "notes": "\"Connect to Power BI\" drawer: workspace selector (calls pbi-list-workspaces), one-click create/update dataset, dataset ID display, last-pushed timestamp, manual re-push button.\n"
+        },
+        {
+          "name": "Testing and documentation",
+          "days": 3,
+          "notes": "Unit tests for pbi-push; integration test against Power BI sandbox workspace; user guide: app registration steps, wizard walkthrough, template report customization guide.\n"
+        }
+      ],
+      "_sourceFile": "/mnt/documents/wbs-integrations.yaml"
+    },
+    {
+      "id": "INT-05",
+      "name": "Public REST / GraphQL enterprise API",
+      "surface": "Integrations",
+      "status": "aspirational",
+      "durationDays": 25,
+      "prerequisites": [],
+      "workItemHint": null,
+      "sources": [
+        "cap.integrations.public-api",
+        "marketing-promises.md::api-access",
+        "Landing.tsx:232"
+      ],
+      "rationale": "Landing.tsx FAQ (\"API access is available for enterprise integrations — SiteManager, AASHTOWare, or internal reporting systems\") is a direct customer-facing commitment; all other enterprise integrations (INT-02, INT-04) depend on a stable API surface with versioning and auth.",
+      "subTasks": [
+        {
+          "name": "API design — resource model, versioning, auth strategy",
+          "days": 3,
+          "notes": "Design OpenAPI 3.1 spec: /v1/projects, /v1/projects/{id}/pay-items, /v1/projects/{id}/daily-reports, /v1/projects/{id}/quantities (approved), /v1/projects/{id}/schedule-activities. Choose OAuth2 client-credentials for M2M; API key with HMAC for simpler integrations. Define pagination, filtering, field-selection, rate-limit headers.\n"
+        },
+        {
+          "name": "OAuth2 client-credentials server (M2M)",
+          "days": 5,
+          "notes": "Edge Function api-token: POST /v1/oauth/token with client_id + client_secret → JWT scoped to org. Admin UI panel to create/revoke API clients. Store hashed secrets in api_clients table with RLS.\n"
+        },
+        {
+          "name": "Core REST endpoints (projects, pay-items, quantities)",
+          "days": 10,
+          "notes": "Supabase Edge Functions per resource group: api-projects (list, get), api-pay-items (list, get, upsert from external), api-quantities (list approved quantities by date range + pay item), api-daily-reports (list approved, get with line items). Enforce org-scoped RLS on JWT sub claim. Return JSON:API-compatible envelopes.\n"
+        },
+        {
+          "name": "GraphQL schema layer (optional query surface)",
+          "days": 5,
+          "notes": "Wrap REST endpoints in a PostGraphile or Hasura-style GraphQL schema via Edge Function api-graphql; expose same resource graph with introspection disabled in production. Primarily for Power BI DirectQuery and analytics tooling.\n"
+        },
+        {
+          "name": "Webhook outbound events",
+          "days": 5,
+          "notes": "Webhook registration table (endpoint_url, events[], secret); trigger on: daily_report.approved, quantity.updated, schedule.updated. Edge Function webhook-dispatch: signs payload with HMAC-SHA256 X-TakeoffPro-Signature header; retries with exponential back-off; delivers status dashboard per endpoint.\n"
+        },
+        {
+          "name": "API developer portal and OpenAPI docs site",
+          "days": 5,
+          "notes": "Generate Redoc / Stoplight Elements HTML from OpenAPI spec; host at /api/docs. Include code samples (curl, Python, Node); interactive \"Try it\" panel requires API key. Add link from in-app Admin → API Keys page.\n"
+        },
+        {
+          "name": "Rate limiting, audit logging, usage metering",
+          "days": 3,
+          "notes": "Upstash Redis sliding-window rate limiting (per client_id, 1000 req/min). api_request_log table: endpoint, status, duration_ms, org_id, client_id. Admin dashboard table showing request volume and error rate per API client.\n"
+        },
+        {
+          "name": "Security review, penetration test, and OWASP API top-10 remediation",
+          "days": 5,
+          "notes": "Engage external security reviewer; test for BOLA (broken object-level auth), BFLA, mass assignment, excessive data exposure. Remediate findings; sign off before GA.\n"
+        },
+        {
+          "name": "SDK packages (TypeScript + Python)",
+          "days": 5,
+          "notes": "Generate typed TypeScript SDK from OpenAPI spec via openapi-typescript-codegen; Python SDK via openapi-python-client. Publish to npm and PyPI under @takeoffpro/sdk-ts and takeoffpro-sdk. Include changelog and semantic versioning.\n"
+        }
+      ],
+      "_sourceFile": "/mnt/documents/wbs-integrations.yaml"
+    },
+    {
+      "id": "INT-06",
+      "name": "NJDOT DC-84 monthly estimate export",
+      "surface": "Integrations",
+      "status": "aspirational",
+      "durationDays": 15,
+      "prerequisites": [],
+      "workItemHint": null,
+      "sources": [
+        "cap.integrations.dc84-export",
+        "marketing-promises.md::automated-monthly-estimate-dc84",
+        "Landing.tsx:181",
+        "Landing.tsx:98 (monthly estimate support feature)"
+      ],
+      "rationale": "Landing.tsx roadmap promises \"Automated Monthly Estimate Generation — format quantities into NJDOT DC-84 payment estimate format\"; this is the primary payment-cycle deliverable for every NJDOT construction contract and is the most direct path to RE adoption.",
+      "subTasks": [
+        {
+          "name": "Discovery — obtain and parse current NJDOT DC-84 form specification",
+          "days": 2,
+          "notes": "Obtain official DC-84 Excel/PDF template from NJDOT Construction Bureau; parse all required fields: contract ID, prime contractor, estimate number, period dates, pay-item table (item no., description, unit, contract qty, previous qty, current qty, total to date, unit price, amount). Confirm column order for both original and revised formats.\n"
+        },
+        {
+          "name": "DC-84 data model and rollup query",
+          "days": 3,
+          "notes": "Write Supabase SQL view dc84_rollup: aggregates approved daily-report quantities by pay item, filtered to a calendar month and project; returns previous total (all months before period start), current period, and running total. Handles partial-period re-opens via snapshot archive.\n"
+        },
+        {
+          "name": "Excel (.xlsx) DC-84 generator Edge Function",
+          "days": 5,
+          "notes": "Edge Function dc84-export: accepts {projectId, year, month}; queries dc84_rollup; populates the official DC-84 xlsx template using exceljs; streams file to client. Preserves NJDOT cell formatting, merged cells, and summary rows. Includes unit-price column pulled from bid-schedule import.\n"
+        },
+        {
+          "name": "PDF rendering of DC-84 for RE signature",
+          "days": 3,
+          "notes": "Edge Function dc84-pdf: renders DC-84 data into a pixel-accurate PDF (Puppeteer headless or jsPDF template); includes signature blocks for RE and PM; embeds TakeoffPro watermark and generation timestamp. Stores generated PDF in project Documents folder automatically.\n"
+        },
+        {
+          "name": "UI — DC-84 export wizard in monthly estimate panel",
+          "days": 3,
+          "notes": "New \"Generate DC-84\" button on Project Controls page; modal: select estimate period (month/year picker), preview rollup table (item count, total amount), \"Download Excel\" and \"Download PDF\" buttons. Warning banner if any pay items have unapproved quantities in the period.\n"
+        },
+        {
+          "name": "Estimate submission history log",
+          "days": 2,
+          "notes": "estimate_submissions table: project_id, period_start, period_end, generated_at, generated_by, file_path, status (draft/submitted/paid). History tab on the DC-84 wizard showing all past estimates with download links.\n"
+        },
+        {
+          "name": "Testing and NJDOT RE validation",
+          "days": 3,
+          "notes": "Unit tests for dc84_rollup query with edge cases (zero quantities, partial month, re-opened reports); visual regression test on Excel output; coordinate with an NJDOT RE to validate against a real DC-84 submission; fix discrepancies before GA.\n"
+        }
+      ],
+      "_sourceFile": "/mnt/documents/wbs-integrations.yaml"
+    },
+    {
+      "id": "INT-07",
+      "name": "Contractor read-only quantity portal",
+      "surface": "Integrations",
+      "status": "aspirational",
+      "durationDays": 15,
+      "prerequisites": [
+        "INT-06"
+      ],
+      "workItemHint": null,
+      "sources": [
+        "cap.integrations.contractor-portal",
+        "marketing-promises.md::contractor-portal",
+        "Landing.tsx:184",
+        "Landing.tsx:215 (FAQ: \"only if you grant access\")"
+      ],
+      "rationale": "Landing.tsx roadmap and FAQ both promise a contractor portal (\"Give contractors read-only access to measured quantities before payment disputes arise\"); pre-payment quantity transparency is cited as the primary dispute- prevention mechanism on the landing page.",
+      "subTasks": [
+        {
+          "name": "Discovery — contractor portal UX requirements and data scope",
+          "days": 2,
+          "notes": "Interview 2-3 NJTA/NJDOT REs on what data contractors need to see (approved totals only? pending? plan annotations?); confirm whether contractors need their own accounts or a shareable token-link; define what is explicitly excluded (RE comments, internal notes, unapproved quantities).\n"
+        },
+        {
+          "name": "Data model — contractor access grants and RLS policies",
+          "days": 3,
+          "notes": "contractor_access_grants table: project_id, contractor_name, contractor_email, access_token (UUID), scopes (quantities_approved, dc84_pdf), granted_by, expires_at, revoked_at. RLS policy: SELECT only on approved quantities where project_id matches grant. No access to annotations, GPS traces, or internal comments.\n"
+        },
+        {
+          "name": "Token-link auth flow (no contractor Supabase account required)",
+          "days": 5,
+          "notes": "Edge Function contractor-auth: validates access_token from URL param; issues short-lived JWT with role=contractor and project_id claim; cookie-based session with 8-hour expiry. No email/password; link is the credential. Rate-limited to 60 req/hr per token. Revocation checked on every request.\n"
+        },
+        {
+          "name": "Contractor portal UI — approved quantities and DC-84 view",
+          "days": 5,
+          "notes": "Standalone route /contractor/:token: branded header (TakeoffPro + project name), pay-item summary table (item no., description, unit, contract qty, total approved to date, % complete), month selector, \"Download DC-84 PDF\" button. Read-only — no annotations, no edit controls. Mobile-optimized for field office tablets.\n"
+        },
+        {
+          "name": "RE portal-management UI (grant / revoke / audit)",
+          "days": 3,
+          "notes": "\"Contractor Access\" tab on Project Settings: \"Create Access Link\" form (contractor name, email, optional expiry); table of active grants with last-accessed timestamp, \"Revoke\" button; full access log (IP, timestamp, pages viewed) for audit trail.\n"
+        },
+        {
+          "name": "Email delivery of portal link to contractor",
+          "days": 2,
+          "notes": "Supabase Edge Function contractor-invite-email: sends branded email via Resend with portal URL, project name, scope description, and expiry date. RE triggers from the grant UI. Logs send status.\n"
+        },
+        {
+          "name": "Testing and security review",
+          "days": 3,
+          "notes": "Test token replay attacks, IDOR between projects, session fixation; verify RLS prevents access to unapproved/internal data; Playwright E2E for full contractor grant → view → RE revoke flow; load test token-auth endpoint.\n"
+        }
+      ],
+      "_sourceFile": "/mnt/documents/wbs-integrations.yaml"
+    },
+    {
+      "id": "INT-08",
+      "name": "Primavera P6 Cloud live API integration",
+      "surface": "Integrations",
+      "status": "aspirational",
+      "durationDays": 25,
+      "prerequisites": [
+        "INT-05"
+      ],
+      "workItemHint": null,
+      "sources": [
+        "cap.integrations.bim360",
+        "cap.p6.xml-parse-serialize",
+        "marketing-promises.md::mcfa-p6-integration-bim360",
+        "McfaPitch.tsx:113 (integrationLayers)",
+        "McfaPitch.tsx:42 (EVM live dashboard)"
+      ],
+      "rationale": "McfaPitch.tsx integrationLayers lists \"Primavera P6 — Schedule\" as a primary data source; current XER file-upload (cap.p6.xml-parse-serialize, shipped) is a manual step — a live API connection enables real-time schedule telemetry as described in McfaPitch tenCoreActivities item 05.",
+      "subTasks": [
+        {
+          "name": "Discovery — P6 EPPM REST API vs P6 Professional Cloud API",
+          "days": 3,
+          "notes": "Oracle P6 EPPM exposes a REST API (v2) at /p6ws; P6 Cloud (Oracle Cloud) exposes OAuth2-secured endpoints. Confirm which deployment MCFA/PANYNJ uses; document auth model, rate limits, WBS/activity/ resource endpoints, and progress-update write permissions.\n"
+        },
+        {
+          "name": "OAuth2 / SAML connector for Oracle P6 Cloud",
+          "days": 5,
+          "notes": "Edge Function p6cloud-auth: OAuth2 authorization-code flow with Oracle Identity Cloud Service (IDCS); store refresh tokens in Vault. Fallback: Basic auth for P6 EPPM on-prem via encrypted service account credentials.\n"
+        },
+        {
+          "name": "Schedule pull — activities, relationships, WBS, resources",
+          "days": 5,
+          "notes": "Edge Function p6cloud-pull: GET /projects/{id}/activities with resource assignments, baseline data, current dates, % complete; normalize into TakeoffPro schedule schema; upsert into schedule_activities, schedule_resources, schedule_relationships; record p6_last_synced_at timestamp.\n"
+        },
+        {
+          "name": "Progress push — approved quantities → P6 actual units",
+          "days": 5,
+          "notes": "Edge Function p6cloud-push: on daily-report approval, map approved quantities to P6 resource assignments via activity_pay_items junction; PATCH /activities/{id} with actual_units, remaining_units, physical_percent_complete. This is the live extension of the existing PMXML-based cap.p6.apply-progress flow.\n"
+        },
+        {
+          "name": "Real-time SPI/CPI telemetry dashboard widget",
+          "days": 5,
+          "notes": "New P6LiveTelemetry component on Project Controls: SPI/CPI gauges updating from p6cloud-pull every sync cycle; top-5 slipping activities list; \"Last synced\" timestamp with manual refresh button. Replaces hardcoded placeholder noted in cap.controls.executive-kpi.\n"
+        },
+        {
+          "name": "Scheduled sync cron and conflict resolution",
+          "days": 3,
+          "notes": "Supabase cron p6cloud-sync: runs every 4 hours per connected project; detects conflicts where P6 has been manually updated since last push; creates conflict_flags record; surfaces in RE dashboard for manual resolution.\n"
+        },
+        {
+          "name": "Testing (unit + P6 sandbox E2E)",
+          "days": 5,
+          "notes": "Unit tests for p6cloud-auth, pull, push; E2E against Oracle P6 EPPM demo environment; validate round-trip fidelity for SPI/CPI computation; test conflict detection with simulated parallel edits.\n"
+        },
+        {
+          "name": "Documentation and P6 admin guide",
+          "days": 2,
+          "notes": "P6 admin guide: creating REST API user, granting project roles, configuring redirect URIs in IDCS. User guide: connecting a P6 project, reviewing telemetry, resolving sync conflicts.\n"
+        }
+      ],
+      "_sourceFile": "/mnt/documents/wbs-integrations.yaml"
+    },
+    {
+      "id": "INT-09",
+      "name": "DC-84 to SiteManager auto-submit pipeline",
+      "surface": "Integrations",
+      "status": "aspirational",
+      "durationDays": 10,
+      "prerequisites": [
+        "INT-06",
+        "INT-02"
+      ],
+      "workItemHint": null,
+      "sources": [
+        "cap.integrations.dc84-export",
+        "cap.integrations.sitemanager-aashtoware",
+        "Landing.tsx:98 (monthly estimate support)"
+      ],
+      "rationale": "The combination of DC-84 generation (INT-06) and SiteManager sync (INT-02) creates a straight-through processing pipeline that eliminates all manual data re-entry from field measurement to NJDOT payment system — the core value proposition stated on the landing page.",
+      "subTasks": [
+        {
+          "name": "Pipeline orchestration design (trigger, stages, rollback)",
+          "days": 3,
+          "notes": "Design pipeline state machine: DRAFT → GENERATED → VALIDATED → SUBMITTED → ACCEPTED / REJECTED. Define rollback: if SM rejects, flag quantities for RE review without reverting approved status. Document NJDOT's electronic estimate submission protocol.\n"
+        },
+        {
+          "name": "Validation gate — pre-submission quantity completeness check",
+          "days": 3,
+          "notes": "Edge Function dc84-validate: checks all contract pay items have at least one approved quantity entry for the period; flags items with zero current quantity as warnings (not errors); confirms unit-price table is complete; returns pass/warn/fail with item-level detail.\n"
+        },
+        {
+          "name": "End-to-end pipeline UI and submission confirmation",
+          "days": 5,
+          "notes": "\"Submit Estimate to NJDOT\" stepper in Project Controls: Step 1 Generate DC-84 → Step 2 Validate (show warnings) → Step 3 Push to SiteManager → Step 4 Confirmation (SM transaction ID + timestamp). Full pipeline log persisted to estimate_submissions table.\n"
+        },
+        {
+          "name": "Integration testing of full pipeline",
+          "days": 3,
+          "notes": "E2E test: create project with pay items → submit daily reports → approve → generate DC-84 → push to SM test environment → verify SM accepted quantities. Regression suite added to CI.\n"
+        },
+        {
+          "name": "RE training materials and standard operating procedure",
+          "days": 2,
+          "notes": "1-page SOP for NJDOT REs: month-end closeout checklist, pipeline walkthrough, error codes and remediation steps. Embedded as in-app help tooltip on each pipeline step.\n"
+        }
+      ],
       "_sourceFile": "/mnt/documents/wbs-integrations.yaml"
     },
     {

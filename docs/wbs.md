@@ -1,16 +1,16 @@
 # TakeoffPro — Work Breakdown Structure
 
-Generated: 2026-05-29T11:00:36.609Z
+Generated: 2026-05-29T11:01:04.727Z
 
-**268 leaves** · 1858 estimated days of non-shipped work
+**276 leaves** · 2038 estimated days of non-shipped work
 
 ## Status summary
 
 | Status | Leaves |
 |---|---:|
-| aspirational | 40 |
+| aspirational | 49 |
 | partial | 28 |
-| planned | 102 |
+| planned | 101 |
 | shipped | 98 |
 
 ## Surfaces
@@ -19,20 +19,29 @@ Generated: 2026-05-29T11:00:36.609Z
 |---|---:|
 | AI | 12 |
 | Auth & Admin | 19 |
+| Backend & Infra | 10 |
 | Bootstrap & Shell | 5 |
 | Claims & Delay Analysis | 6 |
 | Cost Management | 8 |
+| Cross-Cutting | 9 |
+| Documents | 6 |
 | Earned Value | 6 |
 | Fajar / Equipment Rental | 15 |
-| Integrations | 1 |
+| Field Operations | 8 |
+| Integrations | 9 |
+| Marketing & Sales | 8 |
 | Native & Offline | 32 |
 | Notifications | 7 |
+| Project Controls | 13 |
+| Project Lifecycle | 5 |
+| Reporting & Exports | 4 |
+| Reporting | 10 |
 | Resource Management | 25 |
 | Risk & Contingency | 6 |
 | Scenarios & Reflections | 4 |
 | Scheduling Extras | 12 |
 | Scheduling | 21 |
-| Uncategorized | 89 |
+| Takeoff | 16 |
 
 ## AI
 
@@ -75,6 +84,21 @@ Generated: 2026-05-29T11:00:36.609Z
 | aa.soc2-type2 | SOC 2 Type II Certification | aspirational | 25 | 7 |
 | aa.uptime-sla | 99.9% Uptime SLA (Monitoring, On-Call, Status Page) | aspirational | 15 | 8 |
 
+## Backend & Infra
+
+| ID | Name | Status | Days | Sub-tasks |
+|---|---|---|---:|---:|
+| BE-001 | Database Migrations & Schema (36 Migrations) | shipped | 15 | 7 |
+| BE-002 | Row-Level Security Policies | shipped | 10 | 7 |
+| BE-003 | Edge Function — invite-user | shipped | 3 | 5 |
+| BE-004 | Edge Function — parse-schedule (Gemini AI Gantt Parser) | shipped | 5 | 5 |
+| BE-005 | Edge Function — tag-photo (Gemini AI Photo Tagger) | shipped | 5 | 6 |
+| BE-006 | Edge Function — send-push (FCM/APNs Dispatcher) | planned | 10 | 6 |
+| BE-007 | Supabase Realtime Configuration | shipped | 3 | 4 |
+| BE-008 | Vitest Test Suite | shipped | 10 | 7 |
+| BE-009 | Observability & Logging (Aspirational) | aspirational | 10 | 7 |
+| BE-010 | Build-History Tooling & WBS Governance | shipped | 5 | 5 |
+
 ## Bootstrap & Shell
 
 | ID | Name | Status | Days | Sub-tasks |
@@ -109,6 +133,31 @@ Generated: 2026-05-29T11:00:36.609Z
 | COST-007 | Multi-Currency Support | aspirational | 10 | 6 |
 | COST-008 | Cost Code Import from XER ACCOUNT Table | planned | 5 | 4 |
 
+## Cross-Cutting
+
+| ID | Name | Status | Days | Sub-tasks |
+|---|---|---|---:|---:|
+| CC-001 | Guided Tour Framework (useTour + GuidedTour) | shipped | 5 | 5 |
+| CC-002 | Welcome Carousel (First-Visit Onboarding) | shipped | 3 | 4 |
+| CC-003 | Toast Notification System | shipped | 3 | 5 |
+| CC-004 | Confirm Dialog (useConfirm Hook) | shipped | 3 | 4 |
+| CC-005 | Keyboard Shortcuts | shipped | 3 | 6 |
+| CC-006 | Theme Toggle | shipped | 3 | 4 |
+| CC-007 | Notification Bell & In-App Inbox | shipped | 5 | 5 |
+| CC-008 | Error Boundary & Loading States | shipped | 3 | 4 |
+| CC-009 | Auth Flow — Sign-In / Sign-Up / Reset Password / Roles | shipped | 10 | 7 |
+
+## Documents
+
+| ID | Name | Status | Days | Sub-tasks |
+|---|---|---|---:|---:|
+| DOC-001 | Folder Tree & System Folder Rendering | partial | 5 | 6 |
+| DOC-002 | File Upload, Versioning & History | shipped | 10 | 8 |
+| DOC-003 | Trash, Restore & Hard-Delete | shipped | 5 | 6 |
+| DOC-004 | Document Search, Sort & Bulk Ops | shipped | 5 | 7 |
+| DOC-005 | Document Preview — Image & PDF Inline | shipped | 3 | 4 |
+| DOC-006 | Document Tagging & Aspirational Search | planned | 10 | 7 |
+
 ## Earned Value
 
 | ID | Name | Status | Days | Sub-tasks |
@@ -140,11 +189,45 @@ Generated: 2026-05-29T11:00:36.609Z
 | FAJ-014 | Operator hours tracking | planned | 10 | 5 |
 | FAJ-015 | Mobilisation / demobilisation activity templates | planned | 10 | 6 |
 
+## Field Operations
+
+| ID | Name | Status | Days | Sub-tasks |
+|---|---|---|---:|---:|
+| FO-001 | Inspector Daily Report — Draft & Submit | shipped | 10 | 8 |
+| FO-002 | RE Review Queue — Approve / Reject / Bulk | shipped | 10 | 8 |
+| FO-003 | Threaded Report Comments | shipped | 5 | 5 |
+| FO-004 | Report Snapshot Archive on Reopen | shipped | 3 | 3 |
+| FO-005 | Field Photo Capture & Geo-Tag Dispute UI | partial | 10 | 7 |
+| FO-006 | GPS Calibration — 2-3 Point Georeferencing | shipped | 5 | 5 |
+| FO-007 | Live GPS Trace Overlay & Kalman Smoothing | shipped | 5 | 5 |
+| FO-008 | Offline-First Field Workflow | partial | 15 | 8 |
+
 ## Integrations
 
 | ID | Name | Status | Days | Sub-tasks |
 |---|---|---|---:|---:|
-| INT | Integrations Surface | planned | — | 0 |
+| INT-01 | ProjectWise plan-set pull integration | aspirational | 25 | 8 |
+| INT-02 | SiteManager / AASHTOWare quantity sync | aspirational | 25 | 8 |
+| INT-03 | BIM 360 / ACC design and docs integration | aspirational | 25 | 8 |
+| INT-04 | Power BI semantic model export | aspirational | 15 | 7 |
+| INT-05 | Public REST / GraphQL enterprise API | aspirational | 25 | 9 |
+| INT-06 | NJDOT DC-84 monthly estimate export | aspirational | 15 | 7 |
+| INT-07 | Contractor read-only quantity portal | aspirational | 15 | 7 |
+| INT-08 | Primavera P6 Cloud live API integration | aspirational | 25 | 8 |
+| INT-09 | DC-84 to SiteManager auto-submit pipeline | aspirational | 10 | 5 |
+
+## Marketing & Sales
+
+| ID | Name | Status | Days | Sub-tasks |
+|---|---|---|---:|---:|
+| MS-001 | NJTA / NJDOT Landing Page | shipped | 10 | 9 |
+| MS-002 | MCFA CPM Scheduler Pitch Page | shipped | 5 | 5 |
+| MS-003 | XerLens CPM Demo — 17-Step Guided Tour | shipped | 15 | 11 |
+| MS-004 | P6 XML Round-Trip Demo Page | shipped | 3 | 4 |
+| MS-005 | Fajar Al Mustaqbal Equipment-Rental Pitch | shipped | 10 | 7 |
+| MS-006 | Interactive Demo Mode (12-Step Walkthrough) | shipped | 10 | 8 |
+| MS-007 | Privacy Policy & Terms of Service Pages (Planned) | planned | 3 | 4 |
+| MS-008 | Case Studies & Blog/SEO Content (Aspirational) | aspirational | 25 | 5 |
 
 ## Native & Offline
 
@@ -194,6 +277,58 @@ Generated: 2026-05-29T11:00:36.609Z
 | NT-05 | Notification preferences UI | planned | 5 | 5 |
 | NT-06 | Email digest (daily / weekly summary) | aspirational | 10 | 6 |
 | NT-07 | Webhook outbound integration | aspirational | 15 | 8 |
+
+## Project Controls
+
+| ID | Name | Status | Days | Sub-tasks |
+|---|---|---|---:|---:|
+| PC-001 | Executive KPI Dashboard Tiles (Real CPI / SPI) | partial | 15 | 6 |
+| PC-002 | Quantity Variance Progress Bars | shipped | 5 | 4 |
+| PC-003 | Inspector Adoption Tracking | shipped | 5 | 3 |
+| PC-004 | EOS Quarterly Rocks | shipped | 10 | 5 |
+| PC-005 | EOS Weekly Scorecard | shipped | 10 | 5 |
+| PC-006 | Cross-Project EOS Trends | planned | 15 | 5 |
+| PC-007 | Bid Summary Panel | shipped | 5 | 4 |
+| PC-008 | Variance Tracking Register | planned | 15 | 6 |
+| PC-009 | Issue Log | aspirational | 15 | 6 |
+| PC-010 | RFI Tracker | aspirational | 15 | 6 |
+| PC-011 | Submittal Log | aspirational | 15 | 6 |
+| PC-012 | Change Order Register | aspirational | 20 | 6 |
+| PC-013 | AI Field Photo Tagging | shipped | 10 | 5 |
+
+## Project Lifecycle
+
+| ID | Name | Status | Days | Sub-tasks |
+|---|---|---|---:|---:|
+| PL-001 | Project Create Wizard | shipped | 5 | 6 |
+| PL-002 | Project Dashboard (Card Grid) | shipped | 5 | 5 |
+| PL-003 | Project Sidebar Navigation | shipped | 3 | 4 |
+| PL-004 | Project Settings & Metadata Edit | shipped | 3 | 4 |
+| PL-005 | Project Activity Tracking | shipped | 5 | 5 |
+
+## Reporting & Exports
+
+| ID | Name | Status | Days | Sub-tasks |
+|---|---|---|---:|---:|
+| RE-001 | CSV / Excel Takeoff Exports | shipped | 3 | 5 |
+| RE-002 | PDF Summary Report Export | shipped | 3 | 5 |
+| RE-003 | DC-84 Monthly Estimate Format (Planned) | planned | 15 | 6 |
+| RE-004 | Approved Quantities Embed into PMXML | planned | 10 | 6 |
+
+## Reporting
+
+| ID | Name | Status | Days | Sub-tasks |
+|---|---|---|---:|---:|
+| RPT-001 | CSV / PDF / Excel Takeoff Exports | shipped | 10 | 5 |
+| RPT-002 | Daily Report PDF Export | shipped | 10 | 5 |
+| RPT-003 | DCMA 14-Point Audit Report (Memo Export) | shipped | 5 | 5 |
+| RPT-004 | Schedule Progress Summary PDF | shipped | 5 | 4 |
+| RPT-005 | Project Status Report Generator | planned | 20 | 6 |
+| RPT-006 | Weekly Executive Dashboard PDF | planned | 15 | 5 |
+| RPT-007 | DC-84 Monthly Estimate Integration | aspirational | 25 | 7 |
+| RPT-008 | XER / Gantt Chart Export (PNG) | shipped | 3 | 3 |
+| RPT-009 | TIA Narrative Document Export | partial | 5 | 4 |
+| RPT-010 | Portfolio Health Report PDF | aspirational | 15 | 5 |
 
 ## Resource Management
 
@@ -288,83 +423,10 @@ Generated: 2026-05-29T11:00:36.609Z
 | SCH-020 | Resource Leveling (Automated) | aspirational | 25 | 5 |
 | SCH-021 | Portfolio Rollup (Cross-Project Health Strip) | aspirational | 25 | 6 |
 
-## Uncategorized
+## Takeoff
 
 | ID | Name | Status | Days | Sub-tasks |
 |---|---|---|---:|---:|
-| BE-001 | Database Migrations & Schema (36 Migrations) | shipped | 15 | 7 |
-| BE-002 | Row-Level Security Policies | shipped | 10 | 7 |
-| BE-003 | Edge Function — invite-user | shipped | 3 | 5 |
-| BE-004 | Edge Function — parse-schedule (Gemini AI Gantt Parser) | shipped | 5 | 5 |
-| BE-005 | Edge Function — tag-photo (Gemini AI Photo Tagger) | shipped | 5 | 6 |
-| BE-006 | Edge Function — send-push (FCM/APNs Dispatcher) | planned | 10 | 6 |
-| BE-007 | Supabase Realtime Configuration | shipped | 3 | 4 |
-| BE-008 | Vitest Test Suite | shipped | 10 | 7 |
-| BE-009 | Observability & Logging (Aspirational) | aspirational | 10 | 7 |
-| BE-010 | Build-History Tooling & WBS Governance | shipped | 5 | 5 |
-| CC-001 | Guided Tour Framework (useTour + GuidedTour) | shipped | 5 | 5 |
-| CC-002 | Welcome Carousel (First-Visit Onboarding) | shipped | 3 | 4 |
-| CC-003 | Toast Notification System | shipped | 3 | 5 |
-| CC-004 | Confirm Dialog (useConfirm Hook) | shipped | 3 | 4 |
-| CC-005 | Keyboard Shortcuts | shipped | 3 | 6 |
-| CC-006 | Theme Toggle | shipped | 3 | 4 |
-| CC-007 | Notification Bell & In-App Inbox | shipped | 5 | 5 |
-| CC-008 | Error Boundary & Loading States | shipped | 3 | 4 |
-| CC-009 | Auth Flow — Sign-In / Sign-Up / Reset Password / Roles | shipped | 10 | 7 |
-| DOC-001 | Folder Tree & System Folder Rendering | partial | 5 | 6 |
-| DOC-002 | File Upload, Versioning & History | shipped | 10 | 8 |
-| DOC-003 | Trash, Restore & Hard-Delete | shipped | 5 | 6 |
-| DOC-004 | Document Search, Sort & Bulk Ops | shipped | 5 | 7 |
-| DOC-005 | Document Preview — Image & PDF Inline | shipped | 3 | 4 |
-| DOC-006 | Document Tagging & Aspirational Search | planned | 10 | 7 |
-| FO-001 | Inspector Daily Report — Draft & Submit | shipped | 10 | 8 |
-| FO-002 | RE Review Queue — Approve / Reject / Bulk | shipped | 10 | 8 |
-| FO-003 | Threaded Report Comments | shipped | 5 | 5 |
-| FO-004 | Report Snapshot Archive on Reopen | shipped | 3 | 3 |
-| FO-005 | Field Photo Capture & Geo-Tag Dispute UI | partial | 10 | 7 |
-| FO-006 | GPS Calibration — 2-3 Point Georeferencing | shipped | 5 | 5 |
-| FO-007 | Live GPS Trace Overlay & Kalman Smoothing | shipped | 5 | 5 |
-| FO-008 | Offline-First Field Workflow | partial | 15 | 8 |
-| MS-001 | NJTA / NJDOT Landing Page | shipped | 10 | 9 |
-| MS-002 | MCFA CPM Scheduler Pitch Page | shipped | 5 | 5 |
-| MS-003 | XerLens CPM Demo — 17-Step Guided Tour | shipped | 15 | 11 |
-| MS-004 | P6 XML Round-Trip Demo Page | shipped | 3 | 4 |
-| MS-005 | Fajar Al Mustaqbal Equipment-Rental Pitch | shipped | 10 | 7 |
-| MS-006 | Interactive Demo Mode (12-Step Walkthrough) | shipped | 10 | 8 |
-| MS-007 | Privacy Policy & Terms of Service Pages (Planned) | planned | 3 | 4 |
-| MS-008 | Case Studies & Blog/SEO Content (Aspirational) | aspirational | 25 | 5 |
-| PC-001 | Executive KPI Dashboard Tiles (Real CPI / SPI) | partial | 15 | 6 |
-| PC-002 | Quantity Variance Progress Bars | shipped | 5 | 4 |
-| PC-003 | Inspector Adoption Tracking | shipped | 5 | 3 |
-| PC-004 | EOS Quarterly Rocks | shipped | 10 | 5 |
-| PC-005 | EOS Weekly Scorecard | shipped | 10 | 5 |
-| PC-006 | Cross-Project EOS Trends | planned | 15 | 5 |
-| PC-007 | Bid Summary Panel | shipped | 5 | 4 |
-| PC-008 | Variance Tracking Register | planned | 15 | 6 |
-| PC-009 | Issue Log | aspirational | 15 | 6 |
-| PC-010 | RFI Tracker | aspirational | 15 | 6 |
-| PC-011 | Submittal Log | aspirational | 15 | 6 |
-| PC-012 | Change Order Register | aspirational | 20 | 6 |
-| PC-013 | AI Field Photo Tagging | shipped | 10 | 5 |
-| PL-001 | Project Create Wizard | shipped | 5 | 6 |
-| PL-002 | Project Dashboard (Card Grid) | shipped | 5 | 5 |
-| PL-003 | Project Sidebar Navigation | shipped | 3 | 4 |
-| PL-004 | Project Settings & Metadata Edit | shipped | 3 | 4 |
-| PL-005 | Project Activity Tracking | shipped | 5 | 5 |
-| RE-001 | CSV / Excel Takeoff Exports | shipped | 3 | 5 |
-| RE-002 | PDF Summary Report Export | shipped | 3 | 5 |
-| RE-003 | DC-84 Monthly Estimate Format (Planned) | planned | 15 | 6 |
-| RE-004 | Approved Quantities Embed into PMXML | planned | 10 | 6 |
-| RPT-001 | CSV / PDF / Excel Takeoff Exports | shipped | 10 | 5 |
-| RPT-002 | Daily Report PDF Export | shipped | 10 | 5 |
-| RPT-003 | DCMA 14-Point Audit Report (Memo Export) | shipped | 5 | 5 |
-| RPT-004 | Schedule Progress Summary PDF | shipped | 5 | 4 |
-| RPT-005 | Project Status Report Generator | planned | 20 | 6 |
-| RPT-006 | Weekly Executive Dashboard PDF | planned | 15 | 5 |
-| RPT-007 | DC-84 Monthly Estimate Integration | aspirational | 25 | 7 |
-| RPT-008 | XER / Gantt Chart Export (PNG) | shipped | 3 | 3 |
-| RPT-009 | TIA Narrative Document Export | partial | 5 | 4 |
-| RPT-010 | Portfolio Health Report PDF | aspirational | 15 | 5 |
 | TK-001 | PDF Plan Canvas & Page Navigation | shipped | 10 | 7 |
 | TK-002 | TOC Auto-Parse & Region Select | shipped | 5 | 5 |
 | TK-003 | Paper-Scale Calibration & Sync | shipped | 5 | 6 |
