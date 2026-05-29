@@ -1,0 +1,928 @@
+{
+  "generatedAt": "2026-05-29T05:58:26.298Z",
+  "project": {
+    "start": "2025-01-01",
+    "latestCommit": "2026-05-29",
+    "lifespanDays": 514,
+    "totalCommits": 814
+  },
+  "thresholds": {
+    "BURST_MIN_FRAC": 0.6,
+    "BURST_MAX_LIFESPAN": 0.2,
+    "HARDENING_REGEX": "/fix|hardening|round\\s*\\d|polish|cleanup|security/i",
+    "LATE_COMMIT_DAYS": 14
+  },
+  "wbsMap": [
+    {
+      "wbs": "7.1",
+      "label": "Landing / Pitch / Demo pages"
+    },
+    {
+      "wbs": "7.2",
+      "label": "Onboarding tour & welcome"
+    },
+    {
+      "wbs": "7.3",
+      "label": "SEO & marketing infra"
+    },
+    {
+      "wbs": "2.1",
+      "label": "Schedule workspace UI"
+    },
+    {
+      "wbs": "2.2",
+      "label": "Schedule engine (CPM, calendars, baselines)"
+    },
+    {
+      "wbs": "2.3",
+      "label": "P6 / XER import-export"
+    },
+    {
+      "wbs": "2.4",
+      "label": "Schedule QA"
+    },
+    {
+      "wbs": "3.1",
+      "label": "PWA shell"
+    },
+    {
+      "wbs": "3.2",
+      "label": "Native shell (Capacitor)"
+    },
+    {
+      "wbs": "3.3",
+      "label": "Mobile UX (tab bar, toolbar, sheets)"
+    },
+    {
+      "wbs": "3.4",
+      "label": "Mobile / offline QA"
+    },
+    {
+      "wbs": "1.3",
+      "label": "Offline mirror & outbox"
+    },
+    {
+      "wbs": "1.1",
+      "label": "Takeoff frontend (canvas, annotations, pay items)"
+    },
+    {
+      "wbs": "1.2",
+      "label": "Takeoff backend (RLS, RPCs, triggers)"
+    },
+    {
+      "wbs": "1.4",
+      "label": "Takeoff QA"
+    },
+    {
+      "wbs": "4.1",
+      "label": "RE review UI"
+    },
+    {
+      "wbs": "4.3",
+      "label": "RE workflow QA"
+    },
+    {
+      "wbs": "5.1",
+      "label": "In-app reporting (export-utils, summary)"
+    },
+    {
+      "wbs": "5.2",
+      "label": "Daily report Excel pipeline"
+    },
+    {
+      "wbs": "5.3",
+      "label": "P6 PMXML export (this fixture itself)"
+    },
+    {
+      "wbs": "6.1",
+      "label": "Auth & org flow"
+    },
+    {
+      "wbs": "6.2",
+      "label": "TeamManager + project members"
+    },
+    {
+      "wbs": "6.3",
+      "label": "Admin panel"
+    },
+    {
+      "wbs": "1.2",
+      "label": "Edge functions"
+    }
+  ],
+  "wbsRows": [
+    {
+      "wbs": "1.1",
+      "label": "Takeoff frontend (canvas, annotations, pay items)",
+      "fileCount": 38,
+      "commitCount": 428,
+      "firstCommit": "2025-01-01",
+      "lastCommit": "2026-05-28",
+      "lifespanDays": 514,
+      "build": {
+        "count": 422,
+        "start": "2026-03-08",
+        "end": "2026-05-28",
+        "spanDays": 82
+      },
+      "refine": {
+        "count": 6,
+        "start": "2025-01-01",
+        "end": "2026-03-08",
+        "spanDays": 432
+      },
+      "punchList": null,
+      "sampleSubjects": [
+        "template: new_style_vite_react_shadcn_ts_testing_2026-01-08",
+        "Implement TOC auto-parse and polygon-only takeoff",
+        "Enhance PDF TOC-driven takeoff",
+        "Changes",
+        "Parse INDEX OF SHEETS TOC"
+      ],
+      "files": [
+        "src/components/ConfirmDialog.tsx",
+        "src/components/EmptyState.tsx",
+        "src/components/NavLink.tsx",
+        "src/components/NotificationBell.tsx",
+        "src/components/PdfCanvas.tsx",
+        "src/components/ProjectSidebar.tsx",
+        "src/components/ReRejectDialog.tsx",
+        "src/components/ReReviewCard.tsx",
+        "src/components/SpecViewer.tsx",
+        "src/components/SummaryPanel.tsx",
+        "src/components/SyncPanel.tsx",
+        "src/components/TeamManager.tsx",
+        "src/components/Toolbar.tsx",
+        "src/hooks/use-mobile.tsx",
+        "src/hooks/use-toast.ts",
+        "src/hooks/useDocuments.ts",
+        "src/hooks/useNetworkStatus.ts",
+        "src/hooks/useNotifications.ts",
+        "src/hooks/useOutbox.ts",
+        "src/hooks/usePayItemActivityMap.ts",
+        "src/hooks/useProject.ts",
+        "src/hooks/useProjects.ts",
+        "src/hooks/useReReviewQueue.ts",
+        "src/hooks/useTheme.ts",
+        "src/lib/approved-quantities.ts",
+        "src/lib/export-utils.ts",
+        "src/lib/geo-transform.ts",
+        "src/lib/geometry.ts",
+        "src/lib/pdf-utils.ts",
+        "src/lib/specs-utils.ts",
+        "src/lib/storage.ts",
+        "src/lib/utils.ts",
+        "src/pages/Dashboard.tsx",
+        "src/pages/Documents.tsx",
+        "src/pages/Index.tsx",
+        "src/pages/NotFound.tsx",
+        "src/pages/ProjectControls.tsx",
+        "src/pages/Settings.tsx"
+      ]
+    },
+    {
+      "wbs": "1.2",
+      "label": "Takeoff backend (RLS, RPCs, triggers)",
+      "fileCount": 40,
+      "commitCount": 44,
+      "firstCommit": "2026-03-21",
+      "lastCommit": "2026-05-29",
+      "lifespanDays": 70,
+      "build": {
+        "count": 44,
+        "start": "2026-03-21",
+        "end": "2026-05-29",
+        "spanDays": 70
+      },
+      "refine": null,
+      "punchList": null,
+      "sampleSubjects": [
+        "Connected to Lovable Cloud",
+        "Add project dashboard",
+        "Pivot to Supabase-backed projects",
+        "Add Supabase-backed projects",
+        "Add admin panel and policies"
+      ],
+      "files": [
+        "supabase/functions/invite-user/index.ts",
+        "supabase/functions/parse-schedule/index.ts",
+        "supabase/functions/send-push/index.ts",
+        "supabase/functions/tag-photo/index.ts",
+        "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
+        "supabase/migrations/20260321162325_749c9dcd-0ffa-430d-bf20-422872294f47.sql",
+        "supabase/migrations/20260321162349_089b7eac-a691-474e-96f4-b97ab4d2581d.sql",
+        "supabase/migrations/20260321162408_22a25531-f789-4f47-b2d5-ec7d40196497.sql",
+        "supabase/migrations/20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql",
+        "supabase/migrations/20260321164313_fadd3bba-4f5e-4ac1-b47b-3887bdd98769.sql",
+        "supabase/migrations/20260321164809_127eb40b-40a6-4814-b6cc-ed2f3acd27f2.sql",
+        "supabase/migrations/20260321170227_75de1f7c-2825-40a9-b86e-f031966b835e.sql",
+        "supabase/migrations/20260323121718_947e033e-ded7-4dae-9824-5ff155f34faf.sql",
+        "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql",
+        "supabase/migrations/20260323184019_702975d9-3680-45b2-9a82-8587db5f26e5.sql",
+        "supabase/migrations/20260327122843_6f261706-ce0b-4c8a-b707-c3c8b0648540.sql",
+        "supabase/migrations/20260328182512_208ba41b-5292-403a-baf4-9b9b2d158879.sql",
+        "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
+        "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql",
+        "supabase/migrations/20260524015102_6a9de603-5b28-4109-98fe-7e343194da37.sql",
+        "supabase/migrations/20260524015141_75af5978-5463-48f0-894d-a5ff9931868e.sql",
+        "supabase/migrations/20260524015158_bd7b1203-22ec-46f0-8c88-3c4208a05c7d.sql",
+        "supabase/migrations/20260524130242_5034e85e-37ad-4471-bb00-017b17d673ee.sql",
+        "supabase/migrations/20260524172951_27a28235-ea50-4c3c-be4a-528f35665ed2.sql",
+        "supabase/migrations/20260524173747_cd76e27d-fda9-4f8b-aac8-c875aa100937.sql",
+        "supabase/migrations/20260524173937_345bb077-7543-4a05-9ef8-c474d5276b1f.sql",
+        "supabase/migrations/20260524174837_68108104-7e60-4587-a574-eeef24c30253.sql",
+        "supabase/migrations/20260524182507_aa3b520a-cfe2-4510-b710-0caf0809bc7f.sql",
+        "supabase/migrations/20260524230947_197a36b0-b223-4c6d-a3b6-73dd795f14de.sql",
+        "supabase/migrations/20260525163245_e34bfccb-6eb4-4a47-b075-1f9c628559da.sql",
+        "supabase/migrations/20260526015440_e7d9bc81-0db3-4acd-88f7-ff486798a2b2.sql",
+        "supabase/migrations/20260526021443_4709d075-1bb1-44b9-ae5f-3edc62bcd171.sql",
+        "supabase/migrations/20260526105432_7d5d3850-b410-4d77-ad92-1f2f0e524b65.sql",
+        "supabase/migrations/20260526114744_9262b81e-12b7-4ca4-a3c8-d39802232caf.sql",
+        "supabase/migrations/20260526114820_e82b22fa-1dac-434e-942a-e18387a3c065.sql",
+        "supabase/migrations/20260526115717_dea32198-fe8d-4add-89e7-7aca7ad513b7.sql",
+        "supabase/migrations/20260526121114_08c40dcb-7912-41d8-bc1d-3668026265ac.sql",
+        "supabase/migrations/20260528155528_44c52ae9-d9c8-4390-8dde-0367583b44ef.sql",
+        "supabase/migrations/20260528155928_1fea17ca-9deb-4078-8173-ee3e52b6eab6.sql",
+        "supabase/migrations/20260529041918_637a0229-3683-4419-9838-890b4e588b31.sql"
+      ]
+    },
+    {
+      "wbs": "1.3",
+      "label": "Offline mirror & outbox",
+      "fileCount": 7,
+      "commitCount": 3,
+      "firstCommit": "2026-05-25",
+      "lastCommit": "2026-05-28",
+      "lifespanDays": 4,
+      "build": {
+        "count": 2,
+        "start": "2026-05-25",
+        "end": "2026-05-26",
+        "spanDays": 1
+      },
+      "refine": {
+        "count": 1,
+        "start": "2026-05-28",
+        "end": "2026-05-28",
+        "spanDays": 1
+      },
+      "punchList": null,
+      "sampleSubjects": [
+        "Changes"
+      ],
+      "files": [
+        "src/lib/offline/db.ts",
+        "src/lib/offline/idb-persister.ts",
+        "src/lib/offline/mirror.ts",
+        "src/lib/offline/mutation-client.ts",
+        "src/lib/offline/outbox.ts",
+        "src/lib/offline/pdf-cache.ts",
+        "src/lib/offline/sync.ts"
+      ]
+    },
+    {
+      "wbs": "1.4",
+      "label": "Takeoff QA",
+      "fileCount": 2,
+      "commitCount": 12,
+      "firstCommit": "2025-01-01",
+      "lastCommit": "2026-03-15",
+      "lifespanDays": 440,
+      "build": {
+        "count": 11,
+        "start": "2026-03-15",
+        "end": "2026-03-15",
+        "spanDays": 1
+      },
+      "refine": {
+        "count": 1,
+        "start": "2025-01-01",
+        "end": "2025-01-01",
+        "spanDays": 1
+      },
+      "punchList": null,
+      "sampleSubjects": [
+        "template: new_style_vite_react_shadcn_ts_testing_2026-01-08",
+        "Add plan & specs test hook",
+        "Add specs utils tests",
+        "Add spec utils tests",
+        "Add specs tests"
+      ],
+      "files": [
+        "src/test/example.test.ts",
+        "src/test/specs-utils.test.ts"
+      ]
+    },
+    {
+      "wbs": "2.1",
+      "label": "Schedule workspace UI",
+      "fileCount": 11,
+      "commitCount": 13,
+      "firstCommit": "2026-05-26",
+      "lastCommit": "2026-05-26",
+      "lifespanDays": 1,
+      "build": {
+        "count": 13,
+        "start": "2026-05-26",
+        "end": "2026-05-26",
+        "spanDays": 1
+      },
+      "refine": null,
+      "punchList": null,
+      "sampleSubjects": [
+        "Changes"
+      ],
+      "files": [
+        "src/components/schedule/ActivityInspector.tsx",
+        "src/components/schedule/BaselineManager.tsx",
+        "src/components/schedule/CalendarManager.tsx",
+        "src/components/schedule/ComplianceStrip.tsx",
+        "src/components/schedule/GanttChart.tsx",
+        "src/components/schedule/ImportP6Panel.tsx",
+        "src/components/schedule/MetaControls.tsx",
+        "src/components/schedule/ResourceManager.tsx",
+        "src/components/schedule/ScheduleToolbar.tsx",
+        "src/components/schedule/ScheduleWorkspace.tsx",
+        "src/components/schedule/WbsTree.tsx"
+      ]
+    },
+    {
+      "wbs": "2.2",
+      "label": "Schedule engine (CPM, calendars, baselines)",
+      "fileCount": 7,
+      "commitCount": 10,
+      "firstCommit": "2026-05-26",
+      "lastCommit": "2026-05-28",
+      "lifespanDays": 3,
+      "build": {
+        "count": 8,
+        "start": "2026-05-26",
+        "end": "2026-05-26",
+        "spanDays": 1
+      },
+      "refine": {
+        "count": 2,
+        "start": "2026-05-28",
+        "end": "2026-05-28",
+        "spanDays": 1
+      },
+      "punchList": null,
+      "sampleSubjects": [
+        "Changes"
+      ],
+      "files": [
+        "src/lib/schedule/baseline.ts",
+        "src/lib/schedule/calendars.ts",
+        "src/lib/schedule/cpm.ts",
+        "src/lib/schedule/date-utils.ts",
+        "src/lib/schedule/import-p6.ts",
+        "src/lib/schedule/types.ts",
+        "src/lib/schedule/use-schedule.ts"
+      ]
+    },
+    {
+      "wbs": "2.3",
+      "label": "P6 / XER import-export",
+      "fileCount": 21,
+      "commitCount": 17,
+      "firstCommit": "2026-05-05",
+      "lastCommit": "2026-05-26",
+      "lifespanDays": 22,
+      "build": {
+        "count": 17,
+        "start": "2026-05-05",
+        "end": "2026-05-26",
+        "spanDays": 22
+      },
+      "refine": null,
+      "punchList": null,
+      "sampleSubjects": [
+        "Changes"
+      ],
+      "files": [
+        "src/components/GanttUploader.tsx",
+        "src/lib/p6xml/apply-progress.ts",
+        "src/lib/p6xml/build-from-project.ts",
+        "src/lib/p6xml/load-approved.ts",
+        "src/lib/p6xml/parser.ts",
+        "src/lib/p6xml/sample.ts",
+        "src/lib/p6xml/serializer.ts",
+        "src/lib/p6xml/types.ts",
+        "src/lib/xer/aace.ts",
+        "src/lib/xer/chart-export.ts",
+        "src/lib/xer/dcma.ts",
+        "src/lib/xer/feedback.ts",
+        "src/lib/xer/memo-export.ts",
+        "src/lib/xer/parser.ts",
+        "src/lib/xer/progress.ts",
+        "src/lib/xer/sample-update.ts",
+        "src/lib/xer/sample.ts",
+        "src/lib/xer/tia.ts",
+        "src/lib/xer/types.ts",
+        "src/lib/xer/wbs.ts",
+        "src/pages/P6Export.tsx"
+      ]
+    },
+    {
+      "wbs": "2.4",
+      "label": "Schedule QA",
+      "fileCount": 7,
+      "commitCount": 6,
+      "firstCommit": "2026-05-05",
+      "lastCommit": "2026-05-29",
+      "lifespanDays": 25,
+      "build": {
+        "count": 4,
+        "start": "2026-05-26",
+        "end": "2026-05-29",
+        "spanDays": 4
+      },
+      "refine": {
+        "count": 2,
+        "start": "2026-05-05",
+        "end": "2026-05-24",
+        "spanDays": 20
+      },
+      "punchList": null,
+      "sampleSubjects": [
+        "Changes"
+      ],
+      "files": [
+        "src/test/baseline-end.test.ts",
+        "src/test/cpm.test.ts",
+        "src/test/date-utils.test.ts",
+        "src/test/import-p6.test.ts",
+        "src/test/p6xml.test.ts",
+        "src/test/tia.test.ts",
+        "src/test/xer-parser.test.ts"
+      ]
+    },
+    {
+      "wbs": "3.1",
+      "label": "PWA shell",
+      "fileCount": 2,
+      "commitCount": 4,
+      "firstCommit": "2026-05-25",
+      "lastCommit": "2026-05-26",
+      "lifespanDays": 1,
+      "build": {
+        "count": 4,
+        "start": "2026-05-25",
+        "end": "2026-05-26",
+        "spanDays": 1
+      },
+      "refine": null,
+      "punchList": null,
+      "sampleSubjects": [
+        "Changes"
+      ],
+      "files": [
+        "src/components/PwaShell.tsx",
+        "src/lib/pwa.ts"
+      ]
+    },
+    {
+      "wbs": "3.2",
+      "label": "Native shell (Capacitor)",
+      "fileCount": 10,
+      "commitCount": 3,
+      "firstCommit": "2026-05-26",
+      "lastCommit": "2026-05-26",
+      "lifespanDays": 1,
+      "build": {
+        "count": 3,
+        "start": "2026-05-26",
+        "end": "2026-05-26",
+        "spanDays": 1
+      },
+      "refine": null,
+      "punchList": null,
+      "sampleSubjects": [
+        "Changes"
+      ],
+      "files": [
+        "capacitor.config.ts",
+        "src/components/BiometricGate.tsx",
+        "src/lib/native/app-state.ts",
+        "src/lib/native/background-sync.ts",
+        "src/lib/native/biometric.ts",
+        "src/lib/native/camera.ts",
+        "src/lib/native/filesystem.ts",
+        "src/lib/native/geolocation.ts",
+        "src/lib/native/platform.ts",
+        "src/lib/native/push.ts"
+      ]
+    },
+    {
+      "wbs": "3.3",
+      "label": "Mobile UX (tab bar, toolbar, sheets)",
+      "fileCount": 7,
+      "commitCount": 14,
+      "firstCommit": "2026-03-19",
+      "lastCommit": "2026-05-26",
+      "lifespanDays": 68,
+      "build": {
+        "count": 9,
+        "start": "2026-03-19",
+        "end": "2026-03-29",
+        "spanDays": 11
+      },
+      "refine": {
+        "count": 5,
+        "start": "2026-04-07",
+        "end": "2026-05-26",
+        "spanDays": 49
+      },
+      "punchList": {
+        "count": 4,
+        "latest": "2026-05-26"
+      },
+      "sampleSubjects": [
+        "Overhauled mobile UI",
+        "Preceding changes",
+        "Inspector view streamlined",
+        "Add inspector view UI",
+        "Implement inspector view UI"
+      ],
+      "files": [
+        "src/components/GpsCalibration.tsx",
+        "src/components/GpsTraceControls.tsx",
+        "src/components/MobileAnnotationSheet.tsx",
+        "src/components/MobilePayItems.tsx",
+        "src/components/MobileSections.tsx",
+        "src/components/MobileTabBar.tsx",
+        "src/components/MobileToolbar.tsx"
+      ]
+    },
+    {
+      "wbs": "3.4",
+      "label": "Mobile / offline QA",
+      "fileCount": 1,
+      "commitCount": 1,
+      "firstCommit": "2026-05-28",
+      "lastCommit": "2026-05-28",
+      "lifespanDays": 1,
+      "build": {
+        "count": 1,
+        "start": "2026-05-28",
+        "end": "2026-05-28",
+        "spanDays": 1
+      },
+      "refine": null,
+      "punchList": null,
+      "sampleSubjects": [
+        "Changes"
+      ],
+      "files": [
+        "src/test/geometry.test.ts"
+      ]
+    },
+    {
+      "wbs": "4.1",
+      "label": "RE review UI",
+      "fileCount": 4,
+      "commitCount": 11,
+      "firstCommit": "2026-05-24",
+      "lastCommit": "2026-05-24",
+      "lifespanDays": 2,
+      "build": {
+        "count": 10,
+        "start": "2026-05-24",
+        "end": "2026-05-24",
+        "spanDays": 1
+      },
+      "refine": {
+        "count": 1,
+        "start": "2026-05-24",
+        "end": "2026-05-24",
+        "spanDays": 1
+      },
+      "punchList": null,
+      "sampleSubjects": [
+        "Changes"
+      ],
+      "files": [
+        "src/hooks/useDailyReport.ts",
+        "src/lib/daily-report-snapshot.ts",
+        "src/pages/DailyReport.tsx",
+        "src/pages/ReReview.tsx"
+      ]
+    },
+    {
+      "wbs": "4.3",
+      "label": "RE workflow QA",
+      "fileCount": 1,
+      "commitCount": 1,
+      "firstCommit": "2026-05-24",
+      "lastCommit": "2026-05-24",
+      "lifespanDays": 1,
+      "build": {
+        "count": 1,
+        "start": "2026-05-24",
+        "end": "2026-05-24",
+        "spanDays": 1
+      },
+      "refine": null,
+      "punchList": null,
+      "sampleSubjects": [
+        "Changes"
+      ],
+      "files": [
+        "src/test/daily-report-snapshot.test.ts"
+      ]
+    },
+    {
+      "wbs": "6.1",
+      "label": "Auth & org flow",
+      "fileCount": 3,
+      "commitCount": 10,
+      "firstCommit": "2026-03-21",
+      "lastCommit": "2026-05-28",
+      "lifespanDays": 69,
+      "build": {
+        "count": 10,
+        "start": "2026-03-21",
+        "end": "2026-05-28",
+        "spanDays": 69
+      },
+      "refine": null,
+      "punchList": null,
+      "sampleSubjects": [
+        "Connected to Lovable Cloud",
+        "Introduce org invites RBAC",
+        "Organize signup with invites",
+        "Organize signup with invitations",
+        "Fix invite-user edge function"
+      ],
+      "files": [
+        "src/hooks/useAuth.tsx",
+        "src/pages/Auth.tsx",
+        "src/pages/ResetPassword.tsx"
+      ]
+    },
+    {
+      "wbs": "6.3",
+      "label": "Admin panel",
+      "fileCount": 1,
+      "commitCount": 6,
+      "firstCommit": "2026-03-21",
+      "lastCommit": "2026-05-24",
+      "lifespanDays": 65,
+      "build": {
+        "count": 6,
+        "start": "2026-03-21",
+        "end": "2026-05-24",
+        "spanDays": 65
+      },
+      "refine": null,
+      "punchList": null,
+      "sampleSubjects": [
+        "Add admin RLS policies",
+        "Organize signup with invites",
+        "Implement team management UI",
+        "Changes"
+      ],
+      "files": [
+        "src/pages/Admin.tsx"
+      ]
+    },
+    {
+      "wbs": "7.1",
+      "label": "Landing / Pitch / Demo pages",
+      "fileCount": 6,
+      "commitCount": 133,
+      "firstCommit": "2026-03-21",
+      "lastCommit": "2026-05-27",
+      "lifespanDays": 68,
+      "build": {
+        "count": 93,
+        "start": "2026-05-05",
+        "end": "2026-05-06",
+        "spanDays": 2
+      },
+      "refine": {
+        "count": 40,
+        "start": "2026-03-21",
+        "end": "2026-05-27",
+        "spanDays": 68
+      },
+      "punchList": {
+        "count": 4,
+        "latest": "2026-05-27"
+      },
+      "sampleSubjects": [
+        "Added marketing landing page",
+        "Rewrote NJTA/NJDOT landing page",
+        "Created TakeoffPro hero mockup",
+        "Added enterprise landing visuals",
+        "Added GPS field measurement hero"
+      ],
+      "files": [
+        "src/pages/Demo.tsx",
+        "src/pages/FajarPitch.tsx",
+        "src/pages/Landing.tsx",
+        "src/pages/McfaPitch.tsx",
+        "src/pages/P6XmlDemo.tsx",
+        "src/pages/XerDemo.tsx"
+      ]
+    },
+    {
+      "wbs": "7.2",
+      "label": "Onboarding tour & welcome",
+      "fileCount": 5,
+      "commitCount": 16,
+      "firstCommit": "2026-03-21",
+      "lastCommit": "2026-05-26",
+      "lifespanDays": 66,
+      "build": {
+        "count": 13,
+        "start": "2026-05-05",
+        "end": "2026-05-05",
+        "spanDays": 1
+      },
+      "refine": {
+        "count": 3,
+        "start": "2026-03-21",
+        "end": "2026-05-26",
+        "spanDays": 66
+      },
+      "punchList": {
+        "count": 1,
+        "latest": "2026-05-26"
+      },
+      "sampleSubjects": [
+        "Add welcome carousel onboarding",
+        "Fix invite-user edge function",
+        "Changes"
+      ],
+      "files": [
+        "src/components/GuidedTour.tsx",
+        "src/components/NativeFirstRun.tsx",
+        "src/components/WelcomeCarousel.tsx",
+        "src/components/XerLensTour.tsx",
+        "src/hooks/useTour.ts"
+      ]
+    },
+    {
+      "wbs": "7.3",
+      "label": "SEO & marketing infra",
+      "fileCount": 5,
+      "commitCount": 10,
+      "firstCommit": "2025-01-01",
+      "lastCommit": "2026-05-28",
+      "lifespanDays": 514,
+      "build": {
+        "count": 6,
+        "start": "2026-05-25",
+        "end": "2026-05-28",
+        "spanDays": 4
+      },
+      "refine": {
+        "count": 4,
+        "start": "2025-01-01",
+        "end": "2026-03-25",
+        "spanDays": 450
+      },
+      "punchList": null,
+      "sampleSubjects": [
+        "template: new_style_vite_react_shadcn_ts_testing_2026-01-08",
+        "Update site info for publish",
+        "Landing page added",
+        "Rewrote NJTA/NJDOT landing page",
+        "Changes"
+      ],
+      "files": [
+        "index.html",
+        "public/llms.txt",
+        "public/manifest.webmanifest",
+        "public/robots.txt",
+        "public/sitemap.xml"
+      ]
+    }
+  ],
+  "hardeningMilestones": [
+    {
+      "milestoneId": "H01",
+      "date": "2026-03-14",
+      "label": "Fix annotation system bugs / Fix annotation system issues",
+      "wbsTouched": [
+        "1.1"
+      ],
+      "commitCount": 3
+    },
+    {
+      "milestoneId": "H02",
+      "date": "2026-03-23",
+      "label": "Fix signup profile conflict / Improve workflows and fixes in SpecViewer and related areas / Implement mobile and data fixes",
+      "wbsTouched": [
+        "1.1",
+        "1.2",
+        "6.1",
+        "7.2"
+      ],
+      "commitCount": 14
+    }
+  ],
+  "unmappedTopFiles": [
+    {
+      "file": ".lovable/plan.md",
+      "count": 66
+    },
+    {
+      "file": "bun.lock",
+      "count": 28
+    },
+    {
+      "file": "src/App.tsx",
+      "count": 25
+    },
+    {
+      "file": "src/integrations/supabase/types.ts",
+      "count": 21
+    },
+    {
+      "file": "package.json",
+      "count": 10
+    },
+    {
+      "file": "src/types/project.ts",
+      "count": 10
+    },
+    {
+      "file": "src/index.css",
+      "count": 5
+    },
+    {
+      "file": "src/main.tsx",
+      "count": 4
+    },
+    {
+      "file": "vite.config.ts",
+      "count": 3
+    },
+    {
+      "file": "vitest.config.ts",
+      "count": 3
+    },
+    {
+      "file": "public/favicon.ico",
+      "count": 2
+    },
+    {
+      "file": "src/test/setup.ts",
+      "count": 2
+    },
+    {
+      "file": "tailwind.config.ts",
+      "count": 2
+    },
+    {
+      "file": "tsconfig.app.json",
+      "count": 2
+    },
+    {
+      "file": "tsconfig.json",
+      "count": 2
+    },
+    {
+      "file": "docs/NATIVE_SETUP.md",
+      "count": 2
+    },
+    {
+      "file": "supabase/seed.sql",
+      "count": 2
+    },
+    {
+      "file": ".gitignore",
+      "count": 1
+    },
+    {
+      "file": "README.md",
+      "count": 1
+    },
+    {
+      "file": "bun.lockb",
+      "count": 1
+    },
+    {
+      "file": "components.json",
+      "count": 1
+    },
+    {
+      "file": "eslint.config.js",
+      "count": 1
+    },
+    {
+      "file": "package-lock.json",
+      "count": 1
+    },
+    {
+      "file": "postcss.config.js",
+      "count": 1
+    },
+    {
+      "file": "public/placeholder.svg",
+      "count": 1
+    }
+  ]
+}
