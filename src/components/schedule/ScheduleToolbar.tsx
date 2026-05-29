@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Link2, Unlink, ZoomIn, ZoomOut, RefreshCw, Download, Trash2, IndentIncrease, IndentDecrease, FileCode2, Flag, FlagOff, Activity as ActivityIcon, Layers, CalendarDays, Users, Camera } from 'lucide-react';
+import { Plus, Link2, Unlink, ZoomIn, ZoomOut, RefreshCw, Download, Trash2, IndentIncrease, IndentDecrease, FileCode2, Flag, FlagOff, Activity as ActivityIcon, Layers, CalendarDays, Users, Camera, ShieldCheck } from 'lucide-react';
 import type { ActivityType, ScheduleMeta } from '@/lib/schedule/types';
 import { MetaControls } from './MetaControls';
 
@@ -20,6 +20,7 @@ interface Props {
   onOpenCalendars: () => void;
   onOpenResources: () => void;
   onOpenBaselines: () => void;
+  onOpenDcma: () => void;
   selectedCount: number;
   canLink: boolean;
   meta?: ScheduleMeta;
@@ -81,6 +82,9 @@ export function ScheduleToolbar(p: Props) {
       </Button>
       <Button size="sm" variant="ghost" className="h-7 text-[11px]" onClick={p.onOpenBaselines} title="Baselines">
         <Camera className="h-3.5 w-3.5 mr-1" /> Baselines
+      </Button>
+      <Button size="sm" variant="ghost" className="h-7 text-[11px]" onClick={p.onOpenDcma} title="DCMA 14-Point audit">
+        <ShieldCheck className="h-3.5 w-3.5 mr-1" /> DCMA
       </Button>
       <div className="w-px h-4 bg-border mx-1" />
 
