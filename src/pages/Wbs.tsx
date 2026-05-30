@@ -486,6 +486,179 @@ export default function Wbs() {
     );
   };
 
+  // ---- Backlog view ----
+  const CONFIDENCE_COLOR: Record<string, string> = {
+    high: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
+    medium: 'bg-sky-500/15 text-sky-300 border-sky-500/30',
+    low: 'bg-amber-500/15 text-amber-300 border-amber-500/30',
+  };
+  const SOURCE_COLOR: Record<string, string> = {
+    capability_missing: 'bg-rose-500/15 text-rose-300 border-rose-500/30',
+    capability_partial: 'bg-amber-500/15 text-amber-300 border-amber-500/30',
+    risk: 'bg-orange-500/15 text-orange-300 border-orange-500/30',
+    marketing_promise: 'bg-fuchsia-500/15 text-fuchsia-300 border-fuchsia-500/30',
+    verification_gap: 'bg-slate-500/15 text-slate-300 border-slate-500/30',
+  };
+
+  const renderBacklogView = () => {
+    if (!backlog) {
+      return <div className="p-8 text-slate-400 text-sm">No build-backlog.json. Run scripts/wbs/build-build-backlog.mjs.</div>;
+    }
+    const filtered = backlog.entries.filter((e) =>
+      (backlogStream === 'all' || e.stream === backlogStream) &&
+      (backlogSource === 'all' || e.source_type === backlogSource) &&
+      (backlogConfidence === 'all' || e.confidence === backlogConfidence)
+    );
+    const streamKeys = Object.keys(backlog.totals.by_stream).sort();
+    const sourceKeys = Object.keys(backlog.totals.by_source_type).sort();
+    const confidenceKeys = ['high', 'medium', 'low'];
+
+    return (
+      <div className="space-y-4">
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-3 text-xs">
+          {[
+            ['Backlog entries', backlog.totals.entries],
+            ['Estimate', `${backlog.totals.total_estimate_days}d`],
+            ['Capabilities source', backlog.source_counts.capabilities_total],
+            ['Marketing claims', backlog.source_counts.promises_total],
+            ['Verification gaps', backlog.totals.by_source_type.verification_gap || 0],
+            ['Low-confidence rows', backlog.totals.by_confidence.low || 0],
+          ].map(([k, v]) => (
+            <div key={k as string} className="border border-slate-800 rounded p-2 bg-slate-900/40">
+              <div className="text-[10px] uppercase tracking-wide text-slate-500">{k}</div>
+              <div className="text-slate-100 text-sm mt-0.5">{v as React.ReactNode}</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2 text-xs">
+          <select
+            value={backlogStream}
+            onChange={(e) => setBacklogStream(e.target.value)}
+            className="bg-slate-900 border border-slate-800 rounded px-2 py-1 text-slate-200"
+          >
+            <option value="all">All streams ({backlog.entries.length})</option>
+            {streamKeys.map((k) => (
+              <option key={k} value={k}>{k} ({backlog.totals.by_stream[k]})</option>
+            ))}
+          </select>
+          <select
+            value={backlogSource}
+            onChange={(e) => setBacklogSource(e.target.value)}
+            className="bg-slate-900 border border-slate-800 rounded px-2 py-1 text-slate-200"
+          >
+            <option value="all">All sources</option>
+            {sourceKeys.map((k) => (
+              <option key={k} value={k}>{k} ({backlog.totals.by_source_type[k]})</option>
+            ))}
+          </select>
+          <select
+            value={backlogConfidence}
+            onChange={(e) => setBacklogConfidence(e.target.value)}
+            className="bg-slate-900 border border-slate-800 rounded px-2 py-1 text-slate-200"
+          >
+            <option value="all">All confidence</option>
+            {confidenceKeys.map((k) => (
+              <option key={k} value={k}>{k} ({backlog.totals.by_confidence[k] || 0})</option>
+            ))}
+          </select>
+          <span className="text-slate-500 ml-2">{filtered.length} shown</span>
+        </div>
+
+        <div className="border border-slate-800 rounded divide-y divide-slate-900">
+          {filtered.map((e) => {
+            const isOpen = open.has(e.id);
+            return (
+              <div key={e.id}>
+                <div
+                  className="grid grid-cols-12 gap-3 items-start px-3 py-2 text-xs cursor-pointer hover:bg-slate-900/40"
+                  onClick={() => toggle(e.id)}
+                >
+                  <div className="col-span-1 flex items-center gap-1 text-slate-500">
+                    {isOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+                    <span className="text-[10px]">{e.stream.slice(0, 2)}</span>
+                  </div>
+                  <div className="col-span-5 text-slate-100">
+                    <div className="truncate">{e.title}</div>
+                    <div className="text-[10px] text-slate-500 truncate">{e.stream_title}</div>
+                  </div>
+                  <div className="col-span-2 flex flex-wrap gap-1">
+                    <span className={`text-[9px] px-1.5 py-0.5 rounded border ${SOURCE_COLOR[e.source_type] || 'border-slate-700 text-slate-400'}`}>
+                      {e.source_type}
+                    </span>
+                    <span className="text-[9px] px-1.5 py-0.5 rounded border border-slate-700 text-slate-400">
+                      {e.scope_label}
+                    </span>
+                  </div>
+                  <div className="col-span-2 text-slate-400 text-[10px]">{e.owner_role}</div>
+                  <div className="col-span-1 text-slate-300 text-[10px] text-right">{e.estimate_days}d</div>
+                  <div className="col-span-1 text-right">
+                    <span className={`text-[9px] px-1.5 py-0.5 rounded border ${CONFIDENCE_COLOR[e.confidence]}`}>
+                      {e.confidence}
+                    </span>
+                  </div>
+                </div>
+                {isOpen && (
+                  <div className="bg-slate-950/60 px-6 py-3 border-t border-slate-900 grid md:grid-cols-2 gap-4 text-[11px] leading-relaxed">
+                    <div className="space-y-2">
+                      <Section title="Problem">{e.problem_statement}</Section>
+                      <Section title="Desired behavior">{e.desired_behavior}</Section>
+                      <Section title="Acceptance criteria">
+                        <ul className="list-disc pl-4 space-y-0.5">
+                          {e.acceptance_criteria.map((a, i) => <li key={i}>{a}</li>)}
+                        </ul>
+                      </Section>
+                      <Section title="Verification plan">{e.verification_plan}</Section>
+                      <Section title="Definition of done">{e.definition_of_done}</Section>
+                    </div>
+                    <div className="space-y-2">
+                      <Section title="Build scope">
+                        <div className="space-y-1">
+                          {Object.entries(e.build_scope).map(([k, v]) =>
+                            v.length ? (
+                              <div key={k}>
+                                <span className="text-slate-500 uppercase text-[9px] mr-2">{k}</span>
+                                <ul className="list-disc pl-4">
+                                  {v.map((s, i) => <li key={i}>{s}</li>)}
+                                </ul>
+                              </div>
+                            ) : null
+                          )}
+                        </div>
+                      </Section>
+                      {!!e.likely_files.length && (
+                        <Section title="Likely files">
+                          <ul className="font-mono text-slate-400">
+                            {e.likely_files.map((f, i) => <li key={i}>{f}</li>)}
+                          </ul>
+                        </Section>
+                      )}
+                      {!!e.likely_tables.length && (
+                        <Section title="Likely tables">{e.likely_tables.join(', ')}</Section>
+                      )}
+                      <Section title="Roles affected">{e.user_roles_affected.join(', ')}</Section>
+                      {!!e.blockers.length && (
+                        <Section title="Blockers">
+                          <ul className="list-disc pl-4 text-amber-300">
+                            {e.blockers.map((b, i) => <li key={i}>{b}</li>)}
+                          </ul>
+                        </Section>
+                      )}
+                      <Section title="Source">
+                        <span className="font-mono text-slate-500">{e.source_id}</span>
+                        {e.source_severity && <span className="ml-2 text-rose-300">severity: {e.source_severity}</span>}
+                      </Section>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-300 font-mono">
       <div className="border-b border-slate-800 bg-slate-900/60 px-6 py-4 sticky top-0 z-10">
@@ -493,23 +666,28 @@ export default function Wbs() {
           <div className="flex items-center gap-4">
             <h1 className="text-lg text-slate-100 font-semibold">Work Breakdown</h1>
             <div className="flex items-center gap-1 text-xs">
-              {(['files', 'schedule'] as const).map((v) => (
+              {(['backlog', 'files', 'schedule'] as const).map((v) => (
                 <button
                   key={v}
                   onClick={() => setView(v)}
-                  className={`px-3 py-1 rounded border ${view === v ? 'border-sky-500 text-sky-300 bg-sky-500/10' : 'border-slate-800 text-slate-400 hover:border-slate-700'}`}
+                  className={`px-3 py-1 rounded border flex items-center gap-1 ${view === v ? 'border-sky-500 text-sky-300 bg-sky-500/10' : 'border-slate-800 text-slate-400 hover:border-slate-700'}`}
                 >
+                  {v === 'backlog' && <Hammer className="h-3 w-3" />}
                   {v}
                 </button>
               ))}
             </div>
           </div>
           <div className="text-xs text-slate-500">
-            {view === 'files'
-              ? `${(wbs.totals as { leaves: number }).leaves} leaves · ${(wbs.totals as { capabilities: number }).capabilities} capabilities · ${(wbs.totals as { streams: number }).streams} streams`
-              : schedule
-                ? `T0 ${schedule.T0} · ${schedule.totals.total_remaining_days}d remaining · forecast ${schedule.totals.forecast_finish}`
-                : 'no schedule'}
+            {view === 'backlog'
+              ? backlog
+                ? `${backlog.totals.entries} build entries · ${backlog.totals.total_estimate_days}d remaining`
+                : 'no backlog'
+              : view === 'files'
+                ? `${(wbs.totals as { leaves: number }).leaves} leaves · ${(wbs.totals as { capabilities: number }).capabilities} capabilities · ${(wbs.totals as { streams: number }).streams} streams`
+                : schedule
+                  ? `T0 ${schedule.T0} · ${schedule.totals.total_remaining_days}d remaining · forecast ${schedule.totals.forecast_finish}`
+                  : 'no schedule'}
           </div>
         </div>
         {view === 'files' && (
@@ -533,8 +711,17 @@ export default function Wbs() {
         )}
       </div>
       <div className="max-w-[1400px] mx-auto px-4 py-4">
-        {view === 'files' ? streams.map(renderStream) : renderScheduleView()}
+        {view === 'backlog' ? renderBacklogView() : view === 'files' ? streams.map(renderStream) : renderScheduleView()}
       </div>
+    </div>
+  );
+}
+
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <div className="text-[9px] uppercase tracking-wide text-slate-500 mb-1">{title}</div>
+      <div className="text-slate-200">{children}</div>
     </div>
   );
 }
