@@ -11,6 +11,7 @@ const steps = [
   'scripts/wbs/build-state.mjs',
   'scripts/wbs/build-next.mjs',
   'scripts/wbs/build-schedule.mjs',
+  'scripts/wbs/build-build-backlog.mjs',
   'scripts/wbs/publish-public.mjs',
 ];
 

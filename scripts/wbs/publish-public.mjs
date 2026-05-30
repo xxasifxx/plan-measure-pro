@@ -21,6 +21,10 @@ const schedulePath = '.lovable/wbs/schedule.json';
 const schedule = fs.existsSync(schedulePath)
   ? JSON.parse(fs.readFileSync(schedulePath, 'utf8'))
   : null;
+const backlogPath = '.lovable/wbs/build-backlog.json';
+const backlog = fs.existsSync(backlogPath)
+  ? JSON.parse(fs.readFileSync(backlogPath, 'utf8'))
+  : null;
 
 // Slim leaves down to fields the viewer needs
 const slimLeaves = wbs.leaves.map(l => slim(l, [
