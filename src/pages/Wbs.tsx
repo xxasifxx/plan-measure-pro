@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ChevronDown, ChevronRight, FileCode, FileWarning, Package, Folder, Calendar, GitBranch } from 'lucide-react';
+import { ChevronDown, ChevronRight, FileCode, FileWarning, Package, Folder, Calendar, GitBranch, Hammer } from 'lucide-react';
 
 interface Parent {
   id: string;
@@ -68,6 +68,34 @@ interface Schedule {
   };
   milestones: Milestone[];
   streams: ScheduleStream[];
+}
+
+interface BacklogEntry {
+  id: string; stream: string; stream_title: string;
+  source_id: string; source_type: string; source_verdict: string; source_severity: string | null;
+  title: string; problem_statement: string; desired_behavior: string;
+  build_scope: Record<string, string[]>;
+  scope_label: string;
+  likely_files: string[]; likely_tables: string[];
+  user_roles_affected: string[];
+  acceptance_criteria: string[];
+  verification_plan: string;
+  definition_of_done: string;
+  blockers: string[]; dependencies: string[];
+  owner_role: string; estimate_days: number; confidence: 'low' | 'medium' | 'high';
+}
+interface Backlog {
+  generatedAt: string;
+  source_counts: { capabilities_total: number; promises_total: number; verification_activities_total: number };
+  totals: {
+    entries: number;
+    by_source_type: Record<string, number>;
+    by_stream: Record<string, number>;
+    by_confidence: Record<string, number>;
+    by_owner_role: Record<string, number>;
+    total_estimate_days: number;
+  };
+  entries: BacklogEntry[];
 }
 
 const VERDICT_COLOR: Record<string, string> = {
