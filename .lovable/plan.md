@@ -1,142 +1,200 @@
-# TakeoffPro — PM read-out and proposed plan
 
-I went through every WBS artifact end-to-end (capabilities, promises, verification manifest, program deliverables, schedule, state, build-backlog, backlog-network) and cross-checked them against the actual codebase (pages, hooks, supabase migrations, edge functions, scripts). This is what I see as a PM and what I'd commit to next.
+# MCFA Pitch — Detailed Build Plan
 
-## 1. What TakeoffPro is
+Goal: one page (`/mcfa`) that shows MCFA (a) progress on building the app, (b) a tentative schedule to finish it, (c) what the finished app does across roles, on an imagined NJTA project. Everything reads from existing data — no new tables, no new scripts, no agent runs.
 
-Digital quantity-takeoff tool for NJTA/NJDOT RE teams. Replaces paper DC forms with an audit-ready digital record. Three roles: Admin (org owner), PM (setup + review), Inspector (field annotation). Web + Capacitor native + offline outbox + Supabase backend + Primavera P6 round-trip. Priced per project, not per seat.
+The fix is **presentation + grouping**, not new systems. The current 22 streams are kept as-is on disk; the pitch reads them through a 5-phase rollup so the audience sees structure, not jargon.
 
-It is a real, mostly-built product. 36 migrations, 4 edge functions, 21 streams, 20+ pages, mobile + desktop UX, offline + sync, schedule analytics, GPS calibration, demo + 2 partner pitch decks (MCFA, Fajar).
+---
 
-## 2. Honest status, in numbers I trust
+## Section A — "What I've built so far" (top of page, ~1 screen)
 
-Capabilities by stream (from `.lovable/wbs/capabilities.json`, 21 streams):
+Purpose: in 10 seconds, prove this is a real, sizeable codebase — not a slideware demo.
 
-```text
-                                            impl  partial  miss  risks
-01 identity-and-access                         6     2      2      2
-02 portfolio-and-pm-home                       7     1      1      1
-03 project-onboarding                          7     0      0      0   <- done
-04 pay-item-catalog                            5     2      1      0
-05 field-capture                               9     0      0      0   <- done
-06 daily-report-lifecycle                      8     1      1      1
-07 quantity-to-payment                         5     1      2      1
-08 photo-evidence                              6     1      2      1
-09 standard-specifications                     8     0      1      1
-10 document-management                         7     0      3      2
-11 schedule-management                         8     1      1      1
-12 project-health-and-controls                 7     1      1      1
-13 data-export-and-interoperability            7     2      0      0
-14 measurement-and-geometry-engine             7     1      0      0
-15 offline-and-native-durability               7     2      0      0
-16 mobile-field-ergonomics                     6     1      3      1
-17 notifications-and-presence                  5     4      1      1
-18 compliance-and-audit                        6     2      2      0
-19 onboarding-and-tutorials                    6     2      2      1
-20 sales-and-pitch                             7     2      2      2
-                                             ---   ---    ---    ---
-totals                                       134    26     24     16
-```
+Five stat tiles, hard-coded numbers pulled once from existing artifacts (no runtime queries):
 
-- **134 of 184 (~73%) capabilities are implemented**, ~14% partial, ~13% missing.
-- **8 marketing promises** — all unverified, 3 of them not mapped to any stream (`UNMAPPED`).
-- **154 verification activities** — **all manual, none verifiedE2E** (0/154). This is the dominant debt.
-- **15 program deliverables** (non-file work: baseline schedule lock, pilot checklist, ROI calculator, audit-log spec, DC-84 formatter, FCM v1 migration, demo_requests table, etc.) — only 0 are "shipped", 3 partial, 10 planned, 2 missing.
-- Backlog totals: **215 entries, ~561 engineer-days**, 17 high / 173 medium / 25 low confidence.
+| Tile | Number | Source |
+|---|---|---|
+| Application screens | count of files in `src/pages/**` | static |
+| Database migrations | count of files in `supabase/migrations/**` | static |
+| Edge functions | count of dirs in `supabase/functions/**` | static |
+| Lines of TypeScript | `wc -l src/**/*.ts*` | static |
+| P6 XML round-trip | "Verified — see /p6-xml" | link |
 
-Translation: **the product is functionally ~75% done; the missing 25% concentrates in notifications, compliance/audit, document management, mobile ergonomics, payments (contract mods), and sales-proof artifacts. The bigger problem is that almost nothing has automated proof it works.**
+Below tiles: one paragraph (3 sentences) — "Six months of build. The core takeoff loop works end-to-end on web, mobile, and offline. The remaining work is QA, polish, and the scheduling integration MCFA cares about most."
 
-## 3. Real gaps I found in the WBS itself
+No animation, no gradients. Mono font, left-aligned, engineering-report look.
 
-These are blocking the WBS from being useful as a PM tool:
+---
 
-1. **Verification-gap stream IDs are corrupted.** `build-build-backlog.mjs` derives stream from `activityId.slice(0,2) + '-'` for verification activities. Activity IDs look like `01:docs:organic-signup-admin-role`. Result: the backlog has 21 fake streams (`01-`, `02-`, … `21-`) running alongside the real ones (`01-identity-and-access`, …). 154 of 215 entries are mis-filed. Filters and totals are misleading.
-2. **`next.json` recommends nonsense.** Top "ready to start" items are `Verify e2e: .gitignore`, `bun.lockb`, `package.json`, `eslint.config.js`, `postcss.config.js`, `favicon.ico`, `placeholder.svg`. These are auto-generated from file leaves with no domain filter. A PM reading this learns nothing.
-3. **Owner-role inference is too coarse.** All 154 verification gaps → "QA Engineer". Most of them need the engineer who built the capability to also write the proof; the QA framing hides that.
-4. **Marketing promises are too vague.** 8 entries, 3 `UNMAPPED`, none with a defined demo flow or proof route. "Walk the site. Measure automatically." is a claim, not a work item.
-5. **Dependency graph is empty.** `backlog-dependencies.json.edges = {}`. CPM ran and produced `213 unconnected nodes / 1 inferred edge / critical path length 2 / project_duration 10 days`. The network view is technically working but factually meaningless.
-6. **`/wbs` is crashing right now.** React error #310 ("rendered more hooks than during the previous render") — introduced when the Backlog/Network tabs were added. The page the user would use to act on all of this is broken in preview.
-7. **Promises have no `verdict`.** All 8 entries have `verdict: null`. The "delivered + verifiedE2E" check in the generator never fires, so all 8 fall into the backlog regardless of state.
+## Section B — "The work breakdown" (the WBS, regrouped)
 
-## 4. What I'd commit to, in priority order
+Purpose: show MCFA you understand WBS structure. This replaces the current 22-row jargon dump.
 
-### P0 — Make the WBS trustworthy (≈1 day of cleanup, unblocks everything)
-
-1. **Fix the `/wbs` hook-order crash.** Bisect the new Backlog/Network tab code in `src/pages/Wbs.tsx`; move all `useState`/`useMemo` above any early return; verify in preview.
-2. **Fix verification-gap stream mapping** in `scripts/wbs/build-build-backlog.mjs`. Map the `NN:` prefix to the real stream key (`01-identity-and-access`, …) using `STREAM_TITLES` keys. Drop the synthetic `NN-` streams.
-3. **Filter `build-next.mjs`** so lockfiles, config files, dotfiles, manifests, and public assets cannot become "ready to start" recommendations. Only product-meaningful leaves rank.
-4. **Improve owner inference**: verification_gap inherits the owner_role of the source capability when there is one in the same stream; otherwise QA. Add `co_owner` = the capability owner.
-5. **Republish** `public/wbs/*` and validate counts.
-
-### P1 — Make the network actually useful (≈1 day)
-
-6. **Seed real predecessor edges** in `backlog-dependencies.json` for the chains that actually exist in this product:
-   - Auth/RLS → exports, payment, audit
-   - Calibration → measurement → annotation → daily report → quantity-to-payment → export
-   - Offline persistence → sync → conflict UX → mobile editing parity
-   - Onboarding tour → marketing promise proof routes
-   - audit_log spec → compliance UI → RE review
-7. **Re-run CPM**, surface top-10 critical-path items on the Backlog tab header with a "why critical" tooltip.
-
-### P2 — Burn down the real product backlog (sized below)
-
-Grouped by leverage, not by stream evenness. Days are from the backlog generator; treat as order-of-magnitude.
+**Two-level structure rendered as a collapsible tree:**
 
 ```text
-Cluster A — Pilot blockers (~30–40 days)
-  - Complete RLS audit matrix + automated allow/deny tests   [BB-01::c7, high conf, 5d]
-  - Audit log table + RLS spec + trigger + RE review UI     [DLV-audit-log-spec, ~10d]
-  - Password-reset PASSWORD_RECOVERY hardening              [BB-01::c6, 2d]
-  - Resolve duplicate assign_owner_role call                [BB-01::r1, 5d]
-  - Pre-pilot launch checklist (drills + sign-off)          [DLV-internal-launch-checklist, 2d]
-  - Pilot success-criteria memo                             [DLV-pilot-success, 2d]
+Phase 1 — Foundation                    [Built]
+  01 Identity & Access
+  02 Portfolio & PM Home
+  03 Project Onboarding
+  10 Document Management
 
-Cluster B — Payment + export integrity (~25–35 days)
-  - contract_mods table + audit + variance + export effects (capability_missing in 07)
-  - Approved-quantity reconciliation proof + golden file
-  - DC-84 export formatter (NJDOT paper form)               [DLV-dc84, missing]
-  - Excel export goldens for daily report + quantity-to-payment
+Phase 2 — Field Capture                 [Built · QA in progress]
+  04 Pay Item Catalog
+  05 Field Capture
+  08 Photo Evidence
+  14 Measurement & Geometry Engine
+  15 Offline & Native Durability
+  16 Mobile Field Ergonomics
 
-Cluster C — Field durability (~30–45 days)
-  - Offline outbox: conflict-resolution rule + UX (partial today)
-  - Mobile annotation editing parity with desktop (3 missing in stream 16)
-  - GPS calibration verification fixtures (geometry tests under varied scale)
-  - Native iOS/Android device smoke matrix + store listings polish [DLV-app-store]
+Phase 3 — Office Workflow               [In Progress]
+  06 Daily Report Lifecycle
+  07 Quantity to Payment
+  09 Standard Specifications
+  17 Notifications & Presence
+  19 Onboarding & Tutorials
 
-Cluster D — Notifications + presence (~15–20 days)
-  - Migrate send-push to FCM HTTP v1 (OAuth) — currently legacy   [DLV-fcm-v1]
-  - Real-time presence on annotations (4 partial in stream 17)
-  - Notification preferences UI + per-event toggles
+Phase 4 — Scheduling & Reporting        [In Progress — MCFA focus]
+  11 Schedule Management
+  12 Project Health & Controls
+  13 Data Export & Interoperability
+  18 Compliance & Audit
 
-Cluster E — Proof for sales (~15–20 days)
-  - demo_requests table + capture form end-to-end           [DLV-demo-requests, missing]
-  - Map every public claim to a demo route + Playwright proof (8 promises)
-  - Onboarding tour completion path + inspector/PM scripts  [DLV-onboarding-scripts]
-  - Pitch leave-behind PDF + ROI calculator                 [DLV-pitch-pdf, DLV-roi]
-
-Cluster F — WBS process hygiene (~5 days, ongoing)
-  - Every new capability ships with AC + verification recipe in same PR
-  - CI fails on capability rows with no AC + no recipe
-  - Weekly delta artifact (entries added/closed, days remaining, CP shift)
+Phase 5 — Go-to-Market                  [Planned]
+  20 Sales & Pitch
 ```
 
-Total realistic effort to **pilot-ready**: roughly **Clusters A + B + Cluster E lite ≈ 60–75 engineer-days**. To **v1 feature-complete**: roughly **150–180 engineer-days** (less than the 561 raw total because the verification debt collapses once recipes are written alongside fixes).
+**Per stream, the row shows:**
+- Stream code + name
+- Status pill: `Built` / `In Progress` / `Needs QA` / `Planned` (translated from the source-type jargon — see Rollup section)
+- One-sentence plain-English deliverable (curated, not auto-extracted)
+- Click-to-expand: shows the existing 2–4 acceptance criteria from `docs/streams/NN-*.md`, rewritten as user outcomes ("Inspector can mark a pay item complete offline and it syncs when reconnected") instead of file paths
 
-## 5. What I need you to decide
+**Phase header rows** show: count of streams Built / In Progress / Planned, and a date range from `schedule.json`.
 
-I won't size or schedule further without your call on these:
+No 22-stream flat list. No `capability_partial` / `verification_gap` / `placeholder_per_leaf` language anywhere on the page.
 
-1. **Pilot vs feature-complete.** Are we targeting a named NJTA contract for first paid use (drives Cluster A+B+E lite), or holding for v1 (everything)?
-2. **Is there a real QA engineer?** If not, "QA Engineer" in the backlog collapses back into the build engineer and the schedule shape changes.
-3. **Audit scope.** "Audit log" can mean *every mutation on every project table* (heavy) or *only the RE-approval and quantity-change events* (light). The spec deliverable is currently `missing` — your call sets the size of Cluster A.
-4. **Marketing claim policy.** Do unfulfilled landing-page claims get proof routes built, or removed from the landing page? "Walk the site. Measure automatically." in particular implies a GPS-as-you-walk demo that does not exist in the demo route today.
+---
 
-## 6. Technical notes (for the engineer who picks this up)
+## Section C — "Baseline, actuals, forecast" (the schedule)
 
-- `src/pages/Wbs.tsx` crash: React error #310 means a hook is being called conditionally. Likely the Backlog tab introduced a `useState`/`useMemo` after an early `if (!data) return ...`. Move all hooks to the top.
-- Stream-mapping fix in `scripts/wbs/build-build-backlog.mjs`: `entryFromVerificationGap` currently does `\`${activityId.slice(0, 2)}-\``. Change to look up the real stream key by `01` → `01-identity-and-access` using `Object.keys(caps.streams)`.
-- `build-next.mjs` ranker filter: exclude any `primary_leaf` whose path matches `/^(?:\.|public\/|.*\.lock$|.*config\..*|package(?:-lock)?\.json$|index\.html$|.*\.svg$|.*\.ico$|.*\.webmanifest$)/`.
-- Owner inference: when `entryFromVerificationGap` runs, look up the capability in the same stream sharing tokens with the activity ID and inherit its `owner_role`.
-- Dependency seeding: add edges in `backlog-dependencies.json` using existing BB-IDs (e.g. `"BB-07-quantity-to-payment::c?": ["BB-01-identity-and-access::c7"]`). The CPM step already handles cycles and back-edge dropping.
+Purpose: prove you can read and produce a real P6-shaped schedule, which is exactly what MCFA evaluates.
 
-If you approve, I'll implement P0 + P1 in build mode in a single pass and come back with the seeded dependency graph and the cleaned-up `/wbs` board before we touch any actual product code.
+**Layout: a single Gantt-style chart, 5 rows (one per phase) + 7 milestone diamonds.**
+
+For each phase row, draw three bars stacked thin:
+- **Baseline** (gray, planned start → planned finish from `schedule.json`)
+- **Actual** (solid colored, from `wbs-dev.activities.json` — sum of "implemented" leaves' first-commit dates to today)
+- **Forecast** (outlined, today → projected finish from `schedule.json` remaining-days estimate)
+
+Above the chart, three numbers, big mono:
+- **Elapsed:** days since T0 (use first commit date in repo as T0)
+- **Remaining:** sum of `defaults_days.planned + partial` across non-implemented leaves
+- **Variance vs baseline:** delta in days, signed, color-coded
+
+Milestone diamonds from `schedule-config.json`: M0–M6. Each diamond labeled with its name (already plain English: "Foundation verified", "Field capture pilot-ready", etc.). Tooltip on hover shows the gate condition translated to plain English.
+
+Below the chart, one small note: "Dates are forecasts based on remaining scope and current build velocity. T0 = first commit. Updated automatically from `.lovable/wbs/schedule.json`."
+
+**No DCMA panel, no CPM display, no float columns.** Those exist in the app at `/p6-xml` for anyone who wants to see them; the pitch doesn't need them.
+
+---
+
+## Section D — "What the finished app does" (role walkthrough)
+
+Purpose: the imagined NJTA project demo, without leaving the page.
+
+5 acts, presented as a horizontal stepper. Each act = one card with: role badge, 1-sentence scenario, 1 screenshot (static PNG of the actual app), 1-sentence outcome.
+
+| Act | Role | Scenario | Screenshot | Outcome |
+|---|---|---|---|---|
+| 1 | PM (you) | Set up NJTA Contract 104-0001, import the 240-page plan set and contractor's P6 baseline | `/dashboard` + `/p6-xml` import view | Project is live; pay item catalog and schedule are linked |
+| 2 | Inspector (field) | Walks Span 1, measures deck demo on tablet, takes 4 geotagged photos, all offline | `/projects/:id` mobile view + measurement overlay | Daily report drafted offline, queued for sync |
+| 3 | Inspector | Connects to wifi at the trailer; report syncs and lands in RE's queue | Sync panel + re-review queue | Quantities are now in the system, audit-stamped |
+| 4 | RE | Opens the re-review queue, approves 6 measurements, rejects 1 with comment | `/re-review` | Approved quantities flow to `v_approved_pay_item_quantities` |
+| 5 | PM (you) | Hits "Update P6" → app reads approved quantities, writes `ActualUnits` + `%Complete` + `DataDate` into the contractor's PMXML → downloads | `/p6-xml` apply + diff table | A1020 deck demo goes 0% → 47%, A1030 rebar 0% → 14%, with full inspector/date provenance |
+
+The Act 5 card is the **money shot**. Include a small static "before/after" table inside that card so MCFA sees the actual P6 fields that change.
+
+Below the stepper: one line — "Every step above runs today. Try it at /demo for the interactive version."
+
+---
+
+## Section E — Nav trim (small but necessary)
+
+Remove from public/landing nav (keep them reachable when authenticated):
+- `/wbs`
+- `/fajar`
+- `/project-controls`
+- `/p6-xml-demo` (consolidated into `/p6-xml`)
+
+Public nav becomes: **Home · Demo · MCFA · Sign in**
+
+`Landing.tsx` hero subhead changes to the same one-sentence pitch as `/mcfa` Section D Act 5: "Inspector measurements update the contractor's P6 schedule, with a full audit trail."
+
+---
+
+## Technical implementation
+
+**New files (3):**
+
+1. `src/pages/mcfa-pitch/lib/wbs-rollup.ts`
+   - Exports `PHASES`: array of 5 phase objects, each with `id`, `name`, `streamKeys[]`, `oneLineDeliverable`.
+   - Exports `translateVerdict(sourceType: string): 'Built' | 'In Progress' | 'Needs QA' | 'Planned'` — maps `implemented` → Built, `capability_partial` → In Progress, `verification_gap` → Needs QA, `planned`/`placeholder` → Planned.
+   - Exports `getPhaseFor(streamKey)`, `getStreamsForPhase(phaseId)`.
+   - Pure data + functions, ~120 lines, no React.
+
+2. `src/pages/mcfa-pitch/PhaseSchedule.tsx`
+   - Reads `/public/wbs/schedule.json` via fetch on mount (already published there by `scripts/wbs/publish-public.mjs`).
+   - Reads `/public/wbs/build-backlog.json` for actuals (count of implemented leaves per phase).
+   - Renders the Gantt with SVG (no chart library; ~80 lines of SVG). 5 rows × 3 bars + milestone diamonds.
+
+3. `src/pages/mcfa-pitch/Roleplay.tsx`
+   - Static array of 5 acts.
+   - Renders horizontal stepper on desktop, vertical accordion on mobile (< 768px).
+   - Screenshots: reuse existing `/public` assets if present, otherwise placeholder `bg-muted` cards with role badge — list which screenshots to capture in a follow-up so this lands without blocking on assets.
+
+**Modified files (2):**
+
+4. `src/pages/McfaPitch.tsx` — full rewrite (~400 lines → ~250 lines).
+   - Drops pricing calculator, proposal data block, "AI-powered" copy.
+   - 4 sections in order: A (stats) → B (WBS tree) → C (`<PhaseSchedule />`) → D (`<Roleplay />`).
+   - Single CTA at bottom: "Try the live demo" → `/demo`. Secondary: "See the P6 round-trip" → `/p6-xml`.
+
+5. `src/App.tsx` — keep all existing routes (so deep links still work), but `Landing.tsx` nav links drop the four routes listed in Section E.
+
+**Not modified:**
+- No changes to `docs/streams/*.md` (22 files stay as the source of truth for developers).
+- No changes to `.lovable/wbs/*.json` or any `scripts/wbs/*.mjs` (the pipeline that produces them is fine — the problem was never the data, it was the rendering).
+- No DB migrations.
+- No edge functions.
+- No changes to `/p6-xml`, `/demo`, `/wbs` themselves.
+
+---
+
+## What this gives MCFA, concretely
+
+1. **Page A** answers "is this real?" — yes, with numbers.
+2. **Page B** answers "do you know how to structure a project?" — yes, 5 phases, deliverables in English, status honest.
+3. **Page C** answers "can you produce a schedule?" — yes, baseline + actual + forecast + milestones, the three columns every scheduler looks for first.
+4. **Page D** answers "what does it do?" — 5-act story ending in the exact P6 integration MCFA cares about.
+5. **Section E** removes the noise so MCFA never lands on `/wbs` raw.
+
+---
+
+## What this deliberately is not
+
+- Not a redesign of `/wbs` (that page is for internal self-management; MCFA never sees it).
+- Not a new scheduling system or DCMA layer.
+- Not new copy for `Landing.tsx` beyond the hero subhead and nav trim.
+- Not a Fajar update; `/fajar` stays exactly as-is, just unlinked from public nav.
+- Not a "lie-tax" cleanup of marketing promises — Section A only claims what's verifiable.
+
+---
+
+## Open questions before build
+
+1. **Screenshots for Section D Acts 1–5**: do you want me to capture them from the running app (I'd take 5 PNGs at 1440×900 and 390×844), use existing assets you already have, or ship with labeled placeholder cards in v1 and swap them in v2?
+2. **T0 for the schedule**: first commit date (auto), or a specific date you want to anchor to (e.g., the day you signed the MCFA NDA)?
+3. **The one-sentence deliverable per stream** for Section B — want me to draft all 22 and you edit, or do you want to write them yourself before I build?
