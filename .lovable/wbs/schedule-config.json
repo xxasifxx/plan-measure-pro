@@ -1,0 +1,56 @@
+{
+  "_doc": "Hand-curated inputs for build-schedule.mjs. Edit target_date (YYYY-MM-DD) per milestone and add per-capability overrides as the PM nails dates down. The script never overwrites this file.",
+  "T0": null,
+  "defaults_days": {
+    "implemented": 0,
+    "partial": 2,
+    "planned": 5,
+    "placeholder_per_leaf": 3,
+    "risk_capability": 4
+  },
+  "capability_overrides": {},
+  "milestones": [
+    {
+      "id": "M0",
+      "name": "Baseline schedule locked",
+      "gate": { "kind": "deliverable", "id": "DLV-baseline-schedule-lock", "verdict": "implemented" },
+      "target_date": null
+    },
+    {
+      "id": "M1",
+      "name": "Foundation verified",
+      "gate": { "kind": "streams_min_verdict", "streams": ["01-identity-and-access", "02-portfolio-and-pm-home", "03-project-onboarding"], "min_verdict": "partial" },
+      "target_date": null
+    },
+    {
+      "id": "M2",
+      "name": "Field capture pilot-ready",
+      "gate": { "kind": "streams_criteria_implemented", "streams": ["04-pay-item-catalog", "05-field-capture", "06-daily-report-lifecycle", "14-measurement-and-geometry-engine"] },
+      "target_date": null
+    },
+    {
+      "id": "M3",
+      "name": "Audit & compliance gate",
+      "gate": { "kind": "streams_placeholders_cleared", "streams": ["12-project-health-and-controls", "18-compliance-and-audit"] },
+      "target_date": null
+    },
+    {
+      "id": "M4",
+      "name": "MVP feature-complete",
+      "gate": { "kind": "all_criteria_implemented" },
+      "target_date": null
+    },
+    {
+      "id": "M5",
+      "name": "GA — all verify-e2e passing",
+      "gate": { "kind": "all_verify_shipped" },
+      "target_date": null
+    },
+    {
+      "id": "M6",
+      "name": "Sales-ready",
+      "gate": { "kind": "streams_deliverables_implemented", "streams": ["20-sales-and-pitch"] },
+      "target_date": null
+    }
+  ]
+}
