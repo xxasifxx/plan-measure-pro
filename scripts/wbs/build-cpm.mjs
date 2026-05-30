@@ -201,13 +201,6 @@ const stats = {
   max_layer: maxLayer,
   critical_node_count: [...nodes.values()].filter((n) => n.critical).length,
 };
-  cycle_edges_dropped: cycleEdges.size,
-  unconnected_nodes: [...nodes.values()].filter((n) => !n.predecessors.length && !n.successors.length).length,
-  project_duration_days: projectDuration,
-  critical_path_length: criticalIds.length,
-  max_layer: maxLayer,
-  critical_node_count: [...nodes.values()].filter((n) => n.critical).length,
-};
 
 const out = {
   generatedAt: new Date().toISOString(),
