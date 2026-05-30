@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ChevronDown, ChevronRight, FileCode, FileWarning, Package, Folder } from 'lucide-react';
+import { ChevronDown, ChevronRight, FileCode, FileWarning, Package, Folder, Calendar, GitBranch } from 'lucide-react';
 
 interface Parent {
   id: string;
@@ -38,6 +38,37 @@ interface ActivitySlim {
   origin: string;
   lifecycle: string;
 }
+interface ScheduleCap {
+  id: string; title: string; kind: string; verdict: string;
+  files_count: number; needs_count: number;
+  actual_start: string | null; last_touch: string | null;
+  touches: number; loc: number;
+  remaining_days: number; forecast_finish: string | null;
+  verify_done: number; verify_total: number;
+  suspicious_recency?: boolean;
+}
+interface ScheduleStream {
+  stream_key: string; title: string;
+  actual_start: string | null; last_touch: string | null;
+  touches: number; loc: number;
+  remaining_days: number; forecast_finish: string | null;
+  capability_count: number;
+  capabilities: ScheduleCap[];
+}
+interface Milestone {
+  id: string; name: string; gate: unknown;
+  target_date: string | null; forecast_date: string | null; met: boolean;
+}
+interface Schedule {
+  generatedAt: string; T0: string;
+  totals: {
+    capabilities: number; implemented: number; partial: number; planned: number;
+    total_remaining_days: number; total_touches: number; total_loc: number;
+    actual_start: string | null; last_touch: string | null; forecast_finish: string | null;
+  };
+  milestones: Milestone[];
+  streams: ScheduleStream[];
+}
 
 const VERDICT_COLOR: Record<string, string> = {
   implemented: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
@@ -45,6 +76,13 @@ const VERDICT_COLOR: Record<string, string> = {
   missing: 'bg-rose-500/15 text-rose-300 border-rose-500/30',
   planned: 'bg-sky-500/15 text-sky-300 border-sky-500/30',
   unknown: 'bg-slate-500/15 text-slate-300 border-slate-500/30',
+};
+const VERDICT_BAR: Record<string, string> = {
+  implemented: 'bg-emerald-500',
+  partial: 'bg-amber-500',
+  missing: 'bg-rose-500',
+  planned: 'bg-sky-500',
+  unknown: 'bg-slate-600',
 };
 const LIFECYCLE_COLOR: Record<string, string> = {
   shipped: 'bg-emerald-500',
