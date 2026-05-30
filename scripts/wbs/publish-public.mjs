@@ -61,5 +61,8 @@ fs.writeFileSync(path.join(out, 'next.json'), JSON.stringify(next));
 if (schedule) {
   fs.writeFileSync(path.join(out, 'schedule.json'), JSON.stringify(schedule));
 }
+if (backlog) {
+  fs.writeFileSync(path.join(out, 'build-backlog.json'), JSON.stringify(backlog));
+}
 
-console.log(`[publish] public/wbs/  wbs(${slimLeaves.length} leaves) activities(${slimActs.length}) capabilities next${schedule ? ' schedule' : ''}`);
+console.log(`[publish] public/wbs/  wbs(${slimLeaves.length} leaves) activities(${slimActs.length}) capabilities next${schedule ? ' schedule' : ''}${backlog ? ` backlog(${backlog.entries.length})` : ''}`);
