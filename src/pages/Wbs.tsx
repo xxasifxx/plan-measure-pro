@@ -97,6 +97,25 @@ interface Backlog {
   };
   entries: BacklogEntry[];
 }
+interface NetworkNode {
+  id: string; stream: string; title: string; duration: number;
+  confidence: 'low' | 'medium' | 'high'; owner_role: string; source_type: string;
+  predecessors: string[]; successors: string[];
+  layer: number; ES: number; EF: number; LS: number; LF: number;
+  slack: number; critical: boolean;
+}
+interface Network {
+  generatedAt: string;
+  stats: {
+    node_count: number; edge_count: number; declared_edges: number; inferred_edges: number;
+    cycle_edges_dropped: number; unconnected_nodes: number;
+    project_duration_days: number; critical_path_length: number;
+    max_layer: number; critical_node_count: number;
+  };
+  issues: Array<Record<string, unknown>>;
+  critical_path: string[];
+  nodes: NetworkNode[];
+}
 
 const VERDICT_COLOR: Record<string, string> = {
   implemented: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
