@@ -1,0 +1,4 @@
+{
+  "_doc": "Declare predecessors for backlog items. Edit this file by hand. Each key is a backlog id (BB-...); value is an array of predecessor backlog ids that must finish before it can start. The CPM build will compute ES/EF/LS/LF, slack, and the critical path from this graph plus per-item estimate_days.",
+  "edges": {}
+}
