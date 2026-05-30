@@ -1,0 +1,125 @@
+{
+  "_doc": "Non-file work products that belong to the WBS but live outside the repo. Each entry hangs off a stream (default 00-program-management) and shows up as a synthetic leaf parented to a synthetic capability `deliverables` under that stream. Hand-curated; ~15 entries max so the list stays meaningful.",
+  "deliverables": [
+    {
+      "id": "DLV-baseline-schedule-lock",
+      "stream_key": "00-program-management",
+      "name": "Lock baseline project schedule",
+      "verdict": "planned",
+      "evidence": "Baseline must be agreed and frozen in /p6-xml before the team can earn value against it.",
+      "duration_days": 5
+    },
+    {
+      "id": "DLV-baseline-p6-export",
+      "stream_key": "00-program-management",
+      "name": "Publish baseline P6 XML",
+      "verdict": "partial",
+      "evidence": "Emitter exists (scripts/wbs/emit-p6-xml.mjs); baseline snapshot not yet captured to public/exports/.",
+      "duration_days": 1
+    },
+    {
+      "id": "DLV-wbs-governance-doc",
+      "stream_key": "00-program-management",
+      "name": "WBS change-control / governance memo",
+      "verdict": "planned",
+      "evidence": "Single page describing who can move a leaf between streams and when verification flips.",
+      "duration_days": 2
+    },
+    {
+      "id": "DLV-internal-launch-checklist",
+      "stream_key": "00-program-management",
+      "name": "Internal launch checklist (pre-pilot)",
+      "verdict": "planned",
+      "evidence": "Smoke tests + role drill + offline drill + audit-log review, before first paid project.",
+      "duration_days": 2
+    },
+    {
+      "id": "DLV-onboarding-script",
+      "stream_key": "19-onboarding-and-tutorials",
+      "name": "Inspector onboarding script (5 min)",
+      "verdict": "planned",
+      "evidence": "Voiced walkthrough recorded against /demo route, dropped into Settings > Help.",
+      "duration_days": 3
+    },
+    {
+      "id": "DLV-pm-onboarding-script",
+      "stream_key": "19-onboarding-and-tutorials",
+      "name": "PM onboarding script (10 min)",
+      "verdict": "planned",
+      "evidence": "Project setup + pay item import + assigning inspectors + RE workflow.",
+      "duration_days": 3
+    },
+    {
+      "id": "DLV-pitch-leave-behind",
+      "stream_key": "20-sales-and-pitch",
+      "name": "Pitch leave-behind PDF",
+      "verdict": "partial",
+      "evidence": "/mcfa and /fajar exist as live decks; PDF export for hand-off not produced.",
+      "duration_days": 2
+    },
+    {
+      "id": "DLV-roi-calculator",
+      "stream_key": "20-sales-and-pitch",
+      "name": "ROI calculator (hours saved vs cost)",
+      "verdict": "planned",
+      "evidence": "Spreadsheet or page; landing page references ROI but no number engine exists.",
+      "duration_days": 2
+    },
+    {
+      "id": "DLV-audit-log-spec",
+      "stream_key": "18-compliance-and-audit",
+      "name": "Audit log table + RLS spec",
+      "verdict": "missing",
+      "evidence": "No audit_log table; spec must define what events are recorded and who can read.",
+      "duration_days": 3
+    },
+    {
+      "id": "DLV-data-retention-policy",
+      "stream_key": "18-compliance-and-audit",
+      "name": "Data retention + deletion policy",
+      "verdict": "planned",
+      "evidence": "Customer contracts will require this before first paid project.",
+      "duration_days": 2
+    },
+    {
+      "id": "DLV-store-listing-final",
+      "stream_key": "15-offline-and-native-durability",
+      "name": "App store listing (iOS + Android)",
+      "verdict": "partial",
+      "evidence": "docs/STORE_LISTING.md drafted; screenshots + icons + final copy not produced.",
+      "duration_days": 4
+    },
+    {
+      "id": "DLV-dc-84-formatter",
+      "stream_key": "13-data-export-and-interoperability",
+      "name": "DC-84 export formatter (NJDOT paper form)",
+      "verdict": "missing",
+      "evidence": "Replacement promise on landing page; no formatter exists in src/lib/export-utils.ts.",
+      "duration_days": 5
+    },
+    {
+      "id": "DLV-fcm-v1-oauth",
+      "stream_key": "17-notifications-and-presence",
+      "name": "Migrate send-push to FCM v1 (OAuth)",
+      "verdict": "missing",
+      "evidence": "supabase/functions/send-push uses legacy server key; Google deprecates 2026.",
+      "duration_days": 3
+    },
+    {
+      "id": "DLV-demo-requests-migration",
+      "stream_key": "20-sales-and-pitch",
+      "name": "demo_requests table + capture form",
+      "verdict": "missing",
+      "evidence": "Landing CTA points at unimplemented table; form submit currently no-ops.",
+      "duration_days": 2
+    },
+    {
+      "id": "DLV-pilot-success-criteria",
+      "stream_key": "00-program-management",
+      "name": "Pilot success criteria + sign-off memo",
+      "verdict": "planned",
+      "evidence": "Defines what 'pilot done' means with first NJTA project owner.",
+      "duration_days": 2
+    }
+  ]
+}

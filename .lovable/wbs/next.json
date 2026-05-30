@@ -1,785 +1,418 @@
 {
-  "generatedAt": "2026-05-29T19:18:51.479Z",
+  "generatedAt": "2026-05-30T14:36:24.058Z",
   "totals": {
-    "ready_to_start": 422,
-    "dormant_but_needed": 11,
-    "blocked_by_decision": 206
+    "ready_to_start": 485,
+    "dormant_but_needed": 5,
+    "blocked_by_decision": 0
   },
   "ready_to_start": [
     {
-      "activity_id": "ACT-0470",
-      "name": "[verify] 02:docs:new-project-dialog",
-      "primary_leaf": "LF-0011",
+      "activity_id": "ACT-0006",
+      "name": "Verify e2e: .gitignore",
+      "primary_leaf": "LF-0002",
       "origin": "future-verification-gap",
-      "downstream_count": 4
+      "downstream_count": 664
     },
     {
-      "activity_id": "ACT-0457",
-      "name": "[verify] 01:docs:organic-signup-admin-role",
-      "primary_leaf": "LF-0001",
+      "activity_id": "ACT-0078",
+      "name": "Verify e2e: bun.lockb",
+      "primary_leaf": "LF-0026",
       "origin": "future-verification-gap",
-      "downstream_count": 1
+      "downstream_count": 662
     },
     {
-      "activity_id": "ACT-0243",
-      "name": "[stub] db: profiles",
-      "primary_leaf": "LF-0006",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0084",
+      "name": "Verify e2e: components.json",
+      "primary_leaf": "LF-0028",
+      "origin": "future-verification-gap",
+      "downstream_count": 660
     },
     {
-      "activity_id": "ACT-0244",
-      "name": "[stub] db: user_roles",
-      "primary_leaf": "LF-0007",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0369",
+      "name": "Verify e2e: eslint.config.js",
+      "primary_leaf": "LF-0123",
+      "origin": "future-verification-gap",
+      "downstream_count": 658
     },
     {
-      "activity_id": "ACT-0245",
-      "name": "[stub] db: invitations",
-      "primary_leaf": "LF-0008",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0372",
+      "name": "Verify e2e: index.html",
+      "primary_leaf": "LF-0124",
+      "origin": "future-verification-gap",
+      "downstream_count": 656
     },
     {
-      "activity_id": "ACT-0246",
-      "name": "[stub] RLS posture",
-      "primary_leaf": "LF-0010",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0375",
+      "name": "Verify e2e: package-lock.json",
+      "primary_leaf": "LF-0125",
+      "origin": "future-verification-gap",
+      "downstream_count": 654
     },
     {
-      "activity_id": "ACT-0247",
-      "name": "[stub] approved-quantities.ts:loadPendingReviewCounts",
-      "primary_leaf": "LF-0016",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0378",
+      "name": "Verify e2e: package.json",
+      "primary_leaf": "LF-0126",
+      "origin": "future-verification-gap",
+      "downstream_count": 652
     },
     {
-      "activity_id": "ACT-0248",
-      "name": "[stub] db: projects",
-      "primary_leaf": "LF-0017",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0381",
+      "name": "Verify e2e: postcss.config.js",
+      "primary_leaf": "LF-0127",
+      "origin": "future-verification-gap",
+      "downstream_count": 650
     },
     {
-      "activity_id": "ACT-0249",
-      "name": "[stub] db: project_members",
-      "primary_leaf": "LF-0018",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0408",
+      "name": "Verify e2e: favicon.ico",
+      "primary_leaf": "LF-0136",
+      "origin": "future-verification-gap",
+      "downstream_count": 648
     },
     {
-      "activity_id": "ACT-0250",
-      "name": "[stub] db: annotations",
-      "primary_leaf": "LF-0019",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0417",
+      "name": "Verify e2e: placeholder.svg",
+      "primary_leaf": "LF-0139",
+      "origin": "future-verification-gap",
+      "downstream_count": 646
     },
     {
-      "activity_id": "ACT-0251",
-      "name": "[stub] db: projects.specs_storage_path",
-      "primary_leaf": "LF-0021",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0432",
+      "name": "Verify e2e: README.md",
+      "primary_leaf": "LF-0144",
+      "origin": "future-verification-gap",
+      "downstream_count": 644
     },
     {
-      "activity_id": "ACT-0252",
-      "name": "[stub] Pay-item import",
-      "primary_leaf": "LF-0024",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0567",
+      "name": "Verify e2e: App.css",
+      "primary_leaf": "LF-0189",
+      "origin": "future-verification-gap",
+      "downstream_count": 642
     },
     {
-      "activity_id": "ACT-0253",
-      "name": "[stub] db: pay_items",
-      "primary_leaf": "LF-0029",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0633",
+      "name": "Verify e2e: NavLink.tsx",
+      "primary_leaf": "LF-0211",
+      "origin": "future-verification-gap",
+      "downstream_count": 640
     },
     {
-      "activity_id": "ACT-0254",
-      "name": "[stub] Contract quantity denominator",
-      "primary_leaf": "LF-0033",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0705",
+      "name": "Verify e2e: accordion.tsx",
+      "primary_leaf": "LF-0235",
+      "origin": "future-verification-gap",
+      "downstream_count": 638
     },
     {
-      "activity_id": "ACT-0255",
-      "name": "[stub] Contract modifications",
-      "primary_leaf": "LF-0034",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0708",
+      "name": "Verify e2e: alert-dialog.tsx",
+      "primary_leaf": "LF-0236",
+      "origin": "future-verification-gap",
+      "downstream_count": 636
     },
     {
-      "activity_id": "ACT-0256",
-      "name": "[stub] db: annotations",
-      "primary_leaf": "LF-0046",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0711",
+      "name": "Verify e2e: alert.tsx",
+      "primary_leaf": "LF-0237",
+      "origin": "future-verification-gap",
+      "downstream_count": 634
     },
     {
-      "activity_id": "ACT-0257",
-      "name": "[stub] db: calibrations",
-      "primary_leaf": "LF-0047",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0714",
+      "name": "Verify e2e: aspect-ratio.tsx",
+      "primary_leaf": "LF-0238",
+      "origin": "future-verification-gap",
+      "downstream_count": 632
     },
     {
-      "activity_id": "ACT-0258",
-      "name": "[stub] db: daily_reports",
-      "primary_leaf": "LF-0055",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0717",
+      "name": "Verify e2e: avatar.tsx",
+      "primary_leaf": "LF-0239",
+      "origin": "future-verification-gap",
+      "downstream_count": 630
     },
     {
-      "activity_id": "ACT-0259",
-      "name": "[stub] db: daily_report_comments",
-      "primary_leaf": "LF-0056",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0720",
+      "name": "Verify e2e: badge.tsx",
+      "primary_leaf": "LF-0240",
+      "origin": "future-verification-gap",
+      "downstream_count": 628
     },
     {
-      "activity_id": "ACT-0260",
-      "name": "[stub] db: daily_report_snapshots",
-      "primary_leaf": "LF-0057",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0723",
+      "name": "Verify e2e: breadcrumb.tsx",
+      "primary_leaf": "LF-0241",
+      "origin": "future-verification-gap",
+      "downstream_count": 626
     },
     {
-      "activity_id": "ACT-0261",
-      "name": "[stub] db: v_approved_pay_item_quantities",
-      "primary_leaf": "LF-0058",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0726",
+      "name": "Verify e2e: button.tsx",
+      "primary_leaf": "LF-0242",
+      "origin": "future-verification-gap",
+      "downstream_count": 624
     },
     {
-      "activity_id": "ACT-0262",
-      "name": "[stub] db: v_approved_pay_item_quantities",
-      "primary_leaf": "LF-0063",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0729",
+      "name": "Verify e2e: calendar.tsx",
+      "primary_leaf": "LF-0243",
+      "origin": "future-verification-gap",
+      "downstream_count": 622
     },
     {
-      "activity_id": "ACT-0263",
-      "name": "[stub] db: annotation_photos",
-      "primary_leaf": "LF-0067",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0732",
+      "name": "Verify e2e: card.tsx",
+      "primary_leaf": "LF-0244",
+      "origin": "future-verification-gap",
+      "downstream_count": 620
     },
     {
-      "activity_id": "ACT-0264",
-      "name": "[stub] db: projects.specs_storage_path",
-      "primary_leaf": "LF-0073",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0735",
+      "name": "Verify e2e: carousel.tsx",
+      "primary_leaf": "LF-0245",
+      "origin": "future-verification-gap",
+      "downstream_count": 618
     },
     {
-      "activity_id": "ACT-0265",
-      "name": "[stub] db: document_folders",
-      "primary_leaf": "LF-0076",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0738",
+      "name": "Verify e2e: chart.tsx",
+      "primary_leaf": "LF-0246",
+      "origin": "future-verification-gap",
+      "downstream_count": 616
     },
     {
-      "activity_id": "ACT-0266",
-      "name": "[stub] db: documents",
-      "primary_leaf": "LF-0077",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0741",
+      "name": "Verify e2e: checkbox.tsx",
+      "primary_leaf": "LF-0247",
+      "origin": "future-verification-gap",
+      "downstream_count": 614
     },
     {
-      "activity_id": "ACT-0267",
-      "name": "[stub] dcma",
-      "primary_leaf": "LF-0086",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0744",
+      "name": "Verify e2e: collapsible.tsx",
+      "primary_leaf": "LF-0248",
+      "origin": "future-verification-gap",
+      "downstream_count": 612
     },
     {
-      "activity_id": "ACT-0268",
-      "name": "[stub] tia",
-      "primary_leaf": "LF-0087",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0747",
+      "name": "Verify e2e: command.tsx",
+      "primary_leaf": "LF-0249",
+      "origin": "future-verification-gap",
+      "downstream_count": 610
     },
     {
-      "activity_id": "ACT-0269",
-      "name": "[stub] aace",
-      "primary_leaf": "LF-0088",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0750",
+      "name": "Verify e2e: context-menu.tsx",
+      "primary_leaf": "LF-0250",
+      "origin": "future-verification-gap",
+      "downstream_count": 608
     },
     {
-      "activity_id": "ACT-0270",
-      "name": "[stub] feedback",
-      "primary_leaf": "LF-0089",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0753",
+      "name": "Verify e2e: dialog.tsx",
+      "primary_leaf": "LF-0251",
+      "origin": "future-verification-gap",
+      "downstream_count": 606
     },
     {
-      "activity_id": "ACT-0271",
-      "name": "[stub] progress",
-      "primary_leaf": "LF-0090",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0756",
+      "name": "Verify e2e: drawer.tsx",
+      "primary_leaf": "LF-0252",
+      "origin": "future-verification-gap",
+      "downstream_count": 604
     },
     {
-      "activity_id": "ACT-0272",
-      "name": "[stub] chart-export",
-      "primary_leaf": "LF-0091",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0759",
+      "name": "Verify e2e: dropdown-menu.tsx",
+      "primary_leaf": "LF-0253",
+      "origin": "future-verification-gap",
+      "downstream_count": 602
     },
     {
-      "activity_id": "ACT-0273",
-      "name": "[stub] memo-export",
-      "primary_leaf": "LF-0092",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0762",
+      "name": "Verify e2e: form.tsx",
+      "primary_leaf": "LF-0254",
+      "origin": "future-verification-gap",
+      "downstream_count": 600
     },
     {
-      "activity_id": "ACT-0274",
-      "name": "[stub] DcmaPanel",
-      "primary_leaf": "LF-0097",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0765",
+      "name": "Verify e2e: hover-card.tsx",
+      "primary_leaf": "LF-0255",
+      "origin": "future-verification-gap",
+      "downstream_count": 598
     },
     {
-      "activity_id": "ACT-0275",
-      "name": "[stub] use-mobile",
-      "primary_leaf": "LF-0155",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0768",
+      "name": "Verify e2e: input-otp.tsx",
+      "primary_leaf": "LF-0256",
+      "origin": "future-verification-gap",
+      "downstream_count": 596
     },
     {
-      "activity_id": "ACT-0276",
-      "name": "[stub] Tab switching / PDF persistence",
-      "primary_leaf": "LF-0158",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0771",
+      "name": "Verify e2e: input.tsx",
+      "primary_leaf": "LF-0257",
+      "origin": "future-verification-gap",
+      "downstream_count": 594
     },
     {
-      "activity_id": "ACT-0277",
-      "name": "[stub] Active pay item chip",
-      "primary_leaf": "LF-0159",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0774",
+      "name": "Verify e2e: label.tsx",
+      "primary_leaf": "LF-0258",
+      "origin": "future-verification-gap",
+      "downstream_count": 592
     },
     {
-      "activity_id": "ACT-0278",
-      "name": "[stub] Badge counts",
-      "primary_leaf": "LF-0160",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0777",
+      "name": "Verify e2e: menubar.tsx",
+      "primary_leaf": "LF-0259",
+      "origin": "future-verification-gap",
+      "downstream_count": 590
     },
     {
-      "activity_id": "ACT-0279",
-      "name": "[stub] Zoom clamp",
-      "primary_leaf": "LF-0161",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0780",
+      "name": "Verify e2e: navigation-menu.tsx",
+      "primary_leaf": "LF-0260",
+      "origin": "future-verification-gap",
+      "downstream_count": 588
     },
     {
-      "activity_id": "ACT-0280",
-      "name": "[stub] Calibration chip tap",
-      "primary_leaf": "LF-0162",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0783",
+      "name": "Verify e2e: pagination.tsx",
+      "primary_leaf": "LF-0261",
+      "origin": "future-verification-gap",
+      "downstream_count": 586
     },
     {
-      "activity_id": "ACT-0281",
-      "name": "[stub] useProject.ts:421–448",
-      "primary_leaf": "LF-0167",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0786",
+      "name": "Verify e2e: popover.tsx",
+      "primary_leaf": "LF-0262",
+      "origin": "future-verification-gap",
+      "downstream_count": 584
     },
     {
-      "activity_id": "ACT-0282",
-      "name": "[stub] Index.tsx:795",
-      "primary_leaf": "LF-0168",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0789",
+      "name": "Verify e2e: progress.tsx",
+      "primary_leaf": "LF-0263",
+      "origin": "future-verification-gap",
+      "downstream_count": 582
     },
     {
-      "activity_id": "ACT-0283",
-      "name": "[stub] Bell + realtime subscribe",
-      "primary_leaf": "LF-0169",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0792",
+      "name": "Verify e2e: radio-group.tsx",
+      "primary_leaf": "LF-0264",
+      "origin": "future-verification-gap",
+      "downstream_count": 580
     },
     {
-      "activity_id": "ACT-0284",
-      "name": "[stub] markRead / markAllRead",
-      "primary_leaf": "LF-0170",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0795",
+      "name": "Verify e2e: resizable.tsx",
+      "primary_leaf": "LF-0265",
+      "origin": "future-verification-gap",
+      "downstream_count": 578
     },
     {
-      "activity_id": "ACT-0285",
-      "name": "[stub] Navigation on click",
-      "primary_leaf": "LF-0171",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0798",
+      "name": "Verify e2e: scroll-area.tsx",
+      "primary_leaf": "LF-0266",
+      "origin": "future-verification-gap",
+      "downstream_count": 576
     },
     {
-      "activity_id": "ACT-0286",
-      "name": "[stub] send-push edge function",
-      "primary_leaf": "LF-0172",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0801",
+      "name": "Verify e2e: select.tsx",
+      "primary_leaf": "LF-0267",
+      "origin": "future-verification-gap",
+      "downstream_count": 574
     },
     {
-      "activity_id": "ACT-0287",
-      "name": "[stub] Presence / online users",
-      "primary_leaf": "LF-0173",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0804",
+      "name": "Verify e2e: separator.tsx",
+      "primary_leaf": "LF-0268",
+      "origin": "future-verification-gap",
+      "downstream_count": 572
     },
     {
-      "activity_id": "ACT-0288",
-      "name": "[stub] DcmaPanel",
-      "primary_leaf": "LF-0175",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0807",
+      "name": "Verify e2e: sheet.tsx",
+      "primary_leaf": "LF-0269",
+      "origin": "future-verification-gap",
+      "downstream_count": 570
     },
     {
-      "activity_id": "ACT-0289",
-      "name": "[stub] dcma",
-      "primary_leaf": "LF-0176",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0810",
+      "name": "Verify e2e: sidebar.tsx",
+      "primary_leaf": "LF-0270",
+      "origin": "future-verification-gap",
+      "downstream_count": 568
     },
     {
-      "activity_id": "ACT-0290",
-      "name": "[stub] types",
-      "primary_leaf": "LF-0182",
-      "origin": "future-risk",
-      "downstream_count": 0
+      "activity_id": "ACT-0813",
+      "name": "Verify e2e: skeleton.tsx",
+      "primary_leaf": "LF-0271",
+      "origin": "future-verification-gap",
+      "downstream_count": 566
     }
   ],
   "dormant_but_needed": [
     {
-      "activity_id": "ACT-0001",
-      "name": "Update plan",
-      "primary_leaf": "LF-0212",
+      "activity_id": "ACT-0898",
+      "name": "Scaffold index.css",
+      "primary_leaf": "LF-0300",
       "lifecycle": "paused",
-      "dormancy_days": 45,
-      "downstream_count": 61,
+      "dormancy_days": 52,
+      "downstream_count": 540,
       "marketing_debt_count": 0,
       "verification_gap_count": 0,
+      "visibility": "quiet"
+    },
+    {
+      "activity_id": "ACT-0899",
+      "name": "Implement index.css",
+      "primary_leaf": "LF-0300",
+      "lifecycle": "paused",
+      "dormancy_days": 52,
+      "downstream_count": 539,
+      "marketing_debt_count": 0,
+      "verification_gap_count": 1,
       "visibility": "normal"
     },
     {
-      "activity_id": "ACT-0063",
-      "name": "Added landing page route",
-      "primary_leaf": "LF-0212",
+      "activity_id": "ACT-0625",
+      "name": "Scaffold MobileToolbar.tsx",
+      "primary_leaf": "LF-0209",
       "lifecycle": "paused",
-      "dormancy_days": 48,
-      "downstream_count": 46,
+      "dormancy_days": 52,
+      "downstream_count": 4,
       "marketing_debt_count": 0,
       "verification_gap_count": 0,
+      "visibility": "quiet"
+    },
+    {
+      "activity_id": "ACT-0626",
+      "name": "Implement MobileToolbar.tsx",
+      "primary_leaf": "LF-0209",
+      "lifecycle": "paused",
+      "dormancy_days": 52,
+      "downstream_count": 3,
+      "marketing_debt_count": 0,
+      "verification_gap_count": 1,
       "visibility": "normal"
     },
     {
-      "activity_id": "ACT-0071",
-      "name": "Add team management UI and flow",
-      "primary_leaf": "LF-0212",
+      "activity_id": "ACT-1096",
+      "name": "Scaffold Demo.tsx",
+      "primary_leaf": "LF-0366",
       "lifecycle": "paused",
       "dormancy_days": 45,
-      "downstream_count": 43,
-      "marketing_debt_count": 0,
-      "verification_gap_count": 0,
-      "visibility": "normal"
-    },
-    {
-      "activity_id": "ACT-0093",
-      "name": "Work in progress",
-      "primary_leaf": "LF-0212",
-      "lifecycle": "paused",
-      "dormancy_days": 52,
-      "downstream_count": 30,
-      "marketing_debt_count": 0,
-      "verification_gap_count": 0,
-      "visibility": "quiet"
-    },
-    {
-      "activity_id": "ACT-0095",
-      "name": "Work in progress",
-      "primary_leaf": "LF-0212",
-      "lifecycle": "paused",
-      "dormancy_days": 52,
-      "downstream_count": 29,
-      "marketing_debt_count": 0,
-      "verification_gap_count": 0,
-      "visibility": "quiet"
-    },
-    {
-      "activity_id": "ACT-0096",
-      "name": "Work in progress",
-      "primary_leaf": "LF-0212",
-      "lifecycle": "paused",
-      "dormancy_days": 50,
-      "downstream_count": 28,
-      "marketing_debt_count": 0,
-      "verification_gap_count": 0,
-      "visibility": "quiet"
-    },
-    {
-      "activity_id": "ACT-0097",
-      "name": "Work in progress",
-      "primary_leaf": "LF-0212",
-      "lifecycle": "paused",
-      "dormancy_days": 47,
-      "downstream_count": 27,
-      "marketing_debt_count": 0,
-      "verification_gap_count": 0,
-      "visibility": "quiet"
-    },
-    {
-      "activity_id": "ACT-0098",
-      "name": "Work in progress",
-      "primary_leaf": "LF-0212",
-      "lifecycle": "paused",
-      "dormancy_days": 45,
-      "downstream_count": 26,
-      "marketing_debt_count": 0,
-      "verification_gap_count": 0,
-      "visibility": "quiet"
-    },
-    {
-      "activity_id": "ACT-0091",
-      "name": "Added label tool and demo route",
-      "primary_leaf": "LF-0005",
-      "lifecycle": "paused",
-      "dormancy_days": 45,
-      "downstream_count": 16,
-      "marketing_debt_count": 0,
-      "verification_gap_count": 0,
-      "visibility": "loud"
-    },
-    {
-      "activity_id": "ACT-0035",
-      "name": "Overhauled mobile UI",
-      "primary_leaf": "LF-0221",
-      "lifecycle": "paused",
-      "dormancy_days": 52,
-      "downstream_count": 1,
-      "marketing_debt_count": 0,
-      "verification_gap_count": 0,
-      "visibility": "quiet"
-    },
-    {
-      "activity_id": "ACT-0094",
-      "name": "Improve demo mobile UX",
-      "primary_leaf": "LF-0025",
-      "lifecycle": "paused",
-      "dormancy_days": 52,
-      "downstream_count": 1,
+      "downstream_count": 2,
       "marketing_debt_count": 0,
       "verification_gap_count": 0,
       "visibility": "quiet"
     }
   ],
-  "blocked_by_decision": [
-    {
-      "activity_id": "ACT-0243",
-      "name": "[stub] db: profiles",
-      "primary_leaf": "LF-0006",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0244",
-      "name": "[stub] db: user_roles",
-      "primary_leaf": "LF-0007",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0245",
-      "name": "[stub] db: invitations",
-      "primary_leaf": "LF-0008",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0246",
-      "name": "[stub] RLS posture",
-      "primary_leaf": "LF-0010",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0247",
-      "name": "[stub] approved-quantities.ts:loadPendingReviewCounts",
-      "primary_leaf": "LF-0016",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0248",
-      "name": "[stub] db: projects",
-      "primary_leaf": "LF-0017",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0249",
-      "name": "[stub] db: project_members",
-      "primary_leaf": "LF-0018",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0250",
-      "name": "[stub] db: annotations",
-      "primary_leaf": "LF-0019",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0251",
-      "name": "[stub] db: projects.specs_storage_path",
-      "primary_leaf": "LF-0021",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0252",
-      "name": "[stub] Pay-item import",
-      "primary_leaf": "LF-0024",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0253",
-      "name": "[stub] db: pay_items",
-      "primary_leaf": "LF-0029",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0254",
-      "name": "[stub] Contract quantity denominator",
-      "primary_leaf": "LF-0033",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0255",
-      "name": "[stub] Contract modifications",
-      "primary_leaf": "LF-0034",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0256",
-      "name": "[stub] db: annotations",
-      "primary_leaf": "LF-0046",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0257",
-      "name": "[stub] db: calibrations",
-      "primary_leaf": "LF-0047",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0258",
-      "name": "[stub] db: daily_reports",
-      "primary_leaf": "LF-0055",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0259",
-      "name": "[stub] db: daily_report_comments",
-      "primary_leaf": "LF-0056",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0260",
-      "name": "[stub] db: daily_report_snapshots",
-      "primary_leaf": "LF-0057",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0261",
-      "name": "[stub] db: v_approved_pay_item_quantities",
-      "primary_leaf": "LF-0058",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0262",
-      "name": "[stub] db: v_approved_pay_item_quantities",
-      "primary_leaf": "LF-0063",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0263",
-      "name": "[stub] db: annotation_photos",
-      "primary_leaf": "LF-0067",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0264",
-      "name": "[stub] db: projects.specs_storage_path",
-      "primary_leaf": "LF-0073",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0265",
-      "name": "[stub] db: document_folders",
-      "primary_leaf": "LF-0076",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0266",
-      "name": "[stub] db: documents",
-      "primary_leaf": "LF-0077",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0267",
-      "name": "[stub] dcma",
-      "primary_leaf": "LF-0086",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0268",
-      "name": "[stub] tia",
-      "primary_leaf": "LF-0087",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0269",
-      "name": "[stub] aace",
-      "primary_leaf": "LF-0088",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0270",
-      "name": "[stub] feedback",
-      "primary_leaf": "LF-0089",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0271",
-      "name": "[stub] progress",
-      "primary_leaf": "LF-0090",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0272",
-      "name": "[stub] chart-export",
-      "primary_leaf": "LF-0091",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0273",
-      "name": "[stub] memo-export",
-      "primary_leaf": "LF-0092",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0274",
-      "name": "[stub] DcmaPanel",
-      "primary_leaf": "LF-0097",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0275",
-      "name": "[stub] use-mobile",
-      "primary_leaf": "LF-0155",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0276",
-      "name": "[stub] Tab switching / PDF persistence",
-      "primary_leaf": "LF-0158",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0277",
-      "name": "[stub] Active pay item chip",
-      "primary_leaf": "LF-0159",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0278",
-      "name": "[stub] Badge counts",
-      "primary_leaf": "LF-0160",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0279",
-      "name": "[stub] Zoom clamp",
-      "primary_leaf": "LF-0161",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0280",
-      "name": "[stub] Calibration chip tap",
-      "primary_leaf": "LF-0162",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0281",
-      "name": "[stub] useProject.ts:421–448",
-      "primary_leaf": "LF-0167",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0282",
-      "name": "[stub] Index.tsx:795",
-      "primary_leaf": "LF-0168",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0283",
-      "name": "[stub] Bell + realtime subscribe",
-      "primary_leaf": "LF-0169",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0284",
-      "name": "[stub] markRead / markAllRead",
-      "primary_leaf": "LF-0170",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0285",
-      "name": "[stub] Navigation on click",
-      "primary_leaf": "LF-0171",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0286",
-      "name": "[stub] send-push edge function",
-      "primary_leaf": "LF-0172",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0287",
-      "name": "[stub] Presence / online users",
-      "primary_leaf": "LF-0173",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0288",
-      "name": "[stub] DcmaPanel",
-      "primary_leaf": "LF-0175",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0289",
-      "name": "[stub] dcma",
-      "primary_leaf": "LF-0176",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0290",
-      "name": "[stub] types",
-      "primary_leaf": "LF-0182",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0291",
-      "name": "[stub] Negative lag / M-code check",
-      "primary_leaf": "LF-0183",
-      "note": "leaf on catalog with no commit yet"
-    },
-    {
-      "activity_id": "ACT-0292",
-      "name": "[stub] Approve/reject timestamps + reviewer",
-      "primary_leaf": "LF-0184",
-      "note": "leaf on catalog with no commit yet"
-    }
-  ]
+  "blocked_by_decision": []
 }
