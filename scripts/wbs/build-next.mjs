@@ -54,6 +54,7 @@ const blocked_by_decision = [];
 
 for (const s of state) {
   const a = byId.get(s.activity_id);
+  if (!isProductLeaf(a.primary_leaf)) continue;
   if (s.lifecycle === 'planned') {
     const preds = a.predecessors || [];
     const openPreds = preds.filter((p) => {
@@ -61,10 +62,13 @@ for (const s of state) {
       return ps && ['planned', 'paused', 'dormant'].includes(ps.lifecycle);
     });
     if (openPreds.length === 0) {
+      const leaf = leafById.get(a.primary_leaf);
       ready_to_start.push({
         activity_id: a.id,
         name: a.name,
         primary_leaf: a.primary_leaf,
+        leaf_path: leaf?.path,
+        stream_key: leaf?.stream_key,
         origin: a.origin,
         downstream_count: downstreamCount(a.id),
       });
@@ -73,10 +77,13 @@ for (const s of state) {
   if (['paused', 'dormant'].includes(s.lifecycle)) {
     const downstream = downstreamCount(a.id);
     if (downstream > 0 || s.health.marketing_debt_count > 0 || s.health.verification_gap_count > 0) {
+      const leaf = leafById.get(a.primary_leaf);
       dormant_but_needed.push({
         activity_id: a.id,
         name: a.name,
         primary_leaf: a.primary_leaf,
+        leaf_path: leaf?.path,
+        stream_key: leaf?.stream_key,
         lifecycle: s.lifecycle,
         dormancy_days: s.health.dormancy_days,
         downstream_count: downstream,
