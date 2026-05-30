@@ -206,6 +206,12 @@ export default function Wbs() {
     return m;
   }, [wbs]);
 
+  const networkById = useMemo(() => {
+    const m = new Map<string, NetworkNode>();
+    if (network) for (const n of network.nodes) m.set(n.id, n);
+    return m;
+  }, [network]);
+
   if (!wbs || !acts) {
     return <div className="min-h-screen bg-slate-950 text-slate-300 p-8 font-mono text-sm">Loading WBS…</div>;
   }
@@ -526,11 +532,7 @@ export default function Wbs() {
     verification_gap: 'bg-slate-500/15 text-slate-300 border-slate-500/30',
   };
 
-  const networkById = useMemo(() => {
-    const m = new Map<string, NetworkNode>();
-    if (network) for (const n of network.nodes) m.set(n.id, n);
-    return m;
-  }, [network]);
+  // networkById is declared above the early-return to keep hook order stable.
 
   const renderBacklogDeps = (id: string) => {
     const n = networkById.get(id);

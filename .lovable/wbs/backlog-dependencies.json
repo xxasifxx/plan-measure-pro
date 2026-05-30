@@ -1,4 +1,64 @@
 {
-  "_doc": "Declare predecessors for backlog items. Edit this file by hand. Each key is a backlog id (BB-...); value is an array of predecessor backlog ids that must finish before it can start. The CPM build will compute ES/EF/LS/LF, slack, and the critical path from this graph plus per-item estimate_days.",
-  "edges": {}
+  "_doc": "Declare predecessors for backlog items. Each key is a backlog id (BB-...); value is an array of predecessor backlog ids that must finish before it can start. The CPM build computes ES/EF/LS/LF, slack, and the critical path from this graph plus per-item estimate_days. Edges using ids that no longer exist are reported in backlog-network.json.issues but do not break the build.",
+  "edges": {
+    "BB-07-quantity-to-payment::c5": ["BB-01-identity-and-access::c7", "BB-06-daily-report-lifecycle::c8"],
+    "BB-07-quantity-to-payment::c7": ["BB-01-identity-and-access::c7"],
+    "BB-07-quantity-to-payment::r1": ["BB-07-quantity-to-payment::c5"],
+    "BB-13-data-export-and-interoperability::c2": ["BB-11-schedule-management::c3"],
+    "BB-13-data-export-and-interoperability::deliverables": ["BB-07-quantity-to-payment::c5", "BB-18-compliance-and-audit::c8"],
+
+    "BB-18-compliance-and-audit::c6": ["BB-06-daily-report-lifecycle::c8"],
+    "BB-18-compliance-and-audit::c7": ["BB-01-identity-and-access::c7"],
+    "BB-18-compliance-and-audit::c8": ["BB-06-daily-report-lifecycle::c8", "BB-07-quantity-to-payment::c5"],
+    "BB-18-compliance-and-audit::deliverables": ["BB-18-compliance-and-audit::c6", "BB-18-compliance-and-audit::c7", "BB-18-compliance-and-audit::c8"],
+
+    "BB-06-daily-report-lifecycle::c8": ["BB-06-daily-report-lifecycle::r1"],
+
+    "BB-17-notifications-and-presence::c5": ["BB-17-notifications-and-presence::r1"],
+    "BB-17-notifications-and-presence::c6": ["BB-01-identity-and-access::c7"],
+    "BB-17-notifications-and-presence::c7": ["BB-17-notifications-and-presence::r1"],
+    "BB-17-notifications-and-presence::deliverables": ["BB-17-notifications-and-presence::c5"],
+
+    "BB-08-photo-evidence::c6": ["BB-15-offline-and-native-durability::c1"],
+    "BB-08-photo-evidence::c7": ["BB-08-photo-evidence::r1"],
+
+    "BB-15-offline-and-native-durability::deliverables": ["BB-15-offline-and-native-durability::c1"],
+    "BB-16-mobile-field-ergonomics::c6": ["BB-15-offline-and-native-durability::c1"],
+    "BB-16-mobile-field-ergonomics::c7": ["BB-16-mobile-field-ergonomics::c6"],
+    "BB-16-mobile-field-ergonomics::c8": ["BB-16-mobile-field-ergonomics::c6"],
+    "BB-16-mobile-field-ergonomics::r4": ["BB-16-mobile-field-ergonomics::c6"],
+
+    "BB-14-measurement-and-geometry-engine::c7": ["BB-04-pay-item-catalog::c4"],
+
+    "BB-04-pay-item-catalog::c7": ["BB-04-pay-item-catalog::c4"],
+    "BB-04-pay-item-catalog::c6": ["BB-04-pay-item-catalog::c4"],
+
+    "BB-10-document-management::c8": ["BB-01-identity-and-access::c7"],
+    "BB-10-document-management::r1": ["BB-10-document-management::c8"],
+    "BB-10-document-management::r2": ["BB-10-document-management::c8"],
+
+    "BB-11-schedule-management::r1": ["BB-11-schedule-management::c3"],
+    "BB-12-project-health-and-controls::c1": ["BB-11-schedule-management::c3", "BB-07-quantity-to-payment::c5"],
+    "BB-12-project-health-and-controls::r1": ["BB-12-project-health-and-controls::c1"],
+
+    "BB-02-portfolio-and-pm-home::c5": ["BB-01-identity-and-access::c7"],
+    "BB-02-portfolio-and-pm-home::r2": ["BB-02-portfolio-and-pm-home::c5"],
+
+    "BB-01-identity-and-access::c7": ["BB-01-identity-and-access::r1"],
+    "BB-01-identity-and-access::c6": ["BB-01-identity-and-access::r4"],
+
+    "BB-19-onboarding-and-tutorials::c4": ["BB-19-onboarding-and-tutorials::r1"],
+    "BB-19-onboarding-and-tutorials::c7": ["BB-19-onboarding-and-tutorials::r1"],
+    "BB-19-onboarding-and-tutorials::deliverables": ["BB-19-onboarding-and-tutorials::c4", "BB-19-onboarding-and-tutorials::c7"],
+
+    "BB-20-sales-and-pitch::c7": ["BB-20-sales-and-pitch::r4"],
+    "BB-20-sales-and-pitch::c8": ["BB-20-sales-and-pitch::r2"],
+    "BB-20-sales-and-pitch::deliverables": ["BB-20-sales-and-pitch::c7", "BB-19-onboarding-and-tutorials::c4"],
+
+    "BB-PROM-1": ["BB-14-measurement-and-geometry-engine::c7"],
+    "BB-PROM-2": ["BB-19-onboarding-and-tutorials::c4"],
+    "BB-PROM-4": ["BB-19-onboarding-and-tutorials::c4"],
+    "BB-PROM-5": ["BB-01-identity-and-access::c6", "BB-01-identity-and-access::c7"],
+    "BB-PROM-8": ["BB-11-schedule-management::c3", "BB-13-data-export-and-interoperability::c2"]
+  }
 }

@@ -372,11 +372,42 @@ function entryFromPromise(p) {
   };
 }
 
+// Map "01" -> "01-identity-and-access" using real capabilities streams.
+const STREAM_KEY_BY_PREFIX = (() => {
+  const m = {};
+  for (const k of Object.keys(caps.streams)) {
+    const pref = k.slice(0, 2);
+    if (!m[pref]) m[pref] = k;
+  }
+  return m;
+})();
+
+// Index capability owner_role per stream so verification gaps inherit the
+// engineer who built the thing rather than defaulting to QA.
+const CAP_OWNER_BY_STREAM = new Map();
+function pickStreamOwner(streamKey, activityId) {
+  const list = CAP_OWNER_BY_STREAM.get(streamKey) || [];
+  if (!list.length) return null;
+  const slug = activityId.toLowerCase();
+  let best = null;
+  for (const c of list) {
+    const overlap = (c.tokens || []).filter((t) => slug.includes(t)).length;
+    if (!best || overlap > best.overlap) best = { overlap, owner: c.owner };
+  }
+  return best?.owner || list[0].owner;
+}
+
 function entryFromVerificationGap(activityId, rec) {
+  const pref = activityId.slice(0, 2);
+  const streamKey = activityId.startsWith('99')
+    ? '99-cross-cutting'
+    : STREAM_KEY_BY_PREFIX[pref] || `${pref}-unmapped`;
+  const inherited = pickStreamOwner(streamKey, activityId);
+  const owner = inherited || 'QA Engineer';
   return {
     id: `BB-VER-${activityId}`,
-    stream: activityId.startsWith('99') ? '99-cross-cutting' : `${activityId.slice(0, 2)}-`,
-    stream_title: 'Verification',
+    stream: streamKey,
+    stream_title: STREAM_TITLES[streamKey] || 'Verification',
     source_id: activityId,
     source_type: 'verification_gap',
     source_verdict: 'unverified',
@@ -405,7 +436,8 @@ function entryFromVerificationGap(activityId, rec) {
     definition_of_done: 'Manifest updated; recipe committed under scripts/verify or src/test.',
     blockers: [],
     dependencies: [],
-    owner_role: 'QA Engineer',
+    owner_role: owner,
+    co_owner: inherited && inherited !== 'QA Engineer' ? 'QA Engineer' : null,
     estimate_days: 2,
     confidence: 'medium',
   };
@@ -416,6 +448,15 @@ const entries = [];
 
 for (const [streamKey, s] of Object.entries(caps.streams)) {
   for (const c of s.capabilities || []) {
+    // record owner role for every cap so verification gaps can inherit it
+    const txt = `${c.title || ''} ${c.evidence || ''}`;
+    const tmpls = pickTemplates(txt);
+    const tokens = (c.title || '')
+      .toLowerCase()
+      .split(/[^a-z0-9]+/)
+      .filter((t) => t.length >= 4);
+    if (!CAP_OWNER_BY_STREAM.has(streamKey)) CAP_OWNER_BY_STREAM.set(streamKey, []);
+    CAP_OWNER_BY_STREAM.get(streamKey).push({ owner: tmpls[0].owner_role, tokens });
     const e = entryFromCapability(streamKey, c);
     if (e) entries.push(e);
   }

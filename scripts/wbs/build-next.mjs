@@ -8,9 +8,32 @@ import { readJson, writeJson } from './util.mjs';
 const acts = readJson('.lovable/wbs/activities.json').activities;
 const rel = readJson('.lovable/wbs/relationships.json');
 const state = readJson('.lovable/wbs/state.json').states;
+const wbs = readJson('.lovable/wbs/wbs.json');
 
 const byId = new Map(acts.map((a) => [a.id, a]));
 const stateOf = new Map(state.map((s) => [s.activity_id, s]));
+const leafById = new Map(wbs.leaves.map((l) => [l.id, l]));
+
+// Filter out activities whose primary_leaf is config / lockfile / public asset /
+// generated boilerplate / shadcn ui / test infra — those are not product work
+// and pollute the "ready" list. Also skip the catch-all 00-program-management
+// stream which collects unclassified utility files.
+const NON_PRODUCT_RE =
+  /(^|\/)(\.|node_modules\/|public\/|dist\/|build\/)|(^|\/)(package(-lock)?\.json|bun\.lockb|yarn\.lock|pnpm-lock\.yaml|tsconfig.*\.json|vite\.config\.(t|j)s|tailwind\.config\.(t|j)s|postcss\.config\.(c|m)?(j|t)s|eslint\.config\.(c|m)?(j|t)s|components\.json|index\.html|README\.md|App\.css|index\.css|main\.tsx|vite-env\.d\.ts|vitest\.config\.(t|j)s)$|\.(ico|svg|png|jpg|jpeg|webp|webmanifest|lock)$|(^|\/)src\/test\//i;
+
+const SHADCN_RE = /(^|\/)src\/components\/ui\//;
+const SUPABASE_GENERATED_RE = /(^|\/)src\/integrations\/supabase\/(client|types)\.ts$/;
+
+function isProductLeaf(leafId) {
+  const leaf = leafById.get(leafId);
+  if (!leaf) return true;
+  const p = leaf.path || '';
+  if (NON_PRODUCT_RE.test(p)) return false;
+  if (SHADCN_RE.test(p)) return false;
+  if (SUPABASE_GENERATED_RE.test(p)) return false;
+  if (leaf.stream_key === '00-program-management') return false;
+  return true;
+}
 
 // Downstream BFS to count transitive successors per activity.
 const succOf = new Map();
@@ -36,6 +59,7 @@ const blocked_by_decision = [];
 
 for (const s of state) {
   const a = byId.get(s.activity_id);
+  if (!isProductLeaf(a.primary_leaf)) continue;
   if (s.lifecycle === 'planned') {
     const preds = a.predecessors || [];
     const openPreds = preds.filter((p) => {
@@ -43,10 +67,13 @@ for (const s of state) {
       return ps && ['planned', 'paused', 'dormant'].includes(ps.lifecycle);
     });
     if (openPreds.length === 0) {
+      const leaf = leafById.get(a.primary_leaf);
       ready_to_start.push({
         activity_id: a.id,
         name: a.name,
         primary_leaf: a.primary_leaf,
+        leaf_path: leaf?.path,
+        stream_key: leaf?.stream_key,
         origin: a.origin,
         downstream_count: downstreamCount(a.id),
       });
@@ -55,10 +82,13 @@ for (const s of state) {
   if (['paused', 'dormant'].includes(s.lifecycle)) {
     const downstream = downstreamCount(a.id);
     if (downstream > 0 || s.health.marketing_debt_count > 0 || s.health.verification_gap_count > 0) {
+      const leaf = leafById.get(a.primary_leaf);
       dormant_but_needed.push({
         activity_id: a.id,
         name: a.name,
         primary_leaf: a.primary_leaf,
+        leaf_path: leaf?.path,
+        stream_key: leaf?.stream_key,
         lifecycle: s.lifecycle,
         dormancy_days: s.health.dormancy_days,
         downstream_count: downstream,
