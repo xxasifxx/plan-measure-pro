@@ -10,6 +10,7 @@ const steps = [
   'scripts/wbs/build-relationships.mjs',
   'scripts/wbs/build-state.mjs',
   'scripts/wbs/build-next.mjs',
+  'scripts/wbs/build-schedule.mjs',
   'scripts/wbs/publish-public.mjs',
 ];
 

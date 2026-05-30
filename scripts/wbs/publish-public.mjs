@@ -17,6 +17,10 @@ const caps = JSON.parse(fs.readFileSync('.lovable/wbs/capabilities.json', 'utf8'
 const acts = JSON.parse(fs.readFileSync('.lovable/wbs/activities.json', 'utf8'));
 const state = JSON.parse(fs.readFileSync('.lovable/wbs/state.json', 'utf8'));
 const next = JSON.parse(fs.readFileSync('.lovable/wbs/next.json', 'utf8'));
+const schedulePath = '.lovable/wbs/schedule.json';
+const schedule = fs.existsSync(schedulePath)
+  ? JSON.parse(fs.readFileSync(schedulePath, 'utf8'))
+  : null;
 
 // Slim leaves down to fields the viewer needs
 const slimLeaves = wbs.leaves.map(l => slim(l, [
@@ -50,5 +54,8 @@ fs.writeFileSync(path.join(out, 'activities.json'), JSON.stringify({
 
 fs.writeFileSync(path.join(out, 'capabilities.json'), JSON.stringify(caps));
 fs.writeFileSync(path.join(out, 'next.json'), JSON.stringify(next));
+if (schedule) {
+  fs.writeFileSync(path.join(out, 'schedule.json'), JSON.stringify(schedule));
+}
 
-console.log(`[publish] public/wbs/  wbs(${slimLeaves.length} leaves) activities(${slimActs.length}) capabilities next`);
+console.log(`[publish] public/wbs/  wbs(${slimLeaves.length} leaves) activities(${slimActs.length}) capabilities next${schedule ? ' schedule' : ''}`);

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ChevronDown, ChevronRight, FileCode, FileWarning, Package, Folder } from 'lucide-react';
+import { ChevronDown, ChevronRight, FileCode, FileWarning, Package, Folder, Calendar, GitBranch } from 'lucide-react';
 
 interface Parent {
   id: string;
@@ -38,6 +38,37 @@ interface ActivitySlim {
   origin: string;
   lifecycle: string;
 }
+interface ScheduleCap {
+  id: string; title: string; kind: string; verdict: string;
+  files_count: number; needs_count: number;
+  actual_start: string | null; last_touch: string | null;
+  touches: number; loc: number;
+  remaining_days: number; forecast_finish: string | null;
+  verify_done: number; verify_total: number;
+  suspicious_recency?: boolean;
+}
+interface ScheduleStream {
+  stream_key: string; title: string;
+  actual_start: string | null; last_touch: string | null;
+  touches: number; loc: number;
+  remaining_days: number; forecast_finish: string | null;
+  capability_count: number;
+  capabilities: ScheduleCap[];
+}
+interface Milestone {
+  id: string; name: string; gate: unknown;
+  target_date: string | null; forecast_date: string | null; met: boolean;
+}
+interface Schedule {
+  generatedAt: string; T0: string;
+  totals: {
+    capabilities: number; implemented: number; partial: number; planned: number;
+    total_remaining_days: number; total_touches: number; total_loc: number;
+    actual_start: string | null; last_touch: string | null; forecast_finish: string | null;
+  };
+  milestones: Milestone[];
+  streams: ScheduleStream[];
+}
 
 const VERDICT_COLOR: Record<string, string> = {
   implemented: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
@@ -45,6 +76,13 @@ const VERDICT_COLOR: Record<string, string> = {
   missing: 'bg-rose-500/15 text-rose-300 border-rose-500/30',
   planned: 'bg-sky-500/15 text-sky-300 border-sky-500/30',
   unknown: 'bg-slate-500/15 text-slate-300 border-slate-500/30',
+};
+const VERDICT_BAR: Record<string, string> = {
+  implemented: 'bg-emerald-500',
+  partial: 'bg-amber-500',
+  missing: 'bg-rose-500',
+  planned: 'bg-sky-500',
+  unknown: 'bg-slate-600',
 };
 const LIFECYCLE_COLOR: Record<string, string> = {
   shipped: 'bg-emerald-500',
@@ -58,16 +96,20 @@ const LIFECYCLE_COLOR: Record<string, string> = {
 export default function Wbs() {
   const [wbs, setWbs] = useState<Wbs | null>(null);
   const [acts, setActs] = useState<ActivitySlim[] | null>(null);
+  const [schedule, setSchedule] = useState<Schedule | null>(null);
   const [open, setOpen] = useState<Set<string>>(new Set());
   const [filter, setFilter] = useState<'all' | 'gaps' | 'placeholders' | 'deliverables'>('all');
+  const [view, setView] = useState<'files' | 'schedule'>('files');
 
   useEffect(() => {
     Promise.all([
       fetch('/wbs/wbs.json').then((r) => r.json()),
       fetch('/wbs/activities.json').then((r) => r.json()),
-    ]).then(([w, a]) => {
+      fetch('/wbs/schedule.json').then((r) => r.ok ? r.json() : null).catch(() => null),
+    ]).then(([w, a, s]) => {
       setWbs(w);
       setActs(a.activities);
+      setSchedule(s);
       // open all streams by default
       setOpen(new Set(w.parents.filter((p: Parent) => p.kind === 'stream').map((p: Parent) => p.id)));
     });
@@ -239,34 +281,226 @@ export default function Wbs() {
 
   const streams = wbs.parents.filter((p) => p.kind === 'stream').sort((a, b) => a.id.localeCompare(b.id));
 
+  // ---- Schedule view helpers ----
+  const renderScheduleStrip = (s: ScheduleStream, span: { min: Date; max: Date }) => {
+    const totalMs = span.max.getTime() - span.min.getTime() || 1;
+    const pct = (d: string | null) =>
+      d ? Math.max(0, Math.min(100, ((new Date(d).getTime() - span.min.getTime()) / totalMs) * 100)) : null;
+    const startPct = pct(s.actual_start);
+    const lastPct = pct(s.last_touch);
+    const forecastPct = pct(s.forecast_finish);
+    const todayPct = pct(schedule!.T0);
+    return (
+      <div className="relative h-3 bg-slate-900 rounded overflow-hidden">
+        {startPct != null && lastPct != null && (
+          <div
+            className="absolute top-0 h-full bg-emerald-500/40 border-l border-r border-emerald-500/60"
+            style={{ left: `${startPct}%`, width: `${Math.max(0.5, lastPct - startPct)}%` }}
+            title={`worked ${s.actual_start} → ${s.last_touch}`}
+          />
+        )}
+        {todayPct != null && lastPct != null && forecastPct != null && forecastPct > lastPct && (
+          <div
+            className="absolute top-0 h-full bg-sky-500/30 border-r border-sky-500/60"
+            style={{ left: `${Math.max(lastPct, todayPct)}%`, width: `${Math.max(0.5, forecastPct - Math.max(lastPct, todayPct))}%` }}
+            title={`remaining ${s.remaining_days}d → ${s.forecast_finish}`}
+          />
+        )}
+        {todayPct != null && (
+          <div className="absolute top-0 h-full w-px bg-rose-400" style={{ left: `${todayPct}%` }} title={`today ${schedule!.T0}`} />
+        )}
+      </div>
+    );
+  };
+
+  const renderScheduleView = () => {
+    if (!schedule) {
+      return <div className="p-8 text-slate-400 text-sm">No schedule.json found. Run scripts/wbs/build-schedule.mjs.</div>;
+    }
+    const dates = [
+      schedule.totals.actual_start, schedule.totals.last_touch, schedule.totals.forecast_finish, schedule.T0,
+      ...schedule.streams.flatMap((s) => [s.actual_start, s.last_touch, s.forecast_finish]),
+    ].filter(Boolean) as string[];
+    const span = {
+      min: new Date(dates.reduce((a, b) => (a < b ? a : b))),
+      max: new Date(dates.reduce((a, b) => (a > b ? a : b))),
+    };
+    const t = schedule.totals;
+    return (
+      <div className="space-y-6">
+        {/* Totals */}
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-3 text-xs">
+          {[
+            ['T0 (today)', schedule.T0],
+            ['Actual start', t.actual_start || '—'],
+            ['Last touch', t.last_touch || '—'],
+            ['Forecast finish', t.forecast_finish || '—'],
+            ['Remaining', `${t.total_remaining_days}d`],
+            ['Capabilities', `${t.implemented}✓ / ${t.partial}~ / ${t.planned}○`],
+          ].map(([k, v]) => (
+            <div key={k} className="border border-slate-800 rounded p-2 bg-slate-900/40">
+              <div className="text-[10px] uppercase tracking-wide text-slate-500">{k}</div>
+              <div className="text-slate-100 text-sm mt-0.5">{v}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Milestones */}
+        <div>
+          <h2 className="text-sm text-slate-200 mb-2 flex items-center gap-2"><Calendar className="h-4 w-4" /> Milestones</h2>
+          <div className="border border-slate-800 rounded overflow-hidden">
+            <table className="w-full text-xs">
+              <thead className="bg-slate-900/60 text-slate-500 text-[10px] uppercase tracking-wide">
+                <tr>
+                  <th className="text-left px-3 py-2 w-12">ID</th>
+                  <th className="text-left px-3 py-2">Name</th>
+                  <th className="text-left px-3 py-2 w-32">Target (PM)</th>
+                  <th className="text-left px-3 py-2 w-32">Forecast</th>
+                  <th className="text-left px-3 py-2 w-20">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {schedule.milestones.map((m) => (
+                  <tr key={m.id} className="border-t border-slate-900">
+                    <td className="px-3 py-2 font-semibold text-slate-300">{m.id}</td>
+                    <td className="px-3 py-2 text-slate-200">{m.name}</td>
+                    <td className="px-3 py-2 text-slate-400">{m.target_date || <span className="text-slate-600">— set in schedule-config.json</span>}</td>
+                    <td className="px-3 py-2 text-slate-300">{m.forecast_date || '—'}</td>
+                    <td className="px-3 py-2">
+                      <span className={`px-1.5 py-0.5 rounded border text-[10px] ${m.met ? VERDICT_COLOR.implemented : VERDICT_COLOR.planned}`}>
+                        {m.met ? 'met' : 'pending'}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Streams Gantt */}
+        <div>
+          <h2 className="text-sm text-slate-200 mb-2 flex items-center gap-2"><GitBranch className="h-4 w-4" /> Streams</h2>
+          <div className="border border-slate-800 rounded divide-y divide-slate-900">
+            {schedule.streams.map((s) => {
+              const isOpen = open.has(`SCH-${s.stream_key}`);
+              return (
+                <div key={s.stream_key}>
+                  <div
+                    className="grid grid-cols-12 gap-3 items-center px-3 py-2 text-xs cursor-pointer hover:bg-slate-900/40"
+                    onClick={() => toggle(`SCH-${s.stream_key}`)}
+                  >
+                    <div className="col-span-3 flex items-center gap-2 text-slate-200 truncate">
+                      {isOpen ? <ChevronDown className="h-3 w-3 text-slate-500" /> : <ChevronRight className="h-3 w-3 text-slate-500" />}
+                      <span className="truncate">{s.title}</span>
+                    </div>
+                    <div className="col-span-5">{renderScheduleStrip(s, span)}</div>
+                    <div className="col-span-1 text-slate-500 text-[10px] text-right">{s.touches}t · {s.loc.toLocaleString()}loc</div>
+                    <div className="col-span-1 text-slate-300 text-[10px] text-right">{s.remaining_days}d left</div>
+                    <div className="col-span-2 text-slate-400 text-[10px] text-right">→ {s.forecast_finish || '—'}</div>
+                  </div>
+                  {isOpen && (
+                    <div className="bg-slate-950/60 px-3 py-2 border-t border-slate-900">
+                      <table className="w-full text-[11px]">
+                        <thead className="text-slate-500 text-[10px] uppercase">
+                          <tr>
+                            <th className="text-left py-1">Capability</th>
+                            <th className="text-left py-1 w-20">Kind</th>
+                            <th className="text-left py-1 w-24">Verdict</th>
+                            <th className="text-right py-1 w-24">Started</th>
+                            <th className="text-right py-1 w-24">Last touch</th>
+                            <th className="text-right py-1 w-16">Touches</th>
+                            <th className="text-right py-1 w-20">Remaining</th>
+                            <th className="text-right py-1 w-24">Forecast</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {s.capabilities.map((c) => (
+                            <tr key={c.id} className="border-t border-slate-900/70">
+                              <td className="py-1 text-slate-200 pr-2">
+                                <span className="truncate inline-block max-w-[420px] align-middle">{c.title}</span>
+                                {c.suspicious_recency && (
+                                  <span className="ml-2 text-[9px] px-1 py-0.5 rounded border border-amber-500/40 text-amber-300" title="All files created today; verdict may overstate maturity">
+                                    suspicious
+                                  </span>
+                                )}
+                              </td>
+                              <td className="py-1 text-slate-400">{c.kind}</td>
+                              <td className="py-1"><span className={`text-[9px] px-1.5 py-0.5 rounded border ${VERDICT_COLOR[c.verdict] || VERDICT_COLOR.unknown}`}>{c.verdict}</span></td>
+                              <td className="py-1 text-right text-slate-400">{c.actual_start || '—'}</td>
+                              <td className="py-1 text-right text-slate-400">{c.last_touch || '—'}</td>
+                              <td className="py-1 text-right text-slate-500">{c.touches}</td>
+                              <td className="py-1 text-right text-slate-300">{c.remaining_days}d</td>
+                              <td className="py-1 text-right text-slate-400">{c.forecast_finish || '—'}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+          <div className="flex items-center gap-4 text-[10px] text-slate-500 mt-2">
+            <span className="flex items-center gap-1"><span className="h-2 w-3 rounded bg-emerald-500/60" /> work logged in git</span>
+            <span className="flex items-center gap-1"><span className="h-2 w-3 rounded bg-sky-500/40" /> remaining estimate</span>
+            <span className="flex items-center gap-1"><span className="h-2 w-px bg-rose-400" />&nbsp;today (T0)</span>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-300 font-mono">
       <div className="border-b border-slate-800 bg-slate-900/60 px-6 py-4 sticky top-0 z-10">
         <div className="flex items-center justify-between mb-2">
-          <h1 className="text-lg text-slate-100 font-semibold">Work Breakdown — file-grounded</h1>
+          <div className="flex items-center gap-4">
+            <h1 className="text-lg text-slate-100 font-semibold">Work Breakdown</h1>
+            <div className="flex items-center gap-1 text-xs">
+              {(['files', 'schedule'] as const).map((v) => (
+                <button
+                  key={v}
+                  onClick={() => setView(v)}
+                  className={`px-3 py-1 rounded border ${view === v ? 'border-sky-500 text-sky-300 bg-sky-500/10' : 'border-slate-800 text-slate-400 hover:border-slate-700'}`}
+                >
+                  {v}
+                </button>
+              ))}
+            </div>
+          </div>
           <div className="text-xs text-slate-500">
-            {(wbs.totals as { leaves: number }).leaves} leaves · {(wbs.totals as { capabilities: number }).capabilities} capabilities · {(wbs.totals as { streams: number }).streams} streams
+            {view === 'files'
+              ? `${(wbs.totals as { leaves: number }).leaves} leaves · ${(wbs.totals as { capabilities: number }).capabilities} capabilities · ${(wbs.totals as { streams: number }).streams} streams`
+              : schedule
+                ? `T0 ${schedule.T0} · ${schedule.totals.total_remaining_days}d remaining · forecast ${schedule.totals.forecast_finish}`
+                : 'no schedule'}
           </div>
         </div>
-        <div className="flex items-center gap-2 text-xs">
-          {(['all', 'gaps', 'placeholders', 'deliverables'] as const).map((f) => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`px-3 py-1 rounded border ${filter === f ? 'border-sky-500 text-sky-300 bg-sky-500/10' : 'border-slate-800 text-slate-400 hover:border-slate-700'}`}
-            >
-              {f}
-            </button>
-          ))}
-          <div className="ml-auto flex items-center gap-3 text-[10px] text-slate-500">
-            <span className="flex items-center gap-1"><span className="h-2 w-3 rounded bg-emerald-500" /> shipped</span>
-            <span className="flex items-center gap-1"><span className="h-2 w-3 rounded bg-amber-500" /> in-flight</span>
-            <span className="flex items-center gap-1"><span className="h-2 w-3 rounded bg-rose-500" /> dormant</span>
-            <span className="flex items-center gap-1"><span className="h-2 w-3 rounded bg-slate-600" /> planned</span>
+        {view === 'files' && (
+          <div className="flex items-center gap-2 text-xs">
+            {(['all', 'gaps', 'placeholders', 'deliverables'] as const).map((f) => (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`px-3 py-1 rounded border ${filter === f ? 'border-sky-500 text-sky-300 bg-sky-500/10' : 'border-slate-800 text-slate-400 hover:border-slate-700'}`}
+              >
+                {f}
+              </button>
+            ))}
+            <div className="ml-auto flex items-center gap-3 text-[10px] text-slate-500">
+              <span className="flex items-center gap-1"><span className="h-2 w-3 rounded bg-emerald-500" /> shipped</span>
+              <span className="flex items-center gap-1"><span className="h-2 w-3 rounded bg-amber-500" /> in-flight</span>
+              <span className="flex items-center gap-1"><span className="h-2 w-3 rounded bg-rose-500" /> dormant</span>
+              <span className="flex items-center gap-1"><span className="h-2 w-3 rounded bg-slate-600" /> planned</span>
+            </div>
           </div>
-        </div>
+        )}
       </div>
-      <div className="max-w-[1400px] mx-auto px-4 py-4">{streams.map(renderStream)}</div>
+      <div className="max-w-[1400px] mx-auto px-4 py-4">
+        {view === 'files' ? streams.map(renderStream) : renderScheduleView()}
+      </div>
     </div>
   );
 }
