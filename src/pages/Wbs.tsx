@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { ChevronDown, ChevronRight, FileCode, FileWarning, Package, Folder, Calendar, GitBranch, Hammer } from 'lucide-react';
 
 interface Parent {
