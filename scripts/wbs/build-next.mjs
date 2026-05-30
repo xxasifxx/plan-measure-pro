@@ -15,11 +15,14 @@ const stateOf = new Map(state.map((s) => [s.activity_id, s]));
 const leafById = new Map(wbs.leaves.map((l) => [l.id, l]));
 
 // Filter out activities whose primary_leaf is config / lockfile / public asset /
-// generated boilerplate — those are not product work and pollute the "ready" list.
+// generated boilerplate / shadcn ui / test infra — those are not product work
+// and pollute the "ready" list. Also skip the catch-all 00-program-management
+// stream which collects unclassified utility files.
 const NON_PRODUCT_RE =
-  /(^|\/)(\.|node_modules\/|public\/|dist\/|build\/)|(^|\/)(package(-lock)?\.json|bun\.lockb|yarn\.lock|pnpm-lock\.yaml|tsconfig.*\.json|vite\.config\.(t|j)s|tailwind\.config\.(t|j)s|postcss\.config\.(c|m)?(j|t)s|eslint\.config\.(c|m)?(j|t)s|components\.json|index\.html|README\.md|App\.css|index\.css|main\.tsx|vite-env\.d\.ts)$|\.(ico|svg|png|jpg|jpeg|webp|webmanifest|lock)$/i;
+  /(^|\/)(\.|node_modules\/|public\/|dist\/|build\/)|(^|\/)(package(-lock)?\.json|bun\.lockb|yarn\.lock|pnpm-lock\.yaml|tsconfig.*\.json|vite\.config\.(t|j)s|tailwind\.config\.(t|j)s|postcss\.config\.(c|m)?(j|t)s|eslint\.config\.(c|m)?(j|t)s|components\.json|index\.html|README\.md|App\.css|index\.css|main\.tsx|vite-env\.d\.ts|vitest\.config\.(t|j)s)$|\.(ico|svg|png|jpg|jpeg|webp|webmanifest|lock)$|(^|\/)src\/test\//i;
 
 const SHADCN_RE = /(^|\/)src\/components\/ui\//;
+const SUPABASE_GENERATED_RE = /(^|\/)src\/integrations\/supabase\/(client|types)\.ts$/;
 
 function isProductLeaf(leafId) {
   const leaf = leafById.get(leafId);
@@ -27,6 +30,8 @@ function isProductLeaf(leafId) {
   const p = leaf.path || '';
   if (NON_PRODUCT_RE.test(p)) return false;
   if (SHADCN_RE.test(p)) return false;
+  if (SUPABASE_GENERATED_RE.test(p)) return false;
+  if (leaf.stream_key === '00-program-management') return false;
   return true;
 }
 
