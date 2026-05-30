@@ -125,19 +125,25 @@ export default function Wbs() {
   const [wbs, setWbs] = useState<Wbs | null>(null);
   const [acts, setActs] = useState<ActivitySlim[] | null>(null);
   const [schedule, setSchedule] = useState<Schedule | null>(null);
+  const [backlog, setBacklog] = useState<Backlog | null>(null);
   const [open, setOpen] = useState<Set<string>>(new Set());
   const [filter, setFilter] = useState<'all' | 'gaps' | 'placeholders' | 'deliverables'>('all');
-  const [view, setView] = useState<'files' | 'schedule'>('files');
+  const [view, setView] = useState<'backlog' | 'files' | 'schedule'>('backlog');
+  const [backlogStream, setBacklogStream] = useState<string>('all');
+  const [backlogSource, setBacklogSource] = useState<string>('all');
+  const [backlogConfidence, setBacklogConfidence] = useState<string>('all');
 
   useEffect(() => {
     Promise.all([
       fetch('/wbs/wbs.json').then((r) => r.json()),
       fetch('/wbs/activities.json').then((r) => r.json()),
       fetch('/wbs/schedule.json').then((r) => r.ok ? r.json() : null).catch(() => null),
-    ]).then(([w, a, s]) => {
+      fetch('/wbs/build-backlog.json').then((r) => r.ok ? r.json() : null).catch(() => null),
+    ]).then(([w, a, s, b]) => {
       setWbs(w);
       setActs(a.activities);
       setSchedule(s);
+      setBacklog(b);
       // open all streams by default
       setOpen(new Set(w.parents.filter((p: Parent) => p.kind === 'stream').map((p: Parent) => p.id)));
     });
