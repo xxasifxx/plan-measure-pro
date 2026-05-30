@@ -97,6 +97,25 @@ interface Backlog {
   };
   entries: BacklogEntry[];
 }
+interface NetworkNode {
+  id: string; stream: string; title: string; duration: number;
+  confidence: 'low' | 'medium' | 'high'; owner_role: string; source_type: string;
+  predecessors: string[]; successors: string[];
+  layer: number; ES: number; EF: number; LS: number; LF: number;
+  slack: number; critical: boolean;
+}
+interface Network {
+  generatedAt: string;
+  stats: {
+    node_count: number; edge_count: number; declared_edges: number; inferred_edges: number;
+    cycle_edges_dropped: number; unconnected_nodes: number;
+    project_duration_days: number; critical_path_length: number;
+    max_layer: number; critical_node_count: number;
+  };
+  issues: Array<Record<string, unknown>>;
+  critical_path: string[];
+  nodes: NetworkNode[];
+}
 
 const VERDICT_COLOR: Record<string, string> = {
   implemented: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
@@ -126,12 +145,17 @@ export default function Wbs() {
   const [acts, setActs] = useState<ActivitySlim[] | null>(null);
   const [schedule, setSchedule] = useState<Schedule | null>(null);
   const [backlog, setBacklog] = useState<Backlog | null>(null);
+  const [network, setNetwork] = useState<Network | null>(null);
   const [open, setOpen] = useState<Set<string>>(new Set());
   const [filter, setFilter] = useState<'all' | 'gaps' | 'placeholders' | 'deliverables'>('all');
-  const [view, setView] = useState<'backlog' | 'files' | 'schedule'>('backlog');
+  const [view, setView] = useState<'backlog' | 'network' | 'files' | 'schedule'>('backlog');
   const [backlogStream, setBacklogStream] = useState<string>('all');
   const [backlogSource, setBacklogSource] = useState<string>('all');
   const [backlogConfidence, setBacklogConfidence] = useState<string>('all');
+  const [networkStream, setNetworkStream] = useState<string>('all');
+  const [networkOnlyConnected, setNetworkOnlyConnected] = useState<boolean>(true);
+  const [networkCriticalOnly, setNetworkCriticalOnly] = useState<boolean>(false);
+  const [networkHover, setNetworkHover] = useState<string | null>(null);
 
   useEffect(() => {
     Promise.all([
@@ -139,11 +163,13 @@ export default function Wbs() {
       fetch('/wbs/activities.json').then((r) => r.json()),
       fetch('/wbs/schedule.json').then((r) => r.ok ? r.json() : null).catch(() => null),
       fetch('/wbs/build-backlog.json').then((r) => r.ok ? r.json() : null).catch(() => null),
-    ]).then(([w, a, s, b]) => {
+      fetch('/wbs/backlog-network.json').then((r) => r.ok ? r.json() : null).catch(() => null),
+    ]).then(([w, a, s, b, n]) => {
       setWbs(w);
       setActs(a.activities);
       setSchedule(s);
       setBacklog(b);
+      setNetwork(n);
       // open all streams by default
       setOpen(new Set(w.parents.filter((p: Parent) => p.kind === 'stream').map((p: Parent) => p.id)));
     });
@@ -500,6 +526,207 @@ export default function Wbs() {
     verification_gap: 'bg-slate-500/15 text-slate-300 border-slate-500/30',
   };
 
+  const networkById = useMemo(() => {
+    const m = new Map<string, NetworkNode>();
+    if (network) for (const n of network.nodes) m.set(n.id, n);
+    return m;
+  }, [network]);
+
+  const renderBacklogDeps = (id: string) => {
+    const n = networkById.get(id);
+    if (!n) return null;
+    const NodeChip = ({ pid }: { pid: string }) => {
+      const p = networkById.get(pid);
+      return (
+        <span className={`inline-block text-[10px] px-1.5 py-0.5 rounded border mr-1 mb-1 ${p?.critical ? 'border-rose-500/50 text-rose-300' : 'border-slate-700 text-slate-300'}`}>
+          {p ? p.title.slice(0, 50) : pid}
+          {p && <span className="ml-1 text-slate-500">{p.duration}d</span>}
+        </span>
+      );
+    };
+    return (
+      <>
+        <Section title={`CPM (${n.critical ? 'critical' : `slack ${n.slack}d`})`}>
+          <span className="text-slate-300">ES {n.ES}d · EF {n.EF}d · LS {n.LS}d · LF {n.LF}d · layer {n.layer}</span>
+        </Section>
+        <Section title={`Predecessors (${n.predecessors.length})`}>
+          {n.predecessors.length === 0
+            ? <span className="text-slate-500">none — declare in .lovable/wbs/backlog-dependencies.json</span>
+            : n.predecessors.map((p) => <NodeChip key={p} pid={p} />)}
+        </Section>
+        <Section title={`Successors (${n.successors.length})`}>
+          {n.successors.length === 0
+            ? <span className="text-slate-500">none</span>
+            : n.successors.map((s) => <NodeChip key={s} pid={s} />)}
+        </Section>
+      </>
+    );
+  };
+
+  const renderNetworkView = () => {
+    if (!network) {
+      return <div className="p-8 text-slate-400 text-sm">No backlog-network.json. Run scripts/wbs/build-cpm.mjs.</div>;
+    }
+    const streamKeys = ['all', ...new Set(network.nodes.map((n) => n.stream))].sort();
+    let visible = network.nodes.filter((n) =>
+      (networkStream === 'all' || n.stream === networkStream) &&
+      (!networkCriticalOnly || n.critical)
+    );
+    if (networkOnlyConnected) {
+      visible = visible.filter((n) => n.predecessors.length + n.successors.length > 0);
+    }
+    const visibleIds = new Set(visible.map((n) => n.id));
+    // Layout: layer-based columns; nodes stacked within column
+    const byLayer = new Map<number, NetworkNode[]>();
+    for (const n of visible) {
+      if (!byLayer.has(n.layer)) byLayer.set(n.layer, []);
+      byLayer.get(n.layer)!.push(n);
+    }
+    const layers = [...byLayer.keys()].sort((a, b) => a - b);
+    const COL = 220, ROW = 38, PAD_X = 20, PAD_Y = 30;
+    const W = PAD_X * 2 + Math.max(1, layers.length) * COL;
+    const H = PAD_Y * 2 + Math.max(1, ...[...byLayer.values()].map((a) => a.length)) * ROW;
+    const pos = new Map<string, { x: number; y: number }>();
+    layers.forEach((l, ci) => {
+      const col = byLayer.get(l)!.slice().sort((a, b) => a.title.localeCompare(b.title));
+      col.forEach((n, ri) => {
+        pos.set(n.id, { x: PAD_X + ci * COL + 8, y: PAD_Y + ri * ROW });
+      });
+    });
+    const edges: Array<{ from: string; to: string; critical: boolean }> = [];
+    for (const n of visible) {
+      for (const s of n.successors) {
+        if (visibleIds.has(s)) {
+          edges.push({ from: n.id, to: s, critical: n.critical && (networkById.get(s)?.critical ?? false) });
+        }
+      }
+    }
+
+    const hover = networkHover ? networkById.get(networkHover) : null;
+
+    return (
+      <div className="space-y-4">
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-3 text-xs">
+          {[
+            ['Nodes', network.stats.node_count],
+            ['Edges', network.stats.edge_count],
+            ['Declared', network.stats.declared_edges],
+            ['Inferred', network.stats.inferred_edges],
+            ['Project duration', `${network.stats.project_duration_days}d`],
+            ['Critical nodes', network.stats.critical_node_count],
+          ].map(([k, v]) => (
+            <div key={k as string} className="border border-slate-800 rounded p-2 bg-slate-900/40">
+              <div className="text-[10px] uppercase tracking-wide text-slate-500">{k}</div>
+              <div className="text-slate-100 text-sm mt-0.5">{v as ReactNode}</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2 text-xs">
+          <select
+            value={networkStream}
+            onChange={(e) => setNetworkStream(e.target.value)}
+            className="bg-slate-900 border border-slate-800 rounded px-2 py-1 text-slate-200"
+          >
+            {streamKeys.map((k) => <option key={k} value={k}>{k}</option>)}
+          </select>
+          <label className="flex items-center gap-1 text-slate-300">
+            <input type="checkbox" checked={networkOnlyConnected} onChange={(e) => setNetworkOnlyConnected(e.target.checked)} />
+            only connected
+          </label>
+          <label className="flex items-center gap-1 text-slate-300">
+            <input type="checkbox" checked={networkCriticalOnly} onChange={(e) => setNetworkCriticalOnly(e.target.checked)} />
+            critical path only
+          </label>
+          <span className="text-slate-500 ml-2">{visible.length} nodes / {edges.length} edges shown</span>
+          {network.stats.cycle_edges_dropped > 0 && (
+            <span className="text-amber-300">⚠ {network.stats.cycle_edges_dropped} cycle edges dropped</span>
+          )}
+          {network.issues.length > 0 && (
+            <span className="text-amber-300">⚠ {network.issues.length} issue(s) — see backlog-network.json</span>
+          )}
+        </div>
+
+        <div className="border border-slate-800 rounded bg-slate-950 overflow-auto" style={{ maxHeight: 600 }}>
+          {visible.length === 0 ? (
+            <div className="p-6 text-slate-500 text-xs">
+              Nothing to show. Declare predecessors in <span className="text-sky-300">.lovable/wbs/backlog-dependencies.json</span> then rerun <span className="text-sky-300">node scripts/wbs/build-cpm.mjs</span>.
+            </div>
+          ) : (
+            <svg width={W} height={H} className="block">
+              <defs>
+                <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                  <path d="M0,0 L10,5 L0,10 z" fill="hsl(215 20% 65%)" />
+                </marker>
+                <marker id="arrow-crit" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                  <path d="M0,0 L10,5 L0,10 z" fill="hsl(0 80% 65%)" />
+                </marker>
+              </defs>
+              {edges.map((e, i) => {
+                const a = pos.get(e.from)!, b = pos.get(e.to)!;
+                return (
+                  <line
+                    key={i}
+                    x1={a.x + 196} y1={a.y + 12}
+                    x2={b.x} y2={b.y + 12}
+                    stroke={e.critical ? 'hsl(0 80% 65%)' : 'hsl(215 20% 35%)'}
+                    strokeWidth={e.critical ? 1.5 : 1}
+                    markerEnd={`url(#${e.critical ? 'arrow-crit' : 'arrow'})`}
+                    opacity={networkHover && e.from !== networkHover && e.to !== networkHover ? 0.15 : 0.9}
+                  />
+                );
+              })}
+              {visible.map((n) => {
+                const p = pos.get(n.id)!;
+                const isHover = networkHover === n.id;
+                const fill = n.critical ? 'hsl(0 70% 18%)' : 'hsl(215 28% 14%)';
+                const stroke = n.critical ? 'hsl(0 80% 60%)' : isHover ? 'hsl(199 89% 60%)' : 'hsl(215 20% 30%)';
+                return (
+                  <g
+                    key={n.id}
+                    transform={`translate(${p.x}, ${p.y})`}
+                    onMouseEnter={() => setNetworkHover(n.id)}
+                    onMouseLeave={() => setNetworkHover(null)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <rect width={196} height={24} rx={3} fill={fill} stroke={stroke} strokeWidth={isHover ? 2 : 1} />
+                    <text x={6} y={15} fill="hsl(210 40% 90%)" fontSize={10} fontFamily="ui-monospace, monospace">
+                      {n.title.length > 28 ? n.title.slice(0, 27) + '…' : n.title}
+                    </text>
+                    <text x={190} y={15} fill="hsl(215 20% 60%)" fontSize={9} fontFamily="ui-monospace, monospace" textAnchor="end">
+                      {n.duration}d
+                    </text>
+                  </g>
+                );
+              })}
+            </svg>
+          )}
+        </div>
+
+        {hover && (
+          <div className="border border-slate-800 rounded p-3 bg-slate-900/40 text-xs space-y-1">
+            <div className="text-slate-100">{hover.title}</div>
+            <div className="text-slate-500">{hover.stream} · {hover.owner_role} · {hover.source_type}</div>
+            <div className="text-slate-300">
+              {hover.duration}d · ES {hover.ES} · EF {hover.EF} · LS {hover.LS} · LF {hover.LF} · slack {hover.slack}d
+              {hover.critical && <span className="ml-2 text-rose-300">CRITICAL</span>}
+            </div>
+            <div className="text-slate-400">
+              ⬅ {hover.predecessors.length} preds · {hover.successors.length} succs ➡
+            </div>
+          </div>
+        )}
+
+        <div className="text-[10px] text-slate-500 leading-relaxed">
+          Edit <span className="text-sky-300 font-mono">.lovable/wbs/backlog-dependencies.json</span> to declare predecessors. Schema:
+          <pre className="text-slate-400 bg-slate-900/40 rounded p-2 mt-1 overflow-auto">{`{ "edges": { "BB-<successor-id>": ["BB-<predecessor-id>", ...] } }`}</pre>
+          Then run <span className="text-sky-300 font-mono">node scripts/wbs/build-cpm.mjs &amp;&amp; node scripts/wbs/publish-public.mjs</span>.
+          Critical-path nodes have zero slack and are highlighted in red.
+        </div>
+      </div>
+    );
+  };
+
   const renderBacklogView = () => {
     if (!backlog) {
       return <div className="p-8 text-slate-400 text-sm">No build-backlog.json. Run scripts/wbs/build-build-backlog.mjs.</div>;
@@ -648,6 +875,7 @@ export default function Wbs() {
                         <span className="font-mono text-slate-500">{e.source_id}</span>
                         {e.source_severity && <span className="ml-2 text-rose-300">severity: {e.source_severity}</span>}
                       </Section>
+                      {network && renderBacklogDeps(e.id)}
                     </div>
                   </div>
                 )}
@@ -666,13 +894,14 @@ export default function Wbs() {
           <div className="flex items-center gap-4">
             <h1 className="text-lg text-slate-100 font-semibold">Work Breakdown</h1>
             <div className="flex items-center gap-1 text-xs">
-              {(['backlog', 'files', 'schedule'] as const).map((v) => (
+              {(['backlog', 'network', 'files', 'schedule'] as const).map((v) => (
                 <button
                   key={v}
                   onClick={() => setView(v)}
                   className={`px-3 py-1 rounded border flex items-center gap-1 ${view === v ? 'border-sky-500 text-sky-300 bg-sky-500/10' : 'border-slate-800 text-slate-400 hover:border-slate-700'}`}
                 >
                   {v === 'backlog' && <Hammer className="h-3 w-3" />}
+                  {v === 'network' && <GitBranch className="h-3 w-3" />}
                   {v}
                 </button>
               ))}
@@ -683,11 +912,15 @@ export default function Wbs() {
               ? backlog
                 ? `${backlog.totals.entries} build entries · ${backlog.totals.total_estimate_days}d remaining`
                 : 'no backlog'
-              : view === 'files'
-                ? `${(wbs.totals as { leaves: number }).leaves} leaves · ${(wbs.totals as { capabilities: number }).capabilities} capabilities · ${(wbs.totals as { streams: number }).streams} streams`
-                : schedule
-                  ? `T0 ${schedule.T0} · ${schedule.totals.total_remaining_days}d remaining · forecast ${schedule.totals.forecast_finish}`
-                  : 'no schedule'}
+              : view === 'network'
+                ? network
+                  ? `${network.stats.node_count} nodes · ${network.stats.edge_count} edges · ${network.stats.project_duration_days}d critical path`
+                  : 'no network'
+                : view === 'files'
+                  ? `${(wbs.totals as { leaves: number }).leaves} leaves · ${(wbs.totals as { capabilities: number }).capabilities} capabilities · ${(wbs.totals as { streams: number }).streams} streams`
+                  : schedule
+                    ? `T0 ${schedule.T0} · ${schedule.totals.total_remaining_days}d remaining · forecast ${schedule.totals.forecast_finish}`
+                    : 'no schedule'}
           </div>
         </div>
         {view === 'files' && (
@@ -711,7 +944,10 @@ export default function Wbs() {
         )}
       </div>
       <div className="max-w-[1400px] mx-auto px-4 py-4">
-        {view === 'backlog' ? renderBacklogView() : view === 'files' ? streams.map(renderStream) : renderScheduleView()}
+        {view === 'backlog' ? renderBacklogView()
+          : view === 'network' ? renderNetworkView()
+          : view === 'files' ? streams.map(renderStream)
+          : renderScheduleView()}
       </div>
     </div>
   );

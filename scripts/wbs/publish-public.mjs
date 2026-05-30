@@ -25,6 +25,10 @@ const backlogPath = '.lovable/wbs/build-backlog.json';
 const backlog = fs.existsSync(backlogPath)
   ? JSON.parse(fs.readFileSync(backlogPath, 'utf8'))
   : null;
+const networkPath = '.lovable/wbs/backlog-network.json';
+const network = fs.existsSync(networkPath)
+  ? JSON.parse(fs.readFileSync(networkPath, 'utf8'))
+  : null;
 
 // Slim leaves down to fields the viewer needs
 const slimLeaves = wbs.leaves.map(l => slim(l, [
@@ -64,5 +68,8 @@ if (schedule) {
 if (backlog) {
   fs.writeFileSync(path.join(out, 'build-backlog.json'), JSON.stringify(backlog));
 }
+if (network) {
+  fs.writeFileSync(path.join(out, 'backlog-network.json'), JSON.stringify(network));
+}
 
-console.log(`[publish] public/wbs/  wbs(${slimLeaves.length} leaves) activities(${slimActs.length}) capabilities next${schedule ? ' schedule' : ''}${backlog ? ` backlog(${backlog.entries.length})` : ''}`);
+console.log(`[publish] public/wbs/  wbs(${slimLeaves.length} leaves) activities(${slimActs.length}) capabilities next${schedule ? ' schedule' : ''}${backlog ? ` backlog(${backlog.entries.length})` : ''}${network ? ` network(${network.stats.node_count}n/${network.stats.edge_count}e)` : ''}`);
