@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ExternalLink, Layers, Database, Cpu, FileCode, GitBranch, ChevronRight } from 'lucide-react';
+import { ArrowRight, ExternalLink, Layers, Database, Cpu, FileCode, GitBranch, ChevronRight, Download } from 'lucide-react';
 import { PHASES, STATUS_COLORS, translateVerdict, rollupStatus, type Status } from './mcfa-pitch/lib/wbs-rollup';
 import { PhaseSchedule } from './mcfa-pitch/PhaseSchedule';
 import { Roleplay } from './mcfa-pitch/Roleplay';
+
+const DEV_XML_HREF = '/exports/takeoffpro-dev.xml';
 
 /* ------------------------------------------------------------------ */
 /* Section A — built-so-far stats (snapshot 2026-05-30)               */
@@ -121,18 +123,32 @@ export default function McfaPitch() {
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-16 space-y-16">
         {/* Hero */}
-        <header className="space-y-4">
+        <header className="space-y-5">
           <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-primary">
             Prepared for MCFA · 2026 Q2
           </div>
           <h1 className="text-3xl sm:text-5xl font-bold tracking-tight leading-tight">
-            Inspector measurements → P6 schedule updates,<br className="hidden sm:block" />
-            <span className="text-primary">with a full audit trail.</span>
+            The TakeoffPro build, as a P6 schedule<br className="hidden sm:block" />
+            <span className="text-primary">you can import in 30 seconds.</span>
           </h1>
           <p className="text-sm sm:text-base text-muted-foreground max-w-2xl leading-relaxed">
-            This page covers three things: what I’ve built so far, the work breakdown and tentative schedule
-            to finish, and a walkthrough of the finished app across all four roles on an imagined NJTA contract.
+            One PMXML file with the full WBS, every activity, status, and milestone for the
+            application I'm building — and a walkthrough of what the finished app does for
+            an inspector, RE, and PM on an NJTA contract.
           </p>
+          <div className="flex flex-wrap items-center gap-2 pt-1">
+            <a
+              href={DEV_XML_HREF}
+              download
+              className="inline-flex items-center gap-2 px-4 py-2 rounded bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90"
+            >
+              <Download className="h-4 w-4" />
+              Download takeoffpro-dev.xml
+            </a>
+            <span className="text-[11px] font-mono text-muted-foreground">
+              P6 PMXML v22.12 · 5 phases · 22 streams · 154 activities · 7 milestones · 140 FS relationships
+            </span>
+          </div>
         </header>
 
         {/* Section A */}
@@ -184,16 +200,18 @@ export default function McfaPitch() {
         {/* CTA */}
         <section className="rounded-md border border-primary/30 bg-primary/5 p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
           <div>
-            <div className="font-mono text-xs uppercase tracking-wider text-primary mb-1">Next step</div>
-            <div className="text-base font-semibold">Run the live P6 round-trip with your own XML.</div>
-            <div className="text-xs text-muted-foreground mt-1">Or walk through the 12-step interactive demo first.</div>
+            <div className="font-mono text-xs uppercase tracking-wider text-primary mb-1">Take it with you</div>
+            <div className="text-base font-semibold">Import the build schedule into your own P6 instance.</div>
+            <div className="text-xs text-muted-foreground mt-1">
+              File → Import → Primavera XML → New Project. Opens with the WBS expanded and milestones on the bar chart.
+            </div>
           </div>
           <div className="flex gap-2">
-            <Link to="/p6-xml" className="inline-flex items-center gap-2 px-4 py-2 rounded bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90">
-              P6 round-trip <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link to="/demo" className="inline-flex items-center gap-2 px-4 py-2 rounded border border-border text-sm font-medium hover:bg-muted/40">
-              Live demo <ExternalLink className="h-4 w-4" />
+            <a href={DEV_XML_HREF} download className="inline-flex items-center gap-2 px-4 py-2 rounded bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90">
+              <Download className="h-4 w-4" /> Download PMXML
+            </a>
+            <Link to="/p6-xml" className="inline-flex items-center gap-2 px-4 py-2 rounded border border-border text-sm font-medium hover:bg-muted/40">
+              Live round-trip <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </section>

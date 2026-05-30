@@ -3,13 +3,166 @@
   <Project>
     <ObjectId>9001</ObjectId>
     <Id>TAKEOFFPRO-DEV</Id>
-    <Name>TakeoffPro Build — Dev WBS (strict scoring)</Name>
+    <Name>TakeoffPro Build — Development Schedule</Name>
     <DataDate>2026-05-29T00:00:00</DataDate>
     <PlannedStartDate>2025-09-01T08:00:00</PlannedStartDate>
+    <WBS>
+      <ObjectId>100</ObjectId>
+      <Code>P1</Code>
+      <Name>Phase 1 — Foundation</Name>
+    </WBS>
+    <WBS>
+      <ObjectId>101</ObjectId>
+      <Code>01</Code>
+      <Name>Identity &amp; Access</Name>
+      <ParentObjectId>100</ParentObjectId>
+    </WBS>
+    <WBS>
+      <ObjectId>102</ObjectId>
+      <Code>02</Code>
+      <Name>Portfolio &amp; PM Home</Name>
+      <ParentObjectId>100</ParentObjectId>
+    </WBS>
+    <WBS>
+      <ObjectId>103</ObjectId>
+      <Code>03</Code>
+      <Name>Project Onboarding</Name>
+      <ParentObjectId>100</ParentObjectId>
+    </WBS>
+    <WBS>
+      <ObjectId>104</ObjectId>
+      <Code>10</Code>
+      <Name>Document Management</Name>
+      <ParentObjectId>100</ParentObjectId>
+    </WBS>
+    <WBS>
+      <ObjectId>105</ObjectId>
+      <Code>P2</Code>
+      <Name>Phase 2 — Field Capture</Name>
+    </WBS>
+    <WBS>
+      <ObjectId>106</ObjectId>
+      <Code>04</Code>
+      <Name>Pay Item Catalog</Name>
+      <ParentObjectId>105</ParentObjectId>
+    </WBS>
+    <WBS>
+      <ObjectId>107</ObjectId>
+      <Code>05</Code>
+      <Name>Field Capture</Name>
+      <ParentObjectId>105</ParentObjectId>
+    </WBS>
+    <WBS>
+      <ObjectId>108</ObjectId>
+      <Code>08</Code>
+      <Name>Photo Evidence</Name>
+      <ParentObjectId>105</ParentObjectId>
+    </WBS>
+    <WBS>
+      <ObjectId>109</ObjectId>
+      <Code>14</Code>
+      <Name>Measurement &amp; Geometry Engine</Name>
+      <ParentObjectId>105</ParentObjectId>
+    </WBS>
+    <WBS>
+      <ObjectId>110</ObjectId>
+      <Code>15</Code>
+      <Name>Offline &amp; Native Durability</Name>
+      <ParentObjectId>105</ParentObjectId>
+    </WBS>
+    <WBS>
+      <ObjectId>111</ObjectId>
+      <Code>16</Code>
+      <Name>Mobile Field Ergonomics</Name>
+      <ParentObjectId>105</ParentObjectId>
+    </WBS>
+    <WBS>
+      <ObjectId>112</ObjectId>
+      <Code>P3</Code>
+      <Name>Phase 3 — Office Workflow</Name>
+    </WBS>
+    <WBS>
+      <ObjectId>113</ObjectId>
+      <Code>06</Code>
+      <Name>Daily Report Lifecycle</Name>
+      <ParentObjectId>112</ParentObjectId>
+    </WBS>
+    <WBS>
+      <ObjectId>114</ObjectId>
+      <Code>07</Code>
+      <Name>Quantity to Payment</Name>
+      <ParentObjectId>112</ParentObjectId>
+    </WBS>
+    <WBS>
+      <ObjectId>115</ObjectId>
+      <Code>09</Code>
+      <Name>Standard Specifications</Name>
+      <ParentObjectId>112</ParentObjectId>
+    </WBS>
+    <WBS>
+      <ObjectId>116</ObjectId>
+      <Code>17</Code>
+      <Name>Notifications &amp; Presence</Name>
+      <ParentObjectId>112</ParentObjectId>
+    </WBS>
+    <WBS>
+      <ObjectId>117</ObjectId>
+      <Code>19</Code>
+      <Name>Onboarding &amp; Tutorials</Name>
+      <ParentObjectId>112</ParentObjectId>
+    </WBS>
+    <WBS>
+      <ObjectId>118</ObjectId>
+      <Code>P4</Code>
+      <Name>Phase 4 — Scheduling &amp; Reporting</Name>
+    </WBS>
+    <WBS>
+      <ObjectId>119</ObjectId>
+      <Code>11</Code>
+      <Name>Schedule Management</Name>
+      <ParentObjectId>118</ParentObjectId>
+    </WBS>
+    <WBS>
+      <ObjectId>120</ObjectId>
+      <Code>12</Code>
+      <Name>Project Health &amp; Controls</Name>
+      <ParentObjectId>118</ParentObjectId>
+    </WBS>
+    <WBS>
+      <ObjectId>121</ObjectId>
+      <Code>13</Code>
+      <Name>Data Export &amp; Interoperability</Name>
+      <ParentObjectId>118</ParentObjectId>
+    </WBS>
+    <WBS>
+      <ObjectId>122</ObjectId>
+      <Code>18</Code>
+      <Name>Compliance &amp; Audit</Name>
+      <ParentObjectId>118</ParentObjectId>
+    </WBS>
+    <WBS>
+      <ObjectId>123</ObjectId>
+      <Code>P5</Code>
+      <Name>Phase 5 — Go-to-Market</Name>
+    </WBS>
+    <WBS>
+      <ObjectId>124</ObjectId>
+      <Code>20</Code>
+      <Name>Sales &amp; Pitch</Name>
+      <ParentObjectId>123</ParentObjectId>
+    </WBS>
+    <WBS>
+      <ObjectId>125</ObjectId>
+      <Code>00</Code>
+      <Name>Uncategorized</Name>
+      <ParentObjectId>100</ParentObjectId>
+    </WBS>
     <Activity>
       <ObjectId>10000</ObjectId>
       <Id>A0001</Id>
       <Name>Organic signup → admin role</Name>
+      <WBSObjectId>101</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -17,17 +170,19 @@
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Identity &amp; Access
-WBS: 01-identity-and-access/Docs
+WBS path: 01-identity-and-access/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: Auth.tsx, useAuth.tsx</Notes>
     </Activity>
     <Activity>
       <ObjectId>10001</ObjectId>
       <Id>A0002</Id>
       <Name>Invitation flow</Name>
+      <WBSObjectId>101</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -35,17 +190,19 @@ Evidence: Auth.tsx, useAuth.tsx</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Identity &amp; Access
-WBS: 01-identity-and-access/Docs
+WBS path: 01-identity-and-access/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: Auth.tsx</Notes>
     </Activity>
     <Activity>
       <ObjectId>10002</ObjectId>
       <Id>A0003</Id>
       <Name>Roles populated</Name>
+      <WBSObjectId>101</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -53,17 +210,19 @@ Evidence: Auth.tsx</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Identity &amp; Access
-WBS: 01-identity-and-access/Docs
+WBS path: 01-identity-and-access/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: useAuth.tsx</Notes>
     </Activity>
     <Activity>
       <ObjectId>10003</ObjectId>
       <Id>A0004</Id>
       <Name>Role booleans correct</Name>
+      <WBSObjectId>101</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -71,17 +230,19 @@ Evidence: useAuth.tsx</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Identity &amp; Access
-WBS: 01-identity-and-access/Docs
+WBS path: 01-identity-and-access/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: useAuth.tsx</Notes>
     </Activity>
     <Activity>
       <ObjectId>10004</ObjectId>
       <Id>A0005</Id>
       <Name>Biometric gate</Name>
+      <WBSObjectId>101</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -89,17 +250,19 @@ Evidence: useAuth.tsx</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Identity &amp; Access
-WBS: 01-identity-and-access/Mobile
+WBS path: 01-identity-and-access/Mobile
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: BiometricGate.tsx</Notes>
     </Activity>
     <Activity>
       <ObjectId>10005</ObjectId>
       <Id>A0006</Id>
       <Name>Password reset</Name>
+      <WBSObjectId>101</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -107,17 +270,19 @@ Evidence: BiometricGate.tsx</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Identity &amp; Access
-WBS: 01-identity-and-access/Docs
+WBS path: 01-identity-and-access/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: ResetPassword.tsx</Notes>
     </Activity>
     <Activity>
       <ObjectId>10006</ObjectId>
       <Id>A0007</Id>
       <Name>RLS posture</Name>
+      <WBSObjectId>101</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>30</PhysicalPercentComplete>
@@ -125,16 +290,18 @@ Evidence: ResetPassword.tsx</Notes>
       <RemainingDuration>6</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Identity &amp; Access
-WBS: 01-identity-and-access/Docs
+WBS path: 01-identity-and-access/Docs
 Source: brief-criterion
 Verdict: partial
 code_present=true  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10007</ObjectId>
       <Id>A0008</Id>
       <Name>`assign_owner_role` is called in both `Auth.tsx:103` and `useAuth.tsx:55` — one of these will always be a redundant no-o</Name>
+      <WBSObjectId>101</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -142,16 +309,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Identity &amp; Access
-WBS: 01-identity-and-access/Remaining
+WBS path: 01-identity-and-access/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10008</ObjectId>
       <Id>A0009</Id>
       <Name>`BiometricGate` only runs the native path; there is no web-equivalent MFA or session idle timeout, leaving browser sessi</Name>
+      <WBSObjectId>101</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -159,16 +328,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>40</RemainingDuration>
       <AtCompletionDuration>40</AtCompletionDuration>
       <Notes>Stream: Identity &amp; Access
-WBS: 01-identity-and-access/Remaining
+WBS path: 01-identity-and-access/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10009</ObjectId>
       <Id>A0010</Id>
       <Name>The `resident_engineer` role was added late and backfilled to all existing admins — new user invitations do not expose a</Name>
+      <WBSObjectId>101</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -176,16 +347,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Identity &amp; Access
-WBS: 01-identity-and-access/Remaining
+WBS path: 01-identity-and-access/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10010</ObjectId>
       <Id>A0011</Id>
       <Name>`ResetPassword.tsx:46` shows a &quot;Loading recovery session…&quot; spinner indefinitely if `PASSWORD_RECOVERY` never fires (e.g.</Name>
+      <WBSObjectId>101</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -193,16 +366,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Identity &amp; Access
-WBS: 01-identity-and-access/Remaining
+WBS path: 01-identity-and-access/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10011</ObjectId>
       <Id>A0012</Id>
       <Name>Ownership + member union</Name>
+      <WBSObjectId>102</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -210,17 +385,19 @@ Verification status: unverified</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Portfolio &amp; PM Home
-WBS: 02-portfolio-and-pm-home/Docs
+WBS path: 02-portfolio-and-pm-home/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: useProjects.ts</Notes>
     </Activity>
     <Activity>
       <ObjectId>10012</ObjectId>
       <Id>A0013</Id>
       <Name>Card stats</Name>
+      <WBSObjectId>102</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -228,17 +405,19 @@ Evidence: useProjects.ts</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Portfolio &amp; PM Home
-WBS: 02-portfolio-and-pm-home/Docs
+WBS path: 02-portfolio-and-pm-home/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: useProjects.ts, Dashboard.tsx</Notes>
     </Activity>
     <Activity>
       <ObjectId>10013</ObjectId>
       <Id>A0014</Id>
       <Name>New Project dialog</Name>
+      <WBSObjectId>102</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -246,17 +425,19 @@ Evidence: useProjects.ts, Dashboard.tsx</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Portfolio &amp; PM Home
-WBS: 02-portfolio-and-pm-home/Docs
+WBS path: 02-portfolio-and-pm-home/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: Dashboard.tsx</Notes>
     </Activity>
     <Activity>
       <ObjectId>10014</ObjectId>
       <Id>A0015</Id>
       <Name>Delete guard</Name>
+      <WBSObjectId>102</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -264,17 +445,19 @@ Evidence: Dashboard.tsx</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Portfolio &amp; PM Home
-WBS: 02-portfolio-and-pm-home/Docs
+WBS path: 02-portfolio-and-pm-home/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: Dashboard.tsx</Notes>
     </Activity>
     <Activity>
       <ObjectId>10015</ObjectId>
       <Id>A0016</Id>
       <Name>PM inspector detail</Name>
+      <WBSObjectId>102</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>30</PhysicalPercentComplete>
@@ -282,17 +465,19 @@ Evidence: Dashboard.tsx</Notes>
       <RemainingDuration>6</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Portfolio &amp; PM Home
-WBS: 02-portfolio-and-pm-home/Docs
+WBS path: 02-portfolio-and-pm-home/Docs
 Source: brief-criterion
 Verdict: partial
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: Dashboard.tsx</Notes>
     </Activity>
     <Activity>
       <ObjectId>10016</ObjectId>
       <Id>A0017</Id>
       <Name>Role badge</Name>
+      <WBSObjectId>102</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -300,17 +485,19 @@ Evidence: Dashboard.tsx</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Portfolio &amp; PM Home
-WBS: 02-portfolio-and-pm-home/Docs
+WBS path: 02-portfolio-and-pm-home/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: Dashboard.tsx</Notes>
     </Activity>
     <Activity>
       <ObjectId>10017</ObjectId>
       <Id>A0018</Id>
       <Name>Inspector empty state</Name>
+      <WBSObjectId>102</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -318,17 +505,19 @@ Evidence: Dashboard.tsx</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Portfolio &amp; PM Home
-WBS: 02-portfolio-and-pm-home/Docs
+WBS path: 02-portfolio-and-pm-home/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: Dashboard.tsx</Notes>
     </Activity>
     <Activity>
       <ObjectId>10018</ObjectId>
       <Id>A0019</Id>
       <Name>`useProjects` fetches all annotations for all user projects in a single unbounded query — will be slow/expensive at scal</Name>
+      <WBSObjectId>102</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -336,16 +525,18 @@ Evidence: Dashboard.tsx</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Portfolio &amp; PM Home
-WBS: 02-portfolio-and-pm-home/Remaining
+WBS path: 02-portfolio-and-pm-home/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10019</ObjectId>
       <Id>A0020</Id>
       <Name>`totalPages` in the PM inspector detail panel is hardcoded to `0` (`Dashboard.tsx:154`), making the &quot;pages annotated&quot; de</Name>
+      <WBSObjectId>102</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -353,16 +544,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Portfolio &amp; PM Home
-WBS: 02-portfolio-and-pm-home/Remaining
+WBS path: 02-portfolio-and-pm-home/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10020</ObjectId>
       <Id>A0021</Id>
       <Name>No React Query cache invalidation when a team member adds annotations in another session; `staleTime` defaults cause sta</Name>
+      <WBSObjectId>102</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -370,16 +563,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Portfolio &amp; PM Home
-WBS: 02-portfolio-and-pm-home/Remaining
+WBS path: 02-portfolio-and-pm-home/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10021</ObjectId>
       <Id>A0022</Id>
       <Name>`loadPendingReviewCounts` fires per-project-list render with all project IDs as a comma-joined cache key, recomputing on</Name>
+      <WBSObjectId>102</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -387,16 +582,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Portfolio &amp; PM Home
-WBS: 02-portfolio-and-pm-home/Remaining
+WBS path: 02-portfolio-and-pm-home/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10022</ObjectId>
       <Id>A0023</Id>
       <Name>Create project / PDF upload</Name>
+      <WBSObjectId>103</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -404,17 +601,19 @@ Verification status: unverified</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Project Onboarding
-WBS: 03-project-onboarding/Docs
+WBS path: 03-project-onboarding/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: useProjects.ts</Notes>
     </Activity>
     <Activity>
       <ObjectId>10023</ObjectId>
       <Id>A0024</Id>
       <Name>Load with offline fallback</Name>
+      <WBSObjectId>103</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -422,17 +621,19 @@ Evidence: useProjects.ts</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Project Onboarding
-WBS: 03-project-onboarding/Docs
+WBS path: 03-project-onboarding/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: Index.tsx</Notes>
     </Activity>
     <Activity>
       <ObjectId>10024</ObjectId>
       <Id>A0025</Id>
       <Name>TOC drag-select</Name>
+      <WBSObjectId>103</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -440,17 +641,19 @@ Evidence: Index.tsx</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Project Onboarding
-WBS: 03-project-onboarding/Docs
+WBS path: 03-project-onboarding/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: PdfCanvas.tsx, Index.tsx, pdf-utils.ts</Notes>
     </Activity>
     <Activity>
       <ObjectId>10025</ObjectId>
       <Id>A0026</Id>
       <Name>Pay-item import</Name>
+      <WBSObjectId>103</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -458,16 +661,18 @@ Evidence: PdfCanvas.tsx, Index.tsx, pdf-utils.ts</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Project Onboarding
-WBS: 03-project-onboarding/Docs
+WBS path: 03-project-onboarding/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10026</ObjectId>
       <Id>A0027</Id>
       <Name>Specs PDF upload + indexing</Name>
+      <WBSObjectId>103</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -475,17 +680,19 @@ Verification status: unverified</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Project Onboarding
-WBS: 03-project-onboarding/Docs
+WBS path: 03-project-onboarding/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: Index.tsx</Notes>
     </Activity>
     <Activity>
       <ObjectId>10027</ObjectId>
       <Id>A0028</Id>
       <Name>TOC / pay-items survive reload</Name>
+      <WBSObjectId>103</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -493,17 +700,19 @@ Evidence: Index.tsx</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Project Onboarding
-WBS: 03-project-onboarding/Docs
+WBS path: 03-project-onboarding/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: useProject.ts, useProject.ts</Notes>
     </Activity>
     <Activity>
       <ObjectId>10028</ObjectId>
       <Id>A0029</Id>
       <Name>`extractPayItemsFromPage` is a pure heuristic regex scan of PDF text layers; non-standard table layouts (rotated text, s</Name>
+      <WBSObjectId>103</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -511,16 +720,18 @@ Evidence: useProject.ts, useProject.ts</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Project Onboarding
-WBS: 03-project-onboarding/Remaining
+WBS path: 03-project-onboarding/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10029</ObjectId>
       <Id>A0030</Id>
       <Name>TOC parsing uses a hardcoded 5px Y-grouping tolerance and `console.log` debug noise in production — no structured loggin</Name>
+      <WBSObjectId>103</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -528,16 +739,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Project Onboarding
-WBS: 03-project-onboarding/Remaining
+WBS path: 03-project-onboarding/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10030</ObjectId>
       <Id>A0031</Id>
       <Name>The &quot;Up to 4 subsequent pages&quot; pay-item scan is a magic number with no UI indication of where the scan stopped.</Name>
+      <WBSObjectId>103</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -545,16 +758,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Project Onboarding
-WBS: 03-project-onboarding/Remaining
+WBS path: 03-project-onboarding/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10031</ObjectId>
       <Id>A0032</Id>
       <Name>`specs_storage_path` is uploaded with `upsert: true` at fixed path `{projectId}/specs.pdf` — concurrent uploads silently</Name>
+      <WBSObjectId>103</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -562,16 +777,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Project Onboarding
-WBS: 03-project-onboarding/Remaining
+WBS path: 03-project-onboarding/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10032</ObjectId>
       <Id>A0033</Id>
       <Name>drawable flag</Name>
+      <WBSObjectId>106</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -579,17 +796,19 @@ Verification status: unverified</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Pay Item Catalog
-WBS: 04-pay-item-catalog/Docs
+WBS path: 04-pay-item-catalog/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: types/project.ts, Toolbar.tsx</Notes>
     </Activity>
     <Activity>
       <ObjectId>10033</ObjectId>
       <Id>A0034</Id>
       <Name>Delete cascade</Name>
+      <WBSObjectId>106</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -597,17 +816,19 @@ Evidence: types/project.ts, Toolbar.tsx</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Pay Item Catalog
-WBS: 04-pay-item-catalog/Docs
+WBS path: 04-pay-item-catalog/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: ProjectSidebar.tsx, useProject.ts</Notes>
     </Activity>
     <Activity>
       <ObjectId>10034</ObjectId>
       <Id>A0035</Id>
       <Name>Edit inline</Name>
+      <WBSObjectId>106</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -615,17 +836,19 @@ Evidence: ProjectSidebar.tsx, useProject.ts</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Pay Item Catalog
-WBS: 04-pay-item-catalog/Docs
+WBS path: 04-pay-item-catalog/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: ProjectSidebar.tsx</Notes>
     </Activity>
     <Activity>
       <ObjectId>10035</ObjectId>
       <Id>A0036</Id>
       <Name>DB persistence</Name>
+      <WBSObjectId>106</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -633,17 +856,19 @@ Evidence: ProjectSidebar.tsx</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Pay Item Catalog
-WBS: 04-pay-item-catalog/Docs
+WBS path: 04-pay-item-catalog/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: useProject.ts</Notes>
     </Activity>
     <Activity>
       <ObjectId>10036</ObjectId>
       <Id>A0037</Id>
       <Name>Section-keyed colors</Name>
+      <WBSObjectId>106</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -651,17 +876,19 @@ Evidence: useProject.ts</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Pay Item Catalog
-WBS: 04-pay-item-catalog/Docs
+WBS path: 04-pay-item-catalog/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: pdf-utils.ts</Notes>
     </Activity>
     <Activity>
       <ObjectId>10037</ObjectId>
       <Id>A0038</Id>
       <Name>Contract quantity denominator</Name>
+      <WBSObjectId>106</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>30</PhysicalPercentComplete>
@@ -669,16 +896,18 @@ Evidence: pdf-utils.ts</Notes>
       <RemainingDuration>6</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Pay Item Catalog
-WBS: 04-pay-item-catalog/Docs
+WBS path: 04-pay-item-catalog/Docs
 Source: brief-criterion
 Verdict: partial
 code_present=true  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10038</ObjectId>
       <Id>A0039</Id>
       <Name>Contract modifications</Name>
+      <WBSObjectId>106</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -686,16 +915,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Pay Item Catalog
-WBS: 04-pay-item-catalog/Docs
+WBS path: 04-pay-item-catalog/Docs
 Source: brief-criterion
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10039</ObjectId>
       <Id>A0040</Id>
       <Name>`updatePayItems` issues full `DELETE` + bulk `INSERT` on every change — data-loss race if two users edit pay items concu</Name>
+      <WBSObjectId>106</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -703,16 +934,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Pay Item Catalog
-WBS: 04-pay-item-catalog/Remaining
+WBS path: 04-pay-item-catalog/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10040</ObjectId>
       <Id>A0041</Id>
       <Name>No contract-modification workflow exists; no audit trail for `contract_quantity` bumps.</Name>
+      <WBSObjectId>106</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -720,16 +953,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>16</RemainingDuration>
       <AtCompletionDuration>16</AtCompletionDuration>
       <Notes>Stream: Pay Item Catalog
-WBS: 04-pay-item-catalog/Remaining
+WBS path: 04-pay-item-catalog/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10041</ObjectId>
       <Id>A0042</Id>
       <Name>Pay-item color auto-assigned from `SECTION_COLORS` at import; no per-item color picker on mobile.</Name>
+      <WBSObjectId>106</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -737,16 +972,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Pay Item Catalog
-WBS: 04-pay-item-catalog/Remaining
+WBS path: 04-pay-item-catalog/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10042</ObjectId>
       <Id>A0043</Id>
       <Name>Cascade deletion done client-side via N individual `offlineMutate` calls, not a single server-side DELETE; unreliable on</Name>
+      <WBSObjectId>106</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -754,16 +991,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>40</RemainingDuration>
       <AtCompletionDuration>40</AtCompletionDuration>
       <Notes>Stream: Pay Item Catalog
-WBS: 04-pay-item-catalog/Remaining
+WBS path: 04-pay-item-catalog/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10043</ObjectId>
       <Id>A0044</Id>
       <Name>Scale calibration</Name>
+      <WBSObjectId>107</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -771,17 +1010,19 @@ Verification status: unverified</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Field Capture
-WBS: 05-field-capture/Docs
+WBS path: 05-field-capture/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: PdfCanvas.tsx, Toolbar.tsx</Notes>
     </Activity>
     <Activity>
       <ObjectId>10044</ObjectId>
       <Id>A0045</Id>
       <Name>Polygon with CY depth prompt</Name>
+      <WBSObjectId>107</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -789,17 +1030,19 @@ Evidence: PdfCanvas.tsx, Toolbar.tsx</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Field Capture
-WBS: 05-field-capture/Docs
+WBS path: 05-field-capture/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: PdfCanvas.tsx</Notes>
     </Activity>
     <Activity>
       <ObjectId>10045</ObjectId>
       <Id>A0046</Id>
       <Name>Drag-handle editing</Name>
+      <WBSObjectId>107</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -807,17 +1050,19 @@ Evidence: PdfCanvas.tsx</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Field Capture
-WBS: 05-field-capture/Docs
+WBS path: 05-field-capture/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: PdfCanvas.tsx, PdfCanvas.tsx</Notes>
     </Activity>
     <Activity>
       <ObjectId>10046</ObjectId>
       <Id>A0047</Id>
       <Name>Undo/redo with DB sync</Name>
+      <WBSObjectId>107</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -825,17 +1070,19 @@ Evidence: PdfCanvas.tsx, PdfCanvas.tsx</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Field Capture
-WBS: 05-field-capture/Docs
+WBS path: 05-field-capture/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: useProject.ts</Notes>
     </Activity>
     <Activity>
       <ObjectId>10047</ObjectId>
       <Id>A0048</Id>
       <Name>Realtime multi-user sync</Name>
+      <WBSObjectId>107</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -843,17 +1090,19 @@ Evidence: useProject.ts</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Field Capture
-WBS: 05-field-capture/Docs
+WBS path: 05-field-capture/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: useProject.ts, useProject.ts</Notes>
     </Activity>
     <Activity>
       <ObjectId>10048</ObjectId>
       <Id>A0049</Id>
       <Name>GPS calibration overlay</Name>
+      <WBSObjectId>107</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -861,17 +1110,19 @@ Evidence: useProject.ts, useProject.ts</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Field Capture
-WBS: 05-field-capture/Docs
+WBS path: 05-field-capture/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: GpsCalibration.tsx, GpsTraceControls.tsx, PdfCanvas.tsx</Notes>
     </Activity>
     <Activity>
       <ObjectId>10049</ObjectId>
       <Id>A0050</Id>
       <Name>Manual quantity override</Name>
+      <WBSObjectId>107</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -879,17 +1130,19 @@ Evidence: GpsCalibration.tsx, GpsTraceControls.tsx, PdfCanvas.tsx</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Field Capture
-WBS: 05-field-capture/Docs
+WBS path: 05-field-capture/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: PdfCanvas.tsx</Notes>
     </Activity>
     <Activity>
       <ObjectId>10050</ObjectId>
       <Id>A0051</Id>
       <Name>readOnly mode</Name>
+      <WBSObjectId>107</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -897,17 +1150,19 @@ Evidence: PdfCanvas.tsx</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Field Capture
-WBS: 05-field-capture/Docs
+WBS path: 05-field-capture/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: Index.tsx, Toolbar.tsx</Notes>
     </Activity>
     <Activity>
       <ObjectId>10051</ObjectId>
       <Id>A0052</Id>
       <Name>`PdfCanvas` is 1,426 lines with pointer/touch/draw/GPS/TOC/drag logic co-located — extremely hard to test in isolation.</Name>
+      <WBSObjectId>107</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -915,16 +1170,18 @@ Evidence: Index.tsx, Toolbar.tsx</Notes>
       <RemainingDuration>16</RemainingDuration>
       <AtCompletionDuration>16</AtCompletionDuration>
       <Notes>Stream: Field Capture
-WBS: 05-field-capture/Remaining
+WBS path: 05-field-capture/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10052</ObjectId>
       <Id>A0053</Id>
       <Name>`buildGeoCalibration` silently throws on degenerate transforms (`GpsCalibration.tsx:72–79`); no diagnostic when affine m</Name>
+      <WBSObjectId>107</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -932,16 +1189,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Field Capture
-WBS: 05-field-capture/Remaining
+WBS path: 05-field-capture/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10053</ObjectId>
       <Id>A0054</Id>
       <Name>Undo stack is per-session and per-device only; undoing on one device does not roll back another user's view.</Name>
+      <WBSObjectId>107</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -949,16 +1208,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Field Capture
-WBS: 05-field-capture/Remaining
+WBS path: 05-field-capture/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10054</ObjectId>
       <Id>A0055</Id>
       <Name>&quot;Copy calibration to pages&quot; does a bulk DB delete + re-insert with no confirmation of which pages were overwritten.</Name>
+      <WBSObjectId>107</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -966,16 +1227,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Field Capture
-WBS: 05-field-capture/Remaining
+WBS path: 05-field-capture/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10055</ObjectId>
       <Id>A0056</Id>
       <Name>**`daily_report_snapshots` table missing from generated types** — queried with `as any` cast; if the table doesn't exist</Name>
+      <WBSObjectId>113</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -983,16 +1246,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Daily Report Lifecycle
-WBS: 06-daily-report-lifecycle/Remaining
+WBS path: 06-daily-report-lifecycle/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10056</ObjectId>
       <Id>A0057</Id>
       <Name>**Role enforcement is client-only** — `useApproveReport`/`useRejectReport` do a plain `update` with no server-side RLS p</Name>
+      <WBSObjectId>113</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1000,16 +1265,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>8</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Daily Report Lifecycle
-WBS: 06-daily-report-lifecycle/Remaining
+WBS path: 06-daily-report-lifecycle/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10057</ObjectId>
       <Id>A0058</Id>
       <Name>**`rejected_at` not cleared on reopen** — `useDailyReport.reopen` only sets `status: 'draft'`; `rejected_at` and `reject</Name>
+      <WBSObjectId>113</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1017,16 +1284,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>16</RemainingDuration>
       <AtCompletionDuration>16</AtCompletionDuration>
       <Notes>Stream: Daily Report Lifecycle
-WBS: 06-daily-report-lifecycle/Remaining
+WBS path: 06-daily-report-lifecycle/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10058</ObjectId>
       <Id>A0059</Id>
       <Name>**No push notification to inspector on RE decision** — `useApproveReport` and `useRejectReport` only invalidate React Qu</Name>
+      <WBSObjectId>113</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1034,16 +1303,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Daily Report Lifecycle
-WBS: 06-daily-report-lifecycle/Remaining
+WBS path: 06-daily-report-lifecycle/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10059</ObjectId>
       <Id>A0060</Id>
       <Name>**ProjectControls variance uses raw annotations, not approved quantities** — `ProjectControls.tsx:180-187` sums `manual_</Name>
+      <WBSObjectId>114</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1051,16 +1322,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Quantity to Payment
-WBS: 07-quantity-to-payment/Remaining
+WBS path: 07-quantity-to-payment/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10060</ObjectId>
       <Id>A0061</Id>
       <Name>**SummaryPanel operates on live annotations, not `v_approved_pay_item_quantities`** — the embedded summary in the main t</Name>
+      <WBSObjectId>114</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1068,16 +1341,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Quantity to Payment
-WBS: 07-quantity-to-payment/Remaining
+WBS path: 07-quantity-to-payment/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10061</ObjectId>
       <Id>A0062</Id>
       <Name>**No payment-period scoping** — there is no date-range filter on approved quantity exports; a pay estimate must be compu</Name>
+      <WBSObjectId>114</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1085,16 +1360,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Quantity to Payment
-WBS: 07-quantity-to-payment/Remaining
+WBS path: 07-quantity-to-payment/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10062</ObjectId>
       <Id>A0063</Id>
       <Name>**View definition not in repo** — `v_approved_pay_item_quantities` is consumed everywhere but its SQL is not in `supabas</Name>
+      <WBSObjectId>114</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1102,16 +1379,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>8</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Quantity to Payment
-WBS: 07-quantity-to-payment/Remaining
+WBS path: 07-quantity-to-payment/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10063</ObjectId>
       <Id>A0064</Id>
       <Name>**`annotation_id` linkage is missing in practice** — the `by_annotation` IndexedDB index implies photos should be tied t</Name>
+      <WBSObjectId>108</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1119,16 +1398,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Photo Evidence
-WBS: 08-photo-evidence/Remaining
+WBS path: 08-photo-evidence/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10064</ObjectId>
       <Id>A0065</Id>
       <Name>**AI call is fire-and-forget with no retry** — if `tag-photo` fails (rate limit, credits exhausted), the error is swallo</Name>
+      <WBSObjectId>108</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1136,16 +1417,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Photo Evidence
-WBS: 08-photo-evidence/Remaining
+WBS path: 08-photo-evidence/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10065</ObjectId>
       <Id>A0066</Id>
       <Name>**Gallery lives only in ProjectControls** — the photo tab is buried in the PM-facing controls hub; inspectors using `Dai</Name>
+      <WBSObjectId>108</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1153,16 +1436,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Photo Evidence
-WBS: 08-photo-evidence/Remaining
+WBS path: 08-photo-evidence/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10066</ObjectId>
       <Id>A0067</Id>
       <Name>**Offline blob serialization unresolved** — IndexedDB store exists but camera blob is never serialized to it; offline ca</Name>
+      <WBSObjectId>108</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1170,16 +1455,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>40</RemainingDuration>
       <AtCompletionDuration>40</AtCompletionDuration>
       <Notes>Stream: Photo Evidence
-WBS: 08-photo-evidence/Remaining
+WBS path: 08-photo-evidence/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10067</ObjectId>
       <Id>A0068</Id>
       <Name>**Entire PDF loaded into memory** — `pdfjs-dist` loads the full binary; a 1,200-page NJDOT spec PDF can consume 200–400 </Name>
+      <WBSObjectId>115</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1187,16 +1474,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Standard Specifications
-WBS: 09-standard-specifications/Remaining
+WBS path: 09-standard-specifications/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10068</ObjectId>
       <Id>A0069</Id>
       <Name>**Search highlight is canvas-drawn, not DOM-native** — the highlight overlay re-renders the entire page canvas on every </Name>
+      <WBSObjectId>115</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1204,16 +1493,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>40</RemainingDuration>
       <AtCompletionDuration>40</AtCompletionDuration>
       <Notes>Stream: Standard Specifications
-WBS: 09-standard-specifications/Remaining
+WBS path: 09-standard-specifications/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10069</ObjectId>
       <Id>A0070</Id>
       <Name>**`extractAllText` runs on the main thread** — though batched, there is no Web Worker; a 900-page extraction still block</Name>
+      <WBSObjectId>115</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1221,16 +1512,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Standard Specifications
-WBS: 09-standard-specifications/Remaining
+WBS path: 09-standard-specifications/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10070</ObjectId>
       <Id>A0071</Id>
       <Name>**No spec PDF upload UI in this stream** — `specs_storage_path` must be set externally (e.g., through the admin panel or</Name>
+      <WBSObjectId>115</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1238,16 +1531,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Standard Specifications
-WBS: 09-standard-specifications/Remaining
+WBS path: 09-standard-specifications/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10071</ObjectId>
       <Id>A0072</Id>
       <Name>**`fetchDocumentVersions` fetches all project documents** — the version-chain query selects the entire `documents` table</Name>
+      <WBSObjectId>104</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1255,16 +1550,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Document Management
-WBS: 10-document-management/Remaining
+WBS path: 10-document-management/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10072</ObjectId>
       <Id>A0073</Id>
       <Name>**Blob orphan risk on insert failure** — `runUploads` in `Documents.tsx` does a best-effort `remove` on insert failure, </Name>
+      <WBSObjectId>104</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1272,16 +1569,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Document Management
-WBS: 10-document-management/Remaining
+WBS path: 10-document-management/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10073</ObjectId>
       <Id>A0074</Id>
       <Name>**No folder-level permission model** — all folders within a project share the same manager/inspector role split; there i</Name>
+      <WBSObjectId>104</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1289,16 +1588,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Document Management
-WBS: 10-document-management/Remaining
+WBS path: 10-document-management/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10074</ObjectId>
       <Id>A0075</Id>
       <Name>**Preview uses signed URLs with 1-hour TTL** — if a user keeps a preview modal open for &gt; 1 hour (e.g., reviewing a larg</Name>
+      <WBSObjectId>104</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1306,16 +1607,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>8</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Document Management
-WBS: 10-document-management/Remaining
+WBS path: 10-document-management/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10075</ObjectId>
       <Id>A0076</Id>
       <Name>**Drag mutation race** — `GanttChart.tsx:88` mutates `cpm.byId` in-place during drag; parent re-render resets position s</Name>
+      <WBSObjectId>119</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1323,16 +1626,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Schedule Management
-WBS: 11-schedule-management/Remaining
+WBS path: 11-schedule-management/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10076</ObjectId>
       <Id>A0077</Id>
       <Name>**`as any` casts on every Supabase call** — generated types don't yet include schedule tables; full persistence layer un</Name>
+      <WBSObjectId>119</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1340,16 +1645,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Schedule Management
-WBS: 11-schedule-management/Remaining
+WBS path: 11-schedule-management/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10077</ObjectId>
       <Id>A0078</Id>
       <Name>**CPM not persisted automatically** — `persistCpm` is a separate manual mutation; tab close after import leaves `is_crit</Name>
+      <WBSObjectId>119</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1357,16 +1664,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Schedule Management
-WBS: 11-schedule-management/Remaining
+WBS path: 11-schedule-management/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10078</ObjectId>
       <Id>A0079</Id>
       <Name>**TIA narrative is a static template** — `buildTia` (tia.ts:23) inserts only the first direct successor; multi-path impa</Name>
+      <WBSObjectId>119</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1374,16 +1683,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Schedule Management
-WBS: 11-schedule-management/Remaining
+WBS path: 11-schedule-management/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10079</ObjectId>
       <Id>A0080</Id>
       <Name>**Hardcoded CPI/SPI** — primary schedule KPI tile shows `CPI 1.03 · SPI 0.98` unconditionally; real values from `analysi</Name>
+      <WBSObjectId>120</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1391,16 +1702,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Project Health and Controls
-WBS: 12-project-health-and-controls/Remaining
+WBS path: 12-project-health-and-controls/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10080</ObjectId>
       <Id>A0081</Id>
       <Name>**`computeExpectedPct` provenance unclear** — `dashboard` memo calls it but function is not visible in first 389 lines; </Name>
+      <WBSObjectId>120</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1408,16 +1721,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Project Health and Controls
-WBS: 12-project-health-and-controls/Remaining
+WBS path: 12-project-health-and-controls/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10081</ObjectId>
       <Id>A0082</Id>
       <Name>**No pagination on scorecard metrics** — `limit(60)` silently drops older data on long-running projects.</Name>
+      <WBSObjectId>120</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1425,16 +1740,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Project Health and Controls
-WBS: 12-project-health-and-controls/Remaining
+WBS path: 12-project-health-and-controls/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10082</ObjectId>
       <Id>A0083</Id>
       <Name>**Photo AI confidence threshold not enforced** — `ai_confidence` read but never used to filter or warn in UI.</Name>
+      <WBSObjectId>120</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1442,16 +1759,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Project Health and Controls
-WBS: 12-project-health-and-controls/Remaining
+WBS path: 12-project-health-and-controls/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10083</ObjectId>
       <Id>A0084</Id>
       <Name>**No round-trip test suite** — P6 import compatibility asserted only in comments; schema regression caught only by contr</Name>
+      <WBSObjectId>121</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1459,16 +1778,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>16</RemainingDuration>
       <AtCompletionDuration>16</AtCompletionDuration>
       <Notes>Stream: Data Export and Interoperability
-WBS: 13-data-export-and-interoperability/Remaining
+WBS path: 13-data-export-and-interoperability/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10084</ObjectId>
       <Id>A0085</Id>
       <Name>**`applyDailyReportsToP6` mutates the live DOM** — shared state; double-apply stacks silently.</Name>
+      <WBSObjectId>121</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1476,16 +1797,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Data Export and Interoperability
-WBS: 13-data-export-and-interoperability/Remaining
+WBS path: 13-data-export-and-interoperability/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10085</ObjectId>
       <Id>A0086</Id>
       <Name>**`jsPDF` `doc.save()` bypasses `saveExport`** — `writePdfFromRows` calls `doc.save()` directly; on native, PDF goes to </Name>
+      <WBSObjectId>121</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1493,16 +1816,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>40</RemainingDuration>
       <AtCompletionDuration>40</AtCompletionDuration>
       <Notes>Stream: Data Export and Interoperability
-WBS: 13-data-export-and-interoperability/Remaining
+WBS path: 13-data-export-and-interoperability/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10086</ObjectId>
       <Id>A0087</Id>
       <Name>**`as-of-date` cutoff is UI-only** — never validated server-side; blank value returns all-time approved quantities.</Name>
+      <WBSObjectId>121</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1510,16 +1835,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Data Export and Interoperability
-WBS: 13-data-export-and-interoperability/Remaining
+WBS path: 13-data-export-and-interoperability/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10087</ObjectId>
       <Id>A0088</Id>
       <Name>**`pixelsPerFoot` is a single global scalar** — assumes uniform scale; scanned/tilted drawings produce systematic invisi</Name>
+      <WBSObjectId>109</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1527,16 +1854,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Measurement and Geometry Engine
-WBS: 14-measurement-and-geometry-engine/Remaining
+WBS path: 14-measurement-and-geometry-engine/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10088</ObjectId>
       <Id>A0089</Id>
       <Name>**`estimateError` reports pixels, not feet** — docstring says &quot;rough feet&quot; but returns plan-pixel residual (geo-transfor</Name>
+      <WBSObjectId>109</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1544,16 +1873,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Measurement and Geometry Engine
-WBS: 14-measurement-and-geometry-engine/Remaining
+WBS path: 14-measurement-and-geometry-engine/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10089</ObjectId>
       <Id>A0090</Id>
       <Name>**No coordinate normalization spec** — `PdfCanvas.tsx` renders raw pixel coordinates; zoom-independent normalization ref</Name>
+      <WBSObjectId>109</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1561,16 +1892,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Measurement and Geometry Engine
-WBS: 14-measurement-and-geometry-engine/Remaining
+WBS path: 14-measurement-and-geometry-engine/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10090</ObjectId>
       <Id>A0091</Id>
       <Name>**Kalman state is in-memory only** — `KalmanState` never persisted; filter cold-starts on every `GpsTraceControls` remou</Name>
+      <WBSObjectId>109</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1578,16 +1911,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Measurement and Geometry Engine
-WBS: 14-measurement-and-geometry-engine/Remaining
+WBS path: 14-measurement-and-geometry-engine/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10091</ObjectId>
       <Id>A0092</Id>
       <Name>**`daily_reports` capped at 30 rows** — inspectors reviewing older history offline see gaps with no warning.</Name>
+      <WBSObjectId>110</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1595,16 +1930,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>40</RemainingDuration>
       <AtCompletionDuration>40</AtCompletionDuration>
       <Notes>Stream: Offline and Native Durability
-WBS: 15-offline-and-native-durability/Remaining
+WBS path: 15-offline-and-native-durability/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10092</ObjectId>
       <Id>A0093</Id>
       <Name>**No conflict resolution UI** — `OutboxStatus` includes `&quot;conflict&quot;` but `mutation-client.ts` never sets it; conflicts l</Name>
+      <WBSObjectId>110</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1612,16 +1949,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Offline and Native Durability
-WBS: 15-offline-and-native-durability/Remaining
+WBS path: 15-offline-and-native-durability/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10093</ObjectId>
       <Id>A0094</Id>
       <Name>**IDB schema is v2 with no documented migration path** — `getDB` only handles `oldVersion &lt; 1` and `&lt; 2`; a future v3 ri</Name>
+      <WBSObjectId>110</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1629,16 +1968,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>8</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Offline and Native Durability
-WBS: 15-offline-and-native-durability/Remaining
+WBS path: 15-offline-and-native-durability/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10094</ObjectId>
       <Id>A0095</Id>
       <Name>**`jsPDF.save()` bypass** — generated PDFs aren't warmable and won't be available offline.</Name>
+      <WBSObjectId>110</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1646,16 +1987,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>40</RemainingDuration>
       <AtCompletionDuration>40</AtCompletionDuration>
       <Notes>Stream: Offline and Native Durability
-WBS: 15-offline-and-native-durability/Remaining
+WBS path: 15-offline-and-native-durability/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10095</ObjectId>
       <Id>A0096</Id>
       <Name>Tab switching / PDF persistence</Name>
+      <WBSObjectId>111</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -1663,16 +2006,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Mobile Field Ergonomics
-WBS: 16-mobile-field-ergonomics/Docs
+WBS path: 16-mobile-field-ergonomics/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10096</ObjectId>
       <Id>A0097</Id>
       <Name>Active pay item chip</Name>
+      <WBSObjectId>111</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -1680,16 +2025,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Mobile Field Ergonomics
-WBS: 16-mobile-field-ergonomics/Docs
+WBS path: 16-mobile-field-ergonomics/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10097</ObjectId>
       <Id>A0098</Id>
       <Name>Badge counts</Name>
+      <WBSObjectId>111</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -1697,16 +2044,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Mobile Field Ergonomics
-WBS: 16-mobile-field-ergonomics/Docs
+WBS path: 16-mobile-field-ergonomics/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10098</ObjectId>
       <Id>A0099</Id>
       <Name>Zoom clamp</Name>
+      <WBSObjectId>111</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -1714,16 +2063,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Mobile Field Ergonomics
-WBS: 16-mobile-field-ergonomics/Docs
+WBS path: 16-mobile-field-ergonomics/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10099</ObjectId>
       <Id>A0100</Id>
       <Name>Calibration chip tap</Name>
+      <WBSObjectId>111</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -1731,16 +2082,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Mobile Field Ergonomics
-WBS: 16-mobile-field-ergonomics/Docs
+WBS path: 16-mobile-field-ergonomics/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10100</ObjectId>
       <Id>A0101</Id>
       <Name>No enforced minimum touch-target size on annotation handles; overlapping annotations on zoomed-out sheets are very hard </Name>
+      <WBSObjectId>111</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1748,16 +2101,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Mobile Field Ergonomics
-WBS: 16-mobile-field-ergonomics/Remaining
+WBS path: 16-mobile-field-ergonomics/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10101</ObjectId>
       <Id>A0102</Id>
       <Name>`useIsMobile` uses hard 768 px breakpoint with no resize listener; tablet rotation doesn't re-evaluate.</Name>
+      <WBSObjectId>111</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1765,16 +2120,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Mobile Field Ergonomics
-WBS: 16-mobile-field-ergonomics/Remaining
+WBS path: 16-mobile-field-ergonomics/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10102</ObjectId>
       <Id>A0103</Id>
       <Name>`MobileToolbar` duplicates zoom logic from desktop `Toolbar`; no shared `useZoom` hook.</Name>
+      <WBSObjectId>111</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1782,16 +2139,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Mobile Field Ergonomics
-WBS: 16-mobile-field-ergonomics/Remaining
+WBS path: 16-mobile-field-ergonomics/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10103</ObjectId>
       <Id>A0104</Id>
       <Name>`Demo.tsx` reimplements full mobile layout independently rather than reusing `Index.tsx` — two maintenance surfaces.</Name>
+      <WBSObjectId>111</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1799,16 +2158,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Mobile Field Ergonomics
-WBS: 16-mobile-field-ergonomics/Remaining
+WBS path: 16-mobile-field-ergonomics/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10104</ObjectId>
       <Id>A0105</Id>
       <Name>Bell + realtime subscribe</Name>
+      <WBSObjectId>116</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -1816,16 +2177,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Notifications &amp; Presence
-WBS: 17-notifications-and-presence/Docs
+WBS path: 17-notifications-and-presence/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10105</ObjectId>
       <Id>A0106</Id>
       <Name>markRead / markAllRead</Name>
+      <WBSObjectId>116</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -1833,16 +2196,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Notifications &amp; Presence
-WBS: 17-notifications-and-presence/Docs
+WBS path: 17-notifications-and-presence/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10106</ObjectId>
       <Id>A0107</Id>
       <Name>Navigation on click</Name>
+      <WBSObjectId>116</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -1850,16 +2215,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Notifications &amp; Presence
-WBS: 17-notifications-and-presence/Docs
+WBS path: 17-notifications-and-presence/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10107</ObjectId>
       <Id>A0108</Id>
       <Name>Native push registration</Name>
+      <WBSObjectId>116</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -1867,17 +2234,19 @@ Verification status: unverified</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Notifications &amp; Presence
-WBS: 17-notifications-and-presence/Mobile
+WBS path: 17-notifications-and-presence/Mobile
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: lib/native/push.ts</Notes>
     </Activity>
     <Activity>
       <ObjectId>10108</ObjectId>
       <Id>A0109</Id>
       <Name>send-push edge function</Name>
+      <WBSObjectId>116</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -1885,16 +2254,18 @@ Evidence: lib/native/push.ts</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Notifications &amp; Presence
-WBS: 17-notifications-and-presence/Docs
+WBS path: 17-notifications-and-presence/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10109</ObjectId>
       <Id>A0110</Id>
       <Name>Presence / online users</Name>
+      <WBSObjectId>116</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -1902,16 +2273,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Notifications &amp; Presence
-WBS: 17-notifications-and-presence/Docs
+WBS path: 17-notifications-and-presence/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10110</ObjectId>
       <Id>A0111</Id>
       <Name>No confirmed trigger that auto-inserts into `notifications`; notification pipeline may be entirely manual/missing.</Name>
+      <WBSObjectId>116</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1919,16 +2292,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>16</RemainingDuration>
       <AtCompletionDuration>16</AtCompletionDuration>
       <Notes>Stream: Notifications &amp; Presence
-WBS: 17-notifications-and-presence/Remaining
+WBS path: 17-notifications-and-presence/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10111</ObjectId>
       <Id>A0112</Id>
       <Name>Presence `name` always `''`; online user list shows &quot;User&quot; for everyone.</Name>
+      <WBSObjectId>116</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1936,16 +2311,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Notifications &amp; Presence
-WBS: 17-notifications-and-presence/Remaining
+WBS path: 17-notifications-and-presence/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10112</ObjectId>
       <Id>A0113</Id>
       <Name>`useNotifications` polls every 60s on web; poor UX fallback for time-sensitive RE actions.</Name>
+      <WBSObjectId>116</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1953,16 +2330,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Notifications &amp; Presence
-WBS: 17-notifications-and-presence/Remaining
+WBS path: 17-notifications-and-presence/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10113</ObjectId>
       <Id>A0114</Id>
       <Name>`send-push` reads `FCM_SERVER_KEY` but FCM HTTP v1 requires OAuth2 service-account tokens, not legacy server key; likely</Name>
+      <WBSObjectId>116</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -1970,16 +2349,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Notifications &amp; Presence
-WBS: 17-notifications-and-presence/Remaining
+WBS path: 17-notifications-and-presence/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10114</ObjectId>
       <Id>A0115</Id>
       <Name>Negative lag / M-code check</Name>
+      <WBSObjectId>122</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -1987,16 +2368,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Compliance &amp; Audit
-WBS: 18-compliance-and-audit/Docs
+WBS path: 18-compliance-and-audit/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10115</ObjectId>
       <Id>A0116</Id>
       <Name>DCMA 14-point</Name>
+      <WBSObjectId>122</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -2004,17 +2387,19 @@ Verification status: unverified</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Compliance &amp; Audit
-WBS: 18-compliance-and-audit/Docs
+WBS path: 18-compliance-and-audit/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Evidence: lib/schedule/analysis/dcma.ts</Notes>
     </Activity>
     <Activity>
       <ObjectId>10116</ObjectId>
       <Id>A0117</Id>
       <Name>Approve/reject timestamps + reviewer</Name>
+      <WBSObjectId>122</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -2022,16 +2407,18 @@ Evidence: lib/schedule/analysis/dcma.ts</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Compliance &amp; Audit
-WBS: 18-compliance-and-audit/Docs
+WBS path: 18-compliance-and-audit/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10117</ObjectId>
       <Id>A0118</Id>
       <Name>Snapshot freeze</Name>
+      <WBSObjectId>122</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -2039,16 +2426,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Compliance &amp; Audit
-WBS: 18-compliance-and-audit/Docs
+WBS path: 18-compliance-and-audit/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10118</ObjectId>
       <Id>A0119</Id>
       <Name>Drift detection</Name>
+      <WBSObjectId>122</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -2056,16 +2445,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Compliance &amp; Audit
-WBS: 18-compliance-and-audit/Docs
+WBS path: 18-compliance-and-audit/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10119</ObjectId>
       <Id>A0120</Id>
       <Name>M-code detection relies on `activity_id` prefix; non-standard prefix (`AD-M100`) breaks check with no fallback to name m</Name>
+      <WBSObjectId>122</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -2073,16 +2464,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Compliance &amp; Audit
-WBS: 18-compliance-and-audit/Remaining
+WBS path: 18-compliance-and-audit/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10120</ObjectId>
       <Id>A0121</Id>
       <Name>Approval fields are plain mutable columns; admin could UPDATE `approved_at` retroactively — no immutable audit trail.</Name>
+      <WBSObjectId>122</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -2090,16 +2483,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>16</RemainingDuration>
       <AtCompletionDuration>16</AtCompletionDuration>
       <Notes>Stream: Compliance &amp; Audit
-WBS: 18-compliance-and-audit/Remaining
+WBS path: 18-compliance-and-audit/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10121</ObjectId>
       <Id>A0122</Id>
       <Name>DCMA runs client-side on full activity set; 1000+ task schedules block JS thread with no web-worker offload.</Name>
+      <WBSObjectId>122</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -2107,16 +2502,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Compliance &amp; Audit
-WBS: 18-compliance-and-audit/Remaining
+WBS path: 18-compliance-and-audit/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10122</ObjectId>
       <Id>A0123</Id>
       <Name>`reject_reason` is freeform with no character minimum at mutation layer; empty-string rejections allowed.</Name>
+      <WBSObjectId>122</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -2124,16 +2521,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Compliance &amp; Audit
-WBS: 18-compliance-and-audit/Remaining
+WBS path: 18-compliance-and-audit/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10123</ObjectId>
       <Id>A0124</Id>
       <Name>WelcomeCarousel gating</Name>
+      <WBSObjectId>117</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -2141,16 +2540,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Onboarding &amp; Tutorials
-WBS: 19-onboarding-and-tutorials/Docs
+WBS path: 19-onboarding-and-tutorials/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10124</ObjectId>
       <Id>A0125</Id>
       <Name>Role filtering</Name>
+      <WBSObjectId>117</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -2158,16 +2559,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Onboarding &amp; Tutorials
-WBS: 19-onboarding-and-tutorials/Docs
+WBS path: 19-onboarding-and-tutorials/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10125</ObjectId>
       <Id>A0126</Id>
       <Name>Guided tour auto-start</Name>
+      <WBSObjectId>117</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -2175,16 +2578,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Onboarding &amp; Tutorials
-WBS: 19-onboarding-and-tutorials/Docs
+WBS path: 19-onboarding-and-tutorials/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10126</ObjectId>
       <Id>A0127</Id>
       <Name>Demo 12-step walkthrough</Name>
+      <WBSObjectId>117</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -2192,16 +2597,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Onboarding &amp; Tutorials
-WBS: 19-onboarding-and-tutorials/Docs
+WBS path: 19-onboarding-and-tutorials/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10127</ObjectId>
       <Id>A0128</Id>
       <Name>NativeFirstRun shown once</Name>
+      <WBSObjectId>117</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -2209,16 +2616,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Onboarding &amp; Tutorials
-WBS: 19-onboarding-and-tutorials/Docs
+WBS path: 19-onboarding-and-tutorials/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10128</ObjectId>
       <Id>A0129</Id>
       <Name>`GuidedTour` polls `querySelector` every 500ms; missing `data-tour` attribute (e.g. collapsed sidebar) means tooltip nev</Name>
+      <WBSObjectId>117</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -2226,16 +2635,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Onboarding &amp; Tutorials
-WBS: 19-onboarding-and-tutorials/Remaining
+WBS path: 19-onboarding-and-tutorials/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10129</ObjectId>
       <Id>A0130</Id>
       <Name>`useTour` stores completion only in `localStorage`; clearing storage replays tour; second device sees it fresh.</Name>
+      <WBSObjectId>117</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -2243,16 +2654,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Onboarding &amp; Tutorials
-WBS: 19-onboarding-and-tutorials/Remaining
+WBS path: 19-onboarding-and-tutorials/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10130</ObjectId>
       <Id>A0131</Id>
       <Name>`WelcomeCarousel` hard-codes 5 slides; adding a new role requires editing component.</Name>
+      <WBSObjectId>117</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -2260,16 +2673,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Onboarding &amp; Tutorials
-WBS: 19-onboarding-and-tutorials/Remaining
+WBS path: 19-onboarding-and-tutorials/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10131</ObjectId>
       <Id>A0132</Id>
       <Name>`Demo.tsx` is ~400 lines of standalone workspace duplication; core takeoff UI changes require parallel updates.</Name>
+      <WBSObjectId>117</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -2277,16 +2692,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Onboarding &amp; Tutorials
-WBS: 19-onboarding-and-tutorials/Remaining
+WBS path: 19-onboarding-and-tutorials/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10132</ObjectId>
       <Id>A0133</Id>
       <Name>Landing page</Name>
+      <WBSObjectId>124</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -2294,16 +2711,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Sales &amp; Pitch
-WBS: 20-sales-and-pitch/Docs
+WBS path: 20-sales-and-pitch/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10133</ObjectId>
       <Id>A0134</Id>
       <Name>Demo CTA linkage</Name>
+      <WBSObjectId>124</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -2311,16 +2730,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Sales &amp; Pitch
-WBS: 20-sales-and-pitch/Docs
+WBS path: 20-sales-and-pitch/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10134</ObjectId>
       <Id>A0135</Id>
       <Name>McfaPitch / FajarPitch</Name>
+      <WBSObjectId>124</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -2328,16 +2749,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Sales &amp; Pitch
-WBS: 20-sales-and-pitch/Docs
+WBS path: 20-sales-and-pitch/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10135</ObjectId>
       <Id>A0136</Id>
       <Name>P6XmlDemo</Name>
+      <WBSObjectId>124</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -2345,16 +2768,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Sales &amp; Pitch
-WBS: 20-sales-and-pitch/Docs
+WBS path: 20-sales-and-pitch/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10136</ObjectId>
       <Id>A0137</Id>
       <Name>sitemap.xml completeness</Name>
+      <WBSObjectId>124</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -2362,16 +2787,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Sales &amp; Pitch
-WBS: 20-sales-and-pitch/Docs
+WBS path: 20-sales-and-pitch/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10137</ObjectId>
       <Id>A0138</Id>
       <Name>llms.txt accuracy</Name>
+      <WBSObjectId>124</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -2379,16 +2806,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Sales &amp; Pitch
-WBS: 20-sales-and-pitch/Docs
+WBS path: 20-sales-and-pitch/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10138</ObjectId>
       <Id>A0139</Id>
       <Name>`demo_requests` table referenced but no migration found; contact form may be silently broken in production.</Name>
+      <WBSObjectId>124</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -2396,16 +2825,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>8</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Sales &amp; Pitch
-WBS: 20-sales-and-pitch/Remaining
+WBS path: 20-sales-and-pitch/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10139</ObjectId>
       <Id>A0140</Id>
       <Name>`FajarPitch.tsx` uses deterministic seed to generate fake equipment availability; if interpreted as real fleet data, mis</Name>
+      <WBSObjectId>124</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -2413,16 +2844,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Sales &amp; Pitch
-WBS: 20-sales-and-pitch/Remaining
+WBS path: 20-sales-and-pitch/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10140</ObjectId>
       <Id>A0141</Id>
       <Name>`McfaPitch` and `FajarPitch` hard-code proposal specifics in source; updating pricing/scope requires code deploy rather </Name>
+      <WBSObjectId>124</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -2430,16 +2863,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
       <Notes>Stream: Sales &amp; Pitch
-WBS: 20-sales-and-pitch/Remaining
+WBS path: 20-sales-and-pitch/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10141</ObjectId>
       <Id>A0142</Id>
       <Name>`llms.txt` and `sitemap.xml` hard-code production domain (`draw-quantify-dash.lovable.app`); staging/preview deployments</Name>
+      <WBSObjectId>124</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -2447,16 +2882,18 @@ Verification status: unverified</Notes>
       <RemainingDuration>8</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: Sales &amp; Pitch
-WBS: 20-sales-and-pitch/Remaining
+WBS path: 20-sales-and-pitch/Remaining
 Source: brief-risk
 Verdict: missing
 code_present=false  verified_e2e=false
-Verification status: unverified</Notes>
+Verification: unverified</Notes>
     </Activity>
     <Activity>
       <ObjectId>10142</ObjectId>
       <Id>A0143</Id>
       <Name>Deliver: Walk the site. Measure automatically.</Name>
+      <WBSObjectId>125</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -2464,17 +2901,19 @@ Verification status: unverified</Notes>
       <RemainingDuration>40</RemainingDuration>
       <AtCompletionDuration>40</AtCompletionDuration>
       <Notes>Stream: 21 Marketing Debt
-WBS: 21-marketing-debt/05-field-capture
+WBS path: 21-marketing-debt/05-field-capture
 Source: marketing-promise
 Verdict: undelivered
 code_present=false  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Marketing claim age: 68d</Notes>
     </Activity>
     <Activity>
       <ObjectId>10143</ObjectId>
       <Id>A0144</Id>
       <Name>Deliver: We'll configure a walkthrough around your contract.</Name>
+      <WBSObjectId>125</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -2482,17 +2921,19 @@ Marketing claim age: 68d</Notes>
       <RemainingDuration>40</RemainingDuration>
       <AtCompletionDuration>40</AtCompletionDuration>
       <Notes>Stream: 21 Marketing Debt
-WBS: 21-marketing-debt/19-onboarding-and-tutorials
+WBS path: 21-marketing-debt/19-onboarding-and-tutorials
 Source: marketing-promise
 Verdict: undelivered
 code_present=false  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Marketing claim age: 68d</Notes>
     </Activity>
     <Activity>
       <ObjectId>10144</ObjectId>
       <Id>A0145</Id>
       <Name>Deliver: [Landing](/landing): Product overview, features, FAQ, and demo request.</Name>
+      <WBSObjectId>125</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -2500,17 +2941,19 @@ Marketing claim age: 68d</Notes>
       <RemainingDuration>40</RemainingDuration>
       <AtCompletionDuration>40</AtCompletionDuration>
       <Notes>Stream: 21 Marketing Debt
-WBS: 21-marketing-debt/Unmapped
+WBS path: 21-marketing-debt/Unmapped
 Source: marketing-promise
 Verdict: undelivered
 code_present=false  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Marketing claim age: 2d</Notes>
     </Activity>
     <Activity>
       <ObjectId>10145</ObjectId>
       <Id>A0146</Id>
       <Name>Deliver: [Interactive Demo](/demo): Standalone walkthrough of field setup and measurement.</Name>
+      <WBSObjectId>125</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -2518,17 +2961,19 @@ Marketing claim age: 2d</Notes>
       <RemainingDuration>40</RemainingDuration>
       <AtCompletionDuration>40</AtCompletionDuration>
       <Notes>Stream: 21 Marketing Debt
-WBS: 21-marketing-debt/03-project-onboarding
+WBS path: 21-marketing-debt/03-project-onboarding
 Source: marketing-promise
 Verdict: undelivered
 code_present=false  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Marketing claim age: 2d</Notes>
     </Activity>
     <Activity>
       <ObjectId>10146</ObjectId>
       <Id>A0147</Id>
       <Name>Deliver: [Sign in](/auth): Authentication for existing teams.</Name>
+      <WBSObjectId>125</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -2536,17 +2981,19 @@ Marketing claim age: 2d</Notes>
       <RemainingDuration>40</RemainingDuration>
       <AtCompletionDuration>40</AtCompletionDuration>
       <Notes>Stream: 21 Marketing Debt
-WBS: 21-marketing-debt/01-identity-and-access
+WBS path: 21-marketing-debt/01-identity-and-access
 Source: marketing-promise
 Verdict: undelivered
 code_present=false  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Marketing claim age: 2d</Notes>
     </Activity>
     <Activity>
       <ObjectId>10147</ObjectId>
       <Id>A0148</Id>
       <Name>Deliver: [MCFA Pitch](/mcfa): Partner-specific overview for MCFA.</Name>
+      <WBSObjectId>125</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -2554,17 +3001,19 @@ Marketing claim age: 2d</Notes>
       <RemainingDuration>40</RemainingDuration>
       <AtCompletionDuration>40</AtCompletionDuration>
       <Notes>Stream: 21 Marketing Debt
-WBS: 21-marketing-debt/Unmapped
+WBS path: 21-marketing-debt/Unmapped
 Source: marketing-promise
 Verdict: undelivered
 code_present=false  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Marketing claim age: 2d</Notes>
     </Activity>
     <Activity>
       <ObjectId>10148</ObjectId>
       <Id>A0149</Id>
       <Name>Deliver: [Fajar Pitch](/fajar): Partner-specific overview for Fajar.</Name>
+      <WBSObjectId>125</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -2572,17 +3021,19 @@ Marketing claim age: 2d</Notes>
       <RemainingDuration>40</RemainingDuration>
       <AtCompletionDuration>40</AtCompletionDuration>
       <Notes>Stream: 21 Marketing Debt
-WBS: 21-marketing-debt/Unmapped
+WBS path: 21-marketing-debt/Unmapped
 Source: marketing-promise
 Verdict: undelivered
 code_present=false  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Marketing claim age: 2d</Notes>
     </Activity>
     <Activity>
       <ObjectId>10149</ObjectId>
       <Id>A0150</Id>
       <Name>Deliver: [PMXML Demo](/p6-xml): Primavera P6 XML round-trip demo (DCMA, progress, RE memo).</Name>
+      <WBSObjectId>125</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Not Started</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>0</PhysicalPercentComplete>
@@ -2590,17 +3041,19 @@ Marketing claim age: 2d</Notes>
       <RemainingDuration>40</RemainingDuration>
       <AtCompletionDuration>40</AtCompletionDuration>
       <Notes>Stream: 21 Marketing Debt
-WBS: 21-marketing-debt/11-schedule-management
+WBS path: 21-marketing-debt/11-schedule-management
 Source: marketing-promise
 Verdict: undelivered
 code_present=false  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Marketing claim age: 2d</Notes>
     </Activity>
     <Activity>
       <ObjectId>10150</ObjectId>
       <Id>A0151</Id>
       <Name>XER ingest engine (scrapped pivot)</Name>
+      <WBSObjectId>125</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>100</PhysicalPercentComplete>
@@ -2610,17 +3063,19 @@ Marketing claim age: 2d</Notes>
       <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>240</AtCompletionDuration>
       <Notes>Stream: 99 Cross-cutting
-WBS: 99-cross-cutting/Narrative
+WBS path: 99-cross-cutting/Narrative
 Source: cross-cutting
 Verdict: implemented
 code_present=true  verified_e2e=true
-Verification status: unverified
+Verification: unverified
 Note: Built then deleted when format proved hostile; informed PMXML pivot.</Notes>
     </Activity>
     <Activity>
       <ObjectId>10151</ObjectId>
       <Id>A0152</Id>
       <Name>PMXML pivot — replace XER with Oracle PMXML round-trip</Name>
+      <WBSObjectId>125</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>60</PhysicalPercentComplete>
@@ -2629,17 +3084,19 @@ Note: Built then deleted when format proved hostile; informed PMXML pivot.</Note
       <RemainingDuration>45</RemainingDuration>
       <AtCompletionDuration>112</AtCompletionDuration>
       <Notes>Stream: 99 Cross-cutting
-WBS: 99-cross-cutting/Narrative
+WBS path: 99-cross-cutting/Narrative
 Source: cross-cutting
 Verdict: partial
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Note: Parser + serializer + apply-progress shipped; baseline import + UDF round-trip remain.</Notes>
     </Activity>
     <Activity>
       <ObjectId>10152</ObjectId>
       <Id>A0153</Id>
       <Name>20-stream comprehension pass (this artefact set)</Name>
+      <WBSObjectId>125</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>100</PhysicalPercentComplete>
@@ -2649,17 +3106,19 @@ Note: Parser + serializer + apply-progress shipped; baseline import + UDF round-
       <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>16</AtCompletionDuration>
       <Notes>Stream: 99 Cross-cutting
-WBS: 99-cross-cutting/Narrative
+WBS path: 99-cross-cutting/Narrative
 Source: cross-cutting
 Verdict: implemented
 code_present=true  verified_e2e=true
-Verification status: unverified
+Verification: unverified
 Note: Briefs, wbs-v2.json, comprehension-report.md.</Notes>
     </Activity>
     <Activity>
       <ObjectId>10153</ObjectId>
       <Id>A0154</Id>
       <Name>Dev WBS authoring (recursive — this effort)</Name>
+      <WBSObjectId>125</WBSObjectId>
+      <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
       <PhysicalPercentComplete>50</PhysicalPercentComplete>
@@ -2668,12 +3127,1090 @@ Note: Briefs, wbs-v2.json, comprehension-report.md.</Notes>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
       <Notes>Stream: 99 Cross-cutting
-WBS: 99-cross-cutting/Narrative
+WBS path: 99-cross-cutting/Narrative
 Source: cross-cutting
 Verdict: partial
 code_present=true  verified_e2e=false
-Verification status: unverified
+Verification: unverified
 Note: Strict-rule scoring + marketing-debt branch + PMXML self-proof.</Notes>
     </Activity>
+    <Activity>
+      <ObjectId>20000</ObjectId>
+      <Id>M0</Id>
+      <Name>M0 — Baseline schedule locked</Name>
+      <WBSObjectId>100</WBSObjectId>
+      <Type>Finish Milestone</Type>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>0</PlannedDuration>
+      <RemainingDuration>0</RemainingDuration>
+      <AtCompletionDuration>0</AtCompletionDuration>
+      <Notes>Gate milestone for phase FOUNDATION.</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>20001</ObjectId>
+      <Id>M1</Id>
+      <Name>M1 — Foundation verified</Name>
+      <WBSObjectId>100</WBSObjectId>
+      <Type>Finish Milestone</Type>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>0</PlannedDuration>
+      <RemainingDuration>0</RemainingDuration>
+      <AtCompletionDuration>0</AtCompletionDuration>
+      <Notes>Gate milestone for phase FOUNDATION.</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>20002</ObjectId>
+      <Id>M2</Id>
+      <Name>M2 — Field capture pilot-ready</Name>
+      <WBSObjectId>105</WBSObjectId>
+      <Type>Finish Milestone</Type>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>0</PlannedDuration>
+      <RemainingDuration>0</RemainingDuration>
+      <AtCompletionDuration>0</AtCompletionDuration>
+      <Notes>Gate milestone for phase FIELD.</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>20003</ObjectId>
+      <Id>M3</Id>
+      <Name>M3 — Office workflow approved</Name>
+      <WBSObjectId>112</WBSObjectId>
+      <Type>Finish Milestone</Type>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>0</PlannedDuration>
+      <RemainingDuration>0</RemainingDuration>
+      <AtCompletionDuration>0</AtCompletionDuration>
+      <Notes>Gate milestone for phase OFFICE.</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>20004</ObjectId>
+      <Id>M4</Id>
+      <Name>M4 — P6 round-trip + compliance</Name>
+      <WBSObjectId>118</WBSObjectId>
+      <Type>Finish Milestone</Type>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>0</PlannedDuration>
+      <RemainingDuration>0</RemainingDuration>
+      <AtCompletionDuration>0</AtCompletionDuration>
+      <Notes>Gate milestone for phase SCHEDULING.</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>20005</ObjectId>
+      <Id>M5</Id>
+      <Name>M5 — MVP feature-complete</Name>
+      <WBSObjectId>118</WBSObjectId>
+      <Type>Finish Milestone</Type>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>0</PlannedDuration>
+      <RemainingDuration>0</RemainingDuration>
+      <AtCompletionDuration>0</AtCompletionDuration>
+      <Notes>Gate milestone for phase SCHEDULING.</Notes>
+    </Activity>
+    <Activity>
+      <ObjectId>20006</ObjectId>
+      <Id>M6</Id>
+      <Name>M6 — Sales-ready / GA</Name>
+      <WBSObjectId>123</WBSObjectId>
+      <Type>Finish Milestone</Type>
+      <Status>Not Started</Status>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>0</PlannedDuration>
+      <RemainingDuration>0</RemainingDuration>
+      <AtCompletionDuration>0</AtCompletionDuration>
+      <Notes>Gate milestone for phase GTM.</Notes>
+    </Activity>
+    <Relationship>
+      <ObjectId>30000</ObjectId>
+      <PredecessorActivityObjectId>10000</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10001</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30001</ObjectId>
+      <PredecessorActivityObjectId>10001</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10002</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30002</ObjectId>
+      <PredecessorActivityObjectId>10002</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10003</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30003</ObjectId>
+      <PredecessorActivityObjectId>10003</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10004</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30004</ObjectId>
+      <PredecessorActivityObjectId>10004</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10005</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30005</ObjectId>
+      <PredecessorActivityObjectId>10005</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10006</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30006</ObjectId>
+      <PredecessorActivityObjectId>10006</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10007</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30007</ObjectId>
+      <PredecessorActivityObjectId>10007</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10008</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30008</ObjectId>
+      <PredecessorActivityObjectId>10008</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10009</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30009</ObjectId>
+      <PredecessorActivityObjectId>10009</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10010</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30010</ObjectId>
+      <PredecessorActivityObjectId>10011</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10012</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30011</ObjectId>
+      <PredecessorActivityObjectId>10012</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10013</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30012</ObjectId>
+      <PredecessorActivityObjectId>10013</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10014</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30013</ObjectId>
+      <PredecessorActivityObjectId>10014</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10015</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30014</ObjectId>
+      <PredecessorActivityObjectId>10015</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10016</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30015</ObjectId>
+      <PredecessorActivityObjectId>10016</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10017</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30016</ObjectId>
+      <PredecessorActivityObjectId>10017</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10018</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30017</ObjectId>
+      <PredecessorActivityObjectId>10018</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10019</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30018</ObjectId>
+      <PredecessorActivityObjectId>10019</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10020</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30019</ObjectId>
+      <PredecessorActivityObjectId>10020</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10021</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30020</ObjectId>
+      <PredecessorActivityObjectId>10022</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10023</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30021</ObjectId>
+      <PredecessorActivityObjectId>10023</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10024</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30022</ObjectId>
+      <PredecessorActivityObjectId>10024</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10025</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30023</ObjectId>
+      <PredecessorActivityObjectId>10025</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10026</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30024</ObjectId>
+      <PredecessorActivityObjectId>10026</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10027</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30025</ObjectId>
+      <PredecessorActivityObjectId>10027</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10028</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30026</ObjectId>
+      <PredecessorActivityObjectId>10028</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10029</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30027</ObjectId>
+      <PredecessorActivityObjectId>10029</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10030</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30028</ObjectId>
+      <PredecessorActivityObjectId>10030</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10031</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30029</ObjectId>
+      <PredecessorActivityObjectId>10032</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10033</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30030</ObjectId>
+      <PredecessorActivityObjectId>10033</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10034</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30031</ObjectId>
+      <PredecessorActivityObjectId>10034</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10035</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30032</ObjectId>
+      <PredecessorActivityObjectId>10035</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10036</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30033</ObjectId>
+      <PredecessorActivityObjectId>10036</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10037</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30034</ObjectId>
+      <PredecessorActivityObjectId>10037</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10038</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30035</ObjectId>
+      <PredecessorActivityObjectId>10038</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10039</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30036</ObjectId>
+      <PredecessorActivityObjectId>10039</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10040</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30037</ObjectId>
+      <PredecessorActivityObjectId>10040</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10041</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30038</ObjectId>
+      <PredecessorActivityObjectId>10041</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10042</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30039</ObjectId>
+      <PredecessorActivityObjectId>10043</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10044</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30040</ObjectId>
+      <PredecessorActivityObjectId>10044</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10045</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30041</ObjectId>
+      <PredecessorActivityObjectId>10045</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10046</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30042</ObjectId>
+      <PredecessorActivityObjectId>10046</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10047</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30043</ObjectId>
+      <PredecessorActivityObjectId>10047</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10048</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30044</ObjectId>
+      <PredecessorActivityObjectId>10048</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10049</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30045</ObjectId>
+      <PredecessorActivityObjectId>10049</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10050</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30046</ObjectId>
+      <PredecessorActivityObjectId>10050</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10051</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30047</ObjectId>
+      <PredecessorActivityObjectId>10051</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10052</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30048</ObjectId>
+      <PredecessorActivityObjectId>10052</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10053</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30049</ObjectId>
+      <PredecessorActivityObjectId>10053</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10054</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30050</ObjectId>
+      <PredecessorActivityObjectId>10055</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10056</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30051</ObjectId>
+      <PredecessorActivityObjectId>10056</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10057</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30052</ObjectId>
+      <PredecessorActivityObjectId>10057</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10058</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30053</ObjectId>
+      <PredecessorActivityObjectId>10059</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10060</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30054</ObjectId>
+      <PredecessorActivityObjectId>10060</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10061</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30055</ObjectId>
+      <PredecessorActivityObjectId>10061</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10062</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30056</ObjectId>
+      <PredecessorActivityObjectId>10063</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10064</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30057</ObjectId>
+      <PredecessorActivityObjectId>10064</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10065</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30058</ObjectId>
+      <PredecessorActivityObjectId>10065</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10066</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30059</ObjectId>
+      <PredecessorActivityObjectId>10067</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10068</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30060</ObjectId>
+      <PredecessorActivityObjectId>10068</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10069</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30061</ObjectId>
+      <PredecessorActivityObjectId>10069</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10070</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30062</ObjectId>
+      <PredecessorActivityObjectId>10071</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10072</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30063</ObjectId>
+      <PredecessorActivityObjectId>10072</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10073</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30064</ObjectId>
+      <PredecessorActivityObjectId>10073</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10074</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30065</ObjectId>
+      <PredecessorActivityObjectId>10075</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10076</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30066</ObjectId>
+      <PredecessorActivityObjectId>10076</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10077</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30067</ObjectId>
+      <PredecessorActivityObjectId>10077</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10078</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30068</ObjectId>
+      <PredecessorActivityObjectId>10079</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10080</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30069</ObjectId>
+      <PredecessorActivityObjectId>10080</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10081</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30070</ObjectId>
+      <PredecessorActivityObjectId>10081</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10082</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30071</ObjectId>
+      <PredecessorActivityObjectId>10083</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10084</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30072</ObjectId>
+      <PredecessorActivityObjectId>10084</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10085</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30073</ObjectId>
+      <PredecessorActivityObjectId>10085</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10086</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30074</ObjectId>
+      <PredecessorActivityObjectId>10087</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10088</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30075</ObjectId>
+      <PredecessorActivityObjectId>10088</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10089</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30076</ObjectId>
+      <PredecessorActivityObjectId>10089</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10090</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30077</ObjectId>
+      <PredecessorActivityObjectId>10091</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10092</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30078</ObjectId>
+      <PredecessorActivityObjectId>10092</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10093</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30079</ObjectId>
+      <PredecessorActivityObjectId>10093</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10094</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30080</ObjectId>
+      <PredecessorActivityObjectId>10095</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10096</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30081</ObjectId>
+      <PredecessorActivityObjectId>10096</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10097</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30082</ObjectId>
+      <PredecessorActivityObjectId>10097</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10098</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30083</ObjectId>
+      <PredecessorActivityObjectId>10098</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10099</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30084</ObjectId>
+      <PredecessorActivityObjectId>10099</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10100</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30085</ObjectId>
+      <PredecessorActivityObjectId>10100</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10101</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30086</ObjectId>
+      <PredecessorActivityObjectId>10101</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10102</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30087</ObjectId>
+      <PredecessorActivityObjectId>10102</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10103</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30088</ObjectId>
+      <PredecessorActivityObjectId>10104</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10105</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30089</ObjectId>
+      <PredecessorActivityObjectId>10105</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10106</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30090</ObjectId>
+      <PredecessorActivityObjectId>10106</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10107</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30091</ObjectId>
+      <PredecessorActivityObjectId>10107</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10108</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30092</ObjectId>
+      <PredecessorActivityObjectId>10108</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10109</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30093</ObjectId>
+      <PredecessorActivityObjectId>10109</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10110</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30094</ObjectId>
+      <PredecessorActivityObjectId>10110</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10111</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30095</ObjectId>
+      <PredecessorActivityObjectId>10111</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10112</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30096</ObjectId>
+      <PredecessorActivityObjectId>10112</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10113</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30097</ObjectId>
+      <PredecessorActivityObjectId>10114</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10115</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30098</ObjectId>
+      <PredecessorActivityObjectId>10115</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10116</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30099</ObjectId>
+      <PredecessorActivityObjectId>10116</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10117</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30100</ObjectId>
+      <PredecessorActivityObjectId>10117</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10118</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30101</ObjectId>
+      <PredecessorActivityObjectId>10118</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10119</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30102</ObjectId>
+      <PredecessorActivityObjectId>10119</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10120</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30103</ObjectId>
+      <PredecessorActivityObjectId>10120</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10121</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30104</ObjectId>
+      <PredecessorActivityObjectId>10121</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10122</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30105</ObjectId>
+      <PredecessorActivityObjectId>10123</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10124</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30106</ObjectId>
+      <PredecessorActivityObjectId>10124</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10125</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30107</ObjectId>
+      <PredecessorActivityObjectId>10125</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10126</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30108</ObjectId>
+      <PredecessorActivityObjectId>10126</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10127</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30109</ObjectId>
+      <PredecessorActivityObjectId>10127</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10128</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30110</ObjectId>
+      <PredecessorActivityObjectId>10128</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10129</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30111</ObjectId>
+      <PredecessorActivityObjectId>10129</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10130</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30112</ObjectId>
+      <PredecessorActivityObjectId>10130</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10131</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30113</ObjectId>
+      <PredecessorActivityObjectId>10132</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10133</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30114</ObjectId>
+      <PredecessorActivityObjectId>10133</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10134</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30115</ObjectId>
+      <PredecessorActivityObjectId>10134</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10135</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30116</ObjectId>
+      <PredecessorActivityObjectId>10135</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10136</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30117</ObjectId>
+      <PredecessorActivityObjectId>10136</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10137</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30118</ObjectId>
+      <PredecessorActivityObjectId>10137</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10138</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30119</ObjectId>
+      <PredecessorActivityObjectId>10138</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10139</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30120</ObjectId>
+      <PredecessorActivityObjectId>10139</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10140</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30121</ObjectId>
+      <PredecessorActivityObjectId>10140</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10141</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30122</ObjectId>
+      <PredecessorActivityObjectId>10142</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10143</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30123</ObjectId>
+      <PredecessorActivityObjectId>10143</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10144</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30124</ObjectId>
+      <PredecessorActivityObjectId>10144</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10145</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30125</ObjectId>
+      <PredecessorActivityObjectId>10145</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10146</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30126</ObjectId>
+      <PredecessorActivityObjectId>10146</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10147</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30127</ObjectId>
+      <PredecessorActivityObjectId>10147</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10148</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30128</ObjectId>
+      <PredecessorActivityObjectId>10148</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10149</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30129</ObjectId>
+      <PredecessorActivityObjectId>10149</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10150</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30130</ObjectId>
+      <PredecessorActivityObjectId>10150</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10151</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30131</ObjectId>
+      <PredecessorActivityObjectId>10151</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10152</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30132</ObjectId>
+      <PredecessorActivityObjectId>10152</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>10153</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30133</ObjectId>
+      <PredecessorActivityObjectId>10074</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>20000</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30134</ObjectId>
+      <PredecessorActivityObjectId>10074</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>20001</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30135</ObjectId>
+      <PredecessorActivityObjectId>10103</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>20002</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30136</ObjectId>
+      <PredecessorActivityObjectId>10131</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>20003</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30137</ObjectId>
+      <PredecessorActivityObjectId>10122</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>20004</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30138</ObjectId>
+      <PredecessorActivityObjectId>10122</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>20005</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
+    <Relationship>
+      <ObjectId>30139</ObjectId>
+      <PredecessorActivityObjectId>10141</PredecessorActivityObjectId>
+      <SuccessorActivityObjectId>20006</SuccessorActivityObjectId>
+      <Type>Finish to Start</Type>
+      <Lag>0</Lag>
+    </Relationship>
   </Project>
 </APIBusinessObjects>

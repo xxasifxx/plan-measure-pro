@@ -23,7 +23,7 @@ import Landing from "./pages/Landing";
 import NotFound from "./pages/NotFound";
 import Documents from "./pages/Documents";
 import Settings from "./pages/Settings";
-import Wbs from "./pages/Wbs";
+
 import { PwaShell } from "@/components/PwaShell";
 import { BiometricGate } from "@/components/BiometricGate";
 import { NativeFirstRun } from "@/components/NativeFirstRun";
@@ -122,7 +122,7 @@ const App = () => (
                 <Route path="/fajar" element={<FajarPitch />} />
                 <Route path="/p6-xml" element={<P6XmlDemo />} />
                 <Route path="/mcfa/p6-xml" element={<P6XmlDemo />} />
-                <Route path="/wbs" element={<Wbs />} />
+                
                 <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
