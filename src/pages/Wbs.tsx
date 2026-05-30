@@ -96,16 +96,20 @@ const LIFECYCLE_COLOR: Record<string, string> = {
 export default function Wbs() {
   const [wbs, setWbs] = useState<Wbs | null>(null);
   const [acts, setActs] = useState<ActivitySlim[] | null>(null);
+  const [schedule, setSchedule] = useState<Schedule | null>(null);
   const [open, setOpen] = useState<Set<string>>(new Set());
   const [filter, setFilter] = useState<'all' | 'gaps' | 'placeholders' | 'deliverables'>('all');
+  const [view, setView] = useState<'files' | 'schedule'>('files');
 
   useEffect(() => {
     Promise.all([
       fetch('/wbs/wbs.json').then((r) => r.json()),
       fetch('/wbs/activities.json').then((r) => r.json()),
-    ]).then(([w, a]) => {
+      fetch('/wbs/schedule.json').then((r) => r.ok ? r.json() : null).catch(() => null),
+    ]).then(([w, a, s]) => {
       setWbs(w);
       setActs(a.activities);
+      setSchedule(s);
       // open all streams by default
       setOpen(new Set(w.parents.filter((p: Parent) => p.kind === 'stream').map((p: Parent) => p.id)));
     });
