@@ -448,6 +448,15 @@ const entries = [];
 
 for (const [streamKey, s] of Object.entries(caps.streams)) {
   for (const c of s.capabilities || []) {
+    // record owner role for every cap so verification gaps can inherit it
+    const txt = `${c.title || ''} ${c.evidence || ''}`;
+    const tmpls = pickTemplates(txt);
+    const tokens = (c.title || '')
+      .toLowerCase()
+      .split(/[^a-z0-9]+/)
+      .filter((t) => t.length >= 4);
+    if (!CAP_OWNER_BY_STREAM.has(streamKey)) CAP_OWNER_BY_STREAM.set(streamKey, []);
+    CAP_OWNER_BY_STREAM.get(streamKey).push({ owner: tmpls[0].owner_role, tokens });
     const e = entryFromCapability(streamKey, c);
     if (e) entries.push(e);
   }
