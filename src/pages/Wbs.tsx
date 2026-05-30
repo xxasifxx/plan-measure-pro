@@ -894,13 +894,14 @@ export default function Wbs() {
           <div className="flex items-center gap-4">
             <h1 className="text-lg text-slate-100 font-semibold">Work Breakdown</h1>
             <div className="flex items-center gap-1 text-xs">
-              {(['backlog', 'files', 'schedule'] as const).map((v) => (
+              {(['backlog', 'network', 'files', 'schedule'] as const).map((v) => (
                 <button
                   key={v}
                   onClick={() => setView(v)}
                   className={`px-3 py-1 rounded border flex items-center gap-1 ${view === v ? 'border-sky-500 text-sky-300 bg-sky-500/10' : 'border-slate-800 text-slate-400 hover:border-slate-700'}`}
                 >
                   {v === 'backlog' && <Hammer className="h-3 w-3" />}
+                  {v === 'network' && <GitBranch className="h-3 w-3" />}
                   {v}
                 </button>
               ))}
@@ -911,11 +912,15 @@ export default function Wbs() {
               ? backlog
                 ? `${backlog.totals.entries} build entries · ${backlog.totals.total_estimate_days}d remaining`
                 : 'no backlog'
-              : view === 'files'
-                ? `${(wbs.totals as { leaves: number }).leaves} leaves · ${(wbs.totals as { capabilities: number }).capabilities} capabilities · ${(wbs.totals as { streams: number }).streams} streams`
-                : schedule
-                  ? `T0 ${schedule.T0} · ${schedule.totals.total_remaining_days}d remaining · forecast ${schedule.totals.forecast_finish}`
-                  : 'no schedule'}
+              : view === 'network'
+                ? network
+                  ? `${network.stats.node_count} nodes · ${network.stats.edge_count} edges · ${network.stats.project_duration_days}d critical path`
+                  : 'no network'
+                : view === 'files'
+                  ? `${(wbs.totals as { leaves: number }).leaves} leaves · ${(wbs.totals as { capabilities: number }).capabilities} capabilities · ${(wbs.totals as { streams: number }).streams} streams`
+                  : schedule
+                    ? `T0 ${schedule.T0} · ${schedule.totals.total_remaining_days}d remaining · forecast ${schedule.totals.forecast_finish}`
+                    : 'no schedule'}
           </div>
         </div>
         {view === 'files' && (
@@ -939,7 +944,10 @@ export default function Wbs() {
         )}
       </div>
       <div className="max-w-[1400px] mx-auto px-4 py-4">
-        {view === 'backlog' ? renderBacklogView() : view === 'files' ? streams.map(renderStream) : renderScheduleView()}
+        {view === 'backlog' ? renderBacklogView()
+          : view === 'network' ? renderNetworkView()
+          : view === 'files' ? streams.map(renderStream)
+          : renderScheduleView()}
       </div>
     </div>
   );
