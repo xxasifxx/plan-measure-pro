@@ -1,460 +1,460 @@
 {
-  "generatedAt": "2026-05-30T16:55:32.737Z",
+  "generatedAt": "2026-05-30T16:56:05.998Z",
   "totals": {
-    "ready_to_start": 371,
+    "ready_to_start": 144,
     "dormant_but_needed": 3,
     "blocked_by_decision": 0
   },
   "ready_to_start": [
     {
-      "activity_id": "ACT-0633",
-      "name": "Verify e2e: NavLink.tsx",
-      "primary_leaf": "LF-0211",
-      "leaf_path": "src/components/NavLink.tsx",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 640
-    },
-    {
-      "activity_id": "ACT-0861",
-      "name": "Verify e2e: use-toast.ts",
-      "primary_leaf": "LF-0287",
-      "leaf_path": "src/hooks/use-toast.ts",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 540
-    },
-    {
-      "activity_id": "ACT-1044",
-      "name": "Verify e2e: utils.ts",
-      "primary_leaf": "LF-0348",
-      "leaf_path": "src/lib/utils.ts",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 536
-    },
-    {
-      "activity_id": "ACT-1116",
-      "name": "Verify e2e: NotFound.tsx",
-      "primary_leaf": "LF-0372",
-      "leaf_path": "src/pages/NotFound.tsx",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 532
-    },
-    {
-      "activity_id": "ACT-1161",
-      "name": "Verify e2e: example.test.ts",
-      "primary_leaf": "LF-0387",
-      "leaf_path": "src/test/example.test.ts",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 530
-    },
-    {
-      "activity_id": "ACT-1173",
-      "name": "Verify e2e: setup.ts",
-      "primary_leaf": "LF-0391",
-      "leaf_path": "src/test/setup.ts",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 528
-    },
-    {
-      "activity_id": "ACT-1332",
-      "name": "Verify e2e: vitest.config.ts",
-      "primary_leaf": "LF-0444",
-      "leaf_path": "vitest.config.ts",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 514
-    },
-    {
-      "activity_id": "ACT-1041",
-      "name": "Verify e2e: storage.ts",
-      "primary_leaf": "LF-0347",
-      "leaf_path": "src/lib/storage.ts",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 508
-    },
-    {
-      "activity_id": "ACT-1176",
-      "name": "Verify e2e: specs-utils.test.ts",
-      "primary_leaf": "LF-0392",
-      "leaf_path": "src/test/specs-utils.test.ts",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 506
-    },
-    {
-      "activity_id": "ACT-0600",
-      "name": "Verify e2e: EmptyState.tsx",
-      "primary_leaf": "LF-0200",
-      "leaf_path": "src/components/EmptyState.tsx",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 504
-    },
-    {
-      "activity_id": "ACT-0894",
-      "name": "Verify e2e: useTheme.ts",
-      "primary_leaf": "LF-0298",
-      "leaf_path": "src/hooks/useTheme.ts",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 502
-    },
-    {
-      "activity_id": "ACT-0903",
-      "name": "Verify e2e: client.ts",
-      "primary_leaf": "LF-0301",
-      "leaf_path": "src/integrations/supabase/client.ts",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 498
-    },
-    {
-      "activity_id": "ACT-1191",
-      "name": "Verify e2e: config.toml",
-      "primary_leaf": "LF-0397",
-      "leaf_path": "supabase/config.toml",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 496
-    },
-    {
-      "activity_id": "ACT-1206",
-      "name": "Verify e2e: 20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
-      "primary_leaf": "LF-0402",
-      "leaf_path": "supabase/migrations/20260321160419_88eaa7bc-8baf-45b7-98d1-1cdd3a3c6550.sql",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 494
-    },
-    {
-      "activity_id": "ACT-1209",
-      "name": "Verify e2e: 20260321162325_749c9dcd-0ffa-430d-bf20-422872294f47.sql",
-      "primary_leaf": "LF-0403",
-      "leaf_path": "supabase/migrations/20260321162325_749c9dcd-0ffa-430d-bf20-422872294f47.sql",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 492
-    },
-    {
-      "activity_id": "ACT-1212",
-      "name": "Verify e2e: 20260321162349_089b7eac-a691-474e-96f4-b97ab4d2581d.sql",
-      "primary_leaf": "LF-0404",
-      "leaf_path": "supabase/migrations/20260321162349_089b7eac-a691-474e-96f4-b97ab4d2581d.sql",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 490
-    },
-    {
-      "activity_id": "ACT-1215",
-      "name": "Verify e2e: 20260321162408_22a25531-f789-4f47-b2d5-ec7d40196497.sql",
-      "primary_leaf": "LF-0405",
-      "leaf_path": "supabase/migrations/20260321162408_22a25531-f789-4f47-b2d5-ec7d40196497.sql",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 488
-    },
-    {
-      "activity_id": "ACT-1218",
-      "name": "Verify e2e: 20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql",
-      "primary_leaf": "LF-0406",
-      "leaf_path": "supabase/migrations/20260321162713_c4804e7a-cb2d-4898-be1d-27ba7694c893.sql",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 486
-    },
-    {
-      "activity_id": "ACT-1086",
-      "name": "Verify e2e: Admin.tsx",
-      "primary_leaf": "LF-0362",
-      "leaf_path": "src/pages/Admin.tsx",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 484
-    },
-    {
-      "activity_id": "ACT-1221",
-      "name": "Verify e2e: 20260321164313_fadd3bba-4f5e-4ac1-b47b-3887bdd98769.sql",
-      "primary_leaf": "LF-0407",
-      "leaf_path": "supabase/migrations/20260321164313_fadd3bba-4f5e-4ac1-b47b-3887bdd98769.sql",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 482
-    },
-    {
-      "activity_id": "ACT-1224",
-      "name": "Verify e2e: 20260321164809_127eb40b-40a6-4814-b6cc-ed2f3acd27f2.sql",
-      "primary_leaf": "LF-0408",
-      "leaf_path": "supabase/migrations/20260321164809_127eb40b-40a6-4814-b6cc-ed2f3acd27f2.sql",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 480
-    },
-    {
-      "activity_id": "ACT-1227",
-      "name": "Verify e2e: 20260321170227_75de1f7c-2825-40a9-b86e-f031966b835e.sql",
-      "primary_leaf": "LF-0409",
-      "leaf_path": "supabase/migrations/20260321170227_75de1f7c-2825-40a9-b86e-f031966b835e.sql",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 478
-    },
-    {
-      "activity_id": "ACT-1230",
-      "name": "Verify e2e: 20260323121718_947e033e-ded7-4dae-9824-5ff155f34faf.sql",
-      "primary_leaf": "LF-0410",
-      "leaf_path": "supabase/migrations/20260323121718_947e033e-ded7-4dae-9824-5ff155f34faf.sql",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 476
-    },
-    {
-      "activity_id": "ACT-1233",
-      "name": "Verify e2e: 20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql",
-      "primary_leaf": "LF-0411",
-      "leaf_path": "supabase/migrations/20260323173825_a351e076-b680-476d-b06d-1b2165092b26.sql",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 474
-    },
-    {
-      "activity_id": "ACT-1194",
-      "name": "Verify e2e: index.ts",
-      "primary_leaf": "LF-0398",
-      "leaf_path": "supabase/functions/invite-user/index.ts",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 472
-    },
-    {
-      "activity_id": "ACT-0699",
-      "name": "Verify e2e: TeamManager.tsx",
-      "primary_leaf": "LF-0233",
-      "leaf_path": "src/components/TeamManager.tsx",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 470
-    },
-    {
-      "activity_id": "ACT-1236",
-      "name": "Verify e2e: 20260323184019_702975d9-3680-45b2-9a82-8587db5f26e5.sql",
-      "primary_leaf": "LF-0412",
-      "leaf_path": "supabase/migrations/20260323184019_702975d9-3680-45b2-9a82-8587db5f26e5.sql",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 468
-    },
-    {
-      "activity_id": "ACT-1239",
-      "name": "Verify e2e: 20260327122843_6f261706-ce0b-4c8a-b707-c3c8b0648540.sql",
-      "primary_leaf": "LF-0413",
-      "leaf_path": "supabase/migrations/20260327122843_6f261706-ce0b-4c8a-b707-c3c8b0648540.sql",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 456
-    },
-    {
-      "activity_id": "ACT-1242",
-      "name": "Verify e2e: 20260328182512_208ba41b-5292-403a-baf4-9b9b2d158879.sql",
-      "primary_leaf": "LF-0414",
-      "leaf_path": "supabase/migrations/20260328182512_208ba41b-5292-403a-baf4-9b9b2d158879.sql",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 452
-    },
-    {
-      "activity_id": "ACT-1245",
-      "name": "Verify e2e: 20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
-      "primary_leaf": "LF-0415",
-      "leaf_path": "supabase/migrations/20260504215217_3462a0a5-a4a5-4f17-8272-83c40fa4e039.sql",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 450
-    },
-    {
-      "activity_id": "ACT-1248",
-      "name": "Verify e2e: 20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql",
-      "primary_leaf": "LF-0416",
-      "leaf_path": "supabase/migrations/20260505010015_f50b6c32-d0b3-42dd-9336-494143f5a389.sql",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 448
-    },
-    {
-      "activity_id": "ACT-1197",
-      "name": "Verify e2e: index.ts",
-      "primary_leaf": "LF-0399",
-      "leaf_path": "supabase/functions/parse-schedule/index.ts",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 446
-    },
-    {
-      "activity_id": "ACT-1053",
-      "name": "Verify e2e: dcma.ts",
-      "primary_leaf": "LF-0351",
-      "leaf_path": "src/lib/xer/dcma.ts",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 444
-    },
-    {
-      "activity_id": "ACT-1062",
+      "activity_id": "ACT-0978",
       "name": "Verify e2e: parser.ts",
-      "primary_leaf": "LF-0354",
-      "leaf_path": "src/lib/xer/parser.ts",
-      "stream_key": "00-program-management",
+      "primary_leaf": "LF-0326",
+      "leaf_path": "src/lib/p6xml/parser.ts",
+      "stream_key": "11-schedule-management",
       "origin": "future-verification-gap",
-      "downstream_count": 442
+      "downstream_count": 44
     },
     {
-      "activity_id": "ACT-1071",
-      "name": "Verify e2e: sample.ts",
-      "primary_leaf": "LF-0357",
-      "leaf_path": "src/lib/xer/sample.ts",
-      "stream_key": "00-program-management",
+      "activity_id": "ACT-1023",
+      "name": "Verify e2e: cpm.ts",
+      "primary_leaf": "LF-0341",
+      "leaf_path": "src/lib/schedule/cpm.ts",
+      "stream_key": "11-schedule-management",
       "origin": "future-verification-gap",
-      "downstream_count": 440
+      "downstream_count": 42
     },
     {
-      "activity_id": "ACT-1074",
-      "name": "Verify e2e: tia.ts",
-      "primary_leaf": "LF-0358",
-      "leaf_path": "src/lib/xer/tia.ts",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 438
-    },
-    {
-      "activity_id": "ACT-1077",
+      "activity_id": "ACT-1032",
       "name": "Verify e2e: types.ts",
-      "primary_leaf": "LF-0359",
-      "leaf_path": "src/lib/xer/types.ts",
-      "stream_key": "00-program-management",
+      "primary_leaf": "LF-0344",
+      "leaf_path": "src/lib/schedule/types.ts",
+      "stream_key": "11-schedule-management",
       "origin": "future-verification-gap",
-      "downstream_count": 436
+      "downstream_count": 40
     },
     {
-      "activity_id": "ACT-1080",
-      "name": "Verify e2e: wbs.ts",
-      "primary_leaf": "LF-0360",
-      "leaf_path": "src/lib/xer/wbs.ts",
-      "stream_key": "00-program-management",
+      "activity_id": "ACT-0663",
+      "name": "Verify e2e: ComplianceStrip.tsx",
+      "primary_leaf": "LF-0221",
+      "leaf_path": "src/components/schedule/ComplianceStrip.tsx",
+      "stream_key": "11-schedule-management",
       "origin": "future-verification-gap",
-      "downstream_count": 434
+      "downstream_count": 38
     },
     {
-      "activity_id": "ACT-1137",
-      "name": "Verify e2e: XerDemo.tsx",
-      "primary_leaf": "LF-0379",
-      "leaf_path": "src/pages/XerDemo.tsx",
-      "stream_key": "00-program-management",
+      "activity_id": "ACT-0687",
+      "name": "Verify e2e: WbsTree.tsx",
+      "primary_leaf": "LF-0229",
+      "leaf_path": "src/components/schedule/WbsTree.tsx",
+      "stream_key": "11-schedule-management",
       "origin": "future-verification-gap",
-      "downstream_count": 432
+      "downstream_count": 36
     },
     {
-      "activity_id": "ACT-0855",
-      "name": "Verify e2e: XerLensTour.tsx",
-      "primary_leaf": "LF-0285",
-      "leaf_path": "src/components/XerLensTour.tsx",
-      "stream_key": "00-program-management",
+      "activity_id": "ACT-0645",
+      "name": "Verify e2e: PwaShell.tsx",
+      "primary_leaf": "LF-0215",
+      "leaf_path": "src/components/PwaShell.tsx",
+      "stream_key": "15-offline-and-native-durability",
       "origin": "future-verification-gap",
-      "downstream_count": 430
+      "downstream_count": 34
     },
     {
-      "activity_id": "ACT-1047",
+      "activity_id": "ACT-0684",
+      "name": "Verify e2e: ScheduleWorkspace.tsx",
+      "primary_leaf": "LF-0228",
+      "leaf_path": "src/components/schedule/ScheduleWorkspace.tsx",
+      "stream_key": "11-schedule-management",
+      "origin": "future-verification-gap",
+      "downstream_count": 34
+    },
+    {
+      "activity_id": "ACT-0873",
+      "name": "Verify e2e: useNetworkStatus.ts",
+      "primary_leaf": "LF-0291",
+      "leaf_path": "src/hooks/useNetworkStatus.ts",
+      "stream_key": "15-offline-and-native-durability",
+      "origin": "future-verification-gap",
+      "downstream_count": 32
+    },
+    {
+      "activity_id": "ACT-1017",
+      "name": "Verify e2e: baseline.ts",
+      "primary_leaf": "LF-0339",
+      "leaf_path": "src/lib/schedule/baseline.ts",
+      "stream_key": "11-schedule-management",
+      "origin": "future-verification-gap",
+      "downstream_count": 32
+    },
+    {
+      "activity_id": "ACT-0993",
+      "name": "Verify e2e: pwa.ts",
+      "primary_leaf": "LF-0331",
+      "leaf_path": "src/lib/pwa.ts",
+      "stream_key": "15-offline-and-native-durability",
+      "origin": "future-verification-gap",
+      "downstream_count": 30
+    },
+    {
+      "activity_id": "ACT-1029",
+      "name": "Verify e2e: import-p6.ts",
+      "primary_leaf": "LF-0343",
+      "leaf_path": "src/lib/schedule/import-p6.ts",
+      "stream_key": "11-schedule-management",
+      "origin": "future-verification-gap",
+      "downstream_count": 30
+    },
+    {
+      "activity_id": "ACT-0654",
+      "name": "Verify e2e: ActivityInspector.tsx",
+      "primary_leaf": "LF-0218",
+      "leaf_path": "src/components/schedule/ActivityInspector.tsx",
+      "stream_key": "11-schedule-management",
+      "origin": "future-verification-gap",
+      "downstream_count": 28
+    },
+    {
+      "activity_id": "ACT-0951",
+      "name": "Verify e2e: idb-persister.ts",
+      "primary_leaf": "LF-0317",
+      "leaf_path": "src/lib/offline/idb-persister.ts",
+      "stream_key": "15-offline-and-native-durability",
+      "origin": "future-verification-gap",
+      "downstream_count": 28
+    },
+    {
+      "activity_id": "ACT-0672",
+      "name": "Verify e2e: ImportP6Panel.tsx",
+      "primary_leaf": "LF-0224",
+      "leaf_path": "src/components/schedule/ImportP6Panel.tsx",
+      "stream_key": "11-schedule-management",
+      "origin": "future-verification-gap",
+      "downstream_count": 26
+    },
+    {
+      "activity_id": "ACT-0954",
+      "name": "Verify e2e: mirror.ts",
+      "primary_leaf": "LF-0318",
+      "leaf_path": "src/lib/offline/mirror.ts",
+      "stream_key": "15-offline-and-native-durability",
+      "origin": "future-verification-gap",
+      "downstream_count": 26
+    },
+    {
+      "activity_id": "ACT-0675",
+      "name": "Verify e2e: MetaControls.tsx",
+      "primary_leaf": "LF-0225",
+      "leaf_path": "src/components/schedule/MetaControls.tsx",
+      "stream_key": "11-schedule-management",
+      "origin": "future-verification-gap",
+      "downstream_count": 24
+    },
+    {
+      "activity_id": "ACT-0963",
+      "name": "Verify e2e: pdf-cache.ts",
+      "primary_leaf": "LF-0321",
+      "leaf_path": "src/lib/offline/pdf-cache.ts",
+      "stream_key": "15-offline-and-native-durability",
+      "origin": "future-verification-gap",
+      "downstream_count": 24
+    },
+    {
+      "activity_id": "ACT-0960",
+      "name": "Verify e2e: outbox.ts",
+      "primary_leaf": "LF-0320",
+      "leaf_path": "src/lib/offline/outbox.ts",
+      "stream_key": "15-offline-and-native-durability",
+      "origin": "future-verification-gap",
+      "downstream_count": 22
+    },
+    {
+      "activity_id": "ACT-1020",
+      "name": "Verify e2e: calendars.ts",
+      "primary_leaf": "LF-0340",
+      "leaf_path": "src/lib/schedule/calendars.ts",
+      "stream_key": "11-schedule-management",
+      "origin": "future-verification-gap",
+      "downstream_count": 22
+    },
+    {
+      "activity_id": "ACT-0657",
+      "name": "Verify e2e: BaselineManager.tsx",
+      "primary_leaf": "LF-0219",
+      "leaf_path": "src/components/schedule/BaselineManager.tsx",
+      "stream_key": "11-schedule-management",
+      "origin": "future-verification-gap",
+      "downstream_count": 20
+    },
+    {
+      "activity_id": "ACT-0966",
+      "name": "Verify e2e: sync.ts",
+      "primary_leaf": "LF-0322",
+      "leaf_path": "src/lib/offline/sync.ts",
+      "stream_key": "15-offline-and-native-durability",
+      "origin": "future-verification-gap",
+      "downstream_count": 20
+    },
+    {
+      "activity_id": "ACT-0660",
+      "name": "Verify e2e: CalendarManager.tsx",
+      "primary_leaf": "LF-0220",
+      "leaf_path": "src/components/schedule/CalendarManager.tsx",
+      "stream_key": "11-schedule-management",
+      "origin": "future-verification-gap",
+      "downstream_count": 18
+    },
+    {
+      "activity_id": "ACT-0696",
+      "name": "Verify e2e: SyncPanel.tsx",
+      "primary_leaf": "LF-0232",
+      "leaf_path": "src/components/SyncPanel.tsx",
+      "stream_key": "15-offline-and-native-durability",
+      "origin": "future-verification-gap",
+      "downstream_count": 18
+    },
+    {
+      "activity_id": "ACT-0678",
+      "name": "Verify e2e: ResourceManager.tsx",
+      "primary_leaf": "LF-0226",
+      "leaf_path": "src/components/schedule/ResourceManager.tsx",
+      "stream_key": "11-schedule-management",
+      "origin": "future-verification-gap",
+      "downstream_count": 16
+    },
+    {
+      "activity_id": "ACT-0879",
+      "name": "Verify e2e: useOutbox.ts",
+      "primary_leaf": "LF-0293",
+      "leaf_path": "src/hooks/useOutbox.ts",
+      "stream_key": "15-offline-and-native-durability",
+      "origin": "future-verification-gap",
+      "downstream_count": 16
+    },
+    {
+      "activity_id": "ACT-0081",
+      "name": "Verify e2e: capacitor.config.ts",
+      "primary_leaf": "LF-0027",
+      "leaf_path": "capacitor.config.ts",
+      "stream_key": "15-offline-and-native-durability",
+      "origin": "future-verification-gap",
+      "downstream_count": 14
+    },
+    {
+      "activity_id": "ACT-0996",
       "name": "Verify e2e: aace.ts",
-      "primary_leaf": "LF-0349",
-      "leaf_path": "src/lib/xer/aace.ts",
-      "stream_key": "00-program-management",
+      "primary_leaf": "LF-0332",
+      "leaf_path": "src/lib/schedule/analysis/aace.ts",
+      "stream_key": "11-schedule-management",
       "origin": "future-verification-gap",
-      "downstream_count": 428
+      "downstream_count": 14
     },
     {
-      "activity_id": "ACT-1056",
-      "name": "Verify e2e: feedback.ts",
-      "primary_leaf": "LF-0352",
-      "leaf_path": "src/lib/xer/feedback.ts",
-      "stream_key": "00-program-management",
+      "activity_id": "ACT-0924",
+      "name": "Verify e2e: app-state.ts",
+      "primary_leaf": "LF-0308",
+      "leaf_path": "src/lib/native/app-state.ts",
+      "stream_key": "15-offline-and-native-durability",
       "origin": "future-verification-gap",
-      "downstream_count": 426
+      "downstream_count": 12
     },
     {
-      "activity_id": "ACT-1065",
-      "name": "Verify e2e: progress.ts",
-      "primary_leaf": "LF-0355",
-      "leaf_path": "src/lib/xer/progress.ts",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 424
-    },
-    {
-      "activity_id": "ACT-1068",
-      "name": "Verify e2e: sample-update.ts",
-      "primary_leaf": "LF-0356",
-      "leaf_path": "src/lib/xer/sample-update.ts",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 422
-    },
-    {
-      "activity_id": "ACT-1059",
-      "name": "Verify e2e: memo-export.ts",
-      "primary_leaf": "LF-0353",
-      "leaf_path": "src/lib/xer/memo-export.ts",
-      "stream_key": "00-program-management",
-      "origin": "future-verification-gap",
-      "downstream_count": 420
-    },
-    {
-      "activity_id": "ACT-1050",
+      "activity_id": "ACT-0999",
       "name": "Verify e2e: chart-export.ts",
-      "primary_leaf": "LF-0350",
-      "leaf_path": "src/lib/xer/chart-export.ts",
-      "stream_key": "00-program-management",
+      "primary_leaf": "LF-0333",
+      "leaf_path": "src/lib/schedule/analysis/chart-export.ts",
+      "stream_key": "11-schedule-management",
       "origin": "future-verification-gap",
-      "downstream_count": 418
+      "downstream_count": 12
     },
     {
-      "activity_id": "ACT-1182",
-      "name": "Verify e2e: xer-parser.test.ts",
-      "primary_leaf": "LF-0394",
-      "leaf_path": "src/test/xer-parser.test.ts",
-      "stream_key": "00-program-management",
+      "activity_id": "ACT-0939",
+      "name": "Verify e2e: geolocation.ts",
+      "primary_leaf": "LF-0313",
+      "leaf_path": "src/lib/native/geolocation.ts",
+      "stream_key": "15-offline-and-native-durability",
       "origin": "future-verification-gap",
-      "downstream_count": 416
+      "downstream_count": 10
     },
     {
-      "activity_id": "ACT-0981",
-      "name": "Verify e2e: sample.ts",
-      "primary_leaf": "LF-0327",
-      "leaf_path": "src/lib/p6xml/sample.ts",
-      "stream_key": "00-program-management",
+      "activity_id": "ACT-0969",
+      "name": "Verify e2e: apply-progress.ts",
+      "primary_leaf": "LF-0323",
+      "leaf_path": "src/lib/p6xml/apply-progress.ts",
+      "stream_key": "13-data-export-and-interoperability",
       "origin": "future-verification-gap",
-      "downstream_count": 404
+      "downstream_count": 10
     },
     {
-      "activity_id": "ACT-1170",
-      "name": "Verify e2e: p6xml.test.ts",
-      "primary_leaf": "LF-0390",
-      "leaf_path": "src/test/p6xml.test.ts",
-      "stream_key": "00-program-management",
+      "activity_id": "ACT-1002",
+      "name": "Verify e2e: dcma.ts",
+      "primary_leaf": "LF-0334",
+      "leaf_path": "src/lib/schedule/analysis/dcma.ts",
+      "stream_key": "11-schedule-management",
       "origin": "future-verification-gap",
-      "downstream_count": 402
+      "downstream_count": 10
     },
     {
-      "activity_id": "ACT-1251",
-      "name": "Verify e2e: 20260524015102_6a9de603-5b28-4109-98fe-7e343194da37.sql",
-      "primary_leaf": "LF-0417",
-      "leaf_path": "supabase/migrations/20260524015102_6a9de603-5b28-4109-98fe-7e343194da37.sql",
-      "stream_key": "00-program-management",
+      "activity_id": "ACT-0942",
+      "name": "Verify e2e: platform.ts",
+      "primary_leaf": "LF-0314",
+      "leaf_path": "src/lib/native/platform.ts",
+      "stream_key": "15-offline-and-native-durability",
       "origin": "future-verification-gap",
-      "downstream_count": 400
+      "downstream_count": 8
+    },
+    {
+      "activity_id": "ACT-0984",
+      "name": "Verify e2e: serializer.ts",
+      "primary_leaf": "LF-0328",
+      "leaf_path": "src/lib/p6xml/serializer.ts",
+      "stream_key": "13-data-export-and-interoperability",
+      "origin": "future-verification-gap",
+      "downstream_count": 8
+    },
+    {
+      "activity_id": "ACT-1005",
+      "name": "Verify e2e: feedback.ts",
+      "primary_leaf": "LF-0335",
+      "leaf_path": "src/lib/schedule/analysis/feedback.ts",
+      "stream_key": "11-schedule-management",
+      "origin": "future-verification-gap",
+      "downstream_count": 8
+    },
+    {
+      "activity_id": "ACT-0921",
+      "name": "Verify e2e: geometry.ts",
+      "primary_leaf": "LF-0307",
+      "leaf_path": "src/lib/geometry.ts",
+      "stream_key": "14-measurement-and-geometry-engine",
+      "origin": "future-verification-gap",
+      "downstream_count": 6
+    },
+    {
+      "activity_id": "ACT-0927",
+      "name": "Verify e2e: background-sync.ts",
+      "primary_leaf": "LF-0309",
+      "leaf_path": "src/lib/native/background-sync.ts",
+      "stream_key": "15-offline-and-native-durability",
+      "origin": "future-verification-gap",
+      "downstream_count": 6
+    },
+    {
+      "activity_id": "ACT-0987",
+      "name": "Verify e2e: types.ts",
+      "primary_leaf": "LF-0329",
+      "leaf_path": "src/lib/p6xml/types.ts",
+      "stream_key": "13-data-export-and-interoperability",
+      "origin": "future-verification-gap",
+      "downstream_count": 6
+    },
+    {
+      "activity_id": "ACT-1008",
+      "name": "Verify e2e: memo-export.ts",
+      "primary_leaf": "LF-0336",
+      "leaf_path": "src/lib/schedule/analysis/memo-export.ts",
+      "stream_key": "11-schedule-management",
+      "origin": "future-verification-gap",
+      "downstream_count": 6
+    },
+    {
+      "activity_id": "ACT-1444",
+      "name": "Scaffold Pitch leave-behind PDF",
+      "primary_leaf": "LF-0482",
+      "leaf_path": "DELIVERABLE/DLV-pitch-leave-behind",
+      "stream_key": "20-sales-and-pitch",
+      "origin": "future-risk",
+      "downstream_count": 6
+    },
+    {
+      "activity_id": "ACT-0612",
+      "name": "Verify e2e: GuidedTour.tsx",
+      "primary_leaf": "LF-0204",
+      "leaf_path": "src/components/GuidedTour.tsx",
+      "stream_key": "02-portfolio-and-pm-home",
+      "origin": "future-verification-gap",
+      "downstream_count": 4
+    },
+    {
+      "activity_id": "ACT-0648",
+      "name": "Verify e2e: ReRejectDialog.tsx",
+      "primary_leaf": "LF-0216",
+      "leaf_path": "src/components/ReRejectDialog.tsx",
+      "stream_key": "06-daily-report-lifecycle",
+      "origin": "future-verification-gap",
+      "downstream_count": 4
+    },
+    {
+      "activity_id": "ACT-0693",
+      "name": "Verify e2e: SummaryPanel.tsx",
+      "primary_leaf": "LF-0231",
+      "leaf_path": "src/components/SummaryPanel.tsx",
+      "stream_key": "04-pay-item-catalog",
+      "origin": "future-verification-gap",
+      "downstream_count": 4
+    },
+    {
+      "activity_id": "ACT-0858",
+      "name": "Verify e2e: use-mobile.tsx",
+      "primary_leaf": "LF-0286",
+      "leaf_path": "src/hooks/use-mobile.tsx",
+      "stream_key": "16-mobile-field-ergonomics",
+      "origin": "future-verification-gap",
+      "downstream_count": 4
+    },
+    {
+      "activity_id": "ACT-0918",
+      "name": "Verify e2e: geo-transform.ts",
+      "primary_leaf": "LF-0306",
+      "leaf_path": "src/lib/geo-transform.ts",
+      "stream_key": "14-measurement-and-geometry-engine",
+      "origin": "future-verification-gap",
+      "downstream_count": 4
+    },
+    {
+      "activity_id": "ACT-0930",
+      "name": "Verify e2e: biometric.ts",
+      "primary_leaf": "LF-0310",
+      "leaf_path": "src/lib/native/biometric.ts",
+      "stream_key": "15-offline-and-native-durability",
+      "origin": "future-verification-gap",
+      "downstream_count": 4
+    },
+    {
+      "activity_id": "ACT-0975",
+      "name": "Verify e2e: load-approved.ts",
+      "primary_leaf": "LF-0325",
+      "leaf_path": "src/lib/p6xml/load-approved.ts",
+      "stream_key": "13-data-export-and-interoperability",
+      "origin": "future-verification-gap",
+      "downstream_count": 4
+    },
+    {
+      "activity_id": "ACT-1011",
+      "name": "Verify e2e: progress.ts",
+      "primary_leaf": "LF-0337",
+      "leaf_path": "src/lib/schedule/analysis/progress.ts",
+      "stream_key": "11-schedule-management",
+      "origin": "future-verification-gap",
+      "downstream_count": 4
+    },
+    {
+      "activity_id": "ACT-1432",
+      "name": "Scaffold Audit log table + RLS spec",
+      "primary_leaf": "LF-0478",
+      "leaf_path": "DELIVERABLE/DLV-audit-log-spec",
+      "stream_key": "18-compliance-and-audit",
+      "origin": "future-risk",
+      "downstream_count": 4
+    },
+    {
+      "activity_id": "ACT-1438",
+      "name": "Scaffold Inspector onboarding script (5 min)",
+      "primary_leaf": "LF-0480",
+      "leaf_path": "DELIVERABLE/DLV-onboarding-script",
+      "stream_key": "19-onboarding-and-tutorials",
+      "origin": "future-risk",
+      "downstream_count": 4
     }
   ],
   "dormant_but_needed": [
