@@ -1,137 +1,59 @@
-## Goal
+# Baseline Project Schedule for WBS
 
-Today the WBS has two shapes that don't meet:
-- **High-concept** lives in `comprehension.json` as stream criteria/risks (what the product must do).
-- **Files** live in `spine.json` / `wbs.json` as `stream → layer → file` (what we've built).
+Generate a schedule branch off the existing capability tree, grounded in real git history (not invented dates), and surface it as a sibling view in `/wbs`.
 
-You want a single tree where **files are leaves under the capability they realize**, activities build them, and program-level deliverables (baseline schedule, governance docs) sit alongside as their own branches. New/missing files appear as placeholder leaves so the WBS shows what's left, not just what exists.
+## What "schedule" means here
 
-## Target shape
+For every capability (187 across 21 streams) we compute:
 
-```text
-TakeoffPro Build
-├── 06 Daily Report Lifecycle                       (stream)
-│   ├── C1 Inspector live preview of day            (capability = criterion)
-│   │   ├── F src/pages/DailyReport.tsx             (file leaf, existing)
-│   │   ├── F src/hooks/useDailyReport.ts           (file leaf, existing)
-│   │   └── F src/lib/daily-report-snapshot.ts     (file leaf, existing)
-│   ├── C2 Submit freezes snapshot                  (capability)
-│   │   └── F src/hooks/useDailyReport.ts          (shared with C1)
-│   ├── C8 Reject requires reason + RLS             (capability, partial)
-│   │   ├── F src/components/ReRejectDialog.tsx     (file leaf, existing)
-│   │   └── F supabase/migrations/NEW_re_role_rls.sql  (PLACEHOLDER leaf)
-│   ├── R1 daily_report_snapshots missing in types  (risk-capability)
-│   │   └── F src/integrations/supabase/types.ts    (shared, regenerate)
-│   └── Stream overhead                             (files not tied to a criterion)
-│       └── F docs/streams/06-daily-report-lifecycle.md
-├── 00 Program Management
-│   ├── Baseline project schedule                   (non-file deliverable)
-│   │   ├── A Lock baseline activities              (activity, no file)
-│   │   └── A Publish baseline P6 XML               (activity, produces public/exports/*.xml)
-│   ├── WBS pipeline                                (existing scripts as files)
-│   └── Governance docs
-└── 21 Marketing Debt                               (kept as-is, claim → activity)
-```
+- **Actual start** = earliest `created_at` across its `files` (from `file-history.json`)
+- **Actual last touch** = latest `last_modified_at` across its `files`
+- **Work done so far** = sum of `touch_count` and `loc_added` across files (depth signal, not just date)
+- **Remaining estimate** = derived from `verdict`:
+  - `implemented` → 0d (only verify-e2e left, pulled from activity tier)
+  - `partial` → 2d default
+  - `planned` / placeholder → 5d default (overridable per capability in a config file)
+- **Forecast finish** = `T0 + cumulative remaining on critical path`, where `T0 = today (2026-05-30)`
 
-Two kinds of leaves:
-1. **File leaves** — one per existing file (from `file-history.json`) plus **placeholder leaves** for files a criterion needs that don't exist yet.
-2. **Deliverable leaves** — non-file work products (baseline schedule, sign-off memos, training videos). These hang off `00 Program Management` or a stream's "Deliverables" node.
+Stream rows roll up: `stream.actual_start = min(cap.actual_start)`, `stream.forecast_finish = T0 + sum(remaining)` (sequential within-stream; cross-stream parallelism left as-is, matching how the team actually works).
 
-Each leaf gets activities (scaffold → implement → verify-e2e). Activities roll up to the capability; capability % complete = weighted roll-up of its file/deliverable leaves' verified status.
+## Milestones
 
-## Build plan
+Hand-curated in a new `.lovable/wbs/schedule-config.json` so dates stay placeholders the PM can edit, not hallucinations:
 
-### 1. Extend the data model (no code changes yet, just schema)
+| ID | Name | Gate condition |
+|----|------|----------------|
+| M0 | Baseline schedule locked | `DLV-baseline-schedule-lock` verdict flips to `implemented` |
+| M1 | Foundation verified | Streams 01, 02, 03 all capabilities ≥ `partial` |
+| M2 | Field capture pilot-ready | Streams 04, 05, 06, 14 all criterion-capabilities `implemented` |
+| M3 | Audit/compliance gate | Streams 12, 18 placeholders cleared |
+| M4 | MVP feature-complete | 100% of `criterion` capabilities `implemented` |
+| M5 | GA — all verified | 100% of leaves have passing `verify-e2e` |
+| M6 | Sales-ready | Stream 20 deliverables `implemented` |
 
-`comprehension.json` already has per-criterion `evidence_paths` — that's the bridge. Add two optional fields per criterion in the stream MD front-matter parser:
+Each milestone gets a `target_date` placeholder (`null` until PM sets it) and a computed `forecast_date` from the roll-up.
 
-```yaml
-capabilities:
-  - id: c1
-    files: [src/pages/DailyReport.tsx, src/hooks/useDailyReport.ts]
-    needs_files: []          # paths that don't exist yet but criterion requires
-  - id: c8
-    files: [src/components/ReRejectDialog.tsx]
-    needs_files: [supabase/migrations/NEW_re_role_rls.sql]
-```
+## Files
 
-For streams where the MD doesn't list this explicitly, derive `files` from `evidence_paths` resolved against the stream's `paths:` globs (already in comprehension).
+**New**
+- `scripts/wbs/build-schedule.mjs` — reads `capabilities.json` + `file-history.json` + `schedule-config.json`, writes `.lovable/wbs/schedule.json`
+- `.lovable/wbs/schedule-config.json` — hand-curated: milestone definitions, default durations by verdict, per-capability overrides (starts empty)
+- `.lovable/wbs/schedule.json` — generated: streams[] with caps[], milestones[], program totals
+- `public/wbs/schedule.json` — slimmed copy for the UI
 
-### 2. New build step: `build-capabilities.mjs`
+**Edited**
+- `scripts/wbs/build-all.mjs` — invoke `build-schedule` after `build-state`
+- `scripts/wbs/publish-public.mjs` — include `schedule.json` in published bundle
+- `src/pages/Wbs.tsx` — add a top-level tab toggle "Files | Schedule"; Schedule view renders the milestone table + per-stream rows showing `[actual_start → last_touch | ░░░ remaining → forecast_finish]` strips with verdict-coloured cap segments; collapsible to cap list with touches/LOC/verdict
 
-Reads `comprehension.json` + `spine.json`. Emits `.lovable/wbs/capabilities.json`:
+No backend, no schema, no route changes — `/wbs` keeps its existing route and adds an in-page tab.
 
-```json
-{
-  "06-daily-report-lifecycle": {
-    "capabilities": [
-      { "id": "06#c1", "title": "...", "verdict": "implemented",
-        "files": ["src/pages/DailyReport.tsx", ...],
-        "needs_files": [] },
-      ...
-    ],
-    "orphan_files": ["docs/streams/06-...md"]   // files owned by stream, no capability claims them
-  }
-}
-```
+## Honesty rules baked in
 
-Orphan files get parked under a per-stream "Stream overhead" capability so nothing is silently homeless.
+- Capabilities with `files: []` AND `needs_files: []` show as `actual_start: null` (no fake dates).
+- A capability whose files were all created today (2026-05-30) but whose verdict is `implemented` gets flagged `suspicious_recency` in the UI — prevents the schedule from claiming a stream "finished" in one day just because WBS scaffolding landed.
+- Schedule never overwrites verdicts; it only reads them.
 
-### 3. Rewrite `build-spine.mjs` parenting (small change)
+## Open question
 
-Today: `leaf.parentId = layer node` (Frontend/Backend/etc.).
-After: `leaf.parentId = capability node`; layer becomes a tag on the leaf, not a parent. Capability nodes parent to stream nodes. Add **placeholder leaves** from `needs_files` with `exists: false`, `loc_added: 0`, `verdict_blocker: true`.
-
-Deliverable leaves (baseline schedule, etc.) live in a new `program-deliverables.json` hand-curated file — small, ~15 entries — and `build-spine` merges them in under `00 Program Management` or the stream they belong to.
-
-### 4. Activities per leaf
-
-Replace today's stream/layer-level activity generation in `build-activities.mjs` with per-leaf activities:
-- `scaffold` (always Completed for existing files; Not Started for placeholders)
-- `implement` (Completed if `loc_added > N` AND verdict ≠ undelivered; In Progress if partial)
-- `verify-e2e` (Completed only if `verification.manifest.json` has a recipe AND `verifiedE2E: true`)
-
-Capability % complete = mean of `verify-e2e` activity status across its leaves. Stream % = weighted mean of capabilities (weight by LOC or leaf count — pick one and stick to it).
-
-### 5. Roll-up + consumer surface
-
-- `build-state.mjs` already exists — point it at the new capability tier.
-- `build-next.mjs` returns "next action" as the **lowest-cost activity that unblocks the highest-verdict-gap capability**.
-- Add a tiny `/wbs` route in-app (read-only) that renders `wbs.json` as a collapsible tree with three colored columns: file exists? activity status? verified? — so the team actually reads it.
-
-### 6. PMXML emit
-
-`emit-p6-xml.mjs` already walks parents → leaves. With capability nodes inserted, PMXML hierarchy gains one more level. No emitter changes needed beyond passing them through; verify round-trip test still parses.
-
-## Files touched
-
-**New:**
-- `scripts/wbs/build-capabilities.mjs`
-- `.lovable/wbs/capabilities.json` (generated)
-- `.lovable/wbs/program-deliverables.json` (hand-curated, ~15 entries)
-- `src/pages/Wbs.tsx` + route (tree viewer; small)
-
-**Edited:**
-- `scripts/wbs/build-spine.mjs` — re-parent leaves to capabilities, inject placeholder + deliverable leaves
-- `scripts/wbs/build-activities.mjs` — per-leaf scaffold/implement/verify triplet
-- `scripts/wbs/build-state.mjs` and `build-next.mjs` — roll up on capability tier
-- `scripts/wbs/build-all.mjs` — add capabilities step before spine
-- Each `docs/streams/NN-*.md` — optional `capabilities:` block; default derivation works without it (one-time pass to fill obvious gaps for the 3–4 streams where evidence_paths under-cover criteria)
-
-**Unchanged:** `comprehension.json` schema, `file-history.json`, `wbs-dev.*` (kept as the lenient code-presence view for contrast), PMXML parser.
-
-## Out of scope (call out)
-
-- Retiring `wbs-dev` and `wbs-v2` — separate decision; this plan keeps the file-grounded WBS as the canonical one without deleting the others.
-- Cost loading / earned value on activities.
-- Auto-filling `verification.manifest.json` — still a human routine; this plan only surfaces the gap more obviously.
-
-## Verification
-
-After build: every stream node has ≥1 capability child; every capability has ≥1 file leaf OR ≥1 deliverable leaf; every file in `file-history.json` appears exactly once as a primary leaf; placeholder leaves count equals sum of `needs_files` across capabilities; PMXML round-trip test still passes.
-
-## Open questions before I build
-
-1. **Deliverable leaves** — do you want me to seed `program-deliverables.json` from the existing `00-program-management` overhead bucket + a short list I draft (baseline schedule lock, governance memo, training video, internal launch checklist), or do you want to hand me the list?
-2. **Placeholder leaves** — derive `needs_files` only from criteria with `verdict: partial|undelivered`, or also from the Risks section of each stream MD (which often names a missing file like `audit_log` table)?
-3. **Capability weight** — leaf count (simple) or LOC (truer to effort)? I'd default to leaf count for honesty since LOC rewards verbose files.
+Default remaining-days for `partial`/`planned` capabilities — keep at 2d/5d as defensible placeholders the PM tunes per cap in `schedule-config.json`, or do you want me to scale by `needs_files.length` and risk severity instead? I'll default to flat 2d/5d unless you say otherwise.
