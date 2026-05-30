@@ -145,12 +145,17 @@ export default function Wbs() {
   const [acts, setActs] = useState<ActivitySlim[] | null>(null);
   const [schedule, setSchedule] = useState<Schedule | null>(null);
   const [backlog, setBacklog] = useState<Backlog | null>(null);
+  const [network, setNetwork] = useState<Network | null>(null);
   const [open, setOpen] = useState<Set<string>>(new Set());
   const [filter, setFilter] = useState<'all' | 'gaps' | 'placeholders' | 'deliverables'>('all');
-  const [view, setView] = useState<'backlog' | 'files' | 'schedule'>('backlog');
+  const [view, setView] = useState<'backlog' | 'network' | 'files' | 'schedule'>('backlog');
   const [backlogStream, setBacklogStream] = useState<string>('all');
   const [backlogSource, setBacklogSource] = useState<string>('all');
   const [backlogConfidence, setBacklogConfidence] = useState<string>('all');
+  const [networkStream, setNetworkStream] = useState<string>('all');
+  const [networkOnlyConnected, setNetworkOnlyConnected] = useState<boolean>(true);
+  const [networkCriticalOnly, setNetworkCriticalOnly] = useState<boolean>(false);
+  const [networkHover, setNetworkHover] = useState<string | null>(null);
 
   useEffect(() => {
     Promise.all([
@@ -158,11 +163,13 @@ export default function Wbs() {
       fetch('/wbs/activities.json').then((r) => r.json()),
       fetch('/wbs/schedule.json').then((r) => r.ok ? r.json() : null).catch(() => null),
       fetch('/wbs/build-backlog.json').then((r) => r.ok ? r.json() : null).catch(() => null),
-    ]).then(([w, a, s, b]) => {
+      fetch('/wbs/backlog-network.json').then((r) => r.ok ? r.json() : null).catch(() => null),
+    ]).then(([w, a, s, b, n]) => {
       setWbs(w);
       setActs(a.activities);
       setSchedule(s);
       setBacklog(b);
+      setNetwork(n);
       // open all streams by default
       setOpen(new Set(w.parents.filter((p: Parent) => p.kind === 'stream').map((p: Parent) => p.id)));
     });
