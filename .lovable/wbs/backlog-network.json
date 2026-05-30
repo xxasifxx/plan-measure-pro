@@ -1,19 +1,21 @@
 {
-  "generatedAt": "2026-05-30T16:25:17.476Z",
+  "generatedAt": "2026-05-30T16:26:03.790Z",
   "stats": {
     "node_count": 215,
-    "edge_count": 0,
+    "edge_count": 1,
     "declared_edges": 0,
+    "inferred_edges": 1,
     "cycle_edges_dropped": 0,
-    "unconnected_nodes": 215,
-    "project_duration_days": 8,
-    "critical_path_length": 1,
-    "max_layer": 0,
-    "critical_node_count": 1
+    "unconnected_nodes": 213,
+    "project_duration_days": 10,
+    "critical_path_length": 2,
+    "max_layer": 1,
+    "critical_node_count": 2
   },
   "issues": [],
   "critical_path": [
-    "BB-08-photo-evidence::r1"
+    "BB-19-onboarding-and-tutorials::c7",
+    "BB-PROM-2"
   ],
   "nodes": [
     {
@@ -29,9 +31,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -47,9 +49,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 5,
-      "LS": 3,
-      "LF": 8,
-      "slack": 3,
+      "LS": 5,
+      "LF": 10,
+      "slack": 5,
       "critical": false
     },
     {
@@ -65,9 +67,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 5,
-      "LS": 3,
-      "LF": 8,
-      "slack": 3,
+      "LS": 5,
+      "LF": 10,
+      "slack": 5,
       "critical": false
     },
     {
@@ -83,9 +85,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 4,
-      "LS": 4,
-      "LF": 8,
-      "slack": 4,
+      "LS": 6,
+      "LF": 10,
+      "slack": 6,
       "critical": false
     },
     {
@@ -101,9 +103,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 3,
-      "LS": 5,
-      "LF": 8,
-      "slack": 5,
+      "LS": 7,
+      "LF": 10,
+      "slack": 7,
       "critical": false
     },
     {
@@ -119,9 +121,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 3,
-      "LS": 5,
-      "LF": 8,
-      "slack": 5,
+      "LS": 7,
+      "LF": 10,
+      "slack": 7,
       "critical": false
     },
     {
@@ -137,9 +139,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 3,
-      "LS": 5,
-      "LF": 8,
-      "slack": 5,
+      "LS": 7,
+      "LF": 10,
+      "slack": 7,
       "critical": false
     },
     {
@@ -155,9 +157,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 4,
-      "LS": 4,
-      "LF": 8,
-      "slack": 4,
+      "LS": 6,
+      "LF": 10,
+      "slack": 6,
       "critical": false
     },
     {
@@ -173,9 +175,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 6,
-      "LS": 2,
-      "LF": 8,
-      "slack": 2,
+      "LS": 4,
+      "LF": 10,
+      "slack": 4,
       "critical": false
     },
     {
@@ -191,9 +193,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 5,
-      "LS": 3,
-      "LF": 8,
-      "slack": 3,
+      "LS": 5,
+      "LF": 10,
+      "slack": 5,
       "critical": false
     },
     {
@@ -209,9 +211,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 6,
-      "LS": 2,
-      "LF": 8,
-      "slack": 2,
+      "LS": 4,
+      "LF": 10,
+      "slack": 4,
       "critical": false
     },
     {
@@ -227,9 +229,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 3,
-      "LS": 5,
-      "LF": 8,
-      "slack": 5,
+      "LS": 7,
+      "LF": 10,
+      "slack": 7,
       "critical": false
     },
     {
@@ -245,9 +247,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 5,
-      "LS": 3,
-      "LF": 8,
-      "slack": 3,
+      "LS": 5,
+      "LF": 10,
+      "slack": 5,
       "critical": false
     },
     {
@@ -263,9 +265,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 4,
-      "LS": 4,
-      "LF": 8,
-      "slack": 4,
+      "LS": 6,
+      "LF": 10,
+      "slack": 6,
       "critical": false
     },
     {
@@ -281,9 +283,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 5,
-      "LS": 3,
-      "LF": 8,
-      "slack": 3,
+      "LS": 5,
+      "LF": 10,
+      "slack": 5,
       "critical": false
     },
     {
@@ -299,9 +301,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 7,
-      "LS": 1,
-      "LF": 8,
-      "slack": 1,
+      "LS": 3,
+      "LF": 10,
+      "slack": 3,
       "critical": false
     },
     {
@@ -317,10 +319,10 @@
       "layer": 0,
       "ES": 0,
       "EF": 8,
-      "LS": 0,
-      "LF": 8,
-      "slack": 0,
-      "critical": true
+      "LS": 2,
+      "LF": 10,
+      "slack": 2,
+      "critical": false
     },
     {
       "id": "BB-09-standard-specifications::r4",
@@ -335,9 +337,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 5,
-      "LS": 3,
-      "LF": 8,
-      "slack": 3,
+      "LS": 5,
+      "LF": 10,
+      "slack": 5,
       "critical": false
     },
     {
@@ -353,9 +355,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 4,
-      "LS": 4,
-      "LF": 8,
-      "slack": 4,
+      "LS": 6,
+      "LF": 10,
+      "slack": 6,
       "critical": false
     },
     {
@@ -371,9 +373,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 3,
-      "LS": 5,
-      "LF": 8,
-      "slack": 5,
+      "LS": 7,
+      "LF": 10,
+      "slack": 7,
       "critical": false
     },
     {
@@ -389,9 +391,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 3,
-      "LS": 5,
-      "LF": 8,
-      "slack": 5,
+      "LS": 7,
+      "LF": 10,
+      "slack": 7,
       "critical": false
     },
     {
@@ -407,9 +409,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 3,
-      "LS": 5,
-      "LF": 8,
-      "slack": 5,
+      "LS": 7,
+      "LF": 10,
+      "slack": 7,
       "critical": false
     },
     {
@@ -425,9 +427,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 5,
-      "LS": 3,
-      "LF": 8,
-      "slack": 3,
+      "LS": 5,
+      "LF": 10,
+      "slack": 5,
       "critical": false
     },
     {
@@ -443,9 +445,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 4,
-      "LS": 4,
-      "LF": 8,
-      "slack": 4,
+      "LS": 6,
+      "LF": 10,
+      "slack": 6,
       "critical": false
     },
     {
@@ -461,9 +463,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 5,
-      "LS": 3,
-      "LF": 8,
-      "slack": 3,
+      "LS": 5,
+      "LF": 10,
+      "slack": 5,
       "critical": false
     },
     {
@@ -479,9 +481,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 4,
-      "LS": 4,
-      "LF": 8,
-      "slack": 4,
+      "LS": 6,
+      "LF": 10,
+      "slack": 6,
       "critical": false
     },
     {
@@ -497,9 +499,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -515,9 +517,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 4,
-      "LS": 4,
-      "LF": 8,
-      "slack": 4,
+      "LS": 6,
+      "LF": 10,
+      "slack": 6,
       "critical": false
     },
     {
@@ -533,9 +535,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 6,
-      "LS": 2,
-      "LF": 8,
-      "slack": 2,
+      "LS": 4,
+      "LF": 10,
+      "slack": 4,
       "critical": false
     },
     {
@@ -551,9 +553,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -569,9 +571,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 5,
-      "LS": 3,
-      "LF": 8,
-      "slack": 3,
+      "LS": 5,
+      "LF": 10,
+      "slack": 5,
       "critical": false
     },
     {
@@ -587,9 +589,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 6,
-      "LS": 2,
-      "LF": 8,
-      "slack": 2,
+      "LS": 4,
+      "LF": 10,
+      "slack": 4,
       "critical": false
     },
     {
@@ -605,9 +607,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 4,
-      "LS": 4,
-      "LF": 8,
-      "slack": 4,
+      "LS": 6,
+      "LF": 10,
+      "slack": 6,
       "critical": false
     },
     {
@@ -623,9 +625,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 4,
-      "LS": 4,
-      "LF": 8,
-      "slack": 4,
+      "LS": 6,
+      "LF": 10,
+      "slack": 6,
       "critical": false
     },
     {
@@ -641,9 +643,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 5,
-      "LS": 3,
-      "LF": 8,
-      "slack": 3,
+      "LS": 5,
+      "LF": 10,
+      "slack": 5,
       "critical": false
     },
     {
@@ -659,9 +661,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 3,
-      "LS": 5,
-      "LF": 8,
-      "slack": 5,
+      "LS": 7,
+      "LF": 10,
+      "slack": 7,
       "critical": false
     },
     {
@@ -677,9 +679,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 5,
-      "LS": 3,
-      "LF": 8,
-      "slack": 3,
+      "LS": 5,
+      "LF": 10,
+      "slack": 5,
       "critical": false
     },
     {
@@ -695,9 +697,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 7,
-      "LS": 1,
-      "LF": 8,
-      "slack": 1,
+      "LS": 3,
+      "LF": 10,
+      "slack": 3,
       "critical": false
     },
     {
@@ -713,9 +715,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -731,9 +733,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 4,
-      "LS": 4,
-      "LF": 8,
-      "slack": 4,
+      "LS": 6,
+      "LF": 10,
+      "slack": 6,
       "critical": false
     },
     {
@@ -749,9 +751,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 5,
-      "LS": 3,
-      "LF": 8,
-      "slack": 3,
+      "LS": 5,
+      "LF": 10,
+      "slack": 5,
       "critical": false
     },
     {
@@ -767,9 +769,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 6,
-      "LS": 2,
-      "LF": 8,
-      "slack": 2,
+      "LS": 4,
+      "LF": 10,
+      "slack": 4,
       "critical": false
     },
     {
@@ -785,9 +787,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -803,9 +805,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 4,
-      "LS": 4,
-      "LF": 8,
-      "slack": 4,
+      "LS": 6,
+      "LF": 10,
+      "slack": 6,
       "critical": false
     },
     {
@@ -817,14 +819,16 @@
       "owner_role": "Backend Engineer",
       "source_type": "capability_missing",
       "predecessors": [],
-      "successors": [],
+      "successors": [
+        "BB-PROM-2"
+      ],
       "layer": 0,
       "ES": 0,
       "EF": 6,
-      "LS": 2,
-      "LF": 8,
-      "slack": 2,
-      "critical": false
+      "LS": 0,
+      "LF": 6,
+      "slack": 0,
+      "critical": true
     },
     {
       "id": "BB-19-onboarding-and-tutorials::r1",
@@ -839,9 +843,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 5,
-      "LS": 3,
-      "LF": 8,
-      "slack": 3,
+      "LS": 5,
+      "LF": 10,
+      "slack": 5,
       "critical": false
     },
     {
@@ -857,9 +861,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -875,9 +879,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 4,
-      "LS": 4,
-      "LF": 8,
-      "slack": 4,
+      "LS": 6,
+      "LF": 10,
+      "slack": 6,
       "critical": false
     },
     {
@@ -893,9 +897,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 3,
-      "LS": 5,
-      "LF": 8,
-      "slack": 5,
+      "LS": 7,
+      "LF": 10,
+      "slack": 7,
       "critical": false
     },
     {
@@ -911,9 +915,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 4,
-      "LS": 4,
-      "LF": 8,
-      "slack": 4,
+      "LS": 6,
+      "LF": 10,
+      "slack": 6,
       "critical": false
     },
     {
@@ -929,9 +933,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 3,
-      "LS": 5,
-      "LF": 8,
-      "slack": 5,
+      "LS": 7,
+      "LF": 10,
+      "slack": 7,
       "critical": false
     },
     {
@@ -947,9 +951,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -965,9 +969,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -983,9 +987,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 4,
-      "LS": 4,
-      "LF": 8,
-      "slack": 4,
+      "LS": 6,
+      "LF": 10,
+      "slack": 6,
       "critical": false
     },
     {
@@ -996,15 +1000,17 @@
       "confidence": "medium",
       "owner_role": "Frontend Engineer",
       "source_type": "marketing_promise",
-      "predecessors": [],
+      "predecessors": [
+        "BB-19-onboarding-and-tutorials::c7"
+      ],
       "successors": [],
-      "layer": 0,
-      "ES": 0,
-      "EF": 4,
-      "LS": 4,
-      "LF": 8,
-      "slack": 4,
-      "critical": false
+      "layer": 1,
+      "ES": 6,
+      "EF": 10,
+      "LS": 6,
+      "LF": 10,
+      "slack": 0,
+      "critical": true
     },
     {
       "id": "BB-PROM-3",
@@ -1019,9 +1025,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 4,
-      "LS": 4,
-      "LF": 8,
-      "slack": 4,
+      "LS": 6,
+      "LF": 10,
+      "slack": 6,
       "critical": false
     },
     {
@@ -1037,9 +1043,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 4,
-      "LS": 4,
-      "LF": 8,
-      "slack": 4,
+      "LS": 6,
+      "LF": 10,
+      "slack": 6,
       "critical": false
     },
     {
@@ -1055,9 +1061,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 4,
-      "LS": 4,
-      "LF": 8,
-      "slack": 4,
+      "LS": 6,
+      "LF": 10,
+      "slack": 6,
       "critical": false
     },
     {
@@ -1073,9 +1079,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 4,
-      "LS": 4,
-      "LF": 8,
-      "slack": 4,
+      "LS": 6,
+      "LF": 10,
+      "slack": 6,
       "critical": false
     },
     {
@@ -1091,9 +1097,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 4,
-      "LS": 4,
-      "LF": 8,
-      "slack": 4,
+      "LS": 6,
+      "LF": 10,
+      "slack": 6,
       "critical": false
     },
     {
@@ -1109,9 +1115,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 4,
-      "LS": 4,
-      "LF": 8,
-      "slack": 4,
+      "LS": 6,
+      "LF": 10,
+      "slack": 6,
       "critical": false
     },
     {
@@ -1127,9 +1133,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1145,9 +1151,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1163,9 +1169,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1181,9 +1187,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1199,9 +1205,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1217,9 +1223,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1235,9 +1241,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1253,9 +1259,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1271,9 +1277,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1289,9 +1295,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1307,9 +1313,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1325,9 +1331,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1343,9 +1349,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1361,9 +1367,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1379,9 +1385,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1397,9 +1403,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1415,9 +1421,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1433,9 +1439,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1451,9 +1457,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1469,9 +1475,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1487,9 +1493,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1505,9 +1511,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1523,9 +1529,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1541,9 +1547,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1559,9 +1565,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1577,9 +1583,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1595,9 +1601,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1613,9 +1619,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1631,9 +1637,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1649,9 +1655,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1667,9 +1673,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1685,9 +1691,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1703,9 +1709,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1721,9 +1727,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1739,9 +1745,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1757,9 +1763,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1775,9 +1781,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1793,9 +1799,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1811,9 +1817,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1829,9 +1835,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1847,9 +1853,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1865,9 +1871,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1883,9 +1889,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1901,9 +1907,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1919,9 +1925,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1937,9 +1943,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1955,9 +1961,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1973,9 +1979,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -1991,9 +1997,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2009,9 +2015,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2027,9 +2033,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2045,9 +2051,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2063,9 +2069,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2081,9 +2087,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2099,9 +2105,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2117,9 +2123,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2135,9 +2141,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2153,9 +2159,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2171,9 +2177,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2189,9 +2195,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2207,9 +2213,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2225,9 +2231,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2243,9 +2249,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2261,9 +2267,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2279,9 +2285,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2297,9 +2303,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2315,9 +2321,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2333,9 +2339,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2351,9 +2357,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2369,9 +2375,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2387,9 +2393,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2405,9 +2411,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2423,9 +2429,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2441,9 +2447,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2459,9 +2465,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2477,9 +2483,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2495,9 +2501,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2513,9 +2519,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2531,9 +2537,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2549,9 +2555,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2567,9 +2573,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2585,9 +2591,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2603,9 +2609,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2621,9 +2627,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2639,9 +2645,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2657,9 +2663,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2675,9 +2681,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2693,9 +2699,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2711,9 +2717,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2729,9 +2735,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2747,9 +2753,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2765,9 +2771,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2783,9 +2789,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2801,9 +2807,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2819,9 +2825,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2837,9 +2843,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2855,9 +2861,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2873,9 +2879,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2891,9 +2897,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2909,9 +2915,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2927,9 +2933,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2945,9 +2951,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2963,9 +2969,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2981,9 +2987,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -2999,9 +3005,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3017,9 +3023,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3035,9 +3041,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3053,9 +3059,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3071,9 +3077,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3089,9 +3095,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3107,9 +3113,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3125,9 +3131,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3143,9 +3149,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3161,9 +3167,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3179,9 +3185,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3197,9 +3203,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3215,9 +3221,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3233,9 +3239,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3251,9 +3257,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3269,9 +3275,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3287,9 +3293,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3305,9 +3311,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3323,9 +3329,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3341,9 +3347,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3359,9 +3365,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3377,9 +3383,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3395,9 +3401,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3413,9 +3419,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3431,9 +3437,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3449,9 +3455,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3467,9 +3473,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3485,9 +3491,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3503,9 +3509,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3521,9 +3527,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3539,9 +3545,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3557,9 +3563,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3575,9 +3581,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3593,9 +3599,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3611,9 +3617,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3629,9 +3635,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3647,9 +3653,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3665,9 +3671,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3683,9 +3689,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3701,9 +3707,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3719,9 +3725,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3737,9 +3743,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3755,9 +3761,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3773,9 +3779,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3791,9 +3797,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3809,9 +3815,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3827,9 +3833,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3845,9 +3851,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3863,9 +3869,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     },
     {
@@ -3881,9 +3887,9 @@
       "layer": 0,
       "ES": 0,
       "EF": 2,
-      "LS": 6,
-      "LF": 8,
-      "slack": 6,
+      "LS": 8,
+      "LF": 10,
+      "slack": 8,
       "critical": false
     }
   ]
