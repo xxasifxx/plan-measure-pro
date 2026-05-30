@@ -367,9 +367,9 @@ export default function Landing() {
               <span className="text-primary">Start Proving Them.</span>
             </motion.h1>
             <motion.p variants={fadeUpChild} className="mt-6 text-sm sm:text-base text-white/60 leading-relaxed max-w-2xl mx-auto">
-              TakeoffPro gives your RE team digital measurement tools that produce audit-ready quantity
-              records — directly from contract plan PDFs. Built around NJTA Standard Specifications and
-              pay item formats.
+              Inspector measurements update the contractor’s P6 schedule, with a full audit trail —
+              from plan-sheet measurement to payable quantity to scheduled percent complete. Built around
+              NJTA Standard Specifications and pay item formats.
             </motion.p>
             <motion.div variants={fadeUpChild} className="flex flex-wrap justify-center gap-3 mt-8">
               <Button size="lg" onClick={() => navigate('/demo')} className="gap-2 text-sm bg-primary hover:bg-primary/90">
