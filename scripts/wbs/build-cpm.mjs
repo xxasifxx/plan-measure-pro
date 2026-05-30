@@ -42,6 +42,13 @@ for (const e of backlog.entries) {
 
 // ─── ingest manual edges ──────────────────────────────────────────────────────
 const issues = [];
+const inferredEdges = [];
+function addEdge(pred, succ, source) {
+  if (!nodes.has(pred) || !nodes.has(succ) || pred === succ) return;
+  nodes.get(succ).predecessors.push(pred);
+  nodes.get(pred).successors.push(succ);
+  if (source === 'inferred') inferredEdges.push({ pred, succ });
+}
 for (const [succ, preds] of Object.entries(manualEdges)) {
   if (!nodes.has(succ)) {
     issues.push({ kind: 'unknown_successor', id: succ });
@@ -56,10 +63,36 @@ for (const [succ, preds] of Object.entries(manualEdges)) {
       issues.push({ kind: 'self_loop', id: succ });
       continue;
     }
-    nodes.get(succ).predecessors.push(pred);
-    nodes.get(pred).successors.push(succ);
+    addEdge(pred, succ, 'manual');
   }
 }
+
+// ─── inferred edges ───────────────────────────────────────────────────────────
+// Safe heuristics; can be overridden by listing the same edge manually.
+//  (1) marketing_promise depends on capability_missing entries in same stream
+//  (2) verification_gap depends on capability_partial/_missing in same stream
+//      (you can only verify e2e once the feature exists)
+const byStreamSource = new Map();
+for (const e of backlog.entries) {
+  const k = `${e.stream}::${e.source_type}`;
+  if (!byStreamSource.has(k)) byStreamSource.set(k, []);
+  byStreamSource.get(k).push(e.id);
+}
+for (const e of backlog.entries) {
+  if (e.source_type === 'marketing_promise') {
+    for (const pred of byStreamSource.get(`${e.stream}::capability_missing`) || []) {
+      addEdge(pred, e.id, 'inferred');
+    }
+  }
+  if (e.source_type === 'verification_gap') {
+    for (const t of ['capability_missing', 'capability_partial']) {
+      for (const pred of byStreamSource.get(`${e.stream}::${t}`) || []) {
+        addEdge(pred, e.id, 'inferred');
+      }
+    }
+  }
+}
+
 for (const n of nodes.values()) {
   n.predecessors = [...new Set(n.predecessors)];
   n.successors = [...new Set(n.successors)];
@@ -160,6 +193,14 @@ const stats = {
   node_count: nodes.size,
   edge_count: [...nodes.values()].reduce((n, x) => n + x.successors.length, 0),
   declared_edges: Object.values(manualEdges).reduce((n, arr) => n + (arr || []).length, 0),
+  inferred_edges: inferredEdges.length,
+  cycle_edges_dropped: cycleEdges.size,
+  unconnected_nodes: [...nodes.values()].filter((n) => !n.predecessors.length && !n.successors.length).length,
+  project_duration_days: projectDuration,
+  critical_path_length: criticalIds.length,
+  max_layer: maxLayer,
+  critical_node_count: [...nodes.values()].filter((n) => n.critical).length,
+};
   cycle_edges_dropped: cycleEdges.size,
   unconnected_nodes: [...nodes.values()].filter((n) => !n.predecessors.length && !n.successors.length).length,
   project_duration_days: projectDuration,
