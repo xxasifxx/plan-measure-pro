@@ -17,12 +17,15 @@ describe('takeoffpro-dev.xml (PMXML self-proof)', () => {
     expect(tables.schemaVersion).toBe('22.12');
   });
 
+  // M0..M6 are phase milestones emitted in addition to the dev-WBS leaves.
+  const leafActivities = tables.activities.filter(a => !/^M\d+$/.test(a.id));
+
   it('round-trips every activity in the JSON', () => {
-    expect(tables.activities.length).toBe(SUMMARY.activities.length);
+    expect(leafActivities.length).toBe(SUMMARY.activities.length);
   });
 
   it('preserves status distribution from the strict scorer', () => {
-    const counts = tables.activities.reduce((acc, a) => {
+    const counts = leafActivities.reduce((acc, a) => {
       acc[a.status || 'Not Started'] = (acc[a.status || 'Not Started'] || 0) + 1;
       return acc;
     }, {});
@@ -32,7 +35,7 @@ describe('takeoffpro-dev.xml (PMXML self-proof)', () => {
   });
 
   it('every Completed activity carries an ActualFinishDate', () => {
-    const completed = tables.activities.filter(a => a.status === 'Completed');
+    const completed = leafActivities.filter(a => a.status === 'Completed');
     for (const a of completed) {
       expect(a.actualFinishDate, `activity ${a.id} ${a.name}`).toBeTruthy();
     }
