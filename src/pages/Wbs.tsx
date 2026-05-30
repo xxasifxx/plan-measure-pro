@@ -674,6 +674,7 @@ export default function Wbs() {
                         <span className="font-mono text-slate-500">{e.source_id}</span>
                         {e.source_severity && <span className="ml-2 text-rose-300">severity: {e.source_severity}</span>}
                       </Section>
+                      {network && renderBacklogDeps(e.id)}
                     </div>
                   </div>
                 )}
