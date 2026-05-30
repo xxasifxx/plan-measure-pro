@@ -526,7 +526,7 @@ export default function Wbs() {
           ].map(([k, v]) => (
             <div key={k as string} className="border border-slate-800 rounded p-2 bg-slate-900/40">
               <div className="text-[10px] uppercase tracking-wide text-slate-500">{k}</div>
-              <div className="text-slate-100 text-sm mt-0.5">{v as React.ReactNode}</div>
+              <div className="text-slate-100 text-sm mt-0.5">{v as ReactNode}</div>
             </div>
           ))}
         </div>
@@ -717,7 +717,7 @@ export default function Wbs() {
   );
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div>
       <div className="text-[9px] uppercase tracking-wide text-slate-500 mb-1">{title}</div>
