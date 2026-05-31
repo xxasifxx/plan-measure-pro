@@ -221,6 +221,7 @@ function main() {
       wbsOid:       streamWbsOid[sk],
       notesBody:    notes(a),
       isMilestone:  false,
+      qaStatus:     a.qaStatus || null,
       _streamKey:   sk,
     };
   });
