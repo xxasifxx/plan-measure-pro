@@ -92,8 +92,19 @@ function activityIdFromIdx(idx) {
   return `A${String(idx + 1).padStart(4,'0')}`;
 }
 
+function qaLabel(a) {
+  if (a.qaStatus === 'Verified')    return 'Verified (E2E)';
+  if (a.qaStatus === 'Requires QA') {
+    if (a.status === 'Completed')   return 'Built — Requires QA';
+    if (a.status === 'In Progress') return 'Partial — Requires QA';
+  }
+  if (a.status === 'Not Started')   return 'Not Started';
+  return a.status || 'Unknown';
+}
+
 function notes(a) {
   const lines = [
+    `QA: ${qaLabel(a)}`,
     `Stream: ${a.stream}`,
     `WBS path: ${a.wbs}`,
     `Source: ${a.source}`,
