@@ -75,8 +75,7 @@ function activitiesFromBriefs(manifest) {
       const codePresent = c.codePresent;
       ensureRecipe(aid, 'manual', manifest);
       const ver = verificationFor(aid, manifest);
-      const { status, pct } = deriveStatus(codePresent, ver.verifiedE2E);
-      const adjustedPct = c.verdict === 'partial' && !ver.verifiedE2E ? 30 : pct;
+      const { status, pct, qaStatus } = deriveStatus(codePresent, ver.verifiedE2E, c.verdict);
       const dates = codePresent ? {
         first: earliestFirst(c.evidence),
         last:  latestLast(c.evidence),
@@ -91,7 +90,8 @@ function activitiesFromBriefs(manifest) {
         verifiedE2E: ver.verifiedE2E,
         verification: ver,
         status,
-        pctComplete: adjustedPct,
+        pctComplete: pct,
+        qaStatus,
         evidence: c.evidence,
         actualStart: dates.first,
         actualFinish: status === 'Completed' ? dates.last : null,
