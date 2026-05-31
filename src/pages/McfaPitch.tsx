@@ -146,7 +146,7 @@ export default function McfaPitch() {
               Download takeoffpro-dev.xml
             </a>
             <span className="text-[11px] font-mono text-muted-foreground">
-              P6 PMXML v22.12 · 5 phases · 22 streams · 154 activities · 7 milestones · 140 FS relationships
+              P6 PMXML v22.12 · 5 phases · 22 streams · 154 activities · 7 milestones · 140 FS relationships · QA_Status UDF per activity
             </span>
           </div>
         </header>
