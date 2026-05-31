@@ -93,8 +93,8 @@ function activitiesFromBriefs(manifest) {
         pctComplete: pct,
         qaStatus,
         evidence: c.evidence,
-        actualStart: dates.first,
-        actualFinish: status === 'Completed' ? dates.last : null,
+        actualStart: dates.first || (status !== 'Not Started' ? TODAY.toISOString() : null),
+        actualFinish: status === 'Completed' ? (dates.last || TODAY.toISOString()) : null,
         durationDays: durationDays(dates.first, dates.last, status === 'Not Started' ? 3 : 1),
         source: 'brief-criterion',
       });
