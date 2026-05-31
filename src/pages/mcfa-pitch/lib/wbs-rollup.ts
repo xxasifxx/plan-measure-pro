@@ -117,7 +117,8 @@ export function translateVerdict(input: {
   const t = (input.sourceType ?? '').toLowerCase();
   if (v === 'implemented') return 'Built';
   if (t === 'verification_gap') return 'Needs QA';
-  if (v === 'partial' || t === 'capability_partial') return 'In Progress';
+  // Code is wired but lacks end-to-end verification → treat as Needs QA, not In Progress.
+  if (v === 'partial' || t === 'capability_partial') return 'Needs QA';
   if (v === 'missing' || t === 'capability_missing' || t === 'risk') return 'In Progress';
   if (v === 'planned' || t === 'marketing_promise') return 'Planned';
   return 'Planned';
@@ -127,6 +128,7 @@ export function translateVerdict(input: {
 export function rollupStatus(statuses: Status[]): Status {
   if (statuses.length === 0) return 'Planned';
   if (statuses.every(s => s === 'Built')) return 'Built';
+  if (statuses.every(s => s === 'Built' || s === 'Needs QA')) return 'Needs QA';
   if (statuses.some(s => s === 'In Progress')) return 'In Progress';
   if (statuses.some(s => s === 'Needs QA')) return 'Needs QA';
   if (statuses.some(s => s === 'Built')) return 'In Progress';
