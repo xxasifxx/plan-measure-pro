@@ -275,11 +275,12 @@ function main() {
       inProgress: all.filter(a => a.status === 'In Progress').length,
       notStarted: all.filter(a => a.status === 'Not Started').length,
       verifiedE2E: all.filter(a => a.verifiedE2E).length,
-      codeOnlyDowngraded: briefAct.filter(a => a.codePresent && !a.verifiedE2E).length,
+      builtRequiresQA: all.filter(a => a.status === 'Completed' && a.qaStatus === 'Requires QA').length,
+      partialRequiresQA: all.filter(a => a.status === 'In Progress' && a.qaStatus === 'Requires QA').length,
       marketingDebtItems: promiseAct.filter(a => a.verdict === 'undelivered').length,
     },
     strictCompletionPct: all.length
-      ? Math.round(100 * all.filter(a => a.status === 'Completed').length / all.length)
+      ? Math.round(100 * all.filter(a => a.verifiedE2E).length / all.length)
       : 0,
     activities: all,
   };
@@ -287,9 +288,9 @@ function main() {
 
   console.log(`Wrote docs/wbs-dev.activities.json`);
   console.log(`  ${summary.totals.activities} activities`);
-  console.log(`  ${summary.totals.completed} Completed / ${summary.totals.inProgress} In Progress / ${summary.totals.notStarted} Not Started`);
-  console.log(`  strict completion: ${summary.strictCompletionPct}%`);
-  console.log(`  ${summary.totals.codeOnlyDowngraded} brief criteria downgraded from Completed → In Progress under strict rule`);
+  console.log(`  ${summary.totals.completed} Completed (of which ${summary.totals.builtRequiresQA} require QA, ${summary.totals.verifiedE2E} verified)`);
+  console.log(`  ${summary.totals.inProgress} In Progress (${summary.totals.partialRequiresQA} require QA) / ${summary.totals.notStarted} Not Started`);
+  console.log(`  E2E-verified completion: ${summary.strictCompletionPct}%`);
   console.log(`  ${summary.totals.marketingDebtItems} marketing claims classified as undelivered (review docs/wbs-dev.promises.json)`);
 }
 
