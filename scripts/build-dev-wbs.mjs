@@ -42,11 +42,17 @@ function slugify(s) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50);
 }
 
-function deriveStatus(codePresent, verifiedE2E) {
-  if (!codePresent && !verifiedE2E) return { status: 'Not Started', pct: 0 };
-  if (codePresent && !verifiedE2E)  return { status: 'In Progress', pct: 50 };
-  if (codePresent && verifiedE2E)   return { status: 'Completed', pct: 100 };
-  return { status: 'Not Started', pct: 0 };
+// Status model — keep honest about QA, stop hiding shipped code as "In Progress".
+//   implemented + codePresent + verifiedE2E  -> Completed 100% Verified
+//   implemented + codePresent (unverified)   -> Completed 100% Requires QA
+//   partial     + codePresent                -> In Progress 60% Requires QA
+//   missing / !codePresent                   -> Not Started 0%
+function deriveStatus(codePresent, verifiedE2E, verdict) {
+  if (!codePresent) return { status: 'Not Started', pct: 0, qaStatus: null };
+  if (verifiedE2E)  return { status: 'Completed',   pct: 100, qaStatus: 'Verified' };
+  if (verdict === 'partial') return { status: 'In Progress', pct: 60, qaStatus: 'Requires QA' };
+  // implemented (or anything else with code present but unverified) → built, needs QA.
+  return { status: 'Completed', pct: 100, qaStatus: 'Requires QA' };
 }
 
 function durationDays(start, end, fallback) {
