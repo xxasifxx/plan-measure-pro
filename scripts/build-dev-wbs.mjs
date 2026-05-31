@@ -42,11 +42,17 @@ function slugify(s) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50);
 }
 
-function deriveStatus(codePresent, verifiedE2E) {
-  if (!codePresent && !verifiedE2E) return { status: 'Not Started', pct: 0 };
-  if (codePresent && !verifiedE2E)  return { status: 'In Progress', pct: 50 };
-  if (codePresent && verifiedE2E)   return { status: 'Completed', pct: 100 };
-  return { status: 'Not Started', pct: 0 };
+// Status model — keep honest about QA, stop hiding shipped code as "In Progress".
+//   implemented + codePresent + verifiedE2E  -> Completed 100% Verified
+//   implemented + codePresent (unverified)   -> Completed 100% Requires QA
+//   partial     + codePresent                -> In Progress 60% Requires QA
+//   missing / !codePresent                   -> Not Started 0%
+function deriveStatus(codePresent, verifiedE2E, verdict) {
+  if (!codePresent) return { status: 'Not Started', pct: 0, qaStatus: null };
+  if (verifiedE2E)  return { status: 'Completed',   pct: 100, qaStatus: 'Verified' };
+  if (verdict === 'partial') return { status: 'In Progress', pct: 60, qaStatus: 'Requires QA' };
+  // implemented (or anything else with code present but unverified) → built, needs QA.
+  return { status: 'Completed', pct: 100, qaStatus: 'Requires QA' };
 }
 
 function durationDays(start, end, fallback) {
@@ -69,8 +75,7 @@ function activitiesFromBriefs(manifest) {
       const codePresent = c.codePresent;
       ensureRecipe(aid, 'manual', manifest);
       const ver = verificationFor(aid, manifest);
-      const { status, pct } = deriveStatus(codePresent, ver.verifiedE2E);
-      const adjustedPct = c.verdict === 'partial' && !ver.verifiedE2E ? 30 : pct;
+      const { status, pct, qaStatus } = deriveStatus(codePresent, ver.verifiedE2E, c.verdict);
       const dates = codePresent ? {
         first: earliestFirst(c.evidence),
         last:  latestLast(c.evidence),
@@ -85,10 +90,11 @@ function activitiesFromBriefs(manifest) {
         verifiedE2E: ver.verifiedE2E,
         verification: ver,
         status,
-        pctComplete: adjustedPct,
+        pctComplete: pct,
+        qaStatus,
         evidence: c.evidence,
-        actualStart: dates.first,
-        actualFinish: status === 'Completed' ? dates.last : null,
+        actualStart: dates.first || (status !== 'Not Started' ? TODAY.toISOString() : null),
+        actualFinish: status === 'Completed' ? (dates.last || TODAY.toISOString()) : null,
         durationDays: durationDays(dates.first, dates.last, status === 'Not Started' ? 3 : 1),
         source: 'brief-criterion',
       });
@@ -147,6 +153,9 @@ function activitiesFromPromises(manifest) {
     const namePrefix = verdict === 'partial'     ? 'Finish delivery: '
                      : verdict === 'delivered'   ? 'Verify e2e: '
                      :                             'Deliver: ';
+    const qaStatusP = verdict === 'undelivered' ? null
+                    : ver.verifiedE2E             ? 'Verified'
+                    :                                'Requires QA';
     out.push({
       id: aid,
       wbs: wbsBranch,
@@ -157,13 +166,15 @@ function activitiesFromPromises(manifest) {
       verifiedE2E: ver.verifiedE2E,
       verification: ver,
       status: verdict === 'undelivered' ? 'Not Started' :
-              ver.verifiedE2E ? 'Completed' : 'In Progress',
+              ver.verifiedE2E ? 'Completed' :
+              verdict === 'partial' ? 'In Progress' : 'Completed',
       pctComplete: verdict === 'undelivered' ? 0 :
                    ver.verifiedE2E ? 100 :
-                   verdict === 'partial' ? 30 : 50,
+                   verdict === 'partial' ? 60 : 100,
+      qaStatus: qaStatusP,
       evidence: p.evidenceFiles || [],
-      actualStart: null,
-      actualFinish: null,
+      actualStart: verdict !== 'undelivered' ? TODAY.toISOString() : null,
+      actualFinish: (verdict !== 'undelivered' && (ver.verifiedE2E || verdict !== 'partial')) ? TODAY.toISOString() : null,
       durationDays: verdict === 'undelivered' ? 5 : verdict === 'partial' ? 3 : 0.5,
       marketingClaimAgeDays: ageDays,
       marketingSource: p.source,
@@ -230,6 +241,7 @@ function crossCuttingActivities(manifest) {
       codePresent: true,
       verifiedE2E: h.status === 'Completed',
       verification: verificationFor(h.id, manifest),
+      qaStatus: h.status === 'Completed' ? 'Verified' : 'Requires QA',
       evidence: [],
       source: 'cross-cutting',
     };
@@ -263,11 +275,12 @@ function main() {
       inProgress: all.filter(a => a.status === 'In Progress').length,
       notStarted: all.filter(a => a.status === 'Not Started').length,
       verifiedE2E: all.filter(a => a.verifiedE2E).length,
-      codeOnlyDowngraded: briefAct.filter(a => a.codePresent && !a.verifiedE2E).length,
+      builtRequiresQA: all.filter(a => a.status === 'Completed' && a.qaStatus === 'Requires QA').length,
+      partialRequiresQA: all.filter(a => a.status === 'In Progress' && a.qaStatus === 'Requires QA').length,
       marketingDebtItems: promiseAct.filter(a => a.verdict === 'undelivered').length,
     },
     strictCompletionPct: all.length
-      ? Math.round(100 * all.filter(a => a.status === 'Completed').length / all.length)
+      ? Math.round(100 * all.filter(a => a.verifiedE2E).length / all.length)
       : 0,
     activities: all,
   };
@@ -275,9 +288,9 @@ function main() {
 
   console.log(`Wrote docs/wbs-dev.activities.json`);
   console.log(`  ${summary.totals.activities} activities`);
-  console.log(`  ${summary.totals.completed} Completed / ${summary.totals.inProgress} In Progress / ${summary.totals.notStarted} Not Started`);
-  console.log(`  strict completion: ${summary.strictCompletionPct}%`);
-  console.log(`  ${summary.totals.codeOnlyDowngraded} brief criteria downgraded from Completed → In Progress under strict rule`);
+  console.log(`  ${summary.totals.completed} Completed (of which ${summary.totals.builtRequiresQA} require QA, ${summary.totals.verifiedE2E} verified)`);
+  console.log(`  ${summary.totals.inProgress} In Progress (${summary.totals.partialRequiresQA} require QA) / ${summary.totals.notStarted} Not Started`);
+  console.log(`  E2E-verified completion: ${summary.strictCompletionPct}%`);
   console.log(`  ${summary.totals.marketingDebtItems} marketing claims classified as undelivered (review docs/wbs-dev.promises.json)`);
 }
 

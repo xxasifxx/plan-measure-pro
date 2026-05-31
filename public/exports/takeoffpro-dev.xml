@@ -6,6 +6,12 @@
     <Name>TakeoffPro Build — Development Schedule</Name>
     <DataDate>2026-05-29T00:00:00</DataDate>
     <PlannedStartDate>2025-09-01T08:00:00</PlannedStartDate>
+    <UDFType>
+      <ObjectId>9100</ObjectId>
+      <SubjectArea>Activity</SubjectArea>
+      <Title>QA_Status</Title>
+      <DataType>Text</DataType>
+    </UDFType>
     <WBS>
       <ObjectId>100</ObjectId>
       <Code>P1</Code>
@@ -160,141 +166,189 @@
     <Activity>
       <ObjectId>10000</ObjectId>
       <Id>A0001</Id>
-      <Name>Organic signup → admin role</Name>
+      <Name>Organic signup → admin role  [Requires QA]</Name>
       <WBSObjectId>101</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Identity &amp; Access
+      <Notes>QA: Built — Requires QA
+Stream: Identity &amp; Access
 WBS path: 01-identity-and-access/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: Auth.tsx, useAuth.tsx</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10001</ObjectId>
       <Id>A0002</Id>
-      <Name>Invitation flow</Name>
+      <Name>Invitation flow  [Requires QA]</Name>
       <WBSObjectId>101</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Identity &amp; Access
+      <Notes>QA: Built — Requires QA
+Stream: Identity &amp; Access
 WBS path: 01-identity-and-access/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: Auth.tsx</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10002</ObjectId>
       <Id>A0003</Id>
-      <Name>Roles populated</Name>
+      <Name>Roles populated  [Requires QA]</Name>
       <WBSObjectId>101</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Identity &amp; Access
+      <Notes>QA: Built — Requires QA
+Stream: Identity &amp; Access
 WBS path: 01-identity-and-access/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: useAuth.tsx</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10003</ObjectId>
       <Id>A0004</Id>
-      <Name>Role booleans correct</Name>
+      <Name>Role booleans correct  [Requires QA]</Name>
       <WBSObjectId>101</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Identity &amp; Access
+      <Notes>QA: Built — Requires QA
+Stream: Identity &amp; Access
 WBS path: 01-identity-and-access/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: useAuth.tsx</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10004</ObjectId>
       <Id>A0005</Id>
-      <Name>Biometric gate</Name>
+      <Name>Biometric gate  [Requires QA]</Name>
       <WBSObjectId>101</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Identity &amp; Access
+      <Notes>QA: Built — Requires QA
+Stream: Identity &amp; Access
 WBS path: 01-identity-and-access/Mobile
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: BiometricGate.tsx</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10005</ObjectId>
       <Id>A0006</Id>
-      <Name>Password reset</Name>
+      <Name>Password reset  [Requires QA]</Name>
       <WBSObjectId>101</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Identity &amp; Access
+      <Notes>QA: Built — Requires QA
+Stream: Identity &amp; Access
 WBS path: 01-identity-and-access/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: ResetPassword.tsx</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10006</ObjectId>
       <Id>A0007</Id>
-      <Name>RLS posture</Name>
+      <Name>RLS posture  [Requires QA]</Name>
       <WBSObjectId>101</WBSObjectId>
       <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>30</PhysicalPercentComplete>
+      <PhysicalPercentComplete>60</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>6</RemainingDuration>
+      <RemainingDuration>3</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Identity &amp; Access
+      <Notes>QA: Partial — Requires QA
+Stream: Identity &amp; Access
 WBS path: 01-identity-and-access/Docs
 Source: brief-criterion
 Verdict: partial
 code_present=true  verified_e2e=false
 Verification: unverified</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10007</ObjectId>
@@ -308,7 +362,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Identity &amp; Access
+      <Notes>QA: Not Started
+Stream: Identity &amp; Access
 WBS path: 01-identity-and-access/Remaining
 Source: brief-risk
 Verdict: missing
@@ -327,7 +382,8 @@ Verification: unverified</Notes>
       <PlannedDuration>40</PlannedDuration>
       <RemainingDuration>40</RemainingDuration>
       <AtCompletionDuration>40</AtCompletionDuration>
-      <Notes>Stream: Identity &amp; Access
+      <Notes>QA: Not Started
+Stream: Identity &amp; Access
 WBS path: 01-identity-and-access/Remaining
 Source: brief-risk
 Verdict: missing
@@ -346,7 +402,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Identity &amp; Access
+      <Notes>QA: Not Started
+Stream: Identity &amp; Access
 WBS path: 01-identity-and-access/Remaining
 Source: brief-risk
 Verdict: missing
@@ -365,7 +422,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Identity &amp; Access
+      <Notes>QA: Not Started
+Stream: Identity &amp; Access
 WBS path: 01-identity-and-access/Remaining
 Source: brief-risk
 Verdict: missing
@@ -375,142 +433,190 @@ Verification: unverified</Notes>
     <Activity>
       <ObjectId>10011</ObjectId>
       <Id>A0012</Id>
-      <Name>Ownership + member union</Name>
+      <Name>Ownership + member union  [Requires QA]</Name>
       <WBSObjectId>102</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Portfolio &amp; PM Home
+      <Notes>QA: Built — Requires QA
+Stream: Portfolio &amp; PM Home
 WBS path: 02-portfolio-and-pm-home/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: useProjects.ts</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10012</ObjectId>
       <Id>A0013</Id>
-      <Name>Card stats</Name>
+      <Name>Card stats  [Requires QA]</Name>
       <WBSObjectId>102</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Portfolio &amp; PM Home
+      <Notes>QA: Built — Requires QA
+Stream: Portfolio &amp; PM Home
 WBS path: 02-portfolio-and-pm-home/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: useProjects.ts, Dashboard.tsx</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10013</ObjectId>
       <Id>A0014</Id>
-      <Name>New Project dialog</Name>
+      <Name>New Project dialog  [Requires QA]</Name>
       <WBSObjectId>102</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Portfolio &amp; PM Home
+      <Notes>QA: Built — Requires QA
+Stream: Portfolio &amp; PM Home
 WBS path: 02-portfolio-and-pm-home/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: Dashboard.tsx</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10014</ObjectId>
       <Id>A0015</Id>
-      <Name>Delete guard</Name>
+      <Name>Delete guard  [Requires QA]</Name>
       <WBSObjectId>102</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Portfolio &amp; PM Home
+      <Notes>QA: Built — Requires QA
+Stream: Portfolio &amp; PM Home
 WBS path: 02-portfolio-and-pm-home/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: Dashboard.tsx</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10015</ObjectId>
       <Id>A0016</Id>
-      <Name>PM inspector detail</Name>
+      <Name>PM inspector detail  [Requires QA]</Name>
       <WBSObjectId>102</WBSObjectId>
       <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>30</PhysicalPercentComplete>
+      <PhysicalPercentComplete>60</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>6</RemainingDuration>
+      <RemainingDuration>3</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Portfolio &amp; PM Home
+      <Notes>QA: Partial — Requires QA
+Stream: Portfolio &amp; PM Home
 WBS path: 02-portfolio-and-pm-home/Docs
 Source: brief-criterion
 Verdict: partial
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: Dashboard.tsx</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10016</ObjectId>
       <Id>A0017</Id>
-      <Name>Role badge</Name>
+      <Name>Role badge  [Requires QA]</Name>
       <WBSObjectId>102</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Portfolio &amp; PM Home
+      <Notes>QA: Built — Requires QA
+Stream: Portfolio &amp; PM Home
 WBS path: 02-portfolio-and-pm-home/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: Dashboard.tsx</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10017</ObjectId>
       <Id>A0018</Id>
-      <Name>Inspector empty state</Name>
+      <Name>Inspector empty state  [Requires QA]</Name>
       <WBSObjectId>102</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Portfolio &amp; PM Home
+      <Notes>QA: Built — Requires QA
+Stream: Portfolio &amp; PM Home
 WBS path: 02-portfolio-and-pm-home/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: Dashboard.tsx</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10018</ObjectId>
@@ -524,7 +630,8 @@ Evidence: Dashboard.tsx</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Portfolio &amp; PM Home
+      <Notes>QA: Not Started
+Stream: Portfolio &amp; PM Home
 WBS path: 02-portfolio-and-pm-home/Remaining
 Source: brief-risk
 Verdict: missing
@@ -543,7 +650,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Portfolio &amp; PM Home
+      <Notes>QA: Not Started
+Stream: Portfolio &amp; PM Home
 WBS path: 02-portfolio-and-pm-home/Remaining
 Source: brief-risk
 Verdict: missing
@@ -562,7 +670,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Portfolio &amp; PM Home
+      <Notes>QA: Not Started
+Stream: Portfolio &amp; PM Home
 WBS path: 02-portfolio-and-pm-home/Remaining
 Source: brief-risk
 Verdict: missing
@@ -581,7 +690,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Portfolio &amp; PM Home
+      <Notes>QA: Not Started
+Stream: Portfolio &amp; PM Home
 WBS path: 02-portfolio-and-pm-home/Remaining
 Source: brief-risk
 Verdict: missing
@@ -591,121 +701,163 @@ Verification: unverified</Notes>
     <Activity>
       <ObjectId>10022</ObjectId>
       <Id>A0023</Id>
-      <Name>Create project / PDF upload</Name>
+      <Name>Create project / PDF upload  [Requires QA]</Name>
       <WBSObjectId>103</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Project Onboarding
+      <Notes>QA: Built — Requires QA
+Stream: Project Onboarding
 WBS path: 03-project-onboarding/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: useProjects.ts</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10023</ObjectId>
       <Id>A0024</Id>
-      <Name>Load with offline fallback</Name>
+      <Name>Load with offline fallback  [Requires QA]</Name>
       <WBSObjectId>103</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Project Onboarding
+      <Notes>QA: Built — Requires QA
+Stream: Project Onboarding
 WBS path: 03-project-onboarding/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: Index.tsx</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10024</ObjectId>
       <Id>A0025</Id>
-      <Name>TOC drag-select</Name>
+      <Name>TOC drag-select  [Requires QA]</Name>
       <WBSObjectId>103</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Project Onboarding
+      <Notes>QA: Built — Requires QA
+Stream: Project Onboarding
 WBS path: 03-project-onboarding/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: PdfCanvas.tsx, Index.tsx, pdf-utils.ts</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10025</ObjectId>
       <Id>A0026</Id>
-      <Name>Pay-item import</Name>
+      <Name>Pay-item import  [Requires QA]</Name>
       <WBSObjectId>103</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Project Onboarding
+      <Notes>QA: Built — Requires QA
+Stream: Project Onboarding
 WBS path: 03-project-onboarding/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10026</ObjectId>
       <Id>A0027</Id>
-      <Name>Specs PDF upload + indexing</Name>
+      <Name>Specs PDF upload + indexing  [Requires QA]</Name>
       <WBSObjectId>103</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Project Onboarding
+      <Notes>QA: Built — Requires QA
+Stream: Project Onboarding
 WBS path: 03-project-onboarding/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: Index.tsx</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10027</ObjectId>
       <Id>A0028</Id>
-      <Name>TOC / pay-items survive reload</Name>
+      <Name>TOC / pay-items survive reload  [Requires QA]</Name>
       <WBSObjectId>103</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Project Onboarding
+      <Notes>QA: Built — Requires QA
+Stream: Project Onboarding
 WBS path: 03-project-onboarding/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: useProject.ts, useProject.ts</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10028</ObjectId>
@@ -719,7 +871,8 @@ Evidence: useProject.ts, useProject.ts</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Project Onboarding
+      <Notes>QA: Not Started
+Stream: Project Onboarding
 WBS path: 03-project-onboarding/Remaining
 Source: brief-risk
 Verdict: missing
@@ -738,7 +891,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Project Onboarding
+      <Notes>QA: Not Started
+Stream: Project Onboarding
 WBS path: 03-project-onboarding/Remaining
 Source: brief-risk
 Verdict: missing
@@ -757,7 +911,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Project Onboarding
+      <Notes>QA: Not Started
+Stream: Project Onboarding
 WBS path: 03-project-onboarding/Remaining
 Source: brief-risk
 Verdict: missing
@@ -776,7 +931,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Project Onboarding
+      <Notes>QA: Not Started
+Stream: Project Onboarding
 WBS path: 03-project-onboarding/Remaining
 Source: brief-risk
 Verdict: missing
@@ -786,121 +942,162 @@ Verification: unverified</Notes>
     <Activity>
       <ObjectId>10032</ObjectId>
       <Id>A0033</Id>
-      <Name>drawable flag</Name>
+      <Name>drawable flag  [Requires QA]</Name>
       <WBSObjectId>106</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Pay Item Catalog
+      <Notes>QA: Built — Requires QA
+Stream: Pay Item Catalog
 WBS path: 04-pay-item-catalog/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: types/project.ts, Toolbar.tsx</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10033</ObjectId>
       <Id>A0034</Id>
-      <Name>Delete cascade</Name>
+      <Name>Delete cascade  [Requires QA]</Name>
       <WBSObjectId>106</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Pay Item Catalog
+      <Notes>QA: Built — Requires QA
+Stream: Pay Item Catalog
 WBS path: 04-pay-item-catalog/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: ProjectSidebar.tsx, useProject.ts</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10034</ObjectId>
       <Id>A0035</Id>
-      <Name>Edit inline</Name>
+      <Name>Edit inline  [Requires QA]</Name>
       <WBSObjectId>106</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Pay Item Catalog
+      <Notes>QA: Built — Requires QA
+Stream: Pay Item Catalog
 WBS path: 04-pay-item-catalog/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: ProjectSidebar.tsx</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10035</ObjectId>
       <Id>A0036</Id>
-      <Name>DB persistence</Name>
+      <Name>DB persistence  [Requires QA]</Name>
       <WBSObjectId>106</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Pay Item Catalog
+      <Notes>QA: Built — Requires QA
+Stream: Pay Item Catalog
 WBS path: 04-pay-item-catalog/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: useProject.ts</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10036</ObjectId>
       <Id>A0037</Id>
-      <Name>Section-keyed colors</Name>
+      <Name>Section-keyed colors  [Requires QA]</Name>
       <WBSObjectId>106</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Pay Item Catalog
+      <Notes>QA: Built — Requires QA
+Stream: Pay Item Catalog
 WBS path: 04-pay-item-catalog/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: pdf-utils.ts</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10037</ObjectId>
       <Id>A0038</Id>
-      <Name>Contract quantity denominator</Name>
+      <Name>Contract quantity denominator  [Requires QA]</Name>
       <WBSObjectId>106</WBSObjectId>
       <Type>Task Dependent</Type>
       <Status>In Progress</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>30</PhysicalPercentComplete>
+      <PhysicalPercentComplete>60</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>6</RemainingDuration>
+      <RemainingDuration>3</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Pay Item Catalog
+      <Notes>QA: Partial — Requires QA
+Stream: Pay Item Catalog
 WBS path: 04-pay-item-catalog/Docs
 Source: brief-criterion
 Verdict: partial
 code_present=true  verified_e2e=false
 Verification: unverified</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10038</ObjectId>
@@ -914,7 +1111,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Pay Item Catalog
+      <Notes>QA: Not Started
+Stream: Pay Item Catalog
 WBS path: 04-pay-item-catalog/Docs
 Source: brief-criterion
 Verdict: missing
@@ -933,7 +1131,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Pay Item Catalog
+      <Notes>QA: Not Started
+Stream: Pay Item Catalog
 WBS path: 04-pay-item-catalog/Remaining
 Source: brief-risk
 Verdict: missing
@@ -952,7 +1151,8 @@ Verification: unverified</Notes>
       <PlannedDuration>16</PlannedDuration>
       <RemainingDuration>16</RemainingDuration>
       <AtCompletionDuration>16</AtCompletionDuration>
-      <Notes>Stream: Pay Item Catalog
+      <Notes>QA: Not Started
+Stream: Pay Item Catalog
 WBS path: 04-pay-item-catalog/Remaining
 Source: brief-risk
 Verdict: missing
@@ -971,7 +1171,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Pay Item Catalog
+      <Notes>QA: Not Started
+Stream: Pay Item Catalog
 WBS path: 04-pay-item-catalog/Remaining
 Source: brief-risk
 Verdict: missing
@@ -990,7 +1191,8 @@ Verification: unverified</Notes>
       <PlannedDuration>40</PlannedDuration>
       <RemainingDuration>40</RemainingDuration>
       <AtCompletionDuration>40</AtCompletionDuration>
-      <Notes>Stream: Pay Item Catalog
+      <Notes>QA: Not Started
+Stream: Pay Item Catalog
 WBS path: 04-pay-item-catalog/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1000,162 +1202,218 @@ Verification: unverified</Notes>
     <Activity>
       <ObjectId>10043</ObjectId>
       <Id>A0044</Id>
-      <Name>Scale calibration</Name>
+      <Name>Scale calibration  [Requires QA]</Name>
       <WBSObjectId>107</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Field Capture
+      <Notes>QA: Built — Requires QA
+Stream: Field Capture
 WBS path: 05-field-capture/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: PdfCanvas.tsx, Toolbar.tsx</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10044</ObjectId>
       <Id>A0045</Id>
-      <Name>Polygon with CY depth prompt</Name>
+      <Name>Polygon with CY depth prompt  [Requires QA]</Name>
       <WBSObjectId>107</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Field Capture
+      <Notes>QA: Built — Requires QA
+Stream: Field Capture
 WBS path: 05-field-capture/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: PdfCanvas.tsx</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10045</ObjectId>
       <Id>A0046</Id>
-      <Name>Drag-handle editing</Name>
+      <Name>Drag-handle editing  [Requires QA]</Name>
       <WBSObjectId>107</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Field Capture
+      <Notes>QA: Built — Requires QA
+Stream: Field Capture
 WBS path: 05-field-capture/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: PdfCanvas.tsx, PdfCanvas.tsx</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10046</ObjectId>
       <Id>A0047</Id>
-      <Name>Undo/redo with DB sync</Name>
+      <Name>Undo/redo with DB sync  [Requires QA]</Name>
       <WBSObjectId>107</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Field Capture
+      <Notes>QA: Built — Requires QA
+Stream: Field Capture
 WBS path: 05-field-capture/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: useProject.ts</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10047</ObjectId>
       <Id>A0048</Id>
-      <Name>Realtime multi-user sync</Name>
+      <Name>Realtime multi-user sync  [Requires QA]</Name>
       <WBSObjectId>107</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Field Capture
+      <Notes>QA: Built — Requires QA
+Stream: Field Capture
 WBS path: 05-field-capture/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: useProject.ts, useProject.ts</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10048</ObjectId>
       <Id>A0049</Id>
-      <Name>GPS calibration overlay</Name>
+      <Name>GPS calibration overlay  [Requires QA]</Name>
       <WBSObjectId>107</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Field Capture
+      <Notes>QA: Built — Requires QA
+Stream: Field Capture
 WBS path: 05-field-capture/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: GpsCalibration.tsx, GpsTraceControls.tsx, PdfCanvas.tsx</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10049</ObjectId>
       <Id>A0050</Id>
-      <Name>Manual quantity override</Name>
+      <Name>Manual quantity override  [Requires QA]</Name>
       <WBSObjectId>107</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Field Capture
+      <Notes>QA: Built — Requires QA
+Stream: Field Capture
 WBS path: 05-field-capture/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: PdfCanvas.tsx</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10050</ObjectId>
       <Id>A0051</Id>
-      <Name>readOnly mode</Name>
+      <Name>readOnly mode  [Requires QA]</Name>
       <WBSObjectId>107</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Field Capture
+      <Notes>QA: Built — Requires QA
+Stream: Field Capture
 WBS path: 05-field-capture/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: Index.tsx, Toolbar.tsx</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10051</ObjectId>
@@ -1169,7 +1427,8 @@ Evidence: Index.tsx, Toolbar.tsx</Notes>
       <PlannedDuration>16</PlannedDuration>
       <RemainingDuration>16</RemainingDuration>
       <AtCompletionDuration>16</AtCompletionDuration>
-      <Notes>Stream: Field Capture
+      <Notes>QA: Not Started
+Stream: Field Capture
 WBS path: 05-field-capture/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1188,7 +1447,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Field Capture
+      <Notes>QA: Not Started
+Stream: Field Capture
 WBS path: 05-field-capture/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1207,7 +1467,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Field Capture
+      <Notes>QA: Not Started
+Stream: Field Capture
 WBS path: 05-field-capture/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1226,7 +1487,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Field Capture
+      <Notes>QA: Not Started
+Stream: Field Capture
 WBS path: 05-field-capture/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1245,7 +1507,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Daily Report Lifecycle
+      <Notes>QA: Not Started
+Stream: Daily Report Lifecycle
 WBS path: 06-daily-report-lifecycle/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1264,7 +1527,8 @@ Verification: unverified</Notes>
       <PlannedDuration>8</PlannedDuration>
       <RemainingDuration>8</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Daily Report Lifecycle
+      <Notes>QA: Not Started
+Stream: Daily Report Lifecycle
 WBS path: 06-daily-report-lifecycle/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1283,7 +1547,8 @@ Verification: unverified</Notes>
       <PlannedDuration>16</PlannedDuration>
       <RemainingDuration>16</RemainingDuration>
       <AtCompletionDuration>16</AtCompletionDuration>
-      <Notes>Stream: Daily Report Lifecycle
+      <Notes>QA: Not Started
+Stream: Daily Report Lifecycle
 WBS path: 06-daily-report-lifecycle/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1302,7 +1567,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Daily Report Lifecycle
+      <Notes>QA: Not Started
+Stream: Daily Report Lifecycle
 WBS path: 06-daily-report-lifecycle/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1321,7 +1587,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Quantity to Payment
+      <Notes>QA: Not Started
+Stream: Quantity to Payment
 WBS path: 07-quantity-to-payment/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1340,7 +1607,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Quantity to Payment
+      <Notes>QA: Not Started
+Stream: Quantity to Payment
 WBS path: 07-quantity-to-payment/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1359,7 +1627,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Quantity to Payment
+      <Notes>QA: Not Started
+Stream: Quantity to Payment
 WBS path: 07-quantity-to-payment/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1378,7 +1647,8 @@ Verification: unverified</Notes>
       <PlannedDuration>8</PlannedDuration>
       <RemainingDuration>8</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Quantity to Payment
+      <Notes>QA: Not Started
+Stream: Quantity to Payment
 WBS path: 07-quantity-to-payment/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1397,7 +1667,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Photo Evidence
+      <Notes>QA: Not Started
+Stream: Photo Evidence
 WBS path: 08-photo-evidence/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1416,7 +1687,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Photo Evidence
+      <Notes>QA: Not Started
+Stream: Photo Evidence
 WBS path: 08-photo-evidence/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1435,7 +1707,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Photo Evidence
+      <Notes>QA: Not Started
+Stream: Photo Evidence
 WBS path: 08-photo-evidence/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1454,7 +1727,8 @@ Verification: unverified</Notes>
       <PlannedDuration>40</PlannedDuration>
       <RemainingDuration>40</RemainingDuration>
       <AtCompletionDuration>40</AtCompletionDuration>
-      <Notes>Stream: Photo Evidence
+      <Notes>QA: Not Started
+Stream: Photo Evidence
 WBS path: 08-photo-evidence/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1473,7 +1747,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Standard Specifications
+      <Notes>QA: Not Started
+Stream: Standard Specifications
 WBS path: 09-standard-specifications/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1492,7 +1767,8 @@ Verification: unverified</Notes>
       <PlannedDuration>40</PlannedDuration>
       <RemainingDuration>40</RemainingDuration>
       <AtCompletionDuration>40</AtCompletionDuration>
-      <Notes>Stream: Standard Specifications
+      <Notes>QA: Not Started
+Stream: Standard Specifications
 WBS path: 09-standard-specifications/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1511,7 +1787,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Standard Specifications
+      <Notes>QA: Not Started
+Stream: Standard Specifications
 WBS path: 09-standard-specifications/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1530,7 +1807,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Standard Specifications
+      <Notes>QA: Not Started
+Stream: Standard Specifications
 WBS path: 09-standard-specifications/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1549,7 +1827,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Document Management
+      <Notes>QA: Not Started
+Stream: Document Management
 WBS path: 10-document-management/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1568,7 +1847,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Document Management
+      <Notes>QA: Not Started
+Stream: Document Management
 WBS path: 10-document-management/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1587,7 +1867,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Document Management
+      <Notes>QA: Not Started
+Stream: Document Management
 WBS path: 10-document-management/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1606,7 +1887,8 @@ Verification: unverified</Notes>
       <PlannedDuration>8</PlannedDuration>
       <RemainingDuration>8</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Document Management
+      <Notes>QA: Not Started
+Stream: Document Management
 WBS path: 10-document-management/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1625,7 +1907,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Schedule Management
+      <Notes>QA: Not Started
+Stream: Schedule Management
 WBS path: 11-schedule-management/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1644,7 +1927,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Schedule Management
+      <Notes>QA: Not Started
+Stream: Schedule Management
 WBS path: 11-schedule-management/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1663,7 +1947,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Schedule Management
+      <Notes>QA: Not Started
+Stream: Schedule Management
 WBS path: 11-schedule-management/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1682,7 +1967,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Schedule Management
+      <Notes>QA: Not Started
+Stream: Schedule Management
 WBS path: 11-schedule-management/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1701,7 +1987,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Project Health and Controls
+      <Notes>QA: Not Started
+Stream: Project Health and Controls
 WBS path: 12-project-health-and-controls/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1720,7 +2007,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Project Health and Controls
+      <Notes>QA: Not Started
+Stream: Project Health and Controls
 WBS path: 12-project-health-and-controls/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1739,7 +2027,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Project Health and Controls
+      <Notes>QA: Not Started
+Stream: Project Health and Controls
 WBS path: 12-project-health-and-controls/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1758,7 +2047,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Project Health and Controls
+      <Notes>QA: Not Started
+Stream: Project Health and Controls
 WBS path: 12-project-health-and-controls/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1777,7 +2067,8 @@ Verification: unverified</Notes>
       <PlannedDuration>16</PlannedDuration>
       <RemainingDuration>16</RemainingDuration>
       <AtCompletionDuration>16</AtCompletionDuration>
-      <Notes>Stream: Data Export and Interoperability
+      <Notes>QA: Not Started
+Stream: Data Export and Interoperability
 WBS path: 13-data-export-and-interoperability/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1796,7 +2087,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Data Export and Interoperability
+      <Notes>QA: Not Started
+Stream: Data Export and Interoperability
 WBS path: 13-data-export-and-interoperability/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1815,7 +2107,8 @@ Verification: unverified</Notes>
       <PlannedDuration>40</PlannedDuration>
       <RemainingDuration>40</RemainingDuration>
       <AtCompletionDuration>40</AtCompletionDuration>
-      <Notes>Stream: Data Export and Interoperability
+      <Notes>QA: Not Started
+Stream: Data Export and Interoperability
 WBS path: 13-data-export-and-interoperability/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1834,7 +2127,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Data Export and Interoperability
+      <Notes>QA: Not Started
+Stream: Data Export and Interoperability
 WBS path: 13-data-export-and-interoperability/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1853,7 +2147,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Measurement and Geometry Engine
+      <Notes>QA: Not Started
+Stream: Measurement and Geometry Engine
 WBS path: 14-measurement-and-geometry-engine/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1872,7 +2167,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Measurement and Geometry Engine
+      <Notes>QA: Not Started
+Stream: Measurement and Geometry Engine
 WBS path: 14-measurement-and-geometry-engine/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1891,7 +2187,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Measurement and Geometry Engine
+      <Notes>QA: Not Started
+Stream: Measurement and Geometry Engine
 WBS path: 14-measurement-and-geometry-engine/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1910,7 +2207,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Measurement and Geometry Engine
+      <Notes>QA: Not Started
+Stream: Measurement and Geometry Engine
 WBS path: 14-measurement-and-geometry-engine/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1929,7 +2227,8 @@ Verification: unverified</Notes>
       <PlannedDuration>40</PlannedDuration>
       <RemainingDuration>40</RemainingDuration>
       <AtCompletionDuration>40</AtCompletionDuration>
-      <Notes>Stream: Offline and Native Durability
+      <Notes>QA: Not Started
+Stream: Offline and Native Durability
 WBS path: 15-offline-and-native-durability/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1948,7 +2247,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Offline and Native Durability
+      <Notes>QA: Not Started
+Stream: Offline and Native Durability
 WBS path: 15-offline-and-native-durability/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1967,7 +2267,8 @@ Verification: unverified</Notes>
       <PlannedDuration>8</PlannedDuration>
       <RemainingDuration>8</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Offline and Native Durability
+      <Notes>QA: Not Started
+Stream: Offline and Native Durability
 WBS path: 15-offline-and-native-durability/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1986,7 +2287,8 @@ Verification: unverified</Notes>
       <PlannedDuration>40</PlannedDuration>
       <RemainingDuration>40</RemainingDuration>
       <AtCompletionDuration>40</AtCompletionDuration>
-      <Notes>Stream: Offline and Native Durability
+      <Notes>QA: Not Started
+Stream: Offline and Native Durability
 WBS path: 15-offline-and-native-durability/Remaining
 Source: brief-risk
 Verdict: missing
@@ -1996,97 +2298,132 @@ Verification: unverified</Notes>
     <Activity>
       <ObjectId>10095</ObjectId>
       <Id>A0096</Id>
-      <Name>Tab switching / PDF persistence</Name>
+      <Name>Tab switching / PDF persistence  [Requires QA]</Name>
       <WBSObjectId>111</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Mobile Field Ergonomics
+      <Notes>QA: Built — Requires QA
+Stream: Mobile Field Ergonomics
 WBS path: 16-mobile-field-ergonomics/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10096</ObjectId>
       <Id>A0097</Id>
-      <Name>Active pay item chip</Name>
+      <Name>Active pay item chip  [Requires QA]</Name>
       <WBSObjectId>111</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Mobile Field Ergonomics
+      <Notes>QA: Built — Requires QA
+Stream: Mobile Field Ergonomics
 WBS path: 16-mobile-field-ergonomics/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10097</ObjectId>
       <Id>A0098</Id>
-      <Name>Badge counts</Name>
+      <Name>Badge counts  [Requires QA]</Name>
       <WBSObjectId>111</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Mobile Field Ergonomics
+      <Notes>QA: Built — Requires QA
+Stream: Mobile Field Ergonomics
 WBS path: 16-mobile-field-ergonomics/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10098</ObjectId>
       <Id>A0099</Id>
-      <Name>Zoom clamp</Name>
+      <Name>Zoom clamp  [Requires QA]</Name>
       <WBSObjectId>111</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Mobile Field Ergonomics
+      <Notes>QA: Built — Requires QA
+Stream: Mobile Field Ergonomics
 WBS path: 16-mobile-field-ergonomics/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10099</ObjectId>
       <Id>A0100</Id>
-      <Name>Calibration chip tap</Name>
+      <Name>Calibration chip tap  [Requires QA]</Name>
       <WBSObjectId>111</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Mobile Field Ergonomics
+      <Notes>QA: Built — Requires QA
+Stream: Mobile Field Ergonomics
 WBS path: 16-mobile-field-ergonomics/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10100</ObjectId>
@@ -2100,7 +2437,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Mobile Field Ergonomics
+      <Notes>QA: Not Started
+Stream: Mobile Field Ergonomics
 WBS path: 16-mobile-field-ergonomics/Remaining
 Source: brief-risk
 Verdict: missing
@@ -2119,7 +2457,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Mobile Field Ergonomics
+      <Notes>QA: Not Started
+Stream: Mobile Field Ergonomics
 WBS path: 16-mobile-field-ergonomics/Remaining
 Source: brief-risk
 Verdict: missing
@@ -2138,7 +2477,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Mobile Field Ergonomics
+      <Notes>QA: Not Started
+Stream: Mobile Field Ergonomics
 WBS path: 16-mobile-field-ergonomics/Remaining
 Source: brief-risk
 Verdict: missing
@@ -2157,7 +2497,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Mobile Field Ergonomics
+      <Notes>QA: Not Started
+Stream: Mobile Field Ergonomics
 WBS path: 16-mobile-field-ergonomics/Remaining
 Source: brief-risk
 Verdict: missing
@@ -2167,117 +2508,159 @@ Verification: unverified</Notes>
     <Activity>
       <ObjectId>10104</ObjectId>
       <Id>A0105</Id>
-      <Name>Bell + realtime subscribe</Name>
+      <Name>Bell + realtime subscribe  [Requires QA]</Name>
       <WBSObjectId>116</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Notifications &amp; Presence
+      <Notes>QA: Built — Requires QA
+Stream: Notifications &amp; Presence
 WBS path: 17-notifications-and-presence/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10105</ObjectId>
       <Id>A0106</Id>
-      <Name>markRead / markAllRead</Name>
+      <Name>markRead / markAllRead  [Requires QA]</Name>
       <WBSObjectId>116</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Notifications &amp; Presence
+      <Notes>QA: Built — Requires QA
+Stream: Notifications &amp; Presence
 WBS path: 17-notifications-and-presence/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10106</ObjectId>
       <Id>A0107</Id>
-      <Name>Navigation on click</Name>
+      <Name>Navigation on click  [Requires QA]</Name>
       <WBSObjectId>116</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Notifications &amp; Presence
+      <Notes>QA: Built — Requires QA
+Stream: Notifications &amp; Presence
 WBS path: 17-notifications-and-presence/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10107</ObjectId>
       <Id>A0108</Id>
-      <Name>Native push registration</Name>
+      <Name>Native push registration  [Requires QA]</Name>
       <WBSObjectId>116</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Notifications &amp; Presence
+      <Notes>QA: Built — Requires QA
+Stream: Notifications &amp; Presence
 WBS path: 17-notifications-and-presence/Mobile
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: lib/native/push.ts</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10108</ObjectId>
       <Id>A0109</Id>
-      <Name>send-push edge function</Name>
+      <Name>send-push edge function  [Requires QA]</Name>
       <WBSObjectId>116</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Notifications &amp; Presence
+      <Notes>QA: Built — Requires QA
+Stream: Notifications &amp; Presence
 WBS path: 17-notifications-and-presence/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10109</ObjectId>
       <Id>A0110</Id>
-      <Name>Presence / online users</Name>
+      <Name>Presence / online users  [Requires QA]</Name>
       <WBSObjectId>116</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Notifications &amp; Presence
+      <Notes>QA: Built — Requires QA
+Stream: Notifications &amp; Presence
 WBS path: 17-notifications-and-presence/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10110</ObjectId>
@@ -2291,7 +2674,8 @@ Verification: unverified</Notes>
       <PlannedDuration>16</PlannedDuration>
       <RemainingDuration>16</RemainingDuration>
       <AtCompletionDuration>16</AtCompletionDuration>
-      <Notes>Stream: Notifications &amp; Presence
+      <Notes>QA: Not Started
+Stream: Notifications &amp; Presence
 WBS path: 17-notifications-and-presence/Remaining
 Source: brief-risk
 Verdict: missing
@@ -2310,7 +2694,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Notifications &amp; Presence
+      <Notes>QA: Not Started
+Stream: Notifications &amp; Presence
 WBS path: 17-notifications-and-presence/Remaining
 Source: brief-risk
 Verdict: missing
@@ -2329,7 +2714,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Notifications &amp; Presence
+      <Notes>QA: Not Started
+Stream: Notifications &amp; Presence
 WBS path: 17-notifications-and-presence/Remaining
 Source: brief-risk
 Verdict: missing
@@ -2348,7 +2734,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Notifications &amp; Presence
+      <Notes>QA: Not Started
+Stream: Notifications &amp; Presence
 WBS path: 17-notifications-and-presence/Remaining
 Source: brief-risk
 Verdict: missing
@@ -2358,98 +2745,133 @@ Verification: unverified</Notes>
     <Activity>
       <ObjectId>10114</ObjectId>
       <Id>A0115</Id>
-      <Name>Negative lag / M-code check</Name>
+      <Name>Negative lag / M-code check  [Requires QA]</Name>
       <WBSObjectId>122</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Compliance &amp; Audit
+      <Notes>QA: Built — Requires QA
+Stream: Compliance &amp; Audit
 WBS path: 18-compliance-and-audit/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10115</ObjectId>
       <Id>A0116</Id>
-      <Name>DCMA 14-point</Name>
+      <Name>DCMA 14-point  [Requires QA]</Name>
       <WBSObjectId>122</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Compliance &amp; Audit
+      <Notes>QA: Built — Requires QA
+Stream: Compliance &amp; Audit
 WBS path: 18-compliance-and-audit/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified
 Evidence: lib/schedule/analysis/dcma.ts</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10116</ObjectId>
       <Id>A0117</Id>
-      <Name>Approve/reject timestamps + reviewer</Name>
+      <Name>Approve/reject timestamps + reviewer  [Requires QA]</Name>
       <WBSObjectId>122</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Compliance &amp; Audit
+      <Notes>QA: Built — Requires QA
+Stream: Compliance &amp; Audit
 WBS path: 18-compliance-and-audit/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10117</ObjectId>
       <Id>A0118</Id>
-      <Name>Snapshot freeze</Name>
+      <Name>Snapshot freeze  [Requires QA]</Name>
       <WBSObjectId>122</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Compliance &amp; Audit
+      <Notes>QA: Built — Requires QA
+Stream: Compliance &amp; Audit
 WBS path: 18-compliance-and-audit/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10118</ObjectId>
       <Id>A0119</Id>
-      <Name>Drift detection</Name>
+      <Name>Drift detection  [Requires QA]</Name>
       <WBSObjectId>122</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Compliance &amp; Audit
+      <Notes>QA: Built — Requires QA
+Stream: Compliance &amp; Audit
 WBS path: 18-compliance-and-audit/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10119</ObjectId>
@@ -2463,7 +2885,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Compliance &amp; Audit
+      <Notes>QA: Not Started
+Stream: Compliance &amp; Audit
 WBS path: 18-compliance-and-audit/Remaining
 Source: brief-risk
 Verdict: missing
@@ -2482,7 +2905,8 @@ Verification: unverified</Notes>
       <PlannedDuration>16</PlannedDuration>
       <RemainingDuration>16</RemainingDuration>
       <AtCompletionDuration>16</AtCompletionDuration>
-      <Notes>Stream: Compliance &amp; Audit
+      <Notes>QA: Not Started
+Stream: Compliance &amp; Audit
 WBS path: 18-compliance-and-audit/Remaining
 Source: brief-risk
 Verdict: missing
@@ -2501,7 +2925,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Compliance &amp; Audit
+      <Notes>QA: Not Started
+Stream: Compliance &amp; Audit
 WBS path: 18-compliance-and-audit/Remaining
 Source: brief-risk
 Verdict: missing
@@ -2520,7 +2945,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Compliance &amp; Audit
+      <Notes>QA: Not Started
+Stream: Compliance &amp; Audit
 WBS path: 18-compliance-and-audit/Remaining
 Source: brief-risk
 Verdict: missing
@@ -2530,97 +2956,132 @@ Verification: unverified</Notes>
     <Activity>
       <ObjectId>10123</ObjectId>
       <Id>A0124</Id>
-      <Name>WelcomeCarousel gating</Name>
+      <Name>WelcomeCarousel gating  [Requires QA]</Name>
       <WBSObjectId>117</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Onboarding &amp; Tutorials
+      <Notes>QA: Built — Requires QA
+Stream: Onboarding &amp; Tutorials
 WBS path: 19-onboarding-and-tutorials/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10124</ObjectId>
       <Id>A0125</Id>
-      <Name>Role filtering</Name>
+      <Name>Role filtering  [Requires QA]</Name>
       <WBSObjectId>117</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Onboarding &amp; Tutorials
+      <Notes>QA: Built — Requires QA
+Stream: Onboarding &amp; Tutorials
 WBS path: 19-onboarding-and-tutorials/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10125</ObjectId>
       <Id>A0126</Id>
-      <Name>Guided tour auto-start</Name>
+      <Name>Guided tour auto-start  [Requires QA]</Name>
       <WBSObjectId>117</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Onboarding &amp; Tutorials
+      <Notes>QA: Built — Requires QA
+Stream: Onboarding &amp; Tutorials
 WBS path: 19-onboarding-and-tutorials/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10126</ObjectId>
       <Id>A0127</Id>
-      <Name>Demo 12-step walkthrough</Name>
+      <Name>Demo 12-step walkthrough  [Requires QA]</Name>
       <WBSObjectId>117</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Onboarding &amp; Tutorials
+      <Notes>QA: Built — Requires QA
+Stream: Onboarding &amp; Tutorials
 WBS path: 19-onboarding-and-tutorials/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10127</ObjectId>
       <Id>A0128</Id>
-      <Name>NativeFirstRun shown once</Name>
+      <Name>NativeFirstRun shown once  [Requires QA]</Name>
       <WBSObjectId>117</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Onboarding &amp; Tutorials
+      <Notes>QA: Built — Requires QA
+Stream: Onboarding &amp; Tutorials
 WBS path: 19-onboarding-and-tutorials/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10128</ObjectId>
@@ -2634,7 +3095,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Onboarding &amp; Tutorials
+      <Notes>QA: Not Started
+Stream: Onboarding &amp; Tutorials
 WBS path: 19-onboarding-and-tutorials/Remaining
 Source: brief-risk
 Verdict: missing
@@ -2653,7 +3115,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Onboarding &amp; Tutorials
+      <Notes>QA: Not Started
+Stream: Onboarding &amp; Tutorials
 WBS path: 19-onboarding-and-tutorials/Remaining
 Source: brief-risk
 Verdict: missing
@@ -2672,7 +3135,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Onboarding &amp; Tutorials
+      <Notes>QA: Not Started
+Stream: Onboarding &amp; Tutorials
 WBS path: 19-onboarding-and-tutorials/Remaining
 Source: brief-risk
 Verdict: missing
@@ -2691,7 +3155,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Onboarding &amp; Tutorials
+      <Notes>QA: Not Started
+Stream: Onboarding &amp; Tutorials
 WBS path: 19-onboarding-and-tutorials/Remaining
 Source: brief-risk
 Verdict: missing
@@ -2701,116 +3166,158 @@ Verification: unverified</Notes>
     <Activity>
       <ObjectId>10132</ObjectId>
       <Id>A0133</Id>
-      <Name>Landing page</Name>
+      <Name>Landing page  [Requires QA]</Name>
       <WBSObjectId>124</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Sales &amp; Pitch
+      <Notes>QA: Built — Requires QA
+Stream: Sales &amp; Pitch
 WBS path: 20-sales-and-pitch/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10133</ObjectId>
       <Id>A0134</Id>
-      <Name>Demo CTA linkage</Name>
+      <Name>Demo CTA linkage  [Requires QA]</Name>
       <WBSObjectId>124</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Sales &amp; Pitch
+      <Notes>QA: Built — Requires QA
+Stream: Sales &amp; Pitch
 WBS path: 20-sales-and-pitch/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10134</ObjectId>
       <Id>A0135</Id>
-      <Name>McfaPitch / FajarPitch</Name>
+      <Name>McfaPitch / FajarPitch  [Requires QA]</Name>
       <WBSObjectId>124</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Sales &amp; Pitch
+      <Notes>QA: Built — Requires QA
+Stream: Sales &amp; Pitch
 WBS path: 20-sales-and-pitch/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10135</ObjectId>
       <Id>A0136</Id>
-      <Name>P6XmlDemo</Name>
+      <Name>P6XmlDemo  [Requires QA]</Name>
       <WBSObjectId>124</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Sales &amp; Pitch
+      <Notes>QA: Built — Requires QA
+Stream: Sales &amp; Pitch
 WBS path: 20-sales-and-pitch/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10136</ObjectId>
       <Id>A0137</Id>
-      <Name>sitemap.xml completeness</Name>
+      <Name>sitemap.xml completeness  [Requires QA]</Name>
       <WBSObjectId>124</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Sales &amp; Pitch
+      <Notes>QA: Built — Requires QA
+Stream: Sales &amp; Pitch
 WBS path: 20-sales-and-pitch/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10137</ObjectId>
       <Id>A0138</Id>
-      <Name>llms.txt accuracy</Name>
+      <Name>llms.txt accuracy  [Requires QA]</Name>
       <WBSObjectId>124</WBSObjectId>
       <Type>Task Dependent</Type>
-      <Status>In Progress</Status>
+      <Status>Completed</Status>
       <PercentCompleteType>Physical</PercentCompleteType>
-      <PhysicalPercentComplete>50</PhysicalPercentComplete>
+      <PhysicalPercentComplete>100</PhysicalPercentComplete>
+      <ActualStartDate>2026-05-29T00:00:00</ActualStartDate>
+      <ActualFinishDate>2026-05-29T00:00:00</ActualFinishDate>
       <PlannedDuration>8</PlannedDuration>
-      <RemainingDuration>4</RemainingDuration>
+      <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Sales &amp; Pitch
+      <Notes>QA: Built — Requires QA
+Stream: Sales &amp; Pitch
 WBS path: 20-sales-and-pitch/Docs
 Source: brief-criterion
 Verdict: implemented
 code_present=true  verified_e2e=false
 Verification: unverified</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10138</ObjectId>
@@ -2824,7 +3331,8 @@ Verification: unverified</Notes>
       <PlannedDuration>8</PlannedDuration>
       <RemainingDuration>8</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Sales &amp; Pitch
+      <Notes>QA: Not Started
+Stream: Sales &amp; Pitch
 WBS path: 20-sales-and-pitch/Remaining
 Source: brief-risk
 Verdict: missing
@@ -2843,7 +3351,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Sales &amp; Pitch
+      <Notes>QA: Not Started
+Stream: Sales &amp; Pitch
 WBS path: 20-sales-and-pitch/Remaining
 Source: brief-risk
 Verdict: missing
@@ -2862,7 +3371,8 @@ Verification: unverified</Notes>
       <PlannedDuration>24</PlannedDuration>
       <RemainingDuration>24</RemainingDuration>
       <AtCompletionDuration>24</AtCompletionDuration>
-      <Notes>Stream: Sales &amp; Pitch
+      <Notes>QA: Not Started
+Stream: Sales &amp; Pitch
 WBS path: 20-sales-and-pitch/Remaining
 Source: brief-risk
 Verdict: missing
@@ -2881,7 +3391,8 @@ Verification: unverified</Notes>
       <PlannedDuration>8</PlannedDuration>
       <RemainingDuration>8</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: Sales &amp; Pitch
+      <Notes>QA: Not Started
+Stream: Sales &amp; Pitch
 WBS path: 20-sales-and-pitch/Remaining
 Source: brief-risk
 Verdict: missing
@@ -2900,7 +3411,8 @@ Verification: unverified</Notes>
       <PlannedDuration>40</PlannedDuration>
       <RemainingDuration>40</RemainingDuration>
       <AtCompletionDuration>40</AtCompletionDuration>
-      <Notes>Stream: 21 Marketing Debt
+      <Notes>QA: Not Started
+Stream: 21 Marketing Debt
 WBS path: 21-marketing-debt/05-field-capture
 Source: marketing-promise
 Verdict: undelivered
@@ -2920,7 +3432,8 @@ Marketing claim age: 68d</Notes>
       <PlannedDuration>40</PlannedDuration>
       <RemainingDuration>40</RemainingDuration>
       <AtCompletionDuration>40</AtCompletionDuration>
-      <Notes>Stream: 21 Marketing Debt
+      <Notes>QA: Not Started
+Stream: 21 Marketing Debt
 WBS path: 21-marketing-debt/19-onboarding-and-tutorials
 Source: marketing-promise
 Verdict: undelivered
@@ -2940,7 +3453,8 @@ Marketing claim age: 68d</Notes>
       <PlannedDuration>40</PlannedDuration>
       <RemainingDuration>40</RemainingDuration>
       <AtCompletionDuration>40</AtCompletionDuration>
-      <Notes>Stream: 21 Marketing Debt
+      <Notes>QA: Not Started
+Stream: 21 Marketing Debt
 WBS path: 21-marketing-debt/Unmapped
 Source: marketing-promise
 Verdict: undelivered
@@ -2960,7 +3474,8 @@ Marketing claim age: 2d</Notes>
       <PlannedDuration>40</PlannedDuration>
       <RemainingDuration>40</RemainingDuration>
       <AtCompletionDuration>40</AtCompletionDuration>
-      <Notes>Stream: 21 Marketing Debt
+      <Notes>QA: Not Started
+Stream: 21 Marketing Debt
 WBS path: 21-marketing-debt/03-project-onboarding
 Source: marketing-promise
 Verdict: undelivered
@@ -2980,7 +3495,8 @@ Marketing claim age: 2d</Notes>
       <PlannedDuration>40</PlannedDuration>
       <RemainingDuration>40</RemainingDuration>
       <AtCompletionDuration>40</AtCompletionDuration>
-      <Notes>Stream: 21 Marketing Debt
+      <Notes>QA: Not Started
+Stream: 21 Marketing Debt
 WBS path: 21-marketing-debt/01-identity-and-access
 Source: marketing-promise
 Verdict: undelivered
@@ -3000,7 +3516,8 @@ Marketing claim age: 2d</Notes>
       <PlannedDuration>40</PlannedDuration>
       <RemainingDuration>40</RemainingDuration>
       <AtCompletionDuration>40</AtCompletionDuration>
-      <Notes>Stream: 21 Marketing Debt
+      <Notes>QA: Not Started
+Stream: 21 Marketing Debt
 WBS path: 21-marketing-debt/Unmapped
 Source: marketing-promise
 Verdict: undelivered
@@ -3020,7 +3537,8 @@ Marketing claim age: 2d</Notes>
       <PlannedDuration>40</PlannedDuration>
       <RemainingDuration>40</RemainingDuration>
       <AtCompletionDuration>40</AtCompletionDuration>
-      <Notes>Stream: 21 Marketing Debt
+      <Notes>QA: Not Started
+Stream: 21 Marketing Debt
 WBS path: 21-marketing-debt/Unmapped
 Source: marketing-promise
 Verdict: undelivered
@@ -3040,7 +3558,8 @@ Marketing claim age: 2d</Notes>
       <PlannedDuration>40</PlannedDuration>
       <RemainingDuration>40</RemainingDuration>
       <AtCompletionDuration>40</AtCompletionDuration>
-      <Notes>Stream: 21 Marketing Debt
+      <Notes>QA: Not Started
+Stream: 21 Marketing Debt
 WBS path: 21-marketing-debt/11-schedule-management
 Source: marketing-promise
 Verdict: undelivered
@@ -3051,7 +3570,7 @@ Marketing claim age: 2d</Notes>
     <Activity>
       <ObjectId>10150</ObjectId>
       <Id>A0151</Id>
-      <Name>XER ingest engine (scrapped pivot)</Name>
+      <Name>XER ingest engine (scrapped pivot)  [Verified]</Name>
       <WBSObjectId>125</WBSObjectId>
       <Type>Task Dependent</Type>
       <Status>Completed</Status>
@@ -3062,18 +3581,23 @@ Marketing claim age: 2d</Notes>
       <PlannedDuration>240</PlannedDuration>
       <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>240</AtCompletionDuration>
-      <Notes>Stream: 99 Cross-cutting
+      <Notes>QA: Verified (E2E)
+Stream: 99 Cross-cutting
 WBS path: 99-cross-cutting/Narrative
 Source: cross-cutting
 Verdict: implemented
 code_present=true  verified_e2e=true
 Verification: unverified
 Note: Built then deleted when format proved hostile; informed PMXML pivot.</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Verified</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10151</ObjectId>
       <Id>A0152</Id>
-      <Name>PMXML pivot — replace XER with Oracle PMXML round-trip</Name>
+      <Name>PMXML pivot — replace XER with Oracle PMXML round-trip  [Requires QA]</Name>
       <WBSObjectId>125</WBSObjectId>
       <Type>Task Dependent</Type>
       <Status>In Progress</Status>
@@ -3083,18 +3607,23 @@ Note: Built then deleted when format proved hostile; informed PMXML pivot.</Note
       <PlannedDuration>112</PlannedDuration>
       <RemainingDuration>45</RemainingDuration>
       <AtCompletionDuration>112</AtCompletionDuration>
-      <Notes>Stream: 99 Cross-cutting
+      <Notes>QA: Partial — Requires QA
+Stream: 99 Cross-cutting
 WBS path: 99-cross-cutting/Narrative
 Source: cross-cutting
 Verdict: partial
 code_present=true  verified_e2e=false
 Verification: unverified
 Note: Parser + serializer + apply-progress shipped; baseline import + UDF round-trip remain.</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10152</ObjectId>
       <Id>A0153</Id>
-      <Name>20-stream comprehension pass (this artefact set)</Name>
+      <Name>20-stream comprehension pass (this artefact set)  [Verified]</Name>
       <WBSObjectId>125</WBSObjectId>
       <Type>Task Dependent</Type>
       <Status>Completed</Status>
@@ -3105,18 +3634,23 @@ Note: Parser + serializer + apply-progress shipped; baseline import + UDF round-
       <PlannedDuration>16</PlannedDuration>
       <RemainingDuration>0</RemainingDuration>
       <AtCompletionDuration>16</AtCompletionDuration>
-      <Notes>Stream: 99 Cross-cutting
+      <Notes>QA: Verified (E2E)
+Stream: 99 Cross-cutting
 WBS path: 99-cross-cutting/Narrative
 Source: cross-cutting
 Verdict: implemented
 code_present=true  verified_e2e=true
 Verification: unverified
 Note: Briefs, wbs-v2.json, comprehension-report.md.</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Verified</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>10153</ObjectId>
       <Id>A0154</Id>
-      <Name>Dev WBS authoring (recursive — this effort)</Name>
+      <Name>Dev WBS authoring (recursive — this effort)  [Requires QA]</Name>
       <WBSObjectId>125</WBSObjectId>
       <Type>Task Dependent</Type>
       <Status>In Progress</Status>
@@ -3126,13 +3660,18 @@ Note: Briefs, wbs-v2.json, comprehension-report.md.</Notes>
       <PlannedDuration>8</PlannedDuration>
       <RemainingDuration>4</RemainingDuration>
       <AtCompletionDuration>8</AtCompletionDuration>
-      <Notes>Stream: 99 Cross-cutting
+      <Notes>QA: Partial — Requires QA
+Stream: 99 Cross-cutting
 WBS path: 99-cross-cutting/Narrative
 Source: cross-cutting
 Verdict: partial
 code_present=true  verified_e2e=false
 Verification: unverified
 Note: Strict-rule scoring + marketing-debt branch + PMXML self-proof.</Notes>
+      <UDF>
+        <TypeObjectId>9100</TypeObjectId>
+        <Text>Requires QA</Text>
+      </UDF>
     </Activity>
     <Activity>
       <ObjectId>20000</ObjectId>

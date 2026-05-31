@@ -146,7 +146,7 @@ export default function McfaPitch() {
               Download takeoffpro-dev.xml
             </a>
             <span className="text-[11px] font-mono text-muted-foreground">
-              P6 PMXML v22.12 · 5 phases · 22 streams · 154 activities · 7 milestones · 140 FS relationships
+              P6 PMXML v22.12 · 5 phases · 22 streams · 154 activities · 7 milestones · 140 FS relationships · QA_Status UDF per activity
             </span>
           </div>
         </header>
@@ -154,8 +154,9 @@ export default function McfaPitch() {
         {/* Section A */}
         <Section
           n="A" title="Built so far"
-          intro="Six months of build. The core takeoff loop works end-to-end on web, mobile, and offline. The remaining work is QA, polish, and deepening the P6 integration MCFA cares about most."
+          intro="Six months of build. 60 of 154 scheduled activities are code-complete and demonstrable on web, mobile, and offline — 58 of those still need a formal QA pass before I'd call them verified. The remaining 89 are planned or partially scaffolded, and the bulk of the next sprint is QA, polish, and deepening the P6 integration MCFA cares about most."
         >
+
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
             {STATS.map(s => {
               const Inner = (
@@ -176,8 +177,9 @@ export default function McfaPitch() {
         {/* Section B */}
         <Section
           n="B" title="Work breakdown"
-          intro="Twenty-two engineering streams rolled into five phases. Click a phase to see what ships in it. Status is honest — reading the same activity verdicts the build pipeline produces."
+          intro="Twenty-two engineering streams rolled into five phases. Built = code in repo and demonstrable. Needs QA = built but not yet covered by an end-to-end test pass. In Progress = partial implementation. Planned = not started. Click a phase to expand."
         >
+
           <WbsTree schedule={schedule} />
         </Section>
 

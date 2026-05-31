@@ -92,8 +92,19 @@ function activityIdFromIdx(idx) {
   return `A${String(idx + 1).padStart(4,'0')}`;
 }
 
+function qaLabel(a) {
+  if (a.qaStatus === 'Verified')    return 'Verified (E2E)';
+  if (a.qaStatus === 'Requires QA') {
+    if (a.status === 'Completed')   return 'Built — Requires QA';
+    if (a.status === 'In Progress') return 'Partial — Requires QA';
+  }
+  if (a.status === 'Not Started')   return 'Not Started';
+  return a.status || 'Unknown';
+}
+
 function notes(a) {
   const lines = [
+    `QA: ${qaLabel(a)}`,
     `Stream: ${a.stream}`,
     `WBS path: ${a.wbs}`,
     `Source: ${a.source}`,
@@ -121,15 +132,20 @@ function wbsXml(node) {
     </WBS>`;
 }
 
-function activityXml({ oid, id, name, status, pct, durDays, actualStart, actualFinish, wbsOid, notesBody, isMilestone }) {
+function activityXml({ oid, id, name, status, pct, durDays, actualStart, actualFinish, wbsOid, notesBody, isMilestone, qaStatus }) {
   const totalHr  = hours(durDays);
   const remainHr = status === 'Completed' ? 0
     : status === 'Not Started' ? totalHr
     : Math.round(totalHr * (1 - (pct||0)/100));
+  // Suffix the Name with a QA tag so it's visible in the P6 activity grid even
+  // without opening the Notes / UDF columns.
+  const qaTag = qaStatus === 'Verified'    ? '  [Verified]'
+              : qaStatus === 'Requires QA' ? '  [Requires QA]'
+              : '';
   const lines = [
     `      <ObjectId>${oid}</ObjectId>`,
     `      <Id>${id}</Id>`,
-    `      <Name>${xmlEscape(name)}</Name>`,
+    `      <Name>${xmlEscape(name + qaTag)}</Name>`,
     `      <WBSObjectId>${wbsOid}</WBSObjectId>`,
     `      <Type>${isMilestone ? 'Finish Milestone' : 'Task Dependent'}</Type>`,
     `      <Status>${status}</Status>`,
@@ -142,6 +158,12 @@ function activityXml({ oid, id, name, status, pct, durDays, actualStart, actualF
   lines.push(`      <RemainingDuration>${isMilestone ? 0 : remainHr}</RemainingDuration>`);
   lines.push(`      <AtCompletionDuration>${isMilestone ? 0 : totalHr}</AtCompletionDuration>`);
   if (notesBody) lines.push(`      <Notes>${xmlEscape(notesBody)}</Notes>`);
+  if (qaStatus) {
+    lines.push(`      <UDF>`);
+    lines.push(`        <TypeObjectId>9100</TypeObjectId>`);
+    lines.push(`        <Text>${xmlEscape(qaStatus)}</Text>`);
+    lines.push(`      </UDF>`);
+  }
   return `    <Activity>\n${lines.join('\n')}\n    </Activity>`;
 }
 
@@ -199,6 +221,7 @@ function main() {
       wbsOid:       streamWbsOid[sk],
       notesBody:    notes(a),
       isMilestone:  false,
+      qaStatus:     a.qaStatus || null,
       _streamKey:   sk,
     };
   });
@@ -244,13 +267,21 @@ function main() {
     if (driver) rels.push(relXml(relOid++, driver.oid, m.oid));
   }
 
-  // 5) Compose
+  // 5) Compose — declare the QA_Status UDF once at project level, then activities.
+  const udfType = `    <UDFType>
+      <ObjectId>9100</ObjectId>
+      <SubjectArea>Activity</SubjectArea>
+      <Title>QA_Status</Title>
+      <DataType>Text</DataType>
+    </UDFType>`;
+
   const body = [
     `    <ObjectId>${PROJECT_OID}</ObjectId>`,
     `    <Id>TAKEOFFPRO-DEV</Id>`,
     `    <Name>TakeoffPro Build — Development Schedule</Name>`,
     `    <DataDate>${DATA_DATE}</DataDate>`,
     `    <PlannedStartDate>${PROJECT_S}</PlannedStartDate>`,
+    udfType,
     wbsNodes.map(wbsXml).join('\n'),
     activities.map(activityXml).join('\n'),
     milestones.map(activityXml).join('\n'),
@@ -267,12 +298,19 @@ ${body}
 
   mkdirSync('public/exports', { recursive: true });
   writeFileSync('public/exports/takeoffpro-dev.xml', xml);
+  const qaCounts = {
+    verified:    activities.filter(a => a.qaStatus === 'Verified').length,
+    requiresQA:  activities.filter(a => a.qaStatus === 'Requires QA').length,
+    completed:   activities.filter(a => a.status === 'Completed').length,
+    inProgress:  activities.filter(a => a.status === 'In Progress').length,
+    notStarted:  activities.filter(a => a.status === 'Not Started').length,
+  };
   console.log(`Wrote public/exports/takeoffpro-dev.xml`);
   console.log(`  WBS nodes:     ${wbsNodes.length}  (${PHASES.length} phases + streams)`);
-  console.log(`  Activities:    ${activities.length}`);
+  console.log(`  Activities:    ${activities.length}  (${qaCounts.completed} completed / ${qaCounts.inProgress} in progress / ${qaCounts.notStarted} not started)`);
+  console.log(`  QA:            ${qaCounts.verified} verified · ${qaCounts.requiresQA} require QA`);
   console.log(`  Milestones:    ${milestones.length}`);
   console.log(`  Relationships: ${rels.length}`);
-  console.log(`  Strict completion: ${summary.strictCompletionPct}%`);
 }
 
 main();

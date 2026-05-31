@@ -1,12 +1,13 @@
 {
-  "generatedAt": "2026-05-29T15:13:37.827Z",
+  "generatedAt": "2026-05-31T13:57:11.154Z",
   "totals": {
     "activities": 154,
-    "completed": 2,
-    "inProgress": 63,
+    "completed": 60,
+    "inProgress": 5,
     "notStarted": 89,
     "verifiedE2E": 2,
-    "codeOnlyDowngraded": 61,
+    "builtRequiresQA": 58,
+    "partialRequiresQA": 5,
     "marketingDebtItems": 8
   },
   "strictCompletionPct": 1,
@@ -25,13 +26,15 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "Auth.tsx",
         "useAuth.tsx"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -49,12 +52,14 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "Auth.tsx"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -72,12 +77,14 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "useAuth.tsx"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -95,12 +102,14 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "useAuth.tsx"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -118,12 +127,14 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "BiometricGate.tsx"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -141,12 +152,14 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "ResetPassword.tsx"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -165,8 +178,10 @@
         "status": "unverified"
       },
       "status": "In Progress",
-      "pctComplete": 30,
+      "pctComplete": 60,
+      "qaStatus": "Requires QA",
       "evidence": [],
+      "actualStart": "2026-05-29T00:00:00.000Z",
       "actualFinish": null,
       "durationDays": 1,
       "source": "brief-criterion"
@@ -273,12 +288,14 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "useProjects.ts"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -296,13 +313,15 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "useProjects.ts",
         "Dashboard.tsx"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -320,12 +339,14 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "Dashboard.tsx"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -343,12 +364,14 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "Dashboard.tsx"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -367,10 +390,12 @@
         "status": "unverified"
       },
       "status": "In Progress",
-      "pctComplete": 30,
+      "pctComplete": 60,
+      "qaStatus": "Requires QA",
       "evidence": [
         "Dashboard.tsx"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
       "actualFinish": null,
       "durationDays": 1,
       "source": "brief-criterion"
@@ -389,12 +414,14 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "Dashboard.tsx"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -412,12 +439,14 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "Dashboard.tsx"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -523,12 +552,14 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "useProjects.ts"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -546,12 +577,14 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "Index.tsx"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -569,14 +602,16 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "PdfCanvas.tsx",
         "Index.tsx",
         "pdf-utils.ts"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -594,10 +629,12 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -615,12 +652,14 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "Index.tsx"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -638,13 +677,15 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "useProject.ts",
         "useProject.ts"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -750,13 +791,15 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "types/project.ts",
         "Toolbar.tsx"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -774,13 +817,15 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "ProjectSidebar.tsx",
         "useProject.ts"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -798,12 +843,14 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "ProjectSidebar.tsx"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -821,12 +868,14 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "useProject.ts"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -844,12 +893,14 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "pdf-utils.ts"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -868,8 +919,10 @@
         "status": "unverified"
       },
       "status": "In Progress",
-      "pctComplete": 30,
+      "pctComplete": 60,
+      "qaStatus": "Requires QA",
       "evidence": [],
+      "actualStart": "2026-05-29T00:00:00.000Z",
       "actualFinish": null,
       "durationDays": 1,
       "source": "brief-criterion"
@@ -890,6 +943,7 @@
       },
       "status": "Not Started",
       "pctComplete": 0,
+      "qaStatus": null,
       "evidence": [],
       "actualStart": null,
       "actualFinish": null,
@@ -998,13 +1052,15 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "PdfCanvas.tsx",
         "Toolbar.tsx"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -1022,12 +1078,14 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "PdfCanvas.tsx"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -1045,13 +1103,15 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "PdfCanvas.tsx",
         "PdfCanvas.tsx"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -1069,12 +1129,14 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "useProject.ts"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -1092,13 +1154,15 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "useProject.ts",
         "useProject.ts"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -1116,14 +1180,16 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "GpsCalibration.tsx",
         "GpsTraceControls.tsx",
         "PdfCanvas.tsx"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -1141,12 +1207,14 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "PdfCanvas.tsx"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -1164,13 +1232,15 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "Index.tsx",
         "Toolbar.tsx"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2156,10 +2226,12 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2177,10 +2249,12 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2198,10 +2272,12 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2219,10 +2295,12 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2240,10 +2318,12 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2349,10 +2429,12 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2370,10 +2452,12 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2391,10 +2475,12 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2412,12 +2498,14 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "lib/native/push.ts"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2435,10 +2523,12 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2456,10 +2546,12 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2565,10 +2657,12 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2586,12 +2680,14 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [
         "lib/schedule/analysis/dcma.ts"
       ],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2609,10 +2705,12 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2630,10 +2728,12 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2651,10 +2751,12 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2760,10 +2862,12 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2781,10 +2885,12 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2802,10 +2908,12 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2823,10 +2931,12 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2844,10 +2954,12 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2953,10 +3065,12 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2974,10 +3088,12 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2995,10 +3111,12 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -3016,10 +3134,12 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -3037,10 +3157,12 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -3058,10 +3180,12 @@
         "recipe": null,
         "status": "unverified"
       },
-      "status": "In Progress",
-      "pctComplete": 50,
+      "status": "Completed",
+      "pctComplete": 100,
+      "qaStatus": "Requires QA",
       "evidence": [],
-      "actualFinish": null,
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -3169,6 +3293,7 @@
       },
       "status": "Not Started",
       "pctComplete": 0,
+      "qaStatus": null,
       "evidence": [],
       "actualStart": null,
       "actualFinish": null,
@@ -3193,6 +3318,7 @@
       },
       "status": "Not Started",
       "pctComplete": 0,
+      "qaStatus": null,
       "evidence": [],
       "actualStart": null,
       "actualFinish": null,
@@ -3217,6 +3343,7 @@
       },
       "status": "Not Started",
       "pctComplete": 0,
+      "qaStatus": null,
       "evidence": [],
       "actualStart": null,
       "actualFinish": null,
@@ -3241,6 +3368,7 @@
       },
       "status": "Not Started",
       "pctComplete": 0,
+      "qaStatus": null,
       "evidence": [],
       "actualStart": null,
       "actualFinish": null,
@@ -3265,6 +3393,7 @@
       },
       "status": "Not Started",
       "pctComplete": 0,
+      "qaStatus": null,
       "evidence": [],
       "actualStart": null,
       "actualFinish": null,
@@ -3289,6 +3418,7 @@
       },
       "status": "Not Started",
       "pctComplete": 0,
+      "qaStatus": null,
       "evidence": [],
       "actualStart": null,
       "actualFinish": null,
@@ -3313,6 +3443,7 @@
       },
       "status": "Not Started",
       "pctComplete": 0,
+      "qaStatus": null,
       "evidence": [],
       "actualStart": null,
       "actualFinish": null,
@@ -3337,6 +3468,7 @@
       },
       "status": "Not Started",
       "pctComplete": 0,
+      "qaStatus": null,
       "evidence": [],
       "actualStart": null,
       "actualFinish": null,
@@ -3365,6 +3497,7 @@
         "recipe": null,
         "status": "unverified"
       },
+      "qaStatus": "Verified",
       "evidence": [],
       "source": "cross-cutting"
     },
@@ -3388,6 +3521,7 @@
         "recipe": null,
         "status": "unverified"
       },
+      "qaStatus": "Requires QA",
       "evidence": [],
       "source": "cross-cutting"
     },
@@ -3411,6 +3545,7 @@
         "recipe": null,
         "status": "unverified"
       },
+      "qaStatus": "Verified",
       "evidence": [],
       "source": "cross-cutting"
     },
@@ -3434,6 +3569,7 @@
         "recipe": null,
         "status": "unverified"
       },
+      "qaStatus": "Requires QA",
       "evidence": [],
       "source": "cross-cutting"
     }
