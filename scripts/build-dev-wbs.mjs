@@ -241,6 +241,7 @@ function crossCuttingActivities(manifest) {
       codePresent: true,
       verifiedE2E: h.status === 'Completed',
       verification: verificationFor(h.id, manifest),
+      qaStatus: h.status === 'Completed' ? 'Verified' : 'Requires QA',
       evidence: [],
       source: 'cross-cutting',
     };
