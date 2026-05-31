@@ -177,8 +177,9 @@ export default function McfaPitch() {
         {/* Section B */}
         <Section
           n="B" title="Work breakdown"
-          intro="Twenty-two engineering streams rolled into five phases. Click a phase to see what ships in it. Status is honest — reading the same activity verdicts the build pipeline produces."
+          intro="Twenty-two engineering streams rolled into five phases. Built = code in repo and demonstrable. Needs QA = built but not yet covered by an end-to-end test pass. In Progress = partial implementation. Planned = not started. Click a phase to expand."
         >
+
           <WbsTree schedule={schedule} />
         </Section>
 
