@@ -267,13 +267,21 @@ function main() {
     if (driver) rels.push(relXml(relOid++, driver.oid, m.oid));
   }
 
-  // 5) Compose
+  // 5) Compose — declare the QA_Status UDF once at project level, then activities.
+  const udfType = `    <UDFType>
+      <ObjectId>9100</ObjectId>
+      <SubjectArea>Activity</SubjectArea>
+      <Title>QA_Status</Title>
+      <DataType>Text</DataType>
+    </UDFType>`;
+
   const body = [
     `    <ObjectId>${PROJECT_OID}</ObjectId>`,
     `    <Id>TAKEOFFPRO-DEV</Id>`,
     `    <Name>TakeoffPro Build — Development Schedule</Name>`,
     `    <DataDate>${DATA_DATE}</DataDate>`,
     `    <PlannedStartDate>${PROJECT_S}</PlannedStartDate>`,
+    udfType,
     wbsNodes.map(wbsXml).join('\n'),
     activities.map(activityXml).join('\n'),
     milestones.map(activityXml).join('\n'),
@@ -290,12 +298,19 @@ ${body}
 
   mkdirSync('public/exports', { recursive: true });
   writeFileSync('public/exports/takeoffpro-dev.xml', xml);
+  const qaCounts = {
+    verified:    activities.filter(a => a.qaStatus === 'Verified').length,
+    requiresQA:  activities.filter(a => a.qaStatus === 'Requires QA').length,
+    completed:   activities.filter(a => a.status === 'Completed').length,
+    inProgress:  activities.filter(a => a.status === 'In Progress').length,
+    notStarted:  activities.filter(a => a.status === 'Not Started').length,
+  };
   console.log(`Wrote public/exports/takeoffpro-dev.xml`);
   console.log(`  WBS nodes:     ${wbsNodes.length}  (${PHASES.length} phases + streams)`);
-  console.log(`  Activities:    ${activities.length}`);
+  console.log(`  Activities:    ${activities.length}  (${qaCounts.completed} completed / ${qaCounts.inProgress} in progress / ${qaCounts.notStarted} not started)`);
+  console.log(`  QA:            ${qaCounts.verified} verified · ${qaCounts.requiresQA} require QA`);
   console.log(`  Milestones:    ${milestones.length}`);
   console.log(`  Relationships: ${rels.length}`);
-  console.log(`  Strict completion: ${summary.strictCompletionPct}%`);
 }
 
 main();
