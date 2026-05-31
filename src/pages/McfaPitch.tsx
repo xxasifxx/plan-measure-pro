@@ -154,8 +154,9 @@ export default function McfaPitch() {
         {/* Section A */}
         <Section
           n="A" title="Built so far"
-          intro="Six months of build. The core takeoff loop works end-to-end on web, mobile, and offline. The remaining work is QA, polish, and deepening the P6 integration MCFA cares about most."
+          intro="Six months of build. 60 of 154 scheduled activities are code-complete and demonstrable on web, mobile, and offline — 58 of those still need a formal QA pass before I'd call them verified. The remaining 89 are planned or partially scaffolded, and the bulk of the next sprint is QA, polish, and deepening the P6 integration MCFA cares about most."
         >
+
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
             {STATS.map(s => {
               const Inner = (
