@@ -153,6 +153,9 @@ function activitiesFromPromises(manifest) {
     const namePrefix = verdict === 'partial'     ? 'Finish delivery: '
                      : verdict === 'delivered'   ? 'Verify e2e: '
                      :                             'Deliver: ';
+    const qaStatusP = verdict === 'undelivered' ? null
+                    : ver.verifiedE2E             ? 'Verified'
+                    :                                'Requires QA';
     out.push({
       id: aid,
       wbs: wbsBranch,
@@ -163,10 +166,12 @@ function activitiesFromPromises(manifest) {
       verifiedE2E: ver.verifiedE2E,
       verification: ver,
       status: verdict === 'undelivered' ? 'Not Started' :
-              ver.verifiedE2E ? 'Completed' : 'In Progress',
+              ver.verifiedE2E ? 'Completed' :
+              verdict === 'partial' ? 'In Progress' : 'Completed',
       pctComplete: verdict === 'undelivered' ? 0 :
                    ver.verifiedE2E ? 100 :
-                   verdict === 'partial' ? 30 : 50,
+                   verdict === 'partial' ? 60 : 100,
+      qaStatus: qaStatusP,
       evidence: p.evidenceFiles || [],
       actualStart: null,
       actualFinish: null,
