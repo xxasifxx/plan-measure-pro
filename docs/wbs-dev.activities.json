@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-31T13:56:08.528Z",
+  "generatedAt": "2026-05-31T13:57:11.154Z",
   "totals": {
     "activities": 154,
     "completed": 60,
@@ -33,6 +33,8 @@
         "Auth.tsx",
         "useAuth.tsx"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -56,6 +58,8 @@
       "evidence": [
         "Auth.tsx"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -79,6 +83,8 @@
       "evidence": [
         "useAuth.tsx"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -102,6 +108,8 @@
       "evidence": [
         "useAuth.tsx"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -125,6 +133,8 @@
       "evidence": [
         "BiometricGate.tsx"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -148,6 +158,8 @@
       "evidence": [
         "ResetPassword.tsx"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -169,6 +181,7 @@
       "pctComplete": 60,
       "qaStatus": "Requires QA",
       "evidence": [],
+      "actualStart": "2026-05-29T00:00:00.000Z",
       "actualFinish": null,
       "durationDays": 1,
       "source": "brief-criterion"
@@ -281,6 +294,8 @@
       "evidence": [
         "useProjects.ts"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -305,6 +320,8 @@
         "useProjects.ts",
         "Dashboard.tsx"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -328,6 +345,8 @@
       "evidence": [
         "Dashboard.tsx"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -351,6 +370,8 @@
       "evidence": [
         "Dashboard.tsx"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -374,6 +395,7 @@
       "evidence": [
         "Dashboard.tsx"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
       "actualFinish": null,
       "durationDays": 1,
       "source": "brief-criterion"
@@ -398,6 +420,8 @@
       "evidence": [
         "Dashboard.tsx"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -421,6 +445,8 @@
       "evidence": [
         "Dashboard.tsx"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -532,6 +558,8 @@
       "evidence": [
         "useProjects.ts"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -555,6 +583,8 @@
       "evidence": [
         "Index.tsx"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -580,6 +610,8 @@
         "Index.tsx",
         "pdf-utils.ts"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -601,6 +633,8 @@
       "pctComplete": 100,
       "qaStatus": "Requires QA",
       "evidence": [],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -624,6 +658,8 @@
       "evidence": [
         "Index.tsx"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -648,6 +684,8 @@
         "useProject.ts",
         "useProject.ts"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -760,6 +798,8 @@
         "types/project.ts",
         "Toolbar.tsx"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -784,6 +824,8 @@
         "ProjectSidebar.tsx",
         "useProject.ts"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -807,6 +849,8 @@
       "evidence": [
         "ProjectSidebar.tsx"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -830,6 +874,8 @@
       "evidence": [
         "useProject.ts"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -853,6 +899,8 @@
       "evidence": [
         "pdf-utils.ts"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -874,6 +922,7 @@
       "pctComplete": 60,
       "qaStatus": "Requires QA",
       "evidence": [],
+      "actualStart": "2026-05-29T00:00:00.000Z",
       "actualFinish": null,
       "durationDays": 1,
       "source": "brief-criterion"
@@ -1010,6 +1059,8 @@
         "PdfCanvas.tsx",
         "Toolbar.tsx"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -1033,6 +1084,8 @@
       "evidence": [
         "PdfCanvas.tsx"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -1057,6 +1110,8 @@
         "PdfCanvas.tsx",
         "PdfCanvas.tsx"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -1080,6 +1135,8 @@
       "evidence": [
         "useProject.ts"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -1104,6 +1161,8 @@
         "useProject.ts",
         "useProject.ts"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -1129,6 +1188,8 @@
         "GpsTraceControls.tsx",
         "PdfCanvas.tsx"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -1152,6 +1213,8 @@
       "evidence": [
         "PdfCanvas.tsx"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -1176,6 +1239,8 @@
         "Index.tsx",
         "Toolbar.tsx"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2165,6 +2230,8 @@
       "pctComplete": 100,
       "qaStatus": "Requires QA",
       "evidence": [],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2186,6 +2253,8 @@
       "pctComplete": 100,
       "qaStatus": "Requires QA",
       "evidence": [],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2207,6 +2276,8 @@
       "pctComplete": 100,
       "qaStatus": "Requires QA",
       "evidence": [],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2228,6 +2299,8 @@
       "pctComplete": 100,
       "qaStatus": "Requires QA",
       "evidence": [],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2249,6 +2322,8 @@
       "pctComplete": 100,
       "qaStatus": "Requires QA",
       "evidence": [],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2358,6 +2433,8 @@
       "pctComplete": 100,
       "qaStatus": "Requires QA",
       "evidence": [],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2379,6 +2456,8 @@
       "pctComplete": 100,
       "qaStatus": "Requires QA",
       "evidence": [],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2400,6 +2479,8 @@
       "pctComplete": 100,
       "qaStatus": "Requires QA",
       "evidence": [],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2423,6 +2504,8 @@
       "evidence": [
         "lib/native/push.ts"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2444,6 +2527,8 @@
       "pctComplete": 100,
       "qaStatus": "Requires QA",
       "evidence": [],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2465,6 +2550,8 @@
       "pctComplete": 100,
       "qaStatus": "Requires QA",
       "evidence": [],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2574,6 +2661,8 @@
       "pctComplete": 100,
       "qaStatus": "Requires QA",
       "evidence": [],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2597,6 +2686,8 @@
       "evidence": [
         "lib/schedule/analysis/dcma.ts"
       ],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2618,6 +2709,8 @@
       "pctComplete": 100,
       "qaStatus": "Requires QA",
       "evidence": [],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2639,6 +2732,8 @@
       "pctComplete": 100,
       "qaStatus": "Requires QA",
       "evidence": [],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2660,6 +2755,8 @@
       "pctComplete": 100,
       "qaStatus": "Requires QA",
       "evidence": [],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2769,6 +2866,8 @@
       "pctComplete": 100,
       "qaStatus": "Requires QA",
       "evidence": [],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2790,6 +2889,8 @@
       "pctComplete": 100,
       "qaStatus": "Requires QA",
       "evidence": [],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2811,6 +2912,8 @@
       "pctComplete": 100,
       "qaStatus": "Requires QA",
       "evidence": [],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2832,6 +2935,8 @@
       "pctComplete": 100,
       "qaStatus": "Requires QA",
       "evidence": [],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2853,6 +2958,8 @@
       "pctComplete": 100,
       "qaStatus": "Requires QA",
       "evidence": [],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2962,6 +3069,8 @@
       "pctComplete": 100,
       "qaStatus": "Requires QA",
       "evidence": [],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -2983,6 +3092,8 @@
       "pctComplete": 100,
       "qaStatus": "Requires QA",
       "evidence": [],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -3004,6 +3115,8 @@
       "pctComplete": 100,
       "qaStatus": "Requires QA",
       "evidence": [],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -3025,6 +3138,8 @@
       "pctComplete": 100,
       "qaStatus": "Requires QA",
       "evidence": [],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -3046,6 +3161,8 @@
       "pctComplete": 100,
       "qaStatus": "Requires QA",
       "evidence": [],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
@@ -3067,6 +3184,8 @@
       "pctComplete": 100,
       "qaStatus": "Requires QA",
       "evidence": [],
+      "actualStart": "2026-05-29T00:00:00.000Z",
+      "actualFinish": "2026-05-29T00:00:00.000Z",
       "durationDays": 1,
       "source": "brief-criterion"
     },
