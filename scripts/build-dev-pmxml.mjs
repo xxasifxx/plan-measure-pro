@@ -132,15 +132,20 @@ function wbsXml(node) {
     </WBS>`;
 }
 
-function activityXml({ oid, id, name, status, pct, durDays, actualStart, actualFinish, wbsOid, notesBody, isMilestone }) {
+function activityXml({ oid, id, name, status, pct, durDays, actualStart, actualFinish, wbsOid, notesBody, isMilestone, qaStatus }) {
   const totalHr  = hours(durDays);
   const remainHr = status === 'Completed' ? 0
     : status === 'Not Started' ? totalHr
     : Math.round(totalHr * (1 - (pct||0)/100));
+  // Suffix the Name with a QA tag so it's visible in the P6 activity grid even
+  // without opening the Notes / UDF columns.
+  const qaTag = qaStatus === 'Verified'    ? '  [Verified]'
+              : qaStatus === 'Requires QA' ? '  [Requires QA]'
+              : '';
   const lines = [
     `      <ObjectId>${oid}</ObjectId>`,
     `      <Id>${id}</Id>`,
-    `      <Name>${xmlEscape(name)}</Name>`,
+    `      <Name>${xmlEscape(name + qaTag)}</Name>`,
     `      <WBSObjectId>${wbsOid}</WBSObjectId>`,
     `      <Type>${isMilestone ? 'Finish Milestone' : 'Task Dependent'}</Type>`,
     `      <Status>${status}</Status>`,
@@ -153,6 +158,12 @@ function activityXml({ oid, id, name, status, pct, durDays, actualStart, actualF
   lines.push(`      <RemainingDuration>${isMilestone ? 0 : remainHr}</RemainingDuration>`);
   lines.push(`      <AtCompletionDuration>${isMilestone ? 0 : totalHr}</AtCompletionDuration>`);
   if (notesBody) lines.push(`      <Notes>${xmlEscape(notesBody)}</Notes>`);
+  if (qaStatus) {
+    lines.push(`      <UDF>`);
+    lines.push(`        <TypeObjectId>9100</TypeObjectId>`);
+    lines.push(`        <Text>${xmlEscape(qaStatus)}</Text>`);
+    lines.push(`      </UDF>`);
+  }
   return `    <Activity>\n${lines.join('\n')}\n    </Activity>`;
 }
 
