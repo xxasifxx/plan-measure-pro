@@ -78,28 +78,38 @@ export function PhaseSchedule() {
 
   const range = useMemo(() => {
     if (!schedule) return null;
-    const start = schedule.totals.actual_start;
+    const fullStart = schedule.totals.actual_start;
     const end = schedule.totals.forecast_finish;
     const today = new Date().toISOString().slice(0, 10);
-    const totalDays = diffDays(start, end);
-    return { start, end, today, totalDays };
+    // Clip visible window so the active 4–5 month span isn't dwarfed by
+    // long-running streams that started in 2025. Window starts 90d before today
+    // (or fullStart if later), ends 14d past forecast finish for breathing room.
+    const cs = new Date(today); cs.setDate(cs.getDate() - 90);
+    const clipStart = cs.toISOString().slice(0, 10);
+    const start = clipStart > fullStart ? clipStart : fullStart;
+    const pe = new Date(end); pe.setDate(pe.getDate() + 14);
+    const endPadded = pe.toISOString().slice(0, 10);
+    const totalDays = diffDays(start, endPadded);
+    return { start, end: endPadded, today, totalDays, fullStart, clipped: start > fullStart };
   }, [schedule]);
 
   if (err) return <div className="text-xs font-mono text-destructive">Schedule unavailable: {err}</div>;
   if (!schedule || !range) return <div className="text-xs font-mono text-muted-foreground">Loading schedule…</div>;
 
-  const elapsed = diffDays(range.start, range.today);
+  const elapsed = diffDays(range.fullStart, range.today);
   const remaining = Math.max(0, diffDays(range.today, range.end));
   const totalRemaining = schedule.totals.total_remaining_days;
 
   // SVG layout
   const W = 1000, ROW_H = 44, LEFT = 220, RIGHT = 40, TOP = 30;
-  const H = TOP + phaseRows.length * ROW_H + 40;
+  const MILESTONE_BAND = 70; // staggered milestone label band
+  const H = TOP + phaseRows.length * ROW_H + MILESTONE_BAND;
   const trackW = W - LEFT - RIGHT;
   const x = (dateStr: string) => {
     const d = Math.max(0, Math.min(range.totalDays, diffDays(range.start, dateStr)));
     return LEFT + (d / range.totalDays) * trackW;
   };
+  const isBeforeWindow = (dateStr: string) => dateStr < range.start;
 
   return (
     <div className="space-y-6">
