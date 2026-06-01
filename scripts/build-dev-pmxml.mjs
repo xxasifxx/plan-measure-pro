@@ -277,7 +277,6 @@ function main() {
     durDays:     0,
     actualStart: null, actualFinish: null,
     wbsOid:      phaseWbsOid[m.phase],
-    notesBody:   `Gate milestone for phase ${m.phase.toUpperCase()}.`,
     isMilestone: true,
     _phase:      m.phase,
   }));
