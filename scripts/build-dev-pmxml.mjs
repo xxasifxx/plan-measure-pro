@@ -319,8 +319,12 @@ function main() {
     `    <ObjectId>${PROJECT_OID}</ObjectId>`,
     `    <Id>TAKEOFFPRO-DEV</Id>`,
     `    <Name>TakeoffPro Build — Development Schedule</Name>`,
+    `    <Status>Active</Status>`,
     `    <DataDate>${DATA_DATE}</DataDate>`,
     `    <PlannedStartDate>${PROJECT_S}</PlannedStartDate>`,
+    `    <MustFinishByDate>${PROJECT_F}</MustFinishByDate>`,
+    `    <FinishDate>${PROJECT_F}</FinishDate>`,
+    `    <StartDate>${PROJECT_S}</StartDate>`,
     udfType,
     wbsNodes.map(wbsXml).join('\n'),
     activities.map(activityXml).join('\n'),
@@ -330,6 +334,7 @@ function main() {
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <APIBusinessObjects xmlns="${SCHEMA_NS}" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+${calendarXml()}
   <Project>
 ${body}
   </Project>
