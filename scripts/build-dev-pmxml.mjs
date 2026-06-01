@@ -22,7 +22,15 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 const SCHEMA_NS  = 'http://xmlns.oracle.com/Primavera/P6/V22.12/API/BusinessObjects';
 const DATA_DATE  = '2026-05-29T00:00:00';
 const PROJECT_S  = '2025-09-01T08:00:00';
+const PROJECT_F  = '2027-12-31T17:00:00';
 const PROJECT_OID = 9001;
+const CALENDAR_OID = 9500;
+const CALENDAR_NAME = 'TakeoffPro 5x8';
+// Placeholder planned dates for activities that have no real planned schedule.
+// Mercury's ImportCleaner throws NullReferenceException if Planned dates are
+// missing on Not-Started activities, so we always emit them.
+const DEFAULT_PLANNED_START  = '2026-06-01T08:00:00';
+const DEFAULT_PLANNED_FINISH = '2026-06-02T16:00:00';
 
 // ---- phase definitions (mirrors src/pages/mcfa-pitch/lib/wbs-rollup.ts) ----
 const PHASES = [
@@ -127,37 +135,45 @@ function wbsXml(node) {
     : '';
   return `    <WBS>
       <ObjectId>${node.oid}</ObjectId>
+      <ProjectObjectId>${PROJECT_OID}</ProjectObjectId>
       <Code>${xmlEscape(node.code)}</Code>
       <Name>${xmlEscape(node.name)}</Name>${parent}
     </WBS>`;
 }
 
-function activityXml({ oid, id, name, status, pct, durDays, actualStart, actualFinish, wbsOid, notesBody, isMilestone, qaStatus }) {
+function activityXml({ oid, id, name, status, pct, durDays, actualStart, actualFinish, plannedStart, plannedFinish, wbsOid, isMilestone, qaStatus }) {
   const totalHr  = hours(durDays);
   const remainHr = status === 'Completed' ? 0
     : status === 'Not Started' ? totalHr
     : Math.round(totalHr * (1 - (pct||0)/100));
   // Suffix the Name with a QA tag so it's visible in the P6 activity grid even
-  // without opening the Notes / UDF columns.
+  // without opening the UDF columns.
   const qaTag = qaStatus === 'Verified'    ? '  [Verified]'
               : qaStatus === 'Requires QA' ? '  [Requires QA]'
               : '';
+  // Planned dates are REQUIRED by Mercury ImportCleaner — supply placeholders
+  // when we don't have real ones (everything is summarized capability work).
+  const ps = plannedStart  || actualStart  || DEFAULT_PLANNED_START;
+  const pf = plannedFinish || actualFinish || DEFAULT_PLANNED_FINISH;
   const lines = [
     `      <ObjectId>${oid}</ObjectId>`,
     `      <Id>${id}</Id>`,
     `      <Name>${xmlEscape(name + qaTag)}</Name>`,
+    `      <ProjectObjectId>${PROJECT_OID}</ProjectObjectId>`,
     `      <WBSObjectId>${wbsOid}</WBSObjectId>`,
+    `      <CalendarObjectId>${CALENDAR_OID}</CalendarObjectId>`,
     `      <Type>${isMilestone ? 'Finish Milestone' : 'Task Dependent'}</Type>`,
     `      <Status>${status}</Status>`,
     `      <PercentCompleteType>Physical</PercentCompleteType>`,
     `      <PhysicalPercentComplete>${pct || 0}</PhysicalPercentComplete>`,
+    `      <PlannedStartDate>${ps}</PlannedStartDate>`,
+    `      <PlannedFinishDate>${pf}</PlannedFinishDate>`,
   ];
   if (actualStart)  lines.push(`      <ActualStartDate>${actualStart}</ActualStartDate>`);
   if (actualFinish) lines.push(`      <ActualFinishDate>${actualFinish}</ActualFinishDate>`);
   lines.push(`      <PlannedDuration>${isMilestone ? 0 : totalHr}</PlannedDuration>`);
   lines.push(`      <RemainingDuration>${isMilestone ? 0 : remainHr}</RemainingDuration>`);
   lines.push(`      <AtCompletionDuration>${isMilestone ? 0 : totalHr}</AtCompletionDuration>`);
-  if (notesBody) lines.push(`      <Notes>${xmlEscape(notesBody)}</Notes>`);
   if (qaStatus) {
     lines.push(`      <UDF>`);
     lines.push(`        <TypeObjectId>9100</TypeObjectId>`);
@@ -170,11 +186,37 @@ function activityXml({ oid, id, name, status, pct, durDays, actualStart, actualF
 function relXml(oid, predOid, succOid) {
   return `    <Relationship>
       <ObjectId>${oid}</ObjectId>
+      <PredecessorProjectObjectId>${PROJECT_OID}</PredecessorProjectObjectId>
+      <SuccessorProjectObjectId>${PROJECT_OID}</SuccessorProjectObjectId>
       <PredecessorActivityObjectId>${predOid}</PredecessorActivityObjectId>
       <SuccessorActivityObjectId>${succOid}</SuccessorActivityObjectId>
       <Type>Finish to Start</Type>
       <Lag>0</Lag>
     </Relationship>`;
+}
+
+function calendarXml() {
+  const ww = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'].map(d => {
+    const work = d !== 'Sunday' && d !== 'Saturday';
+    const wt = work
+      ? '<WorkTime><Start>08:00:00</Start><Finish>16:00:00</Finish></WorkTime>'
+      : '';
+    return `      <StandardWorkHours><DayOfWeek>${d}</DayOfWeek>${wt}</StandardWorkHours>`;
+  }).join('\n');
+  return `  <Calendar>
+    <ObjectId>${CALENDAR_OID}</ObjectId>
+    <Name>${CALENDAR_NAME}</Name>
+    <Type>Global</Type>
+    <IsDefault>true</IsDefault>
+    <HoursPerDay>8</HoursPerDay>
+    <HoursPerWeek>40</HoursPerWeek>
+    <HoursPerMonth>172</HoursPerMonth>
+    <HoursPerYear>2000</HoursPerYear>
+    <StandardWorkWeek>
+${ww}
+    </StandardWorkWeek>
+    <HolidayOrExceptions/>
+  </Calendar>`;
 }
 
 // ---- main -----------------------------------------------------------------
@@ -219,7 +261,6 @@ function main() {
       actualStart:  iso(a.actualStart),
       actualFinish: statusFor(a) === 'Completed' ? iso(a.actualFinish) : null,
       wbsOid:       streamWbsOid[sk],
-      notesBody:    notes(a),
       isMilestone:  false,
       qaStatus:     a.qaStatus || null,
       _streamKey:   sk,
@@ -236,7 +277,6 @@ function main() {
     durDays:     0,
     actualStart: null, actualFinish: null,
     wbsOid:      phaseWbsOid[m.phase],
-    notesBody:   `Gate milestone for phase ${m.phase.toUpperCase()}.`,
     isMilestone: true,
     _phase:      m.phase,
   }));
@@ -279,8 +319,12 @@ function main() {
     `    <ObjectId>${PROJECT_OID}</ObjectId>`,
     `    <Id>TAKEOFFPRO-DEV</Id>`,
     `    <Name>TakeoffPro Build — Development Schedule</Name>`,
+    `    <Status>Active</Status>`,
     `    <DataDate>${DATA_DATE}</DataDate>`,
     `    <PlannedStartDate>${PROJECT_S}</PlannedStartDate>`,
+    `    <MustFinishByDate>${PROJECT_F}</MustFinishByDate>`,
+    `    <FinishDate>${PROJECT_F}</FinishDate>`,
+    `    <StartDate>${PROJECT_S}</StartDate>`,
     udfType,
     wbsNodes.map(wbsXml).join('\n'),
     activities.map(activityXml).join('\n'),
@@ -290,6 +334,7 @@ function main() {
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <APIBusinessObjects xmlns="${SCHEMA_NS}" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+${calendarXml()}
   <Project>
 ${body}
   </Project>
