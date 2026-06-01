@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { PHASES, type PhaseId } from './lib/wbs-rollup';
 
+interface ScheduleCap { verdict: string; remaining_days: number }
 interface ScheduleStream {
   stream_key: string;
   title: string;
@@ -8,16 +9,19 @@ interface ScheduleStream {
   last_touch: string | null;
   forecast_finish: string | null;
   remaining_days: number;
-  capabilities: Array<{ verdict: string; remaining_days: number }>;
+  capabilities: ScheduleCap[];
 }
 
 interface Schedule {
   T0: string;
+  defaults_days?: { implemented: number; partial: number; planned: number };
   totals: {
+    capabilities: number;
     implemented: number;
     partial: number;
     planned: number;
     total_remaining_days: number;
+    total_touches: number;
     actual_start: string;
     last_touch: string;
     forecast_finish: string;
@@ -29,36 +33,44 @@ interface Schedule {
 const MS_PER_DAY = 86400000;
 const fmtDate = (s: string | null) =>
   s ? new Date(s).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' }) : '—';
+const fmtShort = (s: string | null) =>
+  s ? new Date(s).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '—';
 const diffDays = (a: string, b: string) =>
   Math.round((new Date(b).getTime() - new Date(a).getTime()) / MS_PER_DAY);
+const addCalDays = (iso: string, n: number) => {
+  const d = new Date(iso);
+  d.setDate(d.getDate() + n);
+  return d.toISOString().slice(0, 10);
+};
 
 interface PhaseRow {
   id: PhaseId;
   name: string;
   earliestStart: string | null;
-  latestForecast: string | null;
   builtCount: number;
   totalCount: number;
-  remainingDays: number;
+  /** capabilities-equivalent remaining in this phase (planned + 0.5 * partial) */
+  remainingCapsEq: number;
 }
 
 function rollupPhases(schedule: Schedule): PhaseRow[] {
   return PHASES.map(p => {
     const matched = schedule.streams.filter(s => p.streams.some(ps => ps.key === s.stream_key));
     const starts = matched.map(s => s.actual_start).filter(Boolean) as string[];
-    const finishes = matched.map(s => s.forecast_finish).filter(Boolean) as string[];
-    let built = 0, total = 0;
+    let built = 0, total = 0, remainingEq = 0;
     matched.forEach(s => s.capabilities.forEach(c => {
-      total++; if (c.verdict === 'implemented') built++;
+      total++;
+      if (c.verdict === 'implemented') built++;
+      else if (c.verdict === 'partial') remainingEq += 0.5;
+      else remainingEq += 1; // planned / missing
     }));
     return {
       id: p.id,
       name: p.name,
       earliestStart: starts.sort()[0] ?? null,
-      latestForecast: finishes.sort().slice(-1)[0] ?? null,
       builtCount: built,
       totalCount: total,
-      remainingDays: matched.reduce((s, x) => s + (x.remaining_days || 0), 0),
+      remainingCapsEq: remainingEq,
     };
   });
 }
@@ -76,34 +88,52 @@ export function PhaseSchedule() {
 
   const phaseRows = useMemo(() => schedule ? rollupPhases(schedule) : [], [schedule]);
 
-  const range = useMemo(() => {
-    if (!schedule) return null;
-    const fullStart = schedule.totals.actual_start;
-    const end = schedule.totals.forecast_finish;
+  /* ----------------------------------------------------------------------
+   * Velocity model: single developer, serial workflow.
+   * Velocity (caps/day) = completed capabilities / elapsed calendar days.
+   *   completed_caps  = implemented + 0.5 * partial
+   *   remaining_caps  = planned     + 0.5 * partial
+   * Each phase's forward calendar duration = phase remaining caps / velocity.
+   * Phases are scheduled back-to-back starting TODAY (no parallelism).
+   * -------------------------------------------------------------------- */
+  const model = useMemo(() => {
+    if (!schedule || phaseRows.length === 0) return null;
     const today = new Date().toISOString().slice(0, 10);
-    // Clip visible window so the active 4–5 month span isn't dwarfed by
-    // long-running streams that started in 2025. Window starts 90d before today
-    // (or fullStart if later), ends 14d past forecast finish for breathing room.
+    const fullStart = schedule.totals.actual_start;
+    const elapsedCal = Math.max(1, diffDays(fullStart, today));
+    const completedCapsEq = schedule.totals.implemented + 0.5 * schedule.totals.partial;
+    const velocity = completedCapsEq > 0 ? completedCapsEq / elapsedCal : 0.2; // caps/day fallback
+    let cursor = today;
+    const forwardByPhase: Record<string, { start: string; end: string; calDays: number }> = {};
+    let cumCalRemaining = 0;
+    for (const r of phaseRows) {
+      const calDays = Math.max(0, Math.ceil(r.remainingCapsEq / velocity));
+      const end = addCalDays(cursor, calDays);
+      forwardByPhase[r.id] = { start: cursor, end, calDays };
+      cumCalRemaining += calDays;
+      cursor = end;
+    }
+    const serialFinish = cursor;
+    return { today, fullStart, velocity, elapsedCal, completedCapsEq, forwardByPhase, serialFinish, cumCalRemaining };
+  }, [schedule, phaseRows]);
+
+  const range = useMemo(() => {
+    if (!schedule || !model) return null;
+    const today = model.today;
+    // Window: 90 days back from today, through serial finish + 14d pad.
     const cs = new Date(today); cs.setDate(cs.getDate() - 90);
     const clipStart = cs.toISOString().slice(0, 10);
-    const start = clipStart > fullStart ? clipStart : fullStart;
-    const pe = new Date(end); pe.setDate(pe.getDate() + 14);
-    const endPadded = pe.toISOString().slice(0, 10);
-    const totalDays = diffDays(start, endPadded);
-    return { start, end: endPadded, today, totalDays, fullStart, clipped: start > fullStart };
-  }, [schedule]);
+    const start = clipStart > schedule.totals.actual_start ? clipStart : schedule.totals.actual_start;
+    const padEnd = addCalDays(model.serialFinish, 14);
+    return { start, end: padEnd, today, totalDays: Math.max(1, diffDays(start, padEnd)) };
+  }, [schedule, model]);
 
   if (err) return <div className="text-xs font-mono text-destructive">Schedule unavailable: {err}</div>;
-  if (!schedule || !range) return <div className="text-xs font-mono text-muted-foreground">Loading schedule…</div>;
-
-  const elapsed = diffDays(range.fullStart, range.today);
-  const remaining = Math.max(0, diffDays(range.today, range.end));
-  const totalRemaining = schedule.totals.total_remaining_days;
+  if (!schedule || !range || !model) return <div className="text-xs font-mono text-muted-foreground">Loading schedule…</div>;
 
   // SVG layout
-  const W = 1000, ROW_H = 44, LEFT = 220, RIGHT = 40, TOP = 30;
-  const MILESTONE_BAND = 70; // staggered milestone label band
-  const H = TOP + phaseRows.length * ROW_H + MILESTONE_BAND;
+  const W = 1000, ROW_H = 44, LEFT = 220, RIGHT = 40, TOP = 30, BOTTOM = 30;
+  const H = TOP + phaseRows.length * ROW_H + BOTTOM;
   const trackW = W - LEFT - RIGHT;
   const x = (dateStr: string) => {
     const d = Math.max(0, Math.min(range.totalDays, diffDays(range.start, dateStr)));
@@ -111,19 +141,31 @@ export function PhaseSchedule() {
   };
   const isBeforeWindow = (dateStr: string) => dateStr < range.start;
 
+  const todayX = x(range.today);
+
   return (
     <div className="space-y-6">
       {/* Top numbers */}
-      <div className="grid grid-cols-3 gap-4">
-        <Stat label="Elapsed" value={`${elapsed}d`} sub={`since ${fmtDate(range.fullStart)}`} />
-        <Stat label="Remaining" value={`${totalRemaining}d`} sub="scope-weighted" tone="amber" />
-        <Stat label="Forecast finish" value={fmtDate(schedule.totals.forecast_finish)} sub={`${remaining}d calendar`} tone="primary" />
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <Stat label="Elapsed" value={`${model.elapsedCal}d`} sub={`since ${fmtDate(model.fullStart)}`} />
+        <Stat
+          label="Velocity"
+          value={`${(model.velocity * 7).toFixed(1)} / wk`}
+          sub={`${model.completedCapsEq.toFixed(0)} caps in ${model.elapsedCal}d`}
+        />
+        <Stat
+          label="Remaining"
+          value={`${model.cumCalRemaining}d`}
+          sub={`serial · ${(schedule.totals.planned + 0.5 * schedule.totals.partial).toFixed(0)} caps left`}
+          tone="amber"
+        />
+        <Stat label="Forecast finish" value={fmtDate(model.serialFinish)} sub="single workflow" tone="primary" />
       </div>
 
       {/* Gantt */}
       <div className="rounded-md border border-border bg-card/40 overflow-x-auto">
         <svg viewBox={`0 0 ${W} ${H}`} className="w-full min-w-[700px]" style={{ height: H }}>
-          {/* time grid: month ticks */}
+          {/* month grid */}
           {(() => {
             const ticks: { x: number; label: string }[] = [];
             const s = new Date(range.start); const e = new Date(range.end);
@@ -135,7 +177,7 @@ export function PhaseSchedule() {
             }
             return ticks.map((t, i) => (
               <g key={i}>
-                <line x1={t.x} x2={t.x} y1={TOP - 8} y2={TOP + phaseRows.length * ROW_H}
+                <line x1={t.x} x2={t.x} y1={TOP - 8} y2={H - BOTTOM + 4}
                   stroke="hsl(var(--border))" strokeWidth={1} strokeDasharray="2 4" opacity={0.4} />
                 <text x={t.x + 3} y={TOP - 14} className="fill-muted-foreground" style={{ fontSize: 9, fontFamily: 'monospace' }}>
                   {t.label}
@@ -145,109 +187,117 @@ export function PhaseSchedule() {
           })()}
 
           {/* today line */}
-          <line x1={x(range.today)} x2={x(range.today)} y1={TOP - 8} y2={TOP + phaseRows.length * ROW_H}
+          <line x1={todayX} x2={todayX} y1={TOP - 8} y2={H - BOTTOM + 4}
             stroke="hsl(var(--primary))" strokeWidth={1.5} />
-          <text x={x(range.today) + 3} y={TOP - 14} className="fill-primary"
-            style={{ fontSize: 9, fontFamily: 'monospace' }}>TODAY</text>
+          <text x={todayX + 3} y={TOP - 14} className="fill-primary" style={{ fontSize: 9, fontFamily: 'monospace' }}>
+            TODAY
+          </text>
 
-          {/* phase rows */}
+          {/* phase rows — actual to today, then serial forecast bar */}
           {phaseRows.map((row, i) => {
             const y = TOP + i * ROW_H + 8;
             const xs = row.earliestStart ?? range.start;
-            const xe = row.latestForecast ?? range.end;
-            const todayX = x(range.today);
-            const startX = x(xs); const endX = x(xe);
-            const actualEnd = Math.min(todayX, endX);
+            const actualStartX = x(xs);
+            const fwd = model.forwardByPhase[row.id];
+            const fwdStartX = x(fwd.start);
+            const fwdEndX = x(fwd.end);
             const clippedLeft = !!row.earliestStart && isBeforeWindow(row.earliestStart);
+            const pctBuilt = row.totalCount > 0 ? Math.round((row.builtCount / row.totalCount) * 100) : 0;
             return (
               <g key={row.id}>
-                {/* label */}
-                <text x={10} y={y + 16} className="fill-foreground" style={{ fontSize: 11, fontFamily: 'monospace', fontWeight: 600 }}>
+                <text x={10} y={y + 16} className="fill-foreground"
+                  style={{ fontSize: 11, fontFamily: 'monospace', fontWeight: 600 }}>
                   {row.name}
                 </text>
-                <text x={10} y={y + 28} className="fill-muted-foreground" style={{ fontSize: 9, fontFamily: 'monospace' }}>
-                  {row.builtCount}/{row.totalCount} built · {row.remainingDays}d left
+                <text x={10} y={y + 28} className="fill-muted-foreground"
+                  style={{ fontSize: 9, fontFamily: 'monospace' }}>
+                  {row.builtCount}/{row.totalCount} built · {pctBuilt}% · {fwd.calDays}d fwd
                 </text>
-                {/* baseline (gray) */}
-                <rect x={startX} y={y} width={Math.max(2, endX - startX)} height={6}
-                  fill="hsl(var(--muted))" opacity={0.5} rx={1} />
-                {/* actual (solid) */}
-                {actualEnd > startX && (
-                  <rect x={startX} y={y + 8} width={Math.max(2, actualEnd - startX)} height={8}
+
+                {/* actual progress: from earliest start to today */}
+                {todayX > actualStartX && (
+                  <rect x={actualStartX} y={y + 4} width={Math.max(2, todayX - actualStartX)} height={10}
                     fill="hsl(var(--primary))" opacity={0.85} rx={1} />
                 )}
-                {/* forecast (outline) */}
-                {endX > actualEnd && (
-                  <rect x={actualEnd} y={y + 8} width={Math.max(2, endX - actualEnd)} height={8}
-                    fill="none" stroke="hsl(var(--primary))" strokeWidth={1.2} strokeDasharray="3 2" rx={1} />
+
+                {/* serial forecast (dashed) — only this phase's slice of forward work */}
+                {fwd.calDays > 0 && fwdEndX > fwdStartX && (
+                  <>
+                    <rect x={fwdStartX} y={y + 16} width={Math.max(2, fwdEndX - fwdStartX)} height={10}
+                      fill="hsl(var(--primary) / 0.18)" stroke="hsl(var(--primary))" strokeWidth={1}
+                      strokeDasharray="3 2" rx={1} />
+                    <text x={fwdEndX + 4} y={y + 24} className="fill-muted-foreground"
+                      style={{ fontSize: 9, fontFamily: 'monospace' }}>
+                      {fmtShort(fwd.end)}
+                    </text>
+                  </>
                 )}
-                {/* clipped-left indicator */}
+
                 {clippedLeft && (
-                  <text x={startX - 2} y={y + 15} textAnchor="end" className="fill-muted-foreground"
+                  <text x={actualStartX - 2} y={y + 13} textAnchor="end" className="fill-muted-foreground"
                     style={{ fontSize: 11, fontFamily: 'monospace' }}>‹‹</text>
                 )}
               </g>
             );
           })}
 
-          {/* milestone diamonds with staggered labels to avoid overlap */}
+          {/* serial finish marker */}
           {(() => {
-            const ms = schedule.milestones
-              .filter(m => m.forecast_date)
-              .map(m => ({ ...m, mx: x(m.forecast_date!) }))
-              .sort((a, b) => a.mx - b.mx);
-            const baseY = TOP + phaseRows.length * ROW_H + 16;
-            const LABEL_W = 28; // min horizontal spacing per label
-            const ROW_GAP = 12;
-            // assign label row to avoid horizontal collisions
-            const rowsLastX: number[] = [];
-            const placed = ms.map(m => {
-              let r = 0;
-              while (r < rowsLastX.length && m.mx - rowsLastX[r] < LABEL_W) r++;
-              rowsLastX[r] = m.mx;
-              return { ...m, row: r };
-            });
-            return placed.map(m => {
-              const fill = m.met ? 'hsl(var(--primary))' : 'hsl(var(--card))';
-              const labelY = baseY + 16 + m.row * ROW_GAP;
-              return (
-                <g key={m.id}>
-                  <polygon points={`${m.mx},${baseY - 6} ${m.mx + 6},${baseY} ${m.mx},${baseY + 6} ${m.mx - 6},${baseY}`}
-                    fill={fill} stroke="hsl(var(--primary))" strokeWidth={1.5} />
-                  {m.row > 0 && (
-                    <line x1={m.mx} x2={m.mx} y1={baseY + 6} y2={labelY - 8}
-                      stroke="hsl(var(--primary))" strokeWidth={0.8} opacity={0.5} />
-                  )}
-                  <text x={m.mx} y={labelY} textAnchor="middle" className="fill-foreground"
-                    style={{ fontSize: 9, fontFamily: 'monospace', fontWeight: 600 }}>{m.id}</text>
-                  <title>{m.id} — {m.name} ({fmtDate(m.forecast_date)})</title>
-                </g>
-              );
-            });
+            const fx = x(model.serialFinish);
+            return (
+              <g>
+                <line x1={fx} x2={fx} y1={TOP - 4} y2={H - BOTTOM + 4}
+                  stroke="hsl(var(--primary))" strokeWidth={1} strokeDasharray="4 3" opacity={0.6} />
+                <text x={fx + 4} y={H - BOTTOM + 16} className="fill-primary"
+                  style={{ fontSize: 9, fontFamily: 'monospace', fontWeight: 600 }}>
+                  FINISH · {fmtShort(model.serialFinish)}
+                </text>
+              </g>
+            );
           })()}
         </svg>
       </div>
 
-      {/* legend + milestone list */}
+      {/* Legend */}
       <div className="flex flex-wrap gap-x-6 gap-y-2 text-[10px] font-mono text-muted-foreground">
-        <span className="flex items-center gap-2"><span className="inline-block w-6 h-1.5 bg-muted/50" />Baseline</span>
-        <span className="flex items-center gap-2"><span className="inline-block w-6 h-2 bg-primary/80" />Actual</span>
-        <span className="flex items-center gap-2"><span className="inline-block w-6 h-2 border border-primary border-dashed" />Forecast</span>
-        <span className="flex items-center gap-2"><span className="inline-block w-2 h-2 border border-primary rotate-45" />Milestone</span>
+        <span className="flex items-center gap-2"><span className="inline-block w-6 h-2 bg-primary/80" />Actual progress (start → today)</span>
+        <span className="flex items-center gap-2"><span className="inline-block w-6 h-2 border border-primary border-dashed bg-primary/20" />Serial forecast (phase slice)</span>
+        <span className="flex items-center gap-2">‹‹ baseline started before window</span>
       </div>
 
-      <div className="grid sm:grid-cols-2 gap-x-6 gap-y-1 text-[10px] font-mono">
-        {schedule.milestones.map(m => (
-          <div key={m.id} className="flex items-center justify-between border-b border-border/40 py-1">
-            <span className="text-foreground/80"><span className="text-primary">{m.id}</span> · {m.name}</span>
-            <span className="text-muted-foreground">{fmtDate(m.forecast_date)}</span>
-          </div>
-        ))}
+      {/* Milestone strip — clearer than clustered diamonds */}
+      <div>
+        <div className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground mb-2">
+          Milestones (forecast)
+        </div>
+        <div className="grid sm:grid-cols-2 gap-2">
+          {[...schedule.milestones]
+            .sort((a, b) => (a.forecast_date ?? '').localeCompare(b.forecast_date ?? ''))
+            .map(m => {
+              const past = m.forecast_date && m.forecast_date < model.today;
+              return (
+                <div key={m.id}
+                  className="flex items-center gap-3 rounded border border-border bg-card/30 px-3 py-2">
+                  <span className={`font-mono text-[10px] font-semibold px-1.5 py-0.5 rounded
+                    ${m.met ? 'bg-primary text-primary-foreground' : 'border border-primary text-primary'}`}>
+                    {m.id}
+                  </span>
+                  <span className="flex-1 text-xs text-foreground/90 leading-tight">{m.name}</span>
+                  <span className={`font-mono text-[10px] ${past && !m.met ? 'text-amber-400' : 'text-muted-foreground'}`}>
+                    {fmtDate(m.forecast_date)}{past && !m.met ? ' · slipped' : ''}
+                  </span>
+                </div>
+              );
+            })}
+        </div>
       </div>
 
-      <p className="text-[10px] font-mono text-muted-foreground">
-        Forecasts derived from remaining-scope + current build velocity. T0 = {fmtDate(range.start)}.
-        Source: <code>.lovable/wbs/schedule.json</code>, regenerated on every build.
+      <p className="text-[10px] font-mono text-muted-foreground leading-relaxed">
+        Forecast assumes a <strong className="text-foreground">single sequential workflow</strong> (one developer),
+        not parallel streams. Velocity is derived from history: {model.completedCapsEq.toFixed(0)} capability-equivalents
+        completed over {model.elapsedCal} calendar days = {(model.velocity * 7).toFixed(2)} caps/week.
+        Remaining work ({(schedule.totals.planned + 0.5 * schedule.totals.partial).toFixed(0)} caps) is scheduled
+        phase-after-phase starting today. Source: <code>.lovable/wbs/schedule.json</code>.
       </p>
     </div>
   );
@@ -256,10 +306,10 @@ export function PhaseSchedule() {
 function Stat({ label, value, sub, tone = 'default' }: { label: string; value: string; sub: string; tone?: 'default' | 'primary' | 'amber' }) {
   const valTone = tone === 'primary' ? 'text-primary' : tone === 'amber' ? 'text-amber-400' : 'text-foreground';
   return (
-    <div className="rounded-md border border-border bg-card/40 p-4">
+    <div className="rounded-md border border-border bg-card/40 p-3">
       <div className="text-[10px] uppercase tracking-wider font-mono text-muted-foreground">{label}</div>
-      <div className={`mt-1 font-mono text-2xl font-semibold ${valTone}`}>{value}</div>
-      <div className="text-[10px] font-mono text-muted-foreground mt-0.5">{sub}</div>
+      <div className={`mt-1 font-mono text-xl font-semibold ${valTone}`}>{value}</div>
+      <div className="text-[10px] font-mono text-muted-foreground mt-0.5 truncate" title={sub}>{sub}</div>
     </div>
   );
 }

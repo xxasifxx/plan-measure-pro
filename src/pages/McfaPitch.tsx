@@ -186,7 +186,7 @@ export default function McfaPitch() {
         {/* Section C */}
         <Section
           n="C" title="Baseline, actuals, forecast"
-          intro="The same data plotted as a schedule. Gray = baseline scope window. Solid = actual progress. Dashed = forecast remaining. Milestones M0–M6 use NJDOT-style gates."
+          intro="Single-developer schedule. Velocity comes from history (capabilities completed per calendar day since the project started). Remaining scope is laid out phase-after-phase starting today — not in parallel — so the forecast finish reflects what one person can actually ship. Each phase row shows actual progress to today, then its slice of forward work as a dashed bar."
         >
           <PhaseSchedule />
         </Section>
