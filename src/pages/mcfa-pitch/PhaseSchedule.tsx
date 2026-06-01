@@ -115,9 +115,9 @@ export function PhaseSchedule() {
     <div className="space-y-6">
       {/* Top numbers */}
       <div className="grid grid-cols-3 gap-4">
-        <Stat label="Elapsed" value={`${elapsed}d`} sub={`since ${fmtDate(range.start)}`} />
+        <Stat label="Elapsed" value={`${elapsed}d`} sub={`since ${fmtDate(range.fullStart)}`} />
         <Stat label="Remaining" value={`${totalRemaining}d`} sub="scope-weighted" tone="amber" />
-        <Stat label="Forecast finish" value={fmtDate(range.end)} sub={`${remaining}d calendar`} tone="primary" />
+        <Stat label="Forecast finish" value={fmtDate(schedule.totals.forecast_finish)} sub={`${remaining}d calendar`} tone="primary" />
       </div>
 
       {/* Gantt */}
