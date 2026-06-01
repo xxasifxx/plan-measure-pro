@@ -78,36 +78,46 @@ export function PhaseSchedule() {
 
   const range = useMemo(() => {
     if (!schedule) return null;
-    const start = schedule.totals.actual_start;
+    const fullStart = schedule.totals.actual_start;
     const end = schedule.totals.forecast_finish;
     const today = new Date().toISOString().slice(0, 10);
-    const totalDays = diffDays(start, end);
-    return { start, end, today, totalDays };
+    // Clip visible window so the active 4–5 month span isn't dwarfed by
+    // long-running streams that started in 2025. Window starts 90d before today
+    // (or fullStart if later), ends 14d past forecast finish for breathing room.
+    const cs = new Date(today); cs.setDate(cs.getDate() - 90);
+    const clipStart = cs.toISOString().slice(0, 10);
+    const start = clipStart > fullStart ? clipStart : fullStart;
+    const pe = new Date(end); pe.setDate(pe.getDate() + 14);
+    const endPadded = pe.toISOString().slice(0, 10);
+    const totalDays = diffDays(start, endPadded);
+    return { start, end: endPadded, today, totalDays, fullStart, clipped: start > fullStart };
   }, [schedule]);
 
   if (err) return <div className="text-xs font-mono text-destructive">Schedule unavailable: {err}</div>;
   if (!schedule || !range) return <div className="text-xs font-mono text-muted-foreground">Loading schedule…</div>;
 
-  const elapsed = diffDays(range.start, range.today);
+  const elapsed = diffDays(range.fullStart, range.today);
   const remaining = Math.max(0, diffDays(range.today, range.end));
   const totalRemaining = schedule.totals.total_remaining_days;
 
   // SVG layout
   const W = 1000, ROW_H = 44, LEFT = 220, RIGHT = 40, TOP = 30;
-  const H = TOP + phaseRows.length * ROW_H + 40;
+  const MILESTONE_BAND = 70; // staggered milestone label band
+  const H = TOP + phaseRows.length * ROW_H + MILESTONE_BAND;
   const trackW = W - LEFT - RIGHT;
   const x = (dateStr: string) => {
     const d = Math.max(0, Math.min(range.totalDays, diffDays(range.start, dateStr)));
     return LEFT + (d / range.totalDays) * trackW;
   };
+  const isBeforeWindow = (dateStr: string) => dateStr < range.start;
 
   return (
     <div className="space-y-6">
       {/* Top numbers */}
       <div className="grid grid-cols-3 gap-4">
-        <Stat label="Elapsed" value={`${elapsed}d`} sub={`since ${fmtDate(range.start)}`} />
+        <Stat label="Elapsed" value={`${elapsed}d`} sub={`since ${fmtDate(range.fullStart)}`} />
         <Stat label="Remaining" value={`${totalRemaining}d`} sub="scope-weighted" tone="amber" />
-        <Stat label="Forecast finish" value={fmtDate(range.end)} sub={`${remaining}d calendar`} tone="primary" />
+        <Stat label="Forecast finish" value={fmtDate(schedule.totals.forecast_finish)} sub={`${remaining}d calendar`} tone="primary" />
       </div>
 
       {/* Gantt */}
@@ -125,7 +135,7 @@ export function PhaseSchedule() {
             }
             return ticks.map((t, i) => (
               <g key={i}>
-                <line x1={t.x} x2={t.x} y1={TOP - 8} y2={H - 30}
+                <line x1={t.x} x2={t.x} y1={TOP - 8} y2={TOP + phaseRows.length * ROW_H}
                   stroke="hsl(var(--border))" strokeWidth={1} strokeDasharray="2 4" opacity={0.4} />
                 <text x={t.x + 3} y={TOP - 14} className="fill-muted-foreground" style={{ fontSize: 9, fontFamily: 'monospace' }}>
                   {t.label}
@@ -135,9 +145,9 @@ export function PhaseSchedule() {
           })()}
 
           {/* today line */}
-          <line x1={x(range.today)} x2={x(range.today)} y1={TOP - 8} y2={H - 30}
+          <line x1={x(range.today)} x2={x(range.today)} y1={TOP - 8} y2={TOP + phaseRows.length * ROW_H}
             stroke="hsl(var(--primary))" strokeWidth={1.5} />
-          <text x={x(range.today) + 3} y={H - 32} className="fill-primary"
+          <text x={x(range.today) + 3} y={TOP - 14} className="fill-primary"
             style={{ fontSize: 9, fontFamily: 'monospace' }}>TODAY</text>
 
           {/* phase rows */}
@@ -148,6 +158,7 @@ export function PhaseSchedule() {
             const todayX = x(range.today);
             const startX = x(xs); const endX = x(xe);
             const actualEnd = Math.min(todayX, endX);
+            const clippedLeft = !!row.earliestStart && isBeforeWindow(row.earliestStart);
             return (
               <g key={row.id}>
                 {/* label */}
@@ -170,25 +181,50 @@ export function PhaseSchedule() {
                   <rect x={actualEnd} y={y + 8} width={Math.max(2, endX - actualEnd)} height={8}
                     fill="none" stroke="hsl(var(--primary))" strokeWidth={1.2} strokeDasharray="3 2" rx={1} />
                 )}
+                {/* clipped-left indicator */}
+                {clippedLeft && (
+                  <text x={startX - 2} y={y + 15} textAnchor="end" className="fill-muted-foreground"
+                    style={{ fontSize: 11, fontFamily: 'monospace' }}>‹‹</text>
+                )}
               </g>
             );
           })}
 
-          {/* milestone diamonds */}
-          {schedule.milestones.filter(m => m.forecast_date).map((m, i) => {
-            const mx = x(m.forecast_date!);
-            const my = H - 18;
-            const fill = m.met ? 'hsl(var(--primary))' : 'hsl(var(--card))';
-            return (
-              <g key={m.id}>
-                <polygon points={`${mx},${my - 6} ${mx + 6},${my} ${mx},${my + 6} ${mx - 6},${my}`}
-                  fill={fill} stroke="hsl(var(--primary))" strokeWidth={1.5} />
-                <text x={mx} y={my + 18} textAnchor="middle" className="fill-foreground"
-                  style={{ fontSize: 8, fontFamily: 'monospace' }}>{m.id}</text>
-                <title>{m.id} — {m.name} ({fmtDate(m.forecast_date)})</title>
-              </g>
-            );
-          })}
+          {/* milestone diamonds with staggered labels to avoid overlap */}
+          {(() => {
+            const ms = schedule.milestones
+              .filter(m => m.forecast_date)
+              .map(m => ({ ...m, mx: x(m.forecast_date!) }))
+              .sort((a, b) => a.mx - b.mx);
+            const baseY = TOP + phaseRows.length * ROW_H + 16;
+            const LABEL_W = 28; // min horizontal spacing per label
+            const ROW_GAP = 12;
+            // assign label row to avoid horizontal collisions
+            const rowsLastX: number[] = [];
+            const placed = ms.map(m => {
+              let r = 0;
+              while (r < rowsLastX.length && m.mx - rowsLastX[r] < LABEL_W) r++;
+              rowsLastX[r] = m.mx;
+              return { ...m, row: r };
+            });
+            return placed.map(m => {
+              const fill = m.met ? 'hsl(var(--primary))' : 'hsl(var(--card))';
+              const labelY = baseY + 16 + m.row * ROW_GAP;
+              return (
+                <g key={m.id}>
+                  <polygon points={`${m.mx},${baseY - 6} ${m.mx + 6},${baseY} ${m.mx},${baseY + 6} ${m.mx - 6},${baseY}`}
+                    fill={fill} stroke="hsl(var(--primary))" strokeWidth={1.5} />
+                  {m.row > 0 && (
+                    <line x1={m.mx} x2={m.mx} y1={baseY + 6} y2={labelY - 8}
+                      stroke="hsl(var(--primary))" strokeWidth={0.8} opacity={0.5} />
+                  )}
+                  <text x={m.mx} y={labelY} textAnchor="middle" className="fill-foreground"
+                    style={{ fontSize: 9, fontFamily: 'monospace', fontWeight: 600 }}>{m.id}</text>
+                  <title>{m.id} — {m.name} ({fmtDate(m.forecast_date)})</title>
+                </g>
+              );
+            });
+          })()}
         </svg>
       </div>
 
