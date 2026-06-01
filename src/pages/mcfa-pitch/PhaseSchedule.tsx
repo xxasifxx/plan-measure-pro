@@ -135,7 +135,7 @@ export function PhaseSchedule() {
             }
             return ticks.map((t, i) => (
               <g key={i}>
-                <line x1={t.x} x2={t.x} y1={TOP - 8} y2={H - 30}
+                <line x1={t.x} x2={t.x} y1={TOP - 8} y2={TOP + phaseRows.length * ROW_H}
                   stroke="hsl(var(--border))" strokeWidth={1} strokeDasharray="2 4" opacity={0.4} />
                 <text x={t.x + 3} y={TOP - 14} className="fill-muted-foreground" style={{ fontSize: 9, fontFamily: 'monospace' }}>
                   {t.label}
@@ -145,9 +145,9 @@ export function PhaseSchedule() {
           })()}
 
           {/* today line */}
-          <line x1={x(range.today)} x2={x(range.today)} y1={TOP - 8} y2={H - 30}
+          <line x1={x(range.today)} x2={x(range.today)} y1={TOP - 8} y2={TOP + phaseRows.length * ROW_H}
             stroke="hsl(var(--primary))" strokeWidth={1.5} />
-          <text x={x(range.today) + 3} y={H - 32} className="fill-primary"
+          <text x={x(range.today) + 3} y={TOP - 14} className="fill-primary"
             style={{ fontSize: 9, fontFamily: 'monospace' }}>TODAY</text>
 
           {/* phase rows */}
