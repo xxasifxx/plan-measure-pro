@@ -135,37 +135,45 @@ function wbsXml(node) {
     : '';
   return `    <WBS>
       <ObjectId>${node.oid}</ObjectId>
+      <ProjectObjectId>${PROJECT_OID}</ProjectObjectId>
       <Code>${xmlEscape(node.code)}</Code>
       <Name>${xmlEscape(node.name)}</Name>${parent}
     </WBS>`;
 }
 
-function activityXml({ oid, id, name, status, pct, durDays, actualStart, actualFinish, wbsOid, notesBody, isMilestone, qaStatus }) {
+function activityXml({ oid, id, name, status, pct, durDays, actualStart, actualFinish, plannedStart, plannedFinish, wbsOid, isMilestone, qaStatus }) {
   const totalHr  = hours(durDays);
   const remainHr = status === 'Completed' ? 0
     : status === 'Not Started' ? totalHr
     : Math.round(totalHr * (1 - (pct||0)/100));
   // Suffix the Name with a QA tag so it's visible in the P6 activity grid even
-  // without opening the Notes / UDF columns.
+  // without opening the UDF columns.
   const qaTag = qaStatus === 'Verified'    ? '  [Verified]'
               : qaStatus === 'Requires QA' ? '  [Requires QA]'
               : '';
+  // Planned dates are REQUIRED by Mercury ImportCleaner — supply placeholders
+  // when we don't have real ones (everything is summarized capability work).
+  const ps = plannedStart  || actualStart  || DEFAULT_PLANNED_START;
+  const pf = plannedFinish || actualFinish || DEFAULT_PLANNED_FINISH;
   const lines = [
     `      <ObjectId>${oid}</ObjectId>`,
     `      <Id>${id}</Id>`,
     `      <Name>${xmlEscape(name + qaTag)}</Name>`,
+    `      <ProjectObjectId>${PROJECT_OID}</ProjectObjectId>`,
     `      <WBSObjectId>${wbsOid}</WBSObjectId>`,
+    `      <CalendarObjectId>${CALENDAR_OID}</CalendarObjectId>`,
     `      <Type>${isMilestone ? 'Finish Milestone' : 'Task Dependent'}</Type>`,
     `      <Status>${status}</Status>`,
     `      <PercentCompleteType>Physical</PercentCompleteType>`,
     `      <PhysicalPercentComplete>${pct || 0}</PhysicalPercentComplete>`,
+    `      <PlannedStartDate>${ps}</PlannedStartDate>`,
+    `      <PlannedFinishDate>${pf}</PlannedFinishDate>`,
   ];
   if (actualStart)  lines.push(`      <ActualStartDate>${actualStart}</ActualStartDate>`);
   if (actualFinish) lines.push(`      <ActualFinishDate>${actualFinish}</ActualFinishDate>`);
   lines.push(`      <PlannedDuration>${isMilestone ? 0 : totalHr}</PlannedDuration>`);
   lines.push(`      <RemainingDuration>${isMilestone ? 0 : remainHr}</RemainingDuration>`);
   lines.push(`      <AtCompletionDuration>${isMilestone ? 0 : totalHr}</AtCompletionDuration>`);
-  if (notesBody) lines.push(`      <Notes>${xmlEscape(notesBody)}</Notes>`);
   if (qaStatus) {
     lines.push(`      <UDF>`);
     lines.push(`        <TypeObjectId>9100</TypeObjectId>`);
@@ -178,11 +186,37 @@ function activityXml({ oid, id, name, status, pct, durDays, actualStart, actualF
 function relXml(oid, predOid, succOid) {
   return `    <Relationship>
       <ObjectId>${oid}</ObjectId>
+      <PredecessorProjectObjectId>${PROJECT_OID}</PredecessorProjectObjectId>
+      <SuccessorProjectObjectId>${PROJECT_OID}</SuccessorProjectObjectId>
       <PredecessorActivityObjectId>${predOid}</PredecessorActivityObjectId>
       <SuccessorActivityObjectId>${succOid}</SuccessorActivityObjectId>
       <Type>Finish to Start</Type>
       <Lag>0</Lag>
     </Relationship>`;
+}
+
+function calendarXml() {
+  const ww = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'].map(d => {
+    const work = d !== 'Sunday' && d !== 'Saturday';
+    const wt = work
+      ? '<WorkTime><Start>08:00:00</Start><Finish>16:00:00</Finish></WorkTime>'
+      : '';
+    return `      <StandardWorkHours><DayOfWeek>${d}</DayOfWeek>${wt}</StandardWorkHours>`;
+  }).join('\n');
+  return `  <Calendar>
+    <ObjectId>${CALENDAR_OID}</ObjectId>
+    <Name>${CALENDAR_NAME}</Name>
+    <Type>Global</Type>
+    <IsDefault>true</IsDefault>
+    <HoursPerDay>8</HoursPerDay>
+    <HoursPerWeek>40</HoursPerWeek>
+    <HoursPerMonth>172</HoursPerMonth>
+    <HoursPerYear>2000</HoursPerYear>
+    <StandardWorkWeek>
+${ww}
+    </StandardWorkWeek>
+    <HolidayOrExceptions/>
+  </Calendar>`;
 }
 
 // ---- main -----------------------------------------------------------------
