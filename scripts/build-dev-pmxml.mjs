@@ -22,7 +22,15 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 const SCHEMA_NS  = 'http://xmlns.oracle.com/Primavera/P6/V22.12/API/BusinessObjects';
 const DATA_DATE  = '2026-05-29T00:00:00';
 const PROJECT_S  = '2025-09-01T08:00:00';
+const PROJECT_F  = '2027-12-31T17:00:00';
 const PROJECT_OID = 9001;
+const CALENDAR_OID = 9500;
+const CALENDAR_NAME = 'TakeoffPro 5x8';
+// Placeholder planned dates for activities that have no real planned schedule.
+// Mercury's ImportCleaner throws NullReferenceException if Planned dates are
+// missing on Not-Started activities, so we always emit them.
+const DEFAULT_PLANNED_START  = '2026-06-01T08:00:00';
+const DEFAULT_PLANNED_FINISH = '2026-06-02T16:00:00';
 
 // ---- phase definitions (mirrors src/pages/mcfa-pitch/lib/wbs-rollup.ts) ----
 const PHASES = [
