@@ -261,7 +261,6 @@ function main() {
       actualStart:  iso(a.actualStart),
       actualFinish: statusFor(a) === 'Completed' ? iso(a.actualFinish) : null,
       wbsOid:       streamWbsOid[sk],
-      notesBody:    notes(a),
       isMilestone:  false,
       qaStatus:     a.qaStatus || null,
       _streamKey:   sk,
