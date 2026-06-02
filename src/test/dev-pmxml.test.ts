@@ -22,7 +22,7 @@ describe('takeoffpro-dev.xml (PMXML self-proof)', () => {
   it('parses with our parser', () => {
     expect(tables.project.id).toBe('TAKEOFFPRO-DEV');
     expect(tables.project.dataDate).toBeTruthy();
-    expect(tables.schemaVersion).toBe('22.12');
+    expect(tables.schemaVersion).toBe('8.4');
   });
 
   // M0..M6 are phase milestones emitted in addition to the dev-WBS leaves.
