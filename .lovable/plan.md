@@ -1,56 +1,33 @@
-## Plan: make the MCFA/P6 schedule reflect what is actually built
+## Plan: make `takeoffpro-dev.xml` importable in P6
 
-### Objective
-The P6 XML import should show that the application already has substantial working functionality, while still being honest that much of it needs QA/E2E verification. The current schedule is underreporting because code-present features are being downgraded to generic `In Progress / 50%` when they are really `Built — Requires QA`.
+The import log maps exactly to objects in `public/exports/takeoffpro-dev.xml`: 1 project, 1 calendar, 161 activities, 140 relationships, 1 UDF definition, and 65 UDF values. That means the file is being read, but P6 is rejecting the object graph. I’ll fix the generator instead of hand-editing the XML.
 
-### What I will change
+### 1. Remove the fragile inline UDF shape
+- Replace the current project-nested `<UDFType>` plus activity-nested `<UDF>` entries with either:
+  - no UDF objects at all, keeping QA status only in the activity name suffix, or
+  - valid top-level `<UDFType>` / `<UDFValue>` objects with required object/project/activity references.
+- For fastest import recovery, I’ll use the no-UDF path first because the import log shows `UserDefinedField` and `UserDefinedFieldValue` are part of the failed chain.
 
-1. **Fix the source status model**
-   - Update the development WBS generator so `implemented + code present + not E2E verified` becomes:
-     - `status: Completed`
-     - `pctComplete: 100`
-     - `qaStatus: Requires QA`
-   - Keep truly partial items as `In Progress`, but label them `Requires QA` instead of burying that fact.
-   - Keep genuinely missing/unbuilt items as `Not Started`.
+### 2. Make calendar and project references P6-safe
+- Change the generated calendar from a global calendar with a hard-coded object id to a project-scoped/default calendar where needed.
+- Ensure the project has a stable root WBS and all WBS nodes parent under that root instead of multiple top-level WBS nodes.
+- Keep all object ids numeric and internally unique.
 
-2. **Preserve QA truth in the P6 XML**
-   - Add a clear QA marker to exported PMXML activities, either as a P6 user-defined field if supported by the import structure, and definitely in the activity notes.
-   - Notes will make the distinction obvious:
-     - `Built — Requires QA`
-     - `Verified`
-     - `Partial — Requires QA`
-     - `Not Started`
+### 3. Repair activity fields for P6 import semantics
+- Emit dates consistently in P6-friendly timestamp format.
+- Keep `ProjectObjectId`, `WBSObjectId`, and `CalendarObjectId` on every activity.
+- For milestones, use start/finish/planned dates consistently and zero durations.
+- For completed and in-progress activities, avoid impossible date/status combinations.
 
-3. **Regenerate the planning artifacts**
-   - Regenerate `docs/wbs-dev.activities.json`.
-   - Regenerate `public/exports/takeoffpro-dev.xml`.
-   - Expected effect: many activities currently shown as `In Progress` will become `Completed` with `Requires QA`, instead of making the project look less built than it is.
+### 4. Repair relationships after activity import is stable
+- Keep relationships only between emitted activity object ids.
+- Add required project references and numeric lag.
+- If relationships still import-fail after activities import, temporarily emit an activity-only diagnostic XML variant so we can isolate relationship schema issues without losing the project/activity import.
 
-4. **Update the MCFA pitch wording**
-   - Replace language that says the core loop merely “works end-to-end” with a more precise planning message:
-     - built features are code-inspected and demonstrable;
-     - remaining work is QA, polish, role walkthrough hardening, and deeper P6 integration.
-   - Adjust the work breakdown labels so MCFA sees grouped delivery status, not jargony internal scoring.
+### 5. Add a real structural QA test
+- Extend `src/test/dev-pmxml.test.ts` beyond the app parser self-proof.
+- Assert counts and invariants that P6 cares about: no inline UDFs, one calendar, one project, unique object ids per object type, every activity has project/WBS/calendar refs, every relationship references existing activities, and all activity WBS refs exist.
 
-5. **Verify the result**
-   - Inspect the regenerated JSON totals.
-   - Inspect the generated XML status distribution.
-   - Confirm the downloadable XML at `/exports/takeoffpro-dev.xml` contains the corrected status/QA signal.
-
-### Technical details
-Files to update:
-- `scripts/build-dev-wbs.mjs`
-- `scripts/build-dev-pmxml.mjs`
-- `docs/wbs-dev.activities.json` after regeneration
-- `public/exports/takeoffpro-dev.xml` after regeneration
-- likely small copy/status refinements in `src/pages/McfaPitch.tsx`
-
-Core logic change:
-```text
-implemented + codePresent + verifiedE2E     -> Completed, 100%, Verified
-implemented + codePresent + not verified    -> Completed, 100%, Requires QA
-partial + codePresent                       -> In Progress, partial %, Requires QA
-missing / no code                           -> Not Started, 0%
-```
-
-This keeps the schedule honest: it shows the app is much farther along, but does not pretend QA is complete.
+### 6. Regenerate the downloadable XML
+- Re-run the generator to update `public/exports/takeoffpro-dev.xml`.
+- Verify the emitted XML object counts match the expected import surface and that no rejected UDF objects remain.

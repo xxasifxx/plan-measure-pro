@@ -19,11 +19,14 @@
 // To open in P6:   File → Import → Primavera XML → New Project.
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 
-const SCHEMA_NS  = 'http://xmlns.oracle.com/Primavera/P6/V22.12/API/BusinessObjects';
+// P6 17.x uses the older Mercury importer; the V8.4 API namespace is the
+// safest common denominator for Primavera XML import in that client family.
+const SCHEMA_NS  = 'http://xmlns.oracle.com/Primavera/P6/V8.4/API/BusinessObjects';
 const DATA_DATE  = '2026-05-29T00:00:00';
 const PROJECT_S  = '2025-09-01T08:00:00';
 const PROJECT_F  = '2027-12-31T17:00:00';
 const PROJECT_OID = 9001;
+const ROOT_WBS_OID = 99;
 const CALENDAR_OID = 9500;
 const CALENDAR_NAME = 'TakeoffPro 5x8';
 // Placeholder planned dates for activities that have no real planned schedule.
@@ -174,12 +177,6 @@ function activityXml({ oid, id, name, status, pct, durDays, actualStart, actualF
   lines.push(`      <PlannedDuration>${isMilestone ? 0 : totalHr}</PlannedDuration>`);
   lines.push(`      <RemainingDuration>${isMilestone ? 0 : remainHr}</RemainingDuration>`);
   lines.push(`      <AtCompletionDuration>${isMilestone ? 0 : totalHr}</AtCompletionDuration>`);
-  if (qaStatus) {
-    lines.push(`      <UDF>`);
-    lines.push(`        <TypeObjectId>9100</TypeObjectId>`);
-    lines.push(`        <Text>${xmlEscape(qaStatus)}</Text>`);
-    lines.push(`      </UDF>`);
-  }
   return `    <Activity>\n${lines.join('\n')}\n    </Activity>`;
 }
 
@@ -205,8 +202,9 @@ function calendarXml() {
   }).join('\n');
   return `  <Calendar>
     <ObjectId>${CALENDAR_OID}</ObjectId>
+    <ProjectObjectId>${PROJECT_OID}</ProjectObjectId>
     <Name>${CALENDAR_NAME}</Name>
-    <Type>Global</Type>
+    <Type>Project</Type>
     <IsDefault>true</IsDefault>
     <HoursPerDay>8</HoursPerDay>
     <HoursPerWeek>40</HoursPerWeek>
@@ -226,13 +224,13 @@ function main() {
   const acts    = summary.activities;
 
   // 1) WBS nodes
-  const wbsNodes = [];
+  const wbsNodes = [{ oid: ROOT_WBS_OID, code: 'TPDEV', name: 'TakeoffPro Development', parentOid: null }];
   const phaseWbsOid  = {};   // phaseId -> oid
   const streamWbsOid = {};   // streamKey -> oid
   let wbsOid = 100;
   for (const p of PHASES) {
     phaseWbsOid[p.id] = wbsOid;
-    wbsNodes.push({ oid: wbsOid++, code: p.code, name: p.name, parentOid: null });
+    wbsNodes.push({ oid: wbsOid++, code: p.code, name: p.name, parentOid: ROOT_WBS_OID });
     for (const sk of p.streams) {
       streamWbsOid[sk] = wbsOid;
       wbsNodes.push({
@@ -307,14 +305,9 @@ function main() {
     if (driver) rels.push(relXml(relOid++, driver.oid, m.oid));
   }
 
-  // 5) Compose — declare the QA_Status UDF once at project level, then activities.
-  const udfType = `    <UDFType>
-      <ObjectId>9100</ObjectId>
-      <SubjectArea>Activity</SubjectArea>
-      <Title>QA_Status</Title>
-      <DataType>Text</DataType>
-    </UDFType>`;
-
+  // 5) Compose. QA status stays in the activity name suffix; UDF objects are
+  // intentionally omitted because P6 17.7 rejects inline UDF definitions/values
+  // in this generated import shape before it can create the activity graph.
   const body = [
     `    <ObjectId>${PROJECT_OID}</ObjectId>`,
     `    <Id>TAKEOFFPRO-DEV</Id>`,
@@ -325,7 +318,6 @@ function main() {
     `    <MustFinishByDate>${PROJECT_F}</MustFinishByDate>`,
     `    <FinishDate>${PROJECT_F}</FinishDate>`,
     `    <StartDate>${PROJECT_S}</StartDate>`,
-    udfType,
     wbsNodes.map(wbsXml).join('\n'),
     activities.map(activityXml).join('\n'),
     milestones.map(activityXml).join('\n'),
