@@ -224,13 +224,13 @@ function main() {
   const acts    = summary.activities;
 
   // 1) WBS nodes
-  const wbsNodes = [];
+  const wbsNodes = [{ oid: ROOT_WBS_OID, code: 'TPDEV', name: 'TakeoffPro Development', parentOid: null }];
   const phaseWbsOid  = {};   // phaseId -> oid
   const streamWbsOid = {};   // streamKey -> oid
   let wbsOid = 100;
   for (const p of PHASES) {
     phaseWbsOid[p.id] = wbsOid;
-    wbsNodes.push({ oid: wbsOid++, code: p.code, name: p.name, parentOid: null });
+    wbsNodes.push({ oid: wbsOid++, code: p.code, name: p.name, parentOid: ROOT_WBS_OID });
     for (const sk of p.streams) {
       streamWbsOid[sk] = wbsOid;
       wbsNodes.push({
@@ -305,14 +305,9 @@ function main() {
     if (driver) rels.push(relXml(relOid++, driver.oid, m.oid));
   }
 
-  // 5) Compose — declare the QA_Status UDF once at project level, then activities.
-  const udfType = `    <UDFType>
-      <ObjectId>9100</ObjectId>
-      <SubjectArea>Activity</SubjectArea>
-      <Title>QA_Status</Title>
-      <DataType>Text</DataType>
-    </UDFType>`;
-
+  // 5) Compose. QA status stays in the activity name suffix; UDF objects are
+  // intentionally omitted because P6 17.7 rejects inline UDF definitions/values
+  // in this generated import shape before it can create the activity graph.
   const body = [
     `    <ObjectId>${PROJECT_OID}</ObjectId>`,
     `    <Id>TAKEOFFPRO-DEV</Id>`,
@@ -323,7 +318,6 @@ function main() {
     `    <MustFinishByDate>${PROJECT_F}</MustFinishByDate>`,
     `    <FinishDate>${PROJECT_F}</FinishDate>`,
     `    <StartDate>${PROJECT_S}</StartDate>`,
-    udfType,
     wbsNodes.map(wbsXml).join('\n'),
     activities.map(activityXml).join('\n'),
     milestones.map(activityXml).join('\n'),
