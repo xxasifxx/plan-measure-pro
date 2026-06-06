@@ -1,33 +1,143 @@
-## Plan: make `takeoffpro-dev.xml` importable in P6
+## Correction
+You’re right. The current XML was not an accurate P6 Professional export. It was a minimal hand-built object graph with fields I assumed P6 would accept. That was the wrong strategy for this task.
 
-The import log maps exactly to objects in `public/exports/takeoffpro-dev.xml`: 1 project, 1 calendar, 161 activities, 140 relationships, 1 UDF definition, and 65 UDF values. That means the file is being read, but P6 is rejecting the object graph. I’ll fix the generator instead of hand-editing the XML.
+The target is not “make our parser happy.” The target is: **generate a P6 Professional 17.7 import file that carries the TakeoffPro development schedule as a usable progress-tracking schedule.**
 
-### 1. Remove the fragile inline UDF shape
-- Replace the current project-nested `<UDFType>` plus activity-nested `<UDF>` entries with either:
-  - no UDF objects at all, keeping QA status only in the activity name suffix, or
-  - valid top-level `<UDFType>` / `<UDFValue>` objects with required object/project/activity references.
-- For fastest import recovery, I’ll use the no-UDF path first because the import log shows `UserDefinedField` and `UserDefinedFieldValue` are part of the failed chain.
+## Revised plan
 
-### 2. Make calendar and project references P6-safe
-- Change the generated calendar from a global calendar with a hard-coded object id to a project-scoped/default calendar where needed.
-- Ensure the project has a stable root WBS and all WBS nodes parent under that root instead of multiple top-level WBS nodes.
-- Keep all object ids numeric and internally unique.
+### 1. Treat the uploaded P6 export as the schema reference
+Use `EC00620.xml` as the canonical P6 Professional 17.7 export dialect:
 
-### 3. Repair activity fields for P6 import semantics
-- Emit dates consistently in P6-friendly timestamp format.
-- Keep `ProjectObjectId`, `WBSObjectId`, and `CalendarObjectId` on every activity.
-- For milestones, use start/finish/planned dates consistently and zero durations.
-- For completed and in-progress activities, avoid impossible date/status combinations.
+- Namespace:
+  ```text
+  http://xmlns.oracle.com/Primavera/P6Professional/V17.7/API/BusinessObjects
+  ```
+- Include the matching `xsi:schemaLocation`.
+- Use P6 Professional conventions from the valid file:
+  - `xsi:nil="true"` fields instead of omitted nullable fields.
+  - `0` / `1` booleans instead of `true` / `false`.
+  - fractional percent values where P6 exports them (`1` = 100%).
+  - real P6 activity field set/order, not our reduced field set.
+  - top-level reference objects before `<Project>` where required.
 
-### 4. Repair relationships after activity import is stable
-- Keep relationships only between emitted activity object ids.
-- Add required project references and numeric lag.
-- If relationships still import-fail after activities import, temporarily emit an activity-only diagnostic XML variant so we can isolate relationship schema issues without losing the project/activity import.
+### 2. Stop exporting a toy project shell
+Replace the current minimal `<Calendar><Project>` file with a proper P6 Professional export shell:
 
-### 5. Add a real structural QA test
-- Extend `src/test/dev-pmxml.test.ts` beyond the app parser self-proof.
-- Assert counts and invariants that P6 cares about: no inline UDFs, one calendar, one project, unique object ids per object type, every activity has project/WBS/calendar refs, every relationship references existing activities, and all activity WBS refs exist.
+- `<Currency>`
+- `<OBS>`
+- `<Calendar>` using the valid file’s global calendar shape
+- `<Project>` with real P6 project defaults:
+  - activity default type/calendar/duration/percent-complete fields
+  - `OBSObjectId`
+  - `ParentEPSObjectId`
+  - `WBSCodeSeparator`
+  - `WBSObjectId` pointing to the root WBS
+  - planned start, scheduled finish, data date, status
 
-### 6. Regenerate the downloadable XML
-- Re-run the generator to update `public/exports/takeoffpro-dev.xml`.
-- Verify the emitted XML object counts match the expected import surface and that no rejected UDF objects remain.
+### 3. Preserve the actual purpose: project progress tracking
+Keep the TakeoffPro development plan as the schedule content:
+
+- WBS = phases and implementation streams.
+- Activities = generated dev work items from `docs/wbs-dev.activities.json`.
+- Milestones = M0–M6.
+- Status = completed / in-progress / not-started from the development evidence.
+- Percent complete = carried into P6 fields correctly.
+- Actual start/finish = emitted only when valid for the activity status.
+- Planned/remaining duration = based on the generated schedule model, not random placeholders.
+- Relationships = single-workflow sequencing where applicable, not assumed infinite parallel execution.
+
+### 4. Emit full P6-shaped WBS records
+Update every generated WBS node to include the fields P6 Professional exports, including:
+
+- `AnticipatedFinishDate xsi:nil="true"`
+- `AnticipatedStartDate xsi:nil="true"`
+- `Code`
+- EV default fields
+- `GUID`
+- independent ETC fields
+- `Name`
+- `OBSObjectId`
+- `ObjectId`
+- `OriginalBudget`
+- `ParentObjectId` or `xsi:nil="true"`
+- `ProjectObjectId`
+- `SequenceNumber`
+- `Status`
+- `WBSCategoryObjectId xsi:nil="true"`
+
+### 5. Emit full P6-shaped Activity records
+Replace the current reduced activity object with the real P6 Professional activity field shape from the valid export:
+
+- actual/planned/remaining labor and non-labor units/cost fields
+- `ActualDuration`
+- `AtCompletionDuration`
+- `AutoComputeActuals`
+- `CalendarObjectId`
+- `DurationPercentComplete`
+- `DurationType`
+- `EstimatedWeight`
+- expected/external/early/late date fields with `xsi:nil="true"` where blank
+- `FinishDate`
+- `GUID`
+- `Id`
+- `LevelingPriority`
+- `Name`
+- `ObjectId`
+- `PercentComplete`
+- `PercentCompleteType`
+- `PhysicalPercentComplete`
+- `PlannedDuration`
+- `PlannedStartDate`
+- `PlannedFinishDate`
+- nil constraint/suspend/resume fields
+- `ProjectObjectId`
+- `RemainingDuration`
+- `StartDate`
+- `Status`
+- `Type`
+- `UnitsPercentComplete`
+- `WBSObjectId`
+
+### 6. Emit relationships in the exact P6 Professional shape
+Keep relationships inside `<Project>`, but use the valid export’s child ordering and fields:
+
+```xml
+<Relationship>
+  <Lag>0</Lag>
+  <ObjectId>...</ObjectId>
+  <PredecessorActivityObjectId>...</PredecessorActivityObjectId>
+  <PredecessorProjectObjectId>...</PredecessorProjectObjectId>
+  <SuccessorActivityObjectId>...</SuccessorActivityObjectId>
+  <SuccessorProjectObjectId>...</SuccessorProjectObjectId>
+  <Type>Finish to Start</Type>
+</Relationship>
+```
+
+### 7. Replace the meaningless parser self-proof tests
+The previous tests proved only that our own parser could read our own XML. That is not useful for P6 import compatibility.
+
+Replace/add tests that compare the generated export against the known-good P6 Professional 17.7 export structure:
+
+- namespace and `schemaLocation` must match P6 Professional 17.7
+- required top-level reference objects must exist
+- project must include required P6 defaults and `WBSObjectId`
+- WBS objects must include the valid-export field set
+- activities must include the valid-export field set
+- nullable fields must use `xsi:nil="true"` instead of disappearing
+- percentages must use P6’s exported numeric convention
+- every activity references an existing project, WBS, and calendar
+- every relationship references existing activities
+
+These tests are not “proof that P6 will import it.” They are guardrails to stop me from producing another fake-minimal XML file.
+
+### 8. Regenerate the actual deliverable
+After updating `scripts/build-dev-pmxml.mjs`, regenerate:
+
+```text
+public/exports/takeoffpro-dev.xml
+```
+
+That file remains the deliverable for retrying the P6 import.
+
+## Acceptance criteria
+This is only done when the generated file is a P6 Professional 17.7-shaped schedule export for the TakeoffPro development project, with real progress/status/duration/relationship data preserved, and no longer a minimal XML hallucination that only satisfies local parser tests.
