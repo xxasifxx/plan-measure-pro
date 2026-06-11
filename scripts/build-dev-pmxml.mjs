@@ -113,19 +113,29 @@ function streamKeyOf(a) {
 }
 
 // ---- 5x8 workday calendar math (Mon-Fri, 08:00-16:00 UTC) ----------------
-// addWorkHours(start, hours) -> Date, advancing across workdays only.
+// Supports forward (positive hours) and backward (negative hours) walks so the
+// generator can place "completed/in-progress actuals" before the data date and
+// "remaining work" after it on the same calendar.
 function nextWorkdayStart(d) {
   const x = new Date(d);
   x.setUTCHours(8, 0, 0, 0);
-  // advance day until Mon-Fri
   while (x.getUTCDay() === 0 || x.getUTCDay() === 6) {
     x.setUTCDate(x.getUTCDate() + 1);
   }
   return x;
 }
+function prevWorkdayEnd(d) {
+  const x = new Date(d);
+  x.setUTCHours(16, 0, 0, 0);
+  while (x.getUTCDay() === 0 || x.getUTCDay() === 6) {
+    x.setUTCDate(x.getUTCDate() - 1);
+  }
+  return x;
+}
 function addWorkHours(start, hours) {
+  if (hours === 0) return new Date(start);
+  if (hours < 0) return subWorkHours(start, -hours);
   let d = new Date(start);
-  // If we're outside work hours, jump to next workday 08:00.
   const h = d.getUTCHours();
   if (h < 8 || h >= 16 || d.getUTCDay() === 0 || d.getUTCDay() === 6) {
     d = nextWorkdayStart(h >= 16 ? new Date(d.getTime() + 24*3600*1000) : d);
@@ -134,15 +144,23 @@ function addWorkHours(start, hours) {
   while (remaining > 0) {
     const endOfDay = new Date(d); endOfDay.setUTCHours(16,0,0,0);
     const avail = (endOfDay.getTime() - d.getTime()) / 3600000;
-    if (remaining <= avail) {
-      d = new Date(d.getTime() + remaining * 3600000);
-      remaining = 0;
-    } else {
-      remaining -= avail;
-      // next workday 08:00
-      const nxt = new Date(d); nxt.setUTCDate(nxt.getUTCDate()+1);
-      d = nextWorkdayStart(nxt);
-    }
+    if (remaining <= avail) { d = new Date(d.getTime() + remaining*3600000); remaining = 0; }
+    else { remaining -= avail; const nxt = new Date(d); nxt.setUTCDate(nxt.getUTCDate()+1); d = nextWorkdayStart(nxt); }
+  }
+  return d;
+}
+function subWorkHours(start, hours) {
+  let d = new Date(start);
+  const h = d.getUTCHours();
+  if (h <= 8 || h > 16 || d.getUTCDay() === 0 || d.getUTCDay() === 6) {
+    d = prevWorkdayEnd(h <= 8 ? new Date(d.getTime() - 24*3600*1000) : d);
+  }
+  let remaining = hours;
+  while (remaining > 0) {
+    const startOfDay = new Date(d); startOfDay.setUTCHours(8,0,0,0);
+    const avail = (d.getTime() - startOfDay.getTime()) / 3600000;
+    if (remaining <= avail) { d = new Date(d.getTime() - remaining*3600000); remaining = 0; }
+    else { remaining -= avail; const prv = new Date(d); prv.setUTCDate(prv.getUTCDate()-1); d = prevWorkdayEnd(prv); }
   }
   return d;
 }
