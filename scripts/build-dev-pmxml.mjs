@@ -600,7 +600,9 @@ function main() {
   }
 
   // 6) Assemble.
-  const scheduledFinish = fmtP6(latestFinish || cursor);
+  let latestFinish = futureCursor;
+  for (const m of milestones) if (m.plannedFinish > latestFinish) latestFinish = m.plannedFinish;
+  const scheduledFinish = fmtP6(latestFinish);
 
   const xml = `<?xml version="1.0" encoding="utf-8"?>
 <APIBusinessObjects xmlns="${SCHEMA_NS}" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="${SCHEMA_LOC}">
@@ -624,7 +626,7 @@ ${rels.join('\n')}
   console.log(`  Activities:   ${activities.length}`);
   console.log(`  Milestones:   ${milestones.length}`);
   console.log(`  Relationships:${rels.length}`);
-  console.log(`  Schedule:     ${fmtP6(earliestStart)} -> ${scheduledFinish}`);
+  console.log(`  Schedule:     ${PROJECT_S} -> ${scheduledFinish} (data date ${DATA_DATE})`);
 }
 
 main();
