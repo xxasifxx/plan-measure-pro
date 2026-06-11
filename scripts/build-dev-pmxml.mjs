@@ -331,8 +331,8 @@ function activityXml(a) {
   const type = isMs ? 'Finish Milestone' : 'Task Dependent';
   const pct = isMs ? (a.status === 'Completed' ? 1 : 0) : a.pct;
   const plannedDur = isMs ? 0 : a.plannedDurationHours;
-  const remainDur  = a.status === 'Completed' ? 0 : (isMs ? 0 : a.remainingHours);
-  const actualDur  = a.status === 'Not Started' ? 0 : (isMs ? 0 : (plannedDur - remainDur));
+  const remainDur  = isMs ? 0 : a.remainingHours;
+  const actualDur  = isMs ? 0 : (a.actualHours ?? 0);
 
   const actStart   = a.actualStart   ? `<ActualStartDate>${fmtP6(a.actualStart)}</ActualStartDate>`   : `<ActualStartDate xsi:nil="true" />`;
   const actFinish  = a.actualFinish  ? `<ActualFinishDate>${fmtP6(a.actualFinish)}</ActualFinishDate>` : `<ActualFinishDate xsi:nil="true" />`;
