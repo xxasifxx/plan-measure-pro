@@ -456,12 +456,47 @@ function main() {
     .sort((x, y) => (phaseIdxByStream[x.sk] ?? 9999) - (phaseIdxByStream[y.sk] ?? 9999) || x.i - y.i);
 
   // 3) Single-workflow sequential schedule on a 5x8 calendar.
+  //
+  // We ignore the degenerate per-activity actual dates in the source (most are
+  // pinned to the data date with zero elapsed time) and synthesize a sane
+  // chronology that obeys these invariants for every activity:
+  //   - Completed:   ActualStart  < ActualFinish <= DataDate
+  //   - In Progress: ActualStart  <= DataDate, PlannedFinish > DataDate,
+  //                  ActualDuration > 0, RemainingDuration > 0
+  //   - Not Started: PlannedStart >= DataDate, no actuals (xsi:nil)
+  // All emitted datetimes land on a Mon-Fri workday between 08:00 and 16:00.
   const dataDate = new Date(DATA_DATE);
-  let cursor = nextWorkdayStart(dataDate); // next-available start for not-yet-done work
+  const projectStart = new Date(PROJECT_S);
+
+  // Figure out how many completed/in-progress work-hours we need to fit into
+  // [projectStart, dataDate] and compress per-activity duration if it overflows.
+  let totalElapsedH = 0;
+  for (const { a } of ordered) {
+    const status = statusFor(a);
+    const totalH = Math.max(1, (a.durationDays || 1)) * 8;
+    if (status === 'Completed') totalElapsedH += totalH;
+    else if (status === 'In Progress') {
+      const pct = Math.max(0, Math.min(1, (a.pctComplete || 0) / 100));
+      totalElapsedH += Math.max(1, Math.round(totalH * pct));
+    }
+  }
+  let availH = 0;
+  {
+    let probe = nextWorkdayStart(projectStart);
+    while (probe < dataDate) {
+      const endOfDay = new Date(probe); endOfDay.setUTCHours(16,0,0,0);
+      const hi = endOfDay < dataDate ? endOfDay : dataDate;
+      availH += Math.max(0, (hi.getTime() - probe.getTime())/3600000);
+      const nxt = new Date(probe); nxt.setUTCDate(nxt.getUTCDate()+1);
+      probe = nextWorkdayStart(nxt);
+    }
+  }
+  const compress = totalElapsedH > 0 ? Math.min(1, availH / totalElapsedH) : 1;
+
+  let pastCursor   = nextWorkdayStart(projectStart);
+  let futureCursor = nextWorkdayStart(dataDate);
   const activities = [];
   let actOid = ACT_OID_BASE;
-  let earliestStart = null;
-  let latestFinish  = null;
 
   for (const { a, i, sk } of ordered) {
     const status = statusFor(a);
@@ -469,32 +504,36 @@ function main() {
     const totalH = durDays * 8;
     const pct = Math.max(0, Math.min(1, (a.pctComplete || 0) / 100));
 
-    let plannedStart, plannedFinish, actualStart = null, actualFinish = null, remainH;
+    let plannedStart, plannedFinish, actualStart = null, actualFinish = null;
+    let remainH, actualH;
 
     if (status === 'Completed') {
-      actualStart = parseIso(a.actualStart) || dataDate;
-      actualFinish = parseIso(a.actualFinish) || actualStart;
+      actualH = Math.max(1, Math.round(totalH * compress));
+      remainH = 0;
+      actualStart = pastCursor;
+      actualFinish = addWorkHours(pastCursor, actualH);
+      if (actualFinish > dataDate) {
+        actualFinish = new Date(dataDate);
+        actualStart  = subWorkHours(actualFinish, actualH);
+      }
+      pastCursor = actualFinish;
       plannedStart = actualStart;
       plannedFinish = actualFinish;
-      remainH = 0;
     } else if (status === 'In Progress') {
-      actualStart = parseIso(a.actualStart) || cursor;
-      remainH = Math.max(1, Math.round(totalH * (1 - pct)));
+      const elapsedH = Math.max(1, Math.min(totalH - 1, Math.round(totalH * pct * compress)));
+      remainH = totalH - elapsedH;
+      actualH = elapsedH;
+      actualStart = subWorkHours(dataDate, elapsedH);
       plannedStart = actualStart;
-      plannedFinish = addWorkHours(cursor, remainH);
-      cursor = addWorkHours(cursor, remainH);
+      plannedFinish = addWorkHours(futureCursor, remainH);
+      futureCursor = plannedFinish;
     } else {
-      // Not Started — chain sequentially after cursor.
-      plannedStart = cursor;
-      plannedFinish = addWorkHours(cursor, totalH);
-      cursor = plannedFinish;
       remainH = totalH;
+      actualH = 0;
+      plannedStart = futureCursor;
+      plannedFinish = addWorkHours(futureCursor, totalH);
+      futureCursor = plannedFinish;
     }
-
-    const refStart = actualStart || plannedStart;
-    const refFinish = actualFinish || plannedFinish;
-    if (!earliestStart || refStart < earliestStart) earliestStart = refStart;
-    if (!latestFinish  || refFinish > latestFinish)  latestFinish  = refFinish;
 
     activities.push({
       oid: actOid++,
@@ -506,6 +545,7 @@ function main() {
       actualStart, actualFinish,
       plannedDurationHours: totalH,
       remainingHours: remainH,
+      actualHours: actualH,
       wbsOid: streamWbsOid[sk],
       isMilestone: false,
       _phase: PHASES.find(p => p.streams.includes(sk))?.id || 'foundation',
@@ -520,7 +560,8 @@ function main() {
     const m = MILESTONES[mi];
     const phaseActs = activities.filter(x => x._phase === m.phase);
     const last = phaseActs[phaseActs.length - 1];
-    const anchor = last ? last.plannedFinish : cursor;
+    let anchor = last ? last.plannedFinish : futureCursor;
+    if (anchor < dataDate) anchor = new Date(dataDate);
     milestones.push({
       oid: msOid++,
       id: m.code,
@@ -532,6 +573,7 @@ function main() {
       actualStart: null, actualFinish: null,
       plannedDurationHours: 0,
       remainingHours: 0,
+      actualHours: 0,
       wbsOid: phaseWbsOid[m.phase],
       isMilestone: true,
       _phase: m.phase,
