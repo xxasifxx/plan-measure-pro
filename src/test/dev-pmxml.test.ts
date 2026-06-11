@@ -148,4 +148,49 @@ describe('takeoffpro-dev.xml (P6 Professional 17.7 export shape)', () => {
     expect(counts['In Progress'] || 0).toBe(SUMMARY.totals.inProgress);
     expect(counts['Not Started'] || 0).toBe(SUMMARY.totals.notStarted);
   });
+
+  it('All emitted datetimes land on a Mon-Fri workday between 08:00 and 16:00', () => {
+    const dateFields = ['ActualStartDate','ActualFinishDate','PlannedStartDate','PlannedFinishDate','StartDate','FinishDate'];
+    for (const a of children(project, 'Activity')) {
+      for (const f of dateFields) {
+        const t = childText(a, f); if (!t) continue;
+        const d = new Date(t);
+        const dow = d.getUTCDay();
+        const h = d.getUTCHours(), m = d.getUTCMinutes();
+        expect(dow, `${childText(a,'Id')}.${f} weekday`).toBeGreaterThan(0);
+        expect(dow, `${childText(a,'Id')}.${f} weekday`).toBeLessThan(6);
+        const minuteOfDay = h*60+m;
+        expect(minuteOfDay, `${childText(a,'Id')}.${f} workhours`).toBeGreaterThanOrEqual(8*60);
+        expect(minuteOfDay, `${childText(a,'Id')}.${f} workhours`).toBeLessThanOrEqual(16*60);
+      }
+    }
+  });
+
+  it('Activity chronology obeys status invariants relative to the data date', () => {
+    const dataDate = new Date(childText(project, 'DataDate')!);
+    for (const a of children(project, 'Activity')) {
+      const status = childText(a, 'Status');
+      const asd = childText(a, 'ActualStartDate');
+      const afd = childText(a, 'ActualFinishDate');
+      const id = childText(a, 'Id')!;
+      if (status === 'Not Started') {
+        expect(isNil(childEl(a, 'ActualStartDate')), `${id} not-started actuals`).toBe(true);
+        expect(isNil(childEl(a, 'ActualFinishDate')), `${id} not-started actuals`).toBe(true);
+      } else if (status === 'Completed') {
+        expect(asd, `${id} completed start`).toBeTruthy();
+        expect(afd, `${id} completed finish`).toBeTruthy();
+        const s = new Date(asd!), f = new Date(afd!);
+        expect(f.getTime(), `${id} finish > start`).toBeGreaterThan(s.getTime());
+        expect(f.getTime(), `${id} finish <= data date`).toBeLessThanOrEqual(dataDate.getTime());
+      } else if (status === 'In Progress') {
+        expect(asd, `${id} in-progress start`).toBeTruthy();
+        expect(isNil(childEl(a, 'ActualFinishDate')), `${id} in-progress finish`).toBe(true);
+        expect(new Date(asd!).getTime(), `${id} start <= data date`).toBeLessThanOrEqual(dataDate.getTime());
+        expect(Number(childText(a, 'ActualDuration') || '0'), `${id} actual duration > 0`).toBeGreaterThan(0);
+        expect(Number(childText(a, 'RemainingDuration') || '0'), `${id} remaining > 0`).toBeGreaterThan(0);
+        const pf = new Date(childText(a, 'PlannedFinishDate')!);
+        expect(pf.getTime(), `${id} planned finish > data date`).toBeGreaterThan(dataDate.getTime());
+      }
+    }
+  });
 });
