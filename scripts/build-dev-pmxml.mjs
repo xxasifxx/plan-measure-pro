@@ -29,8 +29,10 @@ const SCHEMA_NS  = 'http://xmlns.oracle.com/Primavera/P6Professional/V17.7/API/B
 const SCHEMA_LOC = 'http://xmlns.oracle.com/Primavera/P6Professional/V17.7/API/BusinessObjects http://xmlns.oracle.com/Primavera/P6Professional/V17.7/API/p6apibo.xsd';
 
 // ---- project constants ---------------------------------------------------
-const DATA_DATE   = '2026-05-29T08:00:00';
-const PROJECT_S   = '2025-09-01T08:00:00';
+// DATA_DATE / PROJECT_S land on a workday at 08:00 so every actual / planned
+// date the generator emits sits inside calendar working time.
+const DATA_DATE   = '2026-05-29T08:00:00'; // Friday 08:00
+const PROJECT_S   = '2025-09-01T08:00:00'; // Monday 08:00
 const PROJECT_OID = 4417;
 const CALENDAR_OID = 5829;
 const CALENDAR_NAME = 'TakeoffPro - 5 Day Workweek';
