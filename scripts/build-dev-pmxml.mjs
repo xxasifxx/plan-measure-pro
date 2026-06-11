@@ -29,8 +29,10 @@ const SCHEMA_NS  = 'http://xmlns.oracle.com/Primavera/P6Professional/V17.7/API/B
 const SCHEMA_LOC = 'http://xmlns.oracle.com/Primavera/P6Professional/V17.7/API/BusinessObjects http://xmlns.oracle.com/Primavera/P6Professional/V17.7/API/p6apibo.xsd';
 
 // ---- project constants ---------------------------------------------------
-const DATA_DATE   = '2026-05-29T08:00:00';
-const PROJECT_S   = '2025-09-01T08:00:00';
+// DATA_DATE / PROJECT_S land on a workday at 08:00 so every actual / planned
+// date the generator emits sits inside calendar working time.
+const DATA_DATE   = '2026-05-29T08:00:00'; // Friday 08:00
+const PROJECT_S   = '2025-09-01T08:00:00'; // Monday 08:00
 const PROJECT_OID = 4417;
 const CALENDAR_OID = 5829;
 const CALENDAR_NAME = 'TakeoffPro - 5 Day Workweek';
@@ -111,19 +113,29 @@ function streamKeyOf(a) {
 }
 
 // ---- 5x8 workday calendar math (Mon-Fri, 08:00-16:00 UTC) ----------------
-// addWorkHours(start, hours) -> Date, advancing across workdays only.
+// Supports forward (positive hours) and backward (negative hours) walks so the
+// generator can place "completed/in-progress actuals" before the data date and
+// "remaining work" after it on the same calendar.
 function nextWorkdayStart(d) {
   const x = new Date(d);
   x.setUTCHours(8, 0, 0, 0);
-  // advance day until Mon-Fri
   while (x.getUTCDay() === 0 || x.getUTCDay() === 6) {
     x.setUTCDate(x.getUTCDate() + 1);
   }
   return x;
 }
+function prevWorkdayEnd(d) {
+  const x = new Date(d);
+  x.setUTCHours(16, 0, 0, 0);
+  while (x.getUTCDay() === 0 || x.getUTCDay() === 6) {
+    x.setUTCDate(x.getUTCDate() - 1);
+  }
+  return x;
+}
 function addWorkHours(start, hours) {
+  if (hours === 0) return new Date(start);
+  if (hours < 0) return subWorkHours(start, -hours);
   let d = new Date(start);
-  // If we're outside work hours, jump to next workday 08:00.
   const h = d.getUTCHours();
   if (h < 8 || h >= 16 || d.getUTCDay() === 0 || d.getUTCDay() === 6) {
     d = nextWorkdayStart(h >= 16 ? new Date(d.getTime() + 24*3600*1000) : d);
@@ -132,15 +144,23 @@ function addWorkHours(start, hours) {
   while (remaining > 0) {
     const endOfDay = new Date(d); endOfDay.setUTCHours(16,0,0,0);
     const avail = (endOfDay.getTime() - d.getTime()) / 3600000;
-    if (remaining <= avail) {
-      d = new Date(d.getTime() + remaining * 3600000);
-      remaining = 0;
-    } else {
-      remaining -= avail;
-      // next workday 08:00
-      const nxt = new Date(d); nxt.setUTCDate(nxt.getUTCDate()+1);
-      d = nextWorkdayStart(nxt);
-    }
+    if (remaining <= avail) { d = new Date(d.getTime() + remaining*3600000); remaining = 0; }
+    else { remaining -= avail; const nxt = new Date(d); nxt.setUTCDate(nxt.getUTCDate()+1); d = nextWorkdayStart(nxt); }
+  }
+  return d;
+}
+function subWorkHours(start, hours) {
+  let d = new Date(start);
+  const h = d.getUTCHours();
+  if (h <= 8 || h > 16 || d.getUTCDay() === 0 || d.getUTCDay() === 6) {
+    d = prevWorkdayEnd(h <= 8 ? new Date(d.getTime() - 24*3600*1000) : d);
+  }
+  let remaining = hours;
+  while (remaining > 0) {
+    const startOfDay = new Date(d); startOfDay.setUTCHours(8,0,0,0);
+    const avail = (d.getTime() - startOfDay.getTime()) / 3600000;
+    if (remaining <= avail) { d = new Date(d.getTime() - remaining*3600000); remaining = 0; }
+    else { remaining -= avail; const prv = new Date(d); prv.setUTCDate(prv.getUTCDate()-1); d = prevWorkdayEnd(prv); }
   }
   return d;
 }
@@ -311,8 +331,8 @@ function activityXml(a) {
   const type = isMs ? 'Finish Milestone' : 'Task Dependent';
   const pct = isMs ? (a.status === 'Completed' ? 1 : 0) : a.pct;
   const plannedDur = isMs ? 0 : a.plannedDurationHours;
-  const remainDur  = a.status === 'Completed' ? 0 : (isMs ? 0 : a.remainingHours);
-  const actualDur  = a.status === 'Not Started' ? 0 : (isMs ? 0 : (plannedDur - remainDur));
+  const remainDur  = isMs ? 0 : a.remainingHours;
+  const actualDur  = isMs ? 0 : (a.actualHours ?? 0);
 
   const actStart   = a.actualStart   ? `<ActualStartDate>${fmtP6(a.actualStart)}</ActualStartDate>`   : `<ActualStartDate xsi:nil="true" />`;
   const actFinish  = a.actualFinish  ? `<ActualFinishDate>${fmtP6(a.actualFinish)}</ActualFinishDate>` : `<ActualFinishDate xsi:nil="true" />`;
@@ -436,12 +456,47 @@ function main() {
     .sort((x, y) => (phaseIdxByStream[x.sk] ?? 9999) - (phaseIdxByStream[y.sk] ?? 9999) || x.i - y.i);
 
   // 3) Single-workflow sequential schedule on a 5x8 calendar.
+  //
+  // We ignore the degenerate per-activity actual dates in the source (most are
+  // pinned to the data date with zero elapsed time) and synthesize a sane
+  // chronology that obeys these invariants for every activity:
+  //   - Completed:   ActualStart  < ActualFinish <= DataDate
+  //   - In Progress: ActualStart  <= DataDate, PlannedFinish > DataDate,
+  //                  ActualDuration > 0, RemainingDuration > 0
+  //   - Not Started: PlannedStart >= DataDate, no actuals (xsi:nil)
+  // All emitted datetimes land on a Mon-Fri workday between 08:00 and 16:00.
   const dataDate = new Date(DATA_DATE);
-  let cursor = nextWorkdayStart(dataDate); // next-available start for not-yet-done work
+  const projectStart = new Date(PROJECT_S);
+
+  // Figure out how many completed/in-progress work-hours we need to fit into
+  // [projectStart, dataDate] and compress per-activity duration if it overflows.
+  let totalElapsedH = 0;
+  for (const { a } of ordered) {
+    const status = statusFor(a);
+    const totalH = Math.max(1, (a.durationDays || 1)) * 8;
+    if (status === 'Completed') totalElapsedH += totalH;
+    else if (status === 'In Progress') {
+      const pct = Math.max(0, Math.min(1, (a.pctComplete || 0) / 100));
+      totalElapsedH += Math.max(1, Math.round(totalH * pct));
+    }
+  }
+  let availH = 0;
+  {
+    let probe = nextWorkdayStart(projectStart);
+    while (probe < dataDate) {
+      const endOfDay = new Date(probe); endOfDay.setUTCHours(16,0,0,0);
+      const hi = endOfDay < dataDate ? endOfDay : dataDate;
+      availH += Math.max(0, (hi.getTime() - probe.getTime())/3600000);
+      const nxt = new Date(probe); nxt.setUTCDate(nxt.getUTCDate()+1);
+      probe = nextWorkdayStart(nxt);
+    }
+  }
+  const compress = totalElapsedH > 0 ? Math.min(1, availH / totalElapsedH) : 1;
+
+  let pastCursor   = nextWorkdayStart(projectStart);
+  let futureCursor = nextWorkdayStart(dataDate);
   const activities = [];
   let actOid = ACT_OID_BASE;
-  let earliestStart = null;
-  let latestFinish  = null;
 
   for (const { a, i, sk } of ordered) {
     const status = statusFor(a);
@@ -449,32 +504,36 @@ function main() {
     const totalH = durDays * 8;
     const pct = Math.max(0, Math.min(1, (a.pctComplete || 0) / 100));
 
-    let plannedStart, plannedFinish, actualStart = null, actualFinish = null, remainH;
+    let plannedStart, plannedFinish, actualStart = null, actualFinish = null;
+    let remainH, actualH;
 
     if (status === 'Completed') {
-      actualStart = parseIso(a.actualStart) || dataDate;
-      actualFinish = parseIso(a.actualFinish) || actualStart;
+      actualH = Math.max(1, Math.round(totalH * compress));
+      remainH = 0;
+      actualStart = pastCursor;
+      actualFinish = addWorkHours(pastCursor, actualH);
+      if (actualFinish > dataDate) {
+        actualFinish = new Date(dataDate);
+        actualStart  = subWorkHours(actualFinish, actualH);
+      }
+      pastCursor = actualFinish;
       plannedStart = actualStart;
       plannedFinish = actualFinish;
-      remainH = 0;
     } else if (status === 'In Progress') {
-      actualStart = parseIso(a.actualStart) || cursor;
-      remainH = Math.max(1, Math.round(totalH * (1 - pct)));
+      const elapsedH = Math.max(1, Math.min(totalH - 1, Math.round(totalH * pct * compress)));
+      remainH = totalH - elapsedH;
+      actualH = elapsedH;
+      actualStart = subWorkHours(dataDate, elapsedH);
       plannedStart = actualStart;
-      plannedFinish = addWorkHours(cursor, remainH);
-      cursor = addWorkHours(cursor, remainH);
+      plannedFinish = addWorkHours(futureCursor, remainH);
+      futureCursor = plannedFinish;
     } else {
-      // Not Started — chain sequentially after cursor.
-      plannedStart = cursor;
-      plannedFinish = addWorkHours(cursor, totalH);
-      cursor = plannedFinish;
       remainH = totalH;
+      actualH = 0;
+      plannedStart = futureCursor;
+      plannedFinish = addWorkHours(futureCursor, totalH);
+      futureCursor = plannedFinish;
     }
-
-    const refStart = actualStart || plannedStart;
-    const refFinish = actualFinish || plannedFinish;
-    if (!earliestStart || refStart < earliestStart) earliestStart = refStart;
-    if (!latestFinish  || refFinish > latestFinish)  latestFinish  = refFinish;
 
     activities.push({
       oid: actOid++,
@@ -486,6 +545,7 @@ function main() {
       actualStart, actualFinish,
       plannedDurationHours: totalH,
       remainingHours: remainH,
+      actualHours: actualH,
       wbsOid: streamWbsOid[sk],
       isMilestone: false,
       _phase: PHASES.find(p => p.streams.includes(sk))?.id || 'foundation',
@@ -500,7 +560,8 @@ function main() {
     const m = MILESTONES[mi];
     const phaseActs = activities.filter(x => x._phase === m.phase);
     const last = phaseActs[phaseActs.length - 1];
-    const anchor = last ? last.plannedFinish : cursor;
+    let anchor = last ? last.plannedFinish : futureCursor;
+    if (anchor < dataDate) anchor = new Date(dataDate);
     milestones.push({
       oid: msOid++,
       id: m.code,
@@ -512,6 +573,7 @@ function main() {
       actualStart: null, actualFinish: null,
       plannedDurationHours: 0,
       remainingHours: 0,
+      actualHours: 0,
       wbsOid: phaseWbsOid[m.phase],
       isMilestone: true,
       _phase: m.phase,
@@ -538,7 +600,9 @@ function main() {
   }
 
   // 6) Assemble.
-  const scheduledFinish = fmtP6(latestFinish || cursor);
+  let latestFinish = futureCursor;
+  for (const m of milestones) if (m.plannedFinish > latestFinish) latestFinish = m.plannedFinish;
+  const scheduledFinish = fmtP6(latestFinish);
 
   const xml = `<?xml version="1.0" encoding="utf-8"?>
 <APIBusinessObjects xmlns="${SCHEMA_NS}" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="${SCHEMA_LOC}">
@@ -562,7 +626,7 @@ ${rels.join('\n')}
   console.log(`  Activities:   ${activities.length}`);
   console.log(`  Milestones:   ${milestones.length}`);
   console.log(`  Relationships:${rels.length}`);
-  console.log(`  Schedule:     ${fmtP6(earliestStart)} -> ${scheduledFinish}`);
+  console.log(`  Schedule:     ${PROJECT_S} -> ${scheduledFinish} (data date ${DATA_DATE})`);
 }
 
 main();
