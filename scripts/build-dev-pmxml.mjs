@@ -156,6 +156,9 @@ function addWorkHours(start, hours) {
 function advanceCursorAfterFinish(d) {
   return nextSchedulableStart(d);
 }
+function maxDate(a, b) {
+  return a > b ? a : b;
+}
 function subWorkHours(start, hours) {
   let d = new Date(start);
   const h = d.getUTCHours();
@@ -537,8 +540,8 @@ function main() {
       actualH = elapsedH;
       actualStart = subWorkHours(dataDate, elapsedH);
       plannedStart = actualStart;
-      plannedFinish = addWorkHours(futureCursor, remainH);
-      futureCursor = advanceCursorAfterFinish(plannedFinish);
+      plannedFinish = addWorkHours(plannedStart, totalH);
+      futureCursor = advanceCursorAfterFinish(maxDate(futureCursor, plannedFinish));
     } else {
       remainH = totalH;
       actualH = 0;
