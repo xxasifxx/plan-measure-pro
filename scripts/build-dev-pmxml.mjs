@@ -215,7 +215,11 @@ function calendarXml() {
         <DayOfWeek>${d}</DayOfWeek>
         <WorkTime>
           <Start>08:00:00</Start>
-          <Finish>15:59:00</Finish>
+          <Finish>11:59:00</Finish>
+        </WorkTime>
+        <WorkTime>
+          <Start>13:00:00</Start>
+          <Finish>16:59:00</Finish>
         </WorkTime>
       </StandardWorkHours>`;
   }).join('\n');
@@ -395,6 +399,7 @@ function activityXml(a) {
       <PlannedStartDate>${fmtP6(a.plannedStart)}</PlannedStartDate>
       <PrimaryConstraintDate xsi:nil="true" />
       <PrimaryConstraintType xsi:nil="true" />
+      <PrimaryResourceObjectId xsi:nil="true" />
       <ProjectObjectId>${PROJECT_OID}</ProjectObjectId>
       <RemainingDuration>${remainDur}</RemainingDuration>
       <RemainingEarlyFinishDate xsi:nil="true" />
