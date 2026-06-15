@@ -25,6 +25,22 @@ function isNil(el: Element | undefined): boolean {
   const attr = el.getAttributeNS('http://www.w3.org/2001/XMLSchema-instance', 'nil') || el.getAttribute('xsi:nil');
   return attr === 'true';
 }
+function workHoursBetween(start: string, finish: string): number {
+  let d = new Date(start);
+  const end = new Date(finish);
+  let total = 0;
+  while (d < end) {
+    if (d.getUTCDay() > 0 && d.getUTCDay() < 6) {
+      const dayStart = new Date(d); dayStart.setUTCHours(8, 0, 0, 0);
+      const dayEnd = new Date(d); dayEnd.setUTCHours(16, 0, 0, 0);
+      const lo = Math.max(d.getTime(), dayStart.getTime());
+      const hi = Math.min(end.getTime(), dayEnd.getTime());
+      if (hi > lo) total += (hi - lo) / 3600000;
+    }
+    const next = new Date(d); next.setUTCDate(next.getUTCDate() + 1); next.setUTCHours(0, 0, 0, 0); d = next;
+  }
+  return total;
+}
 
 describe('takeoffpro-dev.xml (P6 Professional 17.7 export shape)', () => {
   const tables = parseP6Xml(FIXTURE);
@@ -86,7 +102,7 @@ describe('takeoffpro-dev.xml (P6 Professional 17.7 export shape)', () => {
       for (const f of ['Id','Name','ObjectId','ProjectObjectId','WBSObjectId','CalendarObjectId',
           'Status','Type','PercentCompleteType','PlannedStartDate','PlannedFinishDate',
           'PlannedDuration','RemainingDuration','AtCompletionDuration','GUID',
-          'DurationType','LevelingPriority','PhysicalPercentComplete']) {
+          'DurationType','LevelingPriority','PhysicalPercentComplete','PrimaryResourceObjectId']) {
         expect(childText(a, f) ?? (isNil(childEl(a, f)) ? 'nil' : ''), `${childText(a,'Id')}.${f}`).toBeTruthy();
       }
       // Not-Started activities must declare ActualStart/ActualFinish as xsi:nil rather than omitting them.
@@ -131,6 +147,17 @@ describe('takeoffpro-dev.xml (P6 Professional 17.7 export shape)', () => {
       expect(childText(r, 'SuccessorProjectObjectId')).toBe(projectOid);
       expect(actIds.has(childText(r, 'PredecessorActivityObjectId')!)).toBe(true);
       expect(actIds.has(childText(r, 'SuccessorActivityObjectId')!)).toBe(true);
+    }
+  });
+
+  it('FS relationships do not contradict emitted StartDate/FinishDate chronology', () => {
+    const byOid = new Map(children(project, 'Activity').map(a => [childText(a, 'ObjectId')!, a]));
+    for (const r of children(project, 'Relationship')) {
+      const pred = byOid.get(childText(r, 'PredecessorActivityObjectId')!)!;
+      const succ = byOid.get(childText(r, 'SuccessorActivityObjectId')!)!;
+      const predFinish = new Date(childText(pred, 'FinishDate')!).getTime();
+      const succStart = new Date(childText(succ, 'StartDate')!).getTime();
+      expect(succStart, `${childText(pred, 'Id')} → ${childText(succ, 'Id')}`).toBeGreaterThanOrEqual(predFinish);
     }
   });
 
@@ -190,6 +217,21 @@ describe('takeoffpro-dev.xml (P6 Professional 17.7 export shape)', () => {
         expect(Number(childText(a, 'RemainingDuration') || '0'), `${id} remaining > 0`).toBeGreaterThan(0);
         const pf = new Date(childText(a, 'PlannedFinishDate')!);
         expect(pf.getTime(), `${id} planned finish > data date`).toBeGreaterThan(dataDate.getTime());
+      }
+    }
+  });
+
+  it('task activity durations match emitted planned and actual work windows', () => {
+    for (const a of children(project, 'Activity')) {
+      if (childText(a, 'Type') !== 'Task Dependent') continue;
+      const id = childText(a, 'Id')!;
+      const plannedH = Number(childText(a, 'PlannedDuration') || '0');
+      const plannedWindowH = workHoursBetween(childText(a, 'PlannedStartDate')!, childText(a, 'PlannedFinishDate')!);
+      expect(Math.abs(plannedWindowH - plannedH), `${id} planned duration/window`).toBeLessThan(0.01);
+      if (childText(a, 'Status') === 'Completed') {
+        const actualH = Number(childText(a, 'ActualDuration') || '0');
+        const actualWindowH = workHoursBetween(childText(a, 'ActualStartDate')!, childText(a, 'ActualFinishDate')!);
+        expect(Math.abs(actualWindowH - actualH), `${id} actual duration/window`).toBeLessThan(0.01);
       }
     }
   });
