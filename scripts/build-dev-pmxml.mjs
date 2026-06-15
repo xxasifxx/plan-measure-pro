@@ -124,6 +124,14 @@ function nextWorkdayStart(d) {
   }
   return x;
 }
+function nextSchedulableStart(d) {
+  const x = new Date(d);
+  if (x.getUTCDay() === 0 || x.getUTCDay() === 6) return nextWorkdayStart(x);
+  const minutes = x.getUTCHours() * 60 + x.getUTCMinutes();
+  if (minutes < 8 * 60) { x.setUTCHours(8, 0, 0, 0); return x; }
+  if (minutes >= 16 * 60) { x.setUTCDate(x.getUTCDate() + 1); return nextWorkdayStart(x); }
+  return x;
+}
 function prevWorkdayEnd(d) {
   const x = new Date(d);
   x.setUTCHours(16, 0, 0, 0);
@@ -135,11 +143,7 @@ function prevWorkdayEnd(d) {
 function addWorkHours(start, hours) {
   if (hours === 0) return new Date(start);
   if (hours < 0) return subWorkHours(start, -hours);
-  let d = new Date(start);
-  const h = d.getUTCHours();
-  if (h < 8 || h >= 16 || d.getUTCDay() === 0 || d.getUTCDay() === 6) {
-    d = nextWorkdayStart(h >= 16 ? new Date(d.getTime() + 24*3600*1000) : d);
-  }
+  let d = nextSchedulableStart(start);
   let remaining = hours;
   while (remaining > 0) {
     const endOfDay = new Date(d); endOfDay.setUTCHours(16,0,0,0);
@@ -148,6 +152,12 @@ function addWorkHours(start, hours) {
     else { remaining -= avail; const nxt = new Date(d); nxt.setUTCDate(nxt.getUTCDate()+1); d = nextWorkdayStart(nxt); }
   }
   return d;
+}
+function advanceCursorAfterFinish(d) {
+  return nextSchedulableStart(d);
+}
+function maxDate(a, b) {
+  return a > b ? a : b;
 }
 function subWorkHours(start, hours) {
   let d = new Date(start);
@@ -208,7 +218,7 @@ function calendarXml() {
         <DayOfWeek>${d}</DayOfWeek>
         <WorkTime>
           <Start>08:00:00</Start>
-          <Finish>15:59:00</Finish>
+          <Finish>16:00:00</Finish>
         </WorkTime>
       </StandardWorkHours>`;
   }).join('\n');
@@ -388,6 +398,7 @@ function activityXml(a) {
       <PlannedStartDate>${fmtP6(a.plannedStart)}</PlannedStartDate>
       <PrimaryConstraintDate xsi:nil="true" />
       <PrimaryConstraintType xsi:nil="true" />
+      <PrimaryResourceObjectId xsi:nil="true" />
       <ProjectObjectId>${PROJECT_OID}</ProjectObjectId>
       <RemainingDuration>${remainDur}</RemainingDuration>
       <RemainingEarlyFinishDate xsi:nil="true" />
@@ -510,13 +521,13 @@ function main() {
     if (status === 'Completed') {
       actualH = Math.max(1, Math.round(totalH * compress));
       remainH = 0;
-      actualStart = pastCursor;
+      actualStart = advanceCursorAfterFinish(pastCursor);
       actualFinish = addWorkHours(pastCursor, actualH);
       if (actualFinish > dataDate) {
         actualFinish = new Date(dataDate);
         actualStart  = subWorkHours(actualFinish, actualH);
       }
-      pastCursor = actualFinish;
+      pastCursor = advanceCursorAfterFinish(actualFinish);
       plannedStart = actualStart;
       plannedFinish = actualFinish;
     } else if (status === 'In Progress') {
@@ -525,14 +536,14 @@ function main() {
       actualH = elapsedH;
       actualStart = subWorkHours(dataDate, elapsedH);
       plannedStart = actualStart;
-      plannedFinish = addWorkHours(futureCursor, remainH);
-      futureCursor = plannedFinish;
+      plannedFinish = addWorkHours(plannedStart, totalH);
+      futureCursor = advanceCursorAfterFinish(maxDate(futureCursor, plannedFinish));
     } else {
       remainH = totalH;
       actualH = 0;
       plannedStart = futureCursor;
       plannedFinish = addWorkHours(futureCursor, totalH);
-      futureCursor = plannedFinish;
+      futureCursor = advanceCursorAfterFinish(plannedFinish);
     }
 
     activities.push({
@@ -592,7 +603,9 @@ function main() {
   }
   for (const list of byStream.values()) {
     for (let i = 1; i < list.length; i++) {
-      rels.push(relXml(relOid++, list[i-1].oid, list[i].oid));
+      if (list[i].plannedStart >= list[i-1].plannedFinish) {
+        rels.push(relXml(relOid++, list[i-1].oid, list[i].oid));
+      }
     }
   }
   for (const m of milestones) {
