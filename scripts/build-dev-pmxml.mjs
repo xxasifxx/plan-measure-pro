@@ -218,11 +218,7 @@ function calendarXml() {
         <DayOfWeek>${d}</DayOfWeek>
         <WorkTime>
           <Start>08:00:00</Start>
-          <Finish>11:59:00</Finish>
-        </WorkTime>
-        <WorkTime>
-          <Start>13:00:00</Start>
-          <Finish>16:59:00</Finish>
+          <Finish>16:00:00</Finish>
         </WorkTime>
       </StandardWorkHours>`;
   }).join('\n');
