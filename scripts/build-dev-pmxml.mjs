@@ -124,6 +124,14 @@ function nextWorkdayStart(d) {
   }
   return x;
 }
+function nextSchedulableStart(d) {
+  const x = new Date(d);
+  if (x.getUTCDay() === 0 || x.getUTCDay() === 6) return nextWorkdayStart(x);
+  const minutes = x.getUTCHours() * 60 + x.getUTCMinutes();
+  if (minutes < 8 * 60) { x.setUTCHours(8, 0, 0, 0); return x; }
+  if (minutes >= 16 * 60) { x.setUTCDate(x.getUTCDate() + 1); return nextWorkdayStart(x); }
+  return x;
+}
 function prevWorkdayEnd(d) {
   const x = new Date(d);
   x.setUTCHours(16, 0, 0, 0);
@@ -135,11 +143,7 @@ function prevWorkdayEnd(d) {
 function addWorkHours(start, hours) {
   if (hours === 0) return new Date(start);
   if (hours < 0) return subWorkHours(start, -hours);
-  let d = new Date(start);
-  const h = d.getUTCHours();
-  if (h < 8 || h >= 16 || d.getUTCDay() === 0 || d.getUTCDay() === 6) {
-    d = nextWorkdayStart(h >= 16 ? new Date(d.getTime() + 24*3600*1000) : d);
-  }
+  let d = nextSchedulableStart(start);
   let remaining = hours;
   while (remaining > 0) {
     const endOfDay = new Date(d); endOfDay.setUTCHours(16,0,0,0);
@@ -148,6 +152,9 @@ function addWorkHours(start, hours) {
     else { remaining -= avail; const nxt = new Date(d); nxt.setUTCDate(nxt.getUTCDate()+1); d = nextWorkdayStart(nxt); }
   }
   return d;
+}
+function advanceCursorAfterFinish(d) {
+  return nextSchedulableStart(d);
 }
 function subWorkHours(start, hours) {
   let d = new Date(start);
