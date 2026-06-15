@@ -522,13 +522,13 @@ function main() {
     if (status === 'Completed') {
       actualH = Math.max(1, Math.round(totalH * compress));
       remainH = 0;
-      actualStart = pastCursor;
+      actualStart = advanceCursorAfterFinish(pastCursor);
       actualFinish = addWorkHours(pastCursor, actualH);
       if (actualFinish > dataDate) {
         actualFinish = new Date(dataDate);
         actualStart  = subWorkHours(actualFinish, actualH);
       }
-      pastCursor = actualFinish;
+      pastCursor = advanceCursorAfterFinish(actualFinish);
       plannedStart = actualStart;
       plannedFinish = actualFinish;
     } else if (status === 'In Progress') {
@@ -538,13 +538,13 @@ function main() {
       actualStart = subWorkHours(dataDate, elapsedH);
       plannedStart = actualStart;
       plannedFinish = addWorkHours(futureCursor, remainH);
-      futureCursor = plannedFinish;
+      futureCursor = advanceCursorAfterFinish(plannedFinish);
     } else {
       remainH = totalH;
       actualH = 0;
       plannedStart = futureCursor;
       plannedFinish = addWorkHours(futureCursor, totalH);
-      futureCursor = plannedFinish;
+      futureCursor = advanceCursorAfterFinish(plannedFinish);
     }
 
     activities.push({
@@ -604,7 +604,9 @@ function main() {
   }
   for (const list of byStream.values()) {
     for (let i = 1; i < list.length; i++) {
-      rels.push(relXml(relOid++, list[i-1].oid, list[i].oid));
+      if (list[i].plannedStart >= list[i-1].plannedFinish) {
+        rels.push(relXml(relOid++, list[i-1].oid, list[i].oid));
+      }
     }
   }
   for (const m of milestones) {
