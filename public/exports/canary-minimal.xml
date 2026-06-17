@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<APIBusinessObjects xmlns="http://xmlns.oracle.com/Primavera/P6Professional/V17.7/API/BusinessObjects" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.oracle.com/Primavera/P6Professional/V17.7/API/BusinessObjects http://xmlns.oracle.com/Primavera/P6Professional/V17.7/API/p6apibo.xsd">
+  <OBS>
+    <GUID>{0DA1783C-A2CC-78C7-177B-74BF12874270}</GUID>
+    <Name>Canary Org</Name>
+    <ObjectId>950001</ObjectId>
+    <ParentObjectId xsi:nil="true" />
+    <SequenceNumber>0</SequenceNumber>
+  </OBS>
+  <Calendar>
+    <BaseCalendarObjectId xsi:nil="true" />
+    <HoursPerDay>8</HoursPerDay>
+    <HoursPerMonth>172</HoursPerMonth>
+    <HoursPerWeek>40</HoursPerWeek>
+    <HoursPerYear>2000</HoursPerYear>
+    <IsDefault>1</IsDefault>
+    <IsPersonal>0</IsPersonal>
+    <Name>Canary 5 Day Workweek</Name>
+    <ObjectId>950002</ObjectId>
+    <ProjectObjectId xsi:nil="true" />
+    <Type>Global</Type>
+    <StandardWorkWeek>
+      <StandardWorkHours>
+        <DayOfWeek>Sunday</DayOfWeek>
+        <WorkTime xsi:nil="true" />
+      </StandardWorkHours>
+      <StandardWorkHours>
+        <DayOfWeek>Monday</DayOfWeek>
+        <WorkTime>
+          <Start>08:00:00</Start>
+          <Finish>11:59:00</Finish>
+        </WorkTime>
+        <WorkTime>
+          <Start>13:00:00</Start>
+          <Finish>16:59:00</Finish>
+        </WorkTime>
+      </StandardWorkHours>
+      <StandardWorkHours>
+        <DayOfWeek>Tuesday</DayOfWeek>
+        <WorkTime>
+          <Start>08:00:00</Start>
+          <Finish>11:59:00</Finish>
+        </WorkTime>
+        <WorkTime>
+          <Start>13:00:00</Start>
+          <Finish>16:59:00</Finish>
+        </WorkTime>
+      </StandardWorkHours>
+      <StandardWorkHours>
+        <DayOfWeek>Wednesday</DayOfWeek>
+        <WorkTime>
+          <Start>08:00:00</Start>
+          <Finish>11:59:00</Finish>
+        </WorkTime>
+        <WorkTime>
+          <Start>13:00:00</Start>
+          <Finish>16:59:00</Finish>
+        </WorkTime>
+      </StandardWorkHours>
+      <StandardWorkHours>
+        <DayOfWeek>Thursday</DayOfWeek>
+        <WorkTime>
+          <Start>08:00:00</Start>
+          <Finish>11:59:00</Finish>
+        </WorkTime>
+        <WorkTime>
+          <Start>13:00:00</Start>
+          <Finish>16:59:00</Finish>
+        </WorkTime>
+      </StandardWorkHours>
+      <StandardWorkHours>
+        <DayOfWeek>Friday</DayOfWeek>
+        <WorkTime>
+          <Start>08:00:00</Start>
+          <Finish>11:59:00</Finish>
+        </WorkTime>
+        <WorkTime>
+          <Start>13:00:00</Start>
+          <Finish>16:59:00</Finish>
+        </WorkTime>
+      </StandardWorkHours>
+      <StandardWorkHours>
+        <DayOfWeek>Saturday</DayOfWeek>
+        <WorkTime xsi:nil="true" />
+      </StandardWorkHours>
+    </StandardWorkWeek>
+    <HolidayOrExceptions />
+  </Calendar>
+  <Project>
+    <ActivityDefaultActivityType>Task Dependent</ActivityDefaultActivityType>
+    <ActivityDefaultCalendarObjectId>950002</ActivityDefaultCalendarObjectId>
+    <ActivityDefaultCostAccountObjectId xsi:nil="true" />
+    <ActivityDefaultDurationType>Fixed Duration and Units/Time</ActivityDefaultDurationType>
+    <ActivityDefaultPercentCompleteType>Physical</ActivityDefaultPercentCompleteType>
+    <ActivityDefaultPricePerUnit>0</ActivityDefaultPricePerUnit>
+    <ActivityIdBasedOnSelectedActivity>1</ActivityIdBasedOnSelectedActivity>
+    <ActivityIdIncrement>10</ActivityIdIncrement>
+    <ActivityIdPrefix>CAN</ActivityIdPrefix>
+    <ActivityIdSuffix>1000</ActivityIdSuffix>
+    <ActivityPercentCompleteBasedOnActivitySteps>0</ActivityPercentCompleteBasedOnActivitySteps>
+    <AddActualToRemaining>0</AddActualToRemaining>
+    <AllowNegativeActualUnitsFlag>0</AllowNegativeActualUnitsFlag>
+    <AnnualDiscountRate>0</AnnualDiscountRate>
+    <AnticipatedFinishDate xsi:nil="true" />
+    <AnticipatedStartDate xsi:nil="true" />
+    <AssignmentDefaultDrivingFlag>0</AssignmentDefaultDrivingFlag>
+    <AssignmentDefaultRateType>Price / Unit</AssignmentDefaultRateType>
+    <CheckOutStatus>0</CheckOutStatus>
+    <CostQuantityRecalculateFlag>0</CostQuantityRecalculateFlag>
+    <CriticalActivityFloatLimit>0</CriticalActivityFloatLimit>
+    <CriticalActivityPathType>Critical Float</CriticalActivityPathType>
+    <DataDate>2026-06-15T08:00:00</DataDate>
+    <DateAdded>2026-06-15T08:00:00</DateAdded>
+    <DefaultPriceTimeUnits>Hour</DefaultPriceTimeUnits>
+    <DiscountApplicationPeriod>Month</DiscountApplicationPeriod>
+    <EarnedValueComputeType>Activity Percent Complete</EarnedValueComputeType>
+    <EarnedValueETCComputeType>PF = 1 / CPI</EarnedValueETCComputeType>
+    <EarnedValueETCUserValue>0</EarnedValueETCUserValue>
+    <EarnedValueUserPercent>0.0</EarnedValueUserPercent>
+    <EnableSummarization>1</EnableSummarization>
+    <FiscalYearStartMonth>1</FiscalYearStartMonth>
+    <GUID>{C3D5A6F4-E195-A4AE-7F3A-29D294680472}</GUID>
+    <Id>CANARY01</Id>
+    <IndependentETCLaborUnits>0</IndependentETCLaborUnits>
+    <IndependentETCTotalCost>0</IndependentETCTotalCost>
+    <LevelingPriority>10</LevelingPriority>
+    <LinkActualToActualThisPeriod>1</LinkActualToActualThisPeriod>
+    <LinkPercentCompleteWithActual>0</LinkPercentCompleteWithActual>
+    <LinkPlannedAndAtCompletionFlag>1</LinkPlannedAndAtCompletionFlag>
+    <MustFinishByDate xsi:nil="true" />
+    <Name>P6 PMXML Canary (TakeoffPro)</Name>
+    <OBSObjectId>950001</OBSObjectId>
+    <ObjectId>950003</ObjectId>
+    <OriginalBudget>0</OriginalBudget>
+    <ParentEPSObjectId xsi:nil="true" />
+    <PlannedStartDate>2026-06-01T08:00:00</PlannedStartDate>
+    <PrimaryResourcesCanMarkActivitiesAsCompleted>1</PrimaryResourcesCanMarkActivitiesAsCompleted>
+    <ProjectForecastStartDate xsi:nil="true" />
+    <ResetPlannedToRemainingFlag>0</ResetPlannedToRemainingFlag>
+    <ResourceCanBeAssignedToSameActivityMoreThanOnce>1</ResourceCanBeAssignedToSameActivityMoreThanOnce>
+    <ResourcesCanAssignThemselvesToActivities>1</ResourcesCanAssignThemselvesToActivities>
+    <ScheduledFinishDate>2026-06-26T16:00:00</ScheduledFinishDate>
+    <Status>Active</Status>
+    <StrategicPriority>500</StrategicPriority>
+    <SummarizeToWBSLevel>2</SummarizeToWBSLevel>
+    <UseProjectBaselineForEarnedValue>1</UseProjectBaselineForEarnedValue>
+    <WBSCodeSeparator>.</WBSCodeSeparator>
+    <WBSObjectId>950100</WBSObjectId>
+    <WBS>
+      <AnticipatedFinishDate xsi:nil="true" />
+      <AnticipatedStartDate xsi:nil="true" />
+      <Code>CAN</Code>
+      <EarnedValueComputeType>Activity Percent Complete</EarnedValueComputeType>
+      <EarnedValueETCComputeType>PF = 1 / CPI</EarnedValueETCComputeType>
+      <EarnedValueETCUserValue>0</EarnedValueETCUserValue>
+      <EarnedValueUserPercent>0.0</EarnedValueUserPercent>
+      <GUID>{21378ED8-F935-6583-8363-17EFA9F998C3}</GUID>
+      <IndependentETCLaborUnits>0</IndependentETCLaborUnits>
+      <IndependentETCTotalCost>0</IndependentETCTotalCost>
+      <Name>Canary Root</Name>
+      <OBSObjectId>950001</OBSObjectId>
+      <ObjectId>950100</ObjectId>
+      <OriginalBudget>0</OriginalBudget>
+      <ParentObjectId xsi:nil="true" />
+      <ProjectObjectId>950003</ProjectObjectId>
+      <SequenceNumber>1</SequenceNumber>
+      <Status>Active</Status>
+      <WBSCategoryObjectId xsi:nil="true" />
+    </WBS>
+    <Activity>
+      <ActualDuration>80</ActualDuration>
+      <ActualFinishDate>2026-06-12T16:00:00</ActualFinishDate>
+      <ActualLaborCost>0</ActualLaborCost>
+      <ActualLaborUnits>0</ActualLaborUnits>
+      <ActualNonLaborCost>0</ActualNonLaborCost>
+      <ActualNonLaborUnits>0</ActualNonLaborUnits>
+      <ActualStartDate>2026-06-01T08:00:00</ActualStartDate>
+      <ActualThisPeriodLaborCost>0</ActualThisPeriodLaborCost>
+      <ActualThisPeriodLaborUnits>0</ActualThisPeriodLaborUnits>
+      <ActualThisPeriodNonLaborCost>0</ActualThisPeriodNonLaborCost>
+      <ActualThisPeriodNonLaborUnits>0</ActualThisPeriodNonLaborUnits>
+      <AtCompletionDuration>80</AtCompletionDuration>
+      <AtCompletionExpenseCost>0</AtCompletionExpenseCost>
+      <AtCompletionLaborCost>0</AtCompletionLaborCost>
+      <AtCompletionLaborUnits>0</AtCompletionLaborUnits>
+      <AtCompletionNonLaborCost>0</AtCompletionNonLaborCost>
+      <AtCompletionNonLaborUnits>0</AtCompletionNonLaborUnits>
+      <AutoComputeActuals>0</AutoComputeActuals>
+      <CalendarObjectId>950002</CalendarObjectId>
+      <DurationPercentComplete>1</DurationPercentComplete>
+      <DurationType>Fixed Duration and Units/Time</DurationType>
+      <EstimatedWeight>1</EstimatedWeight>
+      <ExpectedFinishDate xsi:nil="true" />
+      <ExternalEarlyStartDate xsi:nil="true" />
+      <ExternalLateFinishDate xsi:nil="true" />
+      <Feedback />
+      <FinishDate>2026-06-12T16:00:00</FinishDate>
+      <GUID>{10915388-4AF7-DF06-9BBC-9E5DA5A570D0}</GUID>
+      <Id>CAN1000</Id>
+      <IsNewFeedback>0</IsNewFeedback>
+      <LevelingPriority>Normal</LevelingPriority>
+      <Name>Canary Completed Activity</Name>
+      <NonLaborUnitsPercentComplete>0</NonLaborUnitsPercentComplete>
+      <NotesToResources />
+      <ObjectId>960001</ObjectId>
+      <PercentComplete>1</PercentComplete>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>1</PhysicalPercentComplete>
+      <PlannedDuration>80</PlannedDuration>
+      <PlannedFinishDate>2026-06-12T16:00:00</PlannedFinishDate>
+      <PlannedLaborCost>0</PlannedLaborCost>
+      <PlannedLaborUnits>0</PlannedLaborUnits>
+      <PlannedNonLaborCost>0</PlannedNonLaborCost>
+      <PlannedNonLaborUnits>0</PlannedNonLaborUnits>
+      <PlannedStartDate>2026-06-01T08:00:00</PlannedStartDate>
+      <PrimaryConstraintDate xsi:nil="true" />
+      <PrimaryConstraintType xsi:nil="true" />
+      <ProjectObjectId>950003</ProjectObjectId>
+      <RemainingDuration>0</RemainingDuration>
+      <RemainingEarlyFinishDate xsi:nil="true" />
+      <RemainingEarlyStartDate xsi:nil="true" />
+      <RemainingLaborCost>0</RemainingLaborCost>
+      <RemainingLaborUnits>0</RemainingLaborUnits>
+      <RemainingLateFinishDate xsi:nil="true" />
+      <RemainingLateStartDate xsi:nil="true" />
+      <RemainingNonLaborCost>0</RemainingNonLaborCost>
+      <RemainingNonLaborUnits>0</RemainingNonLaborUnits>
+      <ResumeDate xsi:nil="true" />
+      <SecondaryConstraintDate xsi:nil="true" />
+      <SecondaryConstraintType xsi:nil="true" />
+      <StartDate>2026-06-01T08:00:00</StartDate>
+      <Status>Completed</Status>
+      <SuspendDate xsi:nil="true" />
+      <Type>Task Dependent</Type>
+      <UnitsPercentComplete>1</UnitsPercentComplete>
+      <WBSObjectId>950100</WBSObjectId>
+    </Activity>
+    <Activity>
+      <ActualDuration>0</ActualDuration>
+      <ActualFinishDate xsi:nil="true" />
+      <ActualLaborCost>0</ActualLaborCost>
+      <ActualLaborUnits>0</ActualLaborUnits>
+      <ActualNonLaborCost>0</ActualNonLaborCost>
+      <ActualNonLaborUnits>0</ActualNonLaborUnits>
+      <ActualStartDate xsi:nil="true" />
+      <ActualThisPeriodLaborCost>0</ActualThisPeriodLaborCost>
+      <ActualThisPeriodLaborUnits>0</ActualThisPeriodLaborUnits>
+      <ActualThisPeriodNonLaborCost>0</ActualThisPeriodNonLaborCost>
+      <ActualThisPeriodNonLaborUnits>0</ActualThisPeriodNonLaborUnits>
+      <AtCompletionDuration>80</AtCompletionDuration>
+      <AtCompletionExpenseCost>0</AtCompletionExpenseCost>
+      <AtCompletionLaborCost>0</AtCompletionLaborCost>
+      <AtCompletionLaborUnits>0</AtCompletionLaborUnits>
+      <AtCompletionNonLaborCost>0</AtCompletionNonLaborCost>
+      <AtCompletionNonLaborUnits>0</AtCompletionNonLaborUnits>
+      <AutoComputeActuals>0</AutoComputeActuals>
+      <CalendarObjectId>950002</CalendarObjectId>
+      <DurationPercentComplete>0</DurationPercentComplete>
+      <DurationType>Fixed Duration and Units/Time</DurationType>
+      <EstimatedWeight>1</EstimatedWeight>
+      <ExpectedFinishDate xsi:nil="true" />
+      <ExternalEarlyStartDate xsi:nil="true" />
+      <ExternalLateFinishDate xsi:nil="true" />
+      <Feedback />
+      <FinishDate>2026-06-26T16:00:00</FinishDate>
+      <GUID>{9BD0CE80-C8E1-075B-7550-5253B83AFA9C}</GUID>
+      <Id>CAN1010</Id>
+      <IsNewFeedback>0</IsNewFeedback>
+      <LevelingPriority>Normal</LevelingPriority>
+      <Name>Canary Not Started Activity</Name>
+      <NonLaborUnitsPercentComplete>0</NonLaborUnitsPercentComplete>
+      <NotesToResources />
+      <ObjectId>960002</ObjectId>
+      <PercentComplete>0</PercentComplete>
+      <PercentCompleteType>Physical</PercentCompleteType>
+      <PhysicalPercentComplete>0</PhysicalPercentComplete>
+      <PlannedDuration>80</PlannedDuration>
+      <PlannedFinishDate>2026-06-26T16:00:00</PlannedFinishDate>
+      <PlannedLaborCost>0</PlannedLaborCost>
+      <PlannedLaborUnits>0</PlannedLaborUnits>
+      <PlannedNonLaborCost>0</PlannedNonLaborCost>
+      <PlannedNonLaborUnits>0</PlannedNonLaborUnits>
+      <PlannedStartDate>2026-06-15T08:00:00</PlannedStartDate>
+      <PrimaryConstraintDate xsi:nil="true" />
+      <PrimaryConstraintType xsi:nil="true" />
+      <ProjectObjectId>950003</ProjectObjectId>
+      <RemainingDuration>80</RemainingDuration>
+      <RemainingEarlyFinishDate>2026-06-26T16:00:00</RemainingEarlyFinishDate>
+      <RemainingEarlyStartDate>2026-06-15T08:00:00</RemainingEarlyStartDate>
+      <RemainingLaborCost>0</RemainingLaborCost>
+      <RemainingLaborUnits>0</RemainingLaborUnits>
+      <RemainingLateFinishDate xsi:nil="true" />
+      <RemainingLateStartDate xsi:nil="true" />
+      <RemainingNonLaborCost>0</RemainingNonLaborCost>
+      <RemainingNonLaborUnits>0</RemainingNonLaborUnits>
+      <ResumeDate xsi:nil="true" />
+      <SecondaryConstraintDate xsi:nil="true" />
+      <SecondaryConstraintType xsi:nil="true" />
+      <StartDate>2026-06-15T08:00:00</StartDate>
+      <Status>Not Started</Status>
+      <SuspendDate xsi:nil="true" />
+      <Type>Task Dependent</Type>
+      <UnitsPercentComplete>0</UnitsPercentComplete>
+      <WBSObjectId>950100</WBSObjectId>
+    </Activity>
+    <Relationship>
+      <Lag>0</Lag>
+      <ObjectId>970001</ObjectId>
+      <PredecessorActivityObjectId>960001</PredecessorActivityObjectId>
+      <PredecessorProjectObjectId>950003</PredecessorProjectObjectId>
+      <SuccessorActivityObjectId>960002</SuccessorActivityObjectId>
+      <SuccessorProjectObjectId>950003</SuccessorProjectObjectId>
+      <Type>Finish to Start</Type>
+    </Relationship>
+  </Project>
+</APIBusinessObjects>

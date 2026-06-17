@@ -1,69 +1,94 @@
-## Why the import still fails
 
-I traced `scripts/build-dev-pmxml.mjs` against the source data (`docs/wbs-dev.activities.json`, 154 activities) and the regenerated `public/exports/takeoffpro-dev.xml`. The structural shape is fine; the **content is internally contradictory**, which is why P6 rejects every Project / Activity / Relationship.
+# Plan: Fix P6 PMXML Generator Using Researcher Findings
 
-### Bugs found (logic + chronology)
+The researcher's analysis identifies multiple concrete violations in our current generator. Rather than rewriting everything in one pass (we've tried that 4 times and failed), we'll fix issues in isolated, verifiable stages — each producing an importable file that proves one set of rules works before stacking the next.
 
-1. **Source dates are degenerate.** 60 "Completed" activities all share `actualStart = actualFinish = 2026-05-29T00:00:00Z` (the data date). The generator passes those through verbatim, so each completed activity ends up with start == finish but `ActualDuration = 8h`, `PlannedDuration = 8h`. P6 rejects any activity whose `ActualFinishDate - ActualStartDate` is inconsistent with `ActualDuration` against its calendar.
+## Why we keep failing
 
-2. **Times don't fit the calendar.** The Global calendar declares workdays 08:00–16:00. We emit activity dates at `00:00:00` (because source dates are midnight-UTC). P6 will not place an actual start outside calendar working time → activity rejected → whole Project rejected.
+Per the researcher, P6 **silently rejects** child records without per-row diagnostics when:
+1. Top-level objects appear in the wrong order (globals before project-scoped)
+2. Child elements within an object are in the wrong sequence
+3. Date fields don't match the strict per-Status matrix
+4. `<PrimaryResourceObjectId xsi:nil="true"/>` is present (deserializer fails — must be **omitted**, not nilled — our last change actively made this worse)
+5. Relationship `Type` uses short codes instead of `Finish to Start` etc.
+6. Lag is in days instead of hours
 
-3. **`PlannedStart == PlannedFinish` for completed work.** We set `plannedStart = actualStart; plannedFinish = actualFinish` but keep `PlannedDuration = durationDays * 8`. Same contradiction as #1 on the planned side.
+Our current `takeoffpro-dev.xml` violates several of these simultaneously, so we can't tell which fix landed.
 
-4. **Project `earliestStart` is meaningless.** It picks the minimum of activity `refStart`, so the project's effective span (2026-04-01 → 2027-07-05) is driven by one stray completed task, not the actual project start (`PROJECT_S = 2025-09-01`). `ScheduledFinishDate` is correct, but the Project header is internally inconsistent with `PlannedStartDate`.
+## Staged delivery (one session each)
 
-5. **In-progress chronology is wrong.** `actualStart = parseIso(a.actualStart) || cursor`. When source actualStart is the data date, the activity's actual start sits at the data date and its remaining work also starts at the data date, leaving `ActualDuration = 0` but `PercentComplete > 0`. P6 rejects.
+### Session 1 — Canary file + rule-encoded emitter scaffold
+Produce `public/exports/canary-minimal.xml`: 1 project, 1 calendar, 1 WBS, 2 activities (1 Not Started + 1 Completed), 1 FS relationship. Built strictly to the researcher's §13 minimal shape.
 
-6. **`cursor` advances by completed work time.** For "In Progress" we do `cursor = addWorkHours(cursor, remainH)` but never roll the cursor back to account for the elapsed actual portion, so the schedule baseline drifts forward.
+Changes:
+- New `scripts/p6xml/emit.mjs` module with **field-order-enforced** writers for `<Project>`, `<Calendar>`, `<WBS>`, `<Activity>`, `<Relationship>` (each writer hardcodes child order; passing fields out of order throws).
+- New `scripts/build-canary-pmxml.mjs` producing the minimal file.
+- Top-level order enforced: `Currency → OBS → Calendar → Resource → Project (with WBS → Activity → Relationship inside)`.
+- **Remove** every `<PrimaryResourceObjectId xsi:nil="true"/>` — omit the tag entirely when no resource.
+- Relationship `<Type>` uses full strings (`Finish to Start`); `<Lag>` in working hours.
+- New ObjectId ranges that don't collide with reference export DB ids (Project 50000+, Activities 100000+, Relationships 200000+, WBS 60000+).
 
-7. **Milestones inherit garbage from their driver.** They use `last.plannedFinish` of the phase, which is corrupted by #1–#5.
+User imports `canary-minimal.xml` into P6 and reports the log. **Exit criterion:** all 2 activities + 1 relationship accepted.
 
-### Fix plan
+### Session 2 — Status matrix canary
+Once Session 1 imports cleanly, extend the canary to 6 activities exercising every status combo from researcher §5.1:
+- Not Started (only PlannedStart/Finish + RemainingEarlyStart/Finish, no Actuals, no ExpectedFinish unless set)
+- In Progress (PlannedStart/Finish + ActualStart + RemainingEarlyStart/Finish, **no** ActualFinish)
+- Completed (PlannedStart/Finish + ActualStart + ActualFinish, **no** Remaining* dates, RemainingDuration=0)
 
-All changes in `scripts/build-dev-pmxml.mjs`. No app/UI code touched.
+Plus: Start Milestone, Finish Milestone, Level of Effort. Encode date-field guards in `emit.mjs` so emitting a forbidden field for a status throws.
 
-**A. Synthesize a sane chronology, ignore degenerate source dates.**
-   - Define `PROJECT_START = 2025-09-01T08:00:00` and `DATA_DATE = 2026-05-29T08:00:00` (08:00 aligns to calendar).
-   - Walk activities in deterministic order (phase → stream → input). Maintain two cursors:
-     - `pastCursor` starting at `PROJECT_START`, used to lay out completed/in-progress actual segments forward.
-     - `futureCursor` starting at `DATA_DATE`, used to lay out remaining work.
-   - **Completed:** `actualStart = pastCursor`; `actualFinish = addWorkHours(pastCursor, totalH)`; advance `pastCursor = actualFinish`. If `actualFinish > DATA_DATE`, clamp to `DATA_DATE - totalH` worth of workdays so all completed work sits strictly before the data date. `plannedStart/plannedFinish = actualStart/actualFinish`. `ActualDuration = totalH`, `RemainingDuration = 0`, `PercentComplete = 1`.
-   - **In Progress:** `actualStart = addWorkHours(DATA_DATE, -elapsedH)` where `elapsedH = round(totalH * pct)` (clamped ≥ 1, ≤ totalH-1). `remainH = totalH - elapsedH`. `plannedStart = actualStart`. `plannedFinish = addWorkHours(futureCursor, remainH)`. Advance `futureCursor` by `remainH`. `ActualDuration = elapsedH`.
-   - **Not Started:** `plannedStart = futureCursor`; `plannedFinish = addWorkHours(futureCursor, totalH)`; advance `futureCursor`. No actuals (xsi:nil). `PercentComplete = 0`.
+### Session 3 — Full schedule rebuild
+Re-emit `takeoffpro-dev.xml` (161 activities, 140 relationships) using the proven emitter from Sessions 1-2. No new rules — only apply the validated ones at scale.
 
-**B. Implement `addWorkHours` with negative hours** (walk backward across workdays) for the in-progress clamp.
+Drop the existing `scripts/build-dev-pmxml.mjs` ad-hoc logic; the new script composes from `emit.mjs`.
 
-**C. Project header consistency.**
-   - `PlannedStartDate = PROJECT_START` (already true).
-   - `ScheduledFinishDate = fmtP6(futureCursor)` after all remaining work is laid out (drop the `earliestStart`/`latestFinish` min/max).
-   - Keep `DataDate = DATA_DATE`.
+### Session 4 — Validation harness
+Add `src/test/p6-rules.test.ts` that loads each emitted XML and asserts:
+- Top-level child order
+- Within-object child order per type
+- Status × date-field matrix
+- No `xsi:nil` on `PrimaryResourceObjectId`
+- Relationship Type strings, Lag in hours
+- ObjectId uniqueness across the file
+- FS chronology (predecessor finish ≤ successor start, unless lag negative)
 
-**D. Calendar-aligned formatting.**
-   - Force every emitted date to land on a working minute (08:00–16:00, Mon–Fri). `addWorkHours` already does this; just make sure we never bypass it.
+This becomes the regression net so future edits can't silently re-break the file.
 
-**E. Milestones.**
-   - Anchor each phase milestone to the `plannedFinish` of the last activity in that phase (post-fix dates), or to `futureCursor` if the phase has no activities. `PercentComplete = 1` if every driver is Completed, else `0`.
+## Technical notes
 
-**F. Relationships sanity.**
-   - Keep FS-0 chain within stream + driver→milestone, but only emit a relationship if both endpoints land on the same workflow side of the data date OR if successor's `plannedStart >= predecessor's plannedFinish`. (Otherwise P6 will fail the relationship even when both activities exist.)
+ObjectId ranges (researcher §1.5 — avoid system reserved ranges; use stable high values that won't collide):
+```text
+Project        50000
+Calendar       50100
+OBS            50200
+Currency       50300
+WBS            60000–69999
+Activity      100000–199999
+Relationship  200000–299999
+Resource       70000–79999 (unused in Session 1)
+```
 
-**G. Optional but cheap wins.**
-   - Add `<DateAdded>` to Project (some P6 builds require it).
-   - Drop `<WBSObjectId>` from the Project header if it points at a WBS we ourselves create in the same file (P6 fills this in after WBS insert; including a pre-existing reference can race).
+Top-level emission order (researcher §3.2):
+```text
+<APIBusinessObjects>
+  <Currency/>
+  <OBS/>
+  <Calendar/>
+  <Project>
+    <WBS/>...
+    <Activity/>...
+    <Relationship/>...
+  </Project>
+</APIBusinessObjects>
+```
 
-### Verification
+Activity child order (researcher §3.1 — exact P6 schema sequence): ObjectId, GUID, Id, Name, Type, Status, CalendarObjectId, WBSObjectId, ProjectObjectId, PlannedDuration, RemainingDuration, ActualDuration, AtCompletionDuration, PercentCompleteType, PhysicalPercentComplete, DurationPercentComplete, PlannedStartDate, PlannedFinishDate, ActualStartDate, ActualFinishDate, RemainingEarlyStartDate, RemainingEarlyFinishDate, PrimaryConstraintType, PrimaryConstraintDate. (Will verify exact order against `EC00620.xml` during Session 1 implementation.)
 
-1. `node scripts/build-dev-pmxml.mjs` and re-run `src/test/dev-pmxml.test.ts` (already structural).
-2. Add three new assertions to that test:
-   - For every Activity: if `ActualStartDate` and `ActualFinishDate` both present, `Finish > Start` and `(Finish - Start)` in workhours ≈ `ActualDuration` (±1h tolerance).
-   - For every Activity: `ActualStartDate ≤ DataDate` and (`Not Started` ⇒ no actuals; `Completed` ⇒ both actuals; `In Progress` ⇒ start only).
-   - All emitted datetimes fall on Mon–Fri 08:00–16:00.
-3. Report the import log from P6 after re-import.
+## Out of scope (this plan)
+- Resources/assignments (Session 1-3 omit them; researcher confirms they're optional)
+- Baselines, UDFs, Activity Codes
+- The live `P6Export.tsx` flow / `apply-progress.ts` — unchanged. This plan only fixes the static dev-schedule export.
 
-### Files changed
-
-- `scripts/build-dev-pmxml.mjs` (logic rewrite — sections noted above)
-- `src/test/dev-pmxml.test.ts` (add chronology assertions)
-- `public/exports/takeoffpro-dev.xml` (regenerated artifact)
-
-No frontend or backend code is affected.
+## Deliverable for THIS session
+Session 1 only: `scripts/p6xml/emit.mjs`, `scripts/build-canary-pmxml.mjs`, `public/exports/canary-minimal.xml`. User imports the canary and reports the log before we proceed to Session 2.
